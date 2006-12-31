@@ -720,8 +720,8 @@ enum MoveResult Character::move(int dx, int dy)
         // blocking mechs).
         // ------------------------------------------------------------------
 
-	if (!place_is_passable(
-                    getPlace(), newx, newy, this,
+	if (!place_move_is_passable(
+                    getPlace(), getX(), getY(), newx, newy, this,
                     PFLAG_MOVEATTEMPT | 
                     (getActivity() == COMMUTING ? PFLAG_IGNOREMECHS : 0))) {
                 return WasImpassable;
@@ -776,9 +776,11 @@ enum MoveResult Character::move(int dx, int dy)
                                                occupant, 0)) {
                                 relocate(getPlace(), newx, newy);
                                 decActionPoints(
-                                        place_get_movement_cost(getPlace(), 
-                                                                newx, newy, 
-                                                                this));
+                                        place_get_diagonal_movement_cost(
+                                                getPlace(), 
+                                                getX(), getY(),
+                                                newx, newy, 
+                                                this));
                                 return MovedOk;
         
                         }
@@ -798,7 +800,10 @@ enum MoveResult Character::move(int dx, int dy)
 		return WasOccupied;
 	}
 
-        decActionPoints(place_get_movement_cost(getPlace(), newx, newy, this));
+        decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
+                                                         getX(), getY(), 
+                                                         newx, 
+                                                         newy, this));
 	relocate(getPlace(), newx, newy);
 
 	return MovedOk;
@@ -2094,10 +2099,10 @@ void Character::switchPlaces(class Character *occupant)
         //remove();
         occupant->relocate(oldPlace, oldx, oldy);
         relocate(oldPlace, newx, newy);
-        decActionPoints(place_get_movement_cost(getPlace(), 
-                                                getX(), 
-                                                getY(), 
-                                                this));
+        decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
+                                                         oldx, oldy,
+                                                         newx, newy,
+                                                         this));
         setAttackTarget(oldTarget);
         setSolo(wasSolo);
 }

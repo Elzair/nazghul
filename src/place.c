@@ -347,6 +347,15 @@ static void place_for_each_tile(struct place *place,
                                 void (*fx)(struct tile *tile, void *data), 
                                 void *data);
 
+static inline int place_is_diagonal(struct place *place, int from_x, 
+                                    int from_y, int to_x, int to_y)
+{
+        /* FIXME: probably doesn't work on wrapping places... */
+        int dx = from_x - to_x;
+        int dy = from_y - to_y;
+        return (((dx==1) || (dx==-1))
+                && ((dy==1) || (dy==-1)));
+}
 
 static void place_set_default_edge_entrance(struct place *place)
 {
@@ -714,6 +723,27 @@ int place_is_passable(struct place *place, int x, int y,
 
 	return 1;
 }
+
+int place_move_is_passable(struct place *place, int from_x, int from_y,
+                           int to_x, int to_y,
+                           class Object *subject, int flags)
+{
+        /* check destination tile */
+        if (! place_is_passable(place, to_x, to_y, subject, flags)) {
+                return 0;
+        }
+
+        /* check if this is a one-tile diagonal move then check both adjacent
+         * neighbors. */
+        if (place_is_diagonal(place, from_x, from_y, to_x, to_y)
+            && ! place_is_passable(place, from_x, to_y, subject, flags)
+            && ! place_is_passable(place, to_x, from_y, subject, flags)) {
+                return 0;
+        }
+
+        return 1;
+}
+
 
 int place_is_occupied(struct place *place, int x, int y)
 {
@@ -1304,7 +1334,7 @@ int place_get_movement_cost(struct place *place, int x, int y,
 
         WRAP_COORDS(place, x, y);
 
-        // Terrain features override terrain
+        /* Terrain features override terrain */
         tfeat = place_get_object(place, x, y, tfeat_layer);
         if (tfeat) {
                 return obj->getMovementCost(tfeat->getPclass());
@@ -1313,14 +1343,30 @@ int place_get_movement_cost(struct place *place, int x, int y,
 	t = TERRAIN(place, x, y);
         cost = obj->getMovementCost(terrain_pclass(t));
 
-        // Impassable terrain must have a vehicle that makes it passable; use
-        // the cost of vehicle movement
+        /* Impassable terrain must have a vehicle that makes it passable; use
+         * the cost of vehicle movement */
         if (PTABLE_IMPASSABLE == cost) {
                 class Vehicle *vehicle;
                 vehicle = place_get_vehicle(place, x, y);
                 if (vehicle)
                         cost = vehicle->getMovementCost(terrain_pclass(t));
         }
+
+        return cost;
+}
+
+int place_get_diagonal_movement_cost(struct place *place, 
+                                     int from_x, int from_y, 
+                                     int to_x, int to_y, class Object *obj)
+{
+        int cost = place_get_movement_cost(place, to_x, to_y, obj);
+
+        /* Multiply cost of diagonals by 1.4 (pythagorean theorem) */
+        if (place_is_diagonal(place, from_x, from_y, to_x, to_y)) {
+                cost *= 14;
+                cost /= 10;
+        }
+
         return cost;
 }
 

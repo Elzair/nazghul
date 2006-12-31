@@ -53,7 +53,8 @@ int commonInit(void)
 static char *dir_str[] = {
 	"Northwest", "North", "Northeast",
 	"West", "Here", "East",
-	"Southwest", "South", "Southeast" "Up", "Down",
+	"Southwest", "South", "Southeast", 
+        "Up", "Down"
 };
 
 static unsigned char dir_facing[] = {

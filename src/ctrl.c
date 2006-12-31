@@ -37,7 +37,7 @@
 #include "factions.h"
 
 #ifndef CONFIG_DIAGONAL_MOVEMENT
-#define CONFIG_DIAGONAL_MOVEMENT 0
+#define CONFIG_DIAGONAL_MOVEMENT 1
 #endif
 
 int G_latency_start = 0;

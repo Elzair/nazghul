@@ -240,21 +240,7 @@ astar_schedule_neighbor(struct astar_node *node,
          * costlier paths. */
         goodness -= cost;
 
-#if 0
-        /* 03Aug2003 gmcnutt: bugfix: goodness needs to be cumulative for the
-         * whole path. When it isn't, an inferior but shorter path will
-         * supersede a superior but longer path. A longer path can be superior
-         * if it doesn't lead through hazardous terrain. The heuristice invoked
-         * knows this and computes it as part of what we misleadingly call
-         * 'distance'. That part of the information needs to be considered part
-         * of the path, not just part of this particular node. */
-        goodness = node->goodness - (distance + cost);
-#endif
 	location = COORD_TO_INDEX(info->x0, info->y0, info->width);
-
-	/* Safety check the search depth. */
-	//if (goodness <= MIN_GOODNESS)
-        //return;
 
 	/* Check if we already have a route to this location. */
 	if ((ptr = astar_old_route(location))) {

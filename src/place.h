@@ -274,7 +274,13 @@ extern int place_get_light(struct place *place, int x, int y);
 extern void place_set_terrain(struct place *place, int x, int y, struct terrain *terrain);
 extern struct terrain *place_get_terrain(struct place *place, int x, int y);
 extern Uint32 place_get_color(struct place *place, int x, int y);
-extern int place_get_movement_cost(struct place *place, int x, int y, class Object *obj);
+extern int place_get_movement_cost(struct place *place,
+                                   int to_x, int to_y, 
+                                   class Object *obj);
+extern int place_get_diagonal_movement_cost(struct place *place, int from_x, 
+                                            int from_y,
+                                            int to_x, int to_y, 
+                                            class Object *obj);
 extern int place_adjust_turn_cost(struct place *place, int turns);
 extern int place_is_hazardous(struct place *place, int x, int y);
 extern class Party *place_random_encounter(struct place *);
@@ -305,6 +311,10 @@ extern int place_in_los(struct place *p1, int x1, int y1,
                         struct place *p2, int x2, int y2);
 extern void place_add_on_entry_hook(struct place *place, closure_t *hook_fx);
 extern void place_set_terrain_map(struct place *place, struct terrain_map *map);
+int place_move_is_passable(struct place *place, int from_x, int from_y,
+                           int to_x, int to_y,
+                           class Object *subject, int flags);
+
 END_DECL
 
 #endif
