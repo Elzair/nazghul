@@ -153,13 +153,37 @@ bool Party::attackPlayer(int dx, int dy)
 
         struct move_info info;
         struct combat_info cinfo;
-                
+
         memset(&info, 0, sizeof(info));
+         
+        /* Check for a diagonal attack. */
+        if (dx && dy) {
+                
+                /* If an adjacent neighbor is passable make the attack from
+                 * there instead. */
+                if (place_is_passable(getPlace(), getX() + dx, getY(), 
+                                      this, 0)) {
+                        info.x = getX() + dx;
+                        info.y = getY();
+                        info.dx = 0;
+                        info.dy = dy;
+                } else if (place_is_passable(getPlace(), getX(), getY() + dy, 
+                                      this, 0)) {
+                        info.x = getX();
+                        info.y = getY() + dy;
+                        info.dy = 0;
+                        info.dx = dx;
+                } else {
+                        return false;
+                }
+        } else {
+                info.x = getX();
+                info.y = getY();
+                info.dx = dx;
+                info.dy = dy;
+        }
+
         info.place = getPlace();
-        info.x = getX();
-        info.y = getY();
-        info.dx = dx;
-        info.dy = dy;
         info.px = player_party->getX();
         info.py = player_party->getY();
         info.npc_party = this;
@@ -210,7 +234,7 @@ MoveResult Party::move(int dx, int dy)
 	if (newx == player_party->getX() && 
             newy == player_party->getY()) {
 
-		// If this party is hostile to the player then begin combat
+		/* If this party is hostile to the player then begin combat */
 		if (are_hostile(this, player_party)
                     && attackPlayer(dx, dy)) {
                         return EngagedEnemy;
