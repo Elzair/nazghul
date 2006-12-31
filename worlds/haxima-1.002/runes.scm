@@ -39,14 +39,14 @@
        (method 'get rune-l-get)))
 
 ;; rune types
-(mk-obj-type 't_rune_k "Rune of Knowledge" s_runestone_k layer-item rune-ifc)
-(mk-obj-type 't_rune_p "Rune of Power" s_runestone_p layer-item rune-ifc)
-(mk-obj-type 't_rune_s "Rune of Skill" s_runestone_s layer-item rune-ifc)
-(mk-obj-type 't_rune_c "Rune of Curiosity" s_runestone_c layer-item rune-ifc)
-(mk-obj-type 't_rune_f "Rune of Freedom" s_runestone_f layer-item rune-ifc)
-(mk-obj-type 't_rune_w "Rune of Wisdom" s_runestone_w layer-item rune-ifc)
-(mk-obj-type 't_rune_d "Rune of Discretion" s_runestone_d layer-item rune-ifc)
-(mk-obj-type 't_rune_l "Rune of Leadership" s_runestone_l layer-item rune-l-ifc)
+(mk-quest-obj-type 't_rune_k "Rune of Knowledge" s_runestone_k layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_p "Rune of Power" s_runestone_p layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_s "Rune of Skill" s_runestone_s layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_c "Rune of Curiosity" s_runestone_c layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_f "Rune of Freedom" s_runestone_f layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_w "Rune of Wisdom" s_runestone_w layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_d "Rune of Discretion" s_runestone_d layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_l "Rune of Leadership" s_runestone_l layer-item rune-l-ifc)
 
 ;; list of all rune types
 (define rune-types 

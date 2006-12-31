@@ -2144,29 +2144,6 @@ KERN_API_CALL(kern_mk_player)
         pointer members;
         pointer ret;
 
-#if 0
-        // --------------------------------------------------------------------
-        // FIXME: the global player_party should be per-session. That way we
-        // can postpone destroying the current player party until we have
-        // successfully loaded the new session.
-        // --------------------------------------------------------------------
-        
-        /* The player party is a special global object that is created on
-         * startup. This is legacy, and needs to be addressed eventually. For
-         * now reset the party by destroying it and recreating it. Do NOT call
-         * player_init again because it sets up work queue jobs (which right
-         * now I have no way of canceling). */
-
-        if (player_party) {
-                obj_inc_ref(player_party);
-                if (player_party->isOnMap()) // hack!
-                        player_party->remove(); // hack!
-                while (player_party->refcount > 1) // hack!
-                        obj_dec_ref(player_party); // hack!
-                obj_dec_ref(player_party);
-        }
-#endif
-
         if (unpack(sc, &args, "ypspdddppppp", 
                    &tag,
                    &sprite,
@@ -7936,6 +7913,20 @@ KERN_API_CALL(kern_type_set_gob)
        return scm_mk_ptr(sc, type);
 }
 
+KERN_API_CALL(kern_type_set_quest_item_flag)
+{
+        ObjectType *type = 0;
+        int val = 0;
+
+        if (unpack(sc, &args, "pb", &type, &val)) {
+                rt_err("kern-type-set-quest-item-flag: bad args");
+                return sc->NIL;
+        }
+
+        type->setQuestItemFlag(val);
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_type_get_gob)
 {
         ObjectType *type = 0;
@@ -8258,6 +8249,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-type-get-gob", kern_type_get_gob);
         API_DECL(sc, "kern-type-get-name", kern_type_get_name);
         API_DECL(sc, "kern-type-set-gob", kern_type_set_gob);
+        API_DECL(sc, "kern-type-set-quest-item-flag", kern_type_set_quest_item_flag);
 
         /* misc api */
         API_DECL(sc, "kern-add-magic-negated", kern_add_magic_negated);

@@ -87,6 +87,11 @@
 (define (mk-obj-type tag name sprite layer ifc)
   (kern-mk-obj-type tag name sprite layer (ifc-cap ifc) ifc))
 
+;; Same as mk-obj-type but flag this type as critical for a quest
+(define (mk-quest-obj-type tag name sprite layer ifc)
+  (kern-type-set-quest-item-flag (mk-obj-type tag name sprite layer ifc)
+                                 #t))
+
 ;; ----------------------------------------------------------------------------
 ;; send-signal - send a signal to an object. ksender is nil or a pointer to a
 ;; kernel object, tag is the tag of the target object (eg 'door-1) and sig is

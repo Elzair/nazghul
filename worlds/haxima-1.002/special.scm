@@ -56,11 +56,11 @@
 (define lost-halls-loc (list 'p_shard 39 75))
 
 ;; Power core for voidship
-(mk-obj-type 't_power_core "ancient power core" s_power_core layer-item obj-ifc)
+(mk-quest-obj-type 't_power_core "ancient power core" s_power_core layer-item obj-ifc)
 
 ;; Luximene begins the game as a Lich King, when defeated he drops his skull,
 ;; which can be used with the Necromancer to summon his shade.
-(mk-obj-type 't_lich_skull "King Luximenes skull" s_gold_skull layer-item obj-ifc)
+(mk-quest-obj-type 't_lich_skull "King Luximenes skull" s_gold_skull layer-item obj-ifc)
 
 ;; grow -- trigger hook fx to create items (eg, growing reagents, hence the name)
 (define (grow-trig ktrig ktype-tag dice)

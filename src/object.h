@@ -200,6 +200,7 @@ class ObjectType {
         bool canHitLocation(); // weapon hitting a target location
         bool canBuy(); // has a hook for 'buy'
         bool canSearch(); // has a hook for 'search'
+        bool isQuestItem();
 
         void use(Object *user);
         void exec(Object *obj);
@@ -222,6 +223,7 @@ class ObjectType {
         void setPluralName(char *val);
         void setGob(struct gob *gob);
         struct gob * getGob();
+        void setQuestItemFlag(bool val);
 
 
       protected:
@@ -244,6 +246,7 @@ class ObjectType {
 
         char *pluralName;
         char *getPluralName();
+        bool questItemFlag;
 };
 
 class Object {

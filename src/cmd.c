@@ -3704,7 +3704,7 @@ void cmdDrop(class Character *actor)
         int maxq, quantity, dir, x, y;
 
         assert(actor);
-        
+
         cmdwin_clear();
         cmdwin_spush("Drop");
 
@@ -3719,6 +3719,14 @@ void cmdDrop(class Character *actor)
 
         maxq = ie->count - ie->ref;
         assert(maxq);
+
+        /* Don't drop quest items in temporary places! */
+        if (place_is_wilderness_combat(actor->getPlace())
+            && ie->type->isQuestItem()) {
+                log_msg("%s seems important, it might get lost here!", 
+                        ie->type->getName());
+                return;
+        }
 
         /* prompt for a count */
         quantity = ui_get_quantity(maxq);

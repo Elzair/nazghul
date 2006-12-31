@@ -157,7 +157,34 @@
  nil                         ; campsite formation
  nil                         ; vehicle
  ;; inventory
- (kern-mk-inventory nil)
+  (kern-mk-inventory
+    ;; contents
+    (list       (list 1 t_letter_from_enchanter)
+      (list 1 t_manual)
+      (list 1 t_shield)
+      (list 10 t_sword)
+      (list 1 t_picklock)
+      (list 1 t_torch)
+      (list 1 t_mana_potion)
+      (list 1 t_cure_potion)
+      (list 1 t_heal_potion)
+      (list 3 mandrake)
+      (list 3 nightshade)
+      (list 6 black_pearl)
+      (list 6 blood_moss)
+      (list 10 spider_silk)
+      (list 10 garlic)
+      (list 10 ginseng)
+      (list 10 sulphorous_ash)
+      (list 1 t_mystic_sword)
+      (list 1 t_shield_4)
+      (list 1 t_armor_plate_4)
+      (list 1 t_rune_l)
+    )
+    ;; hooks
+    (list
+    )
+  )
  nil ;; party members (should be nil for initial load file)
  )
 
@@ -287,7 +314,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_brundegardt_tower_3 8 9)))
+  (kern-obj-put-at kplayer (list p_shard 80 60)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
@@ -298,5 +325,5 @@
 ;; the line after it.
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
-;;(kern-set-start-proc simple-start)
-(kern-set-start-proc create-char)
+(kern-set-start-proc simple-start)
+;;(kern-set-start-proc create-char)

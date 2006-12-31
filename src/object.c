@@ -2082,6 +2082,16 @@ void ObjectType::runDescribeHook(Object *obj)
         closure_exec(gifc, "ypd", "describe", obj, obj->getCount());
 }
 
+bool ObjectType::isQuestItem()
+{
+        return questItemFlag;
+}
+
+void ObjectType::setQuestItemFlag(bool val)
+{
+        questItemFlag = val;
+}
+
 bool Object::add(ObjectType *type, int amount)
 {
         return false; // subclasses will overload
