@@ -85,6 +85,7 @@ extern bool cmdLook(int x, int y);
 extern bool cmd_terraform(struct place *place, int x, int y);
 extern bool cmdSaveTerrainMap(class Character * pc);
 extern void cmdSettings(void);
+extern void cmdDrop(class Character *pc);
   
 extern class Character *select_party_member(void);
     

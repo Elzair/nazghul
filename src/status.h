@@ -69,7 +69,8 @@ enum StatusMode {
         MixReagents,
         GenericList,
         StringList,
-        DisableStatus
+        DisableStatus,
+        Drop
 };
 					
 enum StatusSelection {

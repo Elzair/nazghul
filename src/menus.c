@@ -739,7 +739,7 @@ int main_menu_scroller(struct KeyHandler * kh, int key, int keymod)
                 data->abort = 1;
 		return 1;
 	default:
-		break;
+                return 0;
 	}
 
         statusScroll(dir);

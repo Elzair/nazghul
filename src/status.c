@@ -163,6 +163,7 @@ static bool stat_filter_reagents(struct inv_entry *ie, void *cookie);
 static bool stat_filter_spells(struct inv_entry *ie, void *cookie);
 static bool stat_filter_items(struct inv_entry *ie, void *cookie);
 static bool stat_filter_misc(struct inv_entry *ie, void *cookie);
+static bool stat_filter_drop(struct inv_entry *ie, void *cookie);
 
 /* functions to show specific types of things from status_show_containe() */
 static void status_show_ztat_character(SDL_Rect *rect, void *thing);
@@ -174,6 +175,10 @@ static void status_show_ztat_spells(SDL_Rect *rect, void *thing);
 /* Filter for the player inventory during the R)eady UI. */
 static struct filter stat_ready_arms_filter = {
         stat_filter_ready_arms, 0
+};
+
+static struct filter stat_drop_filter = {
+        stat_filter_drop, 0
 };
 
 /* Table for the different Z)tats UI windows. */
@@ -235,6 +240,11 @@ static bool stat_filter_misc(struct inv_entry *ie, void *cookie)
                 && ! ie->type->isMixable()
                 && ! ie->type->isCastable()
                 && ! ie->type->isUsable());
+}
+
+static bool stat_filter_drop(struct inv_entry *ie, void *cookie)
+{
+        return (! ie->type->isCastable());
 }
 
 static void switch_to_tall_mode(void)
@@ -1620,6 +1630,20 @@ void statusSetMode(enum StatusMode mode)
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
                 Status.filter = &ztats_entries[ViewItems].filter;
+		Status.maxLine = Status.container->
+                        filter_count(Status.filter) - Status.numLines;
+		Status.paint = stat_show_container;
+                Status.scroll = stat_scroll_container;
+                Status.show_thing = status_show_generic_object_type;
+		Status.selectedEntry = Status.container->first(Status.filter);
+		break;
+	case Drop:
+		switch_to_tall_mode();
+		status_set_title("Drop");
+		Status.topLine = 0;
+		Status.curLine = 0;
+		Status.container = player_party->inventory;
+                Status.filter = &stat_drop_filter;
 		Status.maxLine = Status.container->
                         filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;

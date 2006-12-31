@@ -794,17 +794,14 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
         return 0;  /* Keep on keyhandling */
 }
 
-struct inv_entry *select_item(void)
+static struct inv_entry *select_item(void)
 {
-	enum StatusMode omode;
 	struct inv_entry *ie;
 	struct KeyHandler kh;
 	struct ScrollerContext sc;
 
-	omode = statusGetMode();
         foogodSetHintText(SCROLLER_HINT);
         foogodSetMode(FOOGOD_HINT);        
-	statusSetMode(Use);
 
 	sc.selector = InventoryItem;
 	sc.selection = NULL;
@@ -817,7 +814,6 @@ struct inv_entry *select_item(void)
 	cmdwin_pop();
 	eventPopKeyHandler();
 
-	statusSetMode(omode);
         foogodSetMode(FOOGOD_DEFAULT);
 
 	ie = (struct inv_entry *) sc.selection;
@@ -3698,4 +3694,43 @@ void cmdSettings(void)
         StatusMode omode = statusGetMode();
         options_menu();
         statusSetMode(omode);
+}
+
+void cmdDrop(class Character *ch)
+{
+        enum StatusMode omode;
+        struct inv_entry *ie;
+        class Object *obj;
+
+        assert(ch);
+        
+        cmdwin_clear();
+        cmdwin_spush("Drop");
+
+        omode = statusGetMode();
+        statusSetMode(Drop);
+        ie = select_item();
+        statusSetMode(omode);
+
+        if (!ie) {
+                return;
+        }
+
+        /* FIXME: prompt for location */
+
+        /* put it on the map */
+        obj = ie->type->createInstance();
+        assert(obj);
+        obj->setCount(ie->count);
+        obj->relocate(ch->getPlace(), 
+                      ch->getX(), 
+                      ch->getY(), 
+                      REL_NOSTEP, /* FIXME: really? */
+                      NULL);
+
+        /* remove from party inventory */
+        ch->takeOut(ie->type, ie->count);
+
+        statusRepaint();
+        return;
 }

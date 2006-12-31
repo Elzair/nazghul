@@ -1021,7 +1021,9 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 cmdCastSpell(character);
                 break;
 
-
+        case 'd':
+                cmdDrop(character);
+                break;
         case 'e':
 
                 // ----------------------------------------------------

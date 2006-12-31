@@ -47,7 +47,7 @@
 ;; ----------------------------------------------------------------------------
 (define (mk-spell tag name cast-handler magic-words level context sprite
                   reagents)
-  (let ((spell-ifc (ifc '() (method 'cast cast-handler))))
+  (let ((spell-ifc (ifc obj-ifc (method 'cast cast-handler))))
     (set! spell-ifcs (cons spell-ifc spell-ifcs))
     (kern-add-spell (mk-obj-type tag name nil layer-none spell-ifc)
                     magic-words 
