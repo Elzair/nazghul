@@ -3696,15 +3696,14 @@ void cmdSettings(void)
         statusSetMode(omode);
 }
 
-void cmdDrop(class Character *ch)
+void cmdDrop(class Character *actor)
 {
         enum StatusMode omode;
         struct inv_entry *ie;
         class Object *obj;
-        int maxq;
-        int quantity;
+        int maxq, quantity, dir, x, y;
 
-        assert(ch);
+        assert(actor);
         
         cmdwin_clear();
         cmdwin_spush("Drop");
@@ -3721,27 +3720,32 @@ void cmdDrop(class Character *ch)
         maxq = ie->count - ie->ref;
         assert(maxq);
 
-        /* FIXME: prompt for location */
-
         /* prompt for a count */
         quantity = ui_get_quantity(maxq);
         if (!quantity) {
                 return;
         }
 
+        /* prompt for location */
+        dir = ui_get_direction();
+	if (dir == CANCEL) {
+		return;
+        }
+        x = actor->getX() + directionToDx(dir);
+        y = actor->getY() + directionToDy(dir);
+
         /* put it on the map */
         obj = ie->type->createInstance();
         assert(obj);
         obj->setCount(quantity);
-        obj->relocate(ch->getPlace(), 
-                      ch->getX(), 
-                      ch->getY(), 
+        obj->relocate(actor->getPlace(), x, y,
                       REL_NOSTEP, /* FIXME: really? */
                       NULL);
 
         /* remove from party inventory */
-        ch->takeOut(ie->type, quantity);
+        actor->takeOut(ie->type, quantity);
 
         statusRepaint();
+        mapUpdate(REPAINT_IF_DIRTY);
         return;
 }
