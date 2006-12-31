@@ -3701,6 +3701,8 @@ void cmdDrop(class Character *ch)
         enum StatusMode omode;
         struct inv_entry *ie;
         class Object *obj;
+        int maxq;
+        int quantity;
 
         assert(ch);
         
@@ -3716,14 +3718,21 @@ void cmdDrop(class Character *ch)
                 return;
         }
 
+        maxq = ie->count - ie->ref;
+        assert(maxq);
+
         /* FIXME: prompt for location */
 
         /* prompt for a count */
+        quantity = ui_get_quantity(maxq);
+        if (!quantity) {
+                return;
+        }
 
         /* put it on the map */
         obj = ie->type->createInstance();
         assert(obj);
-        obj->setCount(ie->count - ie->ref);
+        obj->setCount(quantity);
         obj->relocate(ch->getPlace(), 
                       ch->getX(), 
                       ch->getY(), 
@@ -3731,7 +3740,7 @@ void cmdDrop(class Character *ch)
                       NULL);
 
         /* remove from party inventory */
-        ch->takeOut(ie->type, ie->count - ie->ref);
+        ch->takeOut(ie->type, quantity);
 
         statusRepaint();
         return;
