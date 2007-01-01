@@ -238,6 +238,12 @@
     (or (in-list? ef_magical_kill_immunity effects)
         (in-list? ef_temporary_magical_kill_immunity effects))))
 
+(define (has-sleep-immunity? kobj)
+  (println "has-sleep-immunity?")
+  (let ((effects (kern-obj-get-effects kobj)))
+    (or (in-list? ef_sleep_immunity effects)
+        (in-list? ef_temporary_sleep_immunity effects))))
+
 ;; ----------------------------------------------------------------------------
 ;; light
 ;;
@@ -625,8 +631,10 @@
 
 ;; Used by spells:
 (define (apply-poison obj)
-  (kern-log-msg (kern-obj-get-name obj) " poisoned!")
-  (kern-obj-add-effect obj ef_poison nil)
+  (cond ((and (obj-is-char? obj)
+           (not (has-poison-immunity? obj)))
+         (kern-log-msg (kern-obj-get-name obj) " poisoned!")
+         (kern-obj-add-effect obj ef_poison nil)))
   obj)
 
 ;; Used by species that are inherently immune:
@@ -635,10 +643,10 @@
   kobj)
 
 (define (apply-sleep kobj)
-  (if (obj-is-char? kobj)
-      (begin
-        (kern-char-set-sleep kobj #t)
-        (kern-obj-add-effect kobj ef_sleep nil)))
+  (cond ((and (obj-is-char? kobj)
+              (not (has-sleep-immunity? kobj)))
+         (kern-char-set-sleep kobj #t)
+         (kern-obj-add-effect kobj ef_sleep nil)))
   kobj)
 
 (define (make-invisible kobj)

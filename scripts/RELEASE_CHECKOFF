@@ -84,13 +84,8 @@ PART IV: LABEL THE SOURCE
 
     $ cvs -q tag release_x_y_z
 
-    Note: post-release bugfixes should be done on a branch rooted at this
-    label, made like this:
+    See Appendix B for post-release maintenance.
 
-                $ cvs update -r release_0_4_0
-                $ cvs -q tag -b release_0_4_0_maint
-
-    (I haven't tried this yet, so I hope it works!)
 
 PART V: UPLOAD TO SOURCEFORGE
 
@@ -175,3 +170,20 @@ APPENDIX A: Instructions for Release Maintainers
 (9) From there I believe it will prompt you to select from some options to
     describe what type of package it is (I can't see this part w/o a file to
     add, so I'm recalling from memory)
+
+
+
+APPENDIX B: Post-Release Maintenance
+
+Post-release bugfixes should be done on a branch rooted at the release
+label. To make the branch, check out the repository and do this:
+
+   $ cvs update -r release_0_4_0
+   $ cvs -q tag -b release_0_4_0_maint
+   $ cvs update -r release_0_4_0_maint
+
+Fixes should be merged back to the main trunk. Check out the repository on the
+main trunk and merge from the maintenance branch like this:
+
+   $ cvs update -d -j release_0_4_0_main
+
