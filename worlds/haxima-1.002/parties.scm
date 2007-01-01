@@ -217,12 +217,12 @@
             ))
 
 (define dragon-party-l6
-  (ptype-mk "lone dragon" s_dragon faction-monster 6 1
+  (ptype-mk "lone dragon" s_dragon_party faction-monster 6 1
             (pgroup-mk 'dragon "1")
             ))
 
 (define dragon-party-l7
-  (ptype-mk "dragon with cave goblins" s_dragon faction-monster 7 1
+  (ptype-mk "dragon with cave goblins" s_dragon_party faction-monster 7 1
             (pgroup-mk 'dragon "1")
             (pgroup-mk 'cave-goblin-berserker "1d2")
             (pgroup-mk 'cave-goblin-slinger "1d2")
@@ -230,7 +230,7 @@
             ))
 
 (define dragon-party-l8
-  (ptype-mk "flock of dragons" s_dragon faction-monster 8 1
+  (ptype-mk "flock of dragons" s_dragon_party faction-monster 8 1
             (pgroup-mk 'dragon "1d3")
             ))
 
