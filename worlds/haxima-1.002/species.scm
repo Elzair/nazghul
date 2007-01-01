@@ -101,7 +101,7 @@
 (mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover t_prismatic_gaze nil  8  s_gazer_asleep     nil     nil             ) 
 (mk-species 'sp_headless     "headless"       12  0 10 1 14  0  6 mmode-walk  t_hands      humanoid 2  s_asleep           nil     sound-walking   ) 
 (mk-species 'sp_wisp         "wisp"            2 20 16 2  8  8  9 mmode-hover nil          nil      4  nil                nil     nil             ) 
-(mk-species 'sp_dragon       "dragon"         20 10 10 1 50  8  9 mmode-fly   t_fangs      nil      20 nil                "2d4"   sound-walking   )
+(mk-species 'sp_dragon       "dragon"         20 10 10 1 50  8  9 mmode-fly   t_fangs      nil      20 s_dragon_asleep    "2d4"   sound-walking   )
 (mk-species 'sp_zorn         "zorn"           10 10 10 1 10  2  9 mmode-phase t_beak       nil      4  s_asleep           nil     sound-walking   ) 
 (mk-species 'sp_demon        "demon"          14 14 14 1 14  8 12 mmode-fly   t_hands      humanoid 8  s_asleep           nil     sound-walking   ) 
 (mk-species 'sp_lich         "lich"           12 14 14 1 20 10  9 mmode-walk  t_hands      humanoid 8  s_asleep           nil     sound-walking   )

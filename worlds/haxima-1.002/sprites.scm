@@ -417,6 +417,7 @@
 (kern-mk-sprite 's_gint_mage ss_bigobjects 4 4 #f 0 )
 (kern-mk-sprite 's_balron   ss_bigobjects 4 8 #f 0 )
 (kern-mk-sprite 's_dragon   ss_bigobjects 4 16 #f 0 )
+(kern-mk-sprite 's_dragon_asleep   ss_bigobjects 1 20 #f 0 )
 
 ;;----------------------------------------------------------------------------
 ;;;; (kern-mk-sprite 's_wanderer ss_addon 2 94 #f 0)
