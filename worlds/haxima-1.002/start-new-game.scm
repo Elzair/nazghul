@@ -17,6 +17,7 @@
 (kern-load "prices.scm")
 (kern-load "special.scm")
 (kern-load "town-entry.scm")
+(kern-load "pseudorandom-map.scm")
 (kern-load "endless-deeps-mech.scm")
 
 ;;----------------------------------------------------------------------------
