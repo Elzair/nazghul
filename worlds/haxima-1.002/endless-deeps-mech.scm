@@ -314,16 +314,28 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; handles
 
+(define deep-room-hardlinks
+  (list 
+  	(list 0 1    (prmap-room-mklink south 'p_lost_garrison 'm_deeptempl_passage))
+	(list 1 1    (prmap-room-mklink south nil 'm_deeptempl_wall))
+  	(list -1 0   (prmap-room-mklink east 'p_lost_garrison 'm_deeptempl_passage))
+	(list 2 0    (prmap-room-mklink west nil 'm_deeptempl_wall))
+  	(list -1 -1  (prmap-room-mklink east nil 'm_deeptempl_wall))
+	(list 2 -1   (prmap-room-mklink west nil 'm_deeptempl_wall))
+	(list 0 -2   (prmap-room-mklink north nil 'm_deeptempl_wall))
+	(list 1 -2   (prmap-room-mklink north nil 'm_deeptempl_wall))
+  ))
+
 (define (deeps-room-handle-deeps kplace kplayer)
 	(let* (
 		(roomdata (get-roomdata kplace))
 		)
-		(deep-room-init-neighbors kplace roomdata)
-		(deep-room-init-links kplace roomdata deep-room-hardlinks)
-		(if (not (deeps-roomdata-prev roomdata))
+		(prmap-room-init-neighbors kplace roomdata)
+		(prmap-room-init-links kplace roomdata deep-room-hardlinks)
+		(if (not (prmap-roomdata-prev roomdata))
 			(begin
-				(deep-room-blit-map kplace roomdata deep-room-hardlinks deep-room-blitstats)
-				(deep-room-init-contents kplace roomdata))
+				(prmap-room-blit-map kplace roomdata deep-room-hardlinks deep-room-blitstats)
+				(prmap-room-init-contents kplace roomdata))
 		)
 	))
 
@@ -331,8 +343,8 @@
 	(let* (
 		(roomdata (get-roomdata kplace))
 		)
-		(deep-room-init-neighbors kplace roomdata)
-		(deep-room-init-links kplace roomdata deep-room-hardlinks)
+		(prmap-room-init-neighbors kplace roomdata)
+		(prmap-room-init-links kplace roomdata deep-room-hardlinks)
 	))	
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
