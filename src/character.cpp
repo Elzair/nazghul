@@ -440,6 +440,12 @@ enum Character::ReadyResult Character::ready(class ArmsType * arms)
                         player_party->refInventoryObject(arms);
                 }
 
+                // Bugfix: for others, take the item out of personal
+                // inventory. 
+                else if (container) {
+                        container->takeOut(arms, 1);
+                }
+
 		return Readied;
 	}
 
@@ -1449,7 +1455,6 @@ void Character::armThyself(void)
 		class ArmsType *arms = (class ArmsType *) ks.item[i];
 		if (ready(arms) != Character::Readied)
 			continue;
-		container->takeOut(arms, 1);
 	}
 
       destroy_ks:
