@@ -19,11 +19,12 @@
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (kama-mk) (list #f #f))
+(define (kama-mk jail-door-tag) (list #f #f jail-door-tag))
 (define (kama-gave-food? gob) (car gob))
 (define (kama-gave-food! gob) (set-car! gob #t))
 (define (kama-joined-once? gob) (cadr gob))
 (define (kama-joined-once! gob) (set-car! (cdr gob) #t))
+(define (kama-get-jail-door-tag gob) (caddr gob))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -57,15 +58,18 @@
             kama-exit-x
             kama-exit-y))
   (define (door-still-locked?)
-    (println "door-still-locked?")
-    (not (can-pathfind? knpc (exit-point))))
+    (let ((kdoor (eval (kama-get-jail-door-tag (gob knpc)))))
+      (cond ((null? kdoor) (error "Kama's door tag is undefined!") #t)
+            (else
+             (let ((gob (kobj-gob kdoor)))
+               (or (door-locked? gob)
+                   (door-magic-locked? gob)))))))
   (define (rejoin)
     (say knpc "Ha! Iki!")
     (join-player knpc)
     (kern-conv-end)
     )
   (define (join-first-time)    
-    (println "join")
     (say knpc "Hajo! Bona ka ruka! Iki [" (loc-x angriss-lair-loc)
          " " (loc-y angriss-lair-loc) "]")
     (kama-joined-once! (gob knpc))
@@ -154,7 +158,7 @@
        (method 'leav kama-leav)
     ))
 
-(define (mk-kama)
+(define (mk-kama jail-door-tag)
   (bind 
     (kern-mk-char 
      'ch_kama           ; tag
@@ -179,4 +183,4 @@
      nil              ; container
      nil              ; readied
      )
-   (kama-mk)))
+   (kama-mk jail-door-tag)))

@@ -88,7 +88,8 @@
   (kern-place-synch (car (kern-obj-get-location dest-kgate)))
   (moongate-animate dest-kgate moongate-stages)
   ;; "erase" the destination gate so it doesn't look like it remains open
-  (kern-obj-set-sprite dest-kgate (stage-sprite (car moongate-stages)))
+  (if (not (eqv? dest-kgate src-kgate))
+      (kern-obj-set-sprite dest-kgate (stage-sprite (car moongate-stages))))
   (let ((gate (kobj-gob-data src-kgate)))
     (if (moongate-is-temporary? gate)
         (moongate-destroy src-kgate))))

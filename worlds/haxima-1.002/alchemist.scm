@@ -292,34 +292,34 @@
 
 (define (alch-absa knpc kpc)
   (let ((qstat (gob knpc)))
-	  (say knpc "The passage to Absalot was always dangerous. Abandoned so long, who knows what lurks there now? "
-		   "You wouldn't happen to be thinking of going there?")
-	  (if (kern-conv-get-yes-no? kpc)
-		(cond
-			((alchq-lich? qstat)
-				(alch-absa-reward knpc kpc))
-			((in-inventory? kpc t_lichs_blood 1)
-				(begin
-				  (say knpc "In exchange for that vial of lich's blood I'd be "
-					   "happy to tell you of a back door. What do you say?")
-				  (if (kern-conv-get-yes-no? kpc)
-					  (begin
-						(alchq-lich! qstat #t)
-						(kern-obj-remove-from-inventory kpc 
-														t_lichs_blood 
-														1)
-						(kern-obj-add-to-inventory knpc
-												   t_lichs_blood
-												   1)
-						(say knpc "[He grins and winks] Just the stuff I need!")
-						(alch-absa-reward knpc kpc)))
-					  (say knpc "I see. No doubt you have important plans for "
-						   "that lich's blood. I can always get some from "
-						   "another adventurer.")))
-			(#t (say knpc "Bring me a vial of lich's blood and I'll tell you "
-				 "a secret way.")))
-		  (say knpc "It's just a ruin now anyways. Everything was destroyed "
-			   "when it was sacked."))))
+    (say knpc "The passage to Absalot was always dangerous even when it was maintained. "
+         "You wouldn't happen to be thinking of going there?")
+    (if (kern-conv-get-yes-no? kpc)
+        (cond
+         ((alchq-lich? qstat)
+          (alch-absa-reward knpc kpc))
+         ((in-inventory? kpc t_lichs_blood 1)
+          (say knpc "In exchange for that vial of lich's blood I'd be "
+               "happy to tell you of a back door. What do you say?")
+          (if (kern-conv-get-yes-no? kpc)
+              (begin
+                (alchq-lich! qstat #t)
+                (kern-obj-remove-from-inventory kpc 
+                                                t_lichs_blood 
+                                                1)
+                (kern-obj-add-to-inventory knpc
+                                           t_lichs_blood
+                                           1)
+                (say knpc "[He grins and winks] Just the stuff I need!")
+                (alch-absa-reward knpc kpc))
+              (say knpc "I see. No doubt you have IMPORTANT plans for "
+                   "that lich's blood. I can always get some from "
+                   "another adventurer.")))
+         (else
+          (say knpc "Bring me a vial of lich's blood and I'll tell you "
+               "a secret way.")))
+        (say knpc "It's just a ruin now anyways. Everything was destroyed "
+             "when it was sacked."))))
 
 (define (alch-sack knpc kpc)
   (say knpc "Oh yes, didn't you know? Absalot was sacked by the armies "

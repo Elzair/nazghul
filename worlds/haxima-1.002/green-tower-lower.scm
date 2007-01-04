@@ -64,12 +64,12 @@
   (put (mk-locked-windowed-door) 3 2)
   (put (mk-locked-windowed-door) 3 6)
   (put (mk-locked-windowed-door) 3 10)
-  (put (mk-locked-windowed-door) 7 2)
+  (put (kern-tag 'kama-jail-door (mk-locked-windowed-door)) 7 2)
   (put (mk-locked-windowed-door) 7 6)
   (put (mk-locked-windowed-door) 7 10)
 
   ;; prisoners
-  (put (mk-kama) 8 2)
+  (put (mk-kama 'kama-jail-door) 8 2)
 
   ;; crypt
   (put (mk-ladder-down 'p_crypt 9 3) 17 1)
