@@ -25,25 +25,10 @@
 	)
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Room linking
-
-; 2 dimensional map - 5 rooms
-
-;  2   5   4   1   3                   
-; 513 324 132 245 451                          
-;  4   1   5   3   2 
-
-; 3 dimensional map - 7 rooms
-
-;   2 6     3 7     5 4     1 5     6 2     7 3     4 1
-; 5 1 3   6 2 4   1 3 7   2 4 6   7 5 1   4 6 2   3 7 5
-; 7 4     5 1     6 2     3 7     4 3     1 5     2 6
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Generic room data
 
-(mk-obj-type 't_roomdata nil nil layer-none monman-ifc)
+(mk-obj-type 't_roomdata nil nil layer-none nil)
 
 ; returns roomdata object or nil if none
 (define (get-roomdata kplace)
@@ -92,6 +77,93 @@
 (define (prmap-roomdata-setcurrent data cur)
 	(let ((curdat (list-tail data 2)))
 		(set-car! curdat cur)))
+
+(define (prmap-mk-roomdata room x y current prev rooms)
+	(set-roomdata room (list x y current prev rooms))
+	)
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Room linking
+
+; 2 dimensional map - 5 rooms
+
+;  2   5   4   1   3                   
+; 513 324 132 245 451                          
+;  4   1   5   3   2 
+
+(define (prmap-linkrooms-2d room1-tag room2-tag room3-tag room4-tag room5-tag)
+	(prmap-mk-roomdata (eval room1-tag) 0 0 #f #f (list room2-tag room5-tag room3-tag room4-tag))
+	(prmap-mk-roomdata (eval room2-tag) 0 0 #f #f (list room5-tag room3-tag room4-tag room1-tag))
+	(prmap-mk-roomdata (eval room3-tag) 0 0 #f #f (list room4-tag room1-tag room2-tag room5-tag))
+	(prmap-mk-roomdata (eval room4-tag) 0 0 #f #f (list room1-tag room2-tag room5-tag room3-tag))
+	(prmap-mk-roomdata (eval room5-tag) 0 0 #f #f (list room3-tag room4-tag room1-tag room2-tag))
+	)
+
+; 3 dimensional map - 7 rooms
+
+;   2 6     3 7     5 4     1 5     6 2     7 3     4 1
+; 5 1 3   6 2 4   1 3 7   2 4 6   7 5 1   4 6 2   3 7 5
+; 7 4     5 1     6 2     3 7     4 3     1 5     2 6
+
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Map paramater storage
+
+(mk-obj-type 't_mapdata nil nil layer-none nil)
+
+; returns roomdata object or nil if none
+(define (get-mapdata kplace)
+	(let ((dataslist (kplace-get-objects-of-type kplace t_mapdata)))
+		(if (equal? (length dataslist) 0)
+			nil
+			(gob (car dataslist)))))
+			
+
+; replaces any roomdatas in place with given data
+(define (set-mapdata kplace data)
+	(begin
+		; remove any/all previous data
+		(map (lambda (rdataobj)
+				(kern-obj-remove rdataobj))
+			(kplace-get-objects-of-type kplace t_mapdata))
+		;add new t_mapdata
+		(kern-obj-put-at
+			(bind (kern-obj-set-visible (kern-mk-obj t_mapdata 1) #f) data)
+			(list kplace 0 0))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Map random seed values
+
+(define (prmap-mk-prng-params xscale yscale offset modulus)
+	(list xscale yscale offset modulus))
+
+(define (prmap-prng-param-xscale data)
+	(list-ref data 0))
+(define (prmap-prng-param-yscale data)
+	(list-ref data 1))
+(define (prmap-prng-param-offset data)
+	(list-ref data 2))
+(define (prmap-prng-param-modulus data)
+	(list-ref data 3))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Random map parameter data
+
+(define (prmap-mk-mapdata nsparams ewparams areaparams edgemaps areamaps) 
+	(list nsparams ewparams areaparams edgemaps areamaps blitstats))
+
+(define (prmap-params-nsparams params)
+	(list-ref data 0))
+(define (prmap-params-ewparams params)
+	(list-ref data 1))
+(define (prmap-params-areaparams params)
+	(list-ref data 2))
+(define (prmap-params-edgemaps params)
+	(list-ref data edgemaps))
+(define (prmap-params-areamaps params)
+	(list-ref data areamaps))
+(define (prmap-params-blitstats params)
+	(list-ref data blitstats))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random template handling

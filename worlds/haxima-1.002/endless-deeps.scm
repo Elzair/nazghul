@@ -420,16 +420,28 @@
  )
  
 
- ; (x y is_current was_prev (adj_n adj_w adj_e adj_s))
+ (kern-mk-place 
+	'deeps_data
+	"null"
+	  nil          ; sprite
+	(kern-mk-map nil 1 1 pal_expanded
+		(list
+		  "rr"
+		)
+	)
+	 #f              ; wraps
+	 #t              ; underground
+	 #f              ; large-scale (wilderness)
+	 #f              ; tmp combat place
+	 nil ; subplaces
+	 nil ; neighbors
  
- ;  2   5   4   1   3                   
- ; 513 324 132 245 451                          
- ;  4   1   5   3   2  
+	nil ;; objects
+	nil ;; hooks
+	nil
+ )
 
-(set-roomdata p_deeps_1       (list 0 1 #f #f (list 'p_deeps_2 'p_deeps_5 'p_deeps_3 'p_deeps_4)))
-(set-roomdata p_deeps_2       (list 0 2 #f #f (list 'p_deeps_5 'p_deeps_3 'p_deeps_4 'p_deeps_1)))
-(set-roomdata p_deeps_3       (list 0 3 #f #f (list 'p_deeps_4 'p_deeps_1 'p_deeps_2 'p_deeps_5)))
-(set-roomdata p_deeps_4       (list 0 4 #f #f (list 'p_deeps_1 'p_deeps_2 'p_deeps_5 'p_deeps_3)))
-(set-roomdata p_deeps_5       (list 0 5 #f #f (list 'p_deeps_3 'p_deeps_4 'p_deeps_1 'p_deeps_2)))
+(prmap-linkrooms-2d 'p_deeps_1 'p_deeps_2 'p_deeps_3 'p_deeps_4 'p_deeps_5)
+(prmap-mk-roomdata p_lost_garrison 0 0 #t #t (list 'p_deeps_1 'p_deeps_2 'p_deeps_5 'p_deeps_3))
 
-(set-roomdata p_lost_garrison (list 0 0 #t #t (list 'p_deeps_1 'p_deeps_2 'p_deeps_5 'p_deeps_3)))
+
