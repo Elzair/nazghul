@@ -1854,6 +1854,7 @@ void place_exec(struct place *place)
                          * handled by the caller. */
                         if (obj == player_party) {
                                 place_unlock(place);
+                                obj_dec_ref(obj);
                                 return;
                         }
 
