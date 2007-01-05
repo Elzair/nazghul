@@ -112,7 +112,7 @@
 (mk-obj-type 't_mapdata nil nil layer-none nil)
 
 ; returns roomdata object or nil if none
-(define (get-mapdata kplace)
+(define (prmap-get-mapdata kplace)
 	(let ((dataslist (kplace-get-objects-of-type kplace t_mapdata)))
 		(if (equal? (length dataslist) 0)
 			nil
@@ -120,7 +120,7 @@
 			
 
 ; replaces any roomdatas in place with given data
-(define (set-mapdata kplace data)
+(define (prmap-set-mapdata kplace data)
 	(begin
 		; remove any/all previous data
 		(map (lambda (rdataobj)
@@ -149,21 +149,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random map parameter data
 
-(define (prmap-mk-mapdata nsparams ewparams areaparams edgemaps areamaps) 
+(define (prmap-mk-mapdata nsparams ewparams areaparams edgemaps areamaps blitstats) 
 	(list nsparams ewparams areaparams edgemaps areamaps blitstats))
 
 (define (prmap-params-nsparams params)
-	(list-ref data 0))
+	(list-ref params 0))
 (define (prmap-params-ewparams params)
-	(list-ref data 1))
+	(list-ref params 1))
 (define (prmap-params-areaparams params)
-	(list-ref data 2))
+	(list-ref params 2))
 (define (prmap-params-edgemaps params)
-	(list-ref data edgemaps))
+	(list-ref params 3))
 (define (prmap-params-areamaps params)
-	(list-ref data areamaps))
+	(list-ref params 4))
 (define (prmap-params-blitstats params)
-	(list-ref data blitstats))
+	(eval (list-ref params 5)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random template handling
@@ -300,11 +300,12 @@
 	
 ; blit map for area and all sides. uses hard linked sides if given
 ; todo generalise random-type s
-(define (prmap-room-blit-map kplace roomdata hardlinkdata blitstats)
+(define (prmap-room-blit-map kplace roomdata hardlinkdata mapdata)
 	(let* (
 			(rxloc (prmap-roomdata-x roomdata))
 			(ryloc (prmap-roomdata-y roomdata))
 			(linkinfo (prmap-room-gethardlink rxloc ryloc hardlinkdata))
+			(blitstats (prmap-params-blitstats mapdata))
 			(destmap (kern-place-map kplace))
 			(rmapdata (list
 				(list 0 1 deep-random-type-ns)
@@ -367,7 +368,7 @@
 
 (define (prmap-room-cleanout kplace)
 	(map (lambda (obj)
-		(if (equal? (kern-obj-get-type obj) t_roomdata)
+		(if (or (equal? (kern-obj-get-type obj) t_roomdata) (equal? (kern-obj-get-type obj) t_mapdata))
 			nil
 			(begin 
 				(kern-obj-remove obj))

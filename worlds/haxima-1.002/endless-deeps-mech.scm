@@ -334,7 +334,7 @@
 		(prmap-room-init-links kplace roomdata deep-room-hardlinks)
 		(if (not (prmap-roomdata-prev roomdata))
 			(begin
-				(prmap-room-blit-map kplace roomdata deep-room-hardlinks deep-room-blitstats)
+				(prmap-room-blit-map kplace roomdata deep-room-hardlinks (prmap-get-mapdata (eval 'p_deeps_1)))
 				(prmap-room-init-contents kplace roomdata))
 		)
 	))
