@@ -108,5 +108,6 @@
 ;; demon gate ctor
 (define (mk-demon-gate)
   (kern-tag 'demon-gate
-            (bind (kern-mk-obj t_demon_gate 1)
+            (bind (kern-obj-set-ignore-time-stop (kern-mk-obj t_demon_gate 1)
+                                                 #t)
                   (mk-demon-gate-gob))))

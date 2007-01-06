@@ -414,6 +414,9 @@ class Object {
         // These two might destroy the object so make them class methods:
         static void setTTL(class Object *obj, int val);
         static void decrementTTL(class Object *obj);
+
+        bool ignoresTimeStop();
+        void setIgnoreTimeStop(bool val);
         
         struct node *clink; // points back to node in container's list
 
@@ -504,7 +507,7 @@ class Object {
         void triggerOnTileExit(struct place *tilePlace, int tileX, int tileY,
                                int flags);
         int facing;
-
+        bool ignoreTimeStop;
 };
 
 #include "macros.h"

@@ -1822,7 +1822,8 @@ void place_exec(struct place *place)
                  * move during time stop and no tile effects are applied to
                  * anything. */
                 if (TimeStop) {
-                        if (obj->isPlayerControlled()) {
+                        if (obj->isPlayerControlled()
+                            || obj->ignoresTimeStop()) {
                                 obj->exec();
                         }
                 } else {

@@ -699,6 +699,7 @@ void Object::setup()
         ttl             = -1; // everlasting by default
         started         = false;
         facing          = SPRITE_DEF_FACING;
+        ignoreTimeStop  = false;
 
         if (getObjectType() && ! getObjectType()->isVisible())
                 visible = 0;
@@ -1475,6 +1476,11 @@ void Object::save(struct save *save)
         // Set the facing
         if (SPRITE_DEF_FACING != facing) {
                 save->write(save, "(kern-obj-set-facing kobj %d)\n", facing);
+        }
+
+        // Set the ignore-time-stop flag
+        if (ignoreTimeStop) {
+                save->write(save, "(kern-obj-set-ignore-time-stop kobj #t)\n");
         }
 
         // Close the 'let' block, returning kobj as the last thing evaluated.
@@ -2320,3 +2326,12 @@ int Object::getFacing()
 	return facing;
 }
 
+bool Object::ignoresTimeStop()
+{
+        return ignoreTimeStop;
+}
+
+void Object::setIgnoreTimeStop(bool val)
+{
+        ignoreTimeStop = val;
+}

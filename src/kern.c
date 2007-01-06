@@ -5070,6 +5070,25 @@ KERN_API_CALL(kern_obj_set_temporary)
         return scm_mk_ptr(sc, obj);
 }
 
+KERN_API_CALL(kern_obj_set_ignore_time_stop)
+{
+        class Object *obj;
+        int val;
+
+        obj = unpack_obj(sc, &args, "kern-obj-set-ignore-time-stop");
+        if (!obj)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "b", &val)) {
+                rt_err("kern-obj-set-ignore-time-stop: bad value arg");
+                return scm_mk_ptr(sc, obj);
+        }
+
+        obj->setIgnoreTimeStop(val);
+
+        return scm_mk_ptr(sc, obj);
+}
+
 KERN_API_CALL(kern_obj_wander)
 {
         class Object *obj;
@@ -8175,6 +8194,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-conv", kern_obj_set_conv);
         API_DECL(sc, "kern-obj-set-facing", kern_obj_set_facing);
         API_DECL(sc, "kern-obj-set-gob", kern_obj_set_gob);
+        API_DECL(sc, "kern-obj-set-ignore-time-stop", kern_obj_set_ignore_time_stop);
         API_DECL(sc, "kern-obj-set-light", kern_obj_set_light);
         API_DECL(sc, "kern-obj-set-opacity", kern_obj_set_opacity);
         API_DECL(sc, "kern-obj-set-pclass", kern_obj_set_pclass);
