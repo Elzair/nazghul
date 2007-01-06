@@ -178,16 +178,6 @@
 	))
 
 ;map areas replaced by the various blitting ops
-(define deep-room-blitstats-old
-	(list
-		(list 5 0 9 3)
-		(list 0 5 3 9)
-		(list 16 5 3 9)
-		(list 5 16 9 3)
-		(list 3 3 13 13)
-	)
-)
-
 (define deep-room-blitstats
 	(prmap-mk-blitstats 19 19 3 5 3))
 

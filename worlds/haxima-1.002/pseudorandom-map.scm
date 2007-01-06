@@ -195,13 +195,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random template handling
 
-(define (prmap-get-template rxloc ryloc maptype)
+(define (prmap-get-template rxloc ryloc maptype maplistref)
 	(let* (
 			(xmult (list-ref maptype 0)) 
 			(ymult (list-ref maptype 1)) 
 			(addfactor (list-ref maptype 2)) 
 			(modfactor (list-ref maptype 3)) 
-			(maplist (eval(list-ref maptype 4)))
+			(maplist (eval maplistref))
 			(mapnumber (modulo (+ (* rxloc xmult) (* ryloc ymult) addfactor) modfactor))
 		)
 		;get the map from the first entry with value greater than mapnumber		
@@ -342,8 +342,8 @@
 				))
 		)
 		(prmap-do-map-blit destmap
-			(prmap-get-template rxloc ryloc deep-random-type-area)
-			(list-ref blitstats 4))
+			(prmap-get-template rxloc ryloc deep-random-type-area (prmap-params-areamaps mapdata))
+			(prmap-blitstats-area blitstats))
 		(map (lambda (dir)
 			;roomlinktarget is hardlink target if it exists, else regular neighbor
 			(let* (
@@ -353,7 +353,7 @@
 					(thisy (+ ryloc (cadr thisrmapdata)))
 					(thisrtype (caddr thisrmapdata))
 					(linkmap (if (null? thishardlink)
-								(prmap-get-template thisx thisy thisrtype)
+								(prmap-get-template thisx thisy thisrtype (prmap-params-edgemaps mapdata))
 								(cadr thishardlink)))
 				)
 				(prmap-do-map-blit destmap linkmap
