@@ -7,6 +7,33 @@
 	)
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; blit stats
+
+; areamargin: from edge of room to area
+; edgemargin: from corner of room to each side of edge tile
+; edgewidth: from edge of room to inner side of edge tile
+
+(define (prmap-mk-blitstats roomwidth roomheight areamargin edgemargin edgewidth)
+	(list
+		(list edgemargin 0 (- roomwidth edgemargin edgemargin) edgewidth)
+		(list 0 edgemargin edgewidth (- roomheight edgemargin edgemargin))
+		(list (- roomwidth edgewidth) edgemargin edgewidth (- roomheight edgemargin edgemargin))
+		(list edgemargin (- roomheight edgewidth) (- roomwidth edgemargin edgemargin) edgewidth)
+		(list areamargin areamargin (- roomwidth areamargin areamargin) (- roomheight areamargin areamargin))
+	))
+	
+(define (prmap-blitstats-north data)
+	(list-ref data 0))
+(define (prmap-blitstats-west data)
+	(list-ref data 1))
+(define (prmap-blitstats-east data)
+	(list-ref data 2))
+(define (prmap-blitstats-south data)
+	(list-ref data 3))
+(define (prmap-blitstats-area data)
+	(list-ref data 4))
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Directions	
 
 ; order is N W E S

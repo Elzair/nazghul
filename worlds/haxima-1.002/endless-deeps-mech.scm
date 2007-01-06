@@ -178,7 +178,7 @@
 	))
 
 ;map areas replaced by the various blitting ops
-(define deep-room-blitstats
+(define deep-room-blitstats-old
 	(list
 		(list 5 0 9 3)
 		(list 0 5 3 9)
@@ -187,6 +187,10 @@
 		(list 3 3 13 13)
 	)
 )
+
+(define deep-room-blitstats
+	(prmap-mk-blitstats 19 19 3 5 3))
+
 
 ;parameters to random number generators
 (define deep-random-type-ew (list 53 67 43 83 'deep-terrain-edges))
