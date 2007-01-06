@@ -335,14 +335,14 @@
 			(blitstats (prmap-params-blitstats mapdata))
 			(destmap (kern-place-map kplace))
 			(rmapdata (list
-				(list 0 1 deep-random-type-ns)
-				(list 0 0 deep-random-type-ew)
-				(list 1 0 deep-random-type-ew)
-				(list 0 0 deep-random-type-ns)
+				(list 0 1 (prmap-params-nsparams mapdata))
+				(list 0 0 (prmap-params-ewparams mapdata))
+				(list 1 0 (prmap-params-ewparams mapdata))
+				(list 0 0 (prmap-params-nsparams mapdata))
 				))
 		)
 		(prmap-do-map-blit destmap
-			(prmap-get-template rxloc ryloc deep-random-type-area (prmap-params-areamaps mapdata))
+			(prmap-get-template rxloc ryloc (prmap-params-areaparams mapdata) (prmap-params-areamaps mapdata))
 			(prmap-blitstats-area blitstats))
 		(map (lambda (dir)
 			;roomlinktarget is hardlink target if it exists, else regular neighbor

@@ -183,9 +183,9 @@
 
 
 ;parameters to random number generators
-(define deep-random-type-ew (list 53 67 43 83 'deep-terrain-edges))
-(define deep-random-type-ns (list 59 71 31 83 'deep-terrain-edges))
-(define deep-random-type-area (list 89 61 59 149 'deep-terrain-area))
+(define deep-random-type-ew (prmap-mk-prng-params 53 67 43 83))
+(define deep-random-type-ns (prmap-mk-prng-params 59 71 31 83))
+(define deep-random-type-area (prmap-mk-prng-params 89 61 59 149))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; critter lists
