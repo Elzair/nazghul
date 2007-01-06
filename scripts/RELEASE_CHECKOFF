@@ -185,5 +185,5 @@ label. To make the branch, check out the repository and do this:
 Fixes should be merged back to the main trunk. Check out the repository on the
 main trunk and merge from the maintenance branch like this:
 
-   $ cvs update -d -j release_0_4_0_main
+   $ cvs update -d -j release_0_4_0_maint
 
