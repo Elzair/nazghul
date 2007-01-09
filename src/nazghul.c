@@ -296,6 +296,8 @@ static void init_default_cfg()
 
 int main(int argc, char **argv)
 {
+        int print_version = 1;
+
         /* Initialize the cfg environment before parsing args. */
         init_default_cfg();
 
@@ -336,6 +338,16 @@ int main(int argc, char **argv)
         /* Show the splash screen on startup */
         nazghul_splash();
         
+        /* The first time we start print the vesrsion info. */
+        if (print_version) {
+                print_version = 0;
+                log_begin_group();
+                log_msg("*********************************");
+                log_msg("Welcome to Nazghul version %s", PACKAGE_VERSION );
+                log_msg("*********************************");
+                log_end_group();
+        }
+
         /* paint the border for the first time */
         screen_repaint_frame();
 

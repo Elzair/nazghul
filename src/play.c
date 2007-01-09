@@ -300,11 +300,6 @@ int playRun(char *fname)
 		return -1;
 	}
         log_end("ok!");
-        log_begin_group();
-        log_msg("*********************************");
-	log_msg("Welcome to Nazghul version %s", PACKAGE_VERSION );
-        log_msg("*********************************");
-        log_end_group();
         log_msg("'?' for help.");
 
         // Run the optional startup script.
