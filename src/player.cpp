@@ -651,7 +651,6 @@ void PlayerParty::exec()
                 if (clock_alarm_is_expired(&wakeup_alarm)) {
                         endLoitering();
                 }
-                return;
         }
 
         startTurn();
@@ -1093,7 +1092,13 @@ void PlayerParty::beginLoitering(int hours)
         clock_alarm_set(&wakeup_alarm, hours * 60);
         loitering = true;
 
-        session_set_time_accel(CAMPING_TIME_ACCELERATION);
+        /* Bugfix for [ 1629974 ] "loitering in wilderness uses too much
+         * food". We want the acceleration to be one hour per turn at the
+         * current map scale. CAMPING_TIME_ACCELERATION is appropriate for a
+         * town-scale wilderness combat map (where camping typically occurs),
+         * but party loitering is done at wilderness scale. */
+        session_set_time_accel((float)CAMPING_TIME_ACCELERATION
+                               / (float)place_get_scale(getPlace()));
 }
 
 bool PlayerParty::isLoitering()

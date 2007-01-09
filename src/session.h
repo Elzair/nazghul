@@ -93,7 +93,7 @@ typedef struct {
 /* Access to global session diplomacy table: */
 #define session_dtable() (Session->dtable)
 
-#define session_ticks_per_turn() (place_get_scale(Place) * Session->time_accel)
+#define session_ticks_per_turn() (int)(place_get_scale(Place) * Session->time_accel)
 #define session_set_time_accel(val) (Session->time_accel = (val))
 #define session_get_time_accel(val) (Session->time_accel)
 
@@ -191,7 +191,7 @@ struct session {
 
         /* A multiplier for temporarily speeding up time (used when the player
          * is camping or resting) */
-        int time_accel;
+        float time_accel;
 
         /* Optional script to run every turn the player is camping in the
          * wilderness */

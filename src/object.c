@@ -950,7 +950,7 @@ int Object::getActivity()
 
 int Object::getActionPointsPerTurn()
 {
-        int baseAP = getSpeed() * session_get_time_accel();
+        int baseAP = (int)(getSpeed() * session_get_time_accel());
 
         // If 'Quicken' is in effect then give player-controlled objects bonus
         // action points per turn.
