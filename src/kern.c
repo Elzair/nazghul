@@ -3720,7 +3720,7 @@ KERN_API_CALL(kern_mk_skill)
         }
 
         skill = skill_new(name);
-        skill->closure = closure_new(sc, proc);
+        skill->yuse = closure_new(sc, proc);
         list_add(&Session->skills, &skill->list);
         return sc->NIL;
 }
@@ -5254,10 +5254,10 @@ KERN_API_CALL(kern_add_quicken)
 
 KERN_API_CALL(kern_set_time_accel)
 {
-        int val;
+        float val;
 
-        if (unpack(sc, &args, "d", &val)) {
-                rt_err("kern-set-time-acceln: bad args");
+        if (unpack(sc, &args, "f", &val)) {
+                rt_err("kern-set-time-accel: bad args");
                 return sc->F;
         }
 

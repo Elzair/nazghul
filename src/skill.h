@@ -27,7 +27,16 @@
 struct skill {
         struct list list;
         char *name;
-        struct closure *closure;
+        char *desc;
+        int type;  /* skill type */
+        int level; /* min skill type level required */
+        int ap;    /* action points consumed */
+        int mp;    /* mana points consumed */
+        struct sprite *sprite;
+        struct node *tools;
+        struct node *materials;
+        struct closure *yuse;
+        struct closure *can_yuse;
         int refcount;
 };
 

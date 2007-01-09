@@ -35,6 +35,7 @@
 #include "log.h"
 #include "factions.h"
 #include "vmask.h"
+#include "combat.h"
 
 // #define DEBUG
 // #undef debug_h
@@ -1865,6 +1866,11 @@ void place_exec(struct place *place)
                         /* Used to destroy the object explicitly here with
                          * delete. Now rely on the unref at the bottom of the
                          * loop to destory it. */
+                }
+
+                /* check for end of combat */
+                if (combat_get_state() != COMBAT_STATE_DONE) {
+                        combat_analyze_results_of_last_turn();
                 }
 
                 obj_dec_ref(obj);

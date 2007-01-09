@@ -190,7 +190,7 @@ static void session_save_clock(save_t *save, struct session *session)
 
 static void session_save_time_accel(save_t *save, struct session *session)
 {
-        save->write(save, "(kern-set-time-accel %d)\n",
+        save->write(save, "(kern-set-time-accel %f)\n",
                     session->time_accel);
 }
 

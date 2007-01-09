@@ -180,17 +180,6 @@ static void play_loop(void)
                 }
 
                 // ------------------------------------------------------------
-                // Check for changes in the combat state as a result of the
-                // last turn. This check might force a transition from combat
-                // to wilderness mode.
-                // ------------------------------------------------------------
-                
-                times[1] = SDL_GetTicks();
-                if (combat_get_state() != COMBAT_STATE_DONE) {
-                        combat_analyze_results_of_last_turn();
-                }
-
-                // ------------------------------------------------------------
                 // Do a non-blocking check to see if any non-user events need
                 // to run (e.g., animation ticks). Normally these events get
                 // run in place_exec() when the game waits for player input,
