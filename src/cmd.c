@@ -3616,6 +3616,8 @@ static char *cmd_help_text =
 "F)ire a ship's cannon or other ordnance\n"
 "G)et something on the ground\n"
 "H)andle a lever or mechanism\n"
+"K)amp in a bed or the wilderness\n"
+"L)oiter for a while\n"
 "N)ew-Order (rearrange party order)\n"
 "O)pen a chest, door or other closed object\n"
 "Q)uit and save the game\n"
