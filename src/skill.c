@@ -1,6 +1,6 @@
 /*
  * nazghul - an old-school RPG engine
- * Copyright (C) 2006 Gordon McNutt
+ * Copyright (C) 2007 Gordon McNutt
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -32,19 +32,39 @@ static void skill_del(struct skill *skill)
         if (skill->name) {
                 free(skill->name);
         }
+        if (skill->desc) {
+                free(skill->desc);
+        }
         free(skill);
 }
 
-struct skill *skill_new(char *name)
+struct skill *skill_new(void)
 {
         struct skill *skill = (struct skill*)calloc(1, sizeof(*skill));
         assert(skill);
-        assert(name);
         list_init(&skill->list);
-        skill->name = strdup(name);
-        assert(skill->name);
         skill->refcount++;
         return skill;
+}
+
+void skill_set_name(struct skill *skill, char *val)
+{
+        assert(val);
+        if (skill->name) {
+                free(skill->name);
+        }
+        skill->name = strdup(val);
+        assert(skill->name);
+}
+
+void skill_set_desc(struct skill *skill, char *val)
+{
+        assert(val);
+        if (skill->desc) {
+                free(skill->desc);
+        }
+        skill->desc = strdup(val);
+        assert(skill->name);
 }
 
 void skill_ref(struct skill *skill)
@@ -52,7 +72,7 @@ void skill_ref(struct skill *skill)
         skill->refcount++;
 }
 
-extern void skill_unref(struct skill *skill)
+void skill_unref(struct skill *skill)
 {
         assert(skill->refcount > 0);
         skill->refcount--;

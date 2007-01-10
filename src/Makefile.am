@@ -3,6 +3,8 @@ AM_CFLAGS = ${AM_CXXFLAGS}
 
 bin_PROGRAMS = nazghul
 
+#nazghul_SOURCES = $(wildcard *.c) $(wildcard *.cpp) $(wildcard *.h)
+
 nazghul_SOURCES =		\
 	angband.c \
         Arms.cpp \
@@ -151,7 +153,10 @@ nazghul_SOURCES =		\
 	menus.h menus.c \
 	file.h file.c \
 	screen_dims.h \
-	skill.h skill.c
+	skill.h skill.c \
+	skill_set.h skill_set.c \
+	skill_set_entry.h skill_set_entry.c \
+	repstr.h repstr.c
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \

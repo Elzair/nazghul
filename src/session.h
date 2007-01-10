@@ -109,6 +109,9 @@ typedef struct {
 /* Backwards-compatible replacement for the old global player_party */
 #define player_party (Session->player)
 
+struct skill;
+struct skill_set;
+
 struct session {
 
         // This list keeps track of all loaded object types. It's private to
@@ -213,9 +216,9 @@ struct session {
          * wrong, I know. Be careful with it. */
         Being *subject;
 
-        struct list skills; /* list of all the skills in the game */
-
-        struct list blenders;
+        struct list skills;     /* list of all skills in the game     */
+        struct list skill_sets; /* list of all skill sets in the game */
+        struct list blenders;   /* obsolete?                          */
 
         /* The turn count shown in the foogod window; incremented once per game
          * loop in play.c */

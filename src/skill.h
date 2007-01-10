@@ -1,6 +1,6 @@
 /*
  * nazghul - an old-school RPG engine
- * Copyright (C) 2006 Gordon McNutt
+ * Copyright (C) 2007 Gordon McNutt
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -24,24 +24,28 @@
 
 #include "list.h"
 
+/* Description of a skill, its know requirements, a procedure to check for
+ * uncommon requirements, and a procedure to y)use the skill. */
 struct skill {
-        struct list list;
-        char *name;
-        char *desc;
-        int type;  /* skill type */
-        int level; /* min skill type level required */
-        int ap;    /* action points consumed */
-        int mp;    /* mana points consumed */
-        struct sprite *sprite;
-        struct node *tools;
-        struct node *materials;
-        struct closure *yuse;
-        struct closure *can_yuse;
-        int refcount;
+        struct list list;         /* list of all skills in the session */
+        char *name;               /* name shown in UI */
+        char *desc;               /* flavor text for UI; should also describe
+                                   * special requirements checked for in the
+                                   * can_yuse closure. */
+        int ap;                   /* action points consumed */
+        int mp;                   /* mana points consumed */
+        struct sprite *sprite;    /* optional sprite for UI */
+        struct node *tools;       /* list of ObjectTypes needed to y)use */
+        struct node *materials;   /* list of ObjectTypes consumed with y)use */
+        struct closure *yuse;     /* proc that executes the y)use */
+        struct closure *can_yuse; /* check special requirements to y)use */
+        int refcount;             /* memory management */
 };
 
-extern struct skill *skill_new(char *name);
+extern struct skill *skill_new();
 extern void skill_ref(struct skill *);
 extern void skill_unref(struct skill *);
+extern void skill_set_name(struct skill *skill, char *name);
+extern void skill_set_desc(struct skill *skill, char *name);
 
 #endif

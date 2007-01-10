@@ -3719,7 +3719,8 @@ KERN_API_CALL(kern_mk_skill)
                 return sc->NIL;
         }
 
-        skill = skill_new(name);
+        skill = skill_new();
+        skill_set_name(skill, name);
         skill->yuse = closure_new(sc, proc);
         list_add(&Session->skills, &skill->list);
         return sc->NIL;

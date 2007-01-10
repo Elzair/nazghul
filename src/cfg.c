@@ -18,6 +18,7 @@
  */
 
 #include "cfg.h"
+#include "repstr.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -66,21 +67,6 @@ int cfg_init()
         return 0;
 }
 
-static void replace_string(char **sptr, const char *val)
-{
-        if (*sptr == val)
-                return;
-
-        if (*sptr) {
-                free(*sptr);
-                *sptr = 0;
-        }
-        if (val) {
-                *sptr = strdup(val);
-                assert(*sptr);
-        }
-}
-
 void cfg_set(char *key, const char *val)
 {
         int hashkey = hashfn(key);
@@ -95,7 +81,7 @@ void cfg_set(char *key, const char *val)
                         match = !strcmp(entry->key, key);
                 }
                 if (match) {
-                        replace_string(&entry->val, val);
+                        repstr(&entry->val, val);
                 } else {
                         entry->next = cfg_entry_new(key, val);
                 }
