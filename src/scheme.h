@@ -121,6 +121,10 @@
 # define USE_INTERFACE 0
 #endif
 
+#ifndef USE_CELLDUMP
+# define USE_CELLDUMP 1
+#endif
+
 typedef struct scheme scheme;
 typedef struct cell *pointer;
 
@@ -173,7 +177,7 @@ pointer mk_counted_string(scheme *sc, const char *str, int len);
 pointer mk_character(scheme *sc, int c);
 pointer mk_foreign_func(scheme *sc, foreign_func f);
 void putstr(scheme *sc, const char *s);
-
+void celldump(scheme *sc, pointer p);
 
 #if USE_INTERFACE
 struct scheme_interface {

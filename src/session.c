@@ -54,6 +54,7 @@
 #include "wq.h"
 #include "cfg.h"
 #include "skill.h"
+#include "skill_set.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -215,6 +216,7 @@ struct session *session_new(void *interp)
         node_init(&session->sched_chars);
         list_init(&session->blenders);
         list_init(&session->skills);
+        list_init(&session->skill_sets);
         session->time_accel = 1;
         return session;
 }
@@ -302,6 +304,16 @@ void session_del(struct session *session)
                 elem = elem->next;
                 list_remove(&skill->list);
                 skill_unref(skill);
+        }
+
+        /* clean up the list of skill sets */
+        elem = session->skill_sets.next;
+        while (elem != &session->skill_sets) {
+                struct skill_set *skset 
+                        = list_entry(elem, struct skill_set, list);
+                elem = elem->next;
+                list_remove(&skset->list);
+                skill_set_unref(skset);
         }
 
         /* Fixme: need to cleanup the interpreter, too, when I'm feeling

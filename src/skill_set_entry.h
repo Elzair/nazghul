@@ -33,7 +33,7 @@ struct skill_set_entry {
         int refcount;             /* memory management                     */
 };
 
-extern struct skill_set_entry *skill_set_entry_new();
+extern struct skill_set_entry *skill_set_entry_new(struct skill *skill, int level);
 extern void skill_set_entry_ref(struct skill_set_entry *ssent);
 extern void skill_set_entry_unref(struct skill_set_entry *ssent);
 

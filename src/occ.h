@@ -52,7 +52,8 @@ struct occ {
         int xpval; /* reward for killing this type */
         int refcount;
 		
-		struct gob *gob;
+        struct gob *gob;
+        struct skill_set *skills;
 };
 
 extern struct occ *occ_new(char *tag,
@@ -68,5 +69,6 @@ extern struct occ *occ_new(char *tag,
                            int arm_mod);
 
 extern void occ_unref(struct occ *occ);
+extern void occ_set_skills(struct occ *occ, struct skill_set *skills);
 
 #endif

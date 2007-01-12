@@ -4604,6 +4604,68 @@ void scheme_serialize(scheme *sc, pointer p, struct save *save)
 }
 #endif
 
+#if USE_CELLDUMP
+#define MAX_DUMP_LEN 256
+void celldump(scheme *sc, pointer pp)
+{
+        static char *typestr[T_LAST_SYSTEM_TYPE+1] = {
+                "---", "STR", "NUM", "SYM", "PRO",
+                "PAI", "CLO", "CON", "FOR",
+                "CHA", "POR", "VEC", "MAC",
+                "PRO", "ENV"
+        };
+        char strbuf[MAX_DUMP_LEN+1], *bptr;
+        int i;
+
+        memset(strbuf, ' ', sizeof(strbuf));
+
+        /* address */
+        bptr = strbuf;
+        bptr += sprintf(bptr, "%p ", pp);
+
+        /* allocated? */
+        if (0==typeflag(pp)) {
+                bptr += sprintf(bptr, "F %p\n", cdr(pp));
+        } else {
+
+                bptr += sprintf(bptr, "A ");
+
+                /* type */
+                for (i = 0; i < T_LAST_SYSTEM_TYPE && i != type(pp); i++)
+                        ;
+                bptr += sprintf(bptr, typestr[i]);
+                *bptr++ = ' ';
+                
+                /* flags */
+                if (is_syntax(pp))
+                        bptr += sprintf(bptr, "SYN|");
+                if (is_immutable(pp))
+                        bptr += sprintf(bptr, "IMM|");
+                if (is_atom(pp))
+                        bptr += sprintf(bptr, "ATM|");
+                if (is_mark(pp))
+                        bptr += sprintf(bptr, "MRK|");
+                if (*(bptr-1)=='|')
+                        *(bptr-1)=' ';
+
+                /* car/cdr */
+                if (is_pair(pp)) {
+                        bptr += sprintf(bptr, "%p %p\n", 
+                                        car(pp), cdr(pp));
+                } else {
+                        int len = 0;
+                        char *str;
+                        atom2str(sc, pp, 0, &str, &len);
+                        bptr += sprintf(bptr, "%s\n", str);
+                }
+        }
+
+        strbuf[sizeof(strbuf)-1] = 0;
+
+        putstr(sc, strbuf);
+        fflush(NULL);
+}
+#endif /* USE_CELLDUMP */
 /* ========== Main ========== */
 
 #if STANDALONE

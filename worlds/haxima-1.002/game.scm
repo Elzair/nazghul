@@ -196,7 +196,6 @@
 (load "combat-maps.scm")
 
 ;; Object types
-(load "occs.scm")
 (load "objs.scm")
 (load "traps.scm")
 (load "pitfalls.scm")
@@ -209,11 +208,12 @@
 (load "ability.scm")
 (load "cast-ui.scm")
 (load "spells.scm")
-(load "skills.scm")
 (load "items.scm")
 (load "vehicles.scm")
 (load "beds.scm")
 (load "money.scm")
+(load "skills.scm")
+(load "occs.scm")
 (load "ai.scm")
 (load "species.scm")
 (load "conv.scm") ;; basic conversation

@@ -23,6 +23,14 @@
 #define skill_h
 
 #include "list.h"
+#include "node.h"
+
+/* Some skills consume materials in varying amounts. */
+struct skill_material {
+        struct list list;  /* list of materials in skill */
+        void *objtype;     /* ObjectType consumed */
+        int quantity;      /* quantity consumed */
+};
 
 /* Description of a skill, its know requirements, a procedure to check for
  * uncommon requirements, and a procedure to y)use the skill. */
@@ -34,9 +42,8 @@ struct skill {
                                    * can_yuse closure. */
         int ap;                   /* action points consumed */
         int mp;                   /* mana points consumed */
-        struct sprite *sprite;    /* optional sprite for UI */
-        struct node *tools;       /* list of ObjectTypes needed to y)use */
-        struct node *materials;   /* list of ObjectTypes consumed with y)use */
+        struct node tools;        /* list of ObjectTypes needed to y)use */
+        struct list materials;    /* list of skill_materials consumed with y)use */
         struct closure *yuse;     /* proc that executes the y)use */
         struct closure *can_yuse; /* check special requirements to y)use */
         int refcount;             /* memory management */
@@ -47,5 +54,7 @@ extern void skill_ref(struct skill *);
 extern void skill_unref(struct skill *);
 extern void skill_set_name(struct skill *skill, char *name);
 extern void skill_set_desc(struct skill *skill, char *name);
+extern void skill_add_tool(struct skill *skill, void *objtype);
+extern void skill_add_material(struct skill *skill, void *objtype, int quan);
 
 #endif

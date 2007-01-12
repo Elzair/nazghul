@@ -25,6 +25,7 @@
 #include "macros.h"
 #include "common.h"
 #include "dimensions.h"
+#include "node.h"
 
 BEGIN_DECL
 
@@ -44,6 +45,18 @@ struct stat_list_entry {
         struct sprite *sprite;
         char line1[STAT_LIST_CHARS_PER_LINE + 1];
         char line2[STAT_LIST_CHARS_PER_LINE + 1];
+        void *data;
+};
+
+struct stat_super_generic_data {
+        char *title;
+        struct node list;
+        struct node *selected;
+        struct node *first_shown;
+        void (*paint)(struct stat_super_generic_data *self, struct node *node, 
+                      SDL_Rect *rect);
+        void (*unref)(struct stat_super_generic_data *self);
+        int refcount;
         void *data;
 };
 
@@ -70,6 +83,7 @@ enum StatusMode {
         GenericList,
         StringList,
         DisableStatus,
+        SuperGeneric,
         Drop
 };
 					
@@ -79,7 +93,8 @@ enum StatusSelection {
         TradeItem,
         Reagents,
         Generic,
-        String
+        String,
+        SelectSuperGeneric
 };
 
 extern int statusInit(void);
@@ -174,6 +189,10 @@ extern void statusDisableRepaint();
  * not repaint itself.
  */
 extern void statusEnableRepaint();
+
+extern void statusPushMode(enum StatusMode mode);
+extern void statusPopMode();
+extern void statusSetSuperGenericData(struct stat_super_generic_data *data);
 
 END_DECL
 

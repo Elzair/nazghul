@@ -57,7 +57,7 @@ struct skill_set *skill_set_new(void)
         assert(skset);
         list_init(&skset->list);
         list_init(&skset->skills);
-        skset->refcount++;
+        skset->refcount = 1;
         return skset;
 }
 
@@ -88,9 +88,7 @@ void skill_set_unref(struct skill_set *skset)
 void skill_set_add_skill(struct skill_set *skset, struct skill *skill,
                          int level)
 {
-        struct skill_set_entry *ssent = skill_set_entry_new();
+        struct skill_set_entry *ssent = skill_set_entry_new(skill, level);
         assert(ssent);
-        ssent->skill = skill;
-        ssent->level = level;
         list_add_tail(&skset->skills, &ssent->list);
 }

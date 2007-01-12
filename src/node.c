@@ -81,3 +81,14 @@ int node_list_len(struct node *head)
         }
         return n;
 }
+
+void node_list_unlink_and_unref(struct node *head)
+{
+        struct node *node = head->next;
+        while (node != head) {
+                struct node *tmp = node->next;
+                node_remove(node);
+                node_unref(node);
+                node = tmp;
+        }
+}

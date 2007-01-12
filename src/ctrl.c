@@ -157,6 +157,9 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         case 'u':
                 cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                 break;
+        case 'y':
+                cmdYuse(NULL);
+                break;
         case 'x':
                 cmdXamine(party);
                 break;

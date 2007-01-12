@@ -75,7 +75,6 @@ extern bool cmdHandle(class Character * pc);
 extern bool cmdReady(class Character * pc);
 extern bool cmdZtats(class Character * pc);
 extern bool cmdXamine (class Object *examiner);
-extern bool cmdYuse(class Character *pc);
 extern bool cmdAT(class Character * pc);
 extern bool cmdGet(class Object *actor);
 extern bool cmdOpen(class Character * pc);
@@ -86,6 +85,7 @@ extern bool cmd_terraform(struct place *place, int x, int y);
 extern bool cmdSaveTerrainMap(class Character * pc);
 extern void cmdSettings(void);
 extern void cmdDrop(class Character *pc);
+extern void cmdYuse(class Character *pc);
   
 extern class Character *select_party_member(void);
     

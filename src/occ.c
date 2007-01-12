@@ -25,6 +25,7 @@
 #include "object.h"
 #include "sprite.h"
 #include "common.h"
+#include "skill_set.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -39,6 +40,8 @@ static void occ_del(struct occ *occ)
 		free(occ->name);
         if (occ->gob)
                 gob_del(occ->gob);
+        if (occ->skills)
+                skill_set_unref(occ->skills);
         free(occ);
 }
 
@@ -87,4 +90,17 @@ extern void occ_unref(struct occ* occ)
         occ->refcount--;
         if (! occ->refcount)
                 occ_del(occ);
+}
+
+void occ_set_skills(struct occ *occ, struct skill_set *skills)
+{
+        if (occ->skills) {
+                skill_set_unref(skills);
+                occ->skills = 0;
+        }
+
+        if (skills) {
+                skill_set_ref(skills);
+                occ->skills = skills;
+        }
 }

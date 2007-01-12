@@ -55,6 +55,12 @@
 #include "dice.h"
 #include "menus.h"
 
+#include "skill.h"
+#include "skill_set.h"
+#include "skill_set_entry.h"
+#include "occ.h"
+
+
 #define DEBUG
 #include "debug.h"
 
@@ -117,6 +123,8 @@ struct terraform_mode_keyhandler {
         struct terrain_map     * map;
         struct terrain_palette * palette;
 };
+
+static class Character *cmd_front_end(class Character *pc, char *cmdstr);
 
 int dirkey(struct KeyHandler *kh, int key, int keymod)
 {
@@ -794,6 +802,29 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
         return 0;  /* Keep on keyhandling */
 }
 
+static void *cmd_select_generic()
+{
+	struct KeyHandler kh;
+	struct ScrollerContext sc;
+
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);        
+
+	sc.selector = SelectSuperGeneric;
+	sc.selection = NULL;
+	kh.fx = scroller;
+	kh.data = &sc;
+
+	eventPushKeyHandler(&kh);
+	cmdwin_push("<select>");
+	eventHandle();
+	cmdwin_pop();
+	eventPopKeyHandler();
+
+        foogodSetMode(FOOGOD_DEFAULT);
+        return sc.selection;
+}
+
 static struct inv_entry *select_item(void)
 {
 	struct inv_entry *ie;
@@ -859,13 +890,14 @@ class Character *select_party_member(void)
 	character = (class Character *) sc.selection;
 
 	if (character == NULL) {
-		cmdwin_push("none!");
+		cmdwin_push("none!"); /* fixme: move to cmd_front_end? */
 		/* Hack alert: this saves the caller from having to remember to
 		 * do this. Doing it unconditionally is undesirable because it
 		 * can cause status screen flashes if the old mode requires a
 		 * short status window and the next mode requires a tall
 		 * one. */
 	} else {
+                /* fixme: move to cmd_front_end? */
 		cmdwin_spush("%s", character->getName());
 	}
 
@@ -2454,12 +2486,6 @@ int select_spell(struct get_spell_name_data *context)
 	return 0;
 }
 
-bool cmdYuse(class Character *pc)
-{
-        /* Yuse a skill or special ability. */
-        return false;
-}
-
 bool cmdCastSpell(class Character * pc)
 {
 	struct get_spell_name_data context;
@@ -2489,7 +2515,7 @@ bool cmdCastSpell(class Character * pc)
 	}
 
         /* Make sure the PC is not asleep, dead, etc. */
-        if (pc->isDead() || pc->isAsleep()) {
+        if (pc->isDead()) {
                 cmdwin_spush("unable right now!");
                 log_msg("Cast - %s is too dead!", pc->getName());
                 return false;
@@ -3758,4 +3784,184 @@ void cmdDrop(class Character *actor)
         statusRepaint();
         mapUpdate(REPAINT_IF_DIRTY);
         return;
+}
+
+/* Do common front-end processing. Migrate all commands to start using this. */
+static class Character *cmd_front_end(class Character *pc, char *cmdstr)
+{
+        cmdwin_clear();
+        cmdwin_spush(cmdstr);
+
+        /* prompt user? */
+        if (!pc) {
+
+                /* only one choice? */
+                if (player_party->get_num_living_members() == 1) {
+                        pc = player_party->get_first_living_member();
+                        cmdwin_spush(pc->getName());
+                } else {
+                        pc = select_party_member();
+                }
+
+        } else {
+                cmdwin_spush(pc->getName());
+        }
+
+        /* user abort? */
+        if (!pc) {
+                return 0;
+        }
+
+        /* dead actor? */
+        if (pc->isDead()) {
+                log_msg("%s - %s is too dead!", cmdstr, pc->getName());
+                cmdwin_push("can't!");
+                return 0;
+        }
+
+        /* sleeping actor? */
+        if (pc->isAsleep()) {
+                log_msg("%s - %s rolls over and snores!", cmdstr, 
+                        pc->getName());
+                cmdwin_push("can't!");
+                return 0;
+        }
+
+        /* tell status who the actor is (sometimes it matters) */
+        statusSelectCharacter(pc->getOrder());
+
+        return pc;
+}
+
+static void cmd_add_skill_set(struct node *head, class Character *pc, 
+                              struct skill_set *skset)
+{
+        struct list *elem;
+        int pclvl = pc->getLevel();
+
+        /* for each skill in the skill set */
+        list_for_each(&skset->skills, elem) {
+
+                struct skill_set_entry *ssent;
+                ssent = list_entry(elem, struct skill_set_entry, list);
+
+                /* if the character is of sufficient level to yuse the skill */
+                if (pclvl >= ssent->level) {
+                        
+                        /* add it to the list */
+                        struct node *node;
+                        node = node_new(ssent);
+                        node_add_tail(head, node);
+                }
+        }
+}
+
+static void cmd_build_skill_list(struct node *head, class Character *pc)
+{
+        node_init(head);
+
+        /* add species skills */
+        if (pc->species
+            && pc->species->skills) {
+                cmd_add_skill_set(head, pc, pc->species->skills);
+        }
+
+        /* add occupation skills */
+        if (pc->occ
+            && pc->occ->skills) {
+                cmd_add_skill_set(head, pc, pc->occ->skills);
+        }
+
+        /* add bonus skills? */
+}
+
+static void cmd_paint_skill(struct stat_super_generic_data *self, struct node *node, 
+                            SDL_Rect *rect)
+{
+        struct skill_set_entry *ssent = (struct skill_set_entry *)node->ptr;
+
+        /* fixme: for now just paint the skill name */
+        if (rect->h < ASCII_H) {
+                return;
+        }
+        screenPrint(rect, 0, "%s", ssent->skill->name);
+        rect->y += ASCII_H;
+}
+
+static void cmd_skill_list_unref(struct stat_super_generic_data *self)
+{
+        struct node *node;
+
+        /* Decrement the refcount. */
+        assert(self->refcount > 0);
+        self->refcount--;
+        if (self->refcount > 0) {
+                return;
+        }
+
+        /* Cleanup if no more refs. */
+        node = self->list.next;
+        while (node != &self->list) {
+                struct node *tmp = node;
+                node = node->next;
+                node_unref(tmp);
+        }
+}
+
+static struct skill_set_entry *cmd_select_skill(class Character *pc)
+{
+        struct skill_set_entry *ssent;
+        struct node *selected;
+        struct stat_super_generic_data data;
+
+        /* setup the status browser data */
+        memset(&data, 0, sizeof(data));
+        cmd_build_skill_list(&data.list, pc);
+        data.title = "Yuse";
+        data.paint = cmd_paint_skill;
+        data.unref = cmd_skill_list_unref;
+
+        /* put the status browser in selection mode */
+        statusSetSuperGenericData(&data);
+        statusPushMode(SuperGeneric);
+
+        /* wait for user selection */
+        selected = (struct node*)cmd_select_generic();
+
+        /* extract result */
+        if (selected) {
+                ssent = (struct skill_set_entry *)selected->ptr;
+                cmdwin_push(ssent->skill->name);
+        } else {
+                ssent = 0;
+                cmdwin_push("none");
+        }
+
+        /* restore browser status mode */
+        statusPopMode();
+
+        assert(! data.refcount);
+
+        return ssent;
+}
+
+void cmdYuse(class Character *pc)
+{
+        struct skill_set_entry *ssent;
+
+        /* select/verify the actor */
+        if (!(pc = cmd_front_end(pc, "Yuse"))) {
+                return;
+        }
+
+        /* select the skill to yuse */
+        if (!(ssent = cmd_select_skill(pc))) {
+                return;
+        }
+        
+        /* check if yuse is ok */
+
+        /* yuse the skill */
+
+        /* decrement ap/mp */
 }

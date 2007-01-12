@@ -71,6 +71,7 @@
 #include "menus.h"
 #include "file.h"
 #include "skill.h"
+#include "skill_set.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -1525,13 +1526,14 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         int hpmod, hpmult;
         int mpmod, mpmult, hit, def, dam, arm, xpval;
         char *tag = TAG_UNK, *name;
+        struct skill_set *skset;
         float magic;
         pointer ret;
 
         /* Basic args */
-        if (unpack(sc, &args, "ysrddddddddd",
+        if (unpack(sc, &args, "ysrdddddddddp",
                    &tag, &name, &magic, &hpmod, &hpmult, &mpmod, &mpmult, &hit,
-                   &def, &dam, &arm, &xpval)) {
+                   &def, &dam, &arm, &xpval, &skset)) {
                 load_err("kern-mk-occ %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1540,6 +1542,7 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
                       dam, arm);
         occ_ref(occ);
         occ->xpval = xpval;
+        occ_set_skills(occ, skset);
 
         session_add(Session, occ, occ_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, occ);
@@ -3709,20 +3712,110 @@ KERN_API_CALL(kern_set_spell_words)
 
 KERN_API_CALL(kern_mk_skill)
 {
-        char *name = 0;
-        pointer proc = sc->NIL;
-        int lvl = 0;
-        struct skill *skill = 0;
+        char *name, *desc;
+        pointer yuse, can_yuse, list;
+        struct skill *skill;
 
-        if (unpack(sc, &args, "scd", &name, &proc, &lvl)) {
+        /* Unpack name and desc */
+        if (unpack(sc, &args, "ss", &name, &desc)) {
                 load_err("kern-mk-skill: bad args");
                 return sc->NIL;
         }
 
         skill = skill_new();
         skill_set_name(skill, name);
-        skill->yuse = closure_new(sc, proc);
+        skill_set_desc(skill, desc);
+
+        /* Unpack ap, mp and yusage procs */
+        if (unpack(sc, &args, "ddcc", &skill->ap, &skill->mp, &yuse, &can_yuse)) {
+                load_err("kern-mk-skill %s: bad args", name);
+                goto abort;
+        }
+
+        /* yuse is mandatory */
+        if (yuse == sc->NIL) {
+                load_err("kern-mk-skill %s: nil yuse proc", name);
+                goto abort;
+        }
+        skill->yuse = closure_new_ref(sc, yuse);
+
+        /* can_yuse is optional */
+        if (can_yuse != sc->NIL) {
+                skill->can_yuse = closure_new_ref(sc, can_yuse);
+        }
+
+        /* list of tools */
+        list = scm_car(sc, args);
+        args = scm_cdr(sc, args);
+        while (scm_is_pair(sc, list)) {
+                void *objtype;
+                if (unpack(sc, &list, "p", &objtype)) {
+                        load_err("kern-mk-skill %s: bad tool arg", name);
+                        goto abort;
+                }
+                skill_add_tool(skill, objtype);
+        }
+
+        /* list of materials: (objtype, int) pairs */
+        list = scm_car(sc, args);
+        args = scm_cdr(sc, args);
+        while (scm_is_pair(sc, list)) {
+                void *objtype;
+                int quan;
+                pointer pair = scm_car(sc, list);
+                list = scm_cdr(sc, list);
+                if (unpack(sc, &pair, "pd", &objtype, &quan)) {
+                        load_err("kern-mk-skill %s: bad material arg", name);
+                        goto abort;
+                }
+                skill_add_material(skill, objtype, quan);
+        }
+
         list_add(&Session->skills, &skill->list);
+        return scm_mk_ptr(sc, skill);
+
+ abort:
+        skill_unref(skill);
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_mk_skill_set)
+{
+        char *name;
+        struct skill_set *skset;
+        pointer list;
+
+        if (unpack(sc, &args, "s", &name)) {
+                load_err("kern-mk-skill-set: bad name");
+                return sc->NIL;
+        }
+
+        skset = skill_set_new();
+        skill_set_set_name(skset, name);
+
+        list = scm_car(sc, args);
+        args = scm_cdr(sc, args);
+        while (scm_is_pair(sc, list)) {
+                pointer pair;
+                int lvl;
+                struct skill *skill;
+
+                pair = scm_car(sc, list);
+                list = scm_cdr(sc, list);
+                if (unpack(sc, &pair, "dp", &lvl, &skill)) {
+                        load_err("kern-mk-skill %s: bad skill list args", 
+                                 name);
+                        goto abort;
+                }
+
+                skill_set_add_skill(skset, skill, lvl);
+        }
+
+        list_add(&Session->skill_sets, &skset->list);
+        return scm_mk_ptr(sc, skset);
+
+ abort:
+        skill_set_unref(skset);
         return sc->NIL;
 }
 
@@ -8139,6 +8232,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-ptable", kern_mk_ptable);
         API_DECL(sc, "kern-mk-sched", kern_mk_sched);
         API_DECL(sc, "kern-mk-skill", kern_mk_skill);
+        API_DECL(sc, "kern-mk-skill-set", kern_mk_skill_set);
         API_DECL(sc, "kern-mk-sound", kern_mk_sound);
         API_DECL(sc, "kern-mk-species", kern_mk_species);
         API_DECL(sc, "kern-mk-sprite", kern_mk_sprite);

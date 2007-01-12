@@ -55,6 +55,7 @@ struct species {
         sound_t *movement_sound;
         int xpval;           /* reward for killing this type */
         char *armor_dice;    /* for scaly or chitinous types */
+        struct skill_set *skills;
         int stationary : 1;  /* doesn't move?                */
 };
 

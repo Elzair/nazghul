@@ -67,6 +67,8 @@
 #define STAT_INUSE_CLR        'g'
 #define STAT_UNAVAIL_CLR      'G'
 
+#define STAT_MODE_STACK_DEPTH 10
+
 enum ZtatsView {
 	ViewMember = 0,
 	ViewArmaments,
@@ -150,9 +152,17 @@ static struct status {
         /**
          * Sometimes I just don't want to repaint until I'm done doing more
          * stuff. Repaints will be suppressed unless this counter is
-         * zero. Limiteed to internal use only for now.
+         * zero. Limited to internal use only for now.
          */
         int suppressRepaint;
+
+        /**
+         * New experimental super-generic stuff
+         */
+        struct stat_super_generic_data *super_generic;
+
+        enum StatusMode stack[STAT_MODE_STACK_DEPTH];
+        int top;
 
 } Status;
 
@@ -171,6 +181,10 @@ static void status_show_ztat_arms(SDL_Rect *rect, void *thing);
 static void status_show_generic_object_type(SDL_Rect *rect, void *thing);
 static void status_show_mix_reagent(SDL_Rect *rect, void *thing);
 static void status_show_ztat_spells(SDL_Rect *rect, void *thing);
+
+/* super-generic functions */
+static void stat_super_generic_paint();
+static void stat_super_generic_scroll(enum StatusScrollDir dir);
 
 /* Filter for the player inventory during the R)eady UI. */
 static struct filter stat_ready_arms_filter = {
@@ -1576,6 +1590,15 @@ void statusScroll(enum StatusScrollDir dir)
 
 void statusSetMode(enum StatusMode mode)
 {
+        /* Unref the old super generic struct if applicable */
+        if (Status.mode == SuperGeneric) {
+                assert(Status.super_generic);
+                if (Status.super_generic->unref) {
+                        Status.super_generic->unref(Status.super_generic);
+                }
+                Status.super_generic = 0;
+        }
+
 	Status.mode = mode;
 
         /* note: must always repaint title AFTER switching mode because
@@ -1701,6 +1724,25 @@ void statusSetMode(enum StatusMode mode)
 		Status.scroll = myScrollGeneric;
 		Status.selectedEntry = 0;                
                 break;
+        case SuperGeneric:
+                assert(Status.super_generic);
+		switch_to_tall_mode();
+		status_set_title(Status.super_generic->title);
+		Status.topLine = 0;
+		Status.curLine = 0;
+		Status.maxLine = node_list_len(&Status.super_generic->list) 
+                        - Status.numLines;
+		Status.paint = stat_super_generic_paint;
+                Status.scroll = stat_super_generic_scroll;
+                if (node_list_empty(&Status.super_generic->list)) {
+                        Status.super_generic->first_shown = 0;
+                } else {
+                        Status.super_generic->first_shown 
+                                = Status.super_generic->list.next;
+                }
+                Status.super_generic->selected 
+                        = Status.super_generic->first_shown;
+                break;
 	}
 
 	statusRepaint();
@@ -1720,6 +1762,10 @@ void *statusGetSelected(enum StatusSelection sel)
 		return Status.list_sz ? &Status.trades[Status.curLine] : 0;
         case String:
                 return Status.list_sz ? Status.strlist[Status.curLine] : 0;
+        case SelectSuperGeneric:
+                assert(Status.super_generic);
+                return Status.super_generic->selected;
+                break;
 	default:
 		return 0;
 	}
@@ -1845,4 +1891,110 @@ void statusEnableRepaint()
 {
         assert(Status.suppressRepaint);
         Status.suppressRepaint--;        
+}
+
+void statusPushMode(enum StatusMode mode)
+{
+        assert(Status.top < STAT_MODE_STACK_DEPTH);
+        Status.stack[Status.top] = Status.mode;
+        Status.top++;
+        statusSetMode(mode);
+}
+
+void statusPopMode(void)
+{
+        assert(Status.top > 0);
+        Status.top--;
+        statusSetMode(Status.stack[Status.top]);
+}
+
+static void stat_super_generic_paint()
+{
+	SDL_Rect rect = Status.screenRect;
+        struct node *node = Status.super_generic->first_shown;
+        struct node *end = &Status.super_generic->list;
+        int window_bottom = Status.screenRect.y + Status.screenRect.h;
+
+        /* check for empty list */
+        if (!node) {
+                screenPrint(&rect, 0, "No Skills!");
+                return;
+        }
+
+        for (;;) {
+
+                /* check for end-of-list */
+                if (node == end) {
+                        break;
+                }
+                
+                /* check for bottom of window */
+                if (rect.y >= window_bottom) {
+                        break;
+                }
+
+                /* Clip the rect to fit */
+                rect.h = window_bottom - rect.y;
+
+                /* Paint the entry */
+                Status.super_generic->paint(Status.super_generic,
+                                            node,
+                                            &rect);
+
+                /* Advance the list */
+                node = node->next;
+	}
+}
+
+static void stat_super_generic_scroll(enum StatusScrollDir dir)
+{
+        struct node *first = Status.super_generic->list.next;
+        struct node *last = Status.super_generic->list.prev;
+
+        assert(Status.super_generic);
+
+        /* Check for trivial case: empty list */
+        if (node_list_empty(&Status.super_generic->list)) {
+                return;
+        }
+
+	switch (dir) {
+        case ScrollPageUp:
+	case ScrollUp:
+                if (Status.super_generic->first_shown != first) {
+                        Status.super_generic->first_shown =
+                                Status.super_generic->first_shown->prev;
+                }
+		break;
+        case ScrollPageDown:
+	case ScrollDown:
+                if (Status.super_generic->first_shown != last) {
+                        Status.super_generic->first_shown =
+                                Status.super_generic->first_shown->next;
+                }
+		break;
+        case ScrollTop:
+                Status.super_generic->first_shown = first;
+                break;
+        case ScrollBottom:
+                Status.super_generic->first_shown = last;
+		break;
+        default:
+                break;
+	}
+}
+
+void statusSetSuperGenericData(struct stat_super_generic_data *data)
+{
+        if (data == Status.super_generic) {
+                return;
+        }
+
+        if (Status.super_generic
+            && Status.super_generic->unref) {
+                Status.super_generic->unref(Status.super_generic);
+        }
+
+        Status.super_generic = data;
+        data->refcount++;
 }
