@@ -1,15 +1,15 @@
 ;;----------------------------------------------------------------------------
 ;; Skill procedures
+;;
+;; Skill procedures should not do any requirements-checking because the kernel
+;; checks all requirements before allowing them to be called. Skill procedures
+;; should always return (ie, evaluate to) one of the standard result-* codes
+;; (eg, result-ok, result-no-target, etc... see naz.scm).
 
-(define (skill-unlock kchar)
-  (cond ((has? kchar t_picklock 1) 
-         (cast-ui-ranged-any powers-unlock
-                             caster 1 (occ-ability-thief caster)
-                             (mk-ifc-query 'unlock)))
-        (else
-         (kern-log-msg (kern-obj-get-name kchar)
-                       " has no picklock!"))))
-
+(define (skill-unlock kactor)
+  (cast-ui-ranged-any powers-unlock
+                      kactor 1 (occ-ability-thief kactor)
+                      (mk-ifc-query 'unlock)))
 
 ;;----------------------------------------------------------------------------
 ;; Skill declarations

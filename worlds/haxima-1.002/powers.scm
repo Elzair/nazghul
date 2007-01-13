@@ -815,10 +815,14 @@
 	))
 
 (define (powers-unlock caster ktarg power)
-	((kobj-ifc ktarg) 'unlock ktarg caster))
+  (if ((kobj-ifc ktarg) 'unlock ktarg caster)
+      result-ok
+      result-no-effect))
 
 (define (powers-unlock-magic caster ktarg power)
-	((kobj-ifc ktarg) 'magic-unlock ktarg caster))
+  (if ((kobj-ifc ktarg) 'magic-unlock ktarg caster)
+      result-ok
+      result-no-effect))
 	
 (define (powers-view caster ktarg power)
 	(kern-map-set-peering #t)

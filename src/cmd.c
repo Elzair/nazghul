@@ -124,7 +124,14 @@ struct terraform_mode_keyhandler {
         struct terrain_palette * palette;
 };
 
+
+/* fwd decls */
+
 static class Character *cmd_front_end(class Character *pc, char *cmdstr);
+static int cmd_eval_and_log_result(int result);
+
+
+/* functions */
 
 int dirkey(struct KeyHandler *kh, int key, int keymod)
 {
@@ -2486,6 +2493,38 @@ int select_spell(struct get_spell_name_data *context)
 	return 0;
 }
 
+/**
+ * Log console messages describing the results of a closure call and return whether or not it 
+ *
+ * @param result is what closure_exec() returned. It should be one of the
+ * standard result codes.
+ *
+ * @returns non-zero iff the closure call was successful. "Succesful" means it
+ * actually did something; whereas "unsuccesful" means the request was
+ * effectively aborted in the script, so the caller should skip post-processing
+ * like mp or ap reduction, etc.
+ */
+static int cmd_eval_and_log_result(int result)
+{
+        switch (result) {
+        case RESULT_OK:
+                log_continue("ok!");
+                return 1;
+        case RESULT_NO_TARGET:
+                log_continue("no target!");
+                return 0;
+        case RESULT_NO_EFFECT:
+                log_continue("no effect!");
+                return 0;
+        case RESULT_NO_HOSTILES:
+                log_continue("no hostiles here!");
+                return 0;
+        default:
+                assert(false);
+                return 0;
+        }
+}
+
 bool cmdCastSpell(class Character * pc)
 {
 	struct get_spell_name_data context;
@@ -2493,7 +2532,7 @@ bool cmdCastSpell(class Character * pc)
 	struct spell *spell;
 	bool mixed = false;
 	bool natural = false;
-	int i;
+	int i, cast = 0, result = 0;
         char spell_name[MAX_SPELL_NAME_LENGTH];
 
         if (MagicNegated) {
@@ -2595,22 +2634,11 @@ bool cmdCastSpell(class Character * pc)
 	}
 
         /* Cast the spell. */
-        switch (spell->type->cast(pc)) {
-        case RESULT_OK:
-                log_continue("ok!");
-                break;
-        case RESULT_NO_TARGET:
-                log_end("no target!");
+        result = spell->type->cast(pc);
+        cast = cmd_eval_and_log_result(result);
+
+        if (! cast) {
                 return false;
-        case RESULT_NO_EFFECT:
-                log_continue("no effect!");
-                break;
-        case RESULT_NO_HOSTILES:
-                log_continue("no hostiles here!");
-                break;
-        default:
-                assert(false);
-                break;
         }
 
         /* Decrement the caster's mana. */
@@ -3945,23 +3973,63 @@ static struct skill_set_entry *cmd_select_skill(class Character *pc)
         return ssent;
 }
 
-void cmdYuse(class Character *pc)
+void cmdYuse(class Character *actor)
 {
         struct skill_set_entry *ssent;
+        struct skill *skill;
+        int cant = 0, result = 0, yused = 0;
 
         /* select/verify the actor */
-        if (!(pc = cmd_front_end(pc, "Yuse"))) {
+        if (!(actor = cmd_front_end(actor, "Yuse"))) {
                 return;
         }
 
         /* select the skill to yuse */
-        if (!(ssent = cmd_select_skill(pc))) {
+        if (!(ssent = cmd_select_skill(actor))) {
                 return;
         }
-        
-        /* check if yuse is ok */
+        skill = ssent->skill;
+        log_begin("%s: %s - ", actor->getName(), skill->name);
+
+        /* check level */
+        if (actor->getLevel() < ssent->level) {
+                cant = 1;
+                log_msg("Must be level %d!", ssent->level);
+        }
+
+        /* check mana */
+        if (actor->getMana() < skill->mp) {
+                cant = 1;
+                log_msg("Not enough mana!");
+        }
+
+        /* check tools */
+
+        /* check material */
+
+        /* check special */
+        if (skill->can_yuse
+            && ! closure_exec(skill->can_yuse, "p", actor)) {
+                cant = 1;
+        }
+
+        /* cant? */
+        if (cant) {
+                cmdwin_push("failed!");
+                log_end("^c+rFailed!^c-");
+                return;
+        }
 
         /* yuse the skill */
+        result = closure_exec(skill->yuse, "p", actor);
+        yused = cmd_eval_and_log_result(result);
+        
+        /* change ap/mp/xp */
+        if (yused) {
+                actor->addMana(0 - skill->mp);
+                actor->decActionPoints(skill->ap);
+                actor->addExperience(ssent->level);
+        }       
 
-        /* decrement ap/mp */
+        log_end(0);
 }

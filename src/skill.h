@@ -25,15 +25,14 @@
 #include "list.h"
 #include "node.h"
 
-/* Some skills consume materials in varying amounts. */
+/* Description of a material item needed by a skill */
 struct skill_material {
         struct list list;  /* list of materials in skill */
         void *objtype;     /* ObjectType consumed */
         int quantity;      /* quantity consumed */
 };
 
-/* Description of a skill, its know requirements, a procedure to check for
- * uncommon requirements, and a procedure to y)use the skill. */
+/* Description of a skill */
 struct skill {
         struct list list;         /* list of all skills in the session */
         char *name;               /* name shown in UI */

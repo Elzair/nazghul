@@ -120,14 +120,16 @@
 		checkproc))
 
 (define (cast-ui-dospell target effect caster power)
-	(cond ((null? target) result-no-target)
-		((kern-in-los? (kern-obj-get-location caster) (kern-obj-get-location target))
-			(effect caster target power)
-			result-ok)
-		(else
-			(kern-log-msg "Not in LOS!")
-			result-no-target)))
-			
+  (cond ((null? target) result-no-target)
+        ((kern-in-los? (kern-obj-get-location caster) (kern-obj-get-location target))
+         ;; note in this case we should let the effect procedure determine the
+         ;; result (fixme: need to go through and ensure all the powers return
+         ;; a result-* codee)
+         (effect caster target power))
+        (else
+         (kern-log-msg "Not in LOS!")
+         result-no-target)))
+
 
 (define (cast-ui-dospell-loc target effect caster power)
 	(cond ((null? target) result-no-target)
