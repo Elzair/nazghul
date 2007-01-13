@@ -205,7 +205,7 @@
 			(mapnumber (modulo (+ (* rxloc xmult) (* ryloc ymult) addfactor) modfactor))
 		)
 		;get the map from the first entry with value greater than mapnumber		
-		(cadr
+		(cdr
 			(car (filter (lambda (listentry)
 				(> (car listentry) mapnumber))
 					maplist))
@@ -216,8 +216,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; deeps fixed map enabling
 
-(define (prmap-room-mklink dir target maptepl)
-	(let* ((node (list target maptepl)))
+(define (prmap-room-mklink dir target maptemplate hooklist)
+	(let* ((node (cons target (cons maptemplate hooklist))))
 		(get-cardinal-ref
 			(list
 				(list node nil nil nil)
@@ -326,7 +326,6 @@
 	))
 	
 ; blit map for area and all sides. uses hard linked sides if given
-; todo generalise random-type s
 (define (prmap-room-blit-map kplace roomdata hardlinkdata mapdata)
 	(let* (
 			(rxloc (prmap-roomdata-x roomdata))
@@ -340,10 +339,14 @@
 				(list 1 0 (prmap-params-ewparams mapdata))
 				(list 0 0 (prmap-params-nsparams mapdata))
 				))
+			(areamap-choice (prmap-get-template rxloc ryloc (prmap-params-areaparams mapdata) (prmap-params-areamaps mapdata)))
 		)
 		(prmap-do-map-blit destmap
-			(prmap-get-template rxloc ryloc (prmap-params-areaparams mapdata) (prmap-params-areamaps mapdata))
+			(car areamap-choice)
 			(prmap-blitstats-area blitstats))
+		(if (> (length areamap-choice) 1)
+			(map (eval (cadr areamap-choice)) (list kplace))
+			)
 		(map (lambda (dir)
 			;roomlinktarget is hardlink target if it exists, else regular neighbor
 			(let* (
@@ -354,10 +357,13 @@
 					(thisrtype (caddr thisrmapdata))
 					(linkmap (if (null? thishardlink)
 								(prmap-get-template thisx thisy thisrtype (prmap-params-edgemaps mapdata))
-								(cadr thishardlink)))
+								(cdr thishardlink)))
 				)
-				(prmap-do-map-blit destmap linkmap
+				(prmap-do-map-blit destmap (car linkmap)
 					(get-cardinal-ref blitstats dir))
+				(if (> (length linkmap) 1)
+					(map (eval (get-cardinal-ref (cdr linkmap) dir)) (list kplace))
+					)
 			))
 			(list north west east south))
 	))
@@ -423,7 +429,6 @@
 			(ryloc (prmap-roomdata-y roomdata))
 			(distance (sqrt (+ (* rxloc rxloc) (* ryloc ryloc))))
 		)
-		(prmap-room-cleanout kplace)
 		(if (< (kern-dice-roll "1d100") 
 				(min 75 (+ 25 (* 15 (sqrt distance)))))
 			(begin 
