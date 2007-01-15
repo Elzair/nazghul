@@ -310,14 +310,14 @@
 
 (define deep-room-hardlinks
   (list 
-  	(list 0 1    (prmap-room-mklink south 'p_lost_garrison 'm_deeptempl_passage nil))
-	(list 1 1    (prmap-room-mklink south nil 'm_deeptempl_wall nil))
-  	(list -1 0   (prmap-room-mklink east 'p_lost_garrison 'm_deeptempl_passage nil))
-	(list 2 0    (prmap-room-mklink west nil 'm_deeptempl_wall nil))
-  	(list -1 -1  (prmap-room-mklink east nil 'm_deeptempl_wall nil))
-	(list 2 -1   (prmap-room-mklink west nil 'm_deeptempl_wall nil))
-	(list 0 -2   (prmap-room-mklink north nil 'm_deeptempl_wall nil))
-	(list 1 -2   (prmap-room-mklink north nil 'm_deeptempl_wall nil))
+  	(list 0 1    (prmap-room-mklink south 'p_lost_garrison 'm_deeptempl_passage))
+	(list 1 1    (prmap-room-mklink south nil 'm_deeptempl_wall))
+  	(list -1 0   (prmap-room-mklink east 'p_lost_garrison 'm_deeptempl_passag))
+	(list 2 0    (prmap-room-mklink west nil 'm_deeptempl_wall))
+  	(list -1 -1  (prmap-room-mklink east nil 'm_deeptempl_wall))
+	(list 2 -1   (prmap-room-mklink west nil 'm_deeptempl_wall))
+	(list 0 -2   (prmap-room-mklink north nil 'm_deeptempl_wall))
+	(list 1 -2   (prmap-room-mklink north nil 'm_deeptempl_wall))
   ))
 
 (define (deeps-room-handle-deeps kplace kplayer)

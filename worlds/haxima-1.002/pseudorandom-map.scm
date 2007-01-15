@@ -216,7 +216,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; deeps fixed map enabling
 
-(define (prmap-room-mklink dir target maptemplate hooklist)
+(define (prmap-room-mklink dir target maptemplate . hooklist)
 	(let* ((node (cons target (cons maptemplate hooklist))))
 		(get-cardinal-ref
 			(list
