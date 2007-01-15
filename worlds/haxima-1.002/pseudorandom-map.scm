@@ -1,10 +1,20 @@
 ;utility for searching {sum-of-probability, object} lists
-(define (get-numbered-elem list value)
-	(if (>= (car (car list)) value)
-		(cdar list)
-		(get-numbered-elem (cdr list) value)
+(define (get-numbered-elem alist value)
+	(if (>= (car (car alist)) value)
+		(cdar alist)
+		(get-numbered-elem (cdr alist) value)
 		)
 	)
+	
+;list utilities
+(define (list-swap alist entry index)
+	(if (null? alist)
+		nil
+		(if (zero? index)
+			(cons entry (cdr alist))
+			(cons (car alist)
+				(list-swap (cdr alist) entry (- index 1)))
+			)))
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; blit stats
@@ -37,11 +47,13 @@
 ; Directions	
 
 ; order is N W E S
+(define (cardinal-dir-num dir)
+	(/ (- dir 1) 2))
+
 (define (get-cardinal-ref list dir)
-	(begin
 	(list-ref list
-		(/ (- dir 1) 2))
-		))
+		(cardinal-dir-num dir))
+		)
 
 (define prmap-room-offsets
 	(list 
@@ -176,8 +188,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random map parameter data
 
-(define (prmap-mk-mapdata nsparams ewparams areaparams edgemaps areamaps blitstats) 
-	(list nsparams ewparams areaparams edgemaps areamaps blitstats))
+(define (prmap-mk-mapdata nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction hardlinks) 
+	(list nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction hardlinks))
 
 (define (prmap-params-nsparams params)
 	(list-ref params 0))
@@ -191,6 +203,15 @@
 	(list-ref params 4))
 (define (prmap-params-blitstats params)
 	(eval (list-ref params 5)))
+(define (prmap-params-hardlinkfunction params)
+	(let ((candidatefn (list-ref params 6)))
+		(eval
+			(if (null? candidatefn)
+				'prmap-room-gethardlink
+				candidatefn
+		))))
+(define (prmap-params-hardlinks params)
+	(list-ref params 7))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random template handling
@@ -205,7 +226,7 @@
 			(mapnumber (modulo (+ (* rxloc xmult) (* ryloc ymult) addfactor) modfactor))
 		)
 		;get the map from the first entry with value greater than mapnumber		
-		(cdr
+		(cdr 
 			(car (filter (lambda (listentry)
 				(> (car listentry) mapnumber))
 					maplist))
@@ -216,18 +237,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; deeps fixed map enabling
 
+(define (prmap-room-mklinkset northnode westnode eastnode southnode)
+	(list northnode westnode eastnode southnode))
+
 (define (prmap-room-mklink dir target maptemplate . hooklist)
 	(let* ((node (cons target (cons maptemplate hooklist))))
 		(get-cardinal-ref
 			(list
-				(list node nil nil nil)
-				(list nil node nil nil)
-				(list nil nil node nil)
-				(list nil nil nil node)
+				(prmap-room-mklinkset node nil nil nil)
+				(prmap-room-mklinkset nil node nil nil)
+				(prmap-room-mklinkset nil nil node nil)
+				(prmap-room-mklinkset nil nil nil node)
 			)
 			dir
 		)
-	))
+	))	
 	
 (define (prmap-room-gethardlink xloc yloc linksdata)
 	(let (
@@ -243,6 +267,10 @@
 		(if (equal? (length matchinglink) 0)
 			(list nil nil nil nil)
 			(caddr (car matchinglink)))))
+
+(define (prmap-room-getmaphardlink xloc yloc mapdata)
+	(apply (prmap-params-hardlinkfunction mapdata) (list xloc yloc (prmap-params-hardlinks mapdata)))
+	)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; x y location tracking
@@ -286,12 +314,12 @@
 ;; Room linking
 
 ; links in neighbors, or rooms from hardlink list, as appropriate
-(define (prmap-room-init-links kplace roomdata hardlinkdata)
+(define (prmap-room-init-links kplace roomdata mapdata)
 	(let* (
 			(rooms (prmap-roomdata-rooms roomdata))
 			(rxloc (prmap-roomdata-x roomdata))
 			(ryloc (prmap-roomdata-y roomdata))
-			(linkinfo (prmap-room-gethardlink rxloc ryloc hardlinkdata))
+			(linkinfo (prmap-room-getmaphardlink rxloc ryloc mapdata))
 		)
 		(map (lambda (dir)
 			;roomlinktarget is hardlink target if it exists, else regular neighbor
@@ -317,7 +345,7 @@
 	(let (
 			(xloc (list-ref blitstats 0))
 			(yloc (list-ref blitstats 1))
-			(wid (list-ref blitstats 2))
+			(wid (list-ref blitstats 2))  
 			(hgt (list-ref blitstats 3))
 		)	
 		(kern-blit-map destmap xloc yloc
@@ -326,11 +354,11 @@
 	))
 	
 ; blit map for area and all sides. uses hard linked sides if given
-(define (prmap-room-blit-map kplace roomdata hardlinkdata mapdata)
+(define (prmap-room-blit-map kplace roomdata mapdata)
 	(let* (
 			(rxloc (prmap-roomdata-x roomdata))
 			(ryloc (prmap-roomdata-y roomdata))
-			(linkinfo (prmap-room-gethardlink rxloc ryloc hardlinkdata))
+			(linkinfo (prmap-room-getmaphardlink rxloc ryloc mapdata))
 			(blitstats (prmap-params-blitstats mapdata))
 			(destmap (kern-place-map kplace))
 			(rmapdata (list
@@ -345,7 +373,7 @@
 			(car areamap-choice)
 			(prmap-blitstats-area blitstats))
 		(if (> (length areamap-choice) 1)
-			(map (eval (cadr areamap-choice)) (list kplace))
+			(apply (eval (cadr areamap-choice)) (list kplace))
 			)
 		(map (lambda (dir)
 			;roomlinktarget is hardlink target if it exists, else regular neighbor
@@ -442,3 +470,4 @@
 					)
 		)
 	))
+	
