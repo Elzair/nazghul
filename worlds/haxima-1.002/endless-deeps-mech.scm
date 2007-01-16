@@ -183,9 +183,10 @@
 
 
 ;parameters to random number generators
-(define deep-random-type-ew (prmap-mk-prng-params 53 67 0 43 83))
-(define deep-random-type-ns (prmap-mk-prng-params 59 71 0 31 83))
-(define deep-random-type-area (prmap-mk-prng-params 89 61 0 59 149))
+(define (deep-rno) (+ (kern-dice-roll "1d70" 33)))
+(define deep-random-type-ew (prmap-mk-prng-params (deep-rno) (deep-rno) 0 (deep-rno) 83))
+(define deep-random-type-ns (prmap-mk-prng-params (deep-rno) (deep-rno) 0 (deep-rno) 83))
+(define deep-random-type-area (prmap-mk-prng-params (deep-rno) (deep-rno) 0 (deep-rno) 149))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; critter lists
@@ -329,6 +330,7 @@
 		(prmap-room-init-links kplace roomdata mapdata)
 		(if (not (prmap-roomdata-prev roomdata))
 			(begin
+				(prmap-room-cleanout kplace)
 				(prmap-room-blit-map kplace roomdata mapdata)
 				(prmap-room-init-contents kplace roomdata))
 		)
