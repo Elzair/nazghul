@@ -96,29 +96,32 @@
 	(list-ref data 0))
 (define (prmap-roomdata-y data)
 	(list-ref data 1))
-(define (prmap-roomdata-current data)
+(define (prmap-roomdata-z data)
 	(list-ref data 2))
-(define (prmap-roomdata-prev data)
+(define (prmap-roomdata-current data)
 	(list-ref data 3))
-(define (prmap-roomdata-rooms data)
+(define (prmap-roomdata-prev data)
 	(list-ref data 4))
+(define (prmap-roomdata-rooms data)
+	(list-ref data 5))
 
-(define (prmap-roomdata-setxy data x y)
+(define (prmap-roomdata-setxyz data x y z)
 	(set-car! data x)
-	(set-car! (cdr data) y))
+	(set-car! (cdr data) y)
+	(set-car! (cddr data) z))
 	
 ;prev becomes current, current is cleared
 (define (prmap-roomdata-pushcurrent data)
-	(let ((curdat (list-tail data 2)))
+	(let ((curdat (list-tail data 3)))
 		(set-car! (cdr curdat) (car curdat))
 		(set-car! curdat #f)))
 
 (define (prmap-roomdata-setcurrent data cur)
-	(let ((curdat (list-tail data 2)))
+	(let ((curdat (list-tail data 3)))
 		(set-car! curdat cur)))
 
-(define (prmap-mk-roomdata room x y current prev rooms)
-	(set-roomdata room (list x y current prev rooms))
+(define (prmap-mk-roomdata room x y z current prev rooms)
+	(set-roomdata room (list x y z current prev rooms))
 	)
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -131,11 +134,11 @@
 ;  4   1   5   3   2 
 
 (define (prmap-linkrooms-2d room1-tag room2-tag room3-tag room4-tag room5-tag)
-	(prmap-mk-roomdata (eval room1-tag) 0 0 #f #f (list room2-tag room5-tag room3-tag room4-tag))
-	(prmap-mk-roomdata (eval room2-tag) 0 0 #f #f (list room5-tag room3-tag room4-tag room1-tag))
-	(prmap-mk-roomdata (eval room3-tag) 0 0 #f #f (list room4-tag room1-tag room2-tag room5-tag))
-	(prmap-mk-roomdata (eval room4-tag) 0 0 #f #f (list room1-tag room2-tag room5-tag room3-tag))
-	(prmap-mk-roomdata (eval room5-tag) 0 0 #f #f (list room3-tag room4-tag room1-tag room2-tag))
+	(prmap-mk-roomdata (eval room1-tag) 0 0 0 #f #f (list room2-tag room5-tag room3-tag room4-tag))
+	(prmap-mk-roomdata (eval room2-tag) 0 0 0 #f #f (list room5-tag room3-tag room4-tag room1-tag))
+	(prmap-mk-roomdata (eval room3-tag) 0 0 0 #f #f (list room4-tag room1-tag room2-tag room5-tag))
+	(prmap-mk-roomdata (eval room4-tag) 0 0 0 #f #f (list room1-tag room2-tag room5-tag room3-tag))
+	(prmap-mk-roomdata (eval room5-tag) 0 0 0 #f #f (list room3-tag room4-tag room1-tag room2-tag))
 	)
 
 ; 3 dimensional map - 7 rooms
@@ -173,17 +176,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Map random seed values
 
-(define (prmap-mk-prng-params xscale yscale offset modulus)
-	(list xscale yscale offset modulus))
+(define (prmap-mk-prng-params xscale yscale zscale offset modulus)
+	(list xscale yscale zscale offset modulus))
 
 (define (prmap-prng-param-xscale data)
 	(list-ref data 0))
 (define (prmap-prng-param-yscale data)
 	(list-ref data 1))
-(define (prmap-prng-param-offset data)
+(define (prmap-prng-param-zscale data)
 	(list-ref data 2))
-(define (prmap-prng-param-modulus data)
+(define (prmap-prng-param-offset data)
 	(list-ref data 3))
+(define (prmap-prng-param-modulus data)
+	(list-ref data 4))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random map parameter data
@@ -211,19 +216,21 @@
 				candidatefn
 		))))
 (define (prmap-params-hardlinks params)
-	(list-ref params 7))
+	(list-ref params 7)
+	)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random template handling
 
-(define (prmap-get-template rxloc ryloc maptype maplistref)
+(define (prmap-get-template rxloc ryloc rzloc maptype maplistref)
 	(let* (
-			(xmult (list-ref maptype 0)) 
-			(ymult (list-ref maptype 1)) 
-			(addfactor (list-ref maptype 2)) 
-			(modfactor (list-ref maptype 3)) 
+			(xmult (prmap-prng-param-xscale maptype)) 
+			(ymult (prmap-prng-param-yscale maptype)) 
+			(zmult (prmap-prng-param-zscale maptype)) 
+			(addfactor (prmap-prng-param-offset maptype)) 
+			(modfactor (prmap-prng-param-modulus maptype)) 
 			(maplist (eval maplistref))
-			(mapnumber (modulo (+ (* rxloc xmult) (* ryloc ymult) addfactor) modfactor))
+			(mapnumber (modulo (+ (* rxloc xmult) (* ryloc ymult) (* rzloc zmult) addfactor) modfactor))
 		)
 		;get the map from the first entry with value greater than mapnumber		
 		(cdr 
@@ -253,23 +260,24 @@
 		)
 	))	
 	
-(define (prmap-room-gethardlink xloc yloc linksdata)
+(define (prmap-room-gethardlink xloc yloc zloc linksdata)
 	(let (
 		(matchinglink
 			(filter (lambda (listentry)
 				(and
 					(equal? (car listentry) xloc)
 					(equal? (cadr listentry) yloc)
+					(equal? (caddr listentry) zloc)
 				))
 				linksdata)
 			)
 		)
 		(if (equal? (length matchinglink) 0)
 			(list nil nil nil nil)
-			(caddr (car matchinglink)))))
+			(cadddr (car matchinglink)))))
 
-(define (prmap-room-getmaphardlink xloc yloc mapdata)
-	(apply (prmap-params-hardlinkfunction mapdata) (list xloc yloc (prmap-params-hardlinks mapdata)))
+(define (prmap-room-getmaphardlink xloc yloc zloc mapdata)
+	(apply (prmap-params-hardlinkfunction mapdata) (list xloc yloc zloc (prmap-params-hardlinks mapdata)))
 	)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -277,7 +285,7 @@
 
 ;sets x and y location of new rooms based on current location and direction to new room
 ;also updates current -> prev -> normal status
-(define (prmap-room-setxy roomslist dir rxloc ryloc)
+(define (prmap-room-setxyz roomslist dir rxloc ryloc rzloc)
 	(let* (
 			(kplace (eval (get-cardinal-ref roomslist dir)))
 			(roomdata (get-roomdata kplace))
@@ -286,7 +294,7 @@
 			(ryoff (+ ryloc (cadr offsets)))
 		)
 		(if (not (prmap-roomdata-current roomdata))
-			(prmap-roomdata-setxy roomdata rxoff ryoff))
+			(prmap-roomdata-setxyz roomdata rxoff ryoff rzloc))
 		(prmap-roomdata-pushcurrent roomdata)
 		))
 
@@ -296,16 +304,18 @@
 			(rooms (prmap-roomdata-rooms roomdata))
 			(rxloc (prmap-roomdata-x roomdata))
 			(ryloc (prmap-roomdata-y roomdata))
+			(rzloc (prmap-roomdata-z roomdata))
 		)
 		(map (lambda (dir)
-			(prmap-room-setxy rooms dir rxloc ryloc))
+			(prmap-room-setxyz rooms dir rxloc ryloc rzloc))
 			(list north west east south))
 		(prmap-roomdata-setcurrent roomdata #t)
 		;debugging map
 		(if #f
 			(begin
 				(kern-log-msg rxloc)
-				(kern-log-msg ryloc))
+				(kern-log-msg ryloc)
+				(kern-log-msg rzloc))
 		)
 	))
 	
@@ -319,7 +329,8 @@
 			(rooms (prmap-roomdata-rooms roomdata))
 			(rxloc (prmap-roomdata-x roomdata))
 			(ryloc (prmap-roomdata-y roomdata))
-			(linkinfo (prmap-room-getmaphardlink rxloc ryloc mapdata))
+			(rzloc (prmap-roomdata-z roomdata))
+			(linkinfo (prmap-room-getmaphardlink rxloc ryloc rzloc mapdata))
 		)
 		(map (lambda (dir)
 			;roomlinktarget is hardlink target if it exists, else regular neighbor
@@ -358,7 +369,8 @@
 	(let* (
 			(rxloc (prmap-roomdata-x roomdata))
 			(ryloc (prmap-roomdata-y roomdata))
-			(linkinfo (prmap-room-getmaphardlink rxloc ryloc mapdata))
+			(rzloc (prmap-roomdata-z roomdata))
+			(linkinfo (prmap-room-getmaphardlink rxloc ryloc rzloc mapdata))
 			(blitstats (prmap-params-blitstats mapdata))
 			(destmap (kern-place-map kplace))
 			(rmapdata (list
@@ -367,7 +379,7 @@
 				(list 1 0 (prmap-params-ewparams mapdata))
 				(list 0 0 (prmap-params-nsparams mapdata))
 				))
-			(areamap-choice (prmap-get-template rxloc ryloc (prmap-params-areaparams mapdata) (prmap-params-areamaps mapdata)))
+			(areamap-choice (prmap-get-template rxloc ryloc rzloc (prmap-params-areaparams mapdata) (prmap-params-areamaps mapdata)))
 		)
 		(prmap-do-map-blit destmap
 			(car areamap-choice)
@@ -384,7 +396,7 @@
 					(thisy (+ ryloc (cadr thisrmapdata)))
 					(thisrtype (caddr thisrmapdata))
 					(linkmap (if (null? thishardlink)
-								(prmap-get-template thisx thisy thisrtype (prmap-params-edgemaps mapdata))
+								(prmap-get-template thisx thisy rzloc thisrtype (prmap-params-edgemaps mapdata))
 								(cdr thishardlink)))
 				)
 				(prmap-do-map-blit destmap (car linkmap)

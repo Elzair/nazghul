@@ -442,6 +442,6 @@
  )
 
 (prmap-linkrooms-2d 'p_deeps_1 'p_deeps_2 'p_deeps_3 'p_deeps_4 'p_deeps_5)
-(prmap-mk-roomdata p_lost_garrison 0 0 #t #t (list 'p_deeps_1 'p_deeps_2 'p_deeps_5 'p_deeps_3))
+(prmap-mk-roomdata p_lost_garrison 0 0 0 #t #t (list 'p_deeps_1 'p_deeps_2 'p_deeps_5 'p_deeps_3))
 
 (prmap-set-mapdata p_deeps_1 (prmap-mk-mapdata deep-random-type-ns deep-random-type-ew deep-random-type-area 'deep-terrain-edges 'deep-terrain-area 'deep-room-blitstats nil deep-room-hardlinks))
