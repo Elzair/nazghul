@@ -3482,9 +3482,9 @@ static void buy(struct merchant *merch)
 	statusSetMode(ShowParty);
 }
 
-static bool conv_filter_trade(struct inv_entry *ie, void *cookie)
+static bool conv_filter_trade(struct inv_entry *ie, void *fdata)
 {
-        struct trade_info *trade = (struct trade_info*)cookie;
+        struct trade_info *trade = (struct trade_info*)fdata;
         return (ie->type == trade->data && ie->count > ie->ref);
 }
 
@@ -3501,7 +3501,7 @@ static int fill_sell_list(struct merchant *merch, struct trade_info *trades)
                 if (merch->trades[i].cost / MARKUP == 0)
                         continue;
                 
-                filter.cookie = &merch->trades[i];
+                filter.fdata = &merch->trades[i];
                 ie = player_party->inventory->first(&filter);
                 if (!ie)
                         continue;
@@ -3903,16 +3903,30 @@ static void cmd_build_skill_list(struct node *head, class Character *pc)
         /* add bonus skills? */
 }
 
-static void cmd_paint_skill(struct stat_super_generic_data *self, struct node *node, 
+static void cmd_paint_skill(struct stat_super_generic_data *self, 
+                            struct node *node, 
                             SDL_Rect *rect)
 {
         struct skill_set_entry *ssent = (struct skill_set_entry *)node->ptr;
 
-        /* fixme: for now just paint the skill name */
+        /* name */
         if (rect->h < ASCII_H) {
                 return;
         }
         screenPrint(rect, 0, "%s", ssent->skill->name);
+        rect->y += ASCII_H;
+
+        /* fixme: desc requires some console-like buffer management */
+
+        /* lvl, mp & ap */
+        if (rect->h < ASCII_H) {
+                return;
+        }
+        screenPrint(rect, 0, 
+                    "^c+GLvl:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
+                    ssent->level, 
+                    ssent->skill->mp, 
+                    ssent->skill->ap);
         rect->y += ASCII_H;
 }
 

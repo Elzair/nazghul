@@ -4615,7 +4615,7 @@ void celldump(scheme *sc, pointer pp)
                 "PRO", "ENV"
         };
         char strbuf[MAX_DUMP_LEN+1], *bptr;
-        int i;
+        unsigned int i;
 
         memset(strbuf, ' ', sizeof(strbuf));
 

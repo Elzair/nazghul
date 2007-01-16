@@ -24,14 +24,6 @@
 
 #include "object.h"
 
-/* FIXME: move this to object.h */
-struct filter {
-        bool (*fx)(struct inv_entry *ie, void *cookie);
-        void *cookie;
-};
-
-class TrapType;
-
 class Container:public Object {
       public:
 	Container();

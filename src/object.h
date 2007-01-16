@@ -145,6 +145,11 @@ struct inv_entry {
 	class ObjectType *type;
 };
 
+struct filter {
+        bool (*fx)(struct inv_entry *ie, void *fdata);
+        void *fdata;
+};
+
 typedef struct hook_entry {
         struct list list;
         struct effect *effect;

@@ -167,13 +167,13 @@ static struct status {
 } Status;
 
 /* filtering functions used with status_show_container() */
-static bool stat_filter_arms(struct inv_entry *ie, void *cookie);
-static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie);
-static bool stat_filter_reagents(struct inv_entry *ie, void *cookie);
-static bool stat_filter_spells(struct inv_entry *ie, void *cookie);
-static bool stat_filter_items(struct inv_entry *ie, void *cookie);
-static bool stat_filter_misc(struct inv_entry *ie, void *cookie);
-static bool stat_filter_drop(struct inv_entry *ie, void *cookie);
+static bool stat_filter_arms(struct inv_entry *ie, void *fdata);
+static bool stat_filter_ready_arms(struct inv_entry *ie, void *fdata);
+static bool stat_filter_reagents(struct inv_entry *ie, void *fdata);
+static bool stat_filter_spells(struct inv_entry *ie, void *fdata);
+static bool stat_filter_items(struct inv_entry *ie, void *fdata);
+static bool stat_filter_misc(struct inv_entry *ie, void *fdata);
+static bool stat_filter_drop(struct inv_entry *ie, void *fdata);
 
 /* functions to show specific types of things from status_show_containe() */
 static void status_show_ztat_character(SDL_Rect *rect, void *thing);
@@ -207,12 +207,12 @@ static struct ztats_entry ztats_entries[] = {
 };
 
 
-static bool stat_filter_arms(struct inv_entry *ie, void *cookie)
+static bool stat_filter_arms(struct inv_entry *ie, void *fdata)
 {
         return (ie->type->isReadyable());
 }
 
-static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie)
+static bool stat_filter_ready_arms(struct inv_entry *ie, void *fdata)
 {
         if (! ie->type->isReadyable()) {
                 return false;
@@ -232,22 +232,22 @@ static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie)
         return false;
 }
 
-static bool stat_filter_reagents(struct inv_entry *ie, void *cookie)
+static bool stat_filter_reagents(struct inv_entry *ie, void *fdata)
 {
         return ie->type->isMixable();
 }
 
-static bool stat_filter_spells(struct inv_entry *ie, void *cookie)
+static bool stat_filter_spells(struct inv_entry *ie, void *fdata)
 {
         return ie->type->isCastable();
 }
 
-static bool stat_filter_items(struct inv_entry *ie, void *cookie)
+static bool stat_filter_items(struct inv_entry *ie, void *fdata)
 {
         return ie->type->isUsable();
 }
 
-static bool stat_filter_misc(struct inv_entry *ie, void *cookie)
+static bool stat_filter_misc(struct inv_entry *ie, void *fdata)
 {
         /* Things that don't fall into any of the other categories */
         return (! ie->type->isReadyable()
@@ -256,7 +256,7 @@ static bool stat_filter_misc(struct inv_entry *ie, void *cookie)
                 && ! ie->type->isUsable());
 }
 
-static bool stat_filter_drop(struct inv_entry *ie, void *cookie)
+static bool stat_filter_drop(struct inv_entry *ie, void *fdata)
 {
         return (! ie->type->isCastable()
                 && (ie->ref < ie->count));
@@ -718,7 +718,7 @@ static void status_show_ztat_spells(SDL_Rect *rect, void *thing)
         /* Print info only available in the spell struct. */
         if (spell) {
                 screenPrint(rect, 0, 
-                            "^c+GL:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
+                            "^c+GLvl:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
                             spell->level, 
                             spell->cost, spell->action_points);
         }
@@ -1997,4 +1997,21 @@ void statusSetSuperGenericData(struct stat_super_generic_data *data)
 
         Status.super_generic = data;
         data->refcount++;
+}
+
+void statusBrowseContainer(class Container *container,
+                           struct filter *filter,
+                           char *title)
+{
+        switch_to_tall_mode();
+        status_set_title(title);
+        Status.topLine = 0;
+        Status.curLine = 0;
+        Status.container = container;
+        Status.filter = filter;
+        Status.maxLine = container->filter_count(filter) - Status.numLines;
+        Status.paint = stat_show_container;
+        Status.scroll = stat_scroll_container;
+        Status.show_thing = status_show_generic_object_type;
+        Status.selectedEntry = container->first(filter);
 }

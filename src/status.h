@@ -194,6 +194,19 @@ extern void statusPushMode(enum StatusMode mode);
 extern void statusPopMode();
 extern void statusSetSuperGenericData(struct stat_super_generic_data *data);
 
+/**
+ * Show the filtered contents of a container in the status browser and let the
+ * player scroll through them. To retrieve a pointer to the inv_entry struct
+ * for the current highlighteed item, call statusGetSelected(InventoryItem).
+ *
+ * @param container is the container object to browse
+ * @param filter selects which objects to show
+ * @param title is shown at the top of the status window
+ */
+extern void statusBrowseContainer(class Container *container,
+                                  struct filter *filter,
+                                  char *title);
+
 END_DECL
 
 #endif
