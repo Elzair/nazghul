@@ -512,57 +512,61 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	int i;
 	int x = rect->x;
 	int y = rect->y;
-	int len;
+	int alen, slen, stop;
 
         /* Print the string to a buffer. */
 	va_start(args, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, args);
 	va_end(args);
 
-	len = strlen(buf);
-	if (len > rect->w)
-		// fixme: shouldn't it be len * ASCII_W?
-		len = rect->w;
+	slen = strlen(buf);
+        alen = asciiStrlen(buf);
+        stop = rect->x + (rect->w * ASCII_W);
 
-	// If painting on the border then first fill the line with the border
-	// image.
+	/* If painting on the border then first fill the line with the border
+         * image. */
 	if (flags & SP_ONBORDER) {
 		for (x = rect->x; x < rect->x + rect->w; x += BORDER_W)
 			sprite_paint(FrameSprites[FRAME_HORZ], 0, x, rect->y);
 	}
 
+        /* Calculate offset for center and right-justified cases */
 	if (flags & SP_CENTERED) {
-		int w = len * ASCII_W;
+		int w = alen * ASCII_W;
 		if (w > rect->w) {
 			w = rect->w;
-			len = w / ASCII_W;
 		}
 		x = (rect->w - w) / 2 + rect->x;
 	} else if (flags & SP_RIGHTJUSTIFIED) {
-		int w = len * ASCII_W;
+		int w = alen * ASCII_W;
 		if (w > rect->w) {
 			w = rect->w;
-			len = w / ASCII_W;
 		}
 		x = (rect->w - w) + rect->x;
 	}
 
-	// If painting on the border, then paint the right stub 
-	// to the left of the text.
-	if (flags & SP_ONBORDER)
+	/* If painting on the border, then paint the right stub 
+         * to the left of the text. */
+	if (flags & SP_ONBORDER) {
 		sprite_paint(FrameSprites[FRAME_ENDR], 0, x - BORDER_W, rect->y);
+        }
 
-        /* Paint the individual characters from the buffer. This uses a state
-         * machine to accomodate embedded control sequences in the text. */
-	for (i = 0; i < len; i++) {
-                if (asciiPaint(buf[i], x, y, Screen))
+        /* Paint the characters until we run out or hit the end of the
+         * region. */
+	for (i = 0; i < slen && x < stop; i++) {
+
+                if (asciiPaint(buf[i], x, y, Screen)) {
+
+                        /* Move right. */
                         x += ASCII_W;
+                }
 	}
 
-	// If painting on the border, then paint the left stub 
-	// to the right of the text.
-	if (flags & SP_ONBORDER)
+	/* If painting on the border, then paint the left stub 
+         * to the right of the text. */
+	if (flags & SP_ONBORDER) {
 		sprite_paint(FrameSprites[FRAME_ENDL], 0, x, rect->y);
+        }
 }
 
 void screen_repaint_frame(void)

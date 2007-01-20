@@ -3914,15 +3914,7 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
                 return;
         }
         screenPrint(rect, 0, "%s", ssent->skill->name);
-        rect->y += ASCII_H;
-
-        /* fixme: desc requires some console-like buffer management */
-
-        /* lvl, mp & ap */
-        if (rect->h < ASCII_H) {
-                return;
-        }
-        screenPrint(rect, 0, 
+        screenPrint(rect, SP_RIGHTJUSTIFIED, 
                     "^c+GLvl:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
                     ssent->level, 
                     ssent->skill->mp, 

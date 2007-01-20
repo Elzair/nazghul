@@ -583,3 +583,38 @@ int asciiPaint(char c, int x, int y, SDL_Surface * surf)
         return ret;
 }
 
+int asciiStrlen(char *s)
+{
+        /* Start with the current state. */
+        enum ascii_ctrl_states state = Ascii.state;
+        char c = 0;
+        int len = 0;
+
+        while ((c = *s++)) {
+                switch (state) {
+                case ASCII_STATE_CLR:
+                        state = ('+'==c?ASCII_STATE_CLRPUSH:ASCII_STATE_DEF);
+                        break;
+                        
+                case ASCII_STATE_CLRPUSH:
+                        state = ASCII_STATE_DEF;
+                        break;
+                        
+                case ASCII_STATE_ESC:
+                        if (c == 'c') {
+                                state = ASCII_STATE_CLR;
+                        }
+                        break;
+                        
+                case ASCII_STATE_DEF:
+                default:
+                        if ('^' == c) {
+                                state = ASCII_STATE_ESC;
+                        } else {
+                                len++;
+                        }
+                }
+        }
+        
+        return len;
+}
