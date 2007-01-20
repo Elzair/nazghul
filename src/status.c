@@ -1948,36 +1948,35 @@ static void stat_super_generic_paint()
 
 static void stat_super_generic_scroll(enum StatusScrollDir dir)
 {
-        struct node *first = Status.super_generic->list.next;
-        struct node *last = Status.super_generic->list.prev;
-
-        assert(Status.super_generic);
+        struct stat_super_generic_data *gen = Status.super_generic;
+        struct node *first = gen->list.next;
+        struct node *last = gen->list.prev;
 
         /* Check for trivial case: empty list */
-        if (node_list_empty(&Status.super_generic->list)) {
+        if (node_list_empty(&gen->list)) {
                 return;
         }
 
 	switch (dir) {
         case ScrollPageUp:
 	case ScrollUp:
-                if (Status.super_generic->first_shown != first) {
-                        Status.super_generic->first_shown =
-                                Status.super_generic->first_shown->prev;
+                if (gen->first_shown != first) {
+                        gen->first_shown = gen->first_shown->prev;
+                        gen->selected = gen->first_shown;
                 }
 		break;
         case ScrollPageDown:
 	case ScrollDown:
-                if (Status.super_generic->first_shown != last) {
-                        Status.super_generic->first_shown =
-                                Status.super_generic->first_shown->next;
+                if (gen->first_shown != last) {
+                        gen->first_shown = gen->first_shown->next;
+                        gen->selected = gen->first_shown;
                 }
 		break;
         case ScrollTop:
-                Status.super_generic->first_shown = first;
+                gen->first_shown = first;
                 break;
         case ScrollBottom:
-                Status.super_generic->first_shown = last;
+                gen->first_shown = last;
 		break;
         default:
                 break;

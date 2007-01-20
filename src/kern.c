@@ -3803,8 +3803,13 @@ KERN_API_CALL(kern_mk_skill_set)
                 pair = scm_car(sc, list);
                 list = scm_cdr(sc, list);
                 if (unpack(sc, &pair, "dp", &lvl, &skill)) {
-                        load_err("kern-mk-skill %s: bad skill list args", 
+                        load_err("kern-mk-skill-set %s: bad skill list args", 
                                  name);
+                        goto abort;
+                }
+
+                if (!skill) {
+                        load_err("kern-mk-skill-set %s: nil skill", name);
                         goto abort;
                 }
 

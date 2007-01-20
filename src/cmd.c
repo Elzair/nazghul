@@ -3908,18 +3908,71 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
                             SDL_Rect *rect)
 {
         struct skill_set_entry *ssent = (struct skill_set_entry *)node->ptr;
+        struct skill *skill = ssent->skill;
+        char *requires = "Requires:";
+        struct node *tnode;
+        struct list *elem;
+        SDL_Rect orect;
+
+        /* remember original rect */
+        orect = *rect;
 
         /* name */
         if (rect->h < ASCII_H) {
                 return;
         }
-        screenPrint(rect, 0, "%s", ssent->skill->name);
+        screenPrint(rect, 0, "^c+m%s^c-", skill->name);
+
+        /* level, ap, mp */
         screenPrint(rect, SP_RIGHTJUSTIFIED, 
                     "^c+GLvl:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
                     ssent->level, 
-                    ssent->skill->mp, 
-                    ssent->skill->ap);
+                    skill->mp, 
+                    skill->ap);
         rect->y += ASCII_H;
+
+        /* check for required items */
+        if (! node_list_empty(&skill->tools)
+            || ! list_empty(&skill->materials)) {
+
+                /* print "requires:" */
+                screenPrint(rect, 0, "^c+G%s^c-", requires);
+
+                /* temporarily change x to print to right of "requires" */
+                rect->x += (strlen(requires) + 1) * ASCII_W;
+
+                /* list tools */
+                node_for_each(&skill->tools, tnode) {
+                        class ObjectType *tool = (class ObjectType*)tnode->ptr;
+                        screenPrint(rect, 0, "^c+y%s^c-", tool->getName());
+                        rect->y += ASCII_H;
+                }
+
+                /* list materials */
+                list_for_each(&skill->materials, elem) {
+                        struct skill_material *mat =
+                                list_entry(elem, struct skill_material, list);
+                        class ObjectType *objtype = 
+                                (class ObjectType*)mat->objtype;
+                        screenPrint(rect, 0, "^c+y%s^c+c (%d)^c-^c-", 
+                                    objtype->getName(), 
+                                    mat->quantity);
+                        rect->y += ASCII_H;
+                }
+
+                /* restore rect x */
+                rect->x = orect.x;
+        }
+        
+        /* figure out how much area we used */
+        orect.h = rect->y - orect.y;
+
+        /* if this is not the currently selected item then shade it */
+        if (self->selected != node) {
+                screenShade(&orect, 128);
+        }
+
+        return;
 }
 
 static void cmd_skill_list_unref(struct stat_super_generic_data *self)
