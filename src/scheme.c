@@ -4574,6 +4574,15 @@ static void serialize(scheme *sc, pointer p, struct save *save, int flags)
                         save->write(save, "'()\n");
                 } else if (is_string(p)) {
                         save->write(save, "\"%s\"\n", strvalue(p));
+				} else if (is_vector(p)) {
+						save->enter(save, "(vector\n");
+						long vindex;
+						long vlength=ivalue(p);
+						for (vindex=0;vindex<vlength;vindex++)
+						{
+							serialize(sc, vector_elem(p,vindex), save, SER_CAR);
+						}
+						save->exit(save, ")\n");
                 } else {
                         assert(0);
                 }
