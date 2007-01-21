@@ -410,6 +410,7 @@ class Object {
 
         virtual int getMovementCost(int pclass);
         virtual struct mmode *getMovementMode();
+        virtual void setMovementMode(struct mmode *mmode);
         virtual bool isPassable(int pclass);
         virtual void setPclass(int val);
         virtual int getPclass();

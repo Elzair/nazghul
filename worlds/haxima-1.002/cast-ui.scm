@@ -134,8 +134,7 @@
 (define (cast-ui-dospell-loc target effect caster power)
 	(cond ((null? target) result-no-target)
 		((kern-in-los? (kern-obj-get-location caster) target)
-			(effect caster target power)
-			result-ok)
+			(effect caster target power))
 		(else
 			(kern-log-msg "Not in LOS!")
 			result-no-target)))

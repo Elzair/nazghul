@@ -8121,6 +8121,25 @@ KERN_API_CALL(kern_set_time_stop_sprite)
         return sc->T;
 }
 
+KERN_API_CALL(kern_obj_set_mmode)
+{
+        Object *obj;
+        struct mmode *mmode;
+
+        if (!(obj = unpack_obj(sc, &args, "kern-obj-set-mmode")))
+                return sc->NIL;
+
+        if (unpack(sc, &args, "p", &mmode)) {
+                rt_err("kern-obj-set-mmode: bad args");
+                return sc->NIL;
+        }
+
+        obj->setMovementMode(mmode);
+
+        return scm_mk_ptr(sc, obj);
+        
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -8298,6 +8317,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-light", kern_obj_set_light);
         API_DECL(sc, "kern-obj-set-opacity", kern_obj_set_opacity);
         API_DECL(sc, "kern-obj-set-pclass", kern_obj_set_pclass);
+        API_DECL(sc, "kern-obj-set-mmode", kern_obj_set_mmode);
         API_DECL(sc, "kern-obj-set-sprite", kern_obj_set_sprite);
         API_DECL(sc, "kern-obj-set-temporary", kern_obj_set_temporary);
         API_DECL(sc, "kern-obj-set-ttl", kern_obj_set_ttl);

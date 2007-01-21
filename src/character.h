@@ -104,6 +104,7 @@ class Character:public Being {
 	int getLevel();
         void setLevel(int level);
         virtual struct mmode *getMovementMode();
+        virtual void setMovementMode(struct mmode *mmode);
 	virtual int getArmourClass();
 	virtual char *getWoundDescription();
 	virtual class Character *getAttackTarget(class ArmsType * weapon);
@@ -320,6 +321,7 @@ class Character:public Being {
 
         bool fleePathFound;
         int fleeX, fleeY, fleePathFlags;
+        struct mmode *currentMmode;
 };
 
 extern void char_dtor(void *val);

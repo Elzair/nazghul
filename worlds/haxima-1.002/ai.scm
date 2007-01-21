@@ -474,7 +474,7 @@
               (if (not (null? (get-hostiles-in-range kchar 1)))
                   #f
                   (let* ((cloc (kern-obj-get-location kchar))
-                         (vect (loc-to-delta (loc-diff dest cloc)))
+                         (vect (loc-to-delta (loc-diff cloc dest)))
                          (dest (loc-add cloc vect)))
                     (if (passable? dest kchar)
                         (kern-obj-move kchar (loc-x vect) (loc-y vect))

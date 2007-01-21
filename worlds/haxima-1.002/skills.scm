@@ -11,6 +11,14 @@
                       kactor 1 (occ-ability-thief kactor)
                       (mk-ifc-query 'unlock)))
 
+(define (skill-jump kactor)
+  (cast-ui-ranged-loc powers-jump
+                      kactor
+                      2
+                      0))
+                      
+  
+
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
 
@@ -19,6 +27,14 @@
                  1 2 
                  'skill-unlock nil 
                  (list t_picklock) 
+                 (list (list t_sword 1))
+                 ))
+
+(define sk_jump
+  (kern-mk-skill "Jump" "Jump over tiles"
+                 2 1
+                 'skill-jump nil
+                 nil
                  nil))
 
 ;;----------------------------------------------------------------------------
@@ -30,4 +46,5 @@
 
 (define sks_wanderer
   (kern-mk-skill-set "Wanderer" (list (list 1 sk_unlock)
+                                      (list 1 sk_jump)
                                     )))

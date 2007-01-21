@@ -617,8 +617,8 @@
   (let* ((tloc (kern-obj-get-location kchar))
          (v (loc-canonical (foldr (lambda (a b) 
                                (loc-sum a 
-                                        (loc-diff tloc 
-                                                  (kern-obj-get-location b))))
+                                        (loc-diff (kern-obj-get-location b))
+                                                  tloc))
                              (mk-loc (loc-place tloc) 0 0)
                              foes))))
     (define (move dx dy)

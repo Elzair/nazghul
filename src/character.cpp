@@ -176,6 +176,7 @@ Character::Character(char *tag, char *name,
           , fleeX(0)
           , fleeY(0)
           , fleePathFlags(0)
+          , currentMmode(0)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -261,6 +262,7 @@ Character::Character():hm(0), xp(0), order(-1),
                       , fleeX(0)
                       , fleeY(0)
                       , fleePathFlags(0)
+                      , currentMmode(0)
 {
         // This method is probably obsolete now
 
@@ -3140,7 +3142,16 @@ void Character::addDefense(int val)
 
 struct mmode *Character::getMovementMode()
 {
-        return species->mmode;
+        if (currentMmode) {
+                return currentMmode;
+        } else {
+                return species->mmode;
+        }
+}
+
+void Character::setMovementMode(struct mmode *mmode)
+{
+        currentMmode = mmode;
 }
 
 void Character::setCurrentFaction(int faction)

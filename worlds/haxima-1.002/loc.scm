@@ -77,8 +77,8 @@
                   (mdist (loc-x a) (loc-x b) w)
                   (mdist (loc-y a) (loc-y b) w)))
         (mk-loc place
-                (- (loc-x a) (loc-x b))
-                (- (loc-y a) (loc-y b))))))
+                (- (loc-x b) (loc-x a))
+                (- (loc-y b) (loc-y a))))))
 
 
 (define (loc-to-cardinal-dir loc)

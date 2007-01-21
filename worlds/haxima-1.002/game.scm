@@ -79,6 +79,8 @@
    ))
 (map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
 
+(define mmode-jump mmode-fly)
+
 ;; Movement cost table
 (kern-mk-ptable
   ;;   walk   hover ship   phase  fly    skiff  fish crawl  vship rangr none

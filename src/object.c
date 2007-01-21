@@ -2222,6 +2222,11 @@ struct mmode *Object::getMovementMode()
         return NULL;
 }
 
+void Object::setMovementMode(struct mmode *mmode)
+{
+        // nop
+}
+
 Object *Object::getSpeaker()
 {
         return this;

@@ -158,8 +158,9 @@
                         ensnare-loc
                         dir
                         (/ (kern-char-get-level kchar) 2))))
-  (let* ((v (loc-diff (kern-obj-get-location ktarg)
-                      (kern-obj-get-location kchar)))
+  (let* ((v (loc-diff (kern-obj-get-location kchar)
+                      (kern-obj-get-location ktarg)
+                      ))
          (dir (loc-to-cardinal-dir v)))
     (spew-in-dir dir)))
 
@@ -180,8 +181,9 @@
                         ensnare-loc
                         dir
                         4)))
-  (let* ((v (loc-diff (kern-obj-get-location ktarg)
-                      (kern-obj-get-location kchar)))
+  (let* ((v (loc-diff (kern-obj-get-location kchar)
+                      (kern-obj-get-location ktarg)
+                      ))
          (dir (loc-to-cardinal-dir v)))
     (spew-in-dir dir)))
 
