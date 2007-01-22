@@ -335,13 +335,17 @@
   (let ((traps (ifccall ktarg 'get-traps)))
     (cond ((null? traps)
            (kern-log-msg (kern-obj-get-name caster)
-                         " does not detect any traps"))
+                         " does not detect any traps")
+           )
           (else
            (map (lambda (trap)
                   (trap-set-detected! trap #t)
                   (kern-log-msg (kern-obj-get-name caster)
-                                " detects a " (trap-name trap) " trap!"))
-                traps)))))
+                                " detects a " (trap-name trap) " trap!")
+                  )
+                traps)
+           )))
+  result-ok)
 
 ;again, a bit of range for powerful users?
 (define (powers-dispel-field caster ktarg power)

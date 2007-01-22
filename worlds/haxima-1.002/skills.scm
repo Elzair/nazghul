@@ -17,23 +17,36 @@
                       2
                       0))
                       
-  
+(define (skill-detect-trap kactor)
+  (cast-ui-ranged-any powers-detect-traps
+                      kactor 1 (occ-ability-thief kactor)
+                      (lambda (kobj)
+                        (and (kern-obj-is-visible? kobj)
+                             (handles? kobj 'get-traps)))
+                      ))
 
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
 
 (define sk_unlock 
-  (kern-mk-skill "Unlock" "Unlock a non-magical door or chest" 
+  (kern-mk-skill "Unlock" "Unlock a door with a picklock"
                  1 2 
                  'skill-unlock nil 
                  (list t_picklock) 
-                 (list (list t_sword 1))
+                 nil
                  ))
 
 (define sk_jump
-  (kern-mk-skill "Jump" "Jump over tiles"
+  (kern-mk-skill "Jump" "Jump over impassable terrain"
                  2 1
                  'skill-jump nil
+                 nil
+                 nil))
+
+(define sk_detect_trap
+  (kern-mk-skill "Detect Trap" "Check if a door or chest is trapped"
+                 2 2
+                 'skill-detect-trap nil
                  nil
                  nil))
 
@@ -41,10 +54,9 @@
 ;; Skill Set declarations
 
 (define sks_wrogue
-  (kern-mk-skill-set "Wrogue" (list (list 2 sk_unlock)
+  (kern-mk-skill-set "Wrogue" (list (list 1 sk_unlock)
+                                    (list 1 sk_jump)
+                                    (list 1 sk_detect_trap)
                                     )))
 
-(define sks_wanderer
-  (kern-mk-skill-set "Wanderer" (list (list 1 sk_unlock)
-                                      (list 1 sk_jump)
-                                    )))
+(define sks_wanderer sks_wrogue)
