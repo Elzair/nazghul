@@ -126,17 +126,17 @@ Ultima IV / V Runes
 -------------------
 An    - Negate
 Bet   - Small
-Corp  - Death / undead
+Corp  - Death / Undead
 Des   - Down
 Ex    - Freedom
-Flam  - Flame / fire
+Flam  - Flame / Fire
 Grav  - Energy
 Hur   - Wind
 In    - Create
 Jux   - Trap
-Kal   - Invoke / summon
+Kal   - Invoke / Summon
 Lor   - Light
-Mani  - Life / health
+Mani  - Life / Health
 Nox   - Poison
 Ort   - Magic
 Por   - Movement
@@ -146,13 +146,13 @@ Sanct - Protection
 Tym   - Time
 Uus   - Up
 Vas   - Great
-Wis   - Vision / percieve
-Xen   - Creature / being
+Wis   - Vision / Percieve
+Xen   - Creature / Being
 Ylem  - Earth
 Zu    - Sleep
 
 Jzeth - Ether
-Orax  - Water / waves
+Orax  - Water / Waves
 
 
 

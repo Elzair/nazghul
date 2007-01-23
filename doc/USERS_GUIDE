@@ -69,13 +69,15 @@ cursor. When you hit 'ESC' instead the command will cancel. Pretty much all
 commands can be canceled by hitting 'ESC'.
 
 To get a detailed explanation of where you are and what time it is, use the AT
-command by pressing '@'. There is no clock in the game, so this is the only way
-to tell time other than guesstimating from the position of the sun.
+command by pressing '@'. There is no displayed clock in the game, so this is the
+only way to tell time other than guesstimating from the position of the sun or
+finding time telling devices inside the game.
 
                                     Talking
 
-You'll see your first NPC to the south. To talk to the NPC press 't' for
-T)alk. This brings up a targeting crosshair. It might start out on the NPC or
+When you start the game, after selecting what kind of character to create, you'll
+see your first NPC to the south. To talk to the NPC press 't' for T)alk.
+This brings up a targeting crosshair. It might start out on the NPC or
 on your character, it it's on you then move it to the NPC with the arrow keys
 and hit enter. 
 
@@ -125,8 +127,8 @@ When you enter a town, unless you have some enemies there, you will start out
 in "follow mode", which means you control the party leader and everybody else
 in the party tries to keep up. But if hostiles are in town you will be in
 "character mode", which means you control each party member in turn. To switch
-between these two mode use the 'f' key. This will make more sense when you add
-more characters to your party.
+between these two mode use the 'f' key. This will make more sense when you have
+more characters join your party.
 
 IMPORTANT: when you eventually get somebody to join you, don't forget about
            Follow Mode (the 'f' key). It's much easier to have everybody follow
@@ -193,7 +195,7 @@ Foogod Window
 
         Everything in the world suspends while Party members get to move.
 
-    Xray Vision
+    X-ray Vision
 
         Party members can see through walls.
 
@@ -514,7 +516,7 @@ Diseased (D)
 Drunk (A)
 
     Anytime your character buys alcoholic drinks or picks them up from the
-    ground he gets drink. Drunkenness lasts an hour or so and causes him to
+    ground he gets drunk. Drunkenness lasts an hour or so and causes him to
     randomly bump into things.
 
 Ensnared (E)
@@ -540,8 +542,8 @@ Poisoned (P)
 
 Start a conversation with an NPC with the T)alk command. During conversation
 you type simple inquiries and the NPC responds, sometimes asking you a question
-in return. Conversations with shopkeepers will allow you to buy and sell
-items. Most NPCs respond to the 'NAME' and 'JOB' queries, as well as queris
+in return. Conversations with shopkeepers will allow you to BUY and SELL
+items. Most NPCs respond to the 'NAME' and 'JOB' queries, as well as queries
 about their town and fellow townsmen. Their responses usually give you clues to
 further fruitful queries. Also, with the special 'JOIN' query you can ask an
 NPC to join your party (some will join you, and some will join you only if you

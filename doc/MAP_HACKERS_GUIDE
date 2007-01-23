@@ -86,7 +86,7 @@ The following keybindings are in effect:
         Home/End - jump to the top or bottom of the available terrain list
         C - copy; set the terrain under the cursor as the brush
         F - terrain fill (uses the 4-neighbor algorithm)
-        ESC - abort eddit mode
+        ESC - abort edit mode
         Ctrl-[0-9] - save the brush in a "quick access" terrain slot
         [0-9] - load the brush with the quick access terrain slot
  

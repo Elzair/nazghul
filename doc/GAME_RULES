@@ -105,8 +105,8 @@ are causing problems:
 * I'll disallow placing autoportals in the entry zones. This will be checked at
   load time when the portal is declared.
 
-* Everyone in the party will have a superset of the party passabilty mask. It's
-  ok if they have extra passability (permanent or temporary).
+* Everyone in the party will have a superset of the party passability mask.
+  It's ok if they have extra passability (permanent or temporary).
 
 * Party members cannot teleport out of dungeon rooms. They can teleport within
   dungeon rooms, and I'll allow teleport spells which move the whole party at
