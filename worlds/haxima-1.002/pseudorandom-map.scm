@@ -394,7 +394,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; deeps fixed map enabling
+;; hardlinks- fixed rooms enabling
 
 (define (prmap-room-hardlinkentry-get! xloc yloc zloc linksdata)
 	(let ((linkentry 
@@ -407,7 +407,7 @@
 		(car linkentry)
 	))
 
-(define (prmap-room-hardlink-set! xloc yloc zloc linksdata dir target maptemplate . hooklist)
+(define (prmap-room-hardlink-set! xloc yloc zloc linksdata dir target maptemplate hooklist)
 	(vector-set! (prmap-room-hardlinkentry-get! xloc yloc zloc linksdata)
 		(cardinal-dir-num dir)
 		(cons target (cons maptemplate hooklist))

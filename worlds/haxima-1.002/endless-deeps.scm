@@ -447,8 +447,8 @@
 (prmap-set-mapdata p_deeps_1 (prmap-mk-mapdata deep-random-type-ns deep-random-type-ew deep-random-type-area 'deep-terrain-edges 'deep-terrain-area 'deep-room-blitstats nil))
 
 (let ((deep-hardlinks (prmap-params-hardlinks (prmap-get-mapdata p_deeps_1))))
-	(define (link-rm xloc yloc zloc dir target maptemplate . hooks)
-		(prmap-room-hardlink-set! xloc yloc zloc deep-hardlinks dir target maptemplate)
+	(define (link-rm xloc yloc zloc dir target maptemplate)
+		(prmap-room-hardlink-set! xloc yloc zloc deep-hardlinks dir target maptemplate nil)
 		)
 		
 ;;---------------------------------------------------------
