@@ -1,3 +1,4 @@
+
 ;utility for searching {sum-of-probability, object} lists
 (define (get-numbered-elem alist value)
 	(if (>= (car (car alist)) value)
@@ -7,6 +8,7 @@
 	)
 	
 ;list utilities
+;return list with given element swapped
 (define (list-swap alist entry index)
 	(if (null? alist)
 		nil
@@ -15,7 +17,149 @@
 			(cons (car alist)
 				(list-swap (cdr alist) entry (- index 1)))
 			)))
+			
+;return list with nulls defaulting to another list
+(define (list-merge newlist defaultlist)
+	(if (null? newlist)
+		nil
+		(cons (if (null? (car newlist))
+					(car defaultlist)
+					(car newlist))
+				(list-merge (cdr newlist) (cdr defaultlist))
+		)))
+		
+;;vector-merge: return copy of a vector with nulls defaulting to another vector
+(define (vector-merge-visitor instance index newvec defvec)
+	(println "vmv " index " " instance)
+	(if (<= 0 index)
+		(let ((element (vector-ref newvec index))) 
+			(if (null? element)
+				(vector-set! instance index (vector-ref defvec index))
+				(vector-set! instance index element)
+			)
+			(vector-merge-visitor instance (- index 1) newvec defvec)
+		)
+		instance
+	))
+
+(define (vector-merge newvec defaultvec)
+	(vector-merge-visitor
+		(make-vector (vector-length newvec) nil)
+			(- (vector-length newvec) 1)
+			newvec defaultvec)
+		)
+		
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; mutable list support
+;; workarounds for list building commands dying on empty lists
+
+(define (mk-mutable-list alist)
+	(if (null? alist)
+		(list 'mutable-list-placeholder)
+		alist))
+
+(define (mutable-list-insert alist entry index)
+	(cond
+		((equal? (car alist) 'mutable-list-placeholder)
+			(if (zero? index)
+				(set-car! alist entry)
+				(begin
+					(set-car! alist nil)
+					(set-cdr! alist (list 'mutable-list-placeholder))
+					(println alist)
+					(mutable-list-insert (cdr alist) entry (- index 1))
+				))
+		)
+		((zero? index)
+			(set-cdr! alist (cons (car alist) (cdr alist)))
+			(set-car! alist entry)
+			)
+		((null? (cdr alist))
+			(set-cdr! alist (list 'mutable-list-placeholder))
+			(println alist)
+			(mutable-list-insert (cdr alist) entry (- index 1))
+			)
+		(#t
+			(mutable-list-insert (cdr alist) entry (- index 1)))
+	))
+			
+		
+
+(define (mutable-list-set alist entry index)
+	(cond
+		((equal? (car alist) 'mutable-list-placeholder)
+			(if (zero? index)
+				(set-car! alist entry)
+				(begin
+					(set-car! alist nil)
+					(set-cdr! alist (list 'mutable-list-placeholder))
+					(println alist)
+					(mutable-list-set (cdr alist) entry (- index 1))
+				))
+		)
+		((zero? index)
+			(set-car! alist entry)
+			)
+		((null? (cdr alist))
+			(set-cdr! alist (list 'mutable-list-placeholder))
+			(println alist)
+			(mutable-list-set (cdr alist) entry (- index 1))
+			)
+		(#t
+			(mutable-list-set (cdr alist) entry (- index 1)))
+	))
+
+;; exercise for the reader: reimplement as balanced tree
+
+(define (mutable-pairlist-get! alist index)
+	(cond
+		((equal? (car alist) 'mutable-list-placeholder)
+			(set-car! alist (list index 'mutable-list-placeholder))
+			(cdar alist)
+		)
+		((< (caar alist) index)
+			(if (null? (cdr alist))
+				(begin
+					(set-cdr! alist (list (list index 'mutable-list-placeholder)))
+					(cdadr alist)
+				)
+				(mutable-pairlist-get! (cdr alist) index)
+			))
+		((equal? (caar alist) index)
+			(cdar alist)
+			)
+		((> (caar alist) index)
+			(set-cdr! alist (cons (car alist) (cdr alist)))
+			(set-car! alist (list index 'mutable-list-placeholder))
+			(cdar alist)
+			)
+	))
 	
+(define (mutable-pairlist-get alist index)
+	(cond
+		((null? alist)
+			nil
+			)
+		((equal? (car alist) 'mutable-list-placeholder)
+			nil
+			)		
+		((< (caar alist) index)
+			(mutable-pairlist-get (cdr alist) index)
+			)
+		((> (caar alist) index)
+			nil
+			)
+		(#t ;;(equal? (caar alist) index)
+			(cdar alist)
+			)
+	))
+	
+(define (mutable-pairlist-expand-placeholder alist)
+	(if (equal? (car alist) 'mutable-list-placeholder)
+		(set-car! alist (list 'mutable-list-placeholder))
+			)
+	alist)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; blit stats
 
@@ -50,13 +194,21 @@
 (define (cardinal-dir-num dir)
 	(/ (- dir 1) 2))
 
-(define (get-cardinal-ref list dir)
-	(list-ref list
+(define (get-cardinal-ref avector dir)
+	(println "gcrc " avector)
+	(vector-ref avector
 		(cardinal-dir-num dir))
 		)
 
+(define (get-cardinal-lref alist dir)
+	(println "gcrl " alist)
+	(list-ref alist
+		(cardinal-dir-num dir))
+		)
+
+
 (define prmap-room-offsets
-	(list 
+	(vector 
 		(list 0 1)
 		(list -1 0)
 		(list 1 0)
@@ -193,8 +345,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random map parameter data
 
-(define (prmap-mk-mapdata nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction hardlinks) 
-	(list nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction hardlinks))
+(define (prmap-mk-mapdata nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction) 
+	(list nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction (mk-mutable-list nil)))
 
 (define (prmap-params-nsparams params)
 	(list-ref params 0))
@@ -244,39 +396,36 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; deeps fixed map enabling
 
-(define (prmap-room-mklinkset northnode westnode eastnode southnode)
-	(list northnode westnode eastnode southnode))
+(define (prmap-room-hardlinkentry-get! xloc yloc zloc linksdata)
+	(let ((linkentry 
+			(mutable-pairlist-get!
+			(mutable-pairlist-get!
+			(mutable-pairlist-get! linksdata zloc) yloc ) xloc )
+			))
+		(if (equal? (car linkentry) 'mutable-list-placeholder)
+			(set-car! linkentry (vector nil nil nil nil)))
+		(car linkentry)
+	))
 
-(define (prmap-room-mklink dir target maptemplate . hooklist)
-	(let* ((node (cons target (cons maptemplate hooklist))))
-		(get-cardinal-ref
-			(list
-				(prmap-room-mklinkset node nil nil nil)
-				(prmap-room-mklinkset nil node nil nil)
-				(prmap-room-mklinkset nil nil node nil)
-				(prmap-room-mklinkset nil nil nil node)
-			)
-			dir
-		)
-	))	
+(define (prmap-room-hardlink-set! xloc yloc zloc linksdata dir target maptemplate . hooklist)
+	(vector-set! (prmap-room-hardlinkentry-get! xloc yloc zloc linksdata)
+		(cardinal-dir-num dir)
+		(cons target (cons maptemplate hooklist))
+	))
 	
-(define (prmap-room-gethardlink xloc yloc zloc linksdata)
-	(let (
-		(matchinglink
-			(filter (lambda (listentry)
-				(and
-					(equal? (car listentry) xloc)
-					(equal? (cadr listentry) yloc)
-					(equal? (caddr listentry) zloc)
-				))
-				linksdata)
-			)
-		)
-		(if (equal? (length matchinglink) 0)
-			(list nil nil nil nil)
-			(cadddr (car matchinglink)))))
+(define (prmap-room-hardlinkentry-get xloc yloc zloc linksdata)
+	(let ((linkentry 
+			(mutable-pairlist-get
+			(mutable-pairlist-get
+			(mutable-pairlist-get linksdata zloc) yloc ) xloc )
+			))
+		(if (null? linkentry)
+			(vector nil nil nil nil)
+			(car linkentry))
+	))
 
 (define (prmap-room-getmaphardlink xloc yloc zloc mapdata)
+	(println "asdf " (prmap-params-hardlinkfunction mapdata))
 	(apply (prmap-params-hardlinkfunction mapdata) (list xloc yloc zloc (prmap-params-hardlinks mapdata)))
 	)
 
@@ -287,7 +436,7 @@
 ;also updates current -> prev -> normal status
 (define (prmap-room-setxyz roomslist dir rxloc ryloc rzloc)
 	(let* (
-			(kplace (eval (get-cardinal-ref roomslist dir)))
+			(kplace (eval (get-cardinal-lref roomslist dir)))
 			(roomdata (get-roomdata kplace))
 			(offsets (get-cardinal-ref prmap-room-offsets dir))
 			(rxoff (+ rxloc (car offsets)))
@@ -311,7 +460,7 @@
 			(list north west east south))
 		(prmap-roomdata-setcurrent roomdata #t)
 		;debugging map
-		(if #f
+		(if #t
 			(begin
 				(kern-log-msg rxloc)
 				(kern-log-msg ryloc)
@@ -330,8 +479,10 @@
 			(rxloc (prmap-roomdata-x roomdata))
 			(ryloc (prmap-roomdata-y roomdata))
 			(rzloc (prmap-roomdata-z roomdata))
+			(temp (println "b0"))
 			(linkinfo (prmap-room-getmaphardlink rxloc ryloc rzloc mapdata))
 		)
+		(println "b1")
 		(map (lambda (dir)
 			;roomlinktarget is hardlink target if it exists, else regular neighbor
 			(let* (
@@ -340,7 +491,7 @@
 									nil
 									(car thishardlink)))
 				(roomlinktarget (if (null? hardlinktarget)
-									(get-cardinal-ref rooms dir)
+									(get-cardinal-lref rooms dir)
 									hardlinktarget))
 				)
 				(kern-place-set-neighbor dir kplace (eval roomlinktarget))
@@ -373,7 +524,7 @@
 			(linkinfo (prmap-room-getmaphardlink rxloc ryloc rzloc mapdata))
 			(blitstats (prmap-params-blitstats mapdata))
 			(destmap (kern-place-map kplace))
-			(rmapdata (list
+			(rmapdata (vector
 				(list 0 1 (prmap-params-nsparams mapdata))
 				(list 0 0 (prmap-params-ewparams mapdata))
 				(list 1 0 (prmap-params-ewparams mapdata))
@@ -400,9 +551,9 @@
 								(cdr thishardlink)))
 				)
 				(prmap-do-map-blit destmap (car linkmap)
-					(get-cardinal-ref blitstats dir))
+					(get-cardinal-lref blitstats dir))
 				(if (> (length linkmap) 1)
-					(map (eval (get-cardinal-ref (cdr linkmap) dir)) (list kplace))
+					(map (eval (get-cardinal-lref (cdr linkmap) dir)) (list kplace))
 					)
 			))
 			(list north west east south))

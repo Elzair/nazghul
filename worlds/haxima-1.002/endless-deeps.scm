@@ -444,4 +444,24 @@
 (prmap-linkrooms-2d 'p_deeps_1 'p_deeps_2 'p_deeps_3 'p_deeps_4 'p_deeps_5)
 (prmap-mk-roomdata p_lost_garrison 0 0 0 #t #t (list 'p_deeps_1 'p_deeps_2 'p_deeps_5 'p_deeps_3))
 
-(prmap-set-mapdata p_deeps_1 (prmap-mk-mapdata deep-random-type-ns deep-random-type-ew deep-random-type-area 'deep-terrain-edges 'deep-terrain-area 'deep-room-blitstats nil deep-room-hardlinks))
+(prmap-set-mapdata p_deeps_1 (prmap-mk-mapdata deep-random-type-ns deep-random-type-ew deep-random-type-area 'deep-terrain-edges 'deep-terrain-area 'deep-room-blitstats nil))
+
+(let ((deep-hardlinks (prmap-params-hardlinks (prmap-get-mapdata p_deeps_1))))
+	(define (link-rm xloc yloc zloc dir target maptemplate . hooks)
+		(prmap-room-hardlink-set! xloc yloc zloc deep-hardlinks dir target maptemplate)
+		)
+		
+;;---------------------------------------------------------
+;; hardlink setup
+;; 
+;;			x	y	z	dir		target				template			hooks
+
+(link-rm	0	1	0	south	'p_lost_garrison	'm_deeptempl_passage)
+(link-rm	1	1	0	south	nil					'm_deeptempl_wall)
+(link-rm	-1	0	0	east	'p_lost_garrison	'm_deeptempl_passag)
+(link-rm	2	0	0	west	nil					'm_deeptempl_wall)
+(link-rm	-1	-1	0	east	nil					'm_deeptempl_wall)
+(link-rm	2	-1	0	west	nil					'm_deeptempl_wall)
+(link-rm	0	-2	0	north	nil					'm_deeptempl_wall)
+(link-rm	1	-2	0	north	nil 				'm_deeptempl_wall)
+)
