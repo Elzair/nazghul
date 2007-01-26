@@ -23,7 +23,7 @@
 
 (define reagent-types
   (list
-   (list 'sulphorous_ash "sulphorous ash" s_sulphorous_ash)
+   (list 'sulphorous_ash "sulphurous ash" s_sulphorous_ash)
    (list 'ginseng        "ginseng"        s_ginseng)
    (list 'garlic         "garlic"         s_garlic)
    (list 'spider_silk    "spider silk"    s_spider_silk)

@@ -44,7 +44,7 @@
    (kern-ui-page-text
    "Voidship Plans"
    "Parts List:"
-   " Sulphorous Ash (20)"
+   " Sulphurous Ash (20)"
    " Gems (10)"
    " Power Core (1)"
    )))
@@ -71,7 +71,7 @@
   (say knpc "I don't know. Ask the Enchanter."))
 
 (define (eng-bye knpc kpc)
-  (say knpc "[He's seems to have forgotten about you already]"))
+  (say knpc "[He seems to have forgotten about you already]"))
 
 (define (eng-join knpc kpc)
   (say knpc "Too busy. Try the Warritrix, she likes adventures."))
@@ -229,7 +229,7 @@
   (say knpc "The legend of the Demon Gate insists that it was locked by a set "
        "of Runes. Some versions say the Runes were scattered so they could "
        "not be reassambled to open the Gate, others say they were lost "
-       "through simple incompetence and bad luck. Of course, there's not "
+       "through simple incompetence and bad luck. Of course, there's no "
        "telling if the Runes or even the Gate ever existed!"))
 
 (define (eng-wiza knpc kpc)

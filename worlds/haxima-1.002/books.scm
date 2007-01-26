@@ -127,7 +127,7 @@
    (kern-ui-page-text
    "Fire Spray- Bet Flam Hur"
    ""
-   "While the effectiveness of the Flame Wind spell is renowned, it is difficult to cast, exhausting, and well beyond the means of  all but the greatest mages."
+   "While the effectiveness of the Flame Wind spell is renowned, it is difficult to cast, exhausting, and well beyond the means of all but the greatest mages."
    ""
    "The Fire Spray spell is an adaption of the Flame Wind spell to more modest requirements. While it cannot be cast by an absolute beginner, it requires minimal ability. The effectiveness of the spell increases, of course, with the caster's ability."
    ""
@@ -154,7 +154,7 @@
    (kern-ui-page-text
     "Prisoner Receipt"
     ""
-    "The bearer of this letter has deliverd "
+    "The bearer of this letter has delivered "
     "one (1) prisoner to the gaoler.")))
 
 (mk-reusable-item
@@ -171,7 +171,7 @@
     "+-----------------------------------------+"
     "                                           "
     "................ Reagents ................."
-    "GI Ginger                    SS Spider Silk"
+    "GI Ginseng                   SS Spider Silk"
     "GA Garlic                    BP Black Pearl"
     "SA Sulphurous Ash            BM Blood Moss "
     "NI Nightshade                MA Mandrake   "
@@ -198,16 +198,16 @@
     "Vas Flam         Fire Ball      BP, SA     "
     "Vas Lor          Great Light    SA, MA     "
     "-------------- Fourth Circle --------------"
-    "An Grav          Dispell Field  BP, SA     "
+    "An Grav          Dispel Field   BP, SA     "
     "In Sanct Grav    Energy Field   MA, BP, SS "
     "In Sanct         Protection     SA, GI, GA "
-    "Wis Quas         Reveal Hidden  SS, NI     "
+    "Wis Quas         Reveal Hidden  NI, SA     "
     "Bet Por          Blink (Caster) BP, BM     "
     "-------------- Fifth Circle ---------------"
     "In Ex Por        Unlock Magic   SA, BM     "
     "An Ex Por        Magic Lock     SA, BM, GA "
     "In Bet Xen       Insect Swarm   SS, BM, SA "
-    "In Zu            Sleep Field    NI, SS, BP "
+    "In Zu            Sleep          GI, NI, SS "
     "Vas Mani         Great Heal     GI, SS, MA "
     "Rel Tym          Quickness      SA, BM, MA "
     "-------------- Sixth Circle ---------------"

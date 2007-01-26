@@ -172,7 +172,7 @@ Status Window
 
 Foogod Window
 
-    It sounds sacreligious, but that's just my acronym for Food/Gold
+    It sounds sacrilegious, but that's just my acronym for Food/Gold
     Window. This little window appears below the status window and shows the
     turn, food and gold counters as well as the current combat status and any
     active global effects (e.g., "Magic Negated"). If you board a vehicle it
@@ -245,7 +245,7 @@ General commands:
     S)earch-<dir>..............Look carefully
     T)alk-<target>.............Talk to an NPC
     U)se-<member>-<item>.......Use an item like a torch or potion
-    X)amine-<target>...........Examine map files within view
+    X)amine-<target>...........Examine map tiles within view
     Z)tats.....................Show party stats like inventory, armaments, etc
     @)AT.......................Information about where the party is AT, etc
     <space>....................Pass one turn
@@ -310,7 +310,7 @@ Solo Mode (town/combat/dungeons)
     party member's order in the list. 1 is the first member in the list.
 
     NOTE: Solo mode can be very useful if one of your party members has greater
-          passability then the others. For example, if a gazer joins your party
+          passability than the others. For example, if a gazer joins your party
           he can float over water. Now imagine the possibilities if you get a
           ghost to join your party.
 
@@ -392,7 +392,7 @@ Strength
 Dexterity
 
     Dexterity is used when attacking with missile and balanced weaponry, and
-	helps when avoiding your opponents blows. It is also needed when
+	helps when avoiding your opponents' blows. It is also needed when
 	picking locks and disarming trapped chests.
 
 Intelligence
@@ -408,7 +408,7 @@ similar to Ultima 5 and Ultima 6: you select a spell by entering magic
 syllables. A spell name is a combination of one to four syllables.
 
 The syllables, spell names and reagent mixtures provided in the example game
-are a direct ripoff of Ultima 5. If you don't have a u5 reference manual laying
+are a direct ripoff of Ultima 5. If you don't have a u5 reference manual lying
 around then the tables below will help:
 
                                Table 1: Reagents
@@ -450,16 +450,16 @@ In Nox Grav      | Poison Field   | NI, BP, SS             | C
 Vas Flam         | Fire Ball      | BP, SA                 | C
 Vas Lor          | Great Light    | SA, MA                 | PC
 ----------------------------------------------------------------------------
-An Grav          | Dispell Field  | BP, SA                 | PC
+An Grav          | Dispel Field   | BP, SA                 | PC
 In Sanct Grav    | Energy Field   | MA, BP, SS             | C
 In Sanct         | Protection     | SA, GI, GA             | PC
-Wis Quas         | Reveal Hidden  | SS, NI                 | PC
+Wis Quas         | Reveal Hidden  | NI, SA                 | PC
 Bet Por          | Blink (Caster) | BP, BM                 | C
 ----------------------------------------------------------------------------
 In Ex Por        | Unlock Magic   | SA, BM                 | PC
 An Ex Por        | Magic Lock     | SA, BM, GA             | PC
 In Bet Xen       | Insect Swarm   | SS, BM, SA             | C
-In Zu            | Sleep Field    | NI, SS, BP             | C
+In Zu            | Sleep          | GI, NI, SS             | C
 Vas Mani         | Great Heal     | GI, SS, MA             | PC
 Rel Tym          | Quickness      | SA, BM, MA             | PC
 ----------------------------------------------------------------------------
@@ -522,7 +522,7 @@ Drunk (A)
 Ensnared (E)
 
     When stuck in a spider web, a character will break free after struggling
-    for a while. The time required to free himself depends on the characters
+    for a while. The time required to free himself depends on the character's
     strength.
 
 Paralyzed (Z)
@@ -552,7 +552,7 @@ do or say something that impresses them).
 
                                      MISC
 
-Food is consumed three times per day, once unit for each living party
+Food is consumed three times per day, one unit for each living party
 member. When the food runs out, party members take a point of damage at each
 meal time.
 

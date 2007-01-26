@@ -134,7 +134,7 @@
                     (if (yes? kpc)
                         (say knpc "A most useful spell when dealing with the angry dead.")
                         (say knpc "An Xen Corp. A most useful spell. Mix garlic "
-                             "and sulphorous ash to make it. "
+                             "and sulphurous ash to make it. "
                              "(COUGH) I probably have some "
                              "around here which you may borrow.")))))))))
 
