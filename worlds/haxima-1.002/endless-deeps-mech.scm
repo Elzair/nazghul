@@ -158,12 +158,12 @@
 ;probability for edge terrains... out of 83
 (define deep-terrain-edges
 	(list
-		(list 25 'm_deeptempl_wall)
-		(list 30 'm_deeptempl_water)
-		(list 35 'm_deeptempl_hole)
-		(list 40 'm_deeptempl_lava)
-		(list 45 'm_deeptempl_swamp)		
-		(list 100 'm_deeptempl_passage)
+		(list 25 'm_deeptempl_wall #f)
+		(list 30 'm_deeptempl_water #f)
+		(list 35 'm_deeptempl_hole #f)
+		(list 40 'm_deeptempl_lava #f)
+		(list 45 'm_deeptempl_swamp #t)		
+		(list 100 'm_deeptempl_passage #t)
 	))
 
 ;probability for area terrains... out of 149

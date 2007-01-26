@@ -407,10 +407,10 @@
 		(car linkentry)
 	))
 
-(define (prmap-room-hardlink-set! xloc yloc zloc linksdata dir target maptemplate hooklist)
+(define (prmap-room-hardlink-set! xloc yloc zloc linksdata dir target maptemplate passable hooklist)
 	(vector-set! (prmap-room-hardlinkentry-get! xloc yloc zloc linksdata)
 		(cardinal-dir-num dir)
-		(cons target (cons maptemplate hooklist))
+		(cons target (cons maptemplate (cons passable hooklist)))
 	))
 	
 (define (prmap-room-hardlinkentry-get xloc yloc zloc linksdata)
@@ -425,7 +425,6 @@
 	))
 
 (define (prmap-room-getmaphardlink xloc yloc zloc mapdata)
-	(println "asdf " (prmap-params-hardlinkfunction mapdata))
 	(apply (prmap-params-hardlinkfunction mapdata) (list xloc yloc zloc (prmap-params-hardlinks mapdata)))
 	)
 
@@ -460,7 +459,7 @@
 			(list north west east south))
 		(prmap-roomdata-setcurrent roomdata #t)
 		;debugging map
-		(if #t
+		(if #f
 			(begin
 				(kern-log-msg rxloc)
 				(kern-log-msg ryloc)
@@ -552,8 +551,8 @@
 				)
 				(prmap-do-map-blit destmap (car linkmap)
 					(get-cardinal-lref blitstats dir))
-				(if (> (length linkmap) 1)
-					(map (eval (get-cardinal-lref (cdr linkmap) dir)) (list kplace))
+				(if (> (length linkmap) 2)
+					(map (eval (get-cardinal-lref (cddr linkmap) dir)) (list kplace))
 					)
 			))
 			(list north west east south))
@@ -634,3 +633,22 @@
 		)
 	))
 	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Map coherence checking
+
+(define (vector-2d-make width height fill)
+    (let ((2dvec (make-vector height nil)))
+        (do ((index (- height 1) (- index 1)))
+            ((< index 0) 2dvec)
+          (vector-set! 2dvec index (make-vector width fill)))
+	))
+
+;; messy iteration ahead!
+(define (prmap-ensure-coherence mapdata xmin xmax ymin ymax)
+	(let* ((width (- xmax xmin -1))
+			(height (- ymax ymin -1))
+			(table (vector-2d-make width height 'unk))
+			(checking-cursor (vector 0 0))
+			(working-cursor (vector xmin ymin))
+			)
+	))
