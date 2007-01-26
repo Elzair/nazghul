@@ -412,6 +412,7 @@
 (kern-mk-sprite 's_spearskeleton     ss_humanoids 4 80 #f 0 )
 (kern-mk-sprite 's_skeletonarcher    ss_humanoids 4 84 #f 0 )
 (kern-mk-sprite 's_lich           ss_humanoids 4 88 #f 0 )
+(kern-mk-sprite 's_nixie_civilian    ss_humanoids 4 92 #f 0 )
 
 (kern-mk-sprite 's_gint ss_bigobjects 4 0 #f 0 )
 (kern-mk-sprite 's_gint_mage ss_bigobjects 4 4 #f 0 )

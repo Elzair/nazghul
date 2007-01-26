@@ -125,7 +125,7 @@
                  "Fing"             ; name
                  sp_nixie           ; species
                  oc_warrior         ; occ
-                 s_nixie            ; sprite
+                 s_nixie_civilian    ; sprite
                  faction-men         ; starting alignment
                  1 2 0               ; str/int/dex
                  0 0                 ; hp mod/mult
