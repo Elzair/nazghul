@@ -96,7 +96,7 @@
                             (shroom-give-quest shroom))
                           (say knpc "Yes, perhaps ye are afraid.")))
                     (say knpc "Naught for naught, youngling!")))
-              (say knpc "Of course, a skillfull warrior such as you has "
+              (say knpc "Of course, a skillful warrior such as you has "
                    "nothing to learn from an old witch like me."))))))
                                
 (define (shroom-hail knpc kpc)
@@ -118,7 +118,7 @@
                   (shroom-set-quest-done! shroom)
                   (say knpc "Now for your reward. The ward is called "
                        "In Flam Sanct, of the first circle. Mix royal cape, "
-                       "sulphorous ash and garlic. Cast it on yourself or a companion "
+                       "sulphurous ash and garlic. Cast it on yourself or a companion "
                        "and fire will not harm!"))
                 ;; player does NOT have shrooms yet
                 (say knpc "No purple mushroom yet, I see. No rush, dear. "

@@ -1,3 +1,275 @@
+2007-01-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Container.h, src/cmd.c, src/object.h, src/scheme.c, src/status.c, src/status.h, src/Container.cpp:
+	Some minor code cleanup and yet another experimental status browser function.
+
+2007-01-16  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm:
+	endless deeps uses random prng seeds to vary from game to game. Unfortunately, this can result in them not being particularly endless, or even being particularly not endless
+
+	* worlds/haxima-1.002/pseudorandom-map.scm, worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/endless-deeps.scm:
+	z coordinate added to random dungeons.
+
+2007-01-15  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/pseudorandom-map.scm:
+	store customisable hardlink function, and actual hardlink data
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/pseudorandom-map.scm:
+	slightly simpler syntax for random dungeon hardlink hooks
+
+2007-01-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/skill.h, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/skills.scm:
+	Y)using the unlock skill now works.
+
+2007-01-13  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/pseudorandom-map.scm:
+	hooks added to allow random map templates to add objects as well as terrain
+
+2007-01-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/occs.scm, worlds/haxima-1.002/skills.scm, src/session.c, src/skill.c, src/skill.h, src/skill_set.c, src/skill_set_entry.c, src/skill_set_entry.h, src/species.h, src/status.c, src/status.h, src/cmd.h, src/ctrl.c, src/kern.c, src/node.c, src/node.h, src/occ.c, src/occ.h, src/scheme.c, src/scheme.h, src/cmd.c, configure.ac:
+	y)use now shows occupation skills in the status browser
+
+2007-01-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Makefile.am, src/cfg.c, src/kern.c, src/repstr.c, src/repstr.h, src/session.h, src/skill.c, src/skill.h, src/skill_set.c, src/skill_set.h, src/skill_set_entry.c, src/skill_set_entry.h:
+	More skill groundwork
+
+2007-01-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c: Updated built-in help with k)amp and l)oiter
+
+	* src/nazghul.c, src/play.c:
+	Moved the 'welcome to' with the version info to the initial startup (not the game load)
+
+	* src/kern.c, src/place.c, src/play.c, src/session.c, src/skill.h:
+	More bugfixes from 0.5.5 maintenance branch; mixed in with some skill stuff unfortunately
+
+	* src/place.c, src/play.c:
+	Bugfix for [ 1624247 ] Delayed victory messages
+
+	Combat status is now checked after every object executes. Seems inefficient but
+	I'm not noticing any performance hit.
+
+	* src/kern.c:
+	One last tweak to get that time accel thing re-loading properly
+
+	* src/session.c, src/kern.c:
+	Bugfix for [ 1629974 ] loitering in wilderness uses too much food.
+
+	Addendum to the previous fix. Saving/loading the floating-point time
+	acceleration value was not done properly, causing it to be zero on reload and
+	wreaking havoc.
+
+	* src/player.cpp, src/object.c, src/session.h:
+	Merged bugfix from 0.5.5 maintenance branch
+
+	* src/object.c, src/player.cpp, src/session.h:
+	Bugfix for [ 1629974 ] loitering in wilderness uses too much food.
+
+	Loitering for 1 hour was actually using up almost 32 hours. Time acceleration
+	was set to a value appropriate for one hour at town scale, not wilderness
+	scale. To make the values work out for wilderness scale I had to change time
+	acceleration to be a floating point and fix a few type casts.
+
+2007-01-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/powers.scm:
+	Merged bugfix from 0.5.5 maintenance branch
+
+	* worlds/haxima-1.002/powers.scm:
+	Fix for [ 1629421 ] unusual fireball behavior vs. lich. Fixed a parenthesis
+	error in power.scm.
+
+2007-01-06  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/pseudorandom-map.scm:
+	prng parameters now in random map parameter object
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/pseudorandom-map.scm:
+	terrain templates now in random map parameter object
+
+2007-01-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c, src/object.c, src/object.h, src/place.c, worlds/haxima-1.002/demon-gate.scm:
+	Merged bugfix from 0.5.5 maintenance branch
+
+	* scripts/RELEASE_CHECKOFF:
+	Updated some notes on post-release maintenance
+
+	* worlds/haxima-1.002/demon-gate.scm, src/kern.c, src/object.c, src/object.h, src/place.c:
+	Bugfix for [ 1622833 ] Killing Nossifer with time stopped. Added a new object
+	attribute: ignoreTimeStop. The object which checks for end-of-game has this
+	attribute set.
+
+2007-01-06  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/pseudorandom-map.scm:
+	blitstats construction formalized
+
+2007-01-05  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/pseudorandom-map.scm, worlds/haxima-1.002/endless-deeps-mech.scm:
+	blitstats stored in map params
+
+	* worlds/haxima-1.002/npc-types.scm:
+	minor glitch- wrong sprite for deeps troll geomancer
+
+2007-01-05  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/place.c: Merging bugfix from 0.5.5. maintenance branch
+
+	* src/place.c: Bugfix for [ 1627495 ] crash when dying in tutorial cave
+
+	There was a case where place_exec() would return w/o decrementing a refcount on
+	the player party, triggering an assert in session_del().
+
+2007-01-04  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/pseudorandom-map.scm:
+	beginning to shift random map data into structures suitable for runtime storage
+
+2007-01-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/green-tower-lower.scm, worlds/haxima-1.002/kama.scm, worlds/haxima-1.002/moongate.scm:
+	Merging bug fixes from 0.5.5 maintenance branch
+
+	* worlds/haxima-1.002/green-tower-lower.scm, worlds/haxima-1.002/kama.scm:
+	Fix for [ 1626207 ] Releasing Kama from prison. Instead of pathfinding, Kama's
+	jail door is now tagged and stored in Kama's gob so he can check its state
+	directly.
+
+	* worlds/haxima-1.002/alchemist.scm:
+	Fix for [ 1626202 ] Alchemist and the passage into Absalot. Fixed some logic
+	bugs in the Alkie's conversation.
+
+	* worlds/haxima-1.002/moongate.scm:
+	Fix for [ 1622837 ] Loopback moongate doesn't stay. Iff the source and
+	destination gates are the same don't set the destination gate sprite to
+	"closed" after showing the animation.
+
+2007-01-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp:
+	Merging in NPC inventory count fix from 0.5.5 maintenance branch
+
+	* src/character.cpp:
+	Bugfix for [ 1623756 ] Jorn has too many magical items
+
+	The code which arms NPC's was putting on and taking off different pieces of
+	equipment to try them out. Every time it took it off it incremented the
+	inventory counter, but it wasn't decrementing it when it put things on, so the
+	counts were messed up on all NPC's who arm themselves.
+
+2007-01-02  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/pseudorandom-map.scm:
+	changed namespace for generic random dungeon code
+
+	* worlds/haxima-1.002/pseudorandom-map.scm:
+	notes of room linkages added
+
+2007-01-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/fields.scm, worlds/haxima-1.002/portcullis.scm, scripts/RELEASE_CHECKOFF:
+	Merging bugfixes from maintenance branch to main trunk
+
+	* worlds/haxima-1.002/Makefile.am:
+	Fixing the missing-distro-files problem once and for all.
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/fields.scm:
+	Fix for 1622430: "Undead beings aren't immune to sleep fields". Field immunity
+	was just messed up in general.
+
+	Also fixed 1623757: "Items can get poisoned". Poison wasn't checking that it
+	was being applied to a character.
+
+2007-01-01  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/pseudorandom-map.scm, worlds/haxima-1.002/start-new-game.scm:
+	refactored generic random map code from the endless deeps to pseudorandom-map.scm
+
+	* worlds/haxima-1.002/bigobjects.png, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/sprites.scm, worlds/library/artwork/monsters/dragonsleep.xcf:
+	sprite for sleeping dragon
+
+	* worlds/haxima-1.002/bigobjects.png, worlds/haxima-1.002/monsters.png, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/sprites.scm:
+	dragon sprites used
+
+	* worlds/library/artwork/monsters/dragon.xcf:
+	new attempt at dragon sprite
+
+2006-12-31  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/portcullis.scm:
+	Bugfix 1622407: o)pen works on portcullises
+
+	* configure.ac: Added the png link fix on the 0.5.6 branch
+
+	* worlds/haxima-1.002/Makefile.am:
+	Added the 640x480 splash fix on the 0.5.6 branch
+
+	* src/Party.cpp:
+	If an NPC party tries to make a diagonal attack it selects a passable adjacent square to attack from instead.
+
+	* src/astar.c, src/astar.h, src/place.c:
+	Turned on diagonal movement for NPC pathfinding
+
+	* src/astar.c, src/character.cpp, src/common.c, src/ctrl.c, src/place.c, src/place.h:
+	Turning on diagonal movement for player characters only. Can't move through pinched corners.
+
+	* src/character.cpp, src/effect.c, src/kern.c, src/map.c, src/occ.c, src/session.c:
+	Fixed some memory leaks reported by a profiler. Thanks to Eero for giving me a report.
+
+	* worlds/haxima-1.002/runes.scm, worlds/haxima-1.002/special.scm, worlds/haxima-1.002/start-new-game.scm, src/cmd.c, src/kern.c, src/object.c, src/object.h, worlds/haxima-1.002/ifc.scm, worlds/haxima-1.002/jewelry.scm:
+	Quest items can be tagged special, so they won't get dropped in temporary combat maps and lost forever.
+
+	* src/cmd.c: Added direction prompt to d)rop
+
+	* src/cmd.c: Added a quantity prompt to d)rop
+
+	* src/cmd.c, src/status.c: Drop now respects readied arms
+
+	* src/cmd.c, src/cmd.h, src/ctrl.c, src/menus.c, src/status.c, src/status.h, worlds/haxima-1.002/spells.scm:
+	Initial cut at a D)rop command
+
+2006-12-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Makefile.am, src/kern.c, src/session.c, src/session.h, src/skill.c, src/skill.h, worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/skills.scm:
+	Started adding code to support skills
+
+	* src/cmd.c:
+	Bugfix: clicking on close window multiple times caused an endless loop
+
+2006-12-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am:
+	Missing small-screen splash in distro
+
+2006-12-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* scripts/RELEASE_CHECKOFF:
+	Added instructions for uploading releases for release maintainers
+
+2006-12-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* configure.ac: Added check for libpng
+
+2006-12-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am:
+	The spell image file needs to be in the install
+
+	* scripts/RELEASE_CHECKOFF: Some tweaks to the release checkoff list
+
+	* scripts/ANNOUNCEMENT:
+	Adding a file for boilerplate release announcements
+
+	* worlds/haxima-1.002/start-new-game.scm: Fixing the start file
+
 2006-12-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
 
 	* worlds/haxima-1.002/spells.png, worlds/haxima-1.002/spells.scm, worlds/library/artwork/magic/spell_icons.xcf:

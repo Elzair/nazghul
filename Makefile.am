@@ -4,7 +4,7 @@ SUBDIRS = src worlds m4
 
 DIST_SUBDIRS = $(SUBDIRS)
 
-EXTRA_DIST = doc
+EXTRA_DIST = doc icons haxima.desktop
 
 ACLOCAL_AMFLAGS = -I m4
 

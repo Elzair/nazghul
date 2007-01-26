@@ -122,7 +122,7 @@
       (say knpc "Hmm. If I believed you I would throw you to the inquisitors "
            "and torture the truth out of you. But I think you are a poser "
            "and a self-inflated fool. You will vanish into obscurity like "
-           "the Wanderers that preceeded you.")
+           "the Wanderers that preceded you.")
       (say knpc "No, I think you are merely a vagabond, here by "
            "accident. All the same, I will be watching you carefully, "
            "Wanderer. If you betray my city you will know my wrath at the "

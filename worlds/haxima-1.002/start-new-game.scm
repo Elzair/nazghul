@@ -315,7 +315,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 80 60)))
+  (kern-obj-put-at kplayer (list p_oparine 0 0)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)

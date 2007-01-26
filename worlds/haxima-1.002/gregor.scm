@@ -32,7 +32,7 @@
 
 (define (gregor-hut knpc kpc)
   (say knpc "My hut's in the forest to the east. "
-       "Just myself and my grandaughter living there now."))
+       "Just myself and my granddaughter living there now."))
 
 (define (gregor-ench knpc kpc)
   (say knpc "The Enchanter? He's one of the Wise. "

@@ -58,12 +58,12 @@
   (say knpc "My wife May is an ornery woman, but sharp as a tack."))
 
 (define (melvin-kath knpc kpc)
-  (say knpc "That red lady is  a wicked beauty! But I'm neither drunk nor "
+  (say knpc "That red lady is a wicked beauty! But I'm neither drunk nor "
        "fool enough to mingle with wizards business. Take my advice, stay "
        "far away from her and that thing she travels with!"))
 
 (define (melvin-bill knpc kpc)
-  (say knpc "He's missing a screw or too, but he's a good lad."))
+  (say knpc "He's missing a screw or two, but he's a good lad."))
 
 (define (melvin-thud knpc kpc)
   (say knpc "That's no man traveling with the red lady, but I've never seen a "

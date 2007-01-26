@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Haxima
+GenericName=Role Playing Game
+Comment=An old school role playing game
+Exec=haxima
+Icon=haxima.png
+Terminal=false
+Type=Application
+Categories=Application;Game;
+Version=1.002

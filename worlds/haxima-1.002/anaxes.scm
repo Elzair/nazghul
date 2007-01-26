@@ -72,7 +72,7 @@
 
 (define (anaxes-vigi knpc kpc)
   (say knpc "We have failed in our vigilance! "
-       "Luximene has decieved us all, and now we must pay the price for failure."))
+       "Luximene has deceived us all, and now we must pay the price for failure."))
 
 (define (anaxes-fail knpc kpc)
   (say knpc "We have failed the gods, it is no wonder they have forsaken us!"))
@@ -81,7 +81,7 @@
   (say knpc "I was among the Twelve Counselors of Luximene. "
        "To my shame I helped him achieve his empire. "
        "I thought a strong ruler would bring order to the Shard, "
-       "and reign in the heresies of the Accursed. "
+       "and rein in the heresies of the Accursed. "
        "Alas! We were all deceived!"))
 
 (define (anaxes-accu knpc kpc)
@@ -121,7 +121,7 @@
        "danger below or signs from above."))
 
 (define (anaxes-sund knpc kpc)
-  (say knpc "The Sundering is the catclysm that nearly destroyed this world. "
+  (say knpc "The Sundering is the cataclysm that nearly destroyed this world. "
        "Surely thou dost know this! "
        "Unless thou art a demon from beyond the void..."))
 

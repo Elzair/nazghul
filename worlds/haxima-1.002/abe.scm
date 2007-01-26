@@ -78,7 +78,7 @@
 
 (define (abe-demo knpc kpc)
   (say knpc "The Demon Gate was sealed shut by the Wise long ago. "
-       "It's location was blotted from all records, but legend puts it somewhere to the north. "
+       "Its location was blotted from all records, but legend puts it somewhere to the north. "
        "Are you looking for the other Runes?")
   (if (yes? kpc)
       (say knpc "I know a legend which tells of one kept in a temple in the void.")
@@ -105,7 +105,7 @@
       (say knpc "There's a legend that King Clovis carried one as a charm. "
            "He fell in battle during the goblin wars, but it was never found on his body. "
            "Perhaps someone (perhaps a GOBLIN!) looted his corpse and took it.")
-      (say knpc "Just idle curiosity? Belive me, I understand.")))
+      (say knpc "Just idle curiosity? Believe me, I understand.")))
 
 (define (abe-quee knpc kpc)
   (say knpc "I'm not sure what you're insinuating."))

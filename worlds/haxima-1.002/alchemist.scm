@@ -339,7 +339,7 @@
 
 (define (alch-lich knpc kpc)
   (say knpc "A lich is an undead wizard. This foul thing corrupts all it "
-       "touches and commands armies of the dead. It's blood has many uses "
+       "touches and commands armies of the dead. Its blood has many uses "
        "in necromancy, which is not my specialty."))
 
 ;; The Accursed...

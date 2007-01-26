@@ -48,7 +48,7 @@
 
 (define (kalc-join knpc kpc)
   (if (is-player-party-member? knpc)
-      (say knpc "I've alread joined you!")
+      (say knpc "I've already joined you!")
       (begin
         (say knpc "Ok, this will be fun!")
         (join-player knpc)

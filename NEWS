@@ -1,3 +1,7 @@
+Changes between nazghul 0.5.6 and 0.5.5:
+o Fixed: crash when dying upon exit from tutorial cave
+o Fixed: various minor bug-fixes
+
 Changes between nazghul 0.5.5 and 0.5.4:
 Kernel changes:
 o SAVED GAMES FROM PREVIOUS VERSIONS BROKEN! (sorry)

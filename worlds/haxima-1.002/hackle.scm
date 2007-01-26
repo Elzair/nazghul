@@ -56,7 +56,7 @@
 
 ;; basics...
 (define (hackle-default knpc kpc)
-  (say knpc "She cannot help it with that"))
+  (say knpc "She cannot help it with that."))
 
 (define (hackle-hail knpc kpc)
   (say knpc "[You meet a disheveled, middle-aged woman] It comes to her! "
@@ -119,7 +119,7 @@
   (say knpc "It is a mighty wrogue indeed that robs a mighty wizard!"))
 
 (define (hackle-robs knpc kpc)
-  (say knpc "It robs and runs, down it's little mouse-hole!"))
+  (say knpc "It robs and runs, down its little mouse-hole!"))
 
 (define (hackle-hole knpc kpc)
   (say knpc "Does it like riddles?\n"
