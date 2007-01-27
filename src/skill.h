@@ -46,6 +46,7 @@ struct skill {
         struct closure *yuse;     /* proc that executes the y)use */
         struct closure *can_yuse; /* check special requirements to y)use */
         int refcount;             /* memory management */
+        char wilderness_ok : 1;   /* can use in wilderness */
 };
 
 extern struct skill *skill_new();

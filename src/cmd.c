@@ -4050,6 +4050,13 @@ void cmdYuse(class Character *actor)
         skill = ssent->skill;
         log_begin("%s: %s - ", actor->getName(), skill->name);
 
+        /* check wilderness */
+        if (! skill->wilderness_ok
+            && place_is_wilderness(actor->getPlace())) {
+                cant = 1;
+                log_msg("Not in the wilderness!");
+        }
+
         /* check level */
         if (actor->getLevel() < ssent->level) {
                 cant = 1;

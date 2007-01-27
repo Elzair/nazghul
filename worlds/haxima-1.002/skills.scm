@@ -30,7 +30,7 @@
 
 (define sk_unlock 
   (kern-mk-skill "Unlock" "Unlock a door with a picklock"
-                 1 2 
+                 1 2 #f
                  'skill-unlock nil 
                  (list t_picklock) 
                  nil
@@ -38,14 +38,14 @@
 
 (define sk_jump
   (kern-mk-skill "Jump" "Jump over impassable terrain"
-                 2 1
+                 2 1 #f
                  'skill-jump nil
                  nil
                  nil))
 
 (define sk_detect_trap
   (kern-mk-skill "Detect Trap" "Check if a door or chest is trapped"
-                 2 2
+                 2 2 #f
                  'skill-detect-trap nil
                  nil
                  nil))

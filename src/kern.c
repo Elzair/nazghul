@@ -3715,6 +3715,7 @@ KERN_API_CALL(kern_mk_skill)
         char *name, *desc;
         pointer yuse, can_yuse, list;
         struct skill *skill;
+        int flag;
 
         /* Unpack name and desc */
         if (unpack(sc, &args, "ss", &name, &desc)) {
@@ -3727,10 +3728,18 @@ KERN_API_CALL(kern_mk_skill)
         skill_set_desc(skill, desc);
 
         /* Unpack ap, mp and yusage procs */
-        if (unpack(sc, &args, "ddcc", &skill->ap, &skill->mp, &yuse, &can_yuse)) {
+        if (unpack(sc, &args, "ddbcc", 
+                   &skill->ap, 
+                   &skill->mp, 
+                   &flag,
+                   &yuse, &can_yuse)) {
                 load_err("kern-mk-skill %s: bad args", name);
                 goto abort;
         }
+
+        /* I used an int for the unpack since I don't trust the cast to work
+         * portably on structure bit fields */
+        skill->wilderness_ok = flag;
 
         /* yuse is mandatory */
         if (yuse == sc->NIL) {
