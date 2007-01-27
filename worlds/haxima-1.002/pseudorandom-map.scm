@@ -30,7 +30,6 @@
 		
 ;;vector-merge: return copy of a vector with nulls defaulting to another vector
 (define (vector-merge-visitor instance index newvec defvec)
-	(println "vmv " index " " instance)
 	(if (<= 0 index)
 		(let ((element (vector-ref newvec index))) 
 			(if (null? element)
@@ -195,13 +194,13 @@
 	(/ (- dir 1) 2))
 
 (define (get-cardinal-ref avector dir)
-	(println "gcrc " avector)
+	;;(println "gcrc " avector)
 	(vector-ref avector
 		(cardinal-dir-num dir))
 		)
 
 (define (get-cardinal-lref alist dir)
-	(println "gcrl " alist)
+	;;(println "gcrl " alist)
 	(list-ref alist
 		(cardinal-dir-num dir))
 		)
@@ -642,13 +641,107 @@
             ((< index 0) 2dvec)
           (vector-set! 2dvec index (make-vector width fill)))
 	))
+	
+(define (vector-2d-get table cursor)
+	(vector-ref (vector-ref table (vector-ref cursor 1)) (vector-ref cursor 0))
+	)
+
+(define (vector-2d-get-off table xmin ymin cursor)
+	(vector-ref (vector-ref table (- (vector-ref cursor 1) ymin)) (- (vector-ref cursor 0) xmin))
+	)
+	
+(define (vector-2d-set-off table xmin ymin cursor entry)
+	(println "v2so " (- (vector-ref cursor 1) ymin) " " ymin " " cursor)
+	(vector-set! (vector-ref table (- (vector-ref cursor 1) ymin)) (- (vector-ref cursor 0) xmin) entry)
+	)
+	
+(define (prmap-coherence-check-neighbor mapdata xloc yloc zloc dir)
+	(let* (
+		(linkinfo (prmap-room-getmaphardlink xloc yloc zloc mapdata))
+		(rmapdata (vector
+			(list 0 1 (prmap-params-nsparams mapdata))
+			(list 0 0 (prmap-params-ewparams mapdata))
+			(list 1 0 (prmap-params-ewparams mapdata))
+			(list 0 0 (prmap-params-nsparams mapdata))
+			))
+		(thishardlink (get-cardinal-ref linkinfo dir))
+		(thisrmapdata (get-cardinal-ref rmapdata dir))
+		(thisx (+ xloc (car thisrmapdata)))
+		(thisy (+ yloc (cadr thisrmapdata)))
+		(thisrtype (caddr thisrmapdata))
+		(linkmap (if (null? thishardlink)
+				(prmap-get-template thisx thisy zloc thisrtype (prmap-params-edgemaps mapdata))
+				(cdr thishardlink))
+				))
+			(println "pccn " linkmap " -> " (cadr linkmap))
+			(cadr linkmap)
+		))
+						
 
 ;; messy iteration ahead!
-(define (prmap-ensure-coherence mapdata xmin xmax ymin ymax)
+(define (prmap-ensure-coherence mapdata xmin xmax ymin ymax zloc)
 	(let* ((width (- xmax xmin -1))
 			(height (- ymax ymin -1))
 			(table (vector-2d-make width height 'unk))
 			(checking-cursor (vector 0 0))
 			(working-cursor (vector xmin ymin))
+			(flags (vector #f))
 			)
+		(vector-set! (vector-ref table 0) 0 'lin)
+		;; single continuity working pass
+		(do
+			()
+			((> (vector-ref working-cursor 1) ymax))
+			(vector-set! flags 0 east)
+			(if (equal? (vector-2d-get-off table xmin ymin working-cursor) 'lin)
+				(begin
+					(vector-2d-set-off table xmin ymin working-cursor 'exp)
+					(if (and (< (vector-ref working-cursor 1) ymax)
+							(equal? (vector-2d-get-off table xmin (- ymin 1) working-cursor) 'unk)
+							(prmap-coherence-check-neighbor mapdata
+								(vector-ref working-cursor 0) (vector-ref working-cursor 1) zloc north))
+						(begin
+							(println "link n")
+							(vector-2d-set-off table xmin (- ymin 1) working-cursor 'lin)
+						))					
+					(if (and (< (vector-ref working-cursor 0) xmax)
+							(equal? (vector-2d-get-off table (- xmin 1) ymin working-cursor) 'unk)
+							(prmap-coherence-check-neighbor mapdata
+								(vector-ref working-cursor 0) (vector-ref working-cursor 1) zloc east))
+						(begin
+							(println "link e")
+							(vector-2d-set-off table (- xmin 1) ymin working-cursor 'lin)
+						))
+					(if (and (> (vector-ref working-cursor 0) xmin)
+							(equal? (vector-2d-get-off table (+ xmin 1) ymin working-cursor) 'unk)
+							(prmap-coherence-check-neighbor mapdata
+								(vector-ref working-cursor 0) (vector-ref working-cursor 1) zloc west))
+						(begin
+							(println "link w")
+							(vector-2d-set-off table (+ xmin 1) ymin working-cursor 'lin)
+							(vector-set! flags 0 west)
+						))
+					(if (and (> (vector-ref working-cursor 1) ymin)
+							(equal? (vector-2d-get-off table xmin (+ ymin 1) working-cursor) 'unk)
+							(prmap-coherence-check-neighbor mapdata
+								(vector-ref working-cursor 0) (vector-ref working-cursor 1) zloc south))
+						(begin
+							(println "link s")
+							(vector-2d-set-off table xmin (+ ymin 1) working-cursor 'lin)
+							(vector-set! flags 0 south)
+						))
+				))	
+			(cond ((equal? (vector-ref flags 0) south)
+					(vector-set! working-cursor 1 (- (vector-ref working-cursor 1) 1)))
+				((equal? (vector-ref flags 0) west)
+					(vector-set! working-cursor 0 (- (vector-ref working-cursor 0) 1)))
+				((< (vector-ref working-cursor 0) xmax)
+					(vector-set! working-cursor 0 (+ (vector-ref working-cursor 0) 1)))
+				(#t
+					(vector-set! working-cursor 0 xmin)
+					(vector-set! working-cursor 1 (+ 1 (vector-ref working-cursor 1))))
+			)
+			(println table)
+		)
+
 	))
