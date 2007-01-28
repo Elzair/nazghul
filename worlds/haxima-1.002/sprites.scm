@@ -133,7 +133,7 @@
 (kern-mk-sprite 's_pirate_right   ss_u4_shapes 1 130 #f 0 )
 (kern-mk-sprite 's_pirate_back    ss_u4_shapes 1 131 #f 0 )
 
-(kern-mk-sprite 's_nixie          ss_u4_shapes 2 132 #f 0 )
+;;(kern-mk-sprite 's_nixie          ss_u4_shapes 2 132 #f 0 )
 (kern-mk-sprite 's_kraken         ss_u4_shapes 2 134 #f 0 )
 (kern-mk-sprite 's_sea_serpent    ss_u4_shapes 2 136 #f 0 )
 (kern-mk-sprite 's_sea_horse      ss_u4_shapes 2 138 #f 0 )
@@ -413,6 +413,8 @@
 (kern-mk-sprite 's_skeletonarcher    ss_humanoids 4 84 #f 0 )
 (kern-mk-sprite 's_lich           ss_humanoids 4 88 #f 0 )
 (kern-mk-sprite 's_nixie_civilian    ss_humanoids 4 92 #f 0 )
+(kern-mk-sprite 's_nixie_spear          ss_humanoids 4 96 #f 0 )
+(kern-mk-sprite 's_nixie_sword          ss_humanoids 4 100 #f 0 )
 
 (kern-mk-sprite 's_gint ss_bigobjects 4 0 #f 0 )
 (kern-mk-sprite 's_gint_mage ss_bigobjects 4 4 #f 0 )

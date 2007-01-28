@@ -265,7 +265,7 @@
             ))
 
 (define nixie-party-l2
-  (ptype-mk "school of nixies" s_nixie faction-monster 2 3
+  (ptype-mk "school of nixies" s_nixie_spear faction-monster 2 3
             (pgroup-mk 'nixie-swordsman "1d2")
             (pgroup-mk 'nixie-spearman "1d2-1")
             ))
