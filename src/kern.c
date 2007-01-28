@@ -5017,6 +5017,25 @@ KERN_API_CALL(kern_place_is_passable)
         return place_is_passable(place, x, y, obj, 0) ? sc->T : sc->F;
 }
 
+KERN_API_CALL(kern_place_move_is_passable)
+{
+        struct place *fplace, *tplace;
+        int fx, fy, tx, ty;
+        class Object *obj;
+
+        if (unpack_loc(sc, &args, &fplace, &fx, &fy, "kern-place-move-is-passable"))
+                return sc->F;
+
+        if (unpack_loc(sc, &args, &tplace, &tx, &ty, "kern-place-move-is-passable"))
+                return sc->F;
+
+        obj = unpack_obj(sc, &args, "kern-place-move-is-passable");
+        if (!obj)
+                return sc->F;
+
+        return place_move_is_passable(fplace, fx, fy, tx, ty, obj, 0) ? sc->T : sc->F;
+}
+
 KERN_API_CALL(kern_place_is_hazardous)
 {
         struct place *place;
@@ -8361,6 +8380,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-is-wilderness?", kern_place_is_wilderness);
         API_DECL(sc, "kern-place-blocks-los?", kern_place_blocks_los);
         API_DECL(sc, "kern-place-map", kern_place_map);
+        API_DECL(sc, "kern-place-move-is-passable?", kern_place_move_is_passable);
         API_DECL(sc, "kern-place-set-neighbor", kern_place_set_neighbor);
         API_DECL(sc, "kern-place-set-terrain", kern_place_set_terrain);
         API_DECL(sc, "kern-place-set-terrain-map", kern_place_set_terrain_map);

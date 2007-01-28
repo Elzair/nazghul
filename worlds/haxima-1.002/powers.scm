@@ -878,7 +878,7 @@
 	(kern-add-xray-vision (kern-dice-roll
 		(mkdice 10 (floor (+ (/ power 3) 1))))))
 		
-;; Vectors to tiles jumped over
+;; vttjo - "Vectors to tiles jumped over"
 (define (powers-jump-vttjo dx dy)
     (cond ((= dx 2)
            (cond ((= dy -1) (list (cons 1 0) (cons 1 -1)))
@@ -905,32 +905,64 @@
           (else nil)))
 
 (define (powers-jump caster ktarg power)
-  (cond ((kern-place-is-passable ktarg caster)
-         (let* ((cloc (kern-obj-get-location caster))
-                (vect (loc-diff cloc ktarg))
-                (vttjo (powers-jump-vttjo (loc-x vect) 
-                                         (loc-y vect)))
-                (kplace (loc-place (kern-obj-get-location caster)))
-                )
-           (kern-obj-set-mmode caster mmode-jump)
-           (let ((result
-                  (cond ((foldr (lambda (val vtt)
-                                  (or val
-                                      (not (kern-place-is-passable 
-                                            (mk-loc kplace 
-                                                    (+ (car vtt) (loc-x cloc))
-                                                    (+ (cdr vtt) (loc-y cloc)))
-                                            caster))))
-                                #f
-                                vttjo)
-                         (kern-log-msg "Jump failed: blocked!")
-                         result-no-effect)
-                        (else
-                         (kern-obj-relocate caster ktarg nil)
-                         result-ok))))
-             (kern-obj-set-mmode caster nil)
-             result)))
-        (else (kern-log-msg "Jump Failed: Impassable terrain")
-              result-no-effect
-              )
-      ))
+  (let (
+        (cloc (kern-obj-get-location caster))
+        )
+
+    ;; special case: when jumping 1 (or fewer tiles) use normal movement mode
+    (define (jump-one)
+      (cond ((not (kern-place-move-is-passable? cloc ktarg caster))
+             (kern-log-msg "Jump failed: blocked!")
+             result-no-effect
+             )
+            (else
+             (kern-obj-relocate caster ktarg nil)
+             result-ok
+             )
+            )
+      )
+
+    (cond ((not (kern-place-is-passable ktarg caster))
+           (kern-log-msg "Jump Failed: Impassable terrain")
+           result-no-effect
+           )
+          (else
+           (let* (
+                  (vect (loc-diff cloc ktarg))
+                  (dx (loc-x vect))
+                  (dy (loc-y vect))
+                  (kplace (loc-place (kern-obj-get-location caster)))
+                  )
+             (cond ((and (<= (abs dx) 1)
+                         (<= (abs dy) 1)
+                         )
+                    (jump-one)
+                    )
+                   (else
+                    ;; normal case: jump of more than 1 tile
+                    (kern-obj-set-mmode caster mmode-jump)
+                    (let* (
+                          (vttjo (powers-jump-vttjo dx dy))
+                          (result
+                           (cond ((foldr (lambda (val vtt)
+                                           (or val
+                                               (not (kern-place-is-passable 
+                                                     (mk-loc kplace 
+                                                             (+ (car vtt) (loc-x cloc))
+                                                             (+ (cdr vtt) (loc-y cloc)))
+                                                     caster))))
+                                         #f
+                                         vttjo)
+                                  (kern-log-msg "Jump failed: blocked!")
+                                  result-no-effect
+                                  )
+                                 (else
+                                  (kern-obj-relocate caster ktarg nil)
+                                  result-ok
+                                  )
+                                 ))
+                          )
+                      (kern-obj-set-mmode caster nil)
+                      result
+                      )))))
+          )))
