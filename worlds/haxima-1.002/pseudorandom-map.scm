@@ -679,15 +679,38 @@
 						
 
 ;; messy iteration ahead!
-(define (prmap-ensure-coherence mapdata xmin xmax ymin ymax zloc)
+(define (prmap-ensure-coherence mapdata xmin xmax ymin ymax zloc linkfactory)
 	(let* ((width (- xmax xmin -1))
 			(height (- ymax ymin -1))
 			(table (vector-2d-make width height 'unk))
-			(checking-cursor (vector 0 0))
+			(checking-cursor (vector 
+				(- (kern-dice-roll (mkdice 1 width)) 1) 
+				(- (kern-dice-roll (mkdice 1 height)) 1)))
+			(checking-end (vector 0 0))
 			(working-cursor (vector xmin ymin))
-			(flags (vector #f))
+			(flags (vector #f #f #f))
 			)
 		(vector-set! (vector-ref table 0) 0 'lin)
+		(println "ce")
+		;; checking end is tile before current checking cursor
+		;;   looping if need be
+		(cond ((>= (vector-ref checking-cursor 0) 0)
+			(vector-set! checking-end 0 (- (vector-ref checking-cursor 0) 1))
+			(vector-set! checking-end 1 (vector-ref checking-cursor 1))
+			)
+			((>= (vector-ref checking-cursor 1) 0)
+				(vector-set! checking-end 0 (- width 1))
+				(vector-set! checking-end 1 (- 1 (vector-ref checking-cursor 1)))
+				)
+			(#t
+				(vector-set! checking-end 0 (- width 1))
+				(vector-set! checking-end 1 (- height 1))
+				))
+		(println "checkbounds: " checking-cursor " " checking-end)
+		;; loop on fixing links till all checked
+		(do 
+			()
+			((vector-ref flags 2))
 		;; single continuity working pass
 		(do
 			()
@@ -743,5 +766,85 @@
 			)
 			(println table)
 		)
-
+		;; single checking working pass
+		(vector-set! flags 1 #f)
+		(println "checkbounds: " checking-cursor " " checking-end)
+		(do
+			()
+			((vector-ref flags 1))
+			(let ((currentstatus (vector-2d-get-off table 0 0 checking-cursor))	)
+			(println "cursor " checking-cursor)
+			(cond ((and (begin (println "a") #t)
+					(< (vector-ref checking-cursor 0) (- width 1))
+					(begin (println "a1 " (vector-2d-get-off table -1 0 checking-cursor)) #t)
+					(not (equal? (vector-2d-get-off table -1 0 checking-cursor) currentstatus))
+					(begin (println "a2") #t)
+					(null? (get-cardinal-ref
+						(prmap-room-getmaphardlink 
+							(+ (vector-ref checking-cursor 0) xmin) 
+							(+ (vector-ref checking-cursor 1) ymin) 
+								zloc mapdata)
+							east)))
+						(prmap-room-hardlink-set! 
+							(+ (vector-ref checking-cursor 0) xmin)
+							(+ (vector-ref checking-cursor 1) ymin)
+							zloc (prmap-params-hardlinks mapdata) east
+							nil 'm_test2templ_break #t nil)
+						(prmap-room-hardlink-set! 
+							(+ (vector-ref checking-cursor 0) 1 xmin)
+							(+ (vector-ref checking-cursor 1) ymin) 
+							zloc (prmap-params-hardlinks mapdata) west
+							nil 'm_test2templ_break #t nil)
+						(vector-2d-set-off table 0 0 checking-cursor 'lin)
+						(vector-set! working-cursor 0 (+ (vector-ref checking-cursor 0) xmin))
+						(vector-set! working-cursor 1 (+ (vector-ref checking-cursor 1) ymin))
+						(println "mklink east " working-cursor)
+						(vector-set! flags 1 #t)
+						)
+				((and (begin (println "b") #t)
+					(< (vector-ref checking-cursor 1) (- height 1))
+					(begin (println "b1 " (vector-2d-get-off table 0 -1 checking-cursor)) #t)
+					(not (equal? (vector-2d-get-off table 0 -1 checking-cursor) currentstatus))
+					(null? (get-cardinal-ref
+						(prmap-room-getmaphardlink 
+							(+ (vector-ref checking-cursor 0) xmin) 
+							(+ (vector-ref checking-cursor 1) ymin) 
+								zloc mapdata)
+							north)))
+						(prmap-room-hardlink-set! 
+							(+ (vector-ref checking-cursor 0) xmin)
+							(+ (vector-ref checking-cursor 1) ymin)
+							zloc (prmap-params-hardlinks mapdata) north
+							nil 'm_test2templ_break #t nil)
+						(prmap-room-hardlink-set! 
+							(+ (vector-ref checking-cursor 0) xmin)
+							(+ (vector-ref checking-cursor 1) 1 ymin) 
+							zloc (prmap-params-hardlinks mapdata) south
+							nil 'm_test2templ_break #t nil)
+						(vector-2d-set-off table 0 0 checking-cursor 'lin)
+						(vector-set! working-cursor 0 (+ (vector-ref checking-cursor 0) xmin))
+						(vector-set! working-cursor 1 (+ (vector-ref checking-cursor 1) ymin))
+						(println "mklink north " working-cursor)
+						(vector-set! flags 1 #t)
+						)
+				((and (begin (println "c") #t)
+					(equal? (vector-ref checking-cursor 0) (vector-ref checking-end 0))
+					(equal? (vector-ref checking-cursor 1) (vector-ref checking-end 1)))
+					(vector-set! flags 1 #t)
+					(vector-set! flags 2 #t)
+					)
+				((< (vector-ref checking-cursor 0) (- width 1))
+					(vector-set! checking-cursor 0 (+ (vector-ref checking-cursor 0) 1)))
+				((< (vector-ref checking-cursor 1) (- height 1))
+					(vector-set! checking-cursor 0 0)
+					(vector-set! checking-cursor 1 (+ 1 (vector-ref checking-cursor 1))))
+				(#t
+					(vector-set! checking-cursor 0 0)
+					(vector-set! checking-cursor 1 0))
+			)
+		))
+		)
+		(println "f")
+		(println "outflags " flags)
+		(println table)
 	))
