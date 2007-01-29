@@ -2271,7 +2271,17 @@ int Object::getTTL(void) { return ttl; }
 
 bool Object::surreptitiouslyRemove()
 {
-        if (getPlace()==player_party->getPlace()
+        // crasher fix: check for player party; this may be called on boot if
+        // the load file has (kern-obj-set-ttl kobj 0). That scenario happens
+        // when an object's ttl is expired but the player is still in LOS, and
+        // then the player saves the game.
+
+        if (!isOnMap()) {
+                return false;
+        }
+
+        if (player_party
+            && getPlace()==player_party->getPlace()
             && (place_flying_distance(player_party->getPlace(),
                                       player_party->getX(),
                                       player_party->getY(),
