@@ -151,6 +151,30 @@
 		)
 	)
 	
+(kern-mk-map 'm_deeptempl_break 19 19 pal_expanded
+		(list
+			"rr rr rr rr rr rr rr rr bb .. .. rr rr rr rr rr rr rr rr "
+			"rr rr rr rr rr rr rr rr .. .. bb rr rr rr rr rr rr rr rr "
+			"rr rr rr rr rr .. .. rr .. .. rr {4 {{ rr rr rr rr rr rr "
+			"rr rr rr rr rr .. .. .. .. bb .. .. .. .. rr rr rr rr rr "
+			"rr rr rr {{ {2 .. .. {8 .. .. .. .. {8 .. {4 {{ rr rr rr "
+			"rr rr .. {1 {8 .. rr {{ {2 {8 .. {4 {{ rr .. {1 .. rr rr "
+			"rr rr rr {4 {{ {6 {{ rr rr {{ {a .. {1 .. .. .. .. rr rr "
+			"rr rr .. .. {1 .. {5 {{ rr rr {{ rr .. .. {8 .. {4 {{ rr "
+			"bb .. bb .. .. .. .. {1 rr rr rr {8 .. bb {{ {2 .. .. bb "
+			".. .. .. .. .. rr .. {8 .. rr {{ {{ {2 .. {1 .. rr .. .. "
+			".. bb .. .. {4 {{ rr {{ rr rr rr rr .. .. .. .. bb .. .. "
+			"rr .. .. .. .. {1 .. {9 rr {{ {6 {{ rr .. .. .. .. .. rr "
+			"rr rr {8 .. bb .. {4 {{ rr {1 .. {1 .. .. .. .. .. .. rr "
+			"rr rr {{ .. .. .. .. rr .. {8 .. .. .. .. bb {8 .. rr rr "
+			"rr rr rr .. rr .. .. .. {4 {{ bb .. .. .. {4 {{ rr rr rr "
+			"rr rr rr rr {{ {2 .. .. .. {1 .. .. .. .. .. rr rr rr rr "
+			"rr rr rr rr rr {{ {2 .. .. .. .. {2 bb rr rr rr rr rr rr "
+			"rr rr rr rr rr rr .. rr .. .. bb .. rr rr rr rr rr rr rr "
+			"rr rr rr rr rr rr rr rr bb .. .. rr rr rr rr rr rr rr rr "
+		)
+	)
+	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Deeps random map
 
@@ -309,6 +333,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; handles
 
+(define (deeps-init-cohesion)
+		(kern-log-msg "begin cohesion check")
+		(prmap-ensure-cohesion (prmap-get-mapdata (eval 'p_deeps_1)) -6 5 -5 6 0 nil)
+		(kern-log-msg "end cohesion check")
+		(define (deeps-init-cohesion))
+		)
+		
 (define (deeps-room-handle-deeps kplace kplayer)
 	(let* (
 		(roomdata (get-roomdata kplace))
@@ -329,6 +360,7 @@
 		(roomdata (get-roomdata kplace))
 		(mapdata (prmap-get-mapdata (eval 'p_deeps_1)))
 		)
+		(deeps-init-cohesion)
 		(prmap-room-init-neighbors kplace roomdata)
 		(prmap-room-init-links kplace roomdata mapdata)
 	))	
