@@ -3871,16 +3871,22 @@ static void cmd_add_skill_set(struct node *head, class Character *pc,
         list_for_each(&skset->skills, elem) {
 
                 struct skill_set_entry *ssent;
+                struct node *node;
                 ssent = list_entry(elem, struct skill_set_entry, list);
 
-                /* if the character is of sufficient level to yuse the skill */
-                if (pclvl >= ssent->level) {
-                        
-                        /* add it to the list */
-                        struct node *node;
-                        node = node_new(ssent);
-                        node_add_tail(head, node);
+                /* is it a passive skill? */
+                if (ssent->skill->passive) {
+                        continue;
                 }
+
+                /* is the character is of sufficient level? */
+                if (pclvl < ssent->level) {
+                        continue;
+                }
+
+                /* add it to the list */
+                node = node_new(ssent);
+                node_add_tail(head, node);
         }
 }
 

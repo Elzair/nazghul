@@ -72,6 +72,7 @@
 #include "file.h"
 #include "skill.h"
 #include "skill_set.h"
+#include "skill_set_entry.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -3715,7 +3716,7 @@ KERN_API_CALL(kern_mk_skill)
         char *name, *desc;
         pointer yuse, can_yuse, list;
         struct skill *skill;
-        int flag;
+        int wilderness_ok, passive;
 
         /* Unpack name and desc */
         if (unpack(sc, &args, "ss", &name, &desc)) {
@@ -3728,10 +3729,11 @@ KERN_API_CALL(kern_mk_skill)
         skill_set_desc(skill, desc);
 
         /* Unpack ap, mp and yusage procs */
-        if (unpack(sc, &args, "ddbcc", 
+        if (unpack(sc, &args, "ddbbcc", 
                    &skill->ap, 
                    &skill->mp, 
-                   &flag,
+                   &wilderness_ok,
+                   &passive,
                    &yuse, &can_yuse)) {
                 load_err("kern-mk-skill %s: bad args", name);
                 goto abort;
@@ -3739,14 +3741,19 @@ KERN_API_CALL(kern_mk_skill)
 
         /* I used an int for the unpack since I don't trust the cast to work
          * portably on structure bit fields */
-        skill->wilderness_ok = flag;
+        skill->wilderness_ok = wilderness_ok;
+        skill->passive = passive;
 
-        /* yuse is mandatory */
-        if (yuse == sc->NIL) {
-                load_err("kern-mk-skill %s: nil yuse proc", name);
+        /* yuse is mandatory for non-passive skills */
+        if (! skill->passive 
+            && yuse == sc->NIL) {
+                load_err("kern-mk-skill %s: active but nil yuse proc", name);
                 goto abort;
         }
-        skill->yuse = closure_new_ref(sc, yuse);
+
+        if (yuse != sc->NIL) {
+                skill->yuse = closure_new_ref(sc, yuse);
+        }
 
         /* can_yuse is optional */
         if (can_yuse != sc->NIL) {
@@ -6808,10 +6815,103 @@ KERN_API_CALL(kern_char_get_weapons)
 									  &armsIndex);
 }
 
+/**
+ * A generic append-to-scheme-list function.
+ */
+static void kern_list_append(struct kern_append_info *info, void *data)
+{
+        /* alloc a cell */
+        pointer cell = scm_mk_ptr(info->sc, data);
+
+        /* make it a list element */
+        cell = _cons(info->sc, cell, info->sc->NIL, 0);
+        
+        /* add it to the list */
+        if (info->head == info->sc->NIL) {
+                info->head = cell;
+                info->tail = cell;
+
+                /* Protect the head from garbage collection. As long as the
+                 * head is protected the entire list is protected. The caller
+                 * must unprotect the head just before returning the list back
+                 * to scheme, so the collector will clean it up when the script
+                 * no longer needs it. */
+                scm_protect(info->sc, cell);
+
+        } else {
+                info->tail->_object._cons._cdr = cell;
+                info->tail = cell;
+        }  
+}
+
+/**
+ * Used by kern-char-get-skills to add all the skills in a skill set to the
+ * list.
+ */
+static void kern_add_skill_set(struct kern_append_info *info, int pclvl, 
+                               struct skill_set *skset)
+{
+        struct list *elem;
+
+        /* for each skill in the skill set */
+        list_for_each(&skset->skills, elem) {
+
+                struct skill_set_entry *ssent;
+                ssent = list_entry(elem, struct skill_set_entry, list);
+
+                /* is the character of sufficient level? */
+                if (pclvl < ssent->level) {
+                        continue;
+                }
+
+                kern_list_append(info, ssent->skill);
+        }
+}
+
+KERN_API_CALL(kern_char_get_skills)
+{
+        class Character *subj;
+        struct kern_append_info info;
+
+        /* unpack the character */
+        subj = (class Character*)unpack_obj(sc, &args, 
+                                                 "kern-char-get-skills");
+        if (!subj) {
+                return sc->NIL;
+        }
+        
+        /* initialize the relevant list-building info */
+        memset(&info, 0, sizeof(info));
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+
+        /* add species skills */
+        if (subj->species
+            && subj->species->skills) {
+                kern_add_skill_set(&info, subj->getLevel(), 
+                                   subj->species->skills);
+        }
+
+        /* add occupation skills */
+        if (subj->occ
+            && subj->occ->skills) {
+                kern_add_skill_set(&info, subj->getLevel(), 
+                                   subj->occ->skills);
+        }
+        
+        /* allow the list to be gc'd when the script is done with it */
+        if (info.head != sc->NIL) {
+                scm_unprotect(sc, info.head);
+        }
+
+        return info.head;
+}
+
 static pointer kern_build_arm_list(scheme *sc, 
-                                      class Character *character, 
-                                      class ArmsType *arm,
-									  int *armsIndex)
+                                   class Character *character, 
+                                   class ArmsType *arm,
+                                   int *armsIndex)
 {
         /* base case */
         if (! arm)
@@ -6821,9 +6921,9 @@ static pointer kern_build_arm_list(scheme *sc,
         return _cons(sc, 
                      scm_mk_ptr(sc, arm), 
                      kern_build_arm_list(sc, 
-                                            character, 
-                                            character->getNextArms(armsIndex),
-											armsIndex), 
+                                         character, 
+                                         character->getNextArms(armsIndex),
+                                         armsIndex), 
                      0);
 }
 
@@ -8242,6 +8342,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-strength", kern_char_set_strength);
         API_DECL(sc, "kern-char-set-dexterity", kern_char_set_dexterity);
         API_DECL(sc, "kern-char-set-intelligence", kern_char_set_intelligence);
+        API_DECL(sc, "kern-char-get-skills", kern_char_get_skills);
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
         API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
         API_DECL(sc, "kern-char-is-dead?", kern_char_is_dead);

@@ -348,6 +348,10 @@
 (define (has-ap-debt? kobj)
   (< (kern-obj-get-ap kobj) 0))
 
+(define (has-skill? kchar kskill)
+  (in-list? kskill
+            (kern-char-get-skills kchar)))
+
 (define (flee kchar)
   ;;;(display "flee")(newline)
   (kern-char-set-fleeing kchar #t))

@@ -69,30 +69,34 @@
 ;; tile. If the tile has the right passability and is unoccupied, this creates
 ;; a new instance and conceals it on the tile.
 (define (kpitfall-use-handler ktype kchar)
-  (let ((loc (kern-ui-target (kern-obj-get-location kchar) 1)))
-    (cond ((null? loc) 
-           (kern-log-msg "Abort!")
-           #f)
-          ((not (terrain-ok-for-pitfall? loc)) 
-           (kern-log-msg "Wrong terrain type!")
-           #f)
-          ((occupied? loc) 
-           (kern-log-msg "Somebody is there!")
-           #f)
-          (else
-           (let ((kobj (mk-pitfall-from-ktype ktype)))
-             (cond ((null? kobj) 
-                    (kern-log-msg "Script error: unknown type")
-                    #f)
-                   (else
-                    (kern-log-msg (kern-obj-get-name kchar)
-                                  " plants "
-                                  (pitfall-name (kobj-gob-data kobj))
-                                  "!")
-                    (kern-obj-put-at kobj loc)
-                    (kern-obj-remove-from-inventory kchar ktype 1)
-                    (pitfall-set-known-to-npc! (gob kobj) #f)
-                    #t)))))))
+  (cond ((not (has-skill? kchar sk_arm_trap))
+         (kern-log-msg (kern-obj-get-name kchar)
+                       " lacks the skill to Arm Traps!"))
+        (else
+         (let ((loc (kern-ui-target (kern-obj-get-location kchar) 1)))
+           (cond ((null? loc) 
+                  (kern-log-msg "Abort!")
+                  #f)
+                 ((not (terrain-ok-for-pitfall? loc)) 
+                  (kern-log-msg "Wrong terrain type!")
+                  #f)
+                 ((occupied? loc) 
+                  (kern-log-msg "Somebody is there!")
+                  #f)
+                 (else
+                  (let ((kobj (mk-pitfall-from-ktype ktype)))
+                    (cond ((null? kobj) 
+                           (kern-log-msg "Script error: unknown type")
+                           #f)
+                          (else
+                           (kern-log-msg (kern-obj-get-name kchar)
+                                         " plants "
+                                         (pitfall-name (kobj-gob-data kobj))
+                                         "!")
+                           (kern-obj-put-at kobj loc)
+                           (kern-obj-remove-from-inventory kchar ktype 1)
+                           (pitfall-set-known-to-npc! (gob kobj) #f)
+                           #t)))))))))
 
 (define ktrap-ifc
   (ifc obj-ifc
