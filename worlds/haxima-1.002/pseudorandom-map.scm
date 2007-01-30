@@ -57,7 +57,7 @@
 		(list 'mutable-list-placeholder)
 		alist))
 
-(define (mutable-list-insert alist entry index)
+(define (mutable-list-insert alist index entry)
 	(cond
 		((equal? (car alist) 'mutable-list-placeholder)
 			(if (zero? index)
@@ -66,7 +66,7 @@
 					(set-car! alist nil)
 					(set-cdr! alist (list 'mutable-list-placeholder))
 					(println alist)
-					(mutable-list-insert (cdr alist) entry (- index 1))
+					(mutable-list-insert (cdr alist) (- index 1) entry)
 				))
 		)
 		((zero? index)
@@ -76,15 +76,15 @@
 		((null? (cdr alist))
 			(set-cdr! alist (list 'mutable-list-placeholder))
 			(println alist)
-			(mutable-list-insert (cdr alist) entry (- index 1))
+			(mutable-list-insert (cdr alist) (- index 1) entry)
 			)
 		(#t
-			(mutable-list-insert (cdr alist) entry (- index 1)))
+			(mutable-list-insert (cdr alist) (- index 1) entry))
 	))
 			
 		
 
-(define (mutable-list-set alist entry index)
+(define (mutable-list-set alist index entry)
 	(cond
 		((equal? (car alist) 'mutable-list-placeholder)
 			(if (zero? index)
@@ -93,7 +93,7 @@
 					(set-car! alist nil)
 					(set-cdr! alist (list 'mutable-list-placeholder))
 					(println alist)
-					(mutable-list-set (cdr alist) entry (- index 1))
+					(mutable-list-set (cdr alist) (- index 1) entry)
 				))
 		)
 		((zero? index)
@@ -102,10 +102,10 @@
 		((null? (cdr alist))
 			(set-cdr! alist (list 'mutable-list-placeholder))
 			(println alist)
-			(mutable-list-set (cdr alist) entry (- index 1))
+			(mutable-list-set (cdr alist) (- index 1) entry)
 			)
 		(#t
-			(mutable-list-set (cdr alist) entry (- index 1)))
+			(mutable-list-set (cdr alist) (- index 1) entry))
 	))
 
 ;; exercise for the reader: reimplement as balanced tree
@@ -777,16 +777,28 @@
 								zloc mapdata)
 							west))
 							)
-						(prmap-room-hardlink-set! 
-							(+ (vector-ref checking-cursor 0) xmin)
-							(+ (vector-ref checking-cursor 1) ymin)
-							zloc (prmap-params-hardlinks mapdata) east
-							nil 'm_deeptempl_break #t nil)
-						(prmap-room-hardlink-set! 
-							(+ (vector-ref checking-cursor 0) 1 xmin)
-							(+ (vector-ref checking-cursor 1) ymin) 
-							zloc (prmap-params-hardlinks mapdata) west
-							nil 'm_deeptempl_break #t nil)
+						(let ((linkeast (apply linkfactory 
+								(list
+									(+ (vector-ref checking-cursor 0) xmin)
+									(+ (vector-ref checking-cursor 1) ymin)
+									zloc mapdata east)))
+								(linkwest (apply linkfactory 
+									(list
+										(+ (vector-ref checking-cursor 0) 1 xmin)
+										(+ (vector-ref checking-cursor 1) ymin) 
+										zloc mapdata west))
+									))
+							(prmap-room-hardlink-set! 
+								(+ (vector-ref checking-cursor 0) xmin)
+								(+ (vector-ref checking-cursor 1) ymin)
+								zloc (prmap-params-hardlinks mapdata) east
+								nil (car linkeast) #t (cadr linkeast))
+							(prmap-room-hardlink-set! 
+								(+ (vector-ref checking-cursor 0) 1 xmin)
+								(+ (vector-ref checking-cursor 1) ymin) 
+								zloc (prmap-params-hardlinks mapdata) west
+								nil (car linkwest) #t (cadr linkwest))
+						)
 						(vector-2d-set-off table 0 0 checking-cursor 'lin)
 						(vector-set! working-cursor 0 (+ (vector-ref checking-cursor 0) xmin))
 						(vector-set! working-cursor 1 (+ (vector-ref checking-cursor 1) ymin))
@@ -808,16 +820,28 @@
 								zloc mapdata)
 							south))
 							)
-						(prmap-room-hardlink-set! 
-							(+ (vector-ref checking-cursor 0) xmin)
-							(+ (vector-ref checking-cursor 1) ymin)
-							zloc (prmap-params-hardlinks mapdata) north
-							nil 'm_deeptempl_break #t nil)
-						(prmap-room-hardlink-set! 
-							(+ (vector-ref checking-cursor 0) xmin)
-							(+ (vector-ref checking-cursor 1) 1 ymin) 
-							zloc (prmap-params-hardlinks mapdata) south
-							nil 'm_deeptempl_break #t nil)
+						(let ((linknorth (apply linkfactory 
+								(list
+									(+ (vector-ref checking-cursor 0) xmin)
+									(+ (vector-ref checking-cursor 1) ymin)
+									zloc mapdata north)))
+								(linksouth (apply linkfactory 
+									(list
+										(+ (vector-ref checking-cursor 0) xmin)
+										(+ (vector-ref checking-cursor 1) 1 ymin) 
+										zloc mapdata south))
+									))
+							(prmap-room-hardlink-set! 
+								(+ (vector-ref checking-cursor 0) xmin)
+								(+ (vector-ref checking-cursor 1) ymin)
+								zloc (prmap-params-hardlinks mapdata) north
+								nil (car linknorth) #t (cadr linknorth))
+							(prmap-room-hardlink-set! 
+								(+ (vector-ref checking-cursor 0) xmin)
+								(+ (vector-ref checking-cursor 1) 1 ymin) 
+								zloc (prmap-params-hardlinks mapdata) south
+								nil (car linksouth) #t (cadr linksouth))
+						)
 						(vector-2d-set-off table 0 0 checking-cursor 'lin)
 						(vector-set! working-cursor 0 (+ (vector-ref checking-cursor 0) xmin))
 						(vector-set! working-cursor 1 (+ (vector-ref checking-cursor 1) ymin))
