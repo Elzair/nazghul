@@ -1008,18 +1008,19 @@ int Object::getActionPoints()
 
 void Object::decActionPoints(int points)
 {
-        action_points -= points;
+        setActionPoints(action_points - points);
 }
 
 void Object::endTurn()
 {
-        if (action_points > 0)
-                action_points = 0;
+        if (action_points > 0) {
+                setActionPoints(0);
+        }
 }
 
 void Object::startTurn()
 {
-        action_points += getActionPointsPerTurn();
+        setActionPoints(action_points + getActionPointsPerTurn());
         runHook(OBJ_HOOK_START_OF_TURN, 0);
 }
 
@@ -2234,12 +2235,15 @@ Object *Object::getSpeaker()
 
 void Object::resetActionPoints()
 {
-        action_points = 0;
+        setActionPoints(0);
 }
 
 void Object::setActionPoints(int amount)
 {
         action_points = amount;
+        if (isPlayerControlled()) {
+                statusRepaint();
+        }
 }
 
 void obj_inc_ref(Object *obj)

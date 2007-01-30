@@ -519,7 +519,8 @@ int status_show_effect(hook_entry_t *entry, void *data)
         return 0;
 }
 
-static void status_show_character_var_stats_full(SDL_Rect *rect, class Character *pm)
+static void status_show_character_var_stats_full(SDL_Rect *rect, 
+                                                 class Character *pm)
 {
         /* Show the xp, hp and mp */
         screenPrint(rect, 0, 
@@ -537,18 +538,30 @@ static void status_show_character_var_stats_full(SDL_Rect *rect, class Character
         rect->y += ASCII_H;
 }
 
-static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
+static void status_show_character_var_stats(SDL_Rect *rect, 
+                                            class Character *pm)
 {
         /* Show the xp, hp and mp */
-		/* Note that getXpForLevel(2) - getXpForLevel(1) != getXpForLevel(1)*/
+        /* Note that getXpForLevel(2) - getXpForLevel(1) != getXpForLevel(1)*/
         screenPrint(rect, 0, 
-                    "^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cLvl:^cw%d^c%c(%d%%)^c-"
+                    "^c+%cHP:^c%c%d^cw/%d "
+                    "^c%cMP:^c%c%d^cw/%d "
+                    "^c%cAP:^c%c%d^cw/%d "
+                    "^c%cLvl:^cw%d^c%c(%d%%)^c-"
                     , STAT_LABEL_CLR
                     , status_range_color(pm->getHp(), pm->getMaxHp())
                     , pm->getHp(), pm->getMaxHp()
+
                     , STAT_LABEL_CLR
                     , status_range_color(pm->getMana(), pm->getMaxMana())
                     , pm->getMana(), pm->getMaxMana()
+
+                    , STAT_LABEL_CLR
+                    , status_range_color(pm->getActionPoints(), 
+                                         pm->getActionPointsPerTurn())
+                    , pm->getActionPoints()
+                    , pm->getActionPointsPerTurn()
+
                     , STAT_LABEL_CLR
                     , pm->getLevel()
                     , STAT_LABEL_CLR
@@ -923,7 +936,8 @@ static void status_show_party_view_character_arms(class Character *pm,
 
         /* for each readied armament */
 	int armsIndex=0;
-	for (arms = pm->enumerateArms(&armsIndex); arms != NULL; arms = pm->getNextArms(&armsIndex)) {
+	for (arms = pm->enumerateArms(&armsIndex); arms != NULL; 
+             arms = pm->getNextArms(&armsIndex)) {
 
                 /* blit it */
                 sprite_paint(arms->getSprite(), 0, rect->x, rect->y);
@@ -977,7 +991,6 @@ static bool status_show_party_view_character(class Character * pm, void *data)
         /* Show the character effects as mini-icons right-justified on line
          * 2 */
         status_show_party_view_character_effects(pm, &Status.lineRect);
-	/*screenPrint(&Status.lineRect, SP_RIGHTJUSTIFIED, "%s", pm->getCondition());*/
 	Status.lineRect.y += ASCII_H;
 
 	if (Status.pcIndex != -1 && pm->getOrder() != Status.pcIndex) {
