@@ -465,3 +465,5 @@
 (link-rm	0	-2	0	north	nil					'm_deeptempl_wall		#f)
 (link-rm	1	-2	0	north	nil 				'm_deeptempl_wall		#f)
 )
+
+(mutable-list-set (prmap-get-mapdata p_deeps_1) 8 #t)

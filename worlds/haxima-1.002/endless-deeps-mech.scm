@@ -333,12 +333,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; handles
 
-(define (deeps-init-cohesion)
-		(kern-log-msg "begin cohesion check")
-		(prmap-ensure-cohesion (prmap-get-mapdata (eval 'p_deeps_1)) -6 5 -5 6 0 nil)
-		(kern-log-msg "end cohesion check")
-		(define (deeps-init-cohesion))
+(define (deeps-link-factory x y z map dir)
+		(list 'm_deeptempl_break nil)
 		)
+
+(define (deeps-init-cohesion mapdata)
+	(if (list-ref mapdata 8)
+		(begin
+			(kern-log-msg "begin cohesion check")
+			(prmap-ensure-cohesion mapdata -6 5 -5 6 0 deeps-link-factory)
+			(kern-log-msg "end cohesion check")
+			(mutable-list-set mapdata 8 #f)
+		)))
 		
 (define (deeps-room-handle-deeps kplace kplayer)
 	(let* (
@@ -360,7 +366,7 @@
 		(roomdata (get-roomdata kplace))
 		(mapdata (prmap-get-mapdata (eval 'p_deeps_1)))
 		)
-		(deeps-init-cohesion)
+		(deeps-init-cohesion mapdata)
 		(prmap-room-init-neighbors kplace roomdata)
 		(prmap-room-init-links kplace roomdata mapdata)
 	))	
