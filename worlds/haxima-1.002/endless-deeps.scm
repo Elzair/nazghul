@@ -456,9 +456,9 @@
 ;; 
 ;;			x	y	z	dir		target				template				passable
 
-(link-rm	0	1	0	south	'p_lost_garrison	'm_deeptempl_passage	#t)
+(link-rm	0	1	0	south	'p_lost_garrison	'm_deeptempl_passage	#f)
 (link-rm	1	1	0	south	nil					'm_deeptempl_wall		#f)
-(link-rm	-1	0	0	east	'p_lost_garrison	'm_deeptempl_passage	#t)
+(link-rm	-1	0	0	east	'p_lost_garrison	'm_deeptempl_passage	#f)
 (link-rm	2	0	0	west	nil					'm_deeptempl_wall		#f)
 (link-rm	-1	-1	0	east	nil					'm_deeptempl_wall		#f)
 (link-rm	2	-1	0	west	nil					'm_deeptempl_wall		#f)
