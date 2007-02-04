@@ -663,7 +663,7 @@ enum MoveResult Character::move(int dx, int dy)
                  * neighbor first. */
 
                 // Look for a neighbor in that direction
-                int dir = vector_to_dir(dx, dy);
+                int dir = place_off_map_dir(getPlace(),newx, newy);
                 struct place *dest_place = place_get_neighbor(getPlace(), dir);
                 if (dest_place != NULL) {
                         

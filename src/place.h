@@ -251,6 +251,25 @@ static inline int place_off_map(struct place *place, int x, int y) {
         return (x < 0 || x >= place_w(place) || y < 0 || 
                 y >= place_h(place));
 }
+
+// returns direction location is off map (assumes it *is* off the map- check that first!)
+static inline int place_off_map_dir(struct place *place, int x, int y) {
+	if (y<0) {
+		return NORTH;
+	}
+	else if (x < 0) {
+		return WEST;
+	}
+	else if (x >= place_w(place))
+	{
+		return EAST;
+	}
+	else // (y >= place_h(place)) (assuming off map)
+	{
+		return SOUTH;
+	}
+}
+
 extern void place_clip_to_map(struct place *place, int *x, int *y);
 
 static inline int place_wrap_x(struct place *place, int x) {
