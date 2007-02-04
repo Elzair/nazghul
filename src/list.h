@@ -109,6 +109,19 @@ static inline int list_len(struct list *head)
         return n;
 }
 
+static inline void list_move(struct list *new_head, struct list *old_head)
+{
+        if (list_empty(old_head)) {
+                list_init(new_head);
+                return;
+        }
+
+        *new_head = *old_head;
+        new_head->next->prev = new_head;
+        new_head->prev->next = new_head;
+
+        list_init(old_head);
+}
 
 END_DECL
 

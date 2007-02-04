@@ -22,8 +22,17 @@
 #include "cursor.h"
 #include "place.h"
 #include "map.h"
+#include "templ.h"
 
-Cursor::Cursor():range(0), bounded(0), originX(0), originY(0), active(false)
+Cursor::Cursor()
+        : range(0)
+          , bounded(0)
+          , originX(0)
+          , originY(0)
+          , active(false)
+          , useRange(false)
+          , useZone(false)
+          , zone(0)
 {
 }
 
@@ -38,11 +47,25 @@ void Cursor::init(class ObjectType * type)
 
 bool Cursor::inRange(int x, int y)
 {
-        // this works on wrapping maps
-        int d = place_flying_distance(getPlace(), originX, originY, x, y);
+        if (useRange) {
+                // this works on wrapping maps
+                int d = place_flying_distance(getPlace(), originX, originY, 
+                                              x, y);
         
-        // Is the new location out of range?
-        return (d <= range); 
+                // Is the new location out of range?
+                if (d > range) {
+                        return false;
+                }
+        }
+
+        if (useZone) {
+                assert(zone);
+                if (! templ_get(zone, x, y)) {
+                        return false;
+                }
+        }
+
+        return true;
 }
 
 enum MoveResult Cursor::move(int dx, int dy)
@@ -74,27 +97,31 @@ enum MoveResult Cursor::move(int dx, int dy)
         // Is the new location out of range?
         if (! inRange(newx, newy))
                 return OutOfRange;
-        
+
         // move the cursor
         relocate(getPlace(), newx, newy, REL_NOTRIG);
         
         return MovedOk;
 }
 
-void Cursor::setViewportBounded(int bounded)
+void Cursor::setViewportBounded(bool val)
 {
-  this->bounded = !!bounded;
+        bounded = val;
 }
 
-void Cursor::setRange(int range)
+void Cursor::setRange(int val)
 {
-	this->range = range;
+	range = val;
+        useRange = true;
 }
 
 void Cursor::setOrigin(int x, int y)
 {
 	originX = x;
 	originY = y;
+        if (zone) {
+                templ_set_origin(zone, x, y);
+        }
 }
 
 void Cursor::relocate(struct place *newplace, int newx, int newy, bool noStep,
@@ -138,4 +165,29 @@ void Cursor::shadeRange(bool val)
 bool Cursor::isRangeShaded()
 {
         return shade;
+}
+
+void Cursor::setZone(struct templ *val)
+{
+        if (zone) {
+                templ_unref(zone);
+                zone = 0;
+                useZone = false;
+        }
+        
+        if (val) {
+                templ_ref(val);
+                zone = val;
+                useZone = true;
+                templ_set_origin(zone, originX, originY);
+        }
+}
+
+void Cursor::reset()
+{
+        setZone(0);
+        setRange(0);
+        useRange = false;
+        shade    = false;
+        active   = false;
 }

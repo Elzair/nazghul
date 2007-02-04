@@ -42,6 +42,26 @@ struct ScrollerContext {
         bool mixing; // for mix reagents
 };
 
+/**
+ * Request format for select_target_generic().
+ */
+typedef struct ui_select_target_req 
+{
+        struct place *place;   /* where */
+        int x1, y1;            /* origin */
+        int x2, y2;            /* initial/final cursor position */
+        struct templ *tiles;   /* tiles in range */
+        struct list suggest;   /* quick-target tiles */
+        void *data;            /* caller context */
+
+        /* called when the cursor moves over a new tile */
+        void (*move)(struct place *, int, int, void *);
+
+        /* called when user hits 'enter' or otherwise selects a tile */
+        void (*select)(struct place *, int, int, void *);
+
+} ui_select_target_req_t;
+
 #define SCROLLER_HINT "\005\006=scroll ENT=select ESC=exit"
 #define PAGER_HINT  "\005\006=scroll ESC=exit"
 
@@ -139,6 +159,26 @@ extern void ui_trade(struct merchant *merch);
  * hits ESC this will be zero as if no keys were pressed.
  */
 extern int ui_getline_filtered(char *buf, int len, int (*filter)(int key));
+
+/**
+ * More general version of select_target(). Prompts the player to select a tile
+ * within a range or template of tiles.
+ *
+ * @parm req tells the function how to carry out its business.
+ *
+ * @returns zero iff the (x2, y2) fields of the req hold the player-selected
+ * target location. The only time it won't is if the player aborts the prompt.
+ */
+extern int ui_select_target_generic(ui_select_target_req_t *req);
+
+/**
+ * Initialize a target request to safe defaults. Note that this is for a new
+ * request, if you try to re-init without doing some manual cleanup first
+ * you'll get a memory leak.
+ *
+ * @parm req will be initialized.
+ */
+extern void ui_select_target_req_init(ui_select_target_req_t *req);
 
 END_DECL;
 

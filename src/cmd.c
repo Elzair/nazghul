@@ -58,6 +58,7 @@
 #include "skill.h"
 #include "skill_set.h"
 #include "skill_set_entry.h"
+#include "templ.h"
 #include "occ.h"
 
 
@@ -83,18 +84,19 @@
 extern int DeveloperMode;
 
 /* SAM: Using this typedef below */
-typedef void (*v_funcpointer_iiv) (struct place *, int x, int y, void * v);
+typedef void (*v_fncptr_iiv_t) (struct place *, int x, int y, void * v);
+typedef void (*v_funcptr_iiv_t) (struct place *, int x, int y, void * v);
 
 /* Struct used by the movecursor function and it's mouse-handling counterparts
  * for commands which prompt the player to select a target from the map. */
 struct movecursor_data {
 
         /* Optional function called when a tile is entered by the cursor */
-        v_funcpointer_iiv each_tile_func;
+        v_fncptr_iiv_t each_tile_func;
 
         /* Optional function called when the tile under the cursor is selected
          * by the player */
-        v_funcpointer_iiv each_target_func;
+        v_fncptr_iiv_t each_target_func;
 
         /* Optional list of objects to be used by the 'previous' and 'next'
          * cursor operations. */
@@ -1532,22 +1534,57 @@ static void cmd_init_movecursor_data(struct movecursor_data *data,
 int select_target(int ox, int oy, int *x, int *y, int range, 
                   struct list *suggest)
 {
+        ui_select_target_req_t req;
+        int ret;
+
+        /* LEFT OFF DEBUGGING THIS */
+
+        /* convert args to a targeting request */
+        ui_select_target_req_init(&req);
+        req.place = Place; /* hack, but not a new one */
+        req.x1 = ox;
+        req.y1 = oy;
+        req.x2 = *x;
+        req.y2 = *y;
+        req.tiles = templ_new_from_range(range);
+        templ_set_origin(req.tiles, ox, oy);
+        list_move(&req.suggest, suggest);
+        
+        /* call generic target selection */
+        ret = ui_select_target_generic(&req);
+
+        /* convert back */
+        *x = req.x2;
+        *y = req.y2;
+        list_move(suggest, &req.suggest);
+        templ_unref(req.tiles);
+
+        return ret;
+}
+
+void ui_select_target_req_init(ui_select_target_req_t *req)
+{
+        memset(req, 0, sizeof(*req));
+        list_init(&req->suggest);
+}
+
+int ui_select_target_generic(ui_select_target_req_t *req)
+{
         struct movecursor_data data;
         struct KeyHandler kh;
         struct MouseButtonHandler mbh;
         struct MouseMotionHandler mmh;
 
-        Session->crosshair->setRange(range);
-        Session->crosshair->setOrigin(ox, oy);
-        Session->crosshair->relocate(Place, *x, *y);   /* previous target */
-
-        /* initially don't shade the range unless the previous target is the
-         * same as the origin (implying that there is no previous target) */
-        Session->crosshair->shadeRange((*x==ox)&&(*y==oy));
-        Session->show_boxes = 1;
+        Session->crosshair->setZone(req->tiles);
+        Session->crosshair->setViewportBounded(1);
+        Session->crosshair->setOrigin(req->x1, req->y1);
+        Session->crosshair->relocate(req->place, req->x2, req->y2);
+        Session->show_boxes=1;
         mapSetDirty();
 
-        cmd_init_movecursor_data(&data, suggest);
+        cmd_init_movecursor_data(&data, &req->suggest);
+        data.each_tile_func   = req->move;
+        data.each_target_func = req->select;
 
         kh.fx   = movecursor;
         kh.data = &data;
@@ -1559,33 +1596,31 @@ int select_target(int ox, int oy, int *x, int *y, int range,
         mmh.data = &data;
 
         eventPushMouseButtonHandler(&mbh);
-        //eventPushMouseMotionHandler(&mmh);
         eventPushKeyHandler(&kh);
-        cmdwin_spush("<target>");
+        cmdwin_spush("<target> (ESC to exit)");
         eventHandle();
         cmdwin_pop();
         eventPopKeyHandler();
         eventPopMouseButtonHandler();
-        //eventPopMouseMotionHandler();
   
-        Session->show_boxes = 0;
-        *x = Session->crosshair->getX();
-        *y = Session->crosshair->getY();
+        Session->show_boxes=0;
+        req->x2 = Session->crosshair->getX();
+        req->y2 = Session->crosshair->getY();
         Session->crosshair->remove();
         mapSetDirty();
-
+  
         if (data.abort) {
-                cmdwin_spush("none!");
+                cmdwin_spush("Done.");
                 return -1;
         }
   
-        return 0;  
+        return 0;
 }
 
 int select_target_with_doing(int ox, int oy, int *x, int *y,
                              int range,
-                             v_funcpointer_iiv each_tile_func,
-                             v_funcpointer_iiv each_target_func)
+                             v_fncptr_iiv_t each_tile_func,
+                             v_fncptr_iiv_t each_target_func)
 {
         // SAM: 
         // As select_target(), but each_tile_func() 
@@ -1654,8 +1689,8 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
  */
 static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
                                      int range,
-                                     v_funcpointer_iiv each_tile_func,
-                                     v_funcpointer_iiv each_target_func,
+                                     v_fncptr_iiv_t each_tile_func,
+                                     v_fncptr_iiv_t each_target_func,
                                      struct place * place)
 {
         struct terraform_mode_keyhandler data;

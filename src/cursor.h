@@ -37,20 +37,25 @@ class Cursor:public Object {
         virtual void remove();
 
         bool is_active(void);
-        void setViewportBounded(int bounded);
-	void setRange(int range);
+        void setViewportBounded(bool val);
         int getRange();
+        void setRange(int val);
 	void setOrigin(int x, int y);
         int getOriginX();
         int getOriginY();
         bool inRange(int x, int y);
         void shadeRange(bool val);
         bool isRangeShaded();
+        void setZone(struct templ *zone);
+        void reset();
 
       protected:
 	int range, bounded, originX, originY;
         bool active;
         bool shade;
+        bool useRange;
+        bool useZone;
+        struct templ *zone;
 };
 
 #endif // cursor_h

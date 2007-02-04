@@ -156,7 +156,8 @@ nazghul_SOURCES =		\
 	skill.h skill.c \
 	skill_set.h skill_set.c \
 	skill_set_entry.h skill_set_entry.c \
-	repstr.h repstr.c
+	repstr.h repstr.c \
+	templ.h templ.c
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \
