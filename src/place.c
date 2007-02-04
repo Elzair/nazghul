@@ -676,7 +676,7 @@ int place_is_passable(struct place *place, int x, int y,
 	} else if (y < 0 || y >= place->terrain_map->h ||
 		   x < 0 || x >= place->terrain_map->w)
 		return 0;
-fprintf(stderr,"pass01\n");
+
         // Does the caller want to check terrain features?
         if (0 == (flags & PFLAG_IGNORETFEAT)) {
                 class Object *tfeat = NULL;
@@ -691,7 +691,6 @@ fprintf(stderr,"pass01\n");
                                 return 0;
                 }
         }
-fprintf(stderr,"pass02\n");
 
         // Does the caller want to check terrain, and if so is there no
         // overriding terrain feature?
@@ -702,8 +701,6 @@ fprintf(stderr,"pass02\n");
                 if (! place_terrain_is_passable(place, x, y, subject, flags))
                         return 0;
         }
- 
-fprintf(stderr,"pass03\n");
 
         // Does the caller want to check fields?
         if (0 == (flags & PFLAG_IGNOREFIELDS)) {
@@ -724,7 +721,6 @@ fprintf(stderr,"pass03\n");
                      BLOCKS_PASSABILITY))
                         return 0;
 	}
-fprintf(stderr,"pass04\n");
 
 	return 1;
 }
@@ -737,7 +733,7 @@ int place_move_is_passable(struct place *place, int from_x, int from_y,
         if (! place_is_passable(place, to_x, to_y, subject, flags)) {
                 return 0;
         }
-fprintf(stderr,"pass1\n");
+
         /* check if this is a one-tile diagonal move then check both adjacent
          * neighbors. */
         if (place_is_diagonal(place, from_x, from_y, to_x, to_y)
@@ -745,7 +741,7 @@ fprintf(stderr,"pass1\n");
             && ! place_is_passable(place, to_x, from_y, subject, flags & ~PFLAG_MOVEATTEMPT)) {
                 return 0;
         }
-fprintf(stderr,"passout\n");
+
         return 1;
 }
 
