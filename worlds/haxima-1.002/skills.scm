@@ -25,8 +25,35 @@
                              (handles? kobj 'get-traps)))
                       ))
 
+;; fixme: need to find a path from origin to checkloc and add up the movement
+;; cost to find out if the actor can travel that far.
+(define (skill-sprint kactor)
+  (let ((origin (kern-obj-get-location kactor))
+        (sprint-max-range 5))
+    (define (checkloc x y)
+      (let ((checkloc (mk-loc (loc-place origin) x y)))
+        (and (kern-place-is-passable checkloc kactor)
+             (kern-in-los? origin checkloc)
+        )))
+    (cast-ui-template-loc powers-sprint
+                          kactor
+                          (kern-mk-templ origin sprint-max-range 'checkloc)
+                          0)))
+
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
+;;
+;; (kern-mk-skill <tag>
+;;                <name>
+;;                <description>
+;;                <ap-consumed>
+;;                <mp-consumed>
+;;                <can-use-in-wilderness?>
+;;                <is-passive?>
+;;                <yusage-proc>
+;;                <yusage-special-check-proc>
+;;                <list-of-required-tools>
+;;                <list-of-required-consumables>)
 
 (define sk_unlock 
   (kern-mk-skill "Unlock" "Unlock a door with a picklock"
@@ -57,6 +84,13 @@
                  nil
                  nil))
 
+(define sk_sprint
+  (kern-mk-skill "Sprint" "Move quickly, in a straight line, for a short distance"
+                 1 1 #f #f
+                 'skill-sprint
+                 nil
+                 nil))
+
 ;;----------------------------------------------------------------------------
 ;; Skill Set declarations
 
@@ -65,6 +99,7 @@
                                     (list 1 sk_jump)
                                     (list 1 sk_detect_trap)
                                     (list 1 sk_arm_trap)
+                                    (list 1 sk_sprint)
                                     )))
 
 (define sks_wanderer sks_wrogue)

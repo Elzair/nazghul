@@ -125,3 +125,25 @@ void templ_set_origin(struct templ *templ, int x, int y)
         templ->uy = y - templ->h / 2;
 }
 
+void templ_for_each(struct templ *grd, 
+                    int (*cb)(struct templ *, int, int, void *),
+                    void *data)
+{
+        int x1, y1, x2, y2;
+        templ_ref(grd);
+        for (y1 = 0; y1 < grd->h; y1++) {
+                y2 = y1 + grd->uy;
+                for (x1 = 0; x1 < grd->w; x1++) {
+
+                        /* run the cb only on tiles in the templ */
+                        if (templ_get_unch(grd, x1, y1)) {
+                                x2 = x1 + grd->ux;
+                                if (cb(grd, x2, y2, data)) {
+                                        goto done;
+                                }
+                        }
+                }
+        }
+ done:
+        templ_unref(grd);
+}

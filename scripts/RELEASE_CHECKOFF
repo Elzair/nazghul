@@ -167,9 +167,9 @@ APPENDIX A: Instructions for Release Maintainers
 
 (8) Click on "Add Files and/or Refresh View"
 
-(9) From there I believe it will prompt you to select from some options to
-    describe what type of package it is (I can't see this part w/o a file to
-    add, so I'm recalling from memory)
+(9) Scroll down to "Step 3: Edit Files In This Release". Your file should be
+    listed there. Select the "Processor" and "File Type" from the drop-down
+    boxes and click "Update/Refresh".
 
 
 

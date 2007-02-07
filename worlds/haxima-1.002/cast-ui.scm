@@ -120,6 +120,7 @@
 		checkproc))
 
 (define (cast-ui-dospell target effect caster power)
+  (println "cast-ui-dospell")
   (cond ((null? target) result-no-target)
         ((kern-in-los? (kern-obj-get-location caster) (kern-obj-get-location target))
          ;; note in this case we should let the effect procedure determine the
@@ -186,6 +187,17 @@
 				(kern-log-msg "Not in LOS!")
 				result-no-target))))	
 
+(define (cast-ui-template-loc effect caster template power)
+  (cast-ui-dospell-loc
+   (kern-ui-target-generic (kern-obj-get-location caster)
+                           (kern-obj-get-location caster) ;; fixme: cursor-loc
+                           template
+                           nil ;; fixme: suggested-locs
+                           nil ;; fixme: cursor-move-cb
+                           nil ;; fixme: cursor-select-cb
+                           nil ;; fixme: gob
+                           )
+   effect caster power))
 
 ;;----------------------------------------------------------------------------
 ;; First Circle

@@ -1460,7 +1460,6 @@
   (kern-ui-target (kern-obj-get-location caster)
                   range))
 
-
 ;;----------------------------------------------------------------------------
 ;; code for opening a moongate, warping in a monster, and re-closing it
 (define (open-moongate loc)

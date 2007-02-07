@@ -905,44 +905,31 @@
           (else nil)))
 
 (define (powers-jump caster ktarg power)
-  (let (
-        (cloc (kern-obj-get-location caster))
-        )
+  (let ((cloc (kern-obj-get-location caster)))
 
     ;; special case: when jumping 1 (or fewer tiles) use normal movement mode
     (define (jump-one)
       (cond ((not (kern-place-move-is-passable? cloc ktarg caster))
              (kern-log-msg "Jump failed: blocked!")
-             result-no-effect
-             )
+             result-no-effect)
             (else
              (kern-obj-relocate caster ktarg nil)
-             result-ok
-             )
-            )
-      )
+             result-ok)))
 
     (cond ((not (kern-place-is-passable ktarg caster))
            (kern-log-msg "Jump Failed: Impassable terrain")
-           result-no-effect
-           )
+           result-no-effect)
           (else
-           (let* (
-                  (vect (loc-diff cloc ktarg))
+           (let* ((vect (loc-diff cloc ktarg))
                   (dx (loc-x vect))
                   (dy (loc-y vect))
-                  (kplace (loc-place (kern-obj-get-location caster)))
-                  )
-             (cond ((and (<= (abs dx) 1)
-                         (<= (abs dy) 1)
-                         )
-                    (jump-one)
-                    )
+                  (kplace (loc-place (kern-obj-get-location caster))))
+             (cond ((and (<= (abs dx) 1) (<= (abs dy) 1))
+                    (jump-one))
                    (else
                     ;; normal case: jump of more than 1 tile
                     (kern-obj-set-mmode caster mmode-jump)
-                    (let* (
-                          (vttjo (powers-jump-vttjo dx dy))
+                    (let* ((vttjo (powers-jump-vttjo dx dy))
                           (result
                            (cond ((foldr (lambda (val vtt)
                                            (or val
@@ -951,18 +938,22 @@
                                                              (+ (car vtt) (loc-x cloc))
                                                              (+ (cdr vtt) (loc-y cloc)))
                                                      caster))))
-                                         #f
-                                         vttjo)
+                                         #f vttjo)
                                   (kern-log-msg "Jump failed: blocked!")
-                                  result-no-effect
-                                  )
+                                  result-no-effect)
                                  (else
                                   (kern-obj-relocate caster ktarg nil)
-                                  result-ok
-                                  )
-                                 ))
-                          )
+                                  result-ok))))
                       (kern-obj-set-mmode caster nil)
-                      result
-                      )))))
-          )))
+                      result))))))))
+
+(define (powers-sprint caster ktarg power)
+  ;; fixme: stub
+  (kern-log-msg (kern-obj-get-name caster)
+                " tries to sprite to ("
+                (kern-place-get-name (loc-place ktarg))
+                ", "
+                (loc-x ktarg)
+                ", "
+                (loc-y ktarg)
+                ")"))

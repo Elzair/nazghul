@@ -1,6 +1,7 @@
-Nazghul/Haxima x.y.z released
+Nazghul/Haxima 0.5.6 released
 
-Nazghul/Haxima x.y.z is now available in source form. Major changes include
-multiple saved games; more meaningful of character stats; basic character
-creation; and new dungeons, quests, NPC types, and characters. For a detailed
-list see the NEWS file in the distribution.
+Nazghul/Haxima 0.5.6 is now available in source form. This is a bugfix-only
+release, and most of the bugs are minor and will not prevent you from playing
+Haxima (although a few might make it a bit too easy). Save files from 0.5.5
+should still work.
+

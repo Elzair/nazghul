@@ -42,5 +42,8 @@ extern void templ_unref(struct templ *grd);
 extern char templ_get(struct templ *grd, int x, int y);
 extern int templ_set(struct templ *grd, int x, int y, char val);
 extern void templ_set_origin(struct templ *grd, int x, int y);
+extern void templ_for_each(struct templ *grd, 
+                           int (*cb)(struct templ *tmple, int x, int y, void *data),
+                           void *data);
 
 #endif

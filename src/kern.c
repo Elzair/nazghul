@@ -73,6 +73,7 @@
 #include "skill.h"
 #include "skill_set.h"
 #include "skill_set_entry.h"
+#include "templ.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -4341,6 +4342,107 @@ KERN_API_CALL(kern_ui_target)
         return ret;
 }
 
+static int kern_mk_templ_visitor(struct templ *templ, int x, int y, void *data)
+{
+        closure_t *check = (closure_t*)data;
+        
+        /* if the check proc returns #f then turn off this location in the
+         * template */
+        if (! closure_exec(check, "dd", x, y)) {
+                templ_set(templ, x, y, 0);
+        }
+
+        return 0;
+}
+
+KERN_API_CALL(kern_mk_templ)
+{
+        int rad, x, y;
+        struct place *place;
+        pointer checkptr;
+        struct templ *templ;
+        closure_t *checkproc;
+
+        /* origin */
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-mk-templ")) {
+                return sc->NIL;
+        }
+
+        /* radius, check-proc and gob */
+        if (unpack(sc, &args, "dc", &rad, &checkptr)) {
+                rt_err("kern-mk-templ: bad args");
+                return sc->NIL;
+        }
+
+        /* create the templ and set its origin */
+        templ = templ_new_from_range(rad);
+        templ_set_origin(templ, x, y);
+
+        /* run the check procedure on each location covered by the templ */
+        checkproc = closure_new_ref(sc, checkptr);
+        templ_for_each(templ, kern_mk_templ_visitor, checkproc);
+        closure_unref(checkproc);
+
+        return scm_mk_ptr(sc, templ);
+}
+
+KERN_API_CALL(kern_ui_target_generic)
+{
+        ui_select_target_req_t req;
+        pointer move_cb, select_cb, gob, dummy;
+
+        ui_select_target_req_init(&req);
+
+        /* Unpack the origin */
+        if (unpack_loc(sc, &args, &req.place, &req.x1, &req.y1, 
+                       "kern-ui-target-generic")) {
+                return sc->NIL;
+        }
+
+        /* Unpack the initial cursor loc */
+        if (unpack_loc(sc, &args, &req.place, &req.x2, &req.y2, 
+                       "kern-ui-target-generic")) {
+                return sc->NIL;
+        }
+        
+        /* Unpack the template */
+        if (unpack(sc, &args, "p", &req.tiles)) {
+                rt_err("kern-ui-target-generic: bad template arg");
+                return sc->NIL;
+        }
+
+        /* fixme: unpack the suggested list */
+        if (unpack(sc, &args, "p", &dummy)) {
+                rt_err("kern-ui-target-generic: bad template arg");
+                return sc->NIL;
+        }
+
+        /* unpack the move-cb, select-cb and gob */
+        if (unpack(sc, &args, "ccc", &move_cb, &select_cb, &gob)) {
+                rt_err("kern-ui-target-generic: bad callback or gob arg");
+                return sc->NIL;
+        }
+        
+        /* fixme: convert the cb procs into closures (will have to clean them
+         * up at the bottom, too) */
+
+        /* Prompt the player; returns when player has made selection */
+        if (ui_select_target_generic(&req)) {
+                return sc->NIL;
+        }
+
+        /* Kind of a hack: manually unref the templ here, assuming the caller
+         * is done with it, which is going to be the usual case. If I encounter
+         * an unusual case then I'll need to add kern-templ-ref/unref so the
+         * script can protect it. */
+        if (req.tiles) {
+                templ_unref(req.tiles);
+        }
+        
+        /* Pack the target coords for return */
+        return pack(sc, "pdd", req.place, req.x2, req.y2);
+}
+
 KERN_API_CALL(kern_fire_missile)
 {
         ArmsType *missile_type;
@@ -8390,6 +8492,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-species", kern_mk_species);
         API_DECL(sc, "kern-mk-sprite", kern_mk_sprite);
         API_DECL(sc, "kern-mk-sprite-set", kern_mk_sprite_set);
+        API_DECL(sc, "kern-mk-templ", kern_mk_templ);
         API_DECL(sc, "kern-mk-terrain", kern_mk_terrain);
         API_DECL(sc, "kern-mk-vehicle", kern_mk_vehicle);
         API_DECL(sc, "kern-mk-vehicle-type", kern_mk_vehicle_type);
@@ -8581,6 +8684,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-ui-direction", kern_ui_direction);
         API_DECL(sc, "kern-ui-select-party-member", kern_ui_select_party_member);
         API_DECL(sc, "kern-ui-target", kern_ui_target);
+        API_DECL(sc, "kern-ui-target-generic", kern_ui_target_generic);
         API_DECL(sc, "kern-ui-waitkey", kern_ui_waitkey);
         API_DECL(sc, "kern-ui-page-text", kern_ui_page_text);
         API_DECL(sc, "kern-ui-select-from-list", kern_ui_select_from_list);
