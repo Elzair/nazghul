@@ -5132,17 +5132,20 @@ KERN_API_CALL(kern_place_move_is_passable)
         int fx, fy, tx, ty;
         class Object *obj;
 
-        if (unpack_loc(sc, &args, &fplace, &fx, &fy, "kern-place-move-is-passable"))
+        if (unpack_loc(sc, &args, &fplace, &fx, &fy, 
+                       "kern-place-move-is-passable"))
                 return sc->F;
 
-        if (unpack_loc(sc, &args, &tplace, &tx, &ty, "kern-place-move-is-passable"))
+        if (unpack_loc(sc, &args, &tplace, &tx, &ty,
+                       "kern-place-move-is-passable"))
                 return sc->F;
 
         obj = unpack_obj(sc, &args, "kern-place-move-is-passable");
         if (!obj)
                 return sc->F;
 
-        return place_move_is_passable(fplace, fx, fy, tx, ty, obj, 0) ? sc->T : sc->F;
+        return place_move_is_passable(fplace, fx, fy, tx, ty, obj, 0) ? sc->T 
+                : sc->F;
 }
 
 KERN_API_CALL(kern_place_is_hazardous)
@@ -5228,6 +5231,25 @@ KERN_API_CALL(kern_place_get_terrain)
         terrain = place_get_terrain(place, x, y);
 
         return terrain ? scm_mk_ptr(sc, terrain) : sc->NIL;
+}
+
+KERN_API_CALL(kern_place_get_movement_cost)
+{
+        struct place *place;
+        int x, y, cost=0;
+        class Object *obj;
+        
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-get-movement-cost"))
+                goto done;
+
+        obj = unpack_obj(sc, &args, "kern-place-get-movement-cost");
+        if (!obj)
+                goto done;
+
+        cost = place_get_movement_cost(place, x, y, obj);
+
+ done:
+        return scm_mk_integer(sc, cost);
 }
 
 KERN_API_CALL(kern_place_get_light)
@@ -8571,6 +8593,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-get-height", kern_place_get_height);
         API_DECL(sc, "kern-place-get-light", kern_place_get_light);
         API_DECL(sc, "kern-place-get-location", kern_place_get_location);
+        API_DECL(sc, "kern-place-get-movement-cost", kern_place_get_movement_cost);
         API_DECL(sc, "kern-place-get-name", kern_place_get_name);
         API_DECL(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
         API_DECL(sc, "kern-place-get-objects", kern_place_get_objects);
@@ -8647,8 +8670,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-get-player", kern_get_player);
         API_DECL(sc, "kern-get-ticks", kern_get_ticks);
         API_DECL(sc, "kern-get-time", kern_get_time);
-		API_DECL(sc, "kern-get-total-minutes", kern_get_total_minutes);
-		API_DECL(sc, "kern-harm-relations", kern_harm_relations);		
+        API_DECL(sc, "kern-get-total-minutes", kern_get_total_minutes);
+        API_DECL(sc, "kern-harm-relations", kern_harm_relations);		
         API_DECL(sc, "kern-in-los?", kern_in_los);
         /*API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);*/
         API_DECL(sc, "kern-include", kern_include);

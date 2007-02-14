@@ -25,15 +25,30 @@
                              (handles? kobj 'get-traps)))
                       ))
 
-;; fixme: need to find a path from origin to checkloc and add up the movement
-;; cost to find out if the actor can travel that far.
+;; fixme: max-cost should account for actor's current ap
 (define (skill-sprint kactor)
-  (let ((origin (kern-obj-get-location kactor))
-        (sprint-max-range 5))
+  (let* ((origin (kern-obj-get-location kactor))
+         (kplace (loc-place origin))
+         (sprint-max-range 5)
+         (sprint-max-cost 6)
+        )
+    (define (too-far? origin dest)
+      (let ((path (line (loc-x origin) (loc-y origin) (loc-x dest) (loc-y dest))))
+        (let ((cost (foldr (lambda (d xy)
+                             (+ d 
+                                (kern-place-get-movement-cost (mk-loc kplace
+                                                                      (car xy) 
+                                                                      (cdr xy)) 
+                                                              kactor)
+                                ))
+                           0
+                           path)))
+          (> cost sprint-max-cost))))
     (define (checkloc x y)
-      (let ((checkloc (mk-loc (loc-place origin) x y)))
-        (and (kern-place-is-passable checkloc kactor)
-             (kern-in-los? origin checkloc)
+      (let ((dest (mk-loc kplace x y)))
+        (and (kern-place-is-passable dest kactor)
+             (kern-in-los? origin dest)
+             (not (too-far? origin dest))
         )))
     (cast-ui-template-loc powers-sprint
                           kactor

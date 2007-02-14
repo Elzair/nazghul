@@ -1573,3 +1573,52 @@
     (cond ((null? objects) nil)
           (else
            (nearest-obj kchar objects)))))
+
+;; Return an integer describing the sign of x
+(define (sgn x)
+  (cond ((> x 0) 1)
+        ((< x 0) -1)
+        (else 0)))
+
+;; Return a list of (x . y) pairs that constitute a line between two
+;; points. Uses Bresenhaum's line-drawing algorithm.
+(define (line x1 y1 x2 y2)
+  (let* ((dx (- x2 x1))
+         (dy (- y2 y1))
+         (adx (abs dx))
+         (ady (abs dy))
+         (sdx (sgn dx))
+         (sdy (sgn dy))
+         (x (/ ady 2))
+         (y (/ adx 2))
+         (px x1)
+         (py y1))
+    (define (f1 i)
+      ;;(println "f1 i=" i " px=" px " py=" py)
+      (cond ((>= i adx)
+             nil)
+            (else
+             (set! y (+ y ady))
+             (cond ((>= y adx)
+                    (set! y (- y adx))
+                    (set! py (+ py sdy))))
+             (set! px (+ px sdx))
+             (cons (cons px py)
+                   (f1 (+ 1 i))))))
+    (define (f2 i)
+      ;;(println "f2 i=" i " px=" px " py=" py)
+      (cond ((>= i ady)
+             nil)
+            (else
+             (set! x (+ x adx))
+             (cond ((>= x ady)
+                    (set! x (- x ady))
+                    (set! px (+ px sdx))))
+             (set! py (+ py sdy))
+             (cons (cons px py)
+                   (f2 (+ 1 i))))))
+    (cond ((>= adx ady)
+           (cons (cons x1 y1) (f1 0)))
+          (else
+           (cons (cons x1 y1) (f2 0))))))
+
