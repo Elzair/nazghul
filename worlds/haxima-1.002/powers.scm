@@ -973,3 +973,16 @@
     result-ok
     )
   )
+
+(define (powers-wriggle caster ktarg power)
+  (kern-obj-set-mmode caster mmode-wriggle)
+  (cond ((not (kern-place-move-is-passable? (kern-obj-get-location caster)
+                                            ktarg caster))
+         (kern-log-msg "Wriggle failed: blocked!")
+         (kern-obj-set-mmode caster nil)
+         result-no-effect)
+        (else
+         (kern-obj-relocate caster ktarg nil)
+         (kern-log-msg (kern-obj-get-name caster) "Wriggles through!")
+         (kern-obj-set-mmode caster nil)
+         result-ok)))

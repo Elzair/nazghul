@@ -61,6 +61,7 @@
 (define pclass-waterboulder   11) ;; worst case of boulder and water
 (define pclass-sludge    12)
 (define pclass-shallows  13)
+(define pclass-bars      14) ;; portcullis, some windows
 
 ;; Movement modes
 (define mmodes
@@ -76,6 +77,7 @@
    (list 'mmode-voidship "sailing"     8)
    (list 'mmode-ranger   "stalking"    9)
    (list 'mmode-none     "stationary" 10)
+   (list 'mmode-wriggle  "wriggle"    11)
    ))
 (map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
 
@@ -83,22 +85,23 @@
 
 ;; Movement cost table
 (kern-mk-ptable
-  ;;   walk   hover ship   phase  fly    skiff  fish crawl  vship rangr none
-  ;;   ====== ===== ====== =====  ====== ====== ==== =====  ===== ===== ====
- (list 0      0     0      0      0      0      0     0     0     0     0    ) ;; none
- (list norm   norm  cant   norm   norm   cant   cant  norm  cant  norm  cant ) ;; grass/paving
- (list cant   cant  norm   cant   norm   vhard  norm  cant  cant  cant  cant ) ;; deep
- (list cant   hard  cant   cant   norm   norm   norm  cant  cant  cant  cant ) ;; shoals
- (list cant   cant  cant   cant   norm   cant   cant  cant  cant  cant  cant ) ;; mountains
- (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant ) ;; wall (w/ ceiling)
- (list hard   hard  cant   norm   norm   cant   cant  hard  cant  norm  cant ) ;; trees  
- (list vhard  vhard cant   norm   norm   cant   cant  vhard cant  norm  cant ) ;; forest/hills/bog
- (list cant   cant  cant   cant   cant   cant   cant  cant  cant  cant  cant ) ;; energy fields
- (list cant   cant  cant   cant   norm   cant   cant  cant  norm  cant  cant ) ;; space
- (list cant   norm  cant   norm   norm   cant   cant  hard  cant  cant  cant ) ;; boulder
- (list cant   hard  cant   cant   norm   cant   cant  cant  cant  cant  cant ) ;; waterboulder
- (list cant   norm  vhard  cant   norm   vhard  vhard cant  cant  cant  cant ) ;; sludge
- (list norm   norm  cant   norm   norm   norm   norm  norm  cant  norm  cant ) ;; shallows
+  ;;   walk   hover ship   phase  fly    skiff  fish crawl  vship rangr none wrigl 
+  ;;   ====== ===== ====== =====  ====== ====== ==== =====  ===== ===== ==== ===== 
+ (list 0      0     0      0      0      0      0     0     0     0     0    0     ) ;; none
+ (list norm   norm  cant   norm   norm   cant   cant  norm  cant  norm  cant norm  ) ;; grass/paving
+ (list cant   cant  norm   cant   norm   vhard  norm  cant  cant  cant  cant cant  ) ;; deep
+ (list cant   hard  cant   cant   norm   norm   norm  cant  cant  cant  cant cant  ) ;; shoals
+ (list cant   cant  cant   cant   norm   cant   cant  cant  cant  cant  cant cant  ) ;; mountains
+ (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant cant  ) ;; wall (w/ ceiling)
+ (list hard   hard  cant   norm   norm   cant   cant  hard  cant  norm  cant hard  ) ;; trees  
+ (list vhard  vhard cant   norm   norm   cant   cant  vhard cant  norm  cant vhard ) ;; forest/hills/bog
+ (list cant   cant  cant   cant   cant   cant   cant  cant  cant  cant  cant cant  ) ;; energy fields
+ (list cant   cant  cant   cant   norm   cant   cant  cant  norm  cant  cant cant  ) ;; space
+ (list cant   norm  cant   norm   norm   cant   cant  hard  cant  cant  cant hard  ) ;; boulder
+ (list cant   hard  cant   cant   norm   cant   cant  hard  cant  cant  cant hard  ) ;; waterboulder
+ (list cant   norm  vhard  cant   norm   vhard  vhard cant  cant  cant  cant cant  ) ;; sludge
+ (list norm   norm  cant   norm   norm   norm   norm  norm  cant  norm  cant cant  ) ;; shallows
+ (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant vhard ) ;; bars (eg portcullis)
  )
 
 ;; Factions. The diplomacy table (which defines the relationship between

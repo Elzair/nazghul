@@ -5,7 +5,7 @@
 (define (portcullis-state on?)
   (if on?
       (state-mk 's_portcullis_up #f pclass-none 0)
-      (state-mk 's_portcullis_down #f pclass-wall 0)))
+      (state-mk 's_portcullis_down #f pclass-bars 0)))
 
 (define (kportcullis-manual kobj khandler)
   (kern-log-msg "Portcullis won't budge!"))

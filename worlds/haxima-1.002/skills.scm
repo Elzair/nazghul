@@ -56,6 +56,11 @@
                           (kern-mk-templ origin sprint-max-range 'checkloc)
                           0)))
 
+(define (skill-wriggle kactor)
+  ;; fixme: use smart target that only suggests viable locations? Add grease as
+  ;; a required material.
+  (cast-ui-ranged-loc powers-wriggle kactor 1 0))
+
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
 ;;
@@ -96,7 +101,7 @@
 (define sk_arm_trap
   (kern-mk-skill "Arm Trap" "Allows character to arm traps"
                  2 2 #f #t
-                 nil
+                 nil nil
                  nil
                  nil))
 
@@ -107,6 +112,18 @@
                  nil
                  nil))
 
+(define sk_wriggle
+  (kern-mk-skill "Wriggle" "Squeeze through tight spots"
+                 1              ;; ap
+                 1              ;; mp
+                 #f             ;; wilderness?
+                 #f             ;; passive?
+                 'skill-wriggle ;; yusage 
+                 nil            ;; yusage check
+                 nil            ;; tolls
+                 nil            ;; material
+                 ))
+
 ;;----------------------------------------------------------------------------
 ;; Skill Set declarations
 
@@ -116,6 +133,7 @@
                                     (list 1 sk_detect_trap)
                                     (list 1 sk_arm_trap)
                                     (list 1 sk_sprint)
+                                    (list 1 sk_wriggle)
                                     )))
 
 (define sks_wanderer sks_wrogue)

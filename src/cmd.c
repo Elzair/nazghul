@@ -1537,8 +1537,6 @@ int select_target(int ox, int oy, int *x, int *y, int range,
         ui_select_target_req_t req;
         int ret;
 
-        /* LEFT OFF DEBUGGING THIS */
-
         /* convert args to a targeting request */
         ui_select_target_req_init(&req);
         req.place = Place; /* hack, but not a new one */
