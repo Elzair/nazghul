@@ -948,12 +948,28 @@
                       result))))))))
 
 (define (powers-sprint caster ktarg power)
-  ;; fixme: stub
-  (kern-log-msg (kern-obj-get-name caster)
-                " tries to sprite to ("
-                (kern-place-get-name (loc-place ktarg))
-                ", "
-                (loc-x ktarg)
-                ", "
-                (loc-y ktarg)
-                ")"))
+  ;; hokay... first let's get the path from here to there
+  (let* ((origin (kern-obj-get-location caster))
+         (kplace (loc-place origin))
+         (path (line (loc-x origin) (loc-y origin) 
+                     (loc-x ktarg) (loc-y ktarg)))
+         )
+    ;; and now, for each point on the path, let's move the dude there and apply
+    ;; any terrain/field effects. The way should be passable (unless we do
+    ;; something weird like along the way trigger a mech which throws up a
+    ;; wall, in which case I guess that's an advantage of having the sprint
+    ;; skill ;)) Note that the dude may die along the way due to tile effects,
+    ;; so keep a ref count just to be safe and check for death in the move-dude
+    ;; function.
+    (define (move-dude xy)
+      (let ((loc (loc-mk kplace(car xy) (cdr xy))))
+        (cond ((not (kern-char-is-dead? caster))
+               (kern-obj-relocate caster loc nil)
+               (kern-map-repaint)
+               (kern-place-apply-tile-effects kplace caster)))))
+    (kern-obj-inc-ref caster)
+    (for-each move-dude path)
+    (kern-obj-dec-ref caster)
+    result-ok
+    )
+  )

@@ -333,6 +333,7 @@ extern void place_set_terrain_map(struct place *place, struct terrain_map *map);
 int place_move_is_passable(struct place *place, int from_x, int from_y,
                            int to_x, int to_y,
                            class Object *subject, int flags);
+void place_apply_tile_effects(struct place *place, class Object *obj);
 
 END_DECL
 

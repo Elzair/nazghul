@@ -33,7 +33,8 @@
          (sprint-max-cost 6)
         )
     (define (too-far? origin dest)
-      (let ((path (line (loc-x origin) (loc-y origin) (loc-x dest) (loc-y dest))))
+      (let ((path (line (loc-x origin) (loc-y origin) 
+                        (loc-x dest) (loc-y dest))))
         (let ((cost (foldr (lambda (d xy)
                              (+ d 
                                 (kern-place-get-movement-cost (mk-loc kplace

@@ -1729,7 +1729,7 @@ void place_remove_and_destroy_all_objects(struct place *place)
         place_for_each_object(place, place_remove_and_destroy_object, NULL);
 }
 
-static void place_apply_tile_effects(struct place *place, class Object *obj)
+void place_apply_tile_effects(struct place *place, class Object *obj)
 {
         class Object *tfeat;
         class Field *field;

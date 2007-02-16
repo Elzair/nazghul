@@ -1,4 +1,5 @@
 (define (mk-loc place x y) (list place x y))
+(define (loc-mk place x y) (list place x y))
 
 (define (loc-place loc) (car loc))
 (define (loc-x loc) (cadr loc))

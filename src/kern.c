@@ -1079,6 +1079,23 @@ KERN_API_CALL(kern_place_set_neighbor)
         return sc->T;
 }
 
+KERN_API_CALL(kern_place_apply_tile_effects)
+{
+        struct place *place;
+        class Object *obj;
+
+        if (unpack(sc, &args, "p", &place)) {
+                rt_err("kern-place-apply-tile-effects: bad place arg");
+                return sc->NIL;
+        }
+
+        obj = unpack_obj(sc, &args, "kern-obj-relocate");
+        if (!obj)
+                return sc->NIL;
+
+        place_apply_tile_effects(place, obj);
+        return sc->NIL;
+}
 
 static int kern_place_load_contents(scheme *sc, pointer *args, 
                                     struct place *place)
@@ -8588,6 +8605,7 @@ scheme *kern_init(void)
 
         /* kern-place api */
         API_DECL(sc, "kern-place-add-on-entry-hook", kern_place_add_on_entry_hook);
+        API_DECL(sc, "kern-place-apply-tile-effects", kern_place_apply_tile_effects);
         API_DECL(sc, "kern-place-set-subplace", kern_place_set_subplace);
         API_DECL(sc, "kern-place-get-beings", kern_place_get_beings);
         API_DECL(sc, "kern-place-get-height", kern_place_get_height);
