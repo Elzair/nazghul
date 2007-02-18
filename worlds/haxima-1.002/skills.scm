@@ -25,12 +25,11 @@
                              (handles? kobj 'get-traps)))
                       ))
 
-;; fixme: max-cost should account for actor's current ap
 (define (skill-sprint kactor)
   (let* ((origin (kern-obj-get-location kactor))
          (kplace (loc-place origin))
          (sprint-max-range 5)
-         (sprint-max-cost 6)
+         (sprint-max-cost (+ 6 (kern-obj-get-ap kactor)))
         )
     (define (too-far? origin dest)
       (let ((path (line (loc-x origin) (loc-y origin) 
