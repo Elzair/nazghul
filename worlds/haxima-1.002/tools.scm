@@ -24,6 +24,7 @@
 (kern-mk-sprite 's_mirror_bg_flagstones   ss_tools 1 17 #f 0)
 (kern-mk-sprite 's_mirror_bg   ss_tools 1 18 #f 0)
 (kern-mk-sprite 's_bookshelf   ss_tools 1 23 #f 0)
+(kern-mk-sprite 's_grease      ss_tools 1 24 #f 0)
 
 
 
@@ -335,3 +336,6 @@
 	(let ((kstop (kern-mk-obj t_blocker 1)))
 		(bind kstop nil)
 		kstop))
+
+;; grease -- inert object, required for the Wriggle skill
+(mk-obj-type 't_grease "grease" s_grease layer-item obj-ifc)

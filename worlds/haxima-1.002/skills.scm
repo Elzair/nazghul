@@ -57,8 +57,7 @@
                           0)))
 
 (define (skill-wriggle kactor)
-  ;; fixme: use smart target that only suggests viable locations? Add grease as
-  ;; a required material.
+  ;; fixme: use smart target that only suggests viable locations?
   (cast-ui-ranged-loc powers-wriggle kactor 1 0))
 
 ;;----------------------------------------------------------------------------
@@ -120,8 +119,8 @@
                  #f             ;; passive?
                  'skill-wriggle ;; yusage 
                  nil            ;; yusage check
-                 nil            ;; tolls
-                 nil            ;; material
+                 nil            ;; tools
+                 (list (list t_grease 1)) ;; material
                  ))
 
 ;;----------------------------------------------------------------------------

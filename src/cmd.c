@@ -3975,7 +3975,7 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
             || ! list_empty(&skill->materials)) {
 
                 /* print "requires:" */
-                screenPrint(rect, 0, "^c+G%s^c-", requires);
+                screenPrint(rect, 0, " ^c+G%s^c-", requires);
 
                 /* temporarily change x to print to right of "requires" */
                 rect->x += (strlen(requires) + 1) * ASCII_W;
@@ -3983,7 +3983,9 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
                 /* list tools */
                 node_for_each(&skill->tools, tnode) {
                         class ObjectType *tool = (class ObjectType*)tnode->ptr;
-                        screenPrint(rect, 0, "^c+y%s^c-", tool->getName());
+                        struct inv_entry *ie=player_party->inventory->search(tool);
+                        char tool_clr=(ie&&ie->count)?'g':'r';
+                        screenPrint(rect, 0, "^c+%c%s^c-", tool_clr, tool->getName());
                         rect->y += ASCII_H;
                 }
 
@@ -3993,9 +3995,15 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
                                 list_entry(elem, struct skill_material, list);
                         class ObjectType *objtype = 
                                 (class ObjectType*)mat->objtype;
-                        screenPrint(rect, 0, "^c+y%s^c+c (%d)^c-^c-", 
+                        struct inv_entry *ie=player_party->inventory->search(objtype);
+                        char mat_clr=ie?'g':'r';
+                        char q_clr=(ie&&(ie->count>=mat->quantity))?'g':'r';
+                        screenPrint(rect, 0, "^c+%c%s^c+%c (%d/%d)^c-^c-", 
+                                    mat_clr,
                                     objtype->getName(), 
-                                    mat->quantity);
+                                    q_clr,
+                                    mat->quantity,
+                                    ie?ie->count:0);
                         rect->y += ASCII_H;
                 }
 
@@ -4109,8 +4117,35 @@ void cmdYuse(class Character *actor)
         }
 
         /* check tools */
+        if (!node_list_empty(&skill->tools)) {
+                struct node *tnode;
+                node_for_each(&skill->tools, tnode) {
+                        class ObjectType *tool = (class ObjectType*)tnode->ptr;
+                        struct inv_entry *ie=player_party->inventory->search(tool);
+                        if (!ie || !ie->count) {
+                                log_msg("Need %s!", tool->getName());
+                                cant = 1;
+                        }
+                }
+
+        }
 
         /* check material */
+        if (! list_empty(&skill->materials)) {
+                struct list *elem;
+                struct skill_material *mat;
+                class ObjectType *objtype;
+                struct inv_entry *ie;
+                list_for_each(&skill->materials, elem) {
+                        mat = list_entry(elem, struct skill_material, list);
+                        objtype = (class ObjectType*)mat->objtype;
+                        ie = player_party->inventory->search(objtype);
+                        if (!ie || ie->count < mat->quantity) {
+                                cant = 1;
+                                log_msg("Need %d %s!", mat->quantity, objtype->getName());
+                        }
+                }
+        }
 
         /* check special */
         if (skill->can_yuse
@@ -4129,11 +4164,21 @@ void cmdYuse(class Character *actor)
         result = closure_exec(skill->yuse, "p", actor);
         yused = cmd_eval_and_log_result(result);
         
-        /* change ap/mp/xp */
+        /* change ap/mp/xp and consume materials */
         if (yused) {
                 actor->addMana(0 - skill->mp);
                 actor->decActionPoints(skill->ap);
                 actor->addExperience(ssent->level);
+
+                if (! list_empty(&skill->materials)) {
+                        struct list *elem;
+                        struct skill_material *mat;
+                        list_for_each(&skill->materials, elem) {
+                                mat = list_entry(elem, struct skill_material, list);
+                                player_party->takeOut((class ObjectType*)mat->objtype, 
+                                                      mat->quantity);
+                        }
+                }
         }       
 
         log_end(0);

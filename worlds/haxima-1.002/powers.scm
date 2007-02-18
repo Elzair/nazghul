@@ -983,6 +983,6 @@
          result-no-effect)
         (else
          (kern-obj-relocate caster ktarg nil)
-         (kern-log-msg (kern-obj-get-name caster) "Wriggles through!")
+         (kern-log-msg (kern-obj-get-name caster) " wriggles through!")
          (kern-obj-set-mmode caster nil)
          result-ok)))
