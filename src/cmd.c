@@ -1546,7 +1546,9 @@ int select_target(int ox, int oy, int *x, int *y, int range,
         req.y2 = *y;
         req.tiles = templ_new_from_range(range);
         templ_set_origin(req.tiles, ox, oy);
-        list_move(&req.suggest, suggest);
+        if (suggest) {
+                list_move(&req.suggest, suggest);
+        }
         
         /* call generic target selection */
         ret = ui_select_target_generic(&req);
@@ -1554,7 +1556,9 @@ int select_target(int ox, int oy, int *x, int *y, int range,
         /* convert back */
         *x = req.x2;
         *y = req.y2;
-        list_move(suggest, &req.suggest);
+        if (suggest) {
+                list_move(suggest, &req.suggest);
+        }
         templ_unref(req.tiles);
 
         return ret;
