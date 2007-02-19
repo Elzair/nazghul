@@ -235,27 +235,6 @@ INTERFACE INLINE int is_environment(pointer p) { return (type(p)==T_ENVIRONMENT)
 #define setmark(p)       typeflag(p) |= MARK
 #define clrmark(p)       typeflag(p) &= UNMARK
 
-#if USE_PROTECT
-INTERFACE INLINE pointer protect(scheme *sc, pointer p) 
-{ 
-        if (! p->pref)
-                list_add(&sc->protect, &p->plist);
-        p->pref++;
-        return p;
-}
-INTERFACE INLINE pointer unprotect(scheme *sc, pointer p) 
-{ 
-        assert(p->pref > 0);
-        p->pref--;
-        if (! p->pref)
-                list_remove(&p->plist); 
-        return p;
-}
-#define init_pref(p) ((p)->pref = 0)
-#else
-#define init_pref(p)
-#endif
-
 INTERFACE INLINE int is_immutable(pointer p) { return (typeflag(p)&T_IMMUTABLE); }
 /*#define setimmutable(p)  typeflag(p) |= T_IMMUTABLE*/
 INTERFACE INLINE void setimmutable(pointer p) { typeflag(p) |= T_IMMUTABLE; }
@@ -397,6 +376,49 @@ static void assign_proc(scheme *sc, enum scheme_opcodes, char *name);
 
 #define num_ivalue(n)       (n.is_fixnum?(n).value.ivalue:(long)(n).value.rvalue)
 #define num_rvalue(n)       (!n.is_fixnum?(n).value.rvalue:(double)(n).value.ivalue)
+
+#if USE_PROTECT
+INTERFACE INLINE pointer protect(scheme *sc, pointer p) 
+{ 
+        if (! p->pref)
+                list_add(&sc->protect, &p->plist);
+        p->pref++;
+        return p;
+}
+INTERFACE INLINE pointer unprotect(scheme *sc, pointer p) 
+{ 
+        assert(p->pref > 0);
+        p->pref--;
+        if (! p->pref)
+                list_remove(&p->plist); 
+        return p;
+}
+static void unprotect_all(scheme *sc)
+{
+        struct list *elem = sc->protect.next;
+        while (elem != &sc->protect) {
+                pointer p = list_entry(elem, struct cell, plist);
+                elem = elem->next;
+                if (USE_CELLDUMP) {
+                        celldump(sc, p);
+                }
+                list_remove(&p->plist);
+        }
+}
+static void protected_mark(scheme *sc)
+{
+  struct list *elem;
+  pointer p;
+
+  list_for_each(&sc->protect, elem) {
+    p = list_entry(elem, struct cell, plist);
+    mark(p);
+  }
+}
+#define init_pref(p) ((p)->pref = 0)
+#else
+#define init_pref(p)
+#endif
 
 static void nomem(scheme *sc)
 {
@@ -1184,19 +1206,6 @@ E6:   /* up.  Undo the link switching from steps E4 and E5. */
           goto E6;
      }
 }
-
-#if USE_PROTECT
-static void protected_mark(scheme *sc)
-{
-  struct list *elem;
-  pointer p;
-
-  list_for_each(&sc->protect, elem) {
-    p = list_entry(elem, struct cell, plist);
-    mark(p);
-  }
-}
-#endif
 
 /* garbage collection. parameter a, b is marked. */
 static void gc(scheme *sc, pointer a, pointer b) {
@@ -4401,8 +4410,12 @@ void scheme_deinit(scheme *sc) {
   int i;
 
 #if USE_PROTECT
-  /* Make sure the kernel has released all of its references to scheme cells */
-  assert(list_empty(&sc->protect));
+  /* Force protection off for everything. A non-empty protected list probably
+   * indicates a memory leak in the host program. */
+  if (!list_empty(&sc->protect)) {
+          fprintf(stderr, "warn: scheme protect list not empty\n");
+          unprotect_all(sc);
+  }
 #endif
 
   sc->oblist=sc->NIL;

@@ -316,8 +316,10 @@ void session_del(struct session *session)
                 skill_set_unref(skset);
         }
 
-        /* Fixme: need to cleanup the interpreter, too, when I'm feeling
-         * brave. */
+        /* cleanup the interpreter */
+        if (session->interp) {
+                scheme_deinit((scheme*)session->interp);
+        }
 
         free(session);
 }
