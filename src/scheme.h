@@ -125,6 +125,12 @@
 # define USE_CELLDUMP 1
 #endif
 
+/* Allow cells to be marked with a flag that will run a custom finalizer on
+ * them. */
+#ifndef USE_CUSTOM_FINALIZE
+# define USE_CUSTOM_FINALIZE 1
+#endif
+
 typedef struct scheme scheme;
 typedef struct cell *pointer;
 
@@ -163,6 +169,11 @@ SCHEME_EXPORT pointer scheme_call(scheme *sc, pointer func, pointer args);
 
 #if USE_SERIALIZE
 SCHEME_EXPORT void scheme_serialize(scheme *sc, pointer p, struct save *save);
+#endif
+
+#if USE_CUSTOM_FINALIZE
+SCHEME_EXPORT void scheme_set_custom_finalize(scheme *, 
+                                              void (*fx)(scheme *, pointer));
 #endif
 
 typedef pointer (*foreign_func)(scheme *, pointer);
@@ -243,6 +254,10 @@ struct scheme_interface {
 #if USE_PROTECT
   pointer (*protect)(scheme *sc, pointer p);
   pointer (*unprotect)(scheme *sc, pointer p);
+#endif
+
+#if USE_CUSTOM_FINALIZE
+  void (*setcustfin)(pointer p);
 #endif
 
   foreign_func (*ffvalue)(pointer arg); /* gmcnutt: new addition */

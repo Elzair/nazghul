@@ -269,15 +269,6 @@ void session_del(struct session *session)
                 wq_job_del(job);
         }
 
-        /* clean up the sched_chars list */
-        node = session->sched_chars.next;
-        while (node != &session->sched_chars) {
-                struct node *tmp = node->next;
-                node_remove(node);
-                node_unref(node);
-                node = tmp;
-        }
-
         /* Clean up the closures */
         closure_unref_safe(session->start_proc);
         closure_unref_safe(session->camping_proc);
@@ -319,6 +310,13 @@ void session_del(struct session *session)
         /* cleanup the interpreter */
         if (session->interp) {
                 scheme_deinit((scheme*)session->interp);
+        }
+
+        /* Check for memory leaks. Character dtors should have removed
+         * themselves from the sched_chars list if they were on it. */
+        if (! node_list_empty(&session->sched_chars)) {
+                fprintf(stderr, 
+                        "warn: session sched_chars list non-empty\n");
         }
 
         free(session);

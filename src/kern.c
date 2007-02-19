@@ -144,6 +144,8 @@
 #define scm_closure_code(sc, arg) ((sc)->vptr->closure_code(arg))
 #define scm_closure_env(sc, arg) ((sc)->vptr->closure_env(arg))
 
+#define scm_set_cust_fin(sc, arg) ((sc)->vptr->setcustfin(arg))
+
 #define KERN_API_CALL(name) static pointer name(scheme *sc, pointer args)
 #define KERN_OBSOLETE_CALL(name)                 \
 static pointer name(scheme *sc, pointer args) {  \
@@ -1681,6 +1683,17 @@ static pointer kern_mk_char(scheme *sc, pointer args)
          * assign it to a scheme variable named after the tag. */
         if (tag) {
                 scm_define(sc, tag, ret);
+
+                /* Tagged objects may be referred to in the script by their
+                 * tag. If the object is destroyed, the scheme variable that
+                 * refers to the object is still valid (in Scheme, it isn't
+                 * really possible to undefine variables). To prevent crashes
+                 * on dereferencing this variable we'll bump the refcount. To
+                 * ensure the object is destroyed on session teardown, we'll
+                 * mark it for custom finalization, which will decrement the
+                 * extra refcount. */
+                obj_inc_ref(character);
+                scm_set_cust_fin(sc, ret);
         }
 
         return ret;
@@ -3072,6 +3085,17 @@ static pointer kern_tag(scheme *sc, pointer  args)
                 rt_err("kern-tag: bad object");
                 return sc->NIL;
         }
+
+        /* Tagged objects may be referred to in the script by their
+         * tag. If the object is destroyed, the scheme variable that
+         * refers to the object is still valid (in Scheme, it isn't
+         * really possible to undefine variables). To prevent crashes
+         * on dereferencing this variable we'll bump the refcount. To
+         * ensure the object is destroyed on session teardown, we'll
+         * mark it for custom finalization, which will decrement the
+         * extra refcount. */
+        obj_inc_ref(obj);
+        scm_set_cust_fin(sc, p);
 
         obj->tag = strdup(tag);
         assert(obj->tag);
@@ -7135,7 +7159,8 @@ KERN_API_CALL(kern_char_get_inventory)
         class Character *character;
 
         /* unpack the character */
-        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-hp");
+        character = (class Character*)unpack_obj(sc, &args, 
+                                                 "kern-char-get-inventory");
         if (!character)
                 return sc->NIL;
 
@@ -7153,7 +7178,8 @@ KERN_API_CALL(kern_char_get_hp)
         class Character *character;
 
         /* unpack the character */
-        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-hp");
+        character = (class Character*)unpack_obj(sc, &args, 
+                                                 "kern-char-get-hp");
         if (!character)
                 return sc->NIL;
 
@@ -8413,6 +8439,14 @@ KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
 
+static int fincount=0; /* for debug */
+static void kern_finalize(scheme *sc, pointer pp)
+{
+        class Object *obj = (class Object*)pp;
+        obj_dec_ref(obj);
+        fincount++;
+}
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -8428,6 +8462,9 @@ scheme *kern_init(void)
                 free(sc);
                 return 0;
         }
+
+        fincount=0;
+        scheme_set_custom_finalize(sc, kern_finalize);
 
         /* Setup the script-to-kernel API */
 

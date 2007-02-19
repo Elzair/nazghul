@@ -31,8 +31,14 @@
 
 #if USE_PROTECT
 #include <assert.h>
+void dump_protect(scheme *sc);
 #endif
 #include "file.h"
+
+#if USE_CELLDUMP
+static void memdump(scheme *sc);
+static void memleakcheck(scheme *sc);
+#endif
 
 /* Used for documentation purposes, to signal functions in 'interface' */
 #define INTERFACE
@@ -117,6 +123,9 @@ enum scheme_types {
 #define ADJ 32
 #define TYPE_BITS 5
 #define T_MASKTYPE      31    /* 0000000000011111 */
+#if USE_CUSTOM_FINALIZE
+#define T_CUSTFIN     2048    /* 0000100000000000 */
+#endif
 #define T_SYNTAX      4096    /* 0001000000000000 */
 #define T_IMMUTABLE   8192    /* 0010000000000000 */
 #define T_ATOM       16384    /* 0100000000000000 */   /* only for gc */
@@ -234,6 +243,41 @@ INTERFACE INLINE int is_environment(pointer p) { return (type(p)==T_ENVIRONMENT)
 #define is_mark(p)       (typeflag(p)&MARK)
 #define setmark(p)       typeflag(p) |= MARK
 #define clrmark(p)       typeflag(p) &= UNMARK
+#define is_free(p)       (0==typeflag(p))
+
+#if USE_CUSTOM_FINALIZE
+#define is_custfin(p)    (typeflag(p)&T_CUSTFIN)
+#define setcustfin(p)    (typeflag(p)|=T_CUSTFIN)
+#define clrcustfin(p)    (typeflag(p)&=(~T_CUSTFIN))
+#endif
+
+#if USE_PROTECT
+INTERFACE INLINE pointer protect(scheme *sc, pointer p) 
+{ 
+        if (! p->pref)
+                list_add(&sc->protect, &p->plist);
+        p->pref++;
+        return p;
+}
+INTERFACE INLINE pointer unprotect(scheme *sc, pointer p) 
+{ 
+        assert(p->pref > 0);
+        p->pref--;
+        if (! p->pref)
+                list_remove(&p->plist); 
+        return p;
+}
+#define init_pref(p) ((p)->pref = 0)
+#else
+#define init_pref(p)
+#endif
+
+#if USE_CUSTOM_FINALIZE
+INTERFACE INLINE void ifc_setcustfin(pointer p)
+{
+        setcustfin(p);
+}
+#endif
 
 INTERFACE INLINE int is_immutable(pointer p) { return (typeflag(p)&T_IMMUTABLE); }
 /*#define setimmutable(p)  typeflag(p) |= T_IMMUTABLE*/
@@ -376,49 +420,6 @@ static void assign_proc(scheme *sc, enum scheme_opcodes, char *name);
 
 #define num_ivalue(n)       (n.is_fixnum?(n).value.ivalue:(long)(n).value.rvalue)
 #define num_rvalue(n)       (!n.is_fixnum?(n).value.rvalue:(double)(n).value.ivalue)
-
-#if USE_PROTECT
-INTERFACE INLINE pointer protect(scheme *sc, pointer p) 
-{ 
-        if (! p->pref)
-                list_add(&sc->protect, &p->plist);
-        p->pref++;
-        return p;
-}
-INTERFACE INLINE pointer unprotect(scheme *sc, pointer p) 
-{ 
-        assert(p->pref > 0);
-        p->pref--;
-        if (! p->pref)
-                list_remove(&p->plist); 
-        return p;
-}
-static void unprotect_all(scheme *sc)
-{
-        struct list *elem = sc->protect.next;
-        while (elem != &sc->protect) {
-                pointer p = list_entry(elem, struct cell, plist);
-                elem = elem->next;
-                if (USE_CELLDUMP) {
-                        celldump(sc, p);
-                }
-                list_remove(&p->plist);
-        }
-}
-static void protected_mark(scheme *sc)
-{
-  struct list *elem;
-  pointer p;
-
-  list_for_each(&sc->protect, elem) {
-    p = list_entry(elem, struct cell, plist);
-    mark(p);
-  }
-}
-#define init_pref(p) ((p)->pref = 0)
-#else
-#define init_pref(p)
-#endif
 
 static void nomem(scheme *sc)
 {
@@ -1207,6 +1208,35 @@ E6:   /* up.  Undo the link switching from steps E4 and E5. */
      }
 }
 
+#if USE_PROTECT
+static void protected_mark(scheme *sc)
+{
+  struct list *elem;
+  pointer p;
+
+  list_for_each(&sc->protect, elem) {
+    p = list_entry(elem, struct cell, plist);
+    mark(p);
+  }
+}
+static void unprotect_all(scheme *sc)
+{
+#if 1
+        sc->ignore_protect = 1;
+#else
+  struct list *elem;
+  pointer p;
+
+  elem = sc->protect.next;
+  while (elem != &sc->protect) {
+          p = list_entry(elem, struct cell, plist);
+          elem = elem->next;
+          unprotect(sc, p);
+  }
+#endif /* ! 1 */
+}
+#endif
+
 /* garbage collection. parameter a, b is marked. */
 static void gc(scheme *sc, pointer a, pointer b) {
   pointer p;
@@ -1237,7 +1267,9 @@ static void gc(scheme *sc, pointer a, pointer b) {
 
 #if USE_PROTECT
   /* mark protected */
-  protected_mark(sc);
+  if (!sc->ignore_protect) {
+          protected_mark(sc);
+  }
 #endif
 
   /* garbage collect */
@@ -1276,21 +1308,17 @@ static void gc(scheme *sc, pointer a, pointer b) {
 }
 
 static void finalize_cell(scheme *sc, pointer a) {
-#if USE_PROTECT
-        /* At one point I had an assert(!a->pref) in here but I kept hitting it
-         * with ridiculous values for a->pred. I think all this proved is that
-         * I can't rely on the interpreter to keep the a->pref field clear on
-         * freed cells. So I took it out. */
-#endif
-  if(is_string(a)) {
-    sc->free(strvalue(a));
-  } else if(is_port(a)) {
-    if(a->_object._port->kind&port_file 
-       && a->_object._port->rep.stdio.closeit) {
-      port_close(sc,a,port_input|port_output);
-    }
-    sc->free(a->_object._port);
-  }
+        if(is_string(a)) {
+                sc->free(strvalue(a));
+        } else if(is_port(a)) {
+                if(a->_object._port->kind&port_file 
+                   && a->_object._port->rep.stdio.closeit) {
+                        port_close(sc,a,port_input|port_output);
+                }
+                sc->free(a->_object._port);
+        } else if(is_custfin(a) && sc->custom_finalize) {
+                sc->custom_finalize(sc, (pointer)ffvalue(a));
+        }        
 }
 
 /* ========== Routines for Reading ========== */
@@ -4251,9 +4279,11 @@ static struct scheme_interface vtbl ={
   scheme_load_string
 
 #if USE_PROTECT
-  ,
-  protect,
-  unprotect
+  , protect
+  , unprotect
+#endif
+#if USE_CUSTOM_FINALIZE
+  , ifc_setcustfin
 #endif
   , ffvalue
 };
@@ -4381,6 +4411,7 @@ int scheme_init_custom_alloc(scheme *sc, func_alloc malloc, func_dealloc free) {
 #if USE_PROTECT
   /* init protected list */
   list_init(&sc->protect);
+  sc->ignore_protect = 0;
 #endif
   sc->inside = 0;
   return !sc->no_memory;
@@ -4406,15 +4437,41 @@ void scheme_set_external_data(scheme *sc, void *p) {
  sc->ext_data=p;
 }
 
+static void scheme_finalize_all(scheme *sc)
+{
+        int i, j=0;
+        pointer p;
+
+        for (i = sc->last_cell_seg; i >= 0; i--) {
+                p = sc->cell_seg[i] + CELL_SEGSIZE;
+                while (--p >= sc->cell_seg[i]) {
+                        if (is_free(p)) {
+                                continue;
+                        }
+                        finalize_cell(sc, p);
+                        j++;
+                }
+        }
+        fprintf(stderr, "scheme_finalize_all: %d finalized\n", j);
+}
+
 void scheme_deinit(scheme *sc) {
   int i;
 
 #if USE_PROTECT
-  /* Force protection off for everything. A non-empty protected list probably
-   * indicates a memory leak in the host program. */
+  /* Check if the host program is still trying to protect some cells. */
   if (!list_empty(&sc->protect)) {
-          fprintf(stderr, "warn: scheme protect list not empty\n");
+#if USE_CUSTOM_FINALIZE
+          /* Force all cells to be unprotected in order to break reference
+           * cycles between protected cells and host program objects that need
+           * to be dereferenced in the custom finalizer. If there are leaks in
+           * the host program, we can't detect them here. */
           unprotect_all(sc);
+#else
+          /* This probably indicates a memory leak in the host program. */
+          fprintf(stderr, "warn: scheme protect list not empty!\n");
+          dump_protect(sc);
+#endif
   }
 #endif
 
@@ -4440,6 +4497,10 @@ void scheme_deinit(scheme *sc) {
   sc->loadport=sc->NIL;
   sc->gc_verbose=0;
   gc(sc,sc->NIL,sc->NIL);
+
+#if USE_CELLDUMP
+  memleakcheck(sc);
+#endif
 
   for(i=0; i<=sc->last_cell_seg; i++) {
     sc->free(sc->alloc_seg[i]);
@@ -4647,7 +4708,7 @@ void celldump(scheme *sc, pointer pp)
 
         /* allocated? */
         if (0==typeflag(pp)) {
-                bptr += sprintf(bptr, "F %p\n", cdr(pp));
+                bptr += sprintf(bptr, "F %p", cdr(pp));
         } else {
 
                 bptr += sprintf(bptr, "A ");
@@ -4672,24 +4733,87 @@ void celldump(scheme *sc, pointer pp)
 
                 /* car/cdr */
                 if (is_pair(pp)) {
-                        bptr += sprintf(bptr, "%p %p\n", 
+                        bptr += sprintf(bptr, "%p %p", 
                                         car(pp), cdr(pp));
                 } else {
                         int len = 0;
                         char *str;
                         atom2str(sc, pp, 0, &str, &len);
-                        bptr += sprintf(bptr, "%s\n", str);
+                        bptr += sprintf(bptr, "%s", str);
                 }
         }
 
+#if USE_CUSTOM_FINALIZE
+        if (is_custfin(pp)) {
+                bptr += sprintf(bptr, " ~");
+        }
+#endif
+
+#if USE_PROTECT
+        /* protected? */
+        if (!list_empty(&pp->plist)) {
+                bptr += sprintf(bptr, " P%d", pp->pref);
+        }
+#endif
+        bptr += sprintf(bptr, "\n");
         strbuf[sizeof(strbuf)-1] = 0;
 
-        putstr(sc, strbuf);
+        /*putstr(sc, strbuf);*/
+        fprintf(stderr,strbuf);
         fflush(NULL);
 }
-#endif /* USE_CELLDUMP */
-/* ========== Main ========== */
+static void memdump(scheme *sc)
+{
+        int i, j;
+        pointer p;
+        fprintf(stderr, ">>> MEMDUMP <<<\n");
+        for (i=0; i <= sc->last_cell_seg; i++) {
+                p = sc->cell_seg[i];
+                for (j = 0; j < CELL_SEGSIZE; j++, p++) {
+                        celldump(sc, p);
+                }
+        }
+}
+static void memleakcheck(scheme *sc)
+{
+        int i, j, leaks = 0;
+        pointer p;
+        fprintf(stderr, "Scheme leak check...\n");
+        for (i=0; i <= sc->last_cell_seg; i++) {
+                p = sc->cell_seg[i];
+                for (j = 0; j < CELL_SEGSIZE; j++, p++) {
+                        if (!is_free(p)) {
+                                celldump(sc, p);
+                                leaks++;
+                        }
+                }
+        }
+        fprintf(stderr, "%d leaked cells detected\n", leaks);
+}
 
+
+#endif /* USE_CELLDUMP */
+
+#if USE_PROTECT
+void dump_protect(scheme *sc)
+{
+        list *elem;
+        list_for_each(&sc->protect, elem) {
+                pointer pp = (pointer)elem;
+                celldump(sc,pp); /* assumes USE_CELLDUMP */
+        }
+
+}
+#endif /* USE_PROTECT */
+
+#if USE_CUSTOM_FINALIZE
+void scheme_set_custom_finalize(scheme *sc, void (*fin)(scheme *, pointer))
+{
+        sc->custom_finalize = fin;
+}
+#endif
+
+/* ========== Main ========== */
 #if STANDALONE
 
 #ifdef macintosh

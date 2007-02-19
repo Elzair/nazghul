@@ -16,14 +16,6 @@
 (define (mouse-first-meeting? mouse) (car mouse))
 (define (mouse-set-first-meeting! mouse val) (set-car! mouse val))
 
-;; The procedure below references ch_thud and ch_kathryn if they are defined,
-;; so on load add a ref count so if they are killed they won't be destroyed;
-;; once dead, on subsequent reloads they won't be defined anymore
-(if (defined? 'ch_thud)
-    (kern-obj-inc-ref ch_thud))
-(if (defined? 'ch_kathryn)
-    (kern-obj-inc-ref ch_kathryn))
-
 (define (mouse-meet-first-time knpc kpc)
 
   (define (mouse-disappear)

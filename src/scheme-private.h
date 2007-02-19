@@ -140,8 +140,13 @@ struct scheme {
 
 #if USE_PROTECT
         struct list protect;
+        int ignore_protect;
 #endif
         char inside; /* gmcnutt: flag to check recursive entry from C */
+
+#if USE_CUSTOM_FINALIZE
+        void (*custom_finalize)(scheme *sc, pointer pp);
+#endif
 };
 
 #define cons(sc,a,b) _cons(sc,a,b,0)
