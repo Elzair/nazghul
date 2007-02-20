@@ -357,16 +357,19 @@
 (define (powers-disarm-traps caster ktarg power)
   (let ((traps (ifccall ktarg 'get-traps)))
     (cond ((null? traps) 
-           (kern-log-msg "No traps!"))
+           (kern-log-msg "No traps!")
+           result-no-target)
           ((not (handles? ktarg 'rm-traps)) 
-           (kern-log-msg "Traps can't be removed!"))
+           (kern-log-msg "Traps can't be removed!")
+           result-no-target)
           (else
            (map (lambda (trap)
                   (kern-log-msg (kern-obj-get-name caster)
                                 " disarms a " (trap-name trap) " trap!"))
                 traps)
-           (ifccall ktarg 'rm-traps)))))
-				
+           (ifccall ktarg 'rm-traps)
+           result-ok))))
+
 ;todo limit range?
 ;check critter is viewable before message?
 (define (powers-fear caster unused power)			
@@ -380,7 +383,7 @@
 				(occ-ability-magicdef kchar))
 			(repel kchar)))
 	(map try-repel (all-hostiles caster)))
-				
+
 ;todo
 ; fields would be a lot more useful if a wall was created instead of one square
 ;   (length based on caster strength of course)

@@ -59,6 +59,18 @@
   ;; fixme: use smart target that only suggests viable locations?
   (cast-ui-ranged-loc powers-wriggle kactor 1 0))
 
+(define (skill-disarm-trap kactor)
+  ;; fixme: only checks topmost item. Also, this disarms ALL traps, regardless
+  ;; of whether or not they have been detected, so it should involve some cost
+  ;; or risk.
+  (cast-ui-ranged-any powers-disarm-traps
+                      kactor 1 (occ-ability-whitemagic kactor)
+                      (lambda (kobj)
+                        (and (kern-obj-is-visible? kobj)
+                             (handles? kobj 'rm-traps)))
+                      ))
+  
+
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
 ;;
@@ -97,7 +109,7 @@
                  nil))
 
 (define sk_arm_trap
-  (kern-mk-skill "Arm Trap" "Allows character to arm traps"
+  (kern-mk-skill "Arm Trap" "Allows character to use beartraps and caltrops"
                  2 2 #f #t
                  nil nil
                  nil
@@ -122,6 +134,19 @@
                  (list (list t_grease 1)) ;; material
                  ))
 
+(define sk_disarm_trap
+  ;; fixme: should some special tools be required?
+  (kern-mk-skill "Disarm Trap" "Disarm a trap on a door or chest"
+                 1              ;; ap
+                 1              ;; mp
+                 #f             ;; wilderness?
+                 #f             ;; passive?
+                 'skill-disarm-trap ;; yusage 
+                 nil            ;; yusage check
+                 nil            ;; tools
+                 nil            ;; material
+                 ))
+
 ;;----------------------------------------------------------------------------
 ;; Skill Set declarations
 
@@ -132,6 +157,7 @@
                                     (list 1 sk_arm_trap)
                                     (list 1 sk_sprint)
                                     (list 1 sk_wriggle)
+                                    (list 1 sk_disarm_trap)
                                     )))
 
 (define sks_wanderer sks_wrogue)
