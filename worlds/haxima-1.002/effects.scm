@@ -401,6 +401,14 @@
   (kern-obj-set-visible kobj #f))
 
 ;; ----------------------------------------------------------------------------
+;; Motionless Invisibility
+;;
+;; Used by the Hide skill. Similar to normal invisibility, but it adds an exec
+;; procedure which runs on the keystroke hook (the same one used by paralysis)
+;; and removes the invisibility effect.
+;; ----------------------------------------------------------------------------
+
+;; ----------------------------------------------------------------------------
 ;; Slime Split
 ;;
 ;; A special feature of the slime species. When a slime takes damage it rolls

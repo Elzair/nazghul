@@ -805,17 +805,17 @@ int place_visibility(struct place *place, int x, int y)
 		y = WRAP(y, place->terrain_map->h);
 	} else if (x < 0 || x >= place->terrain_map->w || y < 0 ||
 		   y >= place->terrain_map->h)
-		return 0;
+		return ALPHA_OPAQUE;
 
 	terrain = place->terrain_map->terrain[y * place->terrain_map->w + x];
-	if (!terrain || !terrain->alpha)
-		return 0;
+	if (!terrain)
+                return ALPHA_OPAQUE;
 
 	tile = place_lookup_tile(place, x, y);
-	if (tile)
-		return tile_is_transparent(tile);
+	if (tile && ! tile_is_transparent(tile))
+                return ALPHA_OPAQUE;
 
-	return 1;
+        return terrain->alpha;
 }
 
 unsigned int place_walking_distance(struct place *place,

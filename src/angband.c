@@ -32,6 +32,7 @@
 #include "los.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 /* Wrapper/Stubs for cave.c code *********************************************/
 
@@ -73,7 +74,6 @@ typedef unsigned int u32b;
  * Maximum possible sight radius minus one.
  */
 #define MAX_SIGHT 19		/* 19 */
-
 
 /* From xtra2.c **************************************************************/
 
@@ -522,6 +522,56 @@ int vinfo_init(struct vinfo_type *vinfo, int width)
 	return (0);
 }
 
+/* gmcnutt: variable los */
+#ifndef USE_VLOS
+#define USE_VLOS 1
+#endif
+
+/* gmcnutt: max ray strength for vlos */
+#define MAX_RAY_STRENGTH 12
+
+/* gmcnutt: for vlos, track ray strength in each octant */
+static unsigned char ray_strength[VINFO_MAX_SLOPES];
+
+#define OPAQUE(val) ((val)==MAX_RAY_STRENGTH)
+#define VISIBLE(val) ((val)<MAX_RAY_STRENGTH)
+
+static void check_ray_set(u32b *ray_set, u32b ray_mask, int ray_index, unsigned char tile_val, int diag)
+{
+        int ray_bit = 1;
+        unsigned int ray_num;
+
+        /* walk the rays */
+        for (ray_num = 0; ray_num < sizeof(*ray_set)*8; ray_num++) {
+                                                
+                /* if this ray strikes this grid */
+                if (ray_bit & ray_mask) {
+                                                        
+                        /* decrement ray
+                         * strength by grid
+                         * opacity */
+                        int ray_val = ray_strength[ray_index];
+                        ray_val -= tile_val;
+                        if (ray_index==(VINFO_MAX_SLOPES-1)) {
+                                ray_val -= (tile_val / 2);
+                        }
+
+                        if (ray_val < 0) {
+                                ray_val = 0;
+                        }
+
+                        if (!ray_val) {
+                                *ray_set &= ~ray_bit;
+                        }
+
+                        ray_strength[ray_index] = ray_val;
+                }
+                                                
+                ray_bit <<=1;
+                ray_index++;
+        }
+}
+
 /*
  * Calculate the complete field of view using a new algorithm
  *
@@ -625,6 +675,11 @@ void update_view(struct los *los)
 	for (o2 = 0; o2 < 8; o2++) {
 		struct vinfo_type *p;
 
+                if (USE_VLOS) {
+                        /* Initially all rays at max strength */
+                        memset(ray_strength, MAX_RAY_STRENGTH, sizeof(ray_strength));
+                }
+
 		/* Last added */
 		struct vinfo_type *last = &vinfo[0];
 
@@ -684,24 +739,51 @@ void update_view(struct los *los)
 
 			/* If this grid is opaque then mask out the rays which
 			 * strike it and do NOT queue it's children. */
-			if (los->alpha[g] == 0) {
+			{
 
-				/* Clear bits */
-				bits0 &= ~(p->bits_0);
-				bits1 &= ~(p->bits_1);
-				bits2 &= ~(p->bits_2);
-				bits3 &= ~(p->bits_3);
-				continue;
-			}
+                                int ray_index = 0;
+                                unsigned char tile_val = los->alpha[g];
+                                int diag = abs(GRID_Y(g,los->w))==abs(GRID_X(g,los->w));
+                                
+                                /* check rays in first set */
+                                if (bits0 & (p->bits_0)) {
+                                        check_ray_set(&bits0, p->bits_0, ray_index, tile_val, diag);
+                                }
+                                ray_index += (sizeof(bits0)*8);
+
+                                /* check rays in next set */
+                                if (bits1 & (p->bits_1)) {
+                                        check_ray_set(&bits1, p->bits_1, ray_index, tile_val, diag);
+                                }
+                                ray_index += (sizeof(bits1)*8);
+
+                                /* check rays in first set */
+                                if (bits2 & (p->bits_2)) {
+                                        check_ray_set(&bits2, p->bits_2, ray_index, tile_val, diag);
+                                }
+                                ray_index += (sizeof(bits2)*8);
+
+                                /* check rays in first set */
+                                if (bits3 & (p->bits_3)) {
+                                        check_ray_set(&bits3, p->bits_3, ray_index, tile_val, diag);
+                                }
+                                ray_index += (sizeof(bits3)*8);
+                        }
 
 			/* This grid is transparent so queue it's children */
 			if (last != p->next_0)
 				queue[queue_tail++] = last = p->next_0;
 			if (last != p->next_1)
 				queue[queue_tail++] = last = p->next_1;
-		}
-	}
-}
+
+		} // while (queue_head < queue_tail)
+
+                printf("octant=%d %08lx %08lx %08lx %08lx\n", o2, bits0, bits1, bits2, bits3);
+
+	} // for (octant o2)
+
+} // update_view()
+
 
 /* los lib stuff *************************************************************/
 
