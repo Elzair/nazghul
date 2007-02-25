@@ -85,42 +85,27 @@ extern int DeveloperMode;
 
 /* SAM: Using this typedef below */
 typedef void (*v_fncptr_iiv_t) (struct place *, int x, int y, void * v);
-typedef void (*v_funcptr_iiv_t) (struct place *, int x, int y, void * v);
+typedef int (*i_fncptr_iiv_t) (struct place *, int x, int y, void * v);
 
-/* Struct used by the movecursor function and it's mouse-handling counterparts
- * for commands which prompt the player to select a target from the map. */
+
+/**
+ * Struct used by the movecursor function and it's mouse-handling counterparts
+ * for commands which prompt the player to select a target from the map. 
+ */
 struct movecursor_data {
-
-        /* Optional function called when a tile is entered by the cursor */
-        v_fncptr_iiv_t each_tile_func;
-
-        /* Optional function called when the tile under the cursor is selected
-         * by the player */
-        v_fncptr_iiv_t each_target_func;
-
-        /* Optional list of objects to be used by the 'previous' and 'next'
-         * cursor operations. */
-        struct list *loc_list;
-
-        /* Optional pointer into the objlist. */
-        struct list *cur_loc;
-
-        /* Number of tiles to "jump" the cursor on the next direction
-         * keypress. */
-        int jump;
-
-        /* Flags */
-        char abort : 1;   /* command was aborted     */
-        char multi : 1;   /* select multiple targets */
+        v_fncptr_iiv_t each_tile_func;   /* called when cursor moves         */
+        i_fncptr_iiv_t each_target_func; /* called on 'enter' or leftclick   */
+        struct list *loc_list;           /* quick target list                */
+        struct list *cur_loc;            /* current target from list         */
+        int jump;                        /* distance to jump cursor          */
+        void *data;                      /* caller data passed to callbacks  */
+        char abort : 1;                  /* command was aborted              */
 };
 
 /* Struct used by the terraform version of the movecursor function et al. It's
  * a superset of the standard movecursor_data and extends it with
  * some extra data. */
 struct terraform_mode_keyhandler {
-        /* "Inherit" from movecursor_data so we can use the same
-         * mousecursor function for terraform and other targetting commands. */
-        struct movecursor_data base;
         struct place           * place;  // needed?
         struct terrain_map     * map;
         struct terrain_palette * palette;
@@ -131,7 +116,12 @@ struct terraform_mode_keyhandler {
 
 static class Character *cmd_front_end(class Character *pc, char *cmdstr);
 static int cmd_eval_and_log_result(int result);
-
+static int select_target_rlcb(struct place *place,
+                              int ox, int oy, int *x, int *y,
+                              int range,
+                              struct list *suggest,
+                              v_fncptr_iiv_t each_tile_func,
+                              i_fncptr_iiv_t each_target_func);
 
 /* functions */
 
@@ -446,7 +436,7 @@ bool mouse_button_cursor(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *ev
                         data->each_tile_func(Session->crosshair->getPlace(),
                                              Session->crosshair->getX(),
                                              Session->crosshair->getY(),
-                                             0);
+                                             data->data);
                 }
 
         }
@@ -454,13 +444,12 @@ bool mouse_button_cursor(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *ev
         /* target selected? */
         if (event->button == SDL_BUTTON_LEFT) {
                 if (data->each_target_func) {
-                        data->each_target_func(Session->crosshair->getPlace(),
-                                               Session->crosshair->getX(),
-                                               Session->crosshair->getY(),
-                                               data);
+                        return data->each_target_func(Session->crosshair->getPlace(),
+                                                      Session->crosshair->getX(),
+                                                      Session->crosshair->getY(),
+                                                      data->data);
                 }
-
-                return ! data->multi;   /* done unless multiple targets */
+                return 1; /* target selected */
         }
 
 
@@ -498,18 +487,16 @@ bool mouse_motion_cursor(struct MouseMotionHandler *mh, SDL_MouseMotionEvent *ev
                 data->each_tile_func(Session->crosshair->getPlace(),
                                      Session->crosshair->getX(),
                                      Session->crosshair->getY(),
-                                     0);
+                                     data->data);
         }
 
         /* Mouse dragging? */
         if (event->state & SDL_BUTTON(1)
             && data->each_target_func) {
-                data->each_target_func(Session->crosshair->getPlace(),
-                                       Session->crosshair->getX(),
-                                       Session->crosshair->getY(),
-                                       data);
-                
-                return ! data->multi;   /* done unless multiple targets */
+                return data->each_target_func(Session->crosshair->getPlace(),
+                                              Session->crosshair->getX(),
+                                              Session->crosshair->getY(),
+                                              data->data);
         }
 
 
@@ -533,12 +520,12 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
         case KEY_HERE:
 	case '\n':
                 if (data->each_target_func) {
-                        data->each_target_func(Session->crosshair->getPlace(),
-                                               Session->crosshair->getX(),
-                                               Session->crosshair->getY(),
-                                               0);
+                        return data->each_target_func(Session->crosshair->getPlace(),
+                                                      Session->crosshair->getX(),
+                                                      Session->crosshair->getY(),
+                                                      data->data);
                 }
-                return ! data->multi;   /* done unless multiple targets */
+                return 1; /* target selected */
         default:
                 break;
         }
@@ -624,7 +611,7 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                         data->each_tile_func(Session->crosshair->getPlace(),
                                              Session->crosshair->getX(),
                                              Session->crosshair->getY(),
-                                             0);
+                                             data->data);
                 }
 
                 /* turn on range shading after the first move */
@@ -675,22 +662,24 @@ static void cmd_terraform_fill(struct terrain *nt, struct terrain *ot,
 int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, 
                                     int keymod)
 {
-        struct terraform_mode_keyhandler * data;
+        struct movecursor_data *movedat;
+        struct terraform_mode_keyhandler *terdat;        
         struct terrain_palette * pp;
         struct terrain * tt;
 
         assert(kh);
 
-        data = (struct terraform_mode_keyhandler *) kh->data;
-        pp   = data->palette;
+        movedat = (struct movecursor_data *)kh->data;
+        terdat = (struct terraform_mode_keyhandler *)movedat->data;
+        pp     = terdat->palette;
   
         if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN ||
             key == SDLK_LCTRL || key == SDLK_RCTRL) {
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
-                if (data->base.each_target_func)
-                        data->base.each_target_func(Session->crosshair->getPlace(),
-                                               x, y, data);
+                if (movedat->each_target_func)
+                        movedat->each_target_func(Session->crosshair->getPlace(),
+                                                  x, y, terdat);
                 return 0;  /* Keep on keyhandling */
         }
 
@@ -704,16 +693,16 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
                 mapSetDirty();
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
-                if (data->base.each_tile_func)
-                        data->base.each_tile_func(Session->crosshair->getPlace(),
-                                              x, y, data);
+                if (movedat->each_tile_func)
+                        movedat->each_tile_func(Session->crosshair->getPlace(),
+                                              x, y, terdat);
 
                 /* If the CTRL key is held down then also run the target
                  * function to paint the tile. */
                 if (keymod & KMOD_CTRL &&
-                    data->base.each_target_func)
-                        data->base.each_target_func(Session->crosshair->getPlace(),
-                                               x, y, data);
+                    movedat->each_target_func)
+                        movedat->each_target_func(Session->crosshair->getPlace(),
+                                               x, y, terdat);
 
                 return 0;  /* Keep on keyhandling */
         }
@@ -805,7 +794,7 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
         // ...
     
         if (key == SDLK_ESCAPE) {
-                data->base.abort = 1;
+                movedat->abort = 1;
                 return 1;  // Done (abort)
         }
         return 0;  /* Keep on keyhandling */
@@ -1534,16 +1523,35 @@ static void cmd_init_movecursor_data(struct movecursor_data *data,
 int select_target(int ox, int oy, int *x, int *y, int range, 
                   struct list *suggest)
 {
+        return select_target_rlcb(Place, ox, oy, x, y, range, suggest, 0, 0);
+}
+
+void ui_select_target_req_init(ui_select_target_req_t *req)
+{
+        memset(req, 0, sizeof(*req));
+        list_init(&req->suggest);
+}
+
+static int select_target_rlcb(struct place *place, 
+                              int ox, int oy, 
+                              int *x, int *y,
+                              int range,
+                              struct list *suggest,
+                              v_fncptr_iiv_t each_tile_func,
+                              i_fncptr_iiv_t each_target_func)
+{
         ui_select_target_req_t req;
         int ret;
 
         /* convert args to a targeting request */
         ui_select_target_req_init(&req);
-        req.place = Place; /* hack, but not a new one */
+        req.place = place;
         req.x1 = ox;
         req.y1 = oy;
         req.x2 = *x;
         req.y2 = *y;
+        req.move = each_tile_func;
+        req.select = each_target_func;
         req.tiles = templ_new_from_range(range);
         templ_set_origin(req.tiles, ox, oy);
         if (suggest) {
@@ -1564,12 +1572,6 @@ int select_target(int ox, int oy, int *x, int *y, int range,
         return ret;
 }
 
-void ui_select_target_req_init(ui_select_target_req_t *req)
-{
-        memset(req, 0, sizeof(*req));
-        list_init(&req->suggest);
-}
-
 int ui_select_target_generic(ui_select_target_req_t *req)
 {
         struct movecursor_data data;
@@ -1587,6 +1589,7 @@ int ui_select_target_generic(ui_select_target_req_t *req)
         cmd_init_movecursor_data(&data, &req->suggest);
         data.each_tile_func   = req->move;
         data.each_target_func = req->select;
+        data.data = req->data;
 
         kh.fx   = movecursor;
         kh.data = &data;
@@ -1609,6 +1612,7 @@ int ui_select_target_generic(ui_select_target_req_t *req)
         req->x2 = Session->crosshair->getX();
         req->y2 = Session->crosshair->getY();
         Session->crosshair->remove();
+        Session->crosshair->setZone(0);
         mapSetDirty();
   
         if (data.abort) {
@@ -1622,68 +1626,11 @@ int ui_select_target_generic(ui_select_target_req_t *req)
 int select_target_with_doing(int ox, int oy, int *x, int *y,
                              int range,
                              v_fncptr_iiv_t each_tile_func,
-                             v_fncptr_iiv_t each_target_func)
+                             i_fncptr_iiv_t each_target_func)
 {
-        // SAM: 
-        // As select_target(), but each_tile_func() 
-        // will be called at each point cursored over,
-        // and each_target_func() will be called at each point
-        // selected as a target.
-        // 
-        // Eventually, the user will abort with ESC.
-        // 
-        // SAM: It might be nice to return the last target,
-        // in case our caller wants it, but it seems that
-        // the ESC abort stomps on it.
-        struct movecursor_data data;
-        struct KeyHandler kh;
-        struct MouseButtonHandler mbh;
-        struct MouseMotionHandler mmh;
-
-        Session->crosshair->setRange(range);
-        Session->crosshair->setViewportBounded(1);
-        Session->crosshair->setOrigin(ox, oy);
-        Session->crosshair->relocate(Place, *x, *y); /* previous target */
-        Session->show_boxes=1;
-        mapSetDirty();
-
-        memset(&data, 0, sizeof(data));
-        data.each_tile_func   = each_tile_func;
-        data.each_target_func = each_target_func;
-        data.multi            = 1;
-        data.jump             = 1;
-
-        kh.fx   = movecursor;
-        kh.data = &data;
-  
-        mbh.fx = mouse_button_cursor;
-        mbh.data = &data;
-
-        mmh.fx = mouse_motion_cursor;
-        mmh.data = &data;
-
-        eventPushMouseButtonHandler(&mbh);
-        //eventPushMouseMotionHandler(&mmh);
-        eventPushKeyHandler(&kh);
-        cmdwin_spush("<target> (ESC to exit)");
-        eventHandle();
-        cmdwin_pop();
-        eventPopKeyHandler();
-        eventPopMouseButtonHandler();
-        //eventPopMouseMotionHandler();
-  
-        Session->show_boxes=0;
-        *x = Session->crosshair->getX();
-        *y = Session->crosshair->getY();
-        Session->crosshair->remove();
-        mapSetDirty();
-  
-        if (data.abort) {
-                cmdwin_spush("Done.");
-                return -1;
-        }
-  
-        return 0;
+        return select_target_rlcb(Place, ox, oy, x, y, range, 0, 
+                                  each_tile_func, 
+                                  each_target_func);
 }
 
 /**
@@ -1692,10 +1639,11 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
 static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
                                      int range,
                                      v_fncptr_iiv_t each_tile_func,
-                                     v_fncptr_iiv_t each_target_func,
+                                     i_fncptr_iiv_t each_target_func,
                                      struct place * place)
 {
-        struct terraform_mode_keyhandler data;
+        struct movecursor_data movedat;
+        struct terraform_mode_keyhandler terdat;
         struct KeyHandler kh;
         struct MouseButtonHandler mbh;
         struct MouseMotionHandler mmh;
@@ -1708,26 +1656,25 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         mapSetDirty();
   
         /* Setup the key handler */
-        data.base.each_tile_func   = each_tile_func;
-        data.base.each_target_func = each_target_func;
-        data.base.abort            = 0;
-        data.base.multi            = 1;
-        data.base.jump             = 1;
-        data.map              = place->terrain_map;
-        data.palette          = place->terrain_map->palette;
+        terdat.map               = place->terrain_map;
+        terdat.palette           = place->terrain_map->palette;
+        movedat.each_tile_func   = each_tile_func;
+        movedat.each_target_func = each_target_func;
+        movedat.abort            = 0;
+        movedat.jump             = 1;
+        movedat.data             = &terdat;
 
         kh.fx   = cmd_terraform_movecursor_and_do;
-        kh.data = &data;
+        kh.data = &movedat;
 
         mbh.fx = mouse_button_cursor;
-        mbh.data = &data;
+        mbh.data = &movedat;
 
         mmh.fx = mouse_motion_cursor;
-        mmh.data = &data;
+        mmh.data = &movedat;
 
         /* Start interactive mode */
         eventPushMouseButtonHandler(&mbh);
-        //eventPushMouseMotionHandler(&mmh);
         eventPushKeyHandler(&kh);
         cmdwin_spush("<target> (ESC to exit)");
         eventHandle();
@@ -1735,7 +1682,6 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         /* Done -  cleanup */
         cmdwin_pop();
         eventPopKeyHandler();
-        //eventPopMouseMotionHandler();
         eventPopMouseButtonHandler();
   
         *x = Session->crosshair->getX();
@@ -2947,7 +2893,7 @@ void look_at_XY(struct place *place, int x, int y, void *unused)
         log_end(NULL);
 }
 
-void detailed_examine_XY(struct place *place, int x, int y, void *unused)
+int detailed_examine_XY(struct place *place, int x, int y, void *unused)
 {
 	if (DeveloperMode) {
 			log_begin("At XY=(%d,%d): ", x, y);
@@ -2999,6 +2945,8 @@ void detailed_examine_XY(struct place *place, int x, int y, void *unused)
 	#endif
 	
 	log_end(NULL);
+
+        return 0; /* keep on targeting */
 }
 
 /**
@@ -3022,7 +2970,7 @@ static void cmd_dm_xray_look_at_xy(struct place *place, int x, int y,
 /*
  * cmd_terraform_xy  - terraform this tile
  */
-static void cmd_terraform_xy(struct place *place, int x, int y, void * data)
+static int cmd_terraform_xy(struct place *place, int x, int y, void * data)
 {
         struct terraform_mode_keyhandler * kh = 
                 (struct terraform_mode_keyhandler *) data;
@@ -3034,6 +2982,7 @@ static void cmd_terraform_xy(struct place *place, int x, int y, void * data)
         vmask_invalidate(place, x, y, 1, 1);
         mapSetDirty();
         mapUpdate(0);
+        return 0; /* keep on targeting */
 }
 
 bool cmdXamine(class Object * pc)
@@ -3608,7 +3557,8 @@ static void sell(struct merchant *merch)
 
 		cmdwin_spush("%s", trade->name);
 
-		ie = player_party->inventory->search((class ObjectType *) trade->data);
+		ie = player_party->inventory->search((class ObjectType *) 
+                                                     trade->data);
 		assert(ie);
 		assert(ie->ref < ie->count);
 
@@ -3987,9 +3937,11 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
                 /* list tools */
                 node_for_each(&skill->tools, tnode) {
                         class ObjectType *tool = (class ObjectType*)tnode->ptr;
-                        struct inv_entry *ie=player_party->inventory->search(tool);
+                        struct inv_entry *ie=player_party->inventory->
+                                search(tool);
                         char tool_clr=(ie&&ie->count)?'g':'r';
-                        screenPrint(rect, 0, "^c+%c%s^c-", tool_clr, tool->getName());
+                        screenPrint(rect, 0, "^c+%c%s^c-", tool_clr, 
+                                    tool->getName());
                         rect->y += ASCII_H;
                 }
 
@@ -3999,7 +3951,8 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
                                 list_entry(elem, struct skill_material, list);
                         class ObjectType *objtype = 
                                 (class ObjectType*)mat->objtype;
-                        struct inv_entry *ie=player_party->inventory->search(objtype);
+                        struct inv_entry *ie=player_party->inventory->
+                                search(objtype);
                         char mat_clr=ie?'g':'r';
                         char q_clr=(ie&&(ie->count>=mat->quantity))?'g':'r';
                         screenPrint(rect, 0, "^c+%c%s^c+%c (%d/%d)^c-^c-", 
@@ -4125,7 +4078,8 @@ void cmdYuse(class Character *actor)
                 struct node *tnode;
                 node_for_each(&skill->tools, tnode) {
                         class ObjectType *tool = (class ObjectType*)tnode->ptr;
-                        struct inv_entry *ie=player_party->inventory->search(tool);
+                        struct inv_entry *ie=player_party->inventory->
+                                search(tool);
                         if (!ie || !ie->count) {
                                 log_msg("Need %s!", tool->getName());
                                 cant = 1;
@@ -4146,7 +4100,8 @@ void cmdYuse(class Character *actor)
                         ie = player_party->inventory->search(objtype);
                         if (!ie || ie->count < mat->quantity) {
                                 cant = 1;
-                                log_msg("Need %d %s!", mat->quantity, objtype->getName());
+                                log_msg("Need %d %s!", mat->quantity, 
+                                        objtype->getName());
                         }
                 }
         }
@@ -4178,8 +4133,10 @@ void cmdYuse(class Character *actor)
                         struct list *elem;
                         struct skill_material *mat;
                         list_for_each(&skill->materials, elem) {
-                                mat = list_entry(elem, struct skill_material, list);
-                                player_party->takeOut((class ObjectType*)mat->objtype, 
+                                mat = list_entry(elem, struct skill_material, 
+                                                 list);
+                                player_party->takeOut((class ObjectType*)
+                                                      mat->objtype, 
                                                       mat->quantity);
                         }
                 }

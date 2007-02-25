@@ -47,18 +47,19 @@ struct ScrollerContext {
  */
 typedef struct ui_select_target_req 
 {
-        struct place *place;   /* where */
-        int x1, y1;            /* origin */
-        int x2, y2;            /* initial/final cursor position */
-        struct templ *tiles;   /* tiles in range */
-        struct list suggest;   /* quick-target tiles */
-        void *data;            /* caller context */
+        struct place *place;   /* place this is happening in       */
+        int x1, y1;            /* center of target zone            */
+        int x2, y2;            /* initial/final cursor position    */
+        struct templ *tiles;   /* template of tiles in target zone */
+        struct list suggest;   /* quick-target tiles               */
+        void *data;            /* caller context                   */
 
         /* called when the cursor moves over a new tile */
         void (*move)(struct place *, int, int, void *);
 
-        /* called when user hits 'enter' or otherwise selects a tile */
-        void (*select)(struct place *, int, int, void *);
+        /* Called when user hits 'enter' or otherwise selects a tile. Returns
+         * non-zero to end the targeting session, zero otherwise. */
+        int (*select)(struct place *, int, int, void *);
 
 } ui_select_target_req_t;
 
