@@ -4234,20 +4234,14 @@ KERN_API_CALL(kern_mk_effect)
         pointer rm_proc = sc->NIL;
         pointer restart_proc = sc->NIL;
         void *sprite;
-        void *dummy;
         pointer ret;
-        char *name, *tag = 0, *desc, *status_code_str, *hook_name;
-        int hook_id;
+        char *name, *tag = 0;
+        int hookid=0;
+        pointer cell;
 
-        if (unpack(sc, &args, "ysspccccs", &tag, &name, &desc, &sprite, &exec_proc,
-                   &apply_proc, &rm_proc, &restart_proc, &hook_name)) {
+        if (unpack(sc, &args, "yspcccc", &tag, &name, &sprite, &exec_proc,
+                   &apply_proc, &rm_proc, &restart_proc)) {
                 load_err("kern-mk-effect %s: bad args", tag);
-                return sc->NIL;
-        }
-
-        hook_id = Object::nameToHookId(hook_name);
-        if (hook_id < 0) {
-                load_err("kern-mk-effect: bad hook '%s'", hook_name);
                 return sc->NIL;
         }
 
@@ -4264,21 +4258,37 @@ KERN_API_CALL(kern_mk_effect)
                 restart_proc = NULL;
 				
         effect = effect_new(tag, sc, exec_proc, apply_proc, rm_proc, 
-                            restart_proc, name, desc);
+                            restart_proc, name);
 
-        effect->hook_id = hook_id;
         effect->sprite = (struct sprite*)sprite;
 
-        if (unpack(sc, &args, "sdpbd", &status_code_str, &effect->detect_dc,
-                   &dummy /* FIXME: get rid of this here and in the scripts */, 
-                   &effect->cumulative, &effect->duration)) {
+        /* The next parm is the hook id(s). It might be a single integer or a
+         * list of integers. */
+        cell = scm_car(sc, args);
+        if (! scm_is_pair(sc,  cell)) {
+                if (unpack(sc, &args, "d", &hookid)) {
+                        load_err("kern-mk-effect %s: bad hook id arg", tag);
+                        goto abort;
+                }
+                effect_add_hook(effect, hookid);
+        } else {
+                args = scm_cdr(sc, args);
+                do {
+                        if (unpack(sc, &cell, "d", &hookid)) {
+                                load_err("kern-mk-effect %s: bad hook id arg", tag);
+                                goto abort;
+                        }
+                        effect_add_hook(effect, hookid);
+                } while (scm_is_pair(sc, cell));
+        }
+
+        /* Unpack the remaining parms */
+        if (unpack(sc, &args, "dbd", &effect->detect_dc, &effect->cumulative,
+                   &effect->duration)) {
                 load_err("kern-mk-effect %s: bad args", tag);
                 goto abort;
         }
 
-        if (status_code_str)
-                effect->status_code = status_code_str[0];
-        
         session_add(Session, effect, effect_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, effect);
         scm_define(sc, tag, ret);

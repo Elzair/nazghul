@@ -31,7 +31,7 @@ char *EFFECT_ID = "EFFECT";
 struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
                           pointer apply_proc, pointer rm_proc,
                           pointer restart,
-                          char *name, char *description)
+                          char *name)
 {
         struct effect *et;
 
@@ -65,8 +65,7 @@ struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
                 assert(et->name);
         }
 
-        et->description = strdup(description);
-        assert(et->description);
+        bitfield_clear_all(&et->hooks, OBJ_NUM_HOOKS);
 
         return et;
 }
@@ -75,7 +74,6 @@ extern void effect_del(struct effect *et)
 {
         free(et->tag);
         free(et->name);
-        free(et->description);
         closure_unref_safe(et->exec);
         closure_unref_safe(et->apply);
         closure_unref_safe(et->rm);

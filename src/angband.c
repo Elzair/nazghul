@@ -778,8 +778,6 @@ void update_view(struct los *los)
 
 		} // while (queue_head < queue_tail)
 
-                printf("octant=%d %08lx %08lx %08lx %08lx\n", o2, bits0, bits1, bits2, bits3);
-
 	} // for (octant o2)
 
 } // update_view()

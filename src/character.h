@@ -147,7 +147,6 @@ class Character:public Being {
 
         virtual void setActivity(int val);
         virtual void setControlMode(enum control_mode mode);
-        virtual void setDefaultCondition();
         virtual void setInventoryContainer(class Container *container);
         virtual void setLeader(bool val);
         virtual void setSchedule(struct sched *sched);

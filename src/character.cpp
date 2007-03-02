@@ -3130,11 +3130,6 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
 
 }
 
-void Character::setDefaultCondition()
-{
-        condition[0] = isDead() ? 'D' : 0;
-}
-
 void Character::addDefense(int val)
 {
         defenseBonus += val;

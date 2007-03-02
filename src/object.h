@@ -49,41 +49,16 @@
 /* Hack: until movement modes implemented in objects */
 #define obj_mmode(obj) ((obj)->getMovementMode())
 
-/* Hooks
- *
- * OBJ_HOOK_START_OF_TURN
- *      Runs at the start of every turn after the object is given its action 
- *      points for the turn. Passes the object as the sole parameter to the
- *      exec routine. For example, a paralysis effect might set the action 
- *      points to zero so the object cannot move on its turn.
- *
- * OBJ_HOOK_ADD_HOOK
- *      Runs whenever a new effect is added. Passes the effect being added as
- *      the parameter to the exec routine. This can be used to block the effect
- *      from being added. Immunity effects are implemented this way.
- *
- * OBJ_HOOK_DAMAGE
- *      Runs whenever an object takes damage. Passes in the object.
- *
- * OBJ_HOOK_NIL
- *      Never runs. Useful for effects where the script just needs to check if
- *      it is applied. For instance, fire immunity.
- *
- * OBJ_HOOK_ON_DEATH
- *      Meaningful only for the Character subclass, this runs when the
- *      character is killed.
- */
-#define OBJ_HOOK_START_OF_TURN 0
-#define OBJ_HOOK_ADD_HOOK      1
-#define OBJ_HOOK_DAMAGE        2
-#define OBJ_HOOK_KEYSTROKE     3
-#define OBJ_HOOK_NIL           4
-#define OBJ_HOOK_ON_DEATH      5
-#define OBJ_HOOK_READY_EQUIP   6
-#define OBJ_HOOK_UNREADY_EQUIP 7
-#define OBJ_NUM_HOOKS          8
-
-#define OBJ_MAX_CONDITIONS     8 /* OBSOLETE */
+/* Hooks id's */
+#define OBJ_HOOK_START_OF_TURN 0 /* after ap assigned at start of turn       */
+#define OBJ_HOOK_ADD_HOOK      1 /* whan a new effects is added              */
+#define OBJ_HOOK_DAMAGE        2 /* when the object takes damage             */
+#define OBJ_HOOK_KEYSTROKE     3 /* when PC is given a command               */
+#define OBJ_HOOK_NIL           4 /* never (effect just exists)               */
+#define OBJ_HOOK_ON_DEATH      5 /* character just died                      */
+#define OBJ_HOOK_READY_EQUIP   6 /* PC readies                               */
+#define OBJ_HOOK_UNREADY_EQUIP 7 /* PC unreadies                             */
+#define OBJ_NUM_HOOKS          8 
 
 /* Relocation flags. Used to avoid triggers in special cases. */
 #define REL_NOSTEP    (1<<0)                     /* don't trigger "step"     */
@@ -352,13 +327,7 @@ class Object {
         virtual void changePlaceHook();
         virtual MoveResult move(int dx, int dy);
 
-        // Condition API - used to report condition in the status window
-        virtual char *getCondition();
-        virtual void setDefaultCondition();
-
         // Hook/effect API.
-        static int nameToHookId(char *hook_name);
-        static char * hookIdToName(int hook_id);
         virtual void hookForEach(int hook_id, 
                                  int (*cb)(struct hook_entry *entry, 
                                            void *data),
@@ -471,12 +440,6 @@ class Object {
                 struct list list;
                 int lock;
         } hooks[OBJ_NUM_HOOKS];
-
-        // Conditions are used to report the single-character conditions shown
-        // in the status window. E.g., good = 'G', dead = 'D', etc. With the
-        // exception of 'G' and 'D' the kernel is agnostic about their values
-        // and the script controls them.
-        char condition[OBJ_MAX_CONDITIONS + 1];
 
         // (Possibly null) pointer to this object's corresponding ghulscript
         // object.
