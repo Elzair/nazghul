@@ -783,6 +783,8 @@ enum MoveResult Character::move(int dx, int dy)
                         if (!place_is_passable(getPlace(), getX(), getY(), 
                                                occupant, 0)) {
                                 relocate(getPlace(), newx, newy);
+                                runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(),
+                                        newx, newy);
                                 decActionPoints(
                                         place_get_diagonal_movement_cost(
                                                 getPlace(), 
@@ -808,6 +810,7 @@ enum MoveResult Character::move(int dx, int dy)
 		return WasOccupied;
 	}
 
+        runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(), getX(), getY());
         decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
                                                          getX(), getY(), 
                                                          newx, 

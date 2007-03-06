@@ -50,15 +50,27 @@
 #define obj_mmode(obj) ((obj)->getMovementMode())
 
 /* Hooks id's */
-#define OBJ_HOOK_START_OF_TURN 0 /* after ap assigned at start of turn       */
-#define OBJ_HOOK_ADD_HOOK      1 /* whan a new effects is added              */
-#define OBJ_HOOK_DAMAGE        2 /* when the object takes damage             */
-#define OBJ_HOOK_KEYSTROKE     3 /* when PC is given a command               */
-#define OBJ_HOOK_NIL           4 /* never (effect just exists)               */
-#define OBJ_HOOK_ON_DEATH      5 /* character just died                      */
-#define OBJ_HOOK_READY_EQUIP   6 /* PC readies                               */
-#define OBJ_HOOK_UNREADY_EQUIP 7 /* PC unreadies                             */
-#define OBJ_NUM_HOOKS          8 
+#define OBJ_HOOK_START_OF_TURN 0  /* after ap assigned at start of turn      */
+#define OBJ_HOOK_ADD_HOOK      1  /* whan a new effects is added             */
+#define OBJ_HOOK_DAMAGE        2  /* when the object takes damage            */
+#define OBJ_HOOK_KEYSTROKE     3  /* when PC is given a command              */
+#define OBJ_HOOK_NIL           4  /* never (effect just exists)              */
+#define OBJ_HOOK_ON_DEATH      5  /* character just died                     */
+#define OBJ_HOOK_READY_EQUIP   6  /* PC readies                              */
+#define OBJ_HOOK_UNREADY_EQUIP 7  /* PC unreadies                            */
+#define OBJ_HOOK_MOVE_DONE     8  /* character just moved                    */
+#define OBJ_HOOK_ATTACK_DONE   9  /* character just attacked                 */
+#define OBJ_HOOK_CAST_DONE     10 /* character just cast a spell             */
+#define OBJ_HOOK_DROP_DONE     11 /* character just dropped something        */
+#define OBJ_HOOK_YUSE_DONE     12 /* character just yused a skill            */
+#define OBJ_HOOK_GET_DONE      13 /* character just got something            */
+#define OBJ_HOOK_HANDLE_DONE   14 /* character just handled something        */
+#define OBJ_HOOK_OPEN_DONE     15 /* character just opened something         */
+#define OBJ_HOOK_READY_DONE    16 /* character finished equipping            */
+#define OBJ_HOOK_TALK_DONE     17 /* character finished talking              */
+#define OBJ_HOOK_USE_DONE      18 /* character finished using something      */
+#define OBJ_HOOK_KAMP_START    19 /* character about to start camping        */
+#define OBJ_NUM_HOOKS          20 /* total number of object hooks            */
 
 /* Relocation flags. Used to avoid triggers in special cases. */
 #define REL_NOSTEP    (1<<0)                     /* don't trigger "step"     */

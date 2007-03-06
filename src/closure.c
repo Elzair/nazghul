@@ -32,6 +32,8 @@
 
 #define scm_is_pair(sc,arg) ((sc)->vptr->is_pair(arg))
 #define scm_mk_ptr(sc,ptr) mk_foreign_func((sc), (foreign_func)(ptr))
+#define scm_mk_integer(sc, val) \
+        (sc)->vptr->mk_integer((sc), (val))
 #define scm_cdr(p) ((p)->_object._cons._cdr)
 #define scm_car(p) ((p)->_object._cons._car)
 #define scm_is_symbol(sc, arg) ((sc)->vptr->is_symbol(arg))
@@ -249,6 +251,42 @@ int closure_execlpv(closure_t *closure, pointer cell, void *ptr,
         }
 
         /* Prepend the cell and ptr to the arg list. */
+        head = _cons(sc, scm_mk_ptr(sc, ptr), head, 0);
+        head = _cons(sc, cell, head, 0);
+
+        /* Unprotect the list now that we're done allocating. */
+        if (tmp != sc->NIL) {
+                sc->vptr->unprotect(sc, tmp);
+        }
+
+        /* Evaluate the closure. */
+        result = closure_exec_with_scheme_args(closure, head);
+
+        /* Translate the result to an int. */
+        return closure_translate_result(closure->sc, result);
+}
+
+int closure_execlpiv(closure_t *closure, pointer cell, void *ptr, int id,
+                    char *fmt, va_list args)
+{
+        pointer head, tmp, result;
+        scheme *sc = closure->sc;
+
+        /* Convert the C args to Scheme. */
+        if (fmt) {
+                head = vpack(sc, fmt, args);
+        } else {
+                head = sc->NIL;
+        }
+
+        /* Protect the list while allocating cells. */
+        tmp = head;
+        if (tmp != sc->NIL) {
+                sc->vptr->protect(sc, tmp);
+        }
+
+        /* Prepend the cell, ptr and id to the arg list. */
+        head = _cons(sc, scm_mk_integer(sc, id), head, 0);
         head = _cons(sc, scm_mk_ptr(sc, ptr), head, 0);
         head = _cons(sc, cell, head, 0);
 

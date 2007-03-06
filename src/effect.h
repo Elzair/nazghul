@@ -53,6 +53,7 @@ struct effect {
         int cumulative;         /* more then one instance can be attached    */
         int duration;           /* minutes before expire (-1 for never)      */
         bitfield_decl(hooks,OBJ_NUM_HOOKS); /* hooks the effect uses         */
+        int multihook : 1;      /* set iff more than one hook                */
         struct sprite *status_icon; /* 8x16 sprite for status window         */
 };
 

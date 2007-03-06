@@ -254,13 +254,16 @@ int ObjectType::getMaxHp()
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#define HEF_INVALID (1<<0)
+#define HEF_INVALID  (1<<0)
 #define HEF_DETECTED (1<<1)
 #define HEF_STARTED  (1<<2)
+#define HEF_RMDONE   (1<<3) /* rm proc already run */
 
 #define hook_entry_invalidate(he) ((he)->flags |= HEF_INVALID)
 #define hook_entry_detected(he) ((he)->flags & HEF_DETECTED)
 #define hook_entry_detect(he) ((he)->flags |= HEF_DETECTED)
+#define hook_entry_is_rmdone(he) ((he)->flags & HEF_RMDONE)
+#define hook_entry_rmdone(he) ((he)->flags |= HEF_RMDONE)
 #define hook_entry_gob(he) ((he)->gob->p)
 #define hook_entry_started(he) ((he)->started)
 #define hook_entry_set_started(he) ((he)->started=1)
@@ -908,9 +911,9 @@ bool Object::isVisible()
 
 void Object::setVisible(bool val)
 {
-	if (val)
+	if (val) {
 		visible++;
-	else {
+        } else {
 		visible--;
                 if (visible < 0 && getName()) {
                         printf("%s: %d\n", getName(), visible);
@@ -1521,7 +1524,8 @@ void Object::hookForEach(int hook_id,
                 if (hook_entry_is_invalid(entry)) {
                         if (locked) {
                                 //dbg("hookForEach: delete %p\n", entry);
-                                if (entry->effect->rm)
+                                if (entry->effect->rm
+                                    && ! hook_entry_is_rmdone(entry))
                                         closure_exec(entry->effect->rm, "lp", 
                                                      hook_entry_gob(entry), 
                                                      this);
@@ -1708,6 +1712,7 @@ void Object::restoreEffect(struct effect *effect, struct gob *gob, int flags,
 struct object_run_hook_entry_data {
         Object *obj;
         char *fmt;
+        int hook_id;
         va_list args;
 };
 
@@ -1716,12 +1721,23 @@ static int object_run_hook_entry(struct hook_entry *entry, void *data)
         struct object_run_hook_entry_data *info;
         info = (struct object_run_hook_entry_data *)data;
 
-        if (entry->effect->exec)
-                return closure_execlpv(entry->effect->exec, 
-                                       hook_entry_gob(entry),
-                                       info->obj,
-                                       info->fmt, 
-                                       info->args);
+        if (entry->effect->exec) {
+                if (entry->effect->multihook) {
+                        return closure_execlpiv(entry->effect->exec, 
+                                                hook_entry_gob(entry),
+                                                info->obj,
+                                                info->hook_id,
+                                                info->fmt, 
+                                                info->args);
+                } else {
+                        return closure_execlpv(entry->effect->exec, 
+                                               hook_entry_gob(entry),
+                                               info->obj,
+                                               info->fmt, 
+                                               info->args);
+                }
+        }
+
         return 0;
 }
 
@@ -1731,6 +1747,7 @@ void Object::runHook(int hook_id, char *fmt, ...)
 
         data.obj = this;
         data.fmt = fmt;
+        data.hook_id = hook_id;
         va_start(data.args, fmt);
         hookForEach(hook_id, object_run_hook_entry, &data);
         va_end(data.args);
@@ -1792,11 +1809,19 @@ bool Object::removeEffect(struct effect *effect)
                                 // runHooks() method will eventually clean it up.
                                 if (hook_list_locked(hl)) {
                                         hook_entry_invalidate(entry);
+
+                                        // Remember if the effect's rm proc has
+                                        // already been run so it doesn't get
+                                        // run again
+                                        if (found) {
+                                                hook_entry_rmdone(entry);
+                                        }
                                 } else {
-                                        if (entry->effect->rm)
+                                        if (! found && entry->effect->rm) {
                                                 closure_exec(entry->effect->rm, "lp", 
                                                              hook_entry_gob(entry), 
                                                              this);
+                                        }
                                         list_remove(&entry->list);
                                         hook_entry_del(entry);
                                 }

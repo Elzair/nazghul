@@ -11,6 +11,7 @@
 (define on-death-hook      5)
 (define ready-equip-hook   6)
 (define unready-equip-hook 7)
+(define move-done-hook     8)
 
 (define (mk-effect tag name sprite exec apply rm restart hook sym ddc cum dur)
   (kern-mk-effect tag 
@@ -404,12 +405,74 @@
   (kern-obj-set-visible kobj #f))
 
 ;; ----------------------------------------------------------------------------
-;; Motionless Invisibility
+;; Stealth
 ;;
-;; Used by the Hide skill. Similar to normal invisibility, but it adds an exec
-;; procedure which runs on the keystroke hook (the same one used by paralysis)
-;; and removes the invisibility effect.
+;; Used by the Stealth skill. Similar to invisibility, but it decrements MP on
+;; every turn. Also, on anything that involves movement it rolls to remove
+;; itself.
 ;; ----------------------------------------------------------------------------
+(define (stealth-apply fgob kobj)
+  (kern-obj-set-visible kobj #f))
+
+(define (stealth-exec fgob kobj hook)
+  (println "stealth-exec, hook=" hook)
+  (cond ((= hook start-of-turn-hook)
+         (let ((mp (kern-char-get-mana kobj)))
+           (println "mp=" mp)
+           (cond ((> mp 0)
+                  (kern-char-dec-mana kobj 1))
+                 (else
+                  (kern-log-msg (kern-obj-get-name kobj)
+                                " cannot maintain stealth!")
+                  (kern-obj-remove-effect kobj ef_stealth)))))
+        ((= hook move-done-hook)
+         (kern-log-msg (kern-obj-get-name kobj)
+                       " goes out of stealth mode!")
+         (kern-obj-remove-effect kobj ef_stealth))
+        (else
+         (println "stealth-exec: unknown hook " hook))))
+         
+
+(define (stealth-rm fgob kobj)
+  (kern-obj-set-visible kobj #t))
+
+;; ----------------------------------------------------------------------------
+;; Stealth2
+;;
+;; Used by the Stealth skill. Similar to invisibility, but it decrements MP on
+;; every turn. Also, on anything that involves movement it rolls to remove
+;; itself.
+;; ----------------------------------------------------------------------------
+(define (stealth2-apply fgob kobj)
+  (kern-obj-set-visible kobj #f)
+  (kern-obj-add-effect kobj ef_stealth_move nil)
+  )
+
+(define (stealth2-exec fgob kobj)
+  (println "stealth2-exec")
+  (let ((mp (kern-char-get-mana kobj)))
+    (println "mp=" mp)
+    (cond ((> mp 0)
+           (kern-char-dec-mana kobj 1))
+          (else
+           (kern-log-msg (kern-obj-get-name kobj)
+                         " cannot maintain stealth!")
+           (kern-obj-remove-effect kobj ef_stealth)))))
+
+(define (stealth2-rm fgob kobj)
+  (kern-obj-set-visible kobj #t)
+  (kern-obj-remove-effect kobj ef_stealth_move)
+  )
+
+(define (stealth-move-exec fgob kobj)
+  (cond ((has-effect? kobj ef_stealth)
+         (kern-log-msg (kern-obj-get-name kobj)
+                       " goes out of stealth mode!")
+         (kern-obj-remove-effect kobj ef_stealth))
+        (else
+         (println "stealth-move-exec: why am I here?")
+         (kern-obj-remove-effect kobj ef_stealth_move)
+         )))
 
 ;; ----------------------------------------------------------------------------
 ;; Slime Split
@@ -561,6 +624,7 @@
 (mk-effect 'ef_spider_calm            "Spider calm"   s_spider_calm nil          'spider-calm-apply  'spider-calm-rm   nil                start-of-turn-hook ""  0   #f  60) 
 (mk-effect 'ef_disease                "Diseased"      s_disease    'disease-exec  nil                 nil              nil                start-of-turn-hook "D" 0   #f  -2)
 (mk-effect 'ef_graphics_update        nil             nil          'update-graphics nil               nil              'update-graphics   start-of-turn-hook ""  0   #f  -1)
+(mk-effect 'ef_stealth                "Stealth"       nil          'stealth2-exec 'stealth2-apply    'stealth2-rm     'stealth2-apply     start-of-turn-hook ""  0   #f  -1)
 
 ;; Add-hook hooks
 (mk-effect 'ef_poison_immunity               "Poison immunity"    s_im_poison   'poison-immunity-exec    nil nil nil add-hook-hook "I" 0   #f  -1)
@@ -601,9 +665,15 @@
 (mk-effect 'ef_loot_drop         nil nil 'loot-drop-exec    nil nil nil on-death-hook "" 0 #f -1)
 (mk-effect 'ef_cleanup_tentacles nil nil 'cleanup-tentacles nil nil nil on-death-hook "" 0 #f -1)
 
+;; Move-done hooks
+(mk-effect 'ef_stealth_move nil nil 'stealth-move-exec nil nil nil move-done-hook "" 0 #t -1)
+
 ;;----------------------------------------------------------------------------
 ;; Effect Test Procedures
 ;;----------------------------------------------------------------------------
+
+(define (has-effect? kobj kef)
+  (in-list? kef (kern-obj-get-effects kobj)))
 
 (define (is-poisoned? kobj)
   (in-list? ef_poison (kern-obj-get-effects kobj)))
@@ -749,7 +819,7 @@
                                             'apply-lightning
                                             'apply-random-field
                                             ))))
-        (println selection)
+        (println selection)g
         (apply (eval selection)
                (list kobj)))))
    

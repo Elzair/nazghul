@@ -4272,6 +4272,7 @@ KERN_API_CALL(kern_mk_effect)
                 }
                 effect_add_hook(effect, hookid);
         } else {
+                int n_hooks = 0;
                 args = scm_cdr(sc, args);
                 do {
                         if (unpack(sc, &cell, "d", &hookid)) {
@@ -4279,7 +4280,11 @@ KERN_API_CALL(kern_mk_effect)
                                 goto abort;
                         }
                         effect_add_hook(effect, hookid);
+                        n_hooks++;
                 } while (scm_is_pair(sc, cell));
+                if (n_hooks > 1) {
+                        effect->multihook = 1;
+                }
         }
 
         /* Unpack the remaining parms */

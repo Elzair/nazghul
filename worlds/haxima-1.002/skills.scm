@@ -70,6 +70,9 @@
                              (handles? kobj 'rm-traps)))
                       ))
   
+(define (skill-stealth kactor)
+  (kern-obj-add-effect kactor ef_stealth nil)
+  result-ok)
 
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
@@ -147,6 +150,18 @@
                  nil            ;; material
                  ))
 
+(define sk_stealth
+  (kern-mk-skill "Stealth" "Avoid detection"
+                 1              ;; ap
+                 1              ;; mp
+                 #f             ;; wilderness?
+                 #f             ;; passive?
+                 'skill-stealth ;; yusage 
+                 nil            ;; yusage check
+                 nil            ;; tools
+                 nil            ;; material
+                 ))
+
 ;;----------------------------------------------------------------------------
 ;; Skill Set declarations
 
@@ -158,6 +173,7 @@
                                     (list 1 sk_sprint)
                                     (list 1 sk_wriggle)
                                     (list 1 sk_disarm_trap)
+                                    (list 1 sk_stealth)
                                     )))
 
 (define sks_wanderer sks_wrogue)
