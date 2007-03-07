@@ -24,8 +24,6 @@
 
 #include "macros.h"
 #include "closure.h"
-#include "bitfield.h"
-#include "object.h" /* for OBJ_NUM_HOOKS */
 
 BEGIN_DECL
 
@@ -41,24 +39,20 @@ extern char *EFFECT_ID;
 /* An effect type defines an effect like poison, protection, etc. Effects are
  * attached to objects. */
 struct effect {
-        char *ID;               /* for runtime type-verification             */
-        closure_t *exec;        /* scheme proc to execute on-hook            */
-        closure_t *apply;       /* scheme proc to execute on-attach          */
-        closure_t *rm;          /* scheme proc to execute on-removal         */
-        closure_t *restart;     /* scheme proc to restart effect on reload   */
-        char *tag;              /* identifier tag name                       */
-        char *name;             /* short name                                */
-        struct sprite *sprite;  /* might be used in ztats window             */
+        char *ID;               /* for runtime type-verification */
+        closure_t *exec;        /* scheme proc to execute on-hook */
+        closure_t *apply;       /* scheme proc to execute on-attach */
+        closure_t *rm;          /* scheme proc to execute on-removal */
+        closure_t *restart;     /* scheme proc to restart effect on reload */
+        char *tag;              /* identifier tag name */
+        char *name;             /* short name */
+        struct sprite *sprite;  /* might be used in ztats window */
         int detect_dc;          /* detection difficulty class (default zero) */
-        int cumulative;         /* more then one instance can be attached    */
-        int duration;           /* minutes before expire (-1 for never)      */
-        bitfield_decl(hooks,OBJ_NUM_HOOKS); /* hooks the effect uses         */
-        int multihook : 1;      /* set iff more than one hook                */
-        struct sprite *status_icon; /* 8x16 sprite for status window         */
+        int cumulative;         /* more then one instance can be attached */
+        int duration;           /* minutes before expire (-1 for never) */
+        int hook_id;            /* hook the effect attaches to */
+        struct sprite *status_icon; /* 8x16 sprite for status window */
 };
-
-#define effect_add_hook(ef,nr) bitfield_set_bit(ef->hooks,nr)
-#define effect_has_hook(ef,nr) bitfield_test_bit(ef->hooks,nr)
 
 /* Create the closure and dup the strings. Zero out other fields (caller must
  * fill them in). */

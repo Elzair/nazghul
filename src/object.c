@@ -1,7 +1,7 @@
 //
 // nazghul - an old-school RPG engine
 // Copyright (C) 2002, 2003 Gordon McNutt
-//
+//e
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the Free
 // Software Foundation; either version 2 of the License, or (at your option)
@@ -254,16 +254,13 @@ int ObjectType::getMaxHp()
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#define HEF_INVALID  (1<<0)
+#define HEF_INVALID (1<<0)
 #define HEF_DETECTED (1<<1)
 #define HEF_STARTED  (1<<2)
-#define HEF_RMDONE   (1<<3) /* rm proc already run */
 
 #define hook_entry_invalidate(he) ((he)->flags |= HEF_INVALID)
 #define hook_entry_detected(he) ((he)->flags & HEF_DETECTED)
 #define hook_entry_detect(he) ((he)->flags |= HEF_DETECTED)
-#define hook_entry_is_rmdone(he) ((he)->flags & HEF_RMDONE)
-#define hook_entry_rmdone(he) ((he)->flags |= HEF_RMDONE)
 #define hook_entry_gob(he) ((he)->gob->p)
 #define hook_entry_started(he) ((he)->started)
 #define hook_entry_set_started(he) ((he)->started=1)
@@ -911,9 +908,9 @@ bool Object::isVisible()
 
 void Object::setVisible(bool val)
 {
-	if (val) {
+	if (val)
 		visible++;
-        } else {
+	else {
 		visible--;
                 if (visible < 0 && getName()) {
                         printf("%s: %d\n", getName(), visible);
@@ -1493,6 +1490,8 @@ void Object::save(struct save *save)
 }
 
 
+#define VALID_HOOK_ID(id) ((id) >= 0 && (id) < OBJ_NUM_HOOKS)
+
 void Object::hookForEach(int hook_id, 
                          int (*cb)(struct hook_entry *entry, void *data),
                          void *data)
@@ -1503,6 +1502,7 @@ void Object::hookForEach(int hook_id,
 
         //dbg("hookForEach entry\n");
 
+        assert(VALID_HOOK_ID(hook_id));
         hl = &hooks[hook_id];
 
         // Lock the hook list to prevent any removals or entry deletions while
@@ -1524,8 +1524,7 @@ void Object::hookForEach(int hook_id,
                 if (hook_entry_is_invalid(entry)) {
                         if (locked) {
                                 //dbg("hookForEach: delete %p\n", entry);
-                                if (entry->effect->rm
-                                    && ! hook_entry_is_rmdone(entry))
+                                if (entry->effect->rm)
                                         closure_exec(entry->effect->rm, "lp", 
                                                      hook_entry_gob(entry), 
                                                      this);
@@ -1607,13 +1606,27 @@ bool Object::addEffect(struct effect *effect, struct gob *gob)
 {
         hook_entry_t *entry;
         struct add_hook_hook_data data;
-        int hook_id;
-        int first_time = 1;
+        int hook_id = effect->hook_id;
+        
+        assert(VALID_HOOK_ID(effect->hook_id));
+
+        // Hack: NPC's don't go through a keystroke handler. For these,
+        // substitute the start-of-turn-hook for the keystroke-hook.
+        if (effect->hook_id == OBJ_HOOK_KEYSTROKE &&
+            ! isPlayerControlled())
+                hook_id = OBJ_HOOK_START_OF_TURN;
 
         // Use the same data structure to search for the effect and to check
         // for countereffects.
         data.effect = effect;
         data.reject = 0;
+
+        // For non-cumulative effects Check if the effect is already applied.
+        if (! effect->cumulative) {
+                hookForEach(hook_id, object_find_effect, &data);
+                if (data.reject)
+                        return false;
+        }
 
         // If we're starting up the object then "force" effects to be applied,
         // without checking for immunities. This works around the
@@ -1627,56 +1640,27 @@ bool Object::addEffect(struct effect *effect, struct gob *gob)
                 // implemented, BTW.
                 hookForEach(OBJ_HOOK_ADD_HOOK, object_run_add_hook_hook, 
                             &data);
-                
+
                 if (data.reject) {
                         return false;
                 }
         }
 
-        // An effect may attach itself to multiple hooks. Loop over them all.
-        for (hook_id=0; hook_id < OBJ_NUM_HOOKS; hook_id++) {
-
-                if (!effect_has_hook(effect, hook_id)) {
-                        continue;
-                }
-        
-                // Hack: NPC's don't go through a keystroke handler. For these,
-                // substitute the start-of-turn-hook for the keystroke-hook.
-                if (hook_id == OBJ_HOOK_KEYSTROKE 
-                    && ! isPlayerControlled())
-                        hook_id = OBJ_HOOK_START_OF_TURN;
-
-                // Do one-time actions.
-                if (first_time) {
-
-                        // For non-cumulative effects check if the effect is
-                        // already applied.
-                        if (! effect->cumulative) {
-                                hookForEach(hook_id, object_find_effect, &data);
-                                if (data.reject)
-                                        return false;
-                        }
-                
-                        // Run the "apply" procedure of the effect if it has
-                        // one.
-                        if (effect->apply) {
-                                closure_exec(effect->apply, "lp", gob? gob->p : NULL, this);
-                        }
-                        
-                        first_time = 0;
-                }
-
-                entry = hook_entry_new(effect, gob);
-                hook_entry_set_started(entry);
-
-                // Roll to see if the character detects the effect (it won't show up in
-                // stats if not)
-                if (dice_roll("1d20") > effect->detect_dc) {
-                        hook_entry_detect(entry);
-                }
-                
-                hook_list_add(&hooks[hook_id], &entry->list);
+        // Run the "apply" procedure of the effect if it has one.
+        if (effect->apply) {
+                closure_exec(effect->apply, "lp", gob? gob->p : NULL, this);
         }
+
+        entry = hook_entry_new(effect, gob);
+        hook_entry_set_started(entry);
+
+        // Roll to see if the character detects the effect (it won't show up in
+        // stats if not)
+        if (dice_roll("1d20") > effect->detect_dc) {
+                hook_entry_detect(entry);
+        }
+
+        hook_list_add(&hooks[hook_id], &entry->list);
 
         statusRepaint();
 
@@ -1687,32 +1671,25 @@ void Object::restoreEffect(struct effect *effect, struct gob *gob, int flags,
                            clock_alarm_t expiration)
 {
         hook_entry_t *entry;
-        int hook_id;
 
-        for (hook_id=0; hook_id < OBJ_NUM_HOOKS; hook_id++) {
+        assert(VALID_HOOK_ID(effect->hook_id));
 
-                if (!effect_has_hook(effect, hook_id)) {
-                        continue;
-                }
+        // Note: do NOT run the "apply" procedure of the effect here (already
+        // tried this - causes script recursion while loading which as we know
+        // aborts the load prematurely). Instead the "restart" procedure will
+        // be run as part of our start() method, called on all objects near the
+        // end of session_load().
 
-                // Note: do NOT run the "apply" procedure of the effect here
-                // (already tried this - causes script recursion while loading
-                // which as we know aborts the load prematurely). Instead the
-                // "restart" procedure will be run as part of our start()
-                // method, called on all objects near the end of
-                // session_load().
-                entry = hook_entry_new(effect, gob);
-                entry->flags = flags;
-                entry->expiration = expiration;
-                hook_list_add(&hooks[hook_id], &entry->list);
-        }
-                
+        entry = hook_entry_new(effect, gob);
+        entry->flags = flags;
+        entry->expiration = expiration;
+        hook_list_add(&hooks[effect->hook_id], &entry->list);
+
 }
 
 struct object_run_hook_entry_data {
         Object *obj;
         char *fmt;
-        int hook_id;
         va_list args;
 };
 
@@ -1721,23 +1698,12 @@ static int object_run_hook_entry(struct hook_entry *entry, void *data)
         struct object_run_hook_entry_data *info;
         info = (struct object_run_hook_entry_data *)data;
 
-        if (entry->effect->exec) {
-                if (entry->effect->multihook) {
-                        return closure_execlpiv(entry->effect->exec, 
-                                                hook_entry_gob(entry),
-                                                info->obj,
-                                                info->hook_id,
-                                                info->fmt, 
-                                                info->args);
-                } else {
-                        return closure_execlpv(entry->effect->exec, 
-                                               hook_entry_gob(entry),
-                                               info->obj,
-                                               info->fmt, 
-                                               info->args);
-                }
-        }
-
+        if (entry->effect->exec)
+                return closure_execlpv(entry->effect->exec, 
+                                       hook_entry_gob(entry),
+                                       info->obj,
+                                       info->fmt, 
+                                       info->args);
         return 0;
 }
 
@@ -1747,7 +1713,6 @@ void Object::runHook(int hook_id, char *fmt, ...)
 
         data.obj = this;
         data.fmt = fmt;
-        data.hook_id = hook_id;
         va_start(data.args, fmt);
         hookForEach(hook_id, object_run_hook_entry, &data);
         va_end(data.args);
@@ -1774,68 +1739,52 @@ bool Object::removeEffect(struct effect *effect)
 {
         struct list *elem;
         struct hook_list *hl;
-        int hook_id;
-        bool found = false;
+        int hook_id = effect->hook_id;
 
-        for (hook_id=0; hook_id < OBJ_NUM_HOOKS; hook_id++) {
-                
-                if (!effect_has_hook(effect, hook_id)) {
-                        continue;
-                }
+        assert(VALID_HOOK_ID(effect->hook_id));
         
-                // Hack: NPC's don't go through a keystroke handler. For these,
-                // substitute the start-of-turn-hook for the keystroke-hook.
-                if (hook_id == OBJ_HOOK_KEYSTROKE &&
-                    ! isPlayerControlled())
-                        hook_id = OBJ_HOOK_START_OF_TURN;
+        // Hack: NPC's don't go through a keystroke handler. For these,
+        // substitute the start-of-turn-hook for the keystroke-hook.
+        if (effect->hook_id == OBJ_HOOK_KEYSTROKE &&
+            ! isPlayerControlled())
+                hook_id = OBJ_HOOK_START_OF_TURN;
 
-                hl = &hooks[hook_id];
-                
-                elem = hook_list_first(hl);
-                while (elem != hook_list_end(hl)) {
-                        hook_entry_t *entry;
-                        
-                        entry = outcast(elem, hook_entry_t, list);
-                        elem = elem->next;
-                        
-                        if (hook_entry_is_invalid(entry))
-                                // Already pending removal.
-                                continue;
-                        
-                        if (effect == entry->effect) {
-                                
-                                // If the hook list is locked we can't remove/delete
-                                // the entry, but if we mark it invalid then the
-                                // runHooks() method will eventually clean it up.
-                                if (hook_list_locked(hl)) {
-                                        hook_entry_invalidate(entry);
+        hl = &hooks[hook_id];
 
-                                        // Remember if the effect's rm proc has
-                                        // already been run so it doesn't get
-                                        // run again
-                                        if (found) {
-                                                hook_entry_rmdone(entry);
-                                        }
-                                } else {
-                                        if (! found && entry->effect->rm) {
-                                                closure_exec(entry->effect->rm, "lp", 
-                                                             hook_entry_gob(entry), 
-                                                             this);
-                                        }
-                                        list_remove(&entry->list);
-                                        hook_entry_del(entry);
-                                }
-                                
-                                found = true;
+        elem = hook_list_first(hl);
+        while (elem != hook_list_end(hl)) {
+                hook_entry_t *entry;
+
+                entry = outcast(elem, hook_entry_t, list);
+                elem = elem->next;
+
+                if (hook_entry_is_invalid(entry))
+                        // Already pending removal.
+                        continue;
+
+                if (effect == entry->effect) {
+
+                        // If the hook list is locked we can't remove/delete
+                        // the entry, but if we mark it invalid then the
+                        // runHooks() method will eventually clean it up.
+                        if (hook_list_locked(hl)) {
+                                hook_entry_invalidate(entry);
+                        } else {
+                                if (entry->effect->rm)
+                                        closure_exec(entry->effect->rm, "lp", 
+                                                     hook_entry_gob(entry), 
+                                                     this);
+                                list_remove(&entry->list);
+                                hook_entry_del(entry);
                         }
+
+                        statusRepaint();
+
+                        return true;
                 }
         }
 
-        if (found) {
-                statusRepaint();
-        }
-
-        return found;
+        return false;
 }
 
 int Object::getCount()

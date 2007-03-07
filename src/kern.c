@@ -4234,13 +4234,13 @@ KERN_API_CALL(kern_mk_effect)
         pointer rm_proc = sc->NIL;
         pointer restart_proc = sc->NIL;
         void *sprite;
+        void *dummy;
         pointer ret;
         char *name, *tag = 0;
-        int hookid=0;
-        pointer cell;
+        int hook_id;
 
-        if (unpack(sc, &args, "yspcccc", &tag, &name, &sprite, &exec_proc,
-                   &apply_proc, &rm_proc, &restart_proc)) {
+        if (unpack(sc, &args, "yspccccd", &tag, &name, &sprite, &exec_proc,
+                   &apply_proc, &rm_proc, &restart_proc, &hook_id)) {
                 load_err("kern-mk-effect %s: bad args", tag);
                 return sc->NIL;
         }
@@ -4260,36 +4260,11 @@ KERN_API_CALL(kern_mk_effect)
         effect = effect_new(tag, sc, exec_proc, apply_proc, rm_proc, 
                             restart_proc, name);
 
+        effect->hook_id = hook_id;
         effect->sprite = (struct sprite*)sprite;
 
-        /* The next parm is the hook id(s). It might be a single integer or a
-         * list of integers. */
-        cell = scm_car(sc, args);
-        if (! scm_is_pair(sc,  cell)) {
-                if (unpack(sc, &args, "d", &hookid)) {
-                        load_err("kern-mk-effect %s: bad hook id arg", tag);
-                        goto abort;
-                }
-                effect_add_hook(effect, hookid);
-        } else {
-                int n_hooks = 0;
-                args = scm_cdr(sc, args);
-                do {
-                        if (unpack(sc, &cell, "d", &hookid)) {
-                                load_err("kern-mk-effect %s: bad hook id arg", tag);
-                                goto abort;
-                        }
-                        effect_add_hook(effect, hookid);
-                        n_hooks++;
-                } while (scm_is_pair(sc, cell));
-                if (n_hooks > 1) {
-                        effect->multihook = 1;
-                }
-        }
-
-        /* Unpack the remaining parms */
-        if (unpack(sc, &args, "dbd", &effect->detect_dc, &effect->cumulative,
-                   &effect->duration)) {
+        if (unpack(sc, &args, "dbd", &effect->detect_dc,
+                   &effect->cumulative, &effect->duration)) {
                 load_err("kern-mk-effect %s: bad args", tag);
                 goto abort;
         }

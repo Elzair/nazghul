@@ -65,8 +65,6 @@ struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
                 assert(et->name);
         }
 
-        bitfield_clear_all(&et->hooks, OBJ_NUM_HOOKS);
-
         return et;
 }
 

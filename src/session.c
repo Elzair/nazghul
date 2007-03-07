@@ -225,7 +225,6 @@ void session_del(struct session *session)
 {
         struct list *elem;
         struct data_obj_entry *entry;
-        struct node *node;
 
         /* ref the player party so we can control when it gets destroyed, so we
          * know when to zero out the global */
