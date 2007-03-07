@@ -12,6 +12,18 @@
 (define ready-equip-hook   6)
 (define unready-equip-hook 7)
 (define move-done-hook     8)
+(define attack-done-hook   9)
+(define cast-done-hook     10)
+(define drop-done-hook     11)
+(define yuse-done-hook     12)
+(define get-done-hook      13)
+(define handle-done-hook   14)
+(define open-done-hook     15)
+(define ready-done-hook    16)
+(define talk-done-hook     17)
+(define use-done-hook      18)
+(define mix-done-hook      19)
+(define kamp-start-hook    20)
 
 (define (mk-effect tag name sprite exec apply rm restart hook sym ddc cum dur)
   (kern-mk-effect tag 
@@ -405,38 +417,6 @@
   (kern-obj-set-visible kobj #f))
 
 ;; ----------------------------------------------------------------------------
-;; Stealth
-;;
-;; Used by the Stealth skill. Similar to invisibility, but it decrements MP on
-;; every turn. Also, on anything that involves movement it rolls to remove
-;; itself.
-;; ----------------------------------------------------------------------------
-(define (stealth-apply fgob kobj)
-  (kern-obj-set-visible kobj #f))
-
-(define (stealth-exec fgob kobj hook)
-  (println "stealth-exec, hook=" hook)
-  (cond ((= hook start-of-turn-hook)
-         (let ((mp (kern-char-get-mana kobj)))
-           (println "mp=" mp)
-           (cond ((> mp 0)
-                  (kern-char-dec-mana kobj 1))
-                 (else
-                  (kern-log-msg (kern-obj-get-name kobj)
-                                " cannot maintain stealth!")
-                  (kern-obj-remove-effect kobj ef_stealth)))))
-        ((= hook move-done-hook)
-         (kern-log-msg (kern-obj-get-name kobj)
-                       " goes out of stealth mode!")
-         (kern-obj-remove-effect kobj ef_stealth))
-        (else
-         (println "stealth-exec: unknown hook " hook))))
-         
-
-(define (stealth-rm fgob kobj)
-  (kern-obj-set-visible kobj #t))
-
-;; ----------------------------------------------------------------------------
 ;; Stealth2
 ;;
 ;; Used by the Stealth skill. Similar to invisibility, but it decrements MP on
@@ -445,34 +425,42 @@
 ;; ----------------------------------------------------------------------------
 (define (stealth2-apply fgob kobj)
   (kern-obj-set-visible kobj #f)
-  (kern-obj-add-effect kobj ef_stealth_move nil)
-  )
+  (map (lambda (x) (kern-obj-add-effect kobj x nil))
+       stealth-co-effects))
 
 (define (stealth2-exec fgob kobj)
-  (println "stealth2-exec")
   (let ((mp (kern-char-get-mana kobj)))
-    (println "mp=" mp)
     (cond ((> mp 0)
-           (kern-char-dec-mana kobj 1))
+           (kern-char-dec-mana kobj 1)
+           ;; hack -- add the yuse-done hook now instead of in stealth2-apply
+           ;; application. Otherwise, as soon as the player y)uses stealth, the
+           ;; yuse-done hook immediately runs and removes stealth mode.
+           (if (not (has-effect? kobj ef_stealth_yuse))
+               (kern-obj-add-effect kobj ef_stealth_yuse nil))
+           )
           (else
-           (kern-log-msg (kern-obj-get-name kobj)
-                         " cannot maintain stealth!")
+           (kern-log-msg (kern-obj-get-name kobj) " cannot maintain stealth!")
            (kern-obj-remove-effect kobj ef_stealth)))))
 
 (define (stealth2-rm fgob kobj)
   (kern-obj-set-visible kobj #t)
-  (kern-obj-remove-effect kobj ef_stealth_move)
+  (map (lambda (x) (kern-obj-remove-effect kobj x))
+       stealth-co-effects)
+  ;; And treat yuse as a special case
+  (kern-obj-remove-effect kobj ef_stealth_yuse)
   )
 
-(define (stealth-move-exec fgob kobj)
-  (cond ((has-effect? kobj ef_stealth)
-         (kern-log-msg (kern-obj-get-name kobj)
-                       " goes out of stealth mode!")
-         (kern-obj-remove-effect kobj ef_stealth))
-        (else
-         (println "stealth-move-exec: why am I here?")
-         (kern-obj-remove-effect kobj ef_stealth_move)
-         )))
+(define (stealth-move-exec fgob kobj kplace x y)
+  (kern-log-msg (kern-obj-get-name kobj) " goes out of stealth mode!")
+  (kern-obj-remove-effect kobj ef_stealth))
+
+(define (stealth-attack-exec fgob kobj karms ktarg)
+  (kern-log-msg (kern-obj-get-name kobj) " goes out of stealth mode!")
+  (kern-obj-remove-effect kobj ef_stealth))
+
+(define (stealth-generic-exec fgob kobj)
+  (kern-log-msg (kern-obj-get-name kobj) " goes out of stealth mode!")
+  (kern-obj-remove-effect kobj ef_stealth))  
 
 ;; ----------------------------------------------------------------------------
 ;; Slime Split
@@ -667,6 +655,39 @@
 
 ;; Move-done hooks
 (mk-effect 'ef_stealth_move nil nil 'stealth-move-exec nil nil nil move-done-hook "" 0 #t -1)
+
+;; Attack-done hooks
+(mk-effect 'ef_stealth_attack nil nil 'stealth-attack-exec nil nil nil attack-done-hook "" 0 #t -1)
+
+;; Bunch of almost-generic co-effects for stealth
+(map (lambda (x)
+       (mk-effect (car x) nil nil 'stealth-generic-exec nil nil nil (cdr x) "" 0 #t -1))
+     (list
+      (cons 'ef_stealth_cast cast-done-hook)
+      (cons 'ef_stealth_yuse yuse-done-hook)
+      (cons 'ef_stealth_get get-done-hook)
+      (cons 'ef_stealth_handle handle-done-hook)
+      (cons 'ef_stealth_mix mix-done-hook)
+      (cons 'ef_stealth_open open-done-hook)
+      (cons 'ef_stealth_ready ready-done-hook)
+      (cons 'ef_stealth_drop drop-done-hook)
+      (cons 'ef_stealth_use use-done-hook)
+      ))
+
+(define stealth-co-effects
+  (list
+   ef_stealth_move
+   ef_stealth_attack
+   ef_stealth_cast
+   ;; ef_stealth_yuse -- nope, needs to be a special case
+   ef_stealth_get
+   ef_stealth_handle
+   ef_stealth_mix
+   ef_stealth_open
+   ef_stealth_ready
+   ef_stealth_drop
+   ef_stealth_use  
+   ))
 
 ;;----------------------------------------------------------------------------
 ;; Effect Test Procedures

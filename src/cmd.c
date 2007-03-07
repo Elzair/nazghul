@@ -1033,6 +1033,7 @@ bool cmdGet(class Object *actor)
         log_end_group();
 
         mapSetDirty();
+        actor->runHook(OBJ_HOOK_GET_DONE, 0);
         actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
 	return true;
@@ -1149,6 +1150,7 @@ bool cmdOpen(class Character * pc)
                  cmdwin_push("%s!", mech->getName());
                  mech->getObjectType()->open(mech, pc);
                  mapSetDirty();
+                 pc->runHook(OBJ_HOOK_OPEN_DONE, "p", mech);
                  pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
                  return true;
          }
@@ -1164,6 +1166,7 @@ bool cmdOpen(class Character * pc)
 
         log_begin_group();
 
+        pc->runHook(OBJ_HOOK_OPEN_DONE, "p", container);
         pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         cmdwin_push("%s!", container->getName());
 
@@ -1485,6 +1488,7 @@ bool cmdReady(class Character * member)
 
         if (committed) {
                 player_party->sortReadiedItems(member);
+                member->runHook(OBJ_HOOK_READY_DONE, 0);
                 member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         }
 
@@ -1755,6 +1759,7 @@ bool cmdHandle(class Character * pc)
         cmdwin_spush("%s", mechName);
         log_msg("%s handles %s", pc->getName(), mechName);
         mech->getObjectType()->handle(mech, pc);
+        pc->runHook(OBJ_HOOK_HANDLE_DONE, "p", mech);
         pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         mapSetDirty();
 
@@ -1804,6 +1809,8 @@ bool cmdUse(class Character * member, int flags)
         assert(item->isUsable());
 
 	item->use(member);
+        member->runHook(OBJ_HOOK_USE_DONE, "p", item);
+        member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 	statusRepaint();
 
 	return true;
@@ -2621,10 +2628,12 @@ bool cmdCastSpell(class Character * pc)
         cast = cmd_eval_and_log_result(result);
 
         if (! cast) {
+                log_end(NULL);
                 return false;
         }
 
         /* Decrement the caster's mana. */
+        pc->runHook(OBJ_HOOK_CAST_DONE, 0);
         pc->addMana(0 - spell->cost);
         pc->decActionPoints(max(spell->cost/2,1));
         pc->addExperience(spell->cost);
@@ -2830,8 +2839,10 @@ bool cmdMixReagents(class Character *character)
         foogodSetMode(FOOGOD_DEFAULT);
 
         // committed to action now, so decrement AP
-        if (character)
+        if (character) {
+                character->runHook(OBJ_HOOK_MIX_DONE, 0);
                 character->decActionPoints(1);
+        }
 
 	// If the spell is invalid or the reagents are incorrect then punish
 	// the player.
@@ -3795,6 +3806,8 @@ void cmdDrop(class Character *actor)
 
         /* remove from party inventory */
         actor->takeOut(ie->type, quantity);
+        actor->runHook(OBJ_HOOK_DROP_DONE, "pd", ie->type, quantity);
+        actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
         statusRepaint();
         mapUpdate(REPAINT_IF_DIRTY);
@@ -4125,6 +4138,7 @@ void cmdYuse(class Character *actor)
         
         /* change ap/mp/xp and consume materials */
         if (yused) {
+                actor->runHook(OBJ_HOOK_YUSE_DONE, 0);
                 actor->addMana(0 - skill->mp);
                 actor->decActionPoints(skill->ap);
                 actor->addExperience(ssent->level);

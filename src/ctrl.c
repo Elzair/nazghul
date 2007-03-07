@@ -403,6 +403,14 @@ static int ctrl_calc_armor(class Character *target, int critical)
         return armor;
 }
 
+static void ctrl_attack_done(class Character *character, class ArmsType *weapon, 
+                             class Character *target)
+{
+        character->runHook(OBJ_HOOK_ATTACK_DONE, "pp", weapon, target);
+        character->decActionPoints(weapon->getRequiredActionPoints());
+        character->useAmmo(weapon);
+}
+
 void ctrl_do_attack(class Character *character, class ArmsType *weapon, 
                     class Character *target, int to_hit_penalty)
 {
@@ -426,8 +434,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                 );
 
         miss = ! weapon->fire(target, character->getX(), character->getY());
-        character->decActionPoints(weapon->getRequiredActionPoints());
-        character->useAmmo(weapon);
+        ctrl_attack_done(character, weapon, target);
 
         if (miss) {
                 log_end("obstructed!");
@@ -711,8 +718,8 @@ static void ctrl_attack_ui(class Character *character)
                                      character->getY(), 
                                      x, 
                                      y);
-                        character->decActionPoints(weapon->getRequiredActionPoints());
-                        character->useAmmo(weapon);
+
+                        ctrl_attack_done(character, weapon, NULL);
 	
                         cmdwin_spush("%s", terrain->name);
 

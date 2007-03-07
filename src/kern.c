@@ -4234,7 +4234,6 @@ KERN_API_CALL(kern_mk_effect)
         pointer rm_proc = sc->NIL;
         pointer restart_proc = sc->NIL;
         void *sprite;
-        void *dummy;
         pointer ret;
         char *name, *tag = 0;
         int hook_id;

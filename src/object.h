@@ -69,8 +69,9 @@
 #define OBJ_HOOK_READY_DONE    16 /* character finished equipping            */
 #define OBJ_HOOK_TALK_DONE     17 /* character finished talking              */
 #define OBJ_HOOK_USE_DONE      18 /* character finished using something      */
-#define OBJ_HOOK_KAMP_START    19 /* character about to start camping        */
-#define OBJ_NUM_HOOKS          20 /* total number of object hooks            */
+#define OBJ_HOOK_MIX_DONE      19 /* character finished using something      */
+#define OBJ_HOOK_KAMP_START    20 /* character about to start camping        */
+#define OBJ_NUM_HOOKS          21 /* total number of object hooks            */
 
 /* Relocation flags. Used to avoid triggers in special cases. */
 #define REL_NOSTEP    (1<<0)                     /* don't trigger "step"     */
