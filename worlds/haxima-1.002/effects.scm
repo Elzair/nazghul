@@ -334,7 +334,10 @@
   (kern-obj-dec-light kobj torchlight-amount))
 
 (define (torchlight-apply fgob kobj)
-  (kern-obj-inc-light kobj torchlight-amount))
+  (kern-obj-inc-light kobj torchlight-amount)
+  ;; Lighting up a torch will undo stealth mode
+  (kern-obj-remove-effect kobj ef_stealth)
+  )
 
 ;; ----------------------------------------------------------------------------
 ;; Weak light
@@ -417,49 +420,46 @@
   (kern-obj-set-visible kobj #f))
 
 ;; ----------------------------------------------------------------------------
-;; Stealth2
+;; Stealth
 ;;
 ;; Used by the Stealth skill. Similar to invisibility, but it decrements MP on
 ;; every turn. Also, on anything that involves movement it rolls to remove
 ;; itself.
 ;; ----------------------------------------------------------------------------
-(define (stealth2-apply fgob kobj)
+(define (stealth-apply fgob kobj)
   (kern-obj-set-visible kobj #f)
   (map (lambda (x) (kern-obj-add-effect kobj x nil))
        stealth-co-effects))
 
-(define (stealth2-exec fgob kobj)
+(define (stealth-exec fgob kobj)
   (let ((mp (kern-char-get-mana kobj)))
     (cond ((> mp 0)
            (kern-char-dec-mana kobj 1)
-           ;; hack -- add the yuse-done hook now instead of in stealth2-apply
+           ;; hack -- add the yuse-done hook now instead of in stealth-apply
            ;; application. Otherwise, as soon as the player y)uses stealth, the
            ;; yuse-done hook immediately runs and removes stealth mode.
            (if (not (has-effect? kobj ef_stealth_yuse))
                (kern-obj-add-effect kobj ef_stealth_yuse nil))
            )
           (else
-           (kern-log-msg (kern-obj-get-name kobj) " cannot maintain stealth!")
            (kern-obj-remove-effect kobj ef_stealth)))))
 
-(define (stealth2-rm fgob kobj)
+(define (stealth-rm fgob kobj)
   (kern-obj-set-visible kobj #t)
   (map (lambda (x) (kern-obj-remove-effect kobj x))
        stealth-co-effects)
   ;; And treat yuse as a special case
   (kern-obj-remove-effect kobj ef_stealth_yuse)
+  (kern-log-msg (kern-obj-get-name kobj) " goes out of stealth mode!")
   )
 
 (define (stealth-move-exec fgob kobj kplace x y)
-  (kern-log-msg (kern-obj-get-name kobj) " goes out of stealth mode!")
   (kern-obj-remove-effect kobj ef_stealth))
 
 (define (stealth-attack-exec fgob kobj karms ktarg)
-  (kern-log-msg (kern-obj-get-name kobj) " goes out of stealth mode!")
   (kern-obj-remove-effect kobj ef_stealth))
 
 (define (stealth-generic-exec fgob kobj)
-  (kern-log-msg (kern-obj-get-name kobj) " goes out of stealth mode!")
   (kern-obj-remove-effect kobj ef_stealth))  
 
 ;; ----------------------------------------------------------------------------
@@ -611,8 +611,8 @@
 (mk-effect 'ef_permanent_invisibility "Invisible"     s_invis       nil          'invisibility-apply 'invisibility-rm 'invisibility-apply start-of-turn-hook "N" 0   #t  -1)
 (mk-effect 'ef_spider_calm            "Spider calm"   s_spider_calm nil          'spider-calm-apply  'spider-calm-rm   nil                start-of-turn-hook ""  0   #f  60) 
 (mk-effect 'ef_disease                "Diseased"      s_disease    'disease-exec  nil                 nil              nil                start-of-turn-hook "D" 0   #f  -2)
-(mk-effect 'ef_graphics_update        nil             nil          'update-graphics nil               nil              'update-graphics   start-of-turn-hook ""  0   #f  -1)
-(mk-effect 'ef_stealth                "Stealth"       nil          'stealth2-exec 'stealth2-apply    'stealth2-rm     'stealth2-apply     start-of-turn-hook ""  0   #f  -1)
+(mk-effect 'ef_graphics_update        nil             nil          'update-graphics nil               nil             'update-graphics    start-of-turn-hook ""  0   #f  -1)
+(mk-effect 'ef_stealth                "Stealth"       nil          'stealth-exec 'stealth-apply      'stealth-rm      'stealth-apply      start-of-turn-hook ""  0   #f  -1)
 
 ;; Add-hook hooks
 (mk-effect 'ef_poison_immunity               "Poison immunity"    s_im_poison   'poison-immunity-exec    nil nil nil add-hook-hook "I" 0   #f  -1)
