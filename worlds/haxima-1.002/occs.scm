@@ -33,32 +33,33 @@
 ;Thiefliness
 
 (define (occ-ability-thief kchar)
-	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 0)))
-		(if (null? occ-abil)
-			(floor 
-				(/ (+ (kern-char-get-level kchar) 
-					(kern-char-get-dexterity kchar)) 4))
-			(occ-abil kchar)
-			)))
+  (println "occ-ability-thief")
+  (let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 0)))
+    (if (null? occ-abil)
+        (floor 
+         (/ (+ (kern-char-get-level kchar) 
+               (kern-char-get-dexterity kchar)) 4))
+        (occ-abil kchar)
+        )))
 
 
 (occ-set-abil oc_wrogue 0
-	(lambda (kchar)
+              (lambda (kchar)
 		(floor 
-			(+ (kern-char-get-level kchar)
-				(/ (kern-char-get-dexterity kchar) 3)))
-	))
+                 (+ (kern-char-get-level kchar)
+                    (/ (kern-char-get-dexterity kchar) 3)))
+                ))
 
 (let ((partskill
-	(lambda (kchar)
-		(floor 
-			(+ (/ (kern-char-get-level kchar) 2)
-				(/ (kern-char-get-dexterity kchar) 4)
-			)))))
-	(occ-set-abil oc_wright 0 partskill)
-	(occ-set-abil oc_ranger 0 partskill)
-	(occ-set-abil oc_wanderer 0 partskill)
-	)
+       (lambda (kchar)
+         (floor 
+          (+ (/ (kern-char-get-level kchar) 2)
+             (/ (kern-char-get-dexterity kchar) 4)
+             )))))
+  (occ-set-abil oc_wright 0 partskill)
+  (occ-set-abil oc_ranger 0 partskill)
+  (occ-set-abil oc_wanderer 0 partskill)
+  )
 
 (define (occ-thief-dice-roll kchar)
   (kern-dice-roll (string-append "1d" 

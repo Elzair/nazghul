@@ -453,13 +453,36 @@
   (kern-log-msg (kern-obj-get-name kobj) " goes out of stealth mode!")
   )
 
+;; At basic skill levels any movement will undo stealth mode. As the character
+;; advances its ability to remain hidden while moving increases naturally. With
+;; a DC of 16, An L3 wrogue with dexterity 10 will give itself away with
+;; movement about 50% of the time.
+(define (stealth-do-simple-exec fgob kobj)
+  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
+         11)
+      (kern-obj-remove-effect kobj ef_stealth)))
+
 (define (stealth-move-exec fgob kobj kplace x y)
-  (kern-obj-remove-effect kobj ef_stealth))
+  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
+         11)
+      (kern-obj-remove-effect kobj ef_stealth)))
 
-(define (stealth-attack-exec fgob kobj karms ktarg)
-  (kern-obj-remove-effect kobj ef_stealth))
+(define (stealth-do-challenging-exec fgob kobj)
+  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
+         16)
+      (kern-obj-remove-effect kobj ef_stealth)))
 
-(define (stealth-generic-exec fgob kobj)
+(define (stealth-do-masterful-exec fgob kobj)
+  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
+         26)
+  (kern-obj-remove-effect kobj ef_stealth)))
+
+(define (stealth-attack-exec fgob kobj kweap ktarg)
+  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
+         26)
+  (kern-obj-remove-effect kobj ef_stealth)))
+
+(define (stealth-do-impossible-exec fgob kobj)
   (kern-obj-remove-effect kobj ef_stealth))  
 
 ;; ----------------------------------------------------------------------------
@@ -661,17 +684,17 @@
 
 ;; Bunch of almost-generic co-effects for stealth
 (map (lambda (x)
-       (mk-effect (car x) nil nil 'stealth-generic-exec nil nil nil (cdr x) "" 0 #t -1))
+       (mk-effect (car x) nil nil (caddr x) nil nil nil (cadr x) "" 0 #t -1))
      (list
-      (cons 'ef_stealth_cast cast-done-hook)
-      (cons 'ef_stealth_yuse yuse-done-hook)
-      (cons 'ef_stealth_get get-done-hook)
-      (cons 'ef_stealth_handle handle-done-hook)
-      (cons 'ef_stealth_mix mix-done-hook)
-      (cons 'ef_stealth_open open-done-hook)
-      (cons 'ef_stealth_ready ready-done-hook)
-      (cons 'ef_stealth_drop drop-done-hook)
-      (cons 'ef_stealth_use use-done-hook)
+      (list 'ef_stealth_cast   cast-done-hook   'stealth-do-masterful-exec)
+      (list 'ef_stealth_yuse   yuse-done-hook   'stealth-do-masterful-exec)
+      (list 'ef_stealth_get    get-done-hook    'stealth-do-simple-exec)
+      (list 'ef_stealth_handle handle-done-hook 'stealth-do-challenging-exec)
+      (list 'ef_stealth_mix    mix-done-hook    'stealth-do-challenging-exec)
+      (list 'ef_stealth_open   open-done-hook   'stealth-do-challenging-exec)
+      (list 'ef_stealth_ready  ready-done-hook  'stealth-do-challenging-exec)
+      (list 'ef_stealth_drop   drop-done-hook   'stealth-do-simple-exec)
+      (list 'ef_stealth_use    use-done-hook    'stealth-do-simple-exec)
       ))
 
 (define stealth-co-effects
