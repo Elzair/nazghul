@@ -60,6 +60,8 @@
 #define FRAME_DOT  15
 #define FRAME_NUM_SPRITES 16
 
+extern int DeveloperMode; /* global in nazghul.c */
+
 static SDL_Surface *Screen;
 static SDL_Surface *Shaders[N_SHADERS];
 static SDL_Surface *Highlight;
@@ -110,6 +112,91 @@ void screenInitColors(void)
 	Gray    = SDL_MapRGB(Screen->format, 0x80, 0x80, 0x80);
 }
 
+void dump_SDL_PixelFormat(SDL_PixelFormat *fmt)
+{
+        printf("Pixel Format:\n");
+        printf("     palette: %p\n", fmt->palette);
+        printf("BitsPerPixel: %d\n", fmt->BitsPerPixel);
+        printf("       Rmask: 0x%x\n", fmt->Rmask);
+        printf("       Gmask: 0x%x\n", fmt->Gmask);
+        printf("       Bmask: 0x%x\n", fmt->Bmask);
+        printf("       Amask: 0x%x\n", fmt->Amask);
+        printf("      Rshift: %d\n", fmt->Rshift);
+        printf("      Gshift: %d\n", fmt->Gshift);
+        printf("      Bshift: %d\n", fmt->Bshift);
+        printf("      Ashift: %d\n", fmt->Ashift);
+        printf("       Rloss: %d\n", fmt->Rloss);
+        printf("       Gloss: %d\n", fmt->Gloss);
+        printf("       Bloss: %d\n", fmt->Bloss);
+        printf("       Aloss: %d\n", fmt->Aloss);
+        printf("    colorkey: 0x%x\n", fmt->colorkey);
+        printf("       alpha: 0x%x\n", fmt->alpha);               
+}
+
+void dump_SDL_VideoInfo(const SDL_VideoInfo *fmt)
+{
+        printf("Video Info:\n");
+        printf(" hw_available: %c\n", fmt->hw_available ? 'y' : 'n');
+        printf(" wm_available: %c\n", fmt->wm_available ? 'y' : 'n');
+        printf("      blit_hw: %c\n", fmt->blit_hw ? 'y' : 'n');
+        printf("   blit_hw_CC: %c\n", fmt->blit_hw_CC ? 'y' : 'n');
+        printf("    blit_hw_A: %c\n", fmt->blit_hw_A ? 'y' : 'n');
+        printf("      blit_sw: %c\n", fmt->blit_sw ? 'y' : 'n');
+        printf("   blit_sw_CC: %c\n", fmt->blit_sw_CC ? 'y' : 'n');
+        printf("    blit_sw_A: %c\n", fmt->blit_sw_A ? 'y' : 'n');
+        printf("    blit_fill: %c\n", fmt->blit_fill ? 'y' : 'n');
+        printf("    video_mem: %d\n", fmt->video_mem);
+        dump_SDL_PixelFormat(fmt->vfmt);
+}
+
+void dump_SDL_Surface(SDL_Surface *surf)
+{
+        printf("Surface Info:\n");
+        printf("     flags:\n");
+        if (surf->flags & SDL_SWSURFACE)
+                printf("  SDL_SWSURFACE\n");
+        if (surf->flags & SDL_HWSURFACE)
+                printf("  SDL_HWSURFACE\n");
+        if (surf->flags & SDL_ASYNCBLIT)
+                printf("  SDL_ASYNCBLIT\n");
+        if (surf->flags & SDL_ANYFORMAT)
+                printf("  SDL_ANYFORMAT\n");
+        if (surf->flags & SDL_HWPALETTE)
+                printf("  SDL_HWPALETTE\n");
+        if (surf->flags & SDL_DOUBLEBUF)
+                printf("  SDL_DOUBLEBUF\n");
+        if (surf->flags & SDL_FULLSCREEN)
+                printf("  SDL_FULLSCREEN\n");
+        if (surf->flags & SDL_OPENGL)
+                printf("  SDL_OPENGL\n");
+        if (surf->flags & SDL_OPENGLBLIT)
+                printf("  SDL_OPENGLBLIT\n");
+        if (surf->flags & SDL_RESIZABLE)
+                printf("  SDL_RESIZABLE\n");
+        if (surf->flags & SDL_HWACCEL)
+                printf("  SDL_HWACCEL\n");
+        if (surf->flags & SDL_SRCCOLORKEY)
+                printf("  SDL_SRCCOLORKEY\n");
+        if (surf->flags & SDL_RLEACCEL)
+                printf("  SDL_RLEACCEL\n");
+        if (surf->flags & SDL_SRCALPHA)
+                printf("  SDL_SRCALPHA\n");
+        if (surf->flags & SDL_PREALLOC)
+                printf("  SDL_PREALLOC\n");
+        printf("         w: %d\n", surf->w);
+        printf("         h: %d\n", surf->h);
+        printf("     pitch: %d\n", surf->pitch);
+        printf("    pixels: %p\n", surf->pixels);
+        printf(" clip_rect: [%d %d %d %d]\n",
+               surf->clip_rect.x,
+               surf->clip_rect.y,
+               surf->clip_rect.w,
+               surf->clip_rect.h);
+        printf("  refcount: %d\n", surf->refcount);
+        dump_SDL_PixelFormat(surf->format);
+        
+}
+
 void screenInitScreen(void)
 {
 	Uint32 flags = 0;
@@ -129,6 +216,10 @@ void screenInitScreen(void)
 		exit(-1);
 	}
 
+        if (DeveloperMode) {
+                dump_SDL_VideoInfo(fmt);
+        }
+
 	if (fmt->blit_hw_CC &&
 	    fmt->blit_fill &&
 	    ((fmt->video_mem * 1024) >
@@ -142,10 +233,11 @@ void screenInitScreen(void)
 		perror_sdl("SDL_SetVideoMode");
 		exit(-1);
 	}
-	// printf("Set video mode: [%dx%d] %d bpp (%s)\n", 
-	// Screen->w, Screen->h,
-	// Screen->format->BitsPerPixel, 
-	// flags & SDL_HWSURFACE ? "hw" : "sw");
+
+        if (DeveloperMode) {
+                printf("Video initialized to...\n");
+                dump_SDL_Surface(Screen);
+        }
 
 	SDL_WM_SetCaption(APPLICATION_NAME, APPLICATION_NAME);
 }
