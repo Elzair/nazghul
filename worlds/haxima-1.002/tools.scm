@@ -25,7 +25,7 @@
 (kern-mk-sprite 's_mirror_bg   ss_tools 1 18 #f 0)
 (kern-mk-sprite 's_bookshelf   ss_tools 1 23 #f 0)
 (kern-mk-sprite 's_grease      ss_tools 1 24 #f 0)
-
+(kern-mk-sprite 's_rope_hook   ss_tools 1 25 #f 0)
 
 
 ;; torch -- use two in-lor spells
@@ -50,25 +50,26 @@
       (floor (/ (+ (kern-char-get-level kuser) (kern-char-get-dexterity kuser)) 4)))
       )
 (mk-reusable-item 't_picklock "picklock" s_picklock 2
-                (lambda (kobj kuser)
-                  (let ((ktarg (ui-target (kern-obj-get-location kuser)
-                                          1 
-                                          (mk-ifc-query 'unlock))))
-                    (if (null? ktarg)
-                        (begin
-                          (kern-log-msg "No effect!")
-                          nil)
-                        (let ((roll (kern-dice-roll "1d20"))
-							  (bonus (kern-dice-roll (string-append "1d" (number->string (occ-ability-thief kuser)))))
-								)
-                          (println "rolled " roll " + " bonus)
-                          (if (= roll 20)
-                              (pick-lock-ok kuser ktarg)
-                              (if (> (+ roll bonus ) 
-                                     15)
-                                  (pick-lock-ok kuser ktarg)
-                                  (pick-lock-failed kuser kobj)
-                                  )))))))
+                  (lambda (kobj kuser)
+                    (let ((ktarg (ui-target (kern-obj-get-location kuser)
+                                            1 
+                                            (mk-ifc-query 'unlock))))
+                      (if (null? ktarg)
+                          (begin
+                            (kern-log-msg "No effect!")
+                            nil)
+                          (let ((roll (kern-dice-roll "1d20"))
+                                (bonus (kern-dice-roll (string-append "1d" 
+                                                                      (number->string (occ-ability-thief kuser)))))
+                                )
+                            (println "rolled " roll " + " bonus)
+                            (if (= roll 20)
+                                (pick-lock-ok kuser ktarg)
+                                (if (> (+ roll bonus ) 
+                                       15)
+                                    (pick-lock-ok kuser ktarg)
+                                    (pick-lock-failed kuser kobj)
+                                    )))))))
 
 ;; gem -- use peer spell
 (mk-usable-item 't_gem "gem" s_gem 2
@@ -339,3 +340,18 @@
 
 ;; grease -- inert object, required for the Wriggle skill
 (mk-obj-type 't_grease "grease" s_grease layer-item obj-ifc)
+
+;;----------------------------------------------------------------------------
+;; rope-and-hook -- use the wrogue's Reach skill. Works like telekineses but
+;; range is limited by wrogue ability.
+;;
+(mk-reusable-item 
+ 't_rope_hook "rope & hook" s_rope_hook 2
+ (lambda (kobj kuser)
+   (cond ((not (has-skill? kuser sk_reach)) result-lacks-skill)
+         (else
+          (cast-ui-ranged-any powers-telekinesis
+                              kuser
+                              (powers-telekinesis-range (occ-ability-thief kuser))
+                              (occ-ability-thief kuser)
+                              kern-obj-is-mech?)))))

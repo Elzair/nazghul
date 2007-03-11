@@ -1873,14 +1873,14 @@ bool ObjectType::canBump()
         return (gifc_cap & GIFC_CAN_BUMP);
 }
 
-void ObjectType::open(Object *obj, Object *opener)
+int ObjectType::open(Object *obj, Object *opener)
 {
-        closure_exec(gifc, "ypp", "open", obj, opener);
+        return closure_exec(gifc, "ypp", "open", obj, opener);
 }
 
-void ObjectType::bump(Object *obj, Object *bumper)
+int ObjectType::bump(Object *obj, Object *bumper)
 {
-        closure_exec(gifc, "ypp", "open", obj, bumper);
+        return closure_exec(gifc, "ypp", "open", obj, bumper);
 }
 
 bool ObjectType::canHandle()
@@ -1888,9 +1888,9 @@ bool ObjectType::canHandle()
         return (gifc_cap & GIFC_CAN_HANDLE);
 }
 
-void ObjectType::handle(Object *obj, Object *handler)
+int ObjectType::handle(Object *obj, Object *handler)
 {
-        closure_exec(gifc, "ypp", "handle", obj, handler);
+        return closure_exec(gifc, "ypp", "handle", obj, handler);
 }
 
 bool ObjectType::canHitLocation()
@@ -1898,44 +1898,44 @@ bool ObjectType::canHitLocation()
         return (gifc_cap & GIFC_CAN_HIT_LOCATION);
 }
 
-void ObjectType::hitLocation(Object *obj, struct place *place, int x, int y)
+int ObjectType::hitLocation(Object *obj, struct place *place, int x, int y)
 {
-        closure_exec(gifc, "yppdd", "hit-loc", obj, place, x, y);
+        return closure_exec(gifc, "yppdd", "hit-loc", obj, place, x, y);
 }
 
-void ObjectType::step(Object *obj, Object *stepper)
+int ObjectType::step(Object *obj, Object *stepper)
 {
-        closure_exec(gifc, "ypp", "step", obj, stepper);
+        return closure_exec(gifc, "ypp", "step", obj, stepper);
 }
 
-void ObjectType::sense(Object *obj, Object *stepper)
+int ObjectType::sense(Object *obj, Object *stepper)
 {
-		closure_exec(gifc, "ypp", "sense", obj, stepper);
+        return closure_exec(gifc, "ypp", "sense", obj, stepper);
 }
 
-void ObjectType::xamine(Object *obj, Object *xaminer)
+int ObjectType::xamine(Object *obj, Object *xaminer)
 {
-		closure_exec(gifc, "ypp", "xamine", obj, xaminer);
+        return closure_exec(gifc, "ypp", "xamine", obj, xaminer);
 }
 
-void ObjectType::attack(Object *obj, Object *stepper)
+int ObjectType::attack(Object *obj, Object *stepper)
 {
-        closure_exec(gifc, "ypp", "attack", obj, stepper);
+        return closure_exec(gifc, "ypp", "attack", obj, stepper);
 }
 
-void ObjectType::enter(Object *obj, Object *stepper)
+int ObjectType::enter(Object *obj, Object *stepper)
 {
-        closure_exec(gifc, "ypp", "enter", obj, stepper);
+        return closure_exec(gifc, "ypp", "enter", obj, stepper);
 }
 
-void ObjectType::exec(Object *obj)
+int ObjectType::exec(Object *obj)
 {
-        closure_exec(gifc, "yp", "exec", obj);
+        return closure_exec(gifc, "yp", "exec", obj);
 }
 
-void ObjectType::use(Object *user)
+int ObjectType::use(Object *user)
 {
-        closure_exec(gifc, "ypp", "use", this, user);
+        return closure_exec(gifc, "ypp", "use", this, user);
 }
 
 int ObjectType::cast(Object *caster)
@@ -1943,19 +1943,19 @@ int ObjectType::cast(Object *caster)
         return closure_exec(gifc, "yp", "cast", caster);
 }
 
-void ObjectType::get(Object *obj, Object *getter)
+int ObjectType::get(Object *obj, Object *getter)
 {
-        closure_exec(gifc, "ypp", "get", obj, getter);
+        return closure_exec(gifc, "ypp", "get", obj, getter);
 }
 
-void ObjectType::buy(Object *buyer, int q)
+int ObjectType::buy(Object *buyer, int q)
 {
-        closure_exec(gifc, "ypd", "buy", buyer, q);
+        return closure_exec(gifc, "ypd", "buy", buyer, q);
 }
 
-void ObjectType::search(Object *obj, Object *searcher)
+int ObjectType::search(Object *obj, Object *searcher)
 {
-        closure_exec(gifc, "ypp", "search", obj, searcher);
+        return closure_exec(gifc, "ypp", "search", obj, searcher);
 }
 
 closure_t *ObjectType::getGifc()

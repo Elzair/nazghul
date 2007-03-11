@@ -60,9 +60,7 @@
         (eqv? ktype F_energy_perm)))
 
 (define (is-immune-to-field? kchar kfield)
-  (println "is-immune-to-field?")
   (let ((ktype (kern-obj-get-type kfield)))
-    (println "it's a " (kern-type-get-name ktype))
     (cond ((is-fire-field? ktype) (has-fire-immunity? kchar))
           ((is-poison-field? ktype) (has-poison-immunity? kchar))
           ((is-sleep-field? ktype) (has-sleep-immunity? kchar))

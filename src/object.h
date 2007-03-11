@@ -195,21 +195,23 @@ class ObjectType {
         bool canSearch(); // has a hook for 'search'
         bool isQuestItem();
 
-        void use(Object *user);
-        void exec(Object *obj);
-        void get(Object *obj, Object *getter);
-        void open(Object *obj, Object *opener);
-        void step(Object *obj, Object *stepper);
-        void sense(Object *obj, Object *stepper);
-        void xamine(Object *obj, Object *xaminer);		
-        void handle(Object *obj, Object *handler);
-        void attack(Object *obj, Object *attacker);
-        void enter(Object *obj, Object *enterer);
+        // These return the result of closure_exec:
+        int use(Object *user);
+        int exec(Object *obj);
+        int get(Object *obj, Object *getter);
+        int open(Object *obj, Object *opener);
+        int step(Object *obj, Object *stepper);
+        int sense(Object *obj, Object *stepper);
+        int xamine(Object *obj, Object *xaminer);		
+        int handle(Object *obj, Object *handler);
+        int attack(Object *obj, Object *attacker);
+        int enter(Object *obj, Object *enterer);
         int cast(Object *caster);
-        void bump(Object *obj, Object *bumper);
-        void hitLocation(Object *obj, struct place *place, int x, int y);
-        void buy(Object *buyer, int q);
-        void search(Object *obj, Object *searcher);
+        int bump(Object *obj, Object *bumper);
+        int hitLocation(Object *obj, struct place *place, int x, int y);
+        int buy(Object *buyer, int q);
+        int search(Object *obj, Object *searcher);
+
         closure_t *getGifc();
         void setGifc(closure_t *gifc, int cap);
 

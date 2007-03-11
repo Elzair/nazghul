@@ -755,7 +755,9 @@
 ;todo damage/knock away critters?
 ;should fail on no handler squares rather than aborting?
 (define (powers-telekinesis caster ktarg power)
-	((kobj-ifc ktarg) 'handle ktarg caster))
+  ((kobj-ifc ktarg) 'handle ktarg caster)
+  (println "result-ok")
+  result-ok)
 	
 (define (powers-timestop caster dir power)
 	(kern-add-time-stop (kern-dice-roll

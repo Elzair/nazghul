@@ -8,6 +8,7 @@
 (define result-no-target   1)
 (define result-no-effect   2)
 (define result-no-hostiles 3)
+(define result-lacks-skill 4)
 
 ;; Override the default error hook to warn the loader when the interpreter
 ;; encounters any errors during evaluation.

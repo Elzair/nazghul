@@ -162,6 +162,18 @@
                  nil            ;; material
                  ))
 
+(define sk_reach
+  (kern-mk-skill "Reach" "Handle objects more than one tile away"
+                 1              ;; ap
+                 1              ;; mp
+                 #f             ;; wilderness?
+                 #t             ;; passive?
+                 nil            ;; yusage 
+                 nil            ;; yusage check
+                 nil            ;; tools
+                 nil            ;; material
+                 ))
+
 ;;----------------------------------------------------------------------------
 ;; Skill Set declarations
 
@@ -174,6 +186,7 @@
                                     (list 1 sk_wriggle)
                                     (list 1 sk_disarm_trap)
                                     (list 1 sk_stealth)
+                                    (list 1 sk_reach)
                                     )))
 
 (define sks_wanderer sks_wrogue)

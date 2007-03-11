@@ -1775,6 +1775,7 @@ bool cmdUse(class Character * member, int flags)
 {
 	struct inv_entry *ie;
 	class ObjectType *item;
+        int result;
 
 	cmdwin_clear();
 	cmdwin_spush("Use");
@@ -1808,9 +1809,20 @@ bool cmdUse(class Character * member, int flags)
 	item = ie->type;
         assert(item->isUsable());
 
-	item->use(member);
-        member->runHook(OBJ_HOOK_USE_DONE, "p", item);
-        member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
+        // Use the item
+	result = item->use(member);
+
+        // Post-processing: I wanted to add yuse-style console messages here
+        // but found that the item scripts have a different return-code
+        // convention than spells and skills. Need to fix that up before trying
+        // to do this:
+        //// log_begin("%s: %s - ", member->getName(), item->getName());
+        //// cmd_eval_and_log_result(result);
+        //// log_end(0);
+        //// member->runHook(OBJ_HOOK_USE_DONE, "p", item);
+
+        // Item's appear to decrement AP in the script...
+        //member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 	statusRepaint();
 
 	return true;

@@ -120,7 +120,6 @@
 		checkproc))
 
 (define (cast-ui-dospell target effect caster power)
-  (println "cast-ui-dospell")
   (cond ((null? target) result-no-target)
         ((kern-in-los? (kern-obj-get-location caster) (kern-obj-get-location target))
          ;; note in this case we should let the effect procedure determine the

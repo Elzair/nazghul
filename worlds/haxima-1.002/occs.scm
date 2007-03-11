@@ -33,7 +33,6 @@
 ;Thiefliness
 
 (define (occ-ability-thief kchar)
-  (println "occ-ability-thief")
   (let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 0)))
     (if (null? occ-abil)
         (floor 
