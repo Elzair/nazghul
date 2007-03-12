@@ -1816,10 +1816,10 @@ bool cmdUse(class Character * member, int flags)
         // but found that the item scripts have a different return-code
         // convention than spells and skills. Need to fix that up before trying
         // to do this:
-        //// log_begin("%s: %s - ", member->getName(), item->getName());
-        //// cmd_eval_and_log_result(result);
-        //// log_end(0);
-        //// member->runHook(OBJ_HOOK_USE_DONE, "p", item);
+        log_begin("%s: %s - ", member->getName(), item->getName());
+        cmd_eval_and_log_result(result);
+        log_end(0);
+        member->runHook(OBJ_HOOK_USE_DONE, "p", item);
 
         // Item's appear to decrement AP in the script...
         //member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);

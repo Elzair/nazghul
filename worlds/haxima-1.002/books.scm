@@ -8,6 +8,13 @@
 (kern-mk-sprite 's_manual  ss_books 1 1 #f 0)
 (kern-mk-sprite 's_scroll  ss_books 1 2 #f 0)
 
+;; Fixme: see if something like this will work for books:
+(define (mk-book tag name . text)
+  (mk-reusable-item 
+   tag name s_manual 1
+   (lambda ()
+     (kern-ui-page-text text))))
+
 ;;----------------------------------------------------------------------------
 ;; player manual
 (define (basic-survival-manual-commands)
@@ -40,7 +47,8 @@
    "CTRL-S)ave the game"
    "CTRL-R)eload a game"
    "SHIFT+ARROWKEY pan viewer"
-   ))
+   )
+  result-ok)
 
 (mk-reusable-item 't_manual "Basic Survival Manual" s_manual 1 
                   basic-survival-manual-commands)
@@ -58,7 +66,8 @@
    "point the way. Beware."
    ""
    "--Enchanter\n"
-   )))
+   )
+   result-ok))
 
 ;;----------------------------------------------------------------------------
 ;; book of the demon gate
@@ -80,7 +89,8 @@
    "...Nossifer awaits."
    ""
    "--Fildex the Unclean\n"
-   )))
+   )
+   result-ok))
 
 ;;----------------------------------------------------------------------------
 ;; Kathryn's Letter
@@ -93,7 +103,8 @@
    "The Enchanter has one of the Runes. Acquire "
    "it by any means necessary, and leave no one "
    "to tell the tale. Not even a ghost."
-   "--S")))
+   "--S")
+   result-ok))
 
 ;;----------------------------------------------------------------------------
 ;; Spell books
@@ -119,7 +130,8 @@
    "With the appropriate mixture, intone "
    "Ylem An Ex (Matter to Negate Freedom) and "
    "hurl the net of web at your foe."
-   )))
+   ) 
+   result-ok))
 
 (mk-reusable-item 
  't_bet_flam_hur_book "spell book: BFH" s_manual 1
@@ -136,7 +148,8 @@
    "The spell requires sulphurous ash to power the flame. The initial launch of the spell is provided by black pearl, and blood moss instills the motion of the spreading cone of fire."
    ""
    "With this mixture, intone Bet Flam Hur (Small Fire Wind) and direct the cone to engulf your foes."
-   )))
+   )
+   result-ok))
 
 (mk-reusable-item
  't_ranger_orders "Ranger orders" s_scroll 0
@@ -146,7 +159,8 @@
     ""
     "The bearer of this letter may conscript "
     "one (1) ranger into limited temporary "
-    "service.")))
+    "service.")
+   result-ok))
 
 (mk-reusable-item
  't_prisoner_receipt "Prisoner Receipt" s_scroll 0
@@ -155,7 +169,8 @@
     "Prisoner Receipt"
     ""
     "The bearer of this letter has delivered "
-    "one (1) prisoner to the gaoler.")))
+    "one (1) prisoner to the gaoler.")
+   result-ok))
 
 (mk-reusable-item
  't_basic_spell_book "Spell Book" s_manual 0
@@ -234,7 +249,8 @@
     "...              ...            SA, BM, MA "
     "Kal Xen Corp     Summon Undead  SS, MA, NI "
     "Vas Rel Por      Gate Travel    SA, MA, BP "
-    )))
+    )
+   result-ok))
    
 ;;----------------------------------------------------------------------------
 ;; Anaxes letters
@@ -266,4 +282,5 @@
     "                                             "
     "P.S. The Titans are safe. I have seen that   "
     "those who knew of them were slain.           "
-    )))
+    )
+   result-ok))

@@ -12,7 +12,7 @@
 (kern-mk-sprite 's_sanct_lor_scroll       ss_scrolls 1 4 #f 0) ;; invisibility
 (kern-mk-sprite 's_in_quas_xen_scroll     ss_scrolls 1 5 #f 0) ;; clone
 (kern-mk-sprite 's_in_vas_por_ylem_scroll ss_scrolls 1 6 #f 0) ;; tremor
-(kern-mk-sprite 's_an_xen_ex_scroll      ss_scrolls 1 7 #f 0) ;; charm
+(kern-mk-sprite 's_an_xen_ex_scroll       ss_scrolls 1 7 #f 0) ;; charm
 
 (kern-mk-sprite 's_in_an_scroll           ss_scrolls 1 8 #f 0) ;; negate
 (kern-mk-sprite 's_in_ex_por_scroll       ss_scrolls 1 9 #f 0) ;; unlock magic
@@ -24,10 +24,7 @@
 (define (mk-scroll tag name sprite spell)
   (mk-usable-item tag name sprite 1 
                   (lambda (kscrolltype kuser)
-                    (let ((result (apply spell (list kuser))))
-                      (if (eq? result result-ok)
-                          #t
-                          '())))))
+                    (apply spell (list kuser)))))
 
 (mk-scroll 't_an_tym_scroll "An Tym scroll" s_an_tym_scroll an-tym)
 (mk-scroll 't_in_mani_corp_scroll "In Mani Corp scroll" s_in_mani_corp_scroll in-mani-corp)
@@ -43,7 +40,9 @@
 (mk-scroll 't_wis_quas_scroll "Wis Quas scroll" s_wis_quas_scroll wis-quas)
 (mk-scroll 't_wis_an_ylem_scroll "Wis An Ylem scroll" s_wis_an_ylem_scroll wis-an-ylem)
 
-
 ;; Temp shims to keep saved games working
-(define t_an_xen_exe_scroll t_an_xen_ex_scroll)
-(define t_in_exe_por_scroll t_in_ex_por_scroll)
+;; Roll saved games with the new 0.6.x series
+;;(define t_an_xen_exe_scroll t_an_xen_ex_scroll)
+;;(define t_in_exe_por_scroll t_in_ex_por_
+;;Note: bug in scheme interpreter: w/o a newline below the next file (keys.scm,
+;;currently) will not be loaded properly.

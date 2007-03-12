@@ -4,23 +4,25 @@
 ;;----------------------------------------------------------------------------
 
 ;; ----------------------------------------------------------------------------
-;; use-item -- use an item and decrement the action points. The 'use' proc
-;; should return nil for abort, in which case this returns false.
+;; use-item -- use an item and decrement the action points, unless the usage
+;; result is an abort code (currently I think result-no-target is the only such
+;; case). The 'use' proc should return one of the result-* codes.
 ;; ----------------------------------------------------------------------------
 (define (use-item ktype kuser use ap)
-  (if (notnull? (use ktype kuser))
-      (begin
-        (kern-obj-dec-ap kuser ap)
-        #t)
-      #f))
+  (let ((result (use ktype kuser)))
+    (if (not (abortive-result? result))
+        (kern-obj-dec-ap kuser ap))
+    result))
 
 ;; ----------------------------------------------------------------------------
 ;; use-and-remove-item -- use an item type and remove it from the user's
-;; inventory.  The 'use' proc should return nil for abort.
+;; inventory.  The 'use' proc should return one of the standard result-* codes.
 ;; ----------------------------------------------------------------------------
 (define (use-and-remove-item ktype kuser use ap)
-  (if (use-item ktype kuser use ap)
-      (kern-obj-remove-from-inventory kuser ktype 1)))
+  (let ((result (use-item ktype kuser use ap)))
+    (if (not (abortive-result? result))
+        (kern-obj-remove-from-inventory kuser ktype 1))
+    result))
 
 ;; ----------------------------------------------------------------------------
 ;; mk-usable-item -- make a type for an object that can be U)sed by the
@@ -52,15 +54,15 @@
                        (method 'exec
                                (lambda (kitem)
                                  (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location kitem))))
-                                     (let ((kchars (filter 
-                                                    (lambda (kchar)
-                                                      (and (wants-it? kchar)
-                                                           (not (has-ap-debt? kchar))
-                                                           (not (is-player-party-member? kchar))))
-                                                    (get-beings-in-range kitem 
-                                                                         1))))
+                                     (let ((kchars (filter (lambda (kchar)
+                                                             (and (wants-it? kchar)
+                                                                  (not (has-ap-debt? kchar))
+                                                                  (not (is-player-party-member? kchar))))
+                                                           (get-beings-in-range kitem 
+                                                                                1))))
                                        (if (notnull? kchars)
-                                           (kobj-get kitem (car kchars))))))))))
+                                           (kobj-get kitem 
+                                                     (car kchars))))))))))
     (mk-obj-type tag name sprite layer-item item-ifc)))
   
                                               

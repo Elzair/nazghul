@@ -9,6 +9,13 @@
 (define result-no-effect   2)
 (define result-no-hostiles 3)
 (define result-lacks-skill 4)
+(define result-failed      5)
+(define result-not-here    6)
+
+;; Test if a result code indicates that the action was not completed
+(define (abortive-result? result)
+  (or (eq? result result-no-target)
+      (eq? result result-not-here)))
 
 ;; Override the default error hook to warn the loader when the interpreter
 ;; encounters any errors during evaluation.
@@ -718,11 +725,11 @@
 
 (define original-load load)  
 
-; (define (load file)
-;   (display (kern-get-ticks))
-;   (display " loading ")
-;   (display file)(newline)
-;   (original-load file))
+(define (load file)
+   (display (kern-get-ticks))
+   (display " loading ")
+   (display file)(newline)
+   (original-load file))
 
 (define (put obj x y) (list obj x y))
 

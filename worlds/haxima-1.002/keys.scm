@@ -9,9 +9,11 @@
      (let ((ktarg (ui-target (kern-obj-get-location kuser)
                              1 
                              (mk-ifc-query 'use-key))))
-       (cond ((null? ktarg) (kern-log-msg "No effect!"))
+       (cond ((null? ktarg) 
+              result-no-target)
              (else
-              (ifccall ktarg 'use-key ktype)))))))
+              (ifccall ktarg 'use-key ktype)
+              result-ok))))))
 
 (define (mk-key type)
   (kern-mk-obj type 1))
@@ -21,4 +23,4 @@
 ;; done in a place file. So by convention let's list them here.
 (mk-key-type 't_brundegardt_tower_4_key s_picklock)
 
-(println "made key: " t_brundegardt_tower_4_key)
+(println "made key:" 't_brundegardt_tower_4_key)

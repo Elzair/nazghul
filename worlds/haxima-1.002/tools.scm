@@ -37,12 +37,11 @@
 ;; picklock
 (define (pick-lock-ok kuser ktarg)
   (send-signal kuser ktarg 'unlock)
-  #t)
+  result-ok)
 (define (pick-lock-failed kuser ktool)
   (kern-log-msg "Picklock broke!")
   (kern-obj-remove-from-inventory kuser ktool 1)
-  #t
-  )
+  result-failed)
 (define (pick-lock-bonus kuser)
   (if (eqv? (kern-char-get-occ kuser)
             oc_wrogue)
@@ -74,7 +73,8 @@
 ;; gem -- use peer spell
 (mk-usable-item 't_gem "gem" s_gem 2
                 (lambda (kgem kuser)
-                  (powers-view kuser kuser 12) #t))
+                  (powers-view kuser kuser 12)
+                  result-ok))
 
 ;; sledge-hammer -- shatter rocks
 (mk-reusable-item 't_pick "pick" s_pick 2
@@ -82,29 +82,30 @@
                     (let ((loc (kern-ui-target (kern-obj-get-location kuser)
                                                1)))
                       (if (null? loc)
-                          nil
+                          result-no-target
                           (let ((kter (kern-place-get-terrain loc)))
-                            (if (eqv? kter t_boulder)
-                                (begin
-                                  (kern-log-msg (kern-obj-get-name kuser)
-                                                " pulverizes a boulder!")
-                                  (kern-place-set-terrain loc t_grass)
-                                  (if (> (kern-dice-roll "1d20") 16)
-                                      (begin
-                                        (kern-log-msg "The pick shatters!")
-                                        (kern-obj-remove-from-inventory kuser ktool 1))))
-                                (kern-log-msg "No effect!")))))))
-                          
+                            (cond ((eqv? kter t_boulder)
+                                   (kern-log-msg (kern-obj-get-name kuser)
+                                                 " pulverizes a boulder!")
+                                   (kern-place-set-terrain loc t_grass)
+                                   (cond ((> (kern-dice-roll "1d20") 16)
+                                          (kern-log-msg "The pick shatters!")
+                                          (kern-obj-remove-from-inventory kuser ktool 1)))
+                                   result-ok)
+                                  (else
+                                   result-no-effect)))))))
+
 ;; sextant -- gives location
 (mk-reusable-item 't_sextant "sextant" s_sextant 2
                   (lambda (ktool kuser)
                     (let ((loc (kern-obj-get-location kuser)))
-                      (if (kern-place-is-wilderness? (loc-place loc))
-                          (kern-log-msg "You are at [x=" 
-                                        (cadr loc) " y=" (caddr loc) "]")
-                          (begin
-                            (kern-log-msg "Usable only in the wilderness!")
-                            nil)))))
+                      (cond ((kern-place-is-wilderness? (loc-place loc))
+                             (kern-log-msg "You are at [x=" 
+                                           (cadr loc) " y=" (caddr loc) "]")
+                             result-ok)
+                            (else
+                             (kern-log-msg "Usable only in the wilderness!")
+                             result-not-here)))))
 
 ;;----------------------------------------------------------------------------
 ;; shovel & buried object generator
@@ -142,25 +143,26 @@
                   (let ((ktarg (filter is-buried?
                                        (kern-get-objects-at 
                                         (kern-obj-get-location kuser)))))
-                    (if (null? ktarg)
-                        (kern-log-msg "Nothing buried here!")
-                        (begin
-                          (signal-kobj (car ktarg) 'digup (car ktarg) nil)
-                          )))))
+                    (cond ((null? ktarg)
+                           (kern-log-msg "Nothing buried here!")
+                           result-no-effect)
+                          (else
+                           (signal-kobj (car ktarg) 'digup (car ktarg) nil)
+                           result-ok)))))
 						  
 (mk-reusable-item 't_chrono "chronometer" s_chrono 2
-                (lambda (kclock kuser)
-					(let* ((time (kern-get-time))
-						(hour (number->string
-								(if (< (time-hour time) 13)
-									(time-hour time)
-									(- (time-hour time) 12))))
-						(minbase (number->string (time-minute time)))
-						(min (if (< (time-minute time) 10)
-								(string-append "0" minbase)
-								minbase)))
-						(kern-log-msg "The chronometer reads " hour ":" min)
-					)))
+                  (lambda (kclock kuser)
+                    (let* ((time (kern-get-time))
+                           (hour (number->string
+                                  (if (< (time-hour time) 13)
+                                      (time-hour time)
+                                      (- (time-hour time) 12))))
+                           (minbase (number->string (time-minute time)))
+                           (min (if (< (time-minute time) 10)
+                                    (string-append "0" minbase)
+                                    minbase)))
+                      (kern-log-msg "The chronometer reads " hour ":" min)
+                      result-ok)))
 			
 (define clock-hand-icons (list s_clock_hand_n s_clock_hand_ne s_clock_hand_se s_clock_hand_s s_clock_hand_sw s_clock_hand_nw))
 
@@ -172,87 +174,87 @@
 
 (define clock-ifc
   (let ((readclock 
-			(lambda (kclock kuser)
-				(let* ((time (kern-get-time))
-						(hour (number->string
-							(if (< (time-hour time) 13)
-								(time-hour time)
-								(- (time-hour time) 12))))
-						(minbase (number->string (time-minute time)))
-						(min (if (< (time-minute time) 10)
-								(string-append "0" minbase)
-								minbase)))
-					(kern-log-msg "The clock reads " hour ":" min)
-				))))
-  (ifc '()
-		(method 'handle 
-			readclock)
-		(method 'xamine 
-			readclock)
-		(method 'step
-			(lambda (kmirror kuser)
-				))
-		(method 'update-gfx
-			(lambda (kclock)
-				(let* ((time (kern-get-time))
-						(hour-hand (clock-get-hand (floor (/ (time-hour time) 2))))
-						(min-hand (clock-get-hand (floor (/ (+ (time-minute time) 5) 10)))))
-					(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_body hour-hand min-hand)))
-				)))
-		(method 'init
-            (lambda (kmirror)
-				(kern-obj-set-pclass kmirror pclass-wall)
-            ))	
-       )))
+         (lambda (kclock kuser)
+           (let* ((time (kern-get-time))
+                  (hour (number->string
+                         (if (< (time-hour time) 13)
+                             (time-hour time)
+                             (- (time-hour time) 12))))
+                  (minbase (number->string (time-minute time)))
+                  (min (if (< (time-minute time) 10)
+                           (string-append "0" minbase)
+                           minbase)))
+             (kern-log-msg "The clock reads " hour ":" min)
+             result-ok))))
+    (ifc '()
+         (method 'handle 
+                 readclock)
+         (method 'xamine 
+                 readclock)
+         (method 'step
+                 (lambda (kmirror kuser)
+                   ))
+         (method 'update-gfx
+                 (lambda (kclock)
+                   (let* ((time (kern-get-time))
+                          (hour-hand (clock-get-hand (floor (/ (time-hour time) 2))))
+                          (min-hand (clock-get-hand (floor (/ (+ (time-minute time) 5) 10)))))
+                     (kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_body hour-hand min-hand)))
+                     )))
+         (method 'init
+                 (lambda (kmirror)
+                   (kern-obj-set-pclass kmirror pclass-wall)
+                   ))	
+         )))
 
 (define broken-clock-ifc
   (let ((readclock 
-			(lambda (kclock kuser)
-				(kern-log-msg (gob kclock))
-			)))
-  (ifc '()
-		(method 'handle 
-			readclock)
-		(method 'xamine
-			readclock)
-		(method 'step
-			(lambda (kmirror kuser)
-				))
-		(method 'init
-            (lambda (kmirror)
-				(kern-obj-set-pclass kmirror pclass-wall)
-            ))
-       )))
-	
+         (lambda (kclock kuser)
+           (kern-log-msg (gob kclock))
+           )))
+    (ifc '()
+         (method 'handle 
+                 readclock)
+         (method 'xamine
+                 readclock)
+         (method 'step
+                 (lambda (kmirror kuser)
+                   ))
+         (method 'init
+                 (lambda (kmirror)
+                   (kern-obj-set-pclass kmirror pclass-wall)
+                   ))
+         )))
+
 (mk-obj-type 't_clock "clock"
-	(mk-composite-sprite (list s_clock_body s_clock_hand_n s_clock_spin))
-	layer-mechanism clock-ifc)
+             (mk-composite-sprite (list s_clock_body s_clock_hand_n s_clock_spin))
+             layer-mechanism clock-ifc)
 
 (define (mk-clock)
 	(let ((kclock (kern-mk-obj t_clock 1)))
-		(kern-obj-add-effect kclock ef_graphics_update nil) 
-		(bind kclock nil)
-		kclock))
-		
+          (kern-obj-add-effect kclock ef_graphics_update nil) 
+          (bind kclock nil)
+          kclock))
+
 (mk-obj-type 't_broken_clock "clock"
-	s_clock_stopped
-	layer-mechanism broken-clock-ifc)
+             s_clock_stopped
+             layer-mechanism broken-clock-ifc)
 	
 (define (mk-broken-clock icona iconb message)
-	(let ((kclock (kern-mk-obj t_broken_clock 1)))
-		(bind kclock message)
-		(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_stopped icona iconb)))
-		kclock))
+  (let ((kclock (kern-mk-obj t_broken_clock 1)))
+    (bind kclock message)
+    (kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_stopped icona iconb)))
+    kclock))
 
 
 (define (get-char-at location)
-	(define (get-char-from list)
-		(cond ((null? list) nil)
-			((kern-obj-is-char? (car list)) (car list))
-			(else (get-char-from (cdr list))))
-		)
-	(get-char-from (kern-get-objects-at location))
-	)
+  (define (get-char-from list)
+    (cond ((null? list) nil)
+          ((kern-obj-is-char? (car list)) (car list))
+          (else (get-char-from (cdr list))))
+    )
+  (get-char-from (kern-get-objects-at location))
+  )
 
 ;;------------------------------------------------
 ;; mirrors
@@ -262,7 +264,7 @@
        (method 'handle 
                (lambda (kmirror kuser)
                  (kern-log-msg (kern-obj-get-name kuser) " spots " (kern-obj-get-name kuser) " in the mirror")
-                 ))
+                 result-ok))
        (method 'step
                (lambda (kmirror kuser)
                  ))
@@ -278,65 +280,65 @@
                    )))
        (method 'init
                (lambda (kmirror)
-					(kern-obj-set-pclass kmirror pclass-wall)
+                 (kern-obj-set-pclass kmirror pclass-wall)
                  ))
        ))
-	
+
 (mk-obj-type 't_mirror "mirror"
-	'()
-	layer-mechanism mirror-ifc)
-	
+             '()
+             layer-mechanism mirror-ifc)
+
 (define (mk-mirror background-tag)
-	(let ((kmirror (kern-mk-obj t_mirror 1)))
-		(bind kmirror background-tag)
-		(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (eval background-tag) s_mirror_fg)))
-		kmirror))
+  (let ((kmirror (kern-mk-obj t_mirror 1)))
+    (bind kmirror background-tag)
+    (kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (eval background-tag) s_mirror_fg)))
+    kmirror))
 
 ;;---------------------------------------------------------
 ;; bookshelf
 
 (define shelf-ifc
   (ifc '()
-		(method 'step
-			(lambda (kobj kuser)
-				))
-		(method 'init
-            (lambda (kobj)
-				(kern-obj-set-pclass kobj pclass-wall)
-            ))
+       (method 'step
+               (lambda (kobj kuser)
+                 ))
+       (method 'init
+               (lambda (kobj)
+                 (kern-obj-set-pclass kobj pclass-wall)
+                 ))
        ))
 
 (mk-obj-type 't_shelf "set of shelves"
-	s_bookshelf
-	layer-mechanism shelf-ifc)
+             s_bookshelf
+             layer-mechanism shelf-ifc)
 
 (define (mk-shelf)
-	(let ((kshelf (kern-mk-obj t_shelf 1)))
-		(bind kshelf nil)
-		kshelf))
+  (let ((kshelf (kern-mk-obj t_shelf 1)))
+    (bind kshelf nil)
+    kshelf))
 
 ;;---------------------------------------------------------
 ;; blocker
 
 (define blocker-ifc
   (ifc '()
-		(method 'step
-			(lambda (kobj kuser)
-				))
-		(method 'init
-            (lambda (kobj)
-				(kern-obj-set-pclass kobj pclass-space)
-            ))
+       (method 'step
+               (lambda (kobj kuser)
+                 ))
+       (method 'init
+               (lambda (kobj)
+                 (kern-obj-set-pclass kobj pclass-space)
+                 ))
        ))
 
 (mk-obj-type 't_blocker nil
-	'()
-	layer-mechanism blocker-ifc)
+             '()
+             layer-mechanism blocker-ifc)
 
 (define (mk-blocker)
-	(let ((kstop (kern-mk-obj t_blocker 1)))
-		(bind kstop nil)
-		kstop))
+  (let ((kstop (kern-mk-obj t_blocker 1)))
+    (bind kstop nil)
+    kstop))
 
 ;; grease -- inert object, required for the Wriggle skill
 (mk-obj-type 't_grease "grease" s_grease layer-item obj-ifc)

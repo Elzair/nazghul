@@ -60,7 +60,10 @@
 #define FRAME_DOT  15
 #define FRAME_NUM_SPRITES 16
 
-extern int DeveloperMode; /* global in nazghul.c */
+/* Enable this to dump surfaces and video info */
+#ifndef SCREEN_DEBUG
+#define SCREEN_DEBUG 0
+#endif
 
 static SDL_Surface *Screen;
 static SDL_Surface *Shaders[N_SHADERS];
@@ -216,7 +219,7 @@ void screenInitScreen(void)
 		exit(-1);
 	}
 
-        if (DeveloperMode) {
+        if (SCREEN_DEBUG) {
                 dump_SDL_VideoInfo(fmt);
         }
 
@@ -234,7 +237,7 @@ void screenInitScreen(void)
 		exit(-1);
 	}
 
-        if (DeveloperMode) {
+        if (SCREEN_DEBUG) {
                 printf("Video initialized to...\n");
                 dump_SDL_Surface(Screen);
         }
