@@ -511,9 +511,10 @@
                 (if (eqv? kchar ktarg)
                     "self"
                     (kern-obj-get-name ktarg)))
-	(kern-obj-heal ktarg 
-		(+ 10 power (kern-dice-roll "2d20")
-			(kern-dice-roll (mkdice 4 power)))))
+  (kern-obj-heal ktarg 
+                 (+ 10 power (kern-dice-roll "2d20")
+                    (kern-dice-roll (mkdice 4 power))))
+  result-ok)
 
 ;todo should the messages be in the ui part?
 (define (powers-heal kchar ktarg power)
@@ -522,9 +523,10 @@
                 (if (eqv? kchar ktarg)
                     "self"
                     (kern-obj-get-name ktarg)))
-	(kern-obj-heal ktarg 
-		(+ 2 (kern-dice-roll "1d10")
-			(kern-dice-roll (mkdice 2 power)))))
+  (kern-obj-heal ktarg 
+                 (+ 2 (kern-dice-roll "1d10")
+                    (kern-dice-roll (mkdice 2 power))))
+  result-ok)
 	
 ;todo vary duration with power
 (define (powers-invisibility kchar ktarg power)

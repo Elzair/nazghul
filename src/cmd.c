@@ -1810,15 +1810,11 @@ bool cmdUse(class Character * member, int flags)
         assert(item->isUsable());
 
         // Use the item
-	result = item->use(member);
-
-        // Post-processing: I wanted to add yuse-style console messages here
-        // but found that the item scripts have a different return-code
-        // convention than spells and skills. Need to fix that up before trying
-        // to do this:
         log_begin("%s: %s - ", member->getName(), item->getName());
+	result = item->use(member);
         cmd_eval_and_log_result(result);
         log_end(0);
+
         member->runHook(OBJ_HOOK_USE_DONE, "p", item);
 
         // Item's appear to decrement AP in the script...
@@ -2496,7 +2492,8 @@ int select_spell(struct get_spell_name_data *context)
 }
 
 /**
- * Log console messages describing the results of a closure call and return whether or not it 
+ * Log console messages describing the results of a closure call and return
+ * whether or not it succeeded.
  *
  * @param result is what closure_exec() returned. It should be one of the
  * standard result codes.
@@ -2508,23 +2505,26 @@ int select_spell(struct get_spell_name_data *context)
  */
 static int cmd_eval_and_log_result(int result)
 {
-        switch (result) {
-        case RESULT_OK:
-                log_continue("ok!");
+        static struct {
+                char *string;
+                int success;
+        } tbl[] = {
+                { "ok!",               1 },
+                { "no target!",        0 },
+                { "no effect!",        1 },
+                { "no hostiles here!", 1 },
+                { "lacks skill!",      0 },
+                { "failed!",           1 },
+                { "not here!",         0 }
+        };
+
+        if (result < 0 || result >= array_sz(tbl)) {
+                warn("result code '%d' unknown\n", result);
                 return 1;
-        case RESULT_NO_TARGET:
-                log_continue("no target!");
-                return 0;
-        case RESULT_NO_EFFECT:
-                log_continue("no effect!");
-                return 0;
-        case RESULT_NO_HOSTILES:
-                log_continue("no hostiles here!");
-                return 0;
-        default:
-                assert(false);
-                return 0;
         }
+
+        log_continue(tbl[result].string);
+        return tbl[result].success;
 }
 
 bool cmdCastSpell(class Character * pc)

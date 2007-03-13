@@ -109,12 +109,14 @@
 ;; FIXME: the following "blood" potions need to do stuff
 (mk-potion 't_dragons_blood "dragon's blood"  s_red_bubbly_potion
            (lambda (kpotion kuser)
-             (kern-obj-add-effect kuser ef_temporary_fire_immunity nil)))
+             (kern-obj-add-effect kuser ef_temporary_fire_immunity nil)
+             result-ok))
 
 ;; hydra's blood -- turn arrows into poisoned arrows?
 (mk-potion 't_hydras_blood "hydra's blood" s_green_bubbly_potion
            (lambda (kpotion kuser)
-             (kern-obj-add-effect kuser ef_temporary_grow_head nil)))
+             (kern-obj-add-effect kuser ef_temporary_grow_head nil)
+             result-ok))
 
 ;; lich's blood -- turn arrows into diseased arrows?
 (mk-potion 't_lichs_blood "lich's blood" s_yellow_bubbly_potion

@@ -28,5 +28,8 @@
 #define RESULT_NO_TARGET   1
 #define RESULT_NO_EFFECT   2
 #define RESULT_NO_HOSTILES 3
+#define RESULT_LACKS_SKILL 4
+#define RESULT_FAILED      5
+#define RESULT_NOT_HERE    6
 
 #endif
