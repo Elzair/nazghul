@@ -6,20 +6,16 @@
   (println "rune-use")
   (let ((loc (get-target-loc kuser 1)))
     (cond ((null? loc) 
-           (println "no loc")
-           nil)
+           result-no-target)
           ((eqv? (kern-place-get-terrain loc) t_rune_altar)
-           (println "using")
            (shake-map 5)
            (kern-log-msg "A LOCK IS RELEASED!")
            (kern-obj-remove-from-inventory kuser ktype 1)
            (kern-place-set-terrain loc t_active_altar)
            (send-signal kuser demon-gate 'on)
-           )
+           result-ok)
           (else 
-           (kern-log-msg "No effect!")
-           (println "wrong terrain type")
-           nil))))
+           result-not-here))))
 
 (define rune-ifc
   (ifc obj-ifc
