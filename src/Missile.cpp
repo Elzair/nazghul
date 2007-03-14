@@ -48,9 +48,8 @@ class ArmsType *Missile::getObjectType()
 
 bool Missile::enterTile(struct place *place, int x, int y)
 {
-        // kind of a hack... cannonballs aren't blocked by forest
         if (! (flags & MISSILE_IGNORE_LOS))
-                return place_visibility(place, x, y);
+                return (ALPHA_OPAQUE != place_visibility(place, x, y));
 
         if (! (flags & MISSILE_HIT_PARTY))
                 return true;

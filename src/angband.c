@@ -757,13 +757,13 @@ void update_view(struct los *los)
                                 }
                                 ray_index += (sizeof(bits1)*8);
 
-                                /* check rays in first set */
+                                /* check rays in next set */
                                 if (bits2 & (p->bits_2)) {
                                         check_ray_set(&bits2, p->bits_2, ray_index, tile_val, diag);
                                 }
                                 ray_index += (sizeof(bits2)*8);
 
-                                /* check rays in first set */
+                                /* check rays in next set */
                                 if (bits3 & (p->bits_3)) {
                                         check_ray_set(&bits3, p->bits_3, ray_index, tile_val, diag);
                                 }
