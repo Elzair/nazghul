@@ -142,7 +142,6 @@
   (ifc '()
        (method 'hit-loc
                (lambda (kmissile kplace x y)
-                 ;;(println "fireball-hit")
                  (for-each burn
                            (filter obj-is-char? 
                                    (kern-get-objects-at (mk-loc kplace x y))))
@@ -153,7 +152,6 @@
   (ifc nil
        (method 'hit-loc 
                (lambda (kmissile kplace x y)
-                 (println "warhead-hit")
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
 
@@ -233,7 +231,6 @@
                  (let* ((lvl (kern-dice-roll "1d3+5"))
                         (knpc (spawn-npc 'green-slime lvl))
                         (loc (pick-loc (mk-loc kplace x y) knpc)))
-                   (println " loc=" loc)
                    (cond ((null? loc) 
                           (kern-obj-dec-ref knpc)
                           0)

@@ -203,13 +203,11 @@
   )
 
 (define (ensnare-exec fgob kobj)
-  (println "ensnare-exec")
   (if (not (can-ensnare? kobj))
       (kern-obj-remove-effect ef_ensnare)
       (let ((kchar kobj)
             (droll (kern-dice-roll "1d20")))
         ;; special case -- paralysis prevents struggling against the ensnare
-        (println "droll=" droll)
         (if (not (is-paralyzed? kchar))
             (if (or (= droll 20)
                     (> (+ (kern-char-get-strength kchar) 
@@ -255,7 +253,6 @@
         (in-list? ef_temporary_magical_kill_immunity effects))))
 
 (define (has-sleep-immunity? kobj)
-  (println "has-sleep-immunity?")
   (let ((effects (kern-obj-get-effects kobj)))
     (or (in-list? ef_sleep_immunity effects)
         (in-list? ef_temporary_sleep_immunity effects))))
@@ -586,7 +583,6 @@
              sp_human)))
 
 (define (ktype-get-sprite ktype)
-  (println "ktype: " (kern-type-get-name ktype) " gob: " (kern-type-get-gob ktype))
   (let ((gob (kern-type-get-gob ktype)))
     (if (null? gob)
         nil
@@ -739,7 +735,6 @@
 
 (define (is-disabled? kobj)
   (let ((effects (kern-obj-get-effects kobj)))
-    (println "effects=" effects)
     (if (null? effects)
         #f
         (foldr (lambda (x effect)
@@ -863,7 +858,6 @@
                                             'apply-lightning
                                             'apply-random-field
                                             ))))
-        (println selection)g
         (apply (eval selection)
                (list kobj)))))
    

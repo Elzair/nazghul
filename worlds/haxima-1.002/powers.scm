@@ -87,7 +87,6 @@
 			
 (define (cone-handle-box origin minangle maxangle range proc list)
 	(if (null? list)
-		(println "donebox")
 		(begin		
 			(cone-check-cell origin minangle maxangle range proc (car list))
 			(cone-handle-box origin minangle maxangle range proc (cdr list))
@@ -488,12 +487,10 @@
 
 ;todo high power should go to user specified gate
 (define (powers-gate-travel caster ktarg power)
-	(println "vas-rel-por")
 	(define (rmgate kobj)
 		(moongate-close gate)
 		(kern-obj-remove gate))
 	(let ((gate (summon-moongate 'ord)))
-		(println " gate=" gate)
 		(kern-obj-put-at gate ktarg)
 		(moongate-open gate)
 		))
@@ -654,8 +651,12 @@
 
 ;resurrect should have side effects, diminishing with power
 (define (powers-resurrect caster ktarg power)
-	(kern-char-resurrect ktarg)
-	(apply-sleep ktarg))
+  (cond ((is-dead? ktarg)
+         (kern-char-resurrect ktarg)
+         (apply-sleep ktarg)
+         result-ok)
+        (else
+         result-no-effect)))
 				
 (define (powers-reveal caster ktarg power)
 	(kern-add-reveal (* power 4)))
@@ -681,11 +682,9 @@
 
 (define (powers-summon targetloc quantity typegen levelgen faction)
 	(define (run-loop count done)
-		(println " run-loop " count)
 		(if (<= count 0) done
 			(let* ((knpc (spawn-npc (typegen) (levelgen)))
 					(loc (pick-loc targetloc knpc)))
-				(println " loc=" loc)
 				(if (null? loc) 
 					(begin
 						(kern-obj-dec-ref knpc)
@@ -758,7 +757,6 @@
 ;should fail on no handler squares rather than aborting?
 (define (powers-telekinesis caster ktarg power)
   ((kobj-ifc ktarg) 'handle ktarg caster)
-  (println "result-ok")
   result-ok)
 	
 (define (powers-timestop caster dir power)
@@ -796,7 +794,6 @@
 	(let ((damdice (mkdice 1 power))
 		(foes (all-hostiles caster)))
 	(define (tremor kchar)
-		;;(println "tremor")
 		(cond ((kern-char-is-asleep? kchar) (kern-char-set-sleep kchar #f))
 			((> (kern-dice-roll "1d4") 1)
 				(kern-map-set-jitter #t)
@@ -805,15 +802,11 @@
 				(kern-obj-inflict-damage kchar "knocked down" (kern-dice-roll damdice) caster))
 				(else nil)))
 	(define (loop n kchar)
-		;;(println "loop:" n)
-		;;(println "foes:" foes)
 		(if (not (= n 0))
 			(begin
 			(map tremor kchar)
 			(loop (- n 1) kchar))))
 	(define (wakeup kchar) (kern-char-set-sleep kchar #f))
-  ;;(println "in-vas-por-ylem: entry")
-    ;;(println "in-vas-por-ylem:" foes)
     (kern-log-enable #f)
     (map kern-obj-inc-ref foes)
     (shake-map 20)
