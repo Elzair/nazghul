@@ -14,6 +14,8 @@
   (ifc bim-ifc
        (method 'open kportcullis-manual)
        (method 'close kportcullis-manual)
+       (method 'open-remote bim-on)
+       (method 'close-remote bim-off)	   
        (method 'signal bim-toggle)
        (method 'state portcullis-state)
        ))

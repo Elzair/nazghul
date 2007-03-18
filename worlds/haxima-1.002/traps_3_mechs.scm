@@ -24,8 +24,8 @@
     (let ((kport (safe-eval port)))
       (if (notnull? kport)
           (if on?
-              ((kobj-ifc (eval port)) 'open (eval port) kself)
-              ((kobj-ifc (eval port)) 'close (eval port) kself)))))
+              ((kobj-ifc (eval port)) 'open-remote (eval port) kself)
+              ((kobj-ifc (eval port)) 'close-remote (eval port) kself)))))
   (map change ports (list-ref sets n))))
 
 (define t3-ctrl-ifc
