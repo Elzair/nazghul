@@ -33,6 +33,7 @@
 #include "status.h"
 #include "node.h"
 #include "Being.h"
+#include "objectfreezer.h"
 
 /* File for quick save/reload with CTRL-q and CTRL-r */
 #define QUICKSAVE_FNAME "save.scm"
@@ -228,6 +229,8 @@ struct session {
         class PlayerParty *player;
 
         char show_boxes : 1;  /* draw red/green/yellow boxes around npcs */
+		
+		struct objectfreezernode *freezer;
 };
 
 // Callback table for saving objects

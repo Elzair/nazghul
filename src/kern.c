@@ -5405,6 +5405,51 @@ KERN_API_CALL(kern_obj_clone)
         return scm_mk_ptr(sc, clone);
 }
 
+KERN_API_CALL(kern_obj_freeze)
+{
+        class Object *obj;
+		char* key;
+		int x,y;
+
+        obj = unpack_obj(sc, &args, "kern-obj-freeze");
+        if (!obj)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "sdd", &key, &x, &y)) {
+                rt_err("kern-obj-freeze: bad args");
+                return sc->NIL;
+        }
+
+		obj_inc_ref(obj);
+        freezeObject(key, x, y, obj);
+
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_obj_thaw)
+{
+        class Object *obj;
+		char* key;
+		int x,y;
+
+        if (unpack(sc, &args, "s", &key)) {
+                rt_err("kern-obj-thaw: bad args");
+                return sc->NIL;
+        }
+
+        obj = thawObject(key, &x, &y);
+
+		//I suspect the user must manually decr obj ref or it'll be gone before it reaches them
+
+		if (obj)
+		{
+			scm_mk_ptr(sc, obj);
+			return scm_mk_ptr(sc, obj);
+		}
+		
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_set_wind)
 {
         int dur, dir;
@@ -8620,6 +8665,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-ttl", kern_obj_set_ttl);
         API_DECL(sc, "kern-obj-set-visible", kern_obj_set_visible);
         API_DECL(sc, "kern-obj-wander", kern_obj_wander);
+		API_DECL(sc, "kern-obj-freeze", kern_obj_freeze);
+		API_DECL(sc, "kern-obj-thaw", kern_obj_thaw);
 
         /* kern-occ api */
         API_DECL(sc, "kern-occ-get-hp-mod",  kern_occ_get_hp_mod);
