@@ -578,6 +578,11 @@ int session_save(char *fname)
                         }
                 }
         }
+		/* Object freezer */
+        save->write(save, ";;--------------\n");
+        save->write(save, ";; ObjectFreezer\n");
+        save->write(save, ";;--------------\n");
+		saveFreezer(save);
 
         /* Save all the special-case stuff... */
         save->write(save, ";;--------------\n");

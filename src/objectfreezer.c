@@ -91,3 +91,20 @@ class Object* thawObject(char* key,int* xout, int* yout)
 	}
 	return objtemp;
 }
+
+void saveFreezer(save_t *save)
+{
+	struct tree* ofntree= ((tree *)Session->freezer);
+	for (ofntree = tree_minimum(ofntree);ofntree;ofntree = tree_successor(ofntree))
+	{
+		struct objectfreezernode *ofn = (objectfreezernode *) ofntree;
+		struct list* ofllist;
+		list_for_each(&(ofn->objectlist),ofllist)
+		{
+			struct objectfreezerlist *ofln = (objectfreezerlist *) ofllist;
+			save->write(save, "(kern-obj-freeze \n");
+			ofln->obj->save(save);
+			save->write(save, " \"%s\" %d %d)\n",ofntree->key.s_key,ofln->x,ofln->y);
+		}
+	}
+}

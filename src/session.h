@@ -33,7 +33,6 @@
 #include "status.h"
 #include "node.h"
 #include "Being.h"
-#include "objectfreezer.h"
 
 /* File for quick save/reload with CTRL-q and CTRL-r */
 #define QUICKSAVE_FNAME "save.scm"
@@ -307,5 +306,7 @@ extern void session_intro_sched_chars(struct session *session);
 
 // Global session object.
 extern struct session *Session;
+
+#include "objectfreezer.h"
 
 #endif
