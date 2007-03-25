@@ -41,8 +41,9 @@ struct objectfreezernode {
 struct objectfreezernode* new_objectfreezernode(char *key);
 struct objectfreezerlist* new_objectfreezerlistnode(Object *value, int x, int y, objectfreezerlist *list);
 
-void freezeObject(char* key, int x, int y, class Object *o);
-class Object* thawObject(char* key,int* xout, int* yout);
-void saveFreezer(save_t *save);
+void freezer_freezeObject(char* key, int x, int y, class Object *o);
+class Object* freezer_thawObject(char* key,int* xout, int* yout);
+void freezer_save(save_t *save);
+void freezer_del();
 
 #endif

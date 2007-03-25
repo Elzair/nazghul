@@ -5421,36 +5421,12 @@ KERN_API_CALL(kern_obj_freeze)
         }
 
 		obj_inc_ref(obj);
-        freezeObject(key, x, y, obj);
+        freezer_freezeObject(key, x, y, obj);
 
         return sc->NIL;
 }
-
-/* only use this if you know the object is already in-world somewhere and you dont want to shift it! */
+		
 KERN_API_CALL(kern_obj_thaw)
-{
-        class Object *obj;
-		char* key;
-		int x,y;
-
-        if (unpack(sc, &args, "s", &key)) {
-                rt_err("kern-obj-thaw: bad args");
-                return sc->NIL;
-        }
-
-        obj = thawObject(key, &x, &y);
-
-		if (obj)
-		{
-			scm_mk_ptr(sc, obj);
-			obj_dec_ref(obj);
-			return scm_mk_ptr(sc, obj);
-		}
-		
-        return sc->NIL;
-}
-		
-KERN_API_CALL(kern_obj_thaw_at)
 {
         class Object *obj;
 		struct place *place;
@@ -5462,7 +5438,7 @@ KERN_API_CALL(kern_obj_thaw_at)
                 return sc->NIL;
         }
 
-        obj = thawObject(key, &x, &y);
+        obj = freezer_thawObject(key, &x, &y);
 
 		if (obj)
 		{
@@ -8692,7 +8668,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-wander", kern_obj_wander);
 		API_DECL(sc, "kern-obj-freeze", kern_obj_freeze);
 		API_DECL(sc, "kern-obj-thaw", kern_obj_thaw);
-		API_DECL(sc, "kern-obj-thaw-at", kern_obj_thaw_at);
 
         /* kern-occ api */
         API_DECL(sc, "kern-occ-get-hp-mod",  kern_occ_get_hp_mod);

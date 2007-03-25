@@ -229,7 +229,7 @@ struct session {
 
         char show_boxes : 1;  /* draw red/green/yellow boxes around npcs */
 		
-		struct objectfreezernode *freezer;
+		struct tree *freezer;
 };
 
 // Callback table for saving objects

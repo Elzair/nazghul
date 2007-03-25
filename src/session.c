@@ -232,6 +232,8 @@ void session_del(struct session *session)
                 obj_inc_ref(session->player);
         }
 
+		freezer_del();
+
         elem = session->data_objects.next;
         int count = 0;
         while (elem != &session->data_objects) {
@@ -582,7 +584,7 @@ int session_save(char *fname)
         save->write(save, ";;--------------\n");
         save->write(save, ";; ObjectFreezer\n");
         save->write(save, ";;--------------\n");
-		saveFreezer(save);
+		freezer_save(save);
 
         /* Save all the special-case stuff... */
         save->write(save, ";;--------------\n");

@@ -51,27 +51,27 @@ struct objectfreezerlist* new_objectfreezerlistnode(class Object *value, int x, 
 	return newnode;
 }
 
-struct objectfreezernode* ensureFreezerTreeNode(char *key)
+struct objectfreezernode* freezer_ensureFreezerTreeNode(char *key)
 {
-	struct tree* ofntree = tree_s_search((tree *)Session->freezer, key);
+	struct tree* ofntree = tree_s_search(Session->freezer, key);
 	if (ofntree == NULL)
 	{
 		ofntree = (tree *)new_objectfreezernode(key);
-		tree_insert((tree **)&(Session->freezer),ofntree);
+		tree_insert(&(Session->freezer),ofntree);
 	}
 	return (objectfreezernode *) ofntree;
 }
 
-void freezeObject(char *key, int x, int y, class Object *o)
+void freezer_freezeObject(char *key, int x, int y, class Object *o)
 {
-	struct objectfreezernode *ofn = ensureFreezerTreeNode(key);
+	struct objectfreezernode *ofn = freezer_ensureFreezerTreeNode(key);
 	struct objectfreezerlist *ofln = new_objectfreezerlistnode(o,x,y);
 	list_add(&(ofn->objectlist),(list *)ofln);
 }
 
-class Object* thawObject(char* key,int* xout, int* yout)
+class Object* freezer_thawObject(char* key,int* xout, int* yout)
 {
-	struct tree* ofntree = tree_s_search((tree *)Session->freezer, key);
+	struct tree* ofntree = tree_s_search(Session->freezer, key);
 	if (ofntree == NULL)
 	{
 		return NULL;
@@ -86,15 +86,15 @@ class Object* thawObject(char* key,int* xout, int* yout)
 	//check if that was the last entry- if so, delete tree node
 	if (list_empty(&(ofn->objectlist)))
 	{
-		tree_delete((tree **)&(Session->freezer), ofntree);
+		tree_delete(&(Session->freezer), ofntree);
 		free(ofn);
 	}
 	return objtemp;
 }
 
-void saveFreezer(save_t *save)
+void freezer_save(save_t *save)
 {
-	struct tree* ofntree= ((tree *)Session->freezer);
+	struct tree* ofntree= Session->freezer;
 	for (ofntree = tree_minimum(ofntree);ofntree;ofntree = tree_successor(ofntree))
 	{
 		struct objectfreezernode *ofn = (objectfreezernode *) ofntree;
@@ -106,5 +106,22 @@ void saveFreezer(save_t *save)
 			ofln->obj->save(save);
 			save->write(save, " \"%s\" %d %d)\n",ofntree->key.s_key,ofln->x,ofln->y);
 		}
+	}
+}
+
+void freezer_del()
+{
+	struct tree* ofntree;
+	for(ofntree=Session->freezer;ofntree;ofntree=Session->freezer)
+	{
+		struct objectfreezernode *ofn = (objectfreezernode *) ofntree;
+		while (!list_empty(&(ofn->objectlist)))
+		{
+			struct objectfreezerlist *ofln = (objectfreezerlist *) ofn->objectlist.next;
+			list_remove((list *) ofln);
+			free(ofln);
+		}
+		tree_delete(&(Session->freezer), ofntree);
+		free(ofn);
 	}
 }
