@@ -5426,6 +5426,7 @@ KERN_API_CALL(kern_obj_freeze)
         return sc->NIL;
 }
 
+/* only use this if you know the object is already in-world somewhere and you dont want to shift it! */
 KERN_API_CALL(kern_obj_thaw)
 {
         class Object *obj;
@@ -5439,17 +5440,41 @@ KERN_API_CALL(kern_obj_thaw)
 
         obj = thawObject(key, &x, &y);
 
-		//I suspect the user must manually decr obj ref or it'll be gone before it reaches them
-
 		if (obj)
 		{
 			scm_mk_ptr(sc, obj);
+			obj_dec_ref(obj);
 			return scm_mk_ptr(sc, obj);
 		}
 		
         return sc->NIL;
 }
+		
+KERN_API_CALL(kern_obj_thaw_at)
+{
+        class Object *obj;
+		struct place *place;
+		char* key;
+		int x,y;
 
+        if (unpack(sc, &args, "sp", &key, &place)) {
+                rt_err("kern-obj-thaw-at: bad args");
+                return sc->NIL;
+        }
+
+        obj = thawObject(key, &x, &y);
+
+		if (obj)
+		{
+			obj->relocate(place, x, y, REL_NOTRIG);
+			scm_mk_ptr(sc, obj);
+			obj_dec_ref(obj);
+			return scm_mk_ptr(sc, obj);
+		}
+		
+        return sc->NIL;
+}
+	
 KERN_API_CALL(kern_set_wind)
 {
         int dur, dir;
@@ -8667,6 +8692,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-wander", kern_obj_wander);
 		API_DECL(sc, "kern-obj-freeze", kern_obj_freeze);
 		API_DECL(sc, "kern-obj-thaw", kern_obj_thaw);
+		API_DECL(sc, "kern-obj-thaw-at", kern_obj_thaw_at);
 
         /* kern-occ api */
         API_DECL(sc, "kern-occ-get-hp-mod",  kern_occ_get_hp_mod);
