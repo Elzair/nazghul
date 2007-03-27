@@ -338,12 +338,12 @@
 		)
 
 (define (deeps-init-cohesion mapdata)
-	(if (list-ref mapdata 8)
+	(if (list-ref mapdata 10)
 		(begin
 			(kern-log-msg "begin cohesion check")
 			(prmap-ensure-cohesion mapdata -5 6 -6 5 0 deeps-link-factory)
 			(kern-log-msg "end cohesion check")
-			(mutable-list-set mapdata 8 #f)
+			(mutable-list-set mapdata 10 #f)
 		)))
 		
 (define (deeps-room-handle-deeps kplace kplayer)
@@ -351,14 +351,13 @@
 		(roomdata (get-roomdata kplace))
 		(mapdata (prmap-get-mapdata (eval 'p_deeps_1)))
 		)
+		(prmap-room-freeze-current mapdata)
 		(prmap-room-init-neighbors kplace roomdata)
 		(prmap-room-init-links kplace roomdata mapdata)
-		(if (not (prmap-roomdata-prev roomdata))
-			(begin
-				(prmap-room-cleanout kplace)
-				(prmap-room-blit-map kplace roomdata mapdata)
-				(prmap-room-init-contents kplace roomdata))
-		)
+		(prmap-room-cleanout kplace)
+		(prmap-room-thaw kplace mapdata)		
+		(prmap-room-blit-map kplace roomdata mapdata)
+		(prmap-room-init-contents kplace roomdata)
 	))
 
 (define (deeps-room-handle-garrison kplace kplayer)
@@ -367,6 +366,7 @@
 		(mapdata (prmap-get-mapdata (eval 'p_deeps_1)))
 		)
 		(deeps-init-cohesion mapdata)
+		(prmap-room-freeze-current mapdata)
 		(prmap-room-init-neighbors kplace roomdata)
 		(prmap-room-init-links kplace roomdata mapdata)
 	))	

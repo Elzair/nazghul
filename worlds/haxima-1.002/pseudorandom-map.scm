@@ -239,36 +239,24 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random map roomdata
 
-(define (prmap-roomdata-x data)
+(define (prmap-roomdata-tag data)
 	(list-ref data 0))
-(define (prmap-roomdata-y data)
+(define (prmap-roomdata-x data)
 	(list-ref data 1))
-(define (prmap-roomdata-z data)
+(define (prmap-roomdata-y data)
 	(list-ref data 2))
-(define (prmap-roomdata-current data)
+(define (prmap-roomdata-z data)
 	(list-ref data 3))
-(define (prmap-roomdata-prev data)
-	(list-ref data 4))
 (define (prmap-roomdata-rooms data)
-	(list-ref data 5))
+	(list-ref data 4))
 
 (define (prmap-roomdata-setxyz data x y z)
-	(set-car! data x)
-	(set-car! (cdr data) y)
-	(set-car! (cddr data) z))
-	
-;prev becomes current, current is cleared
-(define (prmap-roomdata-pushcurrent data)
-	(let ((curdat (list-tail data 3)))
-		(set-car! (cdr curdat) (car curdat))
-		(set-car! curdat #f)))
+	(set-car! (cdr data) x)
+	(set-car! (cddr data) y)
+	(set-car! (cdddr data) z))
 
-(define (prmap-roomdata-setcurrent data cur)
-	(let ((curdat (list-tail data 3)))
-		(set-car! curdat cur)))
-
-(define (prmap-mk-roomdata room x y z current prev rooms)
-	(set-roomdata room (list x y z current prev rooms))
+(define (prmap-mk-roomdata room-tag x y z rooms)
+	(set-roomdata (eval room-tag) (list room-tag x y z rooms))
 	)
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -281,11 +269,11 @@
 ;  4   1   5   3   2 
 
 (define (prmap-linkrooms-2d room1-tag room2-tag room3-tag room4-tag room5-tag)
-	(prmap-mk-roomdata (eval room1-tag) 0 0 0 #f #f (list room2-tag room5-tag room3-tag room4-tag))
-	(prmap-mk-roomdata (eval room2-tag) 0 0 0 #f #f (list room5-tag room3-tag room4-tag room1-tag))
-	(prmap-mk-roomdata (eval room3-tag) 0 0 0 #f #f (list room4-tag room1-tag room2-tag room5-tag))
-	(prmap-mk-roomdata (eval room4-tag) 0 0 0 #f #f (list room1-tag room2-tag room5-tag room3-tag))
-	(prmap-mk-roomdata (eval room5-tag) 0 0 0 #f #f (list room3-tag room4-tag room1-tag room2-tag))
+	(prmap-mk-roomdata room1-tag 0 0 0 (list room2-tag room5-tag room3-tag room4-tag))
+	(prmap-mk-roomdata room2-tag 0 0 0 (list room5-tag room3-tag room4-tag room1-tag))
+	(prmap-mk-roomdata room3-tag 0 0 0 (list room4-tag room1-tag room2-tag room5-tag))
+	(prmap-mk-roomdata room4-tag 0 0 0 (list room1-tag room2-tag room5-tag room3-tag))
+	(prmap-mk-roomdata room5-tag 0 0 0 (list room3-tag room4-tag room1-tag room2-tag))
 	)
 
 ; 3 dimensional map - 7 rooms
@@ -340,30 +328,44 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Random map parameter data
 
-(define (prmap-mk-mapdata nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction) 
-	(list nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction (mk-mutable-list nil)))
+(define (prmap-mk-mapdata mapname nsparams ewparams areaparams edgemaps areamaps blitstats hardlinkfunction) 
+	(list mapname nsparams ewparams areaparams edgemaps areamaps blitstats nil hardlinkfunction (mk-mutable-list nil)))
 
-(define (prmap-params-nsparams params)
+(define (prmap-params-mapname params)
 	(list-ref params 0))
-(define (prmap-params-ewparams params)
+(define (prmap-params-nsparams params)
 	(list-ref params 1))
-(define (prmap-params-areaparams params)
+(define (prmap-params-ewparams params)
 	(list-ref params 2))
-(define (prmap-params-edgemaps params)
+(define (prmap-params-areaparams params)
 	(list-ref params 3))
-(define (prmap-params-areamaps params)
+(define (prmap-params-edgemaps params)
 	(list-ref params 4))
+(define (prmap-params-areamaps params)
+	(list-ref params 5))
 (define (prmap-params-blitstats params)
-	(eval (list-ref params 5)))
+	(eval (list-ref params 6)))
+	
+(define (prmap-params-current params)
+	(let ((data (list-ref params 7)))
+		(if (null? data)
+			nil
+			(eval data)
+		)))
+		
+(define (prmap-params-set-current params room)
+	(let ((curdat (list-tail params 7)))
+		(set-car! curdat room)))
+	
 (define (prmap-params-hardlinkfunction params)
-	(let ((candidatefn (list-ref params 6)))
+	(let ((candidatefn (list-ref params 8)))
 		(eval
 			(if (null? candidatefn)
 				'prmap-room-hardlinkentry-get
 				candidatefn
 		))))
 (define (prmap-params-hardlinks params)
-	(list-ref params 7)
+	(list-ref params 9)
 	)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -427,7 +429,6 @@
 ;; x y location tracking
 
 ;sets x and y location of new rooms based on current location and direction to new room
-;also updates current -> prev -> normal status
 (define (prmap-room-setxyz roomslist dir rxloc ryloc rzloc)
 	(let* (
 			(kplace (eval (get-cardinal-lref roomslist dir)))
@@ -436,12 +437,10 @@
 			(rxoff (+ rxloc (car offsets)))
 			(ryoff (+ ryloc (cadr offsets)))
 		)
-		(if (not (prmap-roomdata-current roomdata))
-			(prmap-roomdata-setxyz roomdata rxoff ryoff rzloc))
-		(prmap-roomdata-pushcurrent roomdata)
+		(prmap-roomdata-setxyz roomdata rxoff ryoff rzloc)
 		))
 
-;set xy stuff for all neighboring rooms, also sets current as current
+;set xy stuff for all neighboring rooms
 (define (prmap-room-init-neighbors kplace roomdata)
 	(let* (
 			(rooms (prmap-roomdata-rooms roomdata))
@@ -452,13 +451,15 @@
 		(map (lambda (dir)
 			(prmap-room-setxyz rooms dir rxloc ryloc rzloc))
 			(list north west east south))
-		(prmap-roomdata-setcurrent roomdata #t)
 		;debugging map
 		(if #f
 			(begin
-				(kern-log-msg rxloc)
-				(kern-log-msg ryloc)
-				(kern-log-msg rzloc))
+				(kern-log-msg (string-append 
+					(number->string rxloc) " "
+					(number->string ryloc) " "
+					(number->string rzloc) " "))
+				(println "loc : " rxloc " " ryloc " " rzloc)
+				)
 		)
 	))
 	
@@ -581,6 +582,49 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Object handling
 
+(define (prmap-room-roomkey target mapname)
+	(let* ((roomdata (get-roomdata target))
+				(x (prmap-roomdata-x roomdata))
+				(y (prmap-roomdata-y roomdata))
+				(z (prmap-roomdata-z roomdata)))
+		(string-append mapname "|" 
+			(number->string x) "|" 
+			(number->string y) "|"
+			(number->string z))
+	))
+
+(define (prmap-room-freeze-current mapdata)
+	(let ((current (prmap-params-current mapdata)))
+		(if (not (null? current))
+			(let* ((roomkey (prmap-room-roomkey current (prmap-params-mapname mapdata))))
+				(println "freeze: " roomkey)
+				(map (lambda (obj)
+					(if (or (equal? (kern-obj-get-type obj) t_roomdata) (equal? (kern-obj-get-type obj) t_mapdata))
+						nil
+						(let*
+							((loc (kern-obj-get-location obj))
+								(x (car (cdr loc)))
+								(y (car (cddr loc))))
+							(kern-obj-freeze obj roomkey x y)
+							(kern-obj-remove obj)
+						)
+					))
+					(kern-place-get-objects current))
+				(prmap-params-set-current mapdata nil)
+			)
+		)
+		))
+
+(define (prmap-room-thaw kplace mapdata)
+	(let ((roomkey (prmap-room-roomkey kplace (prmap-params-mapname mapdata))))
+		(println " thaw: " roomkey)
+		(do 
+			((obj (kern-obj-thaw roomkey kplace) (kern-obj-thaw roomkey kplace)))
+			((null? obj))
+			(println "obj " (kern-obj-get-name obj))
+		)	
+		(prmap-params-set-current mapdata (prmap-roomdata-tag (get-roomdata kplace)))
+	))
 
 (define (prmap-room-cleanout kplace)
 	(map (lambda (obj)
@@ -604,7 +648,7 @@
 		15))
 	)
 
-; clears out old objects, and creates new ones
+; creates new objects for a room
 ;    this one is rather specific to the endless deeps. need generic version
 (define (prmap-room-init-contents kplace roomdata)
 	(let* (
@@ -612,8 +656,9 @@
 			(ryloc (prmap-roomdata-y roomdata))
 			(distance (sqrt (+ (* rxloc rxloc) (* ryloc ryloc))))
 		)
-		(if (< (kern-dice-roll "1d100") 
-				(min 75 (+ 25 (* 15 (sqrt distance)))))
+		(if (and (null? (kern-place-get-beings kplace))
+				(< (kern-dice-roll "1d100") 
+					(min 75 (+ 25 (* 15 (sqrt distance))))))
 			(begin 
 			(map (lambda (monster)
 				(begin 
