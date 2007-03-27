@@ -30,7 +30,9 @@ struct objectfreezernode* new_objectfreezernode(char *key)
 {
 	objectfreezernode *newnode= (struct objectfreezernode *) malloc(sizeof(struct objectfreezernode));
 	assert(newnode);
-	newnode->treenode.key.s_key=key;
+	newnode->treenode.key.s_key = (char *) malloc((strlen(key)+1) * sizeof(char));
+	assert(newnode->treenode.key.s_key);
+	strcpy(newnode->treenode.key.s_key,key);
 	newnode->treenode.key_type=tree_s_key;
 	newnode->treenode.left=NULL;
 	newnode->treenode.right=NULL;
@@ -87,6 +89,7 @@ class Object* freezer_thawObject(char* key,int* xout, int* yout)
 	if (list_empty(&(ofn->objectlist)))
 	{
 		tree_delete(&(Session->freezer), ofntree);
+		free(ofn->treenode.key.s_key);
 		free(ofn);
 	}
 	return objtemp;
@@ -122,6 +125,7 @@ void freezer_del()
 			free(ofln);
 		}
 		tree_delete(&(Session->freezer), ofntree);
+		free(ofn->treenode.key.s_key);
 		free(ofn);
 	}
 }
