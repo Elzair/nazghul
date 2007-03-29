@@ -45,5 +45,6 @@ void freezer_freezeObject(char* key, int x, int y, class Object *o);
 class Object* freezer_thawObject(char* key,int* xout, int* yout);
 void freezer_save(save_t *save);
 void freezer_del();
+void freezer_start_contents();
 
 #endif

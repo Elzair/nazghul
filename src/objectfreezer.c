@@ -129,3 +129,18 @@ void freezer_del()
 		free(ofn);
 	}
 }
+
+void freezer_start_contents()
+{
+	struct tree* ofntree= Session->freezer;
+	for (ofntree = tree_minimum(ofntree);ofntree;ofntree = tree_successor(ofntree))
+	{
+		struct objectfreezernode *ofn = (objectfreezernode *) ofntree;
+		struct list* ofllist;
+		list_for_each(&(ofn->objectlist),ofllist)
+		{
+			struct objectfreezerlist *ofln = (objectfreezerlist *) ofllist;
+			ofln->obj->start();
+		}
+	}
+}

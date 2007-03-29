@@ -440,7 +440,10 @@ int session_load(char *filename)
                 if (entry->start) {
                         entry->start(entry->obj);
                 }
-        }        
+        }     
+
+		/* need to start all the objects in the freezer too */
+		freezer_start_contents();
 
         sky_start_session(&Session->sky, 
                           NULL != Place && ! Place->underground);
