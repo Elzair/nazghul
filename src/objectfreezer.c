@@ -97,6 +97,10 @@ class Object* freezer_thawObject(char* key,int* xout, int* yout)
 
 void freezer_save(save_t *save)
 {
+	if (!Session->freezer)
+	{
+		return;
+	}
 	struct tree* ofntree= Session->freezer;
 	for (ofntree = tree_minimum(ofntree);ofntree;ofntree = tree_successor(ofntree))
 	{
@@ -132,6 +136,10 @@ void freezer_del()
 
 void freezer_start_contents()
 {
+	if (!Session->freezer)
+	{
+		return;
+	}
 	struct tree* ofntree= Session->freezer;
 	for (ofntree = tree_minimum(ofntree);ofntree;ofntree = tree_successor(ofntree))
 	{
