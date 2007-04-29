@@ -59,7 +59,7 @@
 (kern-mk-sprite 's_ships_wheel ss_u4_shapes 1 54 #f 0 )
 ;(kern-mk-sprite 's_boulder     ss_u4_shapes 1 55 #f 0 )
 (kern-mk-sprite 's_asleep      ss_u4_shapes 1 56 #f 0 )
-(kern-mk-sprite 's_wall_rock   ss_u4_shapes 1 57 #f 0 )
+;(kern-mk-sprite 's_wall_rock   ss_u4_shapes 1 57 #f 0 )
 (kern-mk-sprite 's_door_locked ss_u4_shapes 1 58 #f 0 )
 (kern-mk-sprite 's_door        ss_u4_shapes 1 59 #f 0 )
 (kern-mk-sprite 's_chest       ss_u4_shapes 1 60 #f 0 )
@@ -484,10 +484,13 @@
 (kern-mk-sprite 's_mountains     ss_overlays 1  23 #f 0 )
 (kern-mk-sprite 's_dungeon       ss_overlays 1  24 #f 0 )
 (kern-mk-sprite 's_statue        ss_overlays 1  25 #f 0 )
-(kern-mk-sprite 's_secret_rock   ss_overlays 1  26 #f 0 )
+;(kern-mk-sprite 's_secret_rock   ss_overlays 1  26 #f 0 )
 (kern-mk-sprite 's_blank   		 ss_overlays 1  27 #f 0 )
 (kern-mk-sprite 's_boulder_over  ss_overlays 1  68 #f 0 )
 (kern-mk-sprite 's_boulder       ss_overlays 1  69 #f 0 )
+(kern-mk-sprite 's_wall_rock     ss_overlays 1  72 #f 0 )
+(kern-mk-sprite 's_secret_rock     ss_overlays 1  73 #f 0 )
+(kern-mk-sprite 's_window_in_rock     ss_overlays 1  74 #f 0 )
 
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces
