@@ -113,7 +113,7 @@
 (kern-mk-sprite 's_acid_bolt   ss_arms 1 20 #f 170)
 (kern-mk-sprite 's_thrownweb   ss_arms 1 31 #f 0)
 (kern-mk-sprite 's_prismatic_bolt ss_arms 1 60 #f 0)
-(kern-mk-sprite 's_squat_bubbly_green_potion ss_arms 1 30 #f 170)
+(kern-mk-sprite 's_squat_bubbly_green_potion ss_arms 1 30 #f 0)
 
 ;; ----------------------------------------------------------------------------
 ;; mk-missile-ifc -- automate missile ifc creation. 'pred?' takes an object as
