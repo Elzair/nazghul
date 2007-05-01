@@ -236,6 +236,15 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         cachedPathPlace = getPlace();
                         pathPtr = cachedPath->next;
                         
+                        // Check if already there (can happen if the target changes)
+						if (! pathPtr) {
+								//dbg("already there\n");
+								astar_path_destroy(cachedPath);
+								cachedPath = NULL;
+								cachedPathPlace = NULL;
+								return true;
+						}
+
                         // Try to take the next step along the path.
                         result = move(pathPtr->x - getX(), 
                                       pathPtr->y - getY());
