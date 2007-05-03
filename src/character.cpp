@@ -2180,6 +2180,9 @@ void Character::synchronize()
 
 	if (!sched || sched->n_appts == 0)
 		return;
+		
+	if (isDead())
+		return;
 
         cur_appt = sched_get_appointment(sched, Session->clock.hour,
                                          Session->clock.min);
@@ -2210,6 +2213,9 @@ void Character::synchronize()
 void Character::introduce()
 {
         assert(sched);
+		
+		if (isDead())
+			return;
 
         struct appt *newAppt = sched_get_appointment(sched, 
                                                      Session->clock.hour,
