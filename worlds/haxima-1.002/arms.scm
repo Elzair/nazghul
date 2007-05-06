@@ -50,7 +50,7 @@
 (define temp-ifc
   (ifc '()
        (method 'hit-loc
-               (lambda (kmissile kplace x y)
+               (lambda (kmissile kuser ktarget kplace x y dam)
 				 ((car temp-ifc-state) kmissile kplace x y)
                  ))))
 
@@ -121,7 +121,7 @@
 ;; ----------------------------------------------------------------------------
 (define (mk-missile-ifc hit)
   (ifc '()
-       (method 'hit-loc (lambda (kmissile kplace x y)
+       (method 'hit-loc (lambda (kmissile kuser ktarget kplace x y dam)
                           (let ((targets (filter obj-is-char? 
                                                  (kern-get-objects-at (mk-loc kplace 
                                                                               x 
@@ -141,7 +141,8 @@
 (define fireball-ifc
   (ifc '()
        (method 'hit-loc
-               (lambda (kmissile kplace x y)
+               (lambda (kmissile kuser ktarget kplace x y dam)
+               	
                  (for-each burn
                            (filter obj-is-char? 
                                    (kern-get-objects-at (mk-loc kplace x y))))
@@ -151,7 +152,7 @@
 (define warhead-ifc
   (ifc nil
        (method 'hit-loc 
-               (lambda (kmissile kplace x y)
+               (lambda (kmissile kuser ktarget kplace x y dam)
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
 
@@ -220,14 +221,14 @@
 (define flaming-oil-ifc
   (ifc obj-ifc
        (method 'hit-loc 
-               (lambda (kmissile kplace x y)
+               (lambda (kmissile kuser ktarget kplace x y dam)
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
 
 (define vial-of-slime-ifc
   (ifc obj-ifc
        (method 'hit-loc 
-               (lambda (kmissile kplace x y)
+               (lambda (kmissile kuser ktarget kplace x y dam)
                  (let* ((lvl (kern-dice-roll "1d3+5"))
                         (knpc (spawn-npc 'green-slime lvl))
                         (loc (pick-loc (mk-loc kplace x y) knpc)))
