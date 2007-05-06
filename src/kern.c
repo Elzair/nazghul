@@ -4504,7 +4504,7 @@ KERN_API_CALL(kern_fire_missile)
 
         /* Fire the missile */
         missile->setPlace(dplace);
-        missile->animate(ox, oy, dx, dy, 0);
+        missile->animate(ox, oy, &dx, &dy, 0);
         hitTarget = missile->hitTarget();
         delete missile;
         return hitTarget ? sc->T : sc->F;

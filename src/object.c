@@ -1898,9 +1898,9 @@ bool ObjectType::canHitLocation()
         return (gifc_cap & GIFC_CAN_HIT_LOCATION);
 }
 
-int ObjectType::hitLocation(Object *obj, struct place *place, int x, int y)
+int ObjectType::hitLocation(Object *obj, Object *attacker, Object *target, struct place *place, int x, int y, int dam)
 {
-        return closure_exec(gifc, "yppdd", "hit-loc", obj, place, x, y);
+        return closure_exec(gifc, "yppppddd", "hit-loc", obj, attacker, target, place, x, y, dam);
 }
 
 int ObjectType::step(Object *obj, Object *stepper)

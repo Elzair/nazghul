@@ -208,7 +208,7 @@ class ObjectType {
         int enter(Object *obj, Object *enterer);
         int cast(Object *caster);
         int bump(Object *obj, Object *bumper);
-        int hitLocation(Object *obj, struct place *place, int x, int y);
+        int hitLocation(Object *obj, Object *attacker, Object *target, struct place *place, int x, int y, int dam);
         int buy(Object *buyer, int q);
         int search(Object *obj, Object *searcher);
 

@@ -66,9 +66,10 @@ class ArmsType:public ObjectType {
 	virtual bool isMissileWeapon();
 	virtual void setMissileType(class ArmsType * missileType);
 	virtual class ArmsType *getMissileType();
-	virtual bool fire(class Character * target, int ox, int oy);
-	virtual bool fire(struct place *place, int ox, int oy, int tx, int ty);
-        virtual bool fireInDirection(struct place *place, int ox, int oy, int dx, int dy, class Object *user);
+	virtual bool fire(class Character * target, int ox, int oy, int* misx, int* misy);
+	virtual bool fire(struct place *place, int ox, int oy, int* tx, int* ty);
+    virtual bool fireInDirection(struct place *place, int ox, int oy, int dx, int dy, class Object *user);
+	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
 	virtual bool isThrownWeapon();
 	virtual void setThrown(bool val);
 	virtual class ArmsType *getAmmoType();

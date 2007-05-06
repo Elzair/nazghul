@@ -419,6 +419,8 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         int damage;
         int armor;
         int critical = 0;
+		int misx;
+		int misy;
         bool miss;
 
         /* Reduce the diplomacy rating between the attacker's and target's
@@ -433,21 +435,25 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                   , weapon->getName()
                 );
 
-        miss = ! weapon->fire(target, character->getX(), character->getY());
+        miss = ! weapon->fire(target, character->getX(), character->getY(), &misx, &misy);
         ctrl_attack_done(character, weapon, target);
 
-        if (miss) {
-                log_end("obstructed!");
-                return;
+        if (miss)
+        {
+				log_end("obstructed!");
+				weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,0);
+				return;
         }
 
         /* Roll to hit. */
         log_continue("\n");
         hit = ctrl_calc_to_hit(character, weapon, to_hit_penalty);
         def = ctrl_calc_to_defend(target);
-        if (hit < def) {
-                log_end("evaded!");
-                return;
+        if (hit < def)
+        {
+				log_end("evaded!");
+				weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,0);
+				return;
         }
 
         /* roll for critical hit */
@@ -463,15 +469,19 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         damage -= armor;
         damage = max(damage, 0);
         
-        if (damage <= 0) {
-                log_end("blocked!");
-                return;
+        if (damage <= 0)
+        {
+				log_end("blocked!");
+				weapon->fireHitLoc(character, target, character->getPlace(),misx,misy,0);
+				return;
         }
 
         // the damage() method may destroy the target, so bump the refcount
         // since we still need the target through the end of this function
         obj_inc_ref(target);
         target->damage(damage);
+
+			weapon->fireHitLoc(character, target, character->getPlace(),misx,misy,0);
 
         log_end("%s!", target->getWoundDescription());
 
@@ -704,7 +714,7 @@ static void ctrl_attack_ui(class Character *character)
                                          being_layer);
                 character->setAttackTarget(target);
                 if (target == NULL) {
-
+						
                         /* Attack the terrain */
                         terrain = place_get_terrain(character->getPlace(),
                                                     x, y);
@@ -713,12 +723,17 @@ static void ctrl_attack_ui(class Character *character)
                                   , weapon->getName()
                                 );
 				
+						int misx = x;
+						int misy = y;
+						
                         weapon->fire(character->getPlace(), 
                                      character->getX(), 
                                      character->getY(), 
-                                     x, 
-                                     y);
+                                     &misx, 
+                                     &misy);
 
+								weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,0);                                     
+                                     
                         ctrl_attack_done(character, weapon, NULL);
 	
                         cmdwin_spush("%s", terrain->name);
@@ -726,7 +741,7 @@ static void ctrl_attack_ui(class Character *character)
                         /* Check for a mech */
                         mech = place_get_object(character->getPlace(), x, y, 
                                                 mech_layer);
-                        if (mech) {
+                        if (mech && mech->getName()) {
                                 log_end("%s hit!", mech->getName());
                                 mech->attack(character);
                         } else {

@@ -153,20 +153,43 @@ bool ArmsType::isMissileWeapon()
 	return (missile != NULL && !thrown);
 }
 
-bool ArmsType::fire(class Character * target, int ox, int oy)
+/*
+	triggers a hit-loc ifc event if appropriate for either weapon or missile
+*/
+void ArmsType::fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam)
+{
+	if (isMissileWeapon() || isThrownWeapon())
+	{
+		missile->fireHitLoc(attacker, target, place, x, y, dam);
+	}
+	if (canHitLocation())
+		hitLocation(NULL, attacker, target, place, x, y, dam);	
+}
+
+/*
+	Fires a missile at a specific target, returns true if it reaches the target's location
+	updates misx and misy to be the location the missile reaches.
+*/
+bool ArmsType::fire(class Character * target, int ox, int oy, int *misx, int *misy)
 {
 	if (isMissileWeapon() || isThrownWeapon()) {
+		*misx = target->getX();
+		*misy = target->getY();
 		missile->setPlace(target->getPlace());
 		missile->setX(ox);
 		missile->setY(oy);
-		missile->animate(ox, oy, target->getX(), target->getY(), 0);
+		missile->animate(ox, oy, misx, misy, 0);
 		if (!missile->hitTarget())
 			return false;
 	}
 	return true;
 }
 
-bool ArmsType::fire(struct place * place, int ox, int oy, int tx, int ty)
+/*
+	Fires a missile at a specific tile, returns true if it reaches the target's location
+	updates tx and ty to be the location the missile reaches.
+*/
+bool ArmsType::fire(struct place * place, int ox, int oy, int *tx, int *ty)
 {
 	if (isMissileWeapon() || isThrownWeapon()) {
 		missile->setPlace(place);
@@ -186,12 +209,15 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
         if (fire_sound)
                 sound_play(fire_sound, SOUND_MAX_VOLUME);
 
+		int misx = dx * getRange() + ox;
+		int misy = dy * getRange() + oy;
+
         missile->setPlace(place);
         missile->setX(ox);
         missile->setY(oy);
         missile->animate(ox, oy, 
-                         dx * getRange() + ox, 
-                         dy * getRange() + oy, 
+                         &misx, 
+                         &misy, 
                          MISSILE_IGNORE_LOS|MISSILE_HIT_PARTY);
 
         if (!missile->hitTarget() || !missile->getStruck())

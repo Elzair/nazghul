@@ -33,7 +33,8 @@ class Missile:public Object {
 	Missile(ArmsType*);
 	virtual ~Missile();
 	virtual class ArmsType *getObjectType();
-	virtual void animate(int Ax, int Ay, int Bx, int By, int flags);
+	virtual void animate(int Ax, int Ay, int *Bx, int *By, int flags);
+	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
 	virtual bool hitTarget();
         virtual class Object *getStruck();
         virtual bool enterTile(struct place *place, int x, int y);
