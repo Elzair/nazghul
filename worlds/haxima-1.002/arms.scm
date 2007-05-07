@@ -342,9 +342,8 @@
    (list  't_staff          "staff"          s_staff          "1d3"    "1d4"    "1d3"    slot-weapon   2      2      2			60		30		40		1.0	)
    (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "2"      "2d8+5"  "+0"     slot-weapon   2      1      2			50		20		70		1.0	)
    (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+5" "+2"     slot-weapon   1      1      1			60		20		70		1.0	)
-   (list  't_flaming_sword  "flaming sword"  s_flaming_sword  "1d2"    "1d10+3" "1d2"    slot-weapon   1      1      2			50		20		70		1.0	)
    ))
-
+   
 (kern-mk-sprite 's_leather_helm  ss_arms 1 48 #f 0)
 (kern-mk-sprite 's_chain_coif    ss_arms 1 49 #f 0)
 (kern-mk-sprite 's_iron_helm     ss_arms 1 50 #f 0)
@@ -420,6 +419,21 @@
 ;;
 ;; These don't fit into the mold for any standard arms type.
 ;;--------------------------------------------------------------------------
+
+(define flaming-sword-ifc
+  (ifc obj-ifc
+       (method 'hit-loc 
+               (lambda (kmissile kuser ktarget kplace x y dam)
+               	(cond ((equal? dam 0)
+               				(generic-burn ktarget "1d5-2"))
+               			((> dam 0)
+               				(generic-burn ktarget "2d4"))
+               	))
+         )))          
+							
+(kern-mk-arms-type 't_flaming_sword "flaming sword" s_flaming_sword "1d2" "1d8+2" "0" "1d2" slot-weapon 1 1 1 nil #f #f 2 nil
+					 (ifc-cap flaming-sword-ifc) flaming-sword-ifc 50 20 70 1.0)
+
 
 (kern-mk-arms-type 't_cannon         ; tag
                    "cannon"          ; name
