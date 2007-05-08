@@ -10,6 +10,21 @@
            (kern-obj-is-being? obj)
            (kern-obj-add-effect obj ef_poison nil))
       (kern-log-msg "Noxious fumes!")))
+	
+(define (terrain-effect-lava obj)
+  (if (not (can-fly? obj))
+	(if (and (kern-obj-is-being? obj)
+			(kern-place-is-wilderness? (loc-place (kern-obj-get-location obj))))
+		(let* ((temp (println "wilderness lava"))
+				(avoid (occ-ability-dexdefend obj))
+				(avoidroll (- (kern-dice-roll (mkdice 1 (+ avoid avoid 5))) avoid avoid)))
+			(if (> avoidroll 0)
+				(generic-burn obj (mkdice avoidroll 4)))
+		)
+		(burn obj))))
+
+(define (terrain-effect-torch obj)
+	(generic-burn obj "1d4"))
 
 ;; opacity constants:
 (define opq 12) ;; opaque
@@ -41,7 +56,7 @@
    (list 't_mountains       "mountains"     pclass-mountains s_mountains         opq 0 nil)
    (list 't_fake_mountains  "mountains"     pclass-grass     s_mountains         opq 0 nil)
    (list 't_bog             "bog"           pclass-forest    s_bog               trn 0 'terrain-effect-poison)
-   (list 't_lava            "lava"          pclass-grass     s_lava              trn  128 'burn)
+   (list 't_lava            "lava"          pclass-grass     s_lava              trn  128 'terrain-effect-lava)
    (list 't_fake_lava       "lava"          pclass-grass     s_lava              trn  128 nil)
    (list 't_deep_lava       "deep lava"     pclass-deep      s_deep_lava         trn  0  'great-burn)
    (list 't_fire_terrain    "fire"          pclass-grass     s_field_fire        trn  512 'burn)
@@ -68,7 +83,7 @@
    (list 't_wall_v          "wall"          pclass-wall      s_wall_stone        trn 0 nil)
    (list 't_wall            "wall"          pclass-wall      s_wall_stone        opq 0 nil)
    (list 't_fake_wall       "wall"          pclass-forest    s_wall_stone        opq 0 nil)
-   (list 't_wall_torch      "wall torch"    pclass-wall      s_wall_torch        opq 1024 'burn)
+   (list 't_wall_torch      "wall torch"    pclass-wall      s_wall_torch        opq 1024 'terrain-effect-torch)
    (list 't_arrow_slit      "arrow slit"    pclass-bars      s_arrow_slit        trn 0 nil)
    (list 't_window_in_stone "window"        pclass-bars      s_window_in_stone   trn 0 nil)
    (list 't_window_in_rock  "window"        pclass-bars      s_window_in_rock    trn 0 nil)

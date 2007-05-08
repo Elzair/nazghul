@@ -331,9 +331,9 @@
 ;; lava corners
 
 (define (mk-blend-terrain tag . sprites)
-  (kern-mk-terrain tag "lava" pclass-shoals
+  (kern-mk-terrain tag "lava" pclass-grass
                    (mk-composite-sprite (cons s_lava sprites))
-                   1 0 'burn))
+                   1 0 'terrain-effect-lava))
 
 (mk-blend-terrain 't_lava_n  s_grass_n )
 (mk-blend-terrain 't_lava_w  s_grass_w )
