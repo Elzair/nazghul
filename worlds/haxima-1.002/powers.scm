@@ -147,15 +147,6 @@
 					(kern-map-repaint)
 					(cleanfields loc)
 				))))
-
-(define (mkdice dice size)
-	(let ((numstr (if (number? dice)
-						(number->string dice)
-						dice))
-			(sizestr (if (number? size)
-						(number->string size)
-						size)))
-			(string-append numstr "d" sizestr)))
 			
 (define (cast-missile-proc kchar ktarg ktype)
   (kern-fire-missile ktype

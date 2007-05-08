@@ -1629,3 +1629,13 @@
           (else
            (cons (cons x1 y1) (f2 0))))))
 
+;; Utility for generating dice from numbers easily
+;;
+(define (mkdice dice size)
+	(let ((numstr (if (number? dice)
+						(number->string dice)
+						dice))
+			(sizestr (if (number? size)
+						(number->string size)
+						size)))
+			(string-append numstr "d" sizestr)))
