@@ -18,7 +18,6 @@
 				(> (kern-obj-get-ap obj) -1))
 				)
 	(let* (
-			(temp (println (kern-obj-get-name obj) "vs swamp"))
 			(difficulty
 				(cond ((can-fly? obj) 1)
 					((kern-place-is-wilderness? (loc-place (kern-obj-get-location obj))) 4)
