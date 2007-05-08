@@ -172,7 +172,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "bog" pclass-grass
                    (mk-composite-sprite (cons s_bog sprites))
-                   1 0 'terrain-effect-poison))
+                   1 0 'terrain-effect-swamp))
 
 (mk-blend-terrain 't_bog_nw s_grass_nw)
 (mk-blend-terrain 't_bog_ne s_grass_ne)
