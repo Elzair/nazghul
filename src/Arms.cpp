@@ -196,6 +196,8 @@ bool ArmsType::fire(struct place * place, int ox, int oy, int *tx, int *ty)
 		missile->setX(ox);
 		missile->setY(oy);
 		missile->animate(ox, oy, tx, ty, 0);
+		if (!missile->hitTarget())
+			return false;
 	}
 	return true;
 }

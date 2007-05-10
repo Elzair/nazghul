@@ -441,7 +441,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         if (miss)
         {
 				log_end("obstructed!");
-				weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,0);
+				weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,-1);
 				return;
         }
 
@@ -452,7 +452,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         if (hit < def)
         {
 				log_end("evaded!");
-				weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,0);
+				weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,-1);
 				return;
         }
 
@@ -481,7 +481,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         obj_inc_ref(target);
         target->damage(damage);
 
-			weapon->fireHitLoc(character, target, character->getPlace(),misx,misy,0);
+			weapon->fireHitLoc(character, target, character->getPlace(),misx,misy,damage);
 
         log_end("%s!", target->getWoundDescription());
 
@@ -719,35 +719,43 @@ static void ctrl_attack_ui(class Character *character)
                         terrain = place_get_terrain(character->getPlace(),
                                                     x, y);
 
+                        cmdwin_spush(" %s", terrain->name);                  
+                                                    
                         log_begin("%s: %s - ", character->getName()
                                   , weapon->getName()
                                 );
 				
-						int misx = x;
-						int misy = y;
-						
-                        weapon->fire(character->getPlace(), 
+								int misx = x;
+								int misy = y;
+								
+                        bool miss = ! weapon->fire(character->getPlace(), 
                                      character->getX(), 
                                      character->getY(), 
                                      &misx, 
                                      &misy);
 
-								weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,0);                                     
+                        if (miss)
+                        {
+	                        log_end("obstructed!");
+                        }
+                                     
+                        weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,-1);                                     
                                      
                         ctrl_attack_done(character, weapon, NULL);
-	
-                        cmdwin_spush("%s", terrain->name);
 
-                        /* Check for a mech */
-                        mech = place_get_object(character->getPlace(), x, y, 
-                                                mech_layer);
-                        if (mech && mech->getName()) {
-                                log_end("%s hit!", mech->getName());
-                                mech->attack(character);
-                        } else {
-                                log_end("%s hit!", terrain->name);
+								if (!miss)
+								{                     
+	                        /* Check for a mech */
+	                        mech = place_get_object(character->getPlace(), x, y, 
+	                                                mech_layer);
+	                        if (mech && mech->getName()) {
+	                                log_end("%s hit!", mech->getName());
+	                                mech->attack(character);
+	                        } else {
+	                                log_end("%s hit!", terrain->name);
+	                        }
                         }
-
+							
                 }
                 else if (target == character) {
                         /* Targeting the self is taken to mean "switch to my
