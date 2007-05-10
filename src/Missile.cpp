@@ -21,6 +21,7 @@
 //
 
 #include "Missile.h"
+#include "dice.h"
 #include "character.h"
 #include "screen.h"
 #include "sprite.h"
@@ -46,11 +47,16 @@ class ArmsType *Missile::getObjectType()
         return (class ArmsType *) Object::getObjectType();
 }
 
+/* set hit=true if a party or object has been struck
+return true if the missile has not been interupted */
 bool Missile::enterTile(struct place *place, int x, int y)
 {
         if (! (flags & MISSILE_IGNORE_LOS))
-                return (ALPHA_OPAQUE != place_visibility(place, x, y));
-
+			{
+				 int opacity = place_visibility(place, x, y);
+				 return ((opacity != ALPHA_OPAQUE) && (dice_roll_numeric(1,ALPHA_OPAQUE,0)>opacity));
+			}	
+			
         if (! (flags & MISSILE_HIT_PARTY))
                 return true;
 
