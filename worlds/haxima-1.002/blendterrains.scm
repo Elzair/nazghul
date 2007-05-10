@@ -4,7 +4,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "water" pclass-deep
                    (mk-composite-sprite (cons s_shallow sprites))
-                   1 0 nil))
+                   trn 0 nil))
 
 (mk-blend-terrain 't_wshore_n  s_grass_n )
 (mk-blend-terrain 't_wshore_w  s_grass_w )
@@ -25,7 +25,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "deep water" pclass-deep
                    (mk-composite-sprite (cons s_deep sprites))
-                   1 0 nil))
+                   trn 0 nil))
 
 (mk-blend-terrain 't_dshore_n  s_grass_n )
 (mk-blend-terrain 't_dshore_w  s_grass_w )
@@ -45,7 +45,7 @@
 
 (kern-mk-terrain 't_water_rocks "boulder" pclass-waterboulder
                    (mk-composite-sprite (list s_shoals s_boulder_over))
-                   1 0 nil)
+                   lgt 0 nil)
 
 ;;----------------------------
 ;; Water edges
@@ -53,7 +53,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "grass" pclass-grass
                    (mk-composite-sprite (cons s_shoals (cons s_grassi_c sprites)))
-                   1 0 nil))
+                   trn 0 nil))
 
 (mk-blend-terrain 't_grassw_ne s_grasso_se s_grasso_sw s_grasso_nw)
 (mk-blend-terrain 't_grassw_nw s_grasso_se s_grasso_sw s_grasso_ne)
@@ -66,12 +66,12 @@
 
 (kern-mk-terrain 't_grassw_c "grass" pclass-shoals
                    (mk-composite-sprite (list s_shoals s_grassi_c))
-                   1 0 nil)
+                   trn 0 nil)
 				   
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "trees" pclass-trees
                    (mk-composite-sprite (cons s_shoals (cons s_trees_c sprites)))
-                   1 0 nil))
+                   lgt 0 nil))
 
 (mk-blend-terrain 't_treew_ne s_trees_se s_trees_sw s_trees_nw)
 (mk-blend-terrain 't_treew_nw s_trees_se s_trees_sw s_trees_ne)
@@ -84,12 +84,12 @@
 
 (kern-mk-terrain 't_treew_c "trees" pclass-trees
                    (mk-composite-sprite (list s_shoals s_trees_c))
-                   1 0 nil)
+                   lgt 0 nil)
 				   
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "hills" pclass-trees
                    (mk-composite-sprite (cons s_shoals (cons s_hills_c sprites)))
-                   1 0 nil))
+                   dns 0 nil))
 
 (mk-blend-terrain 't_hillw_ne s_hills_se s_hills_sw s_hills_nw)
 (mk-blend-terrain 't_hillw_nw s_hills_se s_hills_sw s_hills_ne)
@@ -102,12 +102,12 @@
 
 (kern-mk-terrain 't_hillw_c "hills" pclass-trees
                    (mk-composite-sprite (list s_shoals s_hills_c))
-                   1 0 nil)
+                   dns 0 nil)
 				   
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "mountains" pclass-mountains
                    (mk-composite-sprite (cons s_shoals (cons s_mount_c sprites)))
-                   0 0 nil))
+                   opq 0 nil))
 
 (mk-blend-terrain 't_mountw_ne s_mount_se s_mount_sw s_mount_nw)
 (mk-blend-terrain 't_mountw_nw s_mount_se s_mount_sw s_mount_ne)
@@ -120,7 +120,7 @@
 
 (kern-mk-terrain 't_mountw_c "mountains" pclass-mountains
                    (mk-composite-sprite (list s_shoals s_mount_c))
-                   0 0 nil)
+                   opq 0 nil)
 
 ;;----------------------------------------------------------------------------
 ;; Some blended hill terrain types
@@ -128,7 +128,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "grass" pclass-grass
                    (mk-composite-sprite (cons s_grass sprites))
-                   1 0 nil))
+                   trn 0 nil))
 
 (mk-blend-terrain 't_hilledge_n  s_hill_n )
 (mk-blend-terrain 't_hilledge_w  s_hill_w )
@@ -151,7 +151,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "hills" pclass-trees
                    (mk-composite-sprite (cons s_grass (cons s_hills_c sprites)))
-                   1 0 nil))
+                   dns 0 nil))
 
 (mk-blend-terrain 't_hilli_ne s_hills_se s_hills_sw s_hills_nw)
 (mk-blend-terrain 't_hilli_nw s_hills_se s_hills_sw s_hills_ne)
@@ -172,7 +172,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "bog" pclass-grass
                    (mk-composite-sprite (cons s_bog sprites))
-                   1 0 'terrain-effect-swamp))
+                   trn 0 'terrain-effect-swamp))
 
 (mk-blend-terrain 't_bog_nw s_grass_nw)
 (mk-blend-terrain 't_bog_ne s_grass_ne)
@@ -190,7 +190,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "mountains" pclass-mountains
                    (mk-composite-sprite (cons s_grass (cons s_mount_c sprites)))
-                   0 0 nil))
+                   opq 0 nil))
 
 (mk-blend-terrain 't_mountg_ne s_mount_se s_mount_sw s_mount_nw)
 (mk-blend-terrain 't_mountg_nw s_mount_se s_mount_sw s_mount_ne)
@@ -212,7 +212,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "forest" pclass-forest
                    (mk-composite-sprite (cons s_grass (cons s_forest_c sprites)))
-                   1 0 nil))
+                   hvy 0 nil))
 
 (mk-blend-terrain 't_forestg_ne s_forest_se s_forest_sw s_forest_nw)
 (mk-blend-terrain 't_forestg_nw s_forest_se s_forest_sw s_forest_ne)
@@ -231,7 +231,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "cliff edge" pclass-space
                    (mk-composite-sprite (cons s_null sprites))
-                   1 0 nil))
+                   trn 0 nil))
 
 (mk-blend-terrain 't_voids_n  s_grass_n )
 (mk-blend-terrain 't_voids_w  s_grass_w )
@@ -252,7 +252,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "grass" pclass-grass
                    (mk-composite-sprite (cons s_null (cons s_grassi_c sprites)))
-                   1 0 nil))
+                   trn 0 nil))
 
 (mk-blend-terrain 't_grassv_ne s_grasso_se s_grasso_sw s_grasso_nw)
 (mk-blend-terrain 't_grassv_nw s_grasso_se s_grasso_sw s_grasso_ne)
@@ -266,7 +266,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "hills" pclass-trees
                    (mk-composite-sprite (cons s_null (cons s_hills_c sprites)))
-                   1 0 nil))
+                   dns 0 nil))
 
 (mk-blend-terrain 't_hillv_ne s_hills_se s_hills_sw s_hills_nw)
 (mk-blend-terrain 't_hillv_nw s_hills_se s_hills_sw s_hills_ne)
@@ -280,7 +280,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "mountains" pclass-mountains
                    (mk-composite-sprite (cons s_null (cons s_mount_c sprites)))
-                   0 0 nil))
+                   opq 0 nil))
 
 (mk-blend-terrain 't_mountv_ne s_mount_se s_mount_sw s_mount_nw)
 (mk-blend-terrain 't_mountv_nw s_mount_se s_mount_sw s_mount_ne)
@@ -297,7 +297,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "trees" pclass-grass
                    (mk-composite-sprite (cons s_trees sprites))
-                   1 0 nil))
+                   lgt 0 nil))
 
 (mk-blend-terrain 't_trees_nw s_treesi_nw s_grasso_nw)
 (mk-blend-terrain 't_trees_ne s_treesi_ne s_grasso_ne)
@@ -314,7 +314,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "grass" pclass-grass
                    (mk-composite-sprite (cons s_grass sprites))
-                   1 0 nil))
+                   trn 0 nil))
 
 (mk-blend-terrain 't_grasst_nw s_treeso_nw)
 (mk-blend-terrain 't_grasst_ne s_treeso_ne)
@@ -333,7 +333,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "lava" pclass-grass
                    (mk-composite-sprite (cons s_lava sprites))
-                   1 0 'terrain-effect-lava))
+                   trn 0 'terrain-effect-lava))
 
 (mk-blend-terrain 't_lava_n  s_grass_n )
 (mk-blend-terrain 't_lava_w  s_grass_w )

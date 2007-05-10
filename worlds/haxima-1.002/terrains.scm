@@ -52,6 +52,7 @@
 
 ;; opacity constants:
 (define opq 12) ;; opaque
+(define hvy 5)  ;; heavy
 (define dns 3)  ;; dense
 (define lgt 2)  ;; light (density)
 (define trn 0)  ;; transparent
@@ -73,9 +74,9 @@
    (list 't_dirt            "dirt"          pclass-grass     s_dirt              trn 0 nil)
    (list 't_gravel          "gravel"        pclass-grass     s_gravel            trn 0 nil)
    (list 't_trees           "trees"         pclass-trees     s_trees             lgt 0 nil)
-   (list 't_forest_v        "forest"        pclass-forest    s_forest            dns 0 nil)
-   (list 't_forest          "forest"        pclass-forest    s_forest            dns 0 nil)
-   (list 't_hills           "hills"         pclass-trees     s_hills             trn 0 nil)
+   (list 't_forest_v        "forest"        pclass-forest    s_forest            trn 0 nil)
+   (list 't_forest          "forest"        pclass-forest    s_forest            hvy 0 nil)
+   (list 't_hills           "hills"         pclass-trees     s_hills             dns 0 nil)
    (list 't_mountains_v     "mountains"     pclass-mountains s_mountains         trn 0 nil)
    (list 't_mountains       "mountains"     pclass-mountains s_mountains         opq 0 nil)
    (list 't_fake_mountains  "mountains"     pclass-grass     s_mountains         opq 0 nil)
@@ -100,7 +101,7 @@
    (list 't_mast            "mast"          pclass-wall      s_mast              trn 0 nil)
    (list 't_ships_wheel     "ship's wheel"  pclass-wall      s_ships_wheel       trn 0 nil)
    (list 't_deck            "deck"          pclass-grass     s_deck              trn 0 nil)
-   (list 't_boulder         "boulder"       pclass-boulder   s_boulder           trn 0 nil)
+   (list 't_boulder         "boulder"       pclass-boulder   s_boulder           lgt 0 nil)
    (list 't_wall_rock_v     "rock wall"     pclass-wall      s_wall_rock         trn 0 nil)
    (list 't_wall_rock       "rock wall"     pclass-wall      s_wall_rock         opq 0 nil)
    (list 't_fake_wall_rock  "rock wall"     pclass-forest    s_secret_rock       opq 0 nil)
@@ -229,7 +230,7 @@
 (define (mk-shore-terrain tag . sprites)
   (kern-mk-terrain tag "shallow water" pclass-shoals
                    (mk-composite-sprite (cons s_shoals sprites))
-                   1 0 nil))
+                   trn 0 nil))
 
 (mk-shore-terrain 't_shore_n  s_grass_n )
 (mk-shore-terrain 't_shore_w  s_grass_w )
