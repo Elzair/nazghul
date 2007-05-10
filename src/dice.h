@@ -20,3 +20,4 @@
 extern int dice_roll(char *fmt);
 extern int dice_valid(char *fmt);
 extern int dice_average(char *fmt);
+extern int dice_roll_numeric(int num, int faces, int bias);

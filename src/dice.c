@@ -126,12 +126,21 @@ static int dice_parse(char *ptr, int *num, int *faces, int *bias)
         return -1;
 }
 
+int dice_roll_numeric(int num, int faces, int bias)
+{
+	int val = 0;
+	while (num--) {
+	       val += (rand() % faces) + 1;
+	}
+	val += bias;
+	return val;
+}
+
 int dice_roll(char *ptr)
 {
         int num = 0;
         int faces = 0;
         int bias = 0;
-        int val = 0;
 
         if (dice_parse(ptr, &num, &faces, &bias)) {
                 assert(false); /* if uncertain, caller should have checked
@@ -139,13 +148,7 @@ int dice_roll(char *ptr)
                 return 0;
         }
         
-        while (num--) {
-                val += (rand() % faces) + 1;
-        }
-
-        val += bias;
-
-        return val;
+        return dice_roll_numeric(num,faces,bias);
 }
 
 int dice_valid(char *fmt)
