@@ -24,6 +24,7 @@
 #include "dice.h"
 #include "character.h"
 #include "screen.h"
+#include "mmode.h"
 #include "sprite.h"
 #include "map.h"
 #include "console.h"
@@ -36,6 +37,7 @@
 Missile::Missile(ArmsType*type)
         : Object(type)
 {
+
 }
 
 Missile::~Missile()
@@ -53,8 +55,9 @@ bool Missile::enterTile(struct place *place, int x, int y)
 {
         if (! (flags & MISSILE_IGNORE_LOS))
 			{
-				 int opacity = place_visibility(place, x, y);
-				 return ((opacity != ALPHA_OPAQUE) && (dice_roll_numeric(1,ALPHA_OPAQUE,0)>opacity));
+				int obstruction = place_get_movement_cost(place, x, y, this);
+				 //int opacity = place_visibility(place, x, y);
+				 return ((obstruction != 20) && (dice_roll_numeric(1,20,0)>obstruction));
 			}	
 			
         if (! (flags & MISSILE_HIT_PARTY))
@@ -123,4 +126,9 @@ bool Missile::hitTarget()
 class Object * Missile::getStruck()
 {
         return struck;
+}
+
+struct mmode *Missile::getMovementMode()
+{
+        return getObjectType()->getMovementMode();
 }

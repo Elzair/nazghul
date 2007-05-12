@@ -7484,6 +7484,28 @@ KERN_API_CALL(kern_arms_type_get_ammo_type)
         return ammo ? scm_mk_ptr(sc, ammo) : sc->NIL;
 }
 
+KERN_API_CALL(kern_arms_type_set_mmode)
+{
+        class ArmsType *type;
+        struct mmode *mmode;
+        
+        /* unpack the type (should be an arms type, but no way to safely
+         * tell) */
+        if (unpack(sc, &args, "pp", &type, &mmode)) {
+                rt_err("kern-arms-type-set-mmode");
+                return sc->NIL;
+        }
+
+        if (! type) {
+                rt_err("kern-arms-type-set-mmode: null type");
+                return sc->NIL;
+        }
+
+        type->setMovementMode(mmode);
+
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_obj_move)
 {
         class Object *object;
@@ -8506,6 +8528,7 @@ scheme *kern_init(void)
         /* kern-arms-type api */
         API_DECL(sc, "kern-arms-type-get-ammo-type", kern_arms_type_get_ammo_type);
         API_DECL(sc, "kern-arms-type-get-range",     kern_arms_type_get_range);
+        API_DECL(sc, "kern-arms-type-set-mmode",     kern_arms_type_set_mmode);
 
         /* kern-astral-body api */
         API_DECL(sc, "kern-astral-body-get-gob", kern_astral_body_get_gob);

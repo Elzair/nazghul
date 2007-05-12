@@ -106,14 +106,14 @@ ArmsType::~ArmsType()
 {
 	if (missile != NULL)
 		delete missile;
-        if (toHitDice)
-                free(toHitDice);
-        if (toDefendDice)
-                free(toDefendDice);
-        if (damageDice)
-                free(damageDice);
-        if (armorDice)
-                free(armorDice);
+	if (toHitDice)
+	       free(toHitDice);
+	if (toDefendDice)
+	       free(toDefendDice);
+	if (damageDice)
+	       free(damageDice);
+	if (armorDice)
+	       free(armorDice);
 }
 
 bool ArmsType::isType(int classID) 
@@ -354,4 +354,14 @@ int ArmsType::modifyDamageBonus(int damBonus)
 float ArmsType::modifyAvoidBonus(float avoidBonus)
 {
 	return avoidBonus * char_avoid_mod;
+}
+
+struct mmode *ArmsType::getMovementMode()
+{
+   return movementMode;
+}
+
+void ArmsType::setMovementMode(struct mmode *mmode)
+{
+	movementMode = mmode;
 }

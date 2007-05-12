@@ -86,9 +86,9 @@
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
                      num-hands range default-rap nil #t #f weight nil (ifc-cap ifc) ifc stratt_mod dexatt_mod damage_mod avoid_mod))
 
-(define (mk-missile-arms-type tag name sprite ifc)
-  (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil #f #f 
-                     0 nil (ifc-cap ifc) ifc 20 60 20 1.0))
+(define (mk-missile-arms-type tag name sprite ifc mmode)
+  (kern-arms-type-set-mmode (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil #f #f 
+                     0 nil (ifc-cap ifc) ifc 20 60 20 1.0) mmode))
 
 (define (mk-armor-type tag name sprite to-hit armor slots weight avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 0 nil #f #f 
@@ -203,28 +203,32 @@
    ;;    ===================================================================
    ;;    tag           | name        | sprite        | gifc
    ;;    ===================================================================
-   (list 't_slingstone     "sling stone"    s_sling_stone    nil)
-   (list 't_arrow          "arrow"          s_arrow          obj-ifc)
-   (list 't_bolt           "bolt"           s_bolt           obj-ifc)
-   (list 't_warhead        "warhead"        s_warhead        warhead-ifc)
-   (list 't_cannonball     "cannonball"     s_cannonball     obj-ifc)
-   (list 't_poison_bolt    "poison bolt"    s_poison_bolt    poison-bolt-ifc)
-   (list 't_acid_bolt      "acid bolt"      s_acid_bolt      acid-bolt-ifc)
-   (list 't_fireball       "fireball"       s_fireball       fireball-ifc)
-   (list 't_deathball      "deathball"      s_deathball      deathball-ifc)
-   (list 't_stunball       "stunball"       s_projectile     stunball-ifc)
-   (list 't_slimeglob      "slime glob"     s_acid_bolt      nil)
-   (list 't_mfireball      "fireball"       s_fireball       temp-ifc)
-   (list 't_mweb           "web"            s_thrownweb      temp-ifc)
-   (list 't_mpoison_bolt   "poison bolt"    s_poison_bolt    temp-ifc)
-   (list 't_prismatic_bolt "prismatic bolt" s_prismatic_bolt prismatic-bolt-ifc)
+   (list 't_slingstone     "sling stone"    s_sling_stone    nil						mmode-missile)
+   (list 't_arrow          "arrow"          s_arrow          obj-ifc					mmode-missile)
+   (list 't_bolt           "bolt"           s_bolt           obj-ifc					mmode-missile)
+   (list 't_warhead        "warhead"        s_warhead        warhead-ifc			mmode-missile)
+   (list 't_cannonball     "cannonball"     s_cannonball     obj-ifc					mmode-missile)
+   (list 't_poison_bolt    "poison bolt"    s_poison_bolt    poison-bolt-ifc		mmode-missile)
+   (list 't_acid_bolt      "acid bolt"      s_acid_bolt      acid-bolt-ifc			mmode-missile)
+   (list 't_fireball       "fireball"       s_fireball       fireball-ifc			mmode-missile)
+   (list 't_deathball      "deathball"      s_deathball      deathball-ifc			mmode-missile)
+   (list 't_stunball       "stunball"       s_projectile     stunball-ifc			mmode-missile)
+   (list 't_slimeglob      "slime glob"     s_acid_bolt      nil						mmode-missile)
+   (list 't_mfireball      "fireball"       s_fireball       temp-ifc				mmode-missile)
+   (list 't_mweb           "web"            s_thrownweb      temp-ifc				mmode-missile)
+   (list 't_mpoison_bolt   "poison bolt"    s_poison_bolt    temp-ifc				mmode-missile)
+   (list 't_prismatic_bolt "prismatic bolt" s_prismatic_bolt prismatic-bolt-ifc	mmode-missile)
    ))
 
+(println "misls?")
+   
 ;; If we don't create these missile types now, we won't be able to refer to
 ;; them below in the projectile-arms-types table. For example, t_bow needs to
 ;; refer to t_arrow. But the interpreter won't recognize t_arrow as a variable
 ;; name until we call this procedure to create the t_arrow type.
 (map (lambda (type) (apply mk-missile-arms-type type)) missile-arms-types)
+
+(println "misls")
 
 ;; ============================================================================
 ;; Projectile Weapons

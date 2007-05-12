@@ -38,6 +38,7 @@ class Missile:public Object {
 	virtual bool hitTarget();
         virtual class Object *getStruck();
         virtual bool enterTile(struct place *place, int x, int y);
+        virtual struct mmode *getMovementMode();
  protected:
 	bool hit;
         class Object *struck;
