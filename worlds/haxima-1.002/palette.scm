@@ -26,8 +26,11 @@
     (list  ".."   t_grass)              ;; "grass"
     (list  ".!"   t_sunlit_grass)              ;; "grass"
     (list  "tt"   t_trees)              ;; "trees"
+    (list  "t|"   t_trees_d)            ;; "trees denser"
 
     (list  "||"   t_forest)             ;; "forest"
+    (list  "|X"   t_forest_d)           ;; "forest (denser)"
+    (list  "|t"   t_forest_l)           ;; "forest (lighter)"
     (list  "|."   t_forest_v)           ;; "forest"  (non-LOS-blocking)
 
     (list  "{{"   t_hills)              ;; "hills"
@@ -143,7 +146,8 @@
     (list  ">>"   t_rightwing)          ;; "castle wall"
     (list  "w+"   t_arrow_slit)         ;; "arrow slit"
     (list  "ws"   t_window_in_stone)    ;; "window"
-
+    (list  "wr"   t_window_in_rock)     ;; "window"
+    
     (list  "=="   t_bridge_WE)          ;; "east-west bridge"
     (list  "=|"   t_bridge_NS)          ;; "east-west bridge"
     (list  "=!"   t_lava_bridge_NS)
