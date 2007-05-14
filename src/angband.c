@@ -552,6 +552,23 @@ static void check_ray_set(u32b *ray_set, u32b ray_mask, int ray_index, unsigned 
                          * opacity */
                         int ray_val = ray_strength[ray_index];
                         ray_val -= tile_val;
+
+			// Due to the way the rays are cast
+			// (Bresenham algorithm), odd effects
+			// were seen on perfect diagonals.
+			// 
+			// A perfect diagonal (degrees 45, 135, 225, 315)
+			// gets treated as distance n, rather than n * sqrt(2)
+			// and as such, a "spike" of longer LOS on the diagonals
+			// was seen.
+			// 
+			// To avoid this artifact, we aproximate additional 
+			// ray strength reduction to correct this.
+			// Thus far we have reduced by (n * 1), 
+			// so we reduce by (n * 0.5) more, for a total of 1.5.
+			// This is a fair approximation of sqrt(2) ~ 1.41,
+			// and gets rid of the LOS "spikes"
+			// 
                         if (ray_index==(VINFO_MAX_SLOPES-1)) {
                                 ray_val -= (tile_val / 2);
                         }
