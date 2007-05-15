@@ -5276,7 +5276,7 @@ KERN_API_CALL(kern_place_get_movement_cost)
         if (!obj)
                 goto done;
 
-        cost = place_get_movement_cost(place, x, y, obj);
+        cost = place_get_movement_cost(place, x, y, obj,0);
 
  done:
         return scm_mk_integer(sc, cost);

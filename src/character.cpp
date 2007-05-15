@@ -790,7 +790,7 @@ enum MoveResult Character::move(int dx, int dy)
                                                 getPlace(), 
                                                 getX(), getY(),
                                                 newx, newy, 
-                                                this));
+                                                this, (getActivity() == COMMUTING ? PFLAG_IGNOREMECHS : 0)));
                                 return MovedOk;
         
                         }
@@ -814,7 +814,7 @@ enum MoveResult Character::move(int dx, int dy)
         decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
                                                          getX(), getY(), 
                                                          newx, 
-                                                         newy, this));
+                                                         newy, this, (getActivity() == COMMUTING ? PFLAG_IGNOREMECHS : 0)));
 	relocate(getPlace(), newx, newy);
 
 	return MovedOk;
@@ -2112,7 +2112,7 @@ void Character::switchPlaces(class Character *occupant)
         decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
                                                          oldx, oldy,
                                                          newx, newy,
-                                                         this));
+                                                         this, 0));
         setAttackTarget(oldTarget);
         setSolo(wasSolo);
 }

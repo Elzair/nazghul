@@ -283,7 +283,7 @@ MoveResult Party::move(int dx, int dy)
 
 	relocate(newplace, newx, newy);
 
-	action_points -= place_get_movement_cost(getPlace(), getX(), getY(), this);
+	action_points -= place_get_movement_cost(getPlace(), getX(), getY(), this,0);
 
         return MovedOk;
 }

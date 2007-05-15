@@ -295,11 +295,11 @@ extern struct terrain *place_get_terrain(struct place *place, int x, int y);
 extern Uint32 place_get_color(struct place *place, int x, int y);
 extern int place_get_movement_cost(struct place *place,
                                    int to_x, int to_y, 
-                                   class Object *obj);
+                                   class Object *obj, int flags);
 extern int place_get_diagonal_movement_cost(struct place *place, int from_x, 
                                             int from_y,
                                             int to_x, int to_y, 
-                                            class Object *obj);
+                                            class Object *obj, int flags);
 extern int place_adjust_turn_cost(struct place *place, int turns);
 extern int place_is_hazardous(struct place *place, int x, int y);
 extern class Party *place_random_encounter(struct place *);

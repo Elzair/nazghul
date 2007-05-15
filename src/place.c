@@ -711,16 +711,16 @@ int place_is_passable(struct place *place, int x, int y,
 
         }
 
-	// Does the caller want to check mechs?
-	if (0 == (flags & PFLAG_IGNOREMECHS)) {
-                
-                // Is the mech passable?
-                mech = place_get_object(place, x, y, mech_layer);
-                if (mech &&
-                    (place_obj_is_passable(mech, subject, flags) == 
-                     BLOCKS_PASSABILITY))
-                        return 0;
-	}
+		// Does the caller want to check mechs?
+		if (0 == (flags & PFLAG_IGNOREMECHS)) {
+	                
+	                // Is the mech passable?
+	                mech = place_get_object(place, x, y, mech_layer);
+	                if (mech &&
+	                    (place_obj_is_passable(mech, subject, flags) == 
+	                     BLOCKS_PASSABILITY))
+	                        return 0;
+		}
 
 	return 1;
 }
@@ -1164,7 +1164,7 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
         /* Add the terrain cost. */
         *cost += place_get_diagonal_movement_cost(context->place, from_x, 
                                                   from_y, info->x0, info->y0, 
-                                                  context->requestor);
+                                                  context->requestor, PFLAG_IGNOREMECHS);
 
 	/* And penalize tiles with hazards on them. I really should assign
 	 * different penalties to different hazerds. */
@@ -1340,12 +1340,13 @@ void place_enter(struct place *place)
 }
 
 int place_get_movement_cost(struct place *place, int x, int y, 
-                            class Object *obj)
+                            class Object *obj, int flags)
 {
         int cost;
         struct terrain *t;
         class Object *tfeat = NULL;
-
+        class Object *mech = NULL;
+        
         WRAP_COORDS(place, x, y);
 
         /* Terrain features override terrain */
@@ -1354,7 +1355,7 @@ int place_get_movement_cost(struct place *place, int x, int y,
                 return obj->getMovementCost(tfeat->getPclass());
         }
 
-	t = TERRAIN(place, x, y);
+		  t = TERRAIN(place, x, y);
         cost = obj->getMovementCost(terrain_pclass(t));
 
         /* Impassable terrain must have a vehicle that makes it passable; use
@@ -1365,15 +1366,33 @@ int place_get_movement_cost(struct place *place, int x, int y,
                 if (vehicle)
                         cost = vehicle->getMovementCost(terrain_pclass(t));
         }
+        
+       // Is the mech passable?
+       //(place_obj_is_passable(mech, subject, flags) == 
+       //    BLOCKS_PASSABILITY))
+       //       return 0;
+               
+       if (0 == (flags & PFLAG_IGNOREMECHS))
+       {
+	       mech = place_get_object(place, x, y, mech_layer);
+	       if (mech)
+	       {
+		   	int mechcost = obj->getMovementCost(mech->getPclass());
+		   	if (mechcost > cost)
+		   	{
+			   	cost = mechcost;
+		   	}
+	 		}
+ 		}
 
         return cost;
 }
 
 int place_get_diagonal_movement_cost(struct place *place, 
                                      int from_x, int from_y, 
-                                     int to_x, int to_y, class Object *obj)
+                                     int to_x, int to_y, class Object *obj,int flags)
 {
-        int cost = place_get_movement_cost(place, to_x, to_y, obj);
+        int cost = place_get_movement_cost(place, to_x, to_y, obj, flags);
 
         /* Multiply cost of diagonals by 1.4 (pythagorean theorem) */
         if (place_is_diagonal(place, from_x, from_y, to_x, to_y)) {

@@ -491,7 +491,7 @@ MoveResult PlayerParty::move(int newdx, int newdy)
 		// No complications. Update the turn counter based on player
 		// speed and terrain difficulties then move the player.
 		relocate(info.place, info.x, info.y);
-                mv_cost = place_get_movement_cost(info.place, info.x, info.y, this);
+                mv_cost = place_get_movement_cost(info.place, info.x, info.y, this,0);
                 if (vehicle)
                         mv_cost *= vehicle->getMovementCostMultiplier();
                 decActionPoints(mv_cost);
