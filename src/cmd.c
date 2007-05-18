@@ -2853,7 +2853,20 @@ bool cmdMixReagents(class Character *character)
         // committed to action now, so decrement AP
         if (character) {
                 character->runHook(OBJ_HOOK_MIX_DONE, 0);
-                character->decActionPoints(1);
+                
+                if (!spell)
+                {
+	              	character->decActionPoints(dice_roll_numeric(3, 50, 20));  
+                }
+                else if (mistake)
+                {
+	              	character->decActionPoints(dice_roll_numeric(1 ,(2 * spell->action_points) , 100));  
+            	 }
+            	else
+            	{
+	            	// mixing should be SLOW
+	            	character->decActionPoints(100 + 2 * spell->action_points);
+            	}
         }
 
 	// If the spell is invalid or the reagents are incorrect then punish
