@@ -449,7 +449,7 @@
                    slot-nil          ;;        slots : slots it will fit in (e.g., hands)
                    0                 ;;        hands : number of slots required to ready it
                    6                 ;;        range : range it will fire
-                   2                 ;;          rap : required action points to attack with it
+                   80                 ;;          rap : required action points to attack with it
                    t_cannonball      ;;      missile : nil or the armament type it fires
                    #f                ;;       thrown : true or false
                    #t                ;;         ubiq : true if it needs ammo in inventory, false otherwise

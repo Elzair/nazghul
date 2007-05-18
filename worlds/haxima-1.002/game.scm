@@ -39,9 +39,9 @@
 
 ;; Passability Difficulty Levels (Note: 255 is well-known to the kernel to mean
 ;; "impassible" in the case of movement costs)
-(define norm       1)
-(define hard       2)
-(define vhard      3)
+(define norm       50)
+(define hard       100)
+(define vhard      150)
 (define cant       255)
 
 ;; Passability classes
@@ -92,17 +92,17 @@
  (list norm   norm  cant   norm   norm   cant   cant  norm  cant  norm  cant norm  0  ) ;; grass/paving
  (list cant   cant  norm   cant   norm   vhard  norm  cant  cant  cant  cant cant  0  ) ;; deep
  (list cant   hard  cant   cant   norm   norm   norm  cant  cant  cant  cant cant  0  ) ;; shoals
- (list cant   cant  cant   cant   norm   cant   cant  cant  cant  cant  cant cant  19 ) ;; mountains
- (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant cant  20 ) ;; wall (w/ ceiling)
- (list hard   hard  cant   norm   norm   cant   cant  hard  cant  norm  cant hard  10 ) ;; trees  
- (list vhard  vhard cant   norm   norm   cant   cant  vhard cant  norm  cant vhard 3  ) ;; forest/hills/bog
- (list cant   cant  cant   cant   cant   cant   cant  cant  cant  cant  cant cant  20 ) ;; energy fields
+ (list cant   cant  cant   cant   norm   cant   cant  cant  cant  cant  cant cant  95 ) ;; mountains
+ (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant cant  100 ) ;; wall (w/ ceiling)
+ (list hard   hard  cant   norm   norm   cant   cant  hard  cant  norm  cant hard  50 ) ;; trees  
+ (list vhard  vhard cant   norm   norm   cant   cant  vhard cant  norm  cant vhard 7  ) ;; forest/hills/bog
+ (list cant   cant  cant   cant   cant   cant   cant  cant  cant  cant  cant cant  100 ) ;; energy fields
  (list cant   cant  cant   cant   norm   cant   cant  cant  norm  cant  cant cant  0  ) ;; space
  (list cant   norm  cant   norm   norm   cant   cant  hard  cant  cant  cant hard  10  ) ;; boulder
- (list cant   hard  cant   cant   norm   cant   cant  hard  cant  cant  cant hard  1  ) ;; waterboulder
+ (list cant   hard  cant   cant   norm   cant   cant  hard  cant  cant  cant hard  10  ) ;; waterboulder
  (list cant   norm  vhard  cant   norm   vhard  vhard cant  cant  cant  cant cant  0  ) ;; sludge
  (list norm   norm  cant   norm   norm   norm   norm  norm  cant  norm  cant cant  0  ) ;; shallows
- (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant vhard 3  ) ;; bars (eg portcullis)
+ (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant vhard 7  ) ;; bars (eg portcullis)
  )
 
 ;; Factions. The diplomacy table (which defines the relationship between
