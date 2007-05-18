@@ -1065,8 +1065,9 @@ KERN_API_CALL(kern_place_set_neighbor)
                 return sc->F;
         }
 
-        if (! place || ! neighbor) {
-                rt_err("kern-place-set-neighbor: null place(s)");
+        // neighbor == null is allowed (it unlinks current neighbor)
+        if (! place) {
+                rt_err("kern-place-set-neighbor: null place");
                 return sc->F;                
         }
         
@@ -1076,7 +1077,7 @@ KERN_API_CALL(kern_place_set_neighbor)
         }
 
         /* link (works both ways) */
-        place_set_neighbor(place, dir, neighbor);
+	     place_set_neighbor(place, dir, neighbor);
         
         return sc->T;
 }
