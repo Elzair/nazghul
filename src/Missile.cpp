@@ -57,7 +57,7 @@ bool Missile::enterTile(struct place *place, int x, int y)
 			{
 				int obstruction = place_get_movement_cost(place, x, y, this,0);
 				 //int opacity = place_visibility(place, x, y);
-				 return ((obstruction != 20) && (dice_roll_numeric(1,20,0)>obstruction));
+				 return ((obstruction != 20) && (dice_roll_numeric(1,100,0)>obstruction));
 			}	
 			
         if (! (flags & MISSILE_HIT_PARTY))
