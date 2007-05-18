@@ -2647,7 +2647,7 @@ bool cmdCastSpell(class Character * pc)
         /* Decrement the caster's mana. */
         pc->runHook(OBJ_HOOK_CAST_DONE, 0);
         pc->addMana(0 - spell->cost);
-        pc->decActionPoints(max(spell->cost/2,1));
+        pc->decActionPoints(spell->action_points);
         pc->addExperience(spell->cost);
 
 	/* If the spell was mixed then remove it from inventory. */
