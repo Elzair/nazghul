@@ -50,7 +50,42 @@
             (say knpc "[Sigh] My duty is with the paladins.")
             ))))
         
+(define (ini-lost knpc kpc)
+   (let ((ini (kobj-gob-data knpc)))
+     (if (ini-will-join? ini)
+  			(say knpc "The entrance to the Lost Halls is a cavern far to the southwest. "
+  				"Find a ship and sail to ["
+           (loc-x lost-halls-loc) " "
+           (loc-y lost-halls-loc) "].")
+  			(say knpc "The Lost Halls are very dangerous. I'd advise you to stay clear!"))))
+     		
+(define (ini-cave knpc kpc)
+   (let ((ini (kobj-gob-data knpc)))
+     (if (ini-will-join? ini)
+     		(begin
+     			(say knpc "The Lost Halls themselves are deep within the caverns.")
+     			(say knpc (if (is-player-party-member? knpc) "We" "You") " will need to look for the great stairs, in the northern part of the caves.")
+     			(say knpc "Beware of the dungeon's inhabitants!")
+     			)
+     		(ini-default knpc kpc))))
+     		
+(define (ini-inha knpc kpc)
+   (let ((ini (kobj-gob-data knpc)))
+     (if (ini-will-join? ini)
+     		(begin
+     			(say knpc "Everytime we try to clear the place out, another band of gints or trolls decides to move in.")
+     			(say knpc (if (is-player-party-member? knpc) "We" "You") "'d best be prepared for a long, hard battle.")
+     			)
+     		(ini-default knpc kpc))))
 
+(define (ini-stair knpc kpc)
+   (let ((ini (kobj-gob-data knpc)))
+     (if (ini-will-join? ini)
+     		(begin
+     			(say knpc "I know the stairs are somewhere in the north, but I'm afraid I've never been that far, so I don't know their precise location.")
+     			)
+     		(ini-default knpc kpc))))
+     			
 (define (ini-job knpc kpc)
   (say knpc "I'm a paladin. But I don't like it very much."))
 
@@ -135,6 +170,19 @@
        (method 'dagg ini-spit)
        (method 'patc ini-patc)
        (method 'life ini-life)
+       
+       (method 'lost ini-lost)
+       (method 'hall ini-lost)
+       (method 'cave ini-cave)
+       (method 'entr ini-cave)
+       (method 'stai ini-stair)
+       (method 'nort ini-stair)
+       (method 'deep ini-stair)
+       (method 'grea ini-stair)
+       (method 'inha ini-inha)
+       (method 'bewa ini-inha)
+       (method 'dung ini-inha)
+       
        ))
        
 (define (mk-ini)
