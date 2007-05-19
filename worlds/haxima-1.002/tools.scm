@@ -29,7 +29,7 @@
 
 
 ;; torch -- use two in-lor spells
-(mk-usable-item 't_torch "torch" s_torch 1
+(mk-usable-item 't_torch "torch" s_torch norm
                 (lambda (kobj kuser) 
                   (kern-obj-add-effect kuser ef_torchlight nil)
                   result-ok))
@@ -48,7 +48,7 @@
       (floor (+ (kern-char-get-level kuser) (/ (kern-char-get-dexterity kuser) 3)))
       (floor (/ (+ (kern-char-get-level kuser) (kern-char-get-dexterity kuser)) 4)))
       )
-(mk-reusable-item 't_picklock "picklock" s_picklock 2
+(mk-reusable-item 't_picklock "picklock" s_picklock vhard
                   (lambda (kobj kuser)
                     (let ((ktarg (ui-target (kern-obj-get-location kuser)
                                             1 
@@ -71,13 +71,13 @@
                                     )))))))
 
 ;; gem -- use peer spell
-(mk-usable-item 't_gem "gem" s_gem 2
+(mk-usable-item 't_gem "gem" s_gem norm
                 (lambda (kgem kuser)
                   (powers-view kuser kuser 12)
                   result-ok))
 
 ;; sledge-hammer -- shatter rocks
-(mk-reusable-item 't_pick "pick" s_pick 2
+(mk-reusable-item 't_pick "pick" s_pick vhard
                   (lambda (ktool kuser)
                     (let ((loc (kern-ui-target (kern-obj-get-location kuser)
                                                1)))
@@ -96,7 +96,7 @@
                                    result-no-effect)))))))
 
 ;; sextant -- gives location
-(mk-reusable-item 't_sextant "sextant" s_sextant 2
+(mk-reusable-item 't_sextant "sextant" s_sextant hard
                   (lambda (ktool kuser)
                     (let ((loc (kern-obj-get-location kuser)))
                       (cond ((kern-place-is-wilderness? (loc-place loc))
@@ -138,7 +138,7 @@
   (eqv? (kern-obj-get-type kobj)
         t_buried))
 
-(mk-reusable-item 't_shovel "shovel" s_shovel 2
+(mk-reusable-item 't_shovel "shovel" s_shovel vhard
                 (lambda (kshovel kuser)
                   (let ((ktarg (filter is-buried?
                                        (kern-get-objects-at 
@@ -150,7 +150,7 @@
                            (signal-kobj (car ktarg) 'digup (car ktarg) nil)
                            result-ok)))))
 						  
-(mk-reusable-item 't_chrono "chronometer" s_chrono 2
+(mk-reusable-item 't_chrono "chronometer" s_chrono hard
                   (lambda (kclock kuser)
                     (let* ((time (kern-get-time))
                            (hour (number->string
@@ -348,7 +348,7 @@
 ;; range is limited by wrogue ability.
 ;;
 (mk-reusable-item 
- 't_rope_hook "rope & hook" s_rope_hook 2
+ 't_rope_hook "rope & hook" s_rope_hook hard
  (lambda (kobj kuser)
    (cond ((not (has-skill? kuser sk_reach)) result-lacks-skill)
          (else

@@ -22,7 +22,7 @@
 (kern-mk-sprite 's_wis_an_ylem_scroll     ss_scrolls 1 13 #f 0) ;; xray
 
 (define (mk-scroll tag name sprite spell)
-  (mk-usable-item tag name sprite 1 
+  (mk-usable-item tag name sprite norm 
                   (lambda (kscrolltype kuser)
                     (apply spell (list kuser)))))
 

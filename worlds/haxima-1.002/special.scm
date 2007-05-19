@@ -29,7 +29,7 @@
 ;; The Warritrix's note
 ;; ----------------------------------------------------------------------------
 (mk-reusable-item 
- 't_warritrix_orders "Military Orders" s_lexicon 1
+ 't_warritrix_orders "Military Orders" s_lexicon norm
  (lambda (klexicon kuser)
    (kern-ui-page-text
    "Orders to the Warritrix"

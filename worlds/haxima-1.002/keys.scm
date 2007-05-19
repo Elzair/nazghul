@@ -4,7 +4,7 @@
 
 (define (mk-key-type tag sprite)
   (mk-reusable-item 
-   tag "key" sprite 1
+   tag "key" sprite norm
    (lambda (ktype kuser)
      (let ((ktarg (ui-target (kern-obj-get-location kuser)
                              1 

@@ -19,7 +19,7 @@
 ;; Gen's Goblin Lexicon
 ;; ----------------------------------------------------------------------------
 (mk-reusable-item 
- 't_goblin_lexicon "Goblin Lexicon" s_lexicon 1
+ 't_goblin_lexicon "Goblin Lexicon" s_lexicon norm
  (lambda (klexicon kuser)
    (kern-ui-page-text
    "Goblin Lexicon"

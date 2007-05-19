@@ -39,7 +39,7 @@
 ;; Voidship plans
 ;; ----------------------------------------------------------------------------
 (mk-reusable-item 
- 't_voidship_plans "Voidship Plans" s_lexicon 1
+ 't_voidship_plans "Voidship Plans" s_lexicon norm
  (lambda (klexicon kuser)
    (kern-ui-page-text
    "Voidship Plans"

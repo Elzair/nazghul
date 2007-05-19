@@ -209,7 +209,7 @@
 	(list #f loc-open loc-closed trigger)))
 
 (mk-reusable-item 
- 't_mans_note "note" s_scroll 1
+ 't_mans_note "note" s_scroll norm
  (lambda (kletter kuser)
    (kern-ui-page-text
 		"Short Note"

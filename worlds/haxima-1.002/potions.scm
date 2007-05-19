@@ -19,7 +19,7 @@
 ;; mk-potion -- utility for making potion types. 'drink-proc' should return one
 ;; of the result-* codes.
 (define (mk-potion tag name sprite drink-proc)
-  (mk-usable-item tag name sprite 1 drink-proc
+  (mk-usable-item tag name sprite norm drink-proc
                   (lambda (kpotion kuser) 
                     (drink-proc kpotion kuser))))
 

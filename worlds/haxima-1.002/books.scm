@@ -11,7 +11,7 @@
 ;; Fixme: see if something like this will work for books:
 (define (mk-book tag name . text)
   (mk-reusable-item 
-   tag name s_manual 1
+   tag name s_manual norm
    (lambda ()
      (kern-ui-page-text text))))
 
@@ -50,13 +50,13 @@
    )
   result-ok)
 
-(mk-reusable-item 't_manual "Basic Survival Manual" s_manual 1 
+(mk-reusable-item 't_manual "Basic Survival Manual" s_manual (/ norm 3)
                   basic-survival-manual-commands)
 
 ;;----------------------------------------------------------------------------
 ;; letter from enchanter
 (mk-reusable-item 
- 't_letter_from_enchanter "Important Letter" s_lexicon 1
+ 't_letter_from_enchanter "Important Letter" s_lexicon norm
  (lambda (klexicon kuser)
    (kern-ui-page-text
    "IMPORTANT"
@@ -72,7 +72,7 @@
 ;;----------------------------------------------------------------------------
 ;; book of the demon gate
 (mk-reusable-item 
- 't_demon_gate_book "Ragged Text" s_scroll 1
+ 't_demon_gate_book "Ragged Text" s_scroll vhard
  (lambda (kbook kuser)
    (kern-ui-page-text
    "THE DEMON GATE"
@@ -95,7 +95,7 @@
 ;;----------------------------------------------------------------------------
 ;; Kathryn's Letter
 (mk-reusable-item 
- 't_kathryns_letter "Letter" s_scroll 1
+ 't_kathryns_letter "Letter" s_scroll norm
  (lambda (kletter kuser)
    (kern-ui-page-text
    "Letter"
@@ -109,7 +109,7 @@
 ;;----------------------------------------------------------------------------
 ;; Spell books
 (mk-reusable-item 
- 't_ylem_an_ex_book "spell book: YAE" s_manual 1
+ 't_ylem_an_ex_book "spell book: YAE" s_manual hard
  (lambda (kletter kuser)
    (kern-ui-page-text
    "Web Spell- Ylem An Ex"
@@ -134,7 +134,7 @@
    result-ok))
 
 (mk-reusable-item 
- 't_bet_flam_hur_book "spell book: BFH" s_manual 1
+ 't_bet_flam_hur_book "spell book: BFH" s_manual hard
  (lambda (kletter kuser)
    (kern-ui-page-text
    "Fire Spray- Bet Flam Hur"
@@ -152,7 +152,7 @@
    result-ok))
 
 (mk-reusable-item
- 't_ranger_orders "Ranger orders" s_scroll 0
+ 't_ranger_orders "Ranger orders" s_scroll norm
  (lambda (kletter kuser)
    (kern-ui-page-text
     "Ranger Orders"
@@ -163,7 +163,7 @@
    result-ok))
 
 (mk-reusable-item
- 't_prisoner_receipt "Prisoner Receipt" s_scroll 0
+ 't_prisoner_receipt "Prisoner Receipt" s_scroll norm
  (lambda (kletter kuser)
    (kern-ui-page-text
     "Prisoner Receipt"
@@ -173,7 +173,7 @@
    result-ok))
 
 (mk-reusable-item
- 't_basic_spell_book "Spell Book" s_manual 0
+ 't_basic_spell_book "Spell Book" s_manual (/ norm 3)
  (lambda (kbook kuser)
    (kern-ui-page-text
     "Spell Book"
@@ -255,7 +255,7 @@
 ;;----------------------------------------------------------------------------
 ;; Anaxes letters
 (mk-reusable-item
- 't_anaxes_letter "Letter to Anaxes" s_scroll 0
+ 't_anaxes_letter "Letter to Anaxes" s_scroll vhard
  (lambda (kletter kuser)
    (kern-ui-page-text
     "Letter"
