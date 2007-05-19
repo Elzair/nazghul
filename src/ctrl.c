@@ -407,7 +407,6 @@ static void ctrl_attack_done(class Character *character, class ArmsType *weapon,
                              class Character *target)
 {
         character->runHook(OBJ_HOOK_ATTACK_DONE, "pp", weapon, target);
-        character->decActionPoints(weapon->getRequiredActionPoints());
         character->useAmmo(weapon);
 }
 
@@ -609,6 +608,9 @@ static void ctrl_attack_ui(class Character *character)
 
         // Loop over all readied weapons
         int armsIndex=0;
+        int tempAP;
+        int totalAP=0;
+        int firstAP=0;
         for (weapon = character->enumerateWeapons(&armsIndex); weapon != NULL; 
              weapon = character->getNextWeapon(&armsIndex)) {
 
@@ -797,6 +799,15 @@ static void ctrl_attack_ui(class Character *character)
                         if (target->isPlayerControlled())
                                 statusRepaint();
                 }
+                
+                                
+                //sum up AP requirement
+                tempAP = weapon->getRequiredActionPoints();
+                if (tempAP > firstAP)
+                {
+	              	firstAP = tempAP;  
+                }
+                totalAP += tempAP;
 
                 /* Warn the user if out of ammo. Originally this code used
                  * character->getCurrentWeapon() instead of weapon, that may
@@ -806,6 +817,10 @@ static void ctrl_attack_ui(class Character *character)
                         log_msg("%s : %s now out of ammo\n", 
                                      character->getName(), weapon->getName());
         }
+        
+        character->decActionPoints((totalAP+firstAP)/2);
+        
+        
 }
 
 static void ctrl_move_character(class Character *character, int dir)
@@ -995,7 +1010,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 // Exit solo mode.
                 // ----------------------------------------------------
                 player_party->enableRoundRobinMode();
-                character->endTurn();
                 break;
 
         default:
@@ -1320,6 +1334,9 @@ static bool ctrl_attack_target(class Character *character,
                                          target->getX(), target->getY());
 
 		int armsIndex=0;
+		int firstAP=0;
+		int totalAP=0;
+		int tempAP;
         for (class ArmsType * weapon = character->enumerateWeapons(&armsIndex); 
              weapon != NULL; weapon = character->getNextWeapon(&armsIndex)) {
 
@@ -1337,16 +1354,28 @@ static bool ctrl_attack_target(class Character *character,
                 }
 
                 ctrl_do_attack(character, weapon, target, character->getToHitPenalty());
+                
+                //sum up AP requirement
+                tempAP = weapon->getRequiredActionPoints();
+                if (tempAP > firstAP)
+                {
+	              	firstAP = tempAP;  
+                }
+                totalAP += tempAP;
                 attacked = true;
+                
                 statusRepaint();
 
                 if (target->isDead())
                         break;
 
-                if (character->getActionPoints() <= 0)
+                //continue if havent used a turn and a half
+                if (2 * character->getActionPoints() + NAZGHUL_BASE_ACTION_POINTS < firstAP + totalAP)
                         break;
         }
 
+        character->decActionPoints((totalAP+firstAP)/2);
+        
         if (character->needToRearm())
                 character->armThyself();
 

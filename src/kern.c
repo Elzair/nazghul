@@ -4202,6 +4202,9 @@ KERN_API_CALL(kern_char_attack)
 
         ctrl_do_attack(attacker, weapon, defender, 
                        attacker->getToHitPenalty());
+        
+        attacker->decActionPoints(weapon->getRequiredActionPoints());
+                       
         return sc->T;
 }
 
