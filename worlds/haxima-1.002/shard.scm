@@ -459,6 +459,8 @@
   (list p_kun               60 38)
   (list p_bandit_hideout_l1 72 63)
   (list p_brundegardt       76 40)
+  (list p_lost_halls_entrance (loc-x lost-halls-loc)
+       (loc-y lost-halls-loc))
   )
 
  nil ; neighbors
@@ -482,9 +484,6 @@
   ;; dungeons
   (put (mk-dungeon 'p_kurpolis_entrance 9 10) 53 18)
   (put (mk-dungeon 'p_mushroom_cave 7 12) 78 74)
-  (put (mk-dungeon 'p_lost_halls_1 2 2) 
-       (loc-x lost-halls-loc)
-       (loc-y lost-halls-loc))
   (put (mk-dungeon 'p_necromancers_lair 9 9) 40 70)
   (put (mk-dungeon 'p_smoldering_cave 9 9) 118 46)
   (put (mk-dungeon 'p_slimy_cavern 8 30) 13 8)
