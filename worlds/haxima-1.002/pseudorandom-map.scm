@@ -539,7 +539,7 @@
 					(thisx (+ rxloc (car thisrmapdata)))
 					(thisy (+ ryloc (cadr thisrmapdata)))
 					(thisrtype (caddr thisrmapdata))
-					(linkmap (if (null? thishardlink)
+					(linkmap (if (or (null? thishardlink) (null? (car (cdr thishardlink))))
 								(prmap-get-template thisx thisy rzloc thisrtype (prmap-params-edgemaps mapdata))
 								(cdr thishardlink)))
 				)
@@ -551,6 +551,48 @@
 			))
 			(list north west east south))
 	))
+	
+; blit map for all sides. uses hard linked sides if given
+;; todo refactor duplicate code!
+(define (prmap-room-blit-map-edges kplace roomdata mapdata)
+	(let* (
+			(rxloc (prmap-roomdata-x roomdata))
+			(ryloc (prmap-roomdata-y roomdata))
+			(rzloc (prmap-roomdata-z roomdata))
+			(linkinfo (prmap-room-getmaphardlink rxloc ryloc rzloc mapdata))
+			(blitstats (prmap-params-blitstats mapdata))
+			(destmap (kern-place-map kplace))
+			(rmapdata (vector
+				(list 0 1 (prmap-params-nsparams mapdata))
+				(list 0 0 (prmap-params-ewparams mapdata))
+				(list 1 0 (prmap-params-ewparams mapdata))
+				(list 0 0 (prmap-params-nsparams mapdata))
+				))
+		)
+		(map (lambda (dir)
+			;roomlinktarget is hardlink target if it exists, else regular neighbor
+			(let* (
+					(thishardlink (get-cardinal-ref linkinfo dir))
+					(thisrmapdata (get-cardinal-ref rmapdata dir))
+					(thisx (+ rxloc (car thisrmapdata)))
+					(thisy (+ ryloc (cadr thisrmapdata)))
+					(thisrtype (caddr thisrmapdata))
+					(temp (println "thl " thishardlink))
+					(linkmap (if (or (null? thishardlink) (null? (car (cdr thishardlink))))
+								(prmap-get-template thisx thisy rzloc thisrtype (prmap-params-edgemaps mapdata))
+								(cdr thishardlink)))
+				)
+				(println "lm " linkmap)
+				(prmap-do-map-blit destmap (car linkmap)
+					(get-cardinal-lref blitstats dir))
+				(if (> (length linkmap) 2)
+					(map (eval (get-cardinal-lref (cddr linkmap) dir)) (list kplace))
+					)
+			))
+			(list north west east south))
+	)
+	(println "done")
+	)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Monster handling
@@ -721,7 +763,7 @@
 				(thisx (+ xloc (car thisrmapdata)))
 				(thisy (+ yloc (cadr thisrmapdata)))
 				(thisrtype (caddr thisrmapdata))
-				(linkmap (if (null? thishardlink)
+				(linkmap (if (or (null? thishardlink) (null? (car (cdr thishardlink))))
 						(prmap-get-template thisx thisy zloc thisrtype (prmap-params-edgemaps mapdata))
 						(cdr thishardlink))
 						))
