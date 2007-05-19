@@ -1010,6 +1010,9 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 // Exit solo mode.
                 // ----------------------------------------------------
                 player_party->enableRoundRobinMode();
+                //in general, switching to roundrobin mode means
+                //you need all the turns you gan get, so dont waste this one
+                //character->endTurn();
                 break;
 
         default:
