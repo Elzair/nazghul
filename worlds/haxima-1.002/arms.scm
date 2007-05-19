@@ -435,7 +435,7 @@
                	))
          )))          
 							
-(kern-mk-arms-type 't_flaming_sword "flaming sword" s_flaming_sword "1d2" "1d8+2" "0" "1d2" slot-weapon 1 1 1 nil #f #f 2 nil
+(kern-mk-arms-type 't_flaming_sword "flaming sword" s_flaming_sword "1d2" "1d8+2" "0" "1d2" slot-weapon 1 1 default-rap nil #f #f 2 nil
 					 (ifc-cap flaming-sword-ifc) flaming-sword-ifc 50 20 70 1.0)
 
 
