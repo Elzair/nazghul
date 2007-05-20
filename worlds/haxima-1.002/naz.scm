@@ -577,7 +577,7 @@
         (kern-obj-inc-ref kobj)
         (kern-obj-remove kobj)
         (kern-obj-dec-ref kobj)
-        (kern-obj-dec-ap kchar 1)
+        (kern-obj-dec-ap kchar (/ norm 5))
         (kern-map-repaint))))
 
 ;; ----------------------------------------------------------------------------
