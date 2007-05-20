@@ -90,12 +90,12 @@
   (kern-arms-type-set-mmode (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil #f #f 
                      0 nil (ifc-cap ifc) ifc 20 60 20 1.0) mmode))
 
-(define (mk-armor-type tag name sprite to-hit armor slots weight avoid_mod)
-  (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 0 nil #f #f 
+(define (mk-armor-type tag name sprite to-hit armor slots equiptime weight avoid_mod)
+  (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 equiptime nil #f #f 
                      weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod))
 
 (define (mk-shield-type tag name sprite to-hit deflect slots weight avoid_mod) 
-  (kern-mk-arms-type tag name sprite to-hit "0" "0" deflect slots 1 0 0 nil #f #f 
+  (kern-mk-arms-type tag name sprite to-hit "0" "0" deflect slots 1 0 default-rap nil #f #f 
                      weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod))
 
 ;; ============================================================================
@@ -358,22 +358,22 @@
 (define armor-types
   (list
    ;;     ===========================================================================================================
-   ;;     tag             | name          |  sprite           |  to-hit | armor  | slots      | weight | avoid
+   ;;     tag             | name          |  sprite           |  to-hit | armor  | slots      |	equipap	| weight | avoid
    ;;     ===========================================================================================================
-   (list   't_leather_helm   "leather helm"    s_leather_helm      "-1"     "1d2"    slot-helm     0		1.0		)
-   (list   't_leather_helm_2 "+2 leather helm" s_leather_helm      "0"      "1d2+2"  slot-helm     0		1.0		)
-   (list   't_leather_helm_4 "+4 leather helm" s_leather_helm      "0"      "1d2+4"  slot-helm     0		1.0		)
-   (list   't_chain_coif     "chain coif"      s_chain_coif        "-1"     "1d3"    slot-helm     1		0.9		)
-   (list   't_chain_coif_4   "+4 chain coif"   s_chain_coif        "0"      "1d3+4"  slot-helm     1		0.9		)
-   (list   't_iron_helm      "iron helm"       s_iron_helm         "-1"     "1d4"    slot-helm     2		0.9		)
-   (list   't_iron_helm_4    "+4 iron helm"    s_iron_helm         "0"      "1d4+4"  slot-helm     2		0.9		)
-   (list   't_armor_leather  "leather armor"   s_leather_armor     "-1"     "1d4"    slot-armor    2		0.85	)
-   (list   't_armor_leather_2 "+2 leather armor" s_leather_armor   "0"      "1d4+2"  slot-armor    2		0.85	)
-   (list   't_armor_leather_4 "+4 leather armor" s_leather_armor   "0"      "1d4+4"  slot-armor    2		0.9		)
-   (list   't_armor_chain    "chain armor"     s_chain_armor       "-2"     "2d4"    slot-armor    4		0.7		)
-   (list   't_armor_chain_4  "+4 chain armor"  s_chain_armor       "0"      "2d4+4"  slot-armor    4		0.8		)
-   (list   't_armor_plate    "plate armor"     s_plate_armor       "-4"     "4d4"    slot-armor    8		0.6		)
-   (list   't_armor_plate_4  "+4 plate armor"  s_plate_armor       "0"      "4d4+4"  slot-armor    8		0.7		)
+   (list   't_leather_helm   "leather helm"    s_leather_helm      "-1"     "1d2"    slot-helm     50			0		1.0		)
+   (list   't_leather_helm_2 "+2 leather helm" s_leather_helm      "0"      "1d2+2"  slot-helm     50			0		1.0		)
+   (list   't_leather_helm_4 "+4 leather helm" s_leather_helm      "0"      "1d2+4"  slot-helm     50			0		1.0		)
+   (list   't_chain_coif     "chain coif"      s_chain_coif        "-1"     "1d3"    slot-helm     50			1		0.9		)
+   (list   't_chain_coif_4   "+4 chain coif"   s_chain_coif        "0"      "1d3+4"  slot-helm     50			1		0.9		)
+   (list   't_iron_helm      "iron helm"       s_iron_helm         "-1"     "1d4"    slot-helm     50			2		0.9		)
+   (list   't_iron_helm_4    "+4 iron helm"    s_iron_helm         "0"      "1d4+4"  slot-helm     50			2		0.9		)
+   (list   't_armor_leather  "leather armor"   s_leather_armor     "-1"     "1d4"    slot-armor    100		2		0.85	)
+   (list   't_armor_leather_2 "+2 leather armor" s_leather_armor   "0"      "1d4+2"  slot-armor    100		2		0.85	)
+   (list   't_armor_leather_4 "+4 leather armor" s_leather_armor   "0"      "1d4+4"  slot-armor    100		2		0.9		)
+   (list   't_armor_chain    "chain armor"     s_chain_armor       "-2"     "2d4"    slot-armor    150		4		0.7		)
+   (list   't_armor_chain_4  "+4 chain armor"  s_chain_armor       "0"      "2d4+4"  slot-armor    150		4		0.8		)
+   (list   't_armor_plate    "plate armor"     s_plate_armor       "-4"     "4d4"    slot-armor    250		8		0.6		)
+   (list   't_armor_plate_4  "+4 plate armor"  s_plate_armor       "0"      "4d4+4"  slot-armor    250		8		0.7		)
    ))	
 
 (kern-mk-sprite 's_shield            ss_arms 1 54 #f 0)
@@ -384,9 +384,9 @@
    ;;     =================================================================================================================
    ;;     tag                 | name             | sprite                | to-hit | deflect  | slots    | weight | avoid
    ;;     =================================================================================================================
-   (list   't_shield           "small shield"     s_shield                "-1"     "2"      slot-shield   2			0.9		)
-   (list   't_shield_4         "+4 small shield"  s_shield                "0"      "6"      slot-shield   2			0.95	)
-   (list   't_scratched_shield "scratched shield" s_scratched_shield      "0"      "3"      slot-shield   2			0.9		)
+   (list   't_shield           "small shield"     s_shield                "-1"     "5"      slot-shield   2			0.9		)
+   (list   't_shield_4         "+4 small shield"  s_shield                "0"      "9"      slot-shield   2			0.95	)
+   (list   't_scratched_shield "scratched shield" s_scratched_shield      "0"      "7"      slot-shield   2			0.9		)
    ))
 
 
@@ -411,7 +411,7 @@
 				   30 10 20 0.9)
 
 (kern-mk-arms-type 't_spiked_shield "spiked shield" s_spiked_shield
-                   "0" "1d5" "0" "1"
+                   "0" "1d5" "0" "5"
                    slot-shield 1 1 default-rap
                    nil #f #f
                    3 ;; weight
