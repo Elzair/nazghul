@@ -42,6 +42,8 @@
 (define norm       50)
 (define hard       100)
 (define vhard      150)
+(define fast       30)
+(define sfast   	 40)
 (define cant       255)
 
 ;; Passability classes
@@ -62,6 +64,7 @@
 (define pclass-sludge    12)
 (define pclass-shallows  13)
 (define pclass-bars      14) ;; portcullis, some windows
+(define pclass-vmountains 14)
 
 ;; Movement modes
 (define mmodes
@@ -79,31 +82,35 @@
    (list 'mmode-none     "stationary" 10)
    (list 'mmode-wriggle  "wriggle"    11)
    (list 'mmode-missile  "missile"    12)
-   ))
+   (list 'mmode-fastfly  "flying"    13)
+   (list 'mmode-fastrun  "running"    14)
+   (list 'mmode-fastcrawl "crawling"  15)
+))
 (map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
 
 (define mmode-jump mmode-fly)
 
-;; Movement cost table
+;; Movement cost table (optimized for cut to/paste from spreadsheet!)
 (kern-mk-ptable
-  ;;   walk   hover ship   phase  fly    skiff  fish crawl  vship rangr none wrigl missl
-  ;;   ====== ===== ====== =====  ====== ====== ==== =====  ===== ===== ==== ===== =====
- (list 0      0     0      0      0      0      0     0     0     0     0    0     0  ) ;; none
- (list norm   norm  cant   norm   norm   cant   cant  norm  cant  norm  cant norm  0  ) ;; grass/paving
- (list cant   cant  norm   cant   norm   vhard  norm  cant  cant  cant  cant cant  0  ) ;; deep
- (list cant   hard  cant   cant   norm   norm   norm  cant  cant  cant  cant cant  0  ) ;; shoals
- (list cant   cant  cant   cant   norm   cant   cant  cant  cant  cant  cant cant  95 ) ;; mountains
- (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant cant  100 ) ;; wall (w/ ceiling)
- (list hard   hard  cant   norm   norm   cant   cant  hard  cant  norm  cant hard  50 ) ;; trees  
- (list vhard  vhard cant   norm   norm   cant   cant  vhard cant  norm  cant vhard 7  ) ;; forest/hills/bog
- (list cant   cant  cant   cant   cant   cant   cant  cant  cant  cant  cant cant  100 ) ;; energy fields
- (list cant   cant  cant   cant   norm   cant   cant  cant  norm  cant  cant cant  0  ) ;; space
- (list cant   norm  cant   norm   norm   cant   cant  hard  cant  cant  cant hard  10  ) ;; boulder
- (list cant   hard  cant   cant   norm   cant   cant  hard  cant  cant  cant hard  10  ) ;; waterboulder
- (list cant   norm  vhard  cant   norm   vhard  vhard cant  cant  cant  cant cant  0  ) ;; sludge
- (list norm   norm  cant   norm   norm   norm   norm  norm  cant  norm  cant cant  0  ) ;; shallows
- (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant vhard 7  ) ;; bars (eg portcullis)
- )
+	;;	walk	hover	ship	phase	fly	skiff	fish	crawl	vship	rangr	none	wrigl	missl	fly	run	crawl
+	(list	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	)	;;	none
+	(list	norm	norm	cant	norm	norm	cant	cant	norm	cant	norm	cant	norm	0	fast	fast	fast	)	;; grass/paving
+	(list	cant	cant	norm	cant	norm	vhard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	)	;; deep
+	(list	cant	hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	)	;; shoals
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	95	fast	cant	cant	)	;; mountains
+	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	)	;; wall (w/ ceiling)
+	(list	hard	hard	cant	norm	norm	cant	cant	hard	cant	norm	cant	hard	50	fast	norm	norm	)	;; trees
+	(list	vhard	vhard	cant	norm	norm	cant	cant	vhard	cant	norm	cant	vhard	7	fast	hard	hard	)	;; forest/hills/bog
+	(list	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	)	;; energy fields
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	norm	cant	cant	cant	0	fast	cant	cant	)	;; space
+	(list	cant	norm	cant	norm	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	)	;; boulder
+	(list	cant	hard	cant	cant	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	)	;; waterboulder
+	(list	cant	norm	vhard	cant	norm	vhard	vhard	cant	cant	cant	cant	cant	0	fast	cant	cant	)	;; sludge
+	(list	norm	norm	cant	norm	norm	norm	norm	norm	cant	norm	cant	cant	0	fast	norm	norm	)	;; shallow sludge
+	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	vhard	7	cant	cant	cant	)	;; bars (eg portcullis)
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	50	fast	cant	cant	)	;; passlos mountains
+)																																																																																																																																																																																																																																																															
+
 
 ;; Factions. The diplomacy table (which defines the relationship between
 ;; factions) must be defined in the session file, because it changes over time.
