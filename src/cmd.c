@@ -1003,39 +1003,47 @@ bool cmdGet(class Object *actor)
 {
 	class Object *item;
 	int dir;
-        int x, y;
-
+	int x, y;
+	
 	cmdwin_clear();
 	cmdwin_spush("Get");
-
+	
 	dir = ui_get_direction();
+	
 	if (dir == CANCEL)
 		return false;
-
-        x = actor->getX() + directionToDx(dir);
-        y = actor->getY() + directionToDy(dir);
-
+	
+	x = actor->getX() + directionToDx(dir);
+	y = actor->getY() + directionToDy(dir);
+	
 	item = place_get_filtered_object(actor->getPlace(), x, y, 
-                                         cmdGetFilter);
+	cmdGetFilter);
 	if (!item) {
-                log_msg("Get - nothing there!");
+		log_msg("Get - nothing there!");
 		return false;
 	}
-               
-        log_begin_group();
-
-        while (NULL != (item = place_get_filtered_object(
-                                actor->getPlace(), 
-                                x, y, cmdGetFilter))) {
-                item->getObjectType()->get(item, actor);
+	
+	log_begin_group();
+	
+	while (NULL != (item = place_get_filtered_object(
+				actor->getPlace(), 
+				x, y, cmdGetFilter)))
+	{
+		item->getObjectType()->get(item, actor);
+		//do not allow too much AP debt if in combat
+		if ((combat_get_state() == COMBAT_STATE_FIGHTING)
+					&& ((2 * actor->getActionPoints()) + actor->getSpeed() < 0))
+		{
+			break;   
+		}
 	}
-
-        log_end_group();
-
-        mapSetDirty();
-        actor->runHook(OBJ_HOOK_GET_DONE, 0);
-        actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
-
+	
+	log_end_group();
+	
+	mapSetDirty();
+	actor->runHook(OBJ_HOOK_GET_DONE, 0);
+	actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS/4);
+	
 	return true;
 }
 
