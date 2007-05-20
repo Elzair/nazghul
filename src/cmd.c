@@ -1454,6 +1454,7 @@ bool cmdReady(class Character * member)
 
 		if (ie->ref && member->unready(arms)) {
 			msg = "unreadied!";
+			member->decActionPoints(arms->getRequiredActionPoints());
 			statusRepaint();
 		} else {
 
@@ -1461,15 +1462,16 @@ bool cmdReady(class Character * member)
 			case Character::Readied:
 				statusRepaint();
 				msg = "readied!";
-                                /* Move the readied item to the front of the
-                                 * list for easy access next time, and to
-                                 * percolate frequently-used items up to the
-                                 * top. */
-                                //player_party->inventory->moveToFront(ie);
-                                /* After re-ordering the list, reset the status
-                                 * viewer to synch it back up with the new
-                                 * list. */
-                                //statusSetMode(Ready);
+				member->decActionPoints(arms->getRequiredActionPoints());
+           /* Move the readied item to the front of the
+            * list for easy access next time, and to
+            * percolate frequently-used items up to the
+            * top. */
+           //player_party->inventory->moveToFront(ie);
+           /* After re-ordering the list, reset the status
+            * viewer to synch it back up with the new
+            * list. */
+           //statusSetMode(Ready);
 				break;
 			case Character::NoAvailableSlot:
 				msg = "all full!";
@@ -1488,6 +1490,14 @@ bool cmdReady(class Character * member)
 
 		cmdwin_spush("%s %s", arms->getName(), msg);
                 log_end(msg);
+      
+     	//do not allow too much AP debt if in combat
+		if ((combat_get_state() == COMBAT_STATE_FIGHTING)
+					&& ((2 * member->getActionPoints()) + member->getSpeed() < 0))
+		{
+			break;   
+		}
+      
 	}
 
 	eventPopKeyHandler();
@@ -1497,7 +1507,6 @@ bool cmdReady(class Character * member)
         if (committed) {
                 player_party->sortReadiedItems(member);
                 member->runHook(OBJ_HOOK_READY_DONE, 0);
-                member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         }
 
         log_end_group();
