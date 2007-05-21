@@ -64,7 +64,7 @@
 (define pclass-sludge    12)
 (define pclass-shallows  13)
 (define pclass-bars      14) ;; portcullis, some windows
-(define pclass-vmountains 14)
+(define pclass-vmountains 15)
 
 ;; Movement modes
 (define mmodes
@@ -108,7 +108,7 @@
 	(list	cant	norm	vhard	cant	norm	vhard	vhard	cant	cant	cant	cant	cant	0	fast	cant	cant	)	;; sludge
 	(list	norm	norm	cant	norm	norm	norm	norm	norm	cant	norm	cant	cant	0	fast	norm	norm	)	;; shallow sludge
 	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	vhard	7	cant	cant	cant	)	;; bars (eg portcullis)
-	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	50	fast	cant	cant	)	;; passlos mountains
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	30	fast	cant	cant	)	;; passlos mountains
 )																																																																																																																																																																																																																																																															
 
 
