@@ -786,13 +786,18 @@
               (kern-obj-remove-from-inventory kchar ktype 1))))))
 
 (define (generic-burn obj dice)
-  (if (and (kern-obj-is-being? obj)
-           (not (has-fire-immunity? obj)))
-      (begin
-        (if (kern-obj-is-being? obj)
-            (kern-log-msg (kern-obj-get-name obj) " burned!"))
-        ;; FIXME: multiply damage by kern-ticks-per-turn?
-        (kern-obj-apply-damage obj "burning" (kern-dice-roll dice)))))
+	(let ((damage (kern-dice-roll dice)))
+		(if (and (> damage 0)
+				(or (not (kern-obj-is-being? obj))
+					(not (has-fire-immunity? obj))
+			))
+			(begin
+				(if (kern-obj-is-being? obj)
+					(kern-log-msg (kern-obj-get-name obj) " burned!"))
+				;; FIXME: multiply damage by kern-ticks-per-turn?
+				(kern-obj-apply-damage obj "burning" damage)
+			))
+	))
 
 (define (burn obj)
   (generic-burn obj "2d3+2"))
@@ -802,9 +807,13 @@
 
 ;; fixme: what about the player party? probably not safe to just remove it from
 ;; the map...
+;; player party seems to work fine. (sigh. another mighty adventurer bites the dust)
 (define (chasm-fall kobj)
   (cond ((and (not (can-fly? kobj))
-              (not (is-abstract? kobj)))
+              (not (is-abstract? kobj))
+              (or  (not (ship-at (kern-obj-get-location kobj)))
+              		(not (kern-obj-is-being? kobj)))
+              (eqv? pclass-space (kern-terrain-get-pclass (kern-place-get-terrain (kern-obj-get-location kobj)))))
          (kern-log-msg (kern-obj-get-name kobj) " drops into the abyss!")
          (if (obj-is-char? kobj)
              (kern-char-kill kobj)

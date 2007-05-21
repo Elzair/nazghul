@@ -827,6 +827,7 @@
   (in-list? (kern-obj-get-mmode kobj)
             (list mmode-hover
                   mmode-fly
+                  mmode-fastfly
                   mmode-voidship)))
 
 (define (can-phase? kobj)

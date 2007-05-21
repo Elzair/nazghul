@@ -61,7 +61,7 @@
   (list
    ;;    tag                name            pclass           sprite               t light step-on
    ;;    =================  ==============  =============    ==============       = ===== =======
-   (list 't_stars           "stars"         pclass-space     s_stars             trn 0 nil)
+   (list 't_stars           "stars"         pclass-space     s_stars             trn 0 'chasm-fall)
    (list 't_deep            "deep water"    pclass-deep      s_deep              trn 0 nil)
    (list 't_sunlit_deep     "deep water"    pclass-deep      s_deep              trn 64 nil)
    (list 't_shallow         "water"          pclass-deep      s_shallow          trn 0 nil)
@@ -138,7 +138,7 @@
    (list 't_bridge_NS       "bridge"        pclass-bridge    s_ns_bridge         trn 0 nil)
    (list 't_lava_bridge_NS  "bridge"        pclass-bridge    s_ns_bridge         trn 0 nil)
    (list 't_chasm           "chasm"         pclass-space     s_null              trn 0 'chasm-fall)
-   (list 't_void            "empty space"   pclass-space     s_null       trn 0 nil)
+   (list 't_void            "empty space"   pclass-space     s_null       trn 0 'chasm-fall)
    (list 't_trail_0         "trail"         pclass-grass     s_trail_0           trn 0 nil)
    (list 't_trail_1         "trail"         pclass-grass     s_trail_1           trn 0 nil)
    (list 't_trail_2         "trail"         pclass-grass     s_trail_2           trn 0 nil)

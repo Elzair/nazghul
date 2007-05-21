@@ -231,7 +231,7 @@
 (define (mk-blend-terrain tag . sprites)
   (kern-mk-terrain tag "cliff edge" pclass-space
                    (mk-composite-sprite (cons s_null sprites))
-                   trn 0 nil))
+                   trn 0 'chasm-fall))
 
 (mk-blend-terrain 't_voids_n  s_grass_n )
 (mk-blend-terrain 't_voids_w  s_grass_w )
