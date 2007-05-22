@@ -28,7 +28,8 @@
   (kern-log-msg "An apparition appears!")
   (kern-obj-put-at (mk-warritrix)
                    (kern-obj-get-location kobj))
-  (kobj-get kobj kchar))
+  (kern-obj-remove kobj)
+  (kobj-get (kern-mk-obj t_rune_l 1) kchar))
 
 (define rune-l-ifc
   (ifc rune-ifc
@@ -42,7 +43,8 @@
 (mk-quest-obj-type 't_rune_f "Rune of Freedom" s_runestone_f layer-item rune-ifc)
 (mk-quest-obj-type 't_rune_w "Rune of Wisdom" s_runestone_w layer-item rune-ifc)
 (mk-quest-obj-type 't_rune_d "Rune of Discretion" s_runestone_d layer-item rune-ifc)
-(mk-quest-obj-type 't_rune_l "Rune of Leadership" s_runestone_l layer-item rune-l-ifc)
+(mk-quest-obj-type 't_rune_l "Rune of Leadership" s_runestone_l layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_l_init "Rune of Leadership" s_runestone_l layer-item rune-l-ifc)
 
 ;; list of all rune types
 (define rune-types 

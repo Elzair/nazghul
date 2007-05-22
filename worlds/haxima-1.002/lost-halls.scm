@@ -496,7 +496,7 @@
 		(put (mk-monman) 0 0)
 	 (put (mk-corpse2
        '(
-        (1 t_rune_l)
+        (1 t_rune_l_init)
         (1 t_armor_chain_4)
         (1 t_chain_coif_4)
         (1 t_sword_4)
