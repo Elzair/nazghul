@@ -48,7 +48,8 @@ class ArmsType:public ObjectType {
                  bool ubiquitousAmmo,
                  sound_t *fire_sound,
                 class ArmsType *missileType,
-				int str_attack_mod,
+                class ObjectType *ammoType,
+     				int str_attack_mod,
 				int dex_attack_mod,
 				int char_damage_mod,
 				float char_avoid_mod
@@ -72,7 +73,8 @@ class ArmsType:public ObjectType {
 	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
 	virtual bool isThrownWeapon();
 	virtual void setThrown(bool val);
-	virtual class ArmsType *getAmmoType();
+	virtual class ObjectType *getAmmoType();
+	virtual void setAmmoType(ObjectType * ammo_type);
 	virtual void setUbiquitousAmmo(bool val);
 	virtual bool ammoIsUbiquitous();
 	virtual void setWeight(int val);
@@ -101,6 +103,7 @@ class ArmsType:public ObjectType {
 	int char_damage_mod;
 	float char_avoid_mod;
 	class Missile *missile;
+	class ObjectType *ammoType;
 	struct mmode *movementMode;
 };
 

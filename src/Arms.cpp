@@ -35,56 +35,61 @@
 #include "log.h"
 
 ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
-                   int slotMask,
-                   char *to_hit_dice,
-                   char *to_defend_dice,
-                   int numHands,
-                   int range,
-                   int weight,
-                   char *damage_dice,
-                   char *armor_dice,
-                   int reqActPts,
-                   bool thrown,
-                   bool ubiquitousAmmo,
-                   sound_t *fireSound,
-                   class ArmsType *missileType,
-					int strAttackMod,
-					int dexAttackMod,
-					int charDamageMod,
-					float charAvoidMod
-                   )
-        : ObjectType(tag, name, sprite, item_layer),
-          slotMask(slotMask),
-          numHands(numHands),
-          range(range),
-          weight(weight),
-          thrown(thrown),
-          ubiquitousAmmo(ubiquitousAmmo)
+			int slotMask,
+			char *to_hit_dice,
+			char *to_defend_dice,
+			int numHands,
+			int range,
+			int weight,
+			char *damage_dice,
+			char *armor_dice,
+			int reqActPts,
+			bool thrown,
+			bool ubiquitousAmmo,
+			sound_t *fireSound,
+			class ArmsType *missileType,
+			class ObjectType *ammo_type,
+			int strAttackMod,
+			int dexAttackMod,
+			int charDamageMod,
+			float charAvoidMod
+			)
+			: ObjectType(tag, name, sprite, item_layer),
+				slotMask(slotMask),
+				numHands(numHands),
+				range(range),
+				weight(weight),
+				thrown(thrown),
+				ubiquitousAmmo(ubiquitousAmmo)
 {
-        toHitDice = strdup(to_hit_dice);
-        toDefendDice = strdup(to_defend_dice);
-        damageDice = strdup(damage_dice);
-        armorDice = strdup(armor_dice);
-        assert(toHitDice && toDefendDice && damageDice && armorDice);
-        this->fire_sound = fireSound;
+	toHitDice = strdup(to_hit_dice);
+	toDefendDice = strdup(to_defend_dice);
+	damageDice = strdup(damage_dice);
+	armorDice = strdup(armor_dice);
+	assert(toHitDice && toDefendDice && damageDice && armorDice);
+	this->fire_sound = fireSound;
 
-        if (missileType) {
-                missile = new Missile(missileType);
-                assert(missile);
-        } else {
-                missile = NULL;
-        }
-
-        if (thrown) {
-                setMissileType(this);
-        }
-        
-		str_attack_mod = strAttackMod;
-		dex_attack_mod = dexAttackMod;
-		char_damage_mod =charDamageMod;
-		char_avoid_mod = charAvoidMod;
-		
-        required_action_points = reqActPts;
+	if (missileType)
+	{
+		missile = new Missile(missileType);
+		assert(missile);
+	} else {
+		missile = NULL;
+	}
+	
+	ammoType = ammo_type;
+	
+	if (thrown)
+	{
+		setAmmoType(this);
+	}
+	
+	str_attack_mod = strAttackMod;
+	dex_attack_mod = dexAttackMod;
+	char_damage_mod = charDamageMod;
+	char_avoid_mod = charAvoidMod;
+	
+	required_action_points = reqActPts;
 }
 
 ArmsType::ArmsType()
@@ -94,6 +99,7 @@ ArmsType::ArmsType()
         assert(false);
 
         missile        = NULL;
+        ammoType		  = NULL;
         thrown         = false;
         weight         = 0;
         ubiquitousAmmo = false;
@@ -146,6 +152,16 @@ void ArmsType::setMissileType(class ArmsType * missileType)
 		return;
 
 	missile = new Missile(missileType);
+}
+
+class ObjectType *ArmsType::getAmmoType()
+{
+	return ammoType;
+}
+
+void ArmsType::setAmmoType(class ObjectType * ammo_type)
+{
+	ammoType = ammo_type;
 }
 
 bool ArmsType::isMissileWeapon()
@@ -265,15 +281,6 @@ void ArmsType::setThrown(bool val)
 	}
 	// the usual case:
 	setMissileType(this);
-}
-
-class ArmsType *ArmsType::getAmmoType()
-{
-	if (thrown)
-		return this;
-	if (missile == NULL)
-		return NULL;
-	return missile->getObjectType();
 }
 
 int ArmsType::getSlotMask()

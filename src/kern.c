@@ -1376,6 +1376,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         int rap, thrown, ubiq;
         struct sprite *sprite;
         class ArmsType *missile;
+        class ObjectType *ammo;
         pointer gifc;
         pointer ret;
         int gifc_cap;
@@ -1384,12 +1385,20 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
 		int char_damage_mod;
 		float char_avoid_mod;
 
-        if (unpack(sc, &args, "yspssssddddpbbdpdodddr", &tag, &name, &sprite, 
-                   &hit, &damage, &armor, &defend, &slots, &hands, 
-                   &range, &rap, &missile, &thrown, &ubiq, &weight, 
-                   &fire_sound, &gifc_cap, &gifc,
-				   &str_attack_mod, &dex_attack_mod,
-					&char_damage_mod, &char_avoid_mod)) {
+        if (unpack(sc, &args, "yspssssddddppbbdpdodddr",
+        					&tag, 
+        					&name, 
+        					&sprite, 
+                   	&hit, &damage, &armor, &defend,
+                   	&slots, &hands, &range, &rap,
+                   	&missile, &ammo,
+                   	&thrown, &ubiq,
+                   	&weight, 
+                   	&fire_sound,
+                   	&gifc_cap,
+                   	&gifc,
+				   		&str_attack_mod, &dex_attack_mod, &char_damage_mod,
+				   		&char_avoid_mod)) {
                 load_err("kern-mk-arms-type %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1421,7 +1430,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         arms = new ArmsType(tag, name, sprite, slots, hit, defend, hands, 
                             range,
                             weight, damage, armor, rap, thrown, ubiq,
-                            fire_sound, missile, str_attack_mod, dex_attack_mod,
+                            fire_sound, missile, ammo, str_attack_mod, dex_attack_mod,
 							char_damage_mod, char_avoid_mod);
 
         if (gifc != sc->NIL) {
@@ -7472,7 +7481,8 @@ KERN_API_CALL(kern_arms_type_get_range)
 
 KERN_API_CALL(kern_arms_type_get_ammo_type)
 {
-        class ArmsType *type, *ammo;
+        class ArmsType *type;
+        class ObjectType *ammo;
 
         /* unpack the type (should be an arms type, but no way to safely
          * tell) */

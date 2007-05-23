@@ -958,7 +958,7 @@ int Character::hasAmmo (class ArmsType * weapon)
 		struct inv_entry *ie;
 
 		if (weapon->isMissileWeapon()) {
-			ie = player_party->inventory->search(weapon->getMissileType());
+			ie = player_party->inventory->search(weapon->getAmmoType());
                         if (ie == NULL)
                                 return 0;  // No ammo
 			return ie->count;  // 1 or more
@@ -1391,8 +1391,8 @@ void Character::useAmmo(class ArmsType *weapon)
 		struct inv_entry *ie;
 
 		if (weapon->isMissileWeapon()) {
-			class ArmsType *missileType = weapon->getMissileType();
-			takeOut(missileType, 1);
+			class ObjectType *ammoType = weapon->getAmmoType();
+			takeOut(ammoType, 1);
 		} else if (weapon->isThrownWeapon()) {
 
                         // Handle the case where multiple party members have
@@ -1411,7 +1411,7 @@ void Character::useAmmo(class ArmsType *weapon)
 		}
 	} else {
 		if (weapon->isMissileWeapon()) {
-			container->takeOut(weapon->getMissileType(), 1);
+			container->takeOut(weapon->getAmmoType(), 1);
 			if (!hasAmmo(weapon)) {
 				unready(weapon);
 				rearm = true;
