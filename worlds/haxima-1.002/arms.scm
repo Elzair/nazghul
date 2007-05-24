@@ -70,33 +70,33 @@
 							damage_mod avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
                      num-hands range default-rap nil nil #f #f weight nil
-					 obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod))
+					 obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
 
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect 
                                  slots num-hands range missile ubiq weight
 								 stratt_mod dexatt_mod damage_mod avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap missile missile #f ubiq weight nil obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod))
+                     num-hands range default-rap missile missile #f ubiq weight nil obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect slots 
                              num-hands range ifc weight
 							 stratt_mod dexatt_mod damage_mod avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap nil nil #t #f weight nil (ifc-cap ifc) ifc stratt_mod dexatt_mod damage_mod avoid_mod))
+                     num-hands range default-rap nil nil #t #f weight nil (ifc-cap ifc) ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
 
 (define (mk-missile-arms-type tag name sprite ifc mmode)
-  (kern-arms-type-set-mmode (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil nil #f #f 
-                     0 nil (ifc-cap ifc) ifc 20 60 20 1.0) mmode))
+  (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil nil #f #f 
+                     0 nil (ifc-cap ifc) ifc 20 60 20 1.0 mmode))
 
 (define (mk-armor-type tag name sprite to-hit armor slots equiptime weight avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 equiptime nil nil #f #f 
-                     weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod))
+                     weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod mmode-largeobj))
 
 (define (mk-shield-type tag name sprite to-hit deflect slots weight avoid_mod) 
   (kern-mk-arms-type tag name sprite to-hit "0" "0" deflect slots 1 0 default-rap nil nil #f #f 
-                     weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod))
+                     weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod mmode-largeobj))
 
 ;; ============================================================================
 ;; Missiles for Projectile Weapons & Spells
@@ -405,7 +405,7 @@
                    nil nil #f #f
                    2 ;; weight
                    nil obj-ifc-cap obj-ifc
-				   30 10 20 0.9)
+				   30 10 20 0.9 mmode-smallobj)
 
 (kern-mk-arms-type 't_spiked_shield "spiked shield" s_spiked_shield
                    "0" "1d5" "0" "5"
@@ -413,7 +413,7 @@
                    nil nil #f #f
                    3 ;; weight
                    nil obj-ifc-cap obj-ifc
-				   40 20 20 0.8)
+				   40 20 20 0.8 mmode-largeobj)
 
 ;;--------------------------------------------------------------------------
 ;; Special arms types
@@ -433,7 +433,7 @@
          )))          
 							
 (kern-mk-arms-type 't_flaming_sword "flaming sword" s_flaming_sword "1d2" "1d8+2" "0" "1d2" slot-weapon 1 1 default-rap nil nil #f #f 2 nil
-					 (ifc-cap flaming-sword-ifc) flaming-sword-ifc 50 20 70 1.0)
+					 (ifc-cap flaming-sword-ifc) flaming-sword-ifc 50 20 70 1.0 mmode-smallobj)
 
 
 (kern-mk-arms-type 't_cannon         ; tag
@@ -456,6 +456,7 @@
                    0                 ;;      ifc-cap : integer bitmap describing interface slots
                    nil               ;;  get-handler : script ifc
 				   0 0 0 1.0
+				   mmode-largeobj
                    )
 
 ;;----------------------------------------------------------------------------
