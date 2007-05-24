@@ -3588,6 +3588,25 @@ KERN_API_CALL(kern_obj_get_mmode)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_obj_get_movecost)
+{
+	     class Object *obj;
+        int val;
+
+        if (unpack(sc, &args, "pd", &obj, &val)) {
+                rt_err("kern-obj-set-pclass: bad args");
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("kern-obj-set-pclass: null object");
+                return sc->NIL;
+        }
+	
+        val = obj->getMovementCost(val);
+        return scm_mk_integer(sc,val);
+}
+
 KERN_API_CALL(kern_obj_get_name)
 {
         Object *obj = unpack_obj(sc, &args, "kern-obj-get-name");
@@ -8668,6 +8687,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-get-light", kern_obj_get_light);
         API_DECL(sc, "kern-obj-get-location", kern_obj_get_location);
         API_DECL(sc, "kern-obj-get-mmode", kern_obj_get_mmode);
+        API_DECL(sc, "kern-obj-get-movecost", kern_obj_get_movecost);
         API_DECL(sc, "kern-obj-get-name", kern_obj_get_name);
         API_DECL(sc, "kern-obj-get-sprite", kern_obj_get_sprite);
         API_DECL(sc, "kern-obj-get-type", kern_obj_get_type);
