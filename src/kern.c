@@ -1384,8 +1384,10 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
 		int dex_attack_mod;
 		int char_damage_mod;
 		float char_avoid_mod;
+		  struct mmode *mmode;
+		
 
-        if (unpack(sc, &args, "yspssssddddppbbdpdodddr",
+        if (unpack(sc, &args, "yspssssddddppbbdpdodddrp",
         					&tag, 
         					&name, 
         					&sprite, 
@@ -1398,7 +1400,8 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
                    	&gifc_cap,
                    	&gifc,
 				   		&str_attack_mod, &dex_attack_mod, &char_damage_mod,
-				   		&char_avoid_mod)) {
+				   		&char_avoid_mod,
+				   		&mmode)) {
                 load_err("kern-mk-arms-type %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1432,6 +1435,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
                             weight, damage, armor, rap, thrown, ubiq,
                             fire_sound, missile, ammo, str_attack_mod, dex_attack_mod,
 							char_damage_mod, char_avoid_mod);
+			arms->setMovementMode(mmode);
 
         if (gifc != sc->NIL) {
                 /* arms->get_handler = closure_new(sc, get_handler); */
@@ -1505,6 +1509,7 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
         pointer ret;
         pointer gifc;
         int gifc_cap;
+        struct mmode *mmode;
 
         /* unpack the tag */
         if (unpack(sc, &args, "y", &tag)) {
@@ -1528,7 +1533,7 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
         }
 
         /* continue unpacking the rest of the args */
-        if (unpack(sc, &args, "pddo", &sprite, &layer, &gifc_cap, &gifc)) {
+        if (unpack(sc, &args, "pddop", &sprite, &layer, &gifc_cap, &gifc, &mmode)) {
                 load_err("kern-mk-obj-type %s: bad args (did you mean to use "\
                          "kern-mk-obj instead?)", tag);
                 return sc->NIL;
@@ -1545,6 +1550,7 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
                 type->setPluralName(pluralName);
         }
         
+        type->setMovementMode(mmode);
         session_add(Session, type, obj_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, type);
         scm_define(sc, tag, ret);
