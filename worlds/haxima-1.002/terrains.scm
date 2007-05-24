@@ -19,7 +19,7 @@
 				)
 	(let* (
 			(difficulty
-				(cond ((can-fly? obj) 1)
+				(cond ((< (kern-obj-get-movecost obj pclass-canfly) cant) 1)
 					((kern-place-is-wilderness? (loc-place (kern-obj-get-location obj))) 4)
 					(else 6)
 				))
@@ -37,7 +37,7 @@
 	)))
 	
 (define (terrain-effect-lava obj)
-  (if (not (can-fly? obj))
+  (if (eqv? (kern-obj-get-movecost obj pclass-canfly) cant)
 	(if (and (kern-obj-is-being? obj)
 			(kern-place-is-wilderness? (loc-place (kern-obj-get-location obj))))
 		(let* ((avoid (* 2 (occ-ability-dexdefend obj)))
