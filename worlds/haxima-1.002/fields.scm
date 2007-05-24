@@ -18,18 +18,18 @@
 ;; field. See effects.scm.
 ;;----------------------------------------------------------------------------
 
-(kern-mk-field-type 'F_illum  "glowing mote" s_magic          1024 5  pclass-none  nil)
-(kern-mk-field-type 'F_fire   "fire field"   s_field_fire     512  20 pclass-none  'burn)
-(kern-mk-field-type 'F_poison "poison field" s_field_poison   256  20 pclass-none  'apply-poison)
-(kern-mk-field-type 'F_sleep  "sleep field"  s_field_sleep    256  20 pclass-none  'apply-sleep)
-(kern-mk-field-type 'F_energy "energy field" s_field_energy   512  20 pclass-repel 'apply-lightning)
-(kern-mk-field-type 'web-type "spider web"   s_spider_web     0    20 pclass-none 'ensnare)
+(kern-mk-field-type 'F_illum  "glowing mote" s_magic          1024 5  pclass-none  nil	mmode-field)
+(kern-mk-field-type 'F_fire   "fire field"   s_field_fire     512  20 pclass-none  'burn	mmode-field)
+(kern-mk-field-type 'F_poison "poison field" s_field_poison   256  20 pclass-none  'apply-poison	mmode-field)
+(kern-mk-field-type 'F_sleep  "sleep field"  s_field_sleep    256  20 pclass-none  'apply-sleep	mmode-field)
+(kern-mk-field-type 'F_energy "energy field" s_field_energy   512  20 pclass-repel 'apply-lightning	mmode-field)
+(kern-mk-field-type 'web-type "spider web"   s_spider_web     0    20 pclass-none 'ensnare	mmode-field)
 
-(kern-mk-field-type 'F_poison_perm "poison field" s_field_poison 256 -1 pclass-none  'apply-poison)
-(kern-mk-field-type 'F_sleep_perm  "sleep field"  s_field_sleep  256 -1 pclass-none  'apply-sleep)
-(kern-mk-field-type 'F_energy_perm "energy field" s_field_energy 256 -1 pclass-repel 'apply-lightning)
-(kern-mk-field-type 'F_fire_perm   "fire field"   s_field_fire   512 -1 pclass-none  'burn)
-(kern-mk-field-type 'F_web_perm    "spider web"   s_spider_web   0   -1 pclass-none  'ensnare)
+(kern-mk-field-type 'F_poison_perm "poison field" s_field_poison 256 -1 pclass-none  'apply-poison	mmode-field)
+(kern-mk-field-type 'F_sleep_perm  "sleep field"  s_field_sleep  256 -1 pclass-none  'apply-sleep	mmode-field)
+(kern-mk-field-type 'F_energy_perm "energy field" s_field_energy 512 -1 pclass-repel 'apply-lightning	mmode-field)
+(kern-mk-field-type 'F_fire_perm   "fire field"   s_field_fire   512 -1 pclass-none  'burn	mmode-field)
+(kern-mk-field-type 'F_web_perm    "spider web"   s_spider_web   0   -1 pclass-none  'ensnare	mmode-field)
 
 (define all-field-types
   (list F_fire F_poison F_sleep F_energy web-type
