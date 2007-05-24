@@ -168,7 +168,9 @@ class ObjectType {
 	virtual void describe(Object *obj);
         virtual int getSpeed();
         virtual int getMaxHp();
-
+   virtual void setMovementMode(struct mmode *mmode);
+	virtual struct mmode *getMovementMode(); 
+	
         // This might turn out to be too vague. We'll see.
         virtual int getRequiredActionPoints();
 
@@ -234,6 +236,7 @@ class ObjectType {
         closure_t *gifc;
         int gifc_cap;
         struct gob *gob;
+        struct mmode *movementMode;
 
  private:
         bool hasDescribeHook();

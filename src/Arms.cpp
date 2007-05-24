@@ -362,13 +362,3 @@ float ArmsType::modifyAvoidBonus(float avoidBonus)
 {
 	return avoidBonus * char_avoid_mod;
 }
-
-struct mmode *ArmsType::getMovementMode()
-{
-   return movementMode;
-}
-
-void ArmsType::setMovementMode(struct mmode *mmode)
-{
-	movementMode = mmode;
-}

@@ -2018,6 +2018,19 @@ void ObjectType::setQuestItemFlag(bool val)
         questItemFlag = val;
 }
 
+struct mmode *ObjectType::getMovementMode()
+{
+   return movementMode;
+}
+
+void ObjectType::setMovementMode(struct mmode *mmode)
+{
+	movementMode = mmode;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Object
+
 bool Object::add(ObjectType *type, int amount)
 {
         return false; // subclasses will overload
@@ -2139,7 +2152,7 @@ void Object::setTemporary(bool val)
 
 struct mmode *Object::getMovementMode()
 {
-        return NULL;
+        return getObjectType()->getMovementMode();
 }
 
 void Object::setMovementMode(struct mmode *mmode)

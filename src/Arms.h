@@ -83,8 +83,6 @@ class ArmsType:public ObjectType {
 	virtual int modifyDexAttack(int dexBonus);
 	virtual int modifyDamageBonus(int damBonus);
 	virtual float modifyAvoidBonus(float avoidBonus);
-   virtual void setMovementMode(struct mmode *mmode);
-	virtual struct mmode *getMovementMode(); 
 	       
       protected:
 	int slotMask;
@@ -104,7 +102,6 @@ class ArmsType:public ObjectType {
 	float char_avoid_mod;
 	class Missile *missile;
 	class ObjectType *ammoType;
-	struct mmode *movementMode;
 };
 
 #endif

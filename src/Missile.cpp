@@ -127,8 +127,3 @@ class Object * Missile::getStruck()
 {
         return struck;
 }
-
-struct mmode *Missile::getMovementMode()
-{
-        return getObjectType()->getMovementMode();
-}
