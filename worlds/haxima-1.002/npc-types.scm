@@ -824,11 +824,7 @@
   (kbeing-is-npc-type? kchar 'sludge-tentacle))
 
 (define (can-fly? kobj)
-  (in-list? (kern-obj-get-mmode kobj)
-            (list mmode-hover
-                  mmode-fly
-                  mmode-fastfly
-                  mmode-voidship)))
+  (eqv? (kern-obj-get-movecost obj pclass-canfly) norm))
 
 (define (can-phase? kobj)
   (eqv? (kern-obj-get-mmode kobj)
