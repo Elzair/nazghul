@@ -3842,13 +3842,30 @@ void cmdDrop(class Character *actor)
         obj = ie->type->createInstance();
         assert(obj);
         obj->setCount(quantity);
-        obj->relocate(actor->getPlace(), x, y,
-                      REL_NOSTEP, /* FIXME: really? */
-                      NULL);
-
+        if (place_get_movement_cost(actor->getPlace(), x, y, 
+                            obj, 0) < PTABLE_NO_DROP)
+        {
+	        obj->relocate(actor->getPlace(), x, y,
+   	                   REL_NOSTEP, /* FIXME: really? */
+      	                NULL);
+	        actor->takeOut(ie->type, quantity);
+	        actor->runHook(OBJ_HOOK_DROP_DONE, "pd", ie->type, quantity);
+   	  }
+   	  else if (place_get_movement_cost(actor->getPlace(), actor->getX(), actor->getY(), 
+                            obj, 0) < PTABLE_IMPASSABLE)
+        {
+   	  	        obj->relocate(actor->getPlace(), actor->getX(), actor->getY(),
+   	                   REL_NOSTEP, /* FIXME: really? */
+      	                NULL);
+	        actor->takeOut(ie->type, quantity);
+	        actor->runHook(OBJ_HOOK_DROP_DONE, "pd", ie->type, quantity);
+	        log_msg("%s wouldnt fit!", ie->type->getName());
+		 }
+		 else
+		 {
+			 log_msg("Couldnt drop %s!", ie->type->getName());
+		 }
         /* remove from party inventory */
-        actor->takeOut(ie->type, quantity);
-        actor->runHook(OBJ_HOOK_DROP_DONE, "pd", ie->type, quantity);
         actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
         statusRepaint();

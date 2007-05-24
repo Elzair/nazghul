@@ -35,6 +35,8 @@ struct ptable {
 
 #define PTABLE_IMPASSABLE 255
 #define PCLASS_NONE 0
+#define PTABLE_NO_DROP		100 		/* movement cost that disallows dropping objects */
+
 
 #define ptable_is_passable(ptable,mmode,pclass) \
         (ptable_get((ptable),(mmode),(pclass)) != PTABLE_IMPASSABLE)
