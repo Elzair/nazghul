@@ -74,10 +74,10 @@
 
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect 
-                                 slots num-hands range missile ubiq weight
+                                 slots num-hands range projectile ammo ubiq weight
 								 stratt_mod dexatt_mod damage_mod avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap missile missile #f ubiq weight nil obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
+                     num-hands range default-rap projectile ammo #f ubiq weight nil obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect slots 
@@ -204,10 +204,10 @@
    ;;    tag           | name        | sprite        | gifc
    ;;    ===================================================================
    (list 't_slingstone     "sling stone"    s_sling_stone    nil						mmode-missile)
-   (list 't_arrow          "arrow"          s_arrow          obj-ifc					mmode-missile)
-   (list 't_bolt           "bolt"           s_bolt           obj-ifc					mmode-missile)
-   (list 't_warhead        "warhead"        s_warhead        warhead-ifc			mmode-missile)
-   (list 't_cannonball     "cannonball"     s_cannonball     obj-ifc					mmode-missile)
+   (list 't_arrow_p        "arrow"          s_arrow          obj-ifc					mmode-missile)
+   (list 't_bolt_p         "bolt"           s_bolt           obj-ifc					mmode-missile)
+   (list 't_warhead_p      "warhead"        s_warhead        warhead-ifc			mmode-missile)
+   (list 't_cannonball_p   "cannonball"     s_cannonball     obj-ifc					mmode-missile)
    (list 't_poison_bolt    "poison bolt"    s_poison_bolt    poison-bolt-ifc		mmode-missile)
    (list 't_acid_bolt      "acid bolt"      s_acid_bolt      acid-bolt-ifc			mmode-missile)
    (list 't_fireball       "fireball"       s_fireball       fireball-ifc			mmode-missile)
@@ -218,6 +218,11 @@
    (list 't_mweb           "web"            s_thrownweb      temp-ifc				mmode-missile)
    (list 't_mpoison_bolt   "poison bolt"    s_poison_bolt    temp-ifc				mmode-missile)
    (list 't_prismatic_bolt "prismatic bolt" s_prismatic_bolt prismatic-bolt-ifc	mmode-missile)
+
+   (list 't_arrow          "arrow"          s_arrow          obj-ifc					mmode-smallobj)
+   (list 't_bolt           "bolt"           s_bolt           obj-ifc					mmode-smallobj)
+   (list 't_warhead        "warhead"        s_warhead        warhead-ifc			mmode-smallobj)
+   (list 't_cannonball     "cannonball"     s_cannonball     obj-ifc					mmode-smallobj)
    ))
    
 ;; If we don't create these missile types now, we won't be able to refer to
@@ -242,15 +247,15 @@
    ;;     =============================================================================================================================================================
    ;;     tag         | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile    | ubiq | weight | stratt | dexatt | dammod | avoid
    ;;     =============================================================================================================================================================
-   (list 't_sling      "sling"      s_sling      "1d2-2"  "1d4"    "-1"     slot-weapon   1      4     t_slingstone #t      0        10       60       30       0.9  )
-   (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d4+4"  "0"      slot-weapon   1      6     t_slingstone #t      0        10       60       30       0.9  )
-   (list 't_bow        "bow"        s_bow        "1d3-2"  "2d4"    "-2"     slot-weapon   2      6     t_arrow      #f      2        10       70       20       0.9  )
-   (list 't_crossbow   "crossbow"   s_crossbow   "1d4-2"  "4d4"    "-1"     slot-weapon   2      4     t_bolt       #f      3        0        80       0        0.95 )
-   (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "1d2"    "+2"     slot-weapon   2      5     t_fireball   #t      2        0        50       0        1.0  )
-   (list 't_acid_spray "acid spray" nil          "-7"     "1d6"    "+0"     slot-nil      2      2     t_slimeglob  #t      0        10       50       20       1.0  )
-   (list 't_fire_glob  "fire glob"  nil          "-8"     "1d6"    "+0"     slot-nil      2      2     t_fireball   #t      0        10       50       20       1.0  )
-   (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d4"    "-1"     slot-weapon   1      6     t_stunball   #t      2        0        80       0        1.0  )
-   (list 't_prismatic_gaze "prismatic gaze" nil  "1d4"    "0"      "0"      slot-nil      1      3     t_prismatic_bolt #t  0        0        0        0        0.85 )
+   (list 't_sling      "sling"      s_sling      "1d2-2"  "1d4"    "-1"     slot-weapon   1      4     t_slingstone nil #t      0        10       60       30       0.9  )
+   (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d4+4"  "0"      slot-weapon   1      6     t_slingstone nil #t      0        10       60       30       0.9  )
+   (list 't_bow        "bow"        s_bow        "1d3-2"  "2d4"    "-2"     slot-weapon   2      6     t_arrow_p t_arrow     #f      2        10       70       20       0.9  )
+   (list 't_crossbow   "crossbow"   s_crossbow   "1d4-2"  "4d4"    "-1"     slot-weapon   2      4     t_bolt_p t_bolt       #f      3        0        80       0        0.95 )
+   (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "1d2"    "+2"     slot-weapon   2      5     t_fireball nil   #t      2        0        50       0        1.0  )
+   (list 't_acid_spray "acid spray" nil          "-7"     "1d6"    "+0"     slot-nil      2      2     t_slimeglob nil  #t      0        10       50       20       1.0  )
+   (list 't_fire_glob  "fire glob"  nil          "-8"     "1d6"    "+0"     slot-nil      2      2     t_fireball nil   #t      0        10       50       20       1.0  )
+   (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d4"    "-1"     slot-weapon   1      6     t_stunball nil   #t      2        0        80       0        1.0  )
+   (list 't_prismatic_gaze "prismatic gaze" nil  "1d4"    "0"      "0"      slot-nil      1      3     t_prismatic_bolt nil #t  0        0        0        0        0.85 )
    ))
 
 ;; ============================================================================
@@ -446,9 +451,9 @@
                    slot-nil          ;;        slots : slots it will fit in (e.g., hands)
                    0                 ;;        hands : number of slots required to ready it
                    6                 ;;        range : range it will fire
-                   80                 ;;          rap : required action points to attack with it
-                   t_cannonball      ;;      missile : nil or the armament type it fires
+                   80                ;;          rap : required action points to attack with it
                    t_cannonball      ;;
+                   nil				    ;;      missile : nil or the armament type it fires
                    #f                ;;       thrown : true or false
                    #t                ;;         ubiq : true if it needs ammo in inventory, false otherwise
                    0                 ;;       weight : unused
