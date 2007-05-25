@@ -81,10 +81,10 @@
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect slots 
-                             num-hands range ifc weight
+                             num-hands range missile ifc weight
 							 stratt_mod dexatt_mod damage_mod avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap nil nil #t #f weight nil (ifc-cap ifc) ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
+                     num-hands range default-rap missile nil #t #f weight nil (ifc-cap ifc) ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
 
 (define (mk-missile-arms-type tag name sprite ifc mmode)
   (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil nil #f #f 
@@ -197,7 +197,33 @@
                (lambda (kmissile kuser ktarget kplace x y dam)
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
+                                  
+(kern-mk-sprite 's_flaming_oil    ss_arms 1 5 #f 0)
+(kern-mk-sprite 's_spear          ss_arms 1 6 #f 0)
+(kern-mk-sprite 's_thrown_boulder ss_arms 1 7 #f 0)
 
+(define flaming-oil-ifc
+  (ifc obj-ifc
+       (method 'hit-loc 
+               (lambda (kmissile kuser ktarget kplace x y dam)
+                 (kern-obj-put-at (kern-mk-obj F_fire 1) 
+                                  (mk-loc kplace x y))))))
+
+(define vial-of-slime-ifc
+  (ifc obj-ifc
+       (method 'hit-loc 
+               (lambda (kmissile kuser ktarget kplace x y dam)
+                 (let* ((lvl (kern-dice-roll "1d3+5"))
+                        (knpc (spawn-npc 'green-slime lvl))
+                        (loc (pick-loc (mk-loc kplace x y) knpc)))
+                   (cond ((null? loc) 
+                          (kern-obj-dec-ref knpc)
+                          0)
+                         (else
+                          (kern-being-set-base-faction knpc faction-none)
+                          (kern-obj-set-temporary knpc #t)
+                          (kern-obj-put-at knpc loc))))))))
+                          
 (define missile-arms-types
   (list
    ;;    ===================================================================
@@ -218,12 +244,17 @@
    (list 't_mweb           "web"            s_thrownweb      temp-ifc				mmode-missile)
    (list 't_mpoison_bolt   "poison bolt"    s_poison_bolt    temp-ifc				mmode-missile)
    (list 't_prismatic_bolt "prismatic bolt" s_prismatic_bolt prismatic-bolt-ifc	mmode-missile)
+   (list  't_oil_p            "flaming oil"   s_flaming_oil  flaming-oil-ifc	mmode-missile)
+   (list  't_slime_vial_p     "vial of slime" s_squat_bubbly_green_potion  vial-of-slime-ifc	mmode-missile)
+   (list  't_spear_p          "spear"         s_spear          obj-ifc	mmode-missile)
+   (list  't_thrown_boulder_p "loose boulder" s_thrown_boulder  obj-ifc 	mmode-missile)
 
    (list 't_arrow          "arrow"          s_arrow          obj-ifc					mmode-smallobj)
    (list 't_bolt           "bolt"           s_bolt           obj-ifc					mmode-smallobj)
    (list 't_warhead        "warhead"        s_warhead        warhead-ifc			mmode-smallobj)
    (list 't_cannonball     "cannonball"     s_cannonball     obj-ifc					mmode-smallobj)
    ))
+   
    
 ;; If we don't create these missile types now, we won't be able to refer to
 ;; them below in the projectile-arms-types table. For example, t_bow needs to
@@ -262,43 +293,20 @@
 ;; Thrown Weapons
 ;; ============================================================================
 
-(kern-mk-sprite 's_flaming_oil    ss_arms 1 5 #f 0)
-(kern-mk-sprite 's_spear          ss_arms 1 6 #f 0)
-(kern-mk-sprite 's_thrown_boulder ss_arms 1 7 #f 0)
-
-(define flaming-oil-ifc
-  (ifc obj-ifc
-       (method 'hit-loc 
-               (lambda (kmissile kuser ktarget kplace x y dam)
-                 (kern-obj-put-at (kern-mk-obj F_fire 1) 
-                                  (mk-loc kplace x y))))))
-
-(define vial-of-slime-ifc
-  (ifc obj-ifc
-       (method 'hit-loc 
-               (lambda (kmissile kuser ktarget kplace x y dam)
-                 (let* ((lvl (kern-dice-roll "1d3+5"))
-                        (knpc (spawn-npc 'green-slime lvl))
-                        (loc (pick-loc (mk-loc kplace x y) knpc)))
-                   (cond ((null? loc) 
-                          (kern-obj-dec-ref knpc)
-                          0)
-                         (else
-                          (kern-being-set-base-faction knpc faction-none)
-                          (kern-obj-set-temporary knpc #t)
-                          (kern-obj-put-at knpc loc))))))))
-
+   
 (define thrown-arms-types
   (list
    ;;     ============================================================================================================================================================================
-   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc             | weight | stratt | dexatt | dammod | avoid
+   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | missile | ifc             | weight | stratt | dexatt | dammod | avoid
    ;;     ============================================================================================================================================================================
-   (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc    1       20       30       0        0.9     )
-   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1" "1d2"   "-2"     slot-weapon   1      4     vial-of-slime-ifc  1       20       30       0        1.0     )
-   (list  't_spear          "spear"         s_spear                "0"      "1d8"    "+1"     slot-weapon   1      4     obj-ifc            2       20       40       40       1.0     )
-   (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     obj-ifc            10      40       20       60       0.9     )
+   (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     t_oil_p flaming-oil-ifc    1       20       30       0        0.9     )
+   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1" "1d2"   "-2"     slot-weapon   1      4     t_slime_vial_p	vial-of-slime-ifc  1       20       30       0        1.0     )
+   (list  't_spear          "spear"         s_spear                "0"      "1d8"    "+1"     slot-weapon   1      4     t_spear_p	obj-ifc            2       20       40       40       1.0     )
+   (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     t_thrown_boulder_p	obj-ifc            10      40       20       60       0.9     )
    ))
 
+(map (lambda (type) (apply mk-thrown-arms-type type)) thrown-arms-types)  
+   
 ;; Inventory sprites
 (kern-mk-sprite 's_axe            ss_arms 1 29 #f 0)
 (kern-mk-sprite 's_dagger         ss_arms 1 32 #f 0)
@@ -392,7 +400,6 @@
    ))
 
 
-(map (lambda (type) (apply mk-thrown-arms-type     type)) thrown-arms-types)
 (map (lambda (type) (apply mk-projectile-arms-type type)) projectile-arms-types)
 (map (lambda (type) (apply mk-melee-arms-type      type)) melee-arms-types)
 (map (lambda (type) (apply mk-armor-type           type)) armor-types)
