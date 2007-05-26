@@ -977,7 +977,7 @@ int Character::hasAmmo (class ArmsType * weapon)
                 // SAM: Not bothering with quantity of NPC ammo for now
 		return (!weapon->isMissileWeapon() ||
                         (container != NULL &&
-                         container->search(weapon->getMissileType())));
+                         container->search(weapon->getAmmoType())));
 	}
 } // Character::hasAmmo()
 
