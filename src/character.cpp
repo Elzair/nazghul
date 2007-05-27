@@ -2998,38 +2998,38 @@ void Character::save(struct save *save)
 
         save->enter(save, "(kern-mk-char\n");
         if (this->tag) {
-                save->write(save, "\'%s\n", this->tag );
+                save->write(save, "\'%s  ; tag\n", this->tag );
         } else {
-                save->write(save, "nil\n");
+                save->write(save, "nil  ; tag\n");
         }
-        save->write(save, "\"%s\"\n", this->getName());
-        save->write(save, "%s\n",  this->species->tag);
-        save->write(save, "%s\n", this->occ ? this->occ->tag : "nil");
+        save->write(save, "\"%s\"  ; name\n", this->getName());
+        save->write(save, "%s  ; species\n",  this->species->tag);
+        save->write(save, "%s  ; occ\n", this->occ ? this->occ->tag : "nil");
         sprite_save(sprite, save);
         /*save->write(save, "%s\n", sprite_get_tag(this->sprite));*/
-        save->write(save, "%d\n", getBaseFaction());
-        save->write(save, "%d %d %d\n", str, intl, dex);
-        save->write(save, "%d %d\n", this->hp_mod, this->hp_mult);
-        save->write(save, "%d %d\n", this->mp_mod, this->mp_mult);
-        save->write(save, "%d %d\n", this->getHp(), this->getExperience());
-        save->write(save, "%d %d\n", this->getMana(), this->getLevel());
-        save->write(save, "#%c ;; dead?\n", isDead() ? 't' : 'f');
+        save->write(save, "%d  ; BaseFaction\n", getBaseFaction());
+        save->write(save, "%d %d %d  ; str, int, dex\n",    str, intl, dex);
+        save->write(save, "%d %d  ;    hp_mod, hp_mult\n",  this->hp_mod,    this->hp_mult);
+        save->write(save, "%d %d  ;    mp_mod, mp_mult\n",  this->mp_mod,    this->mp_mult);
+        save->write(save, "%d %d  ;    HP, XP\n",           this->getHp(),   this->getExperience());
+        save->write(save, "%d %d  ;    mana, level\n",      this->getMana(), this->getLevel());
+        save->write(save, "#%c  ; dead?\n", isDead() ? 't' : 'f');
 
         if (conv != NULL) {
                 closure_save(conv, save);
         } else
-                save->write(save, "nil\n");
+                save->write(save, "nil  ; conv\n");
 
-        save->write(save, "%s\n", sched? sched->tag : "nil");
+        save->write(save, "%s  ; sched\n", sched? sched->tag : "nil");
 
         if (ai != NULL) {
                 closure_save(ai, save);
         } else
-                save->write(save, "nil\n");
+                save->write(save, "nil  ; ai\n");
 
         // Items in personal inventory.
         if (!container) {
-                save->write(save, "nil ;; inventory\n");
+                save->write(save, "nil  ; inventory\n");
         } else {
                 container->save(save);
         }
@@ -3039,14 +3039,14 @@ void Character::save(struct save *save)
 		int armsIndex=0;
 	arms = this->enumerateArms(&armsIndex);
         if (! arms) {
-                save->write(save, "nil\n");
+                save->write(save, "nil  ; readied arms\n");
         } else {
                 save->enter(save, "(list\n");
                 while (arms != NULL) {
                         save->write(save, "%s\n", arms->getTag());
                         arms = this->getNextArms(&armsIndex);
                 }
-                save->exit(save, ")\n");
+                save->exit(save, ")  ; readied arms\n\n");
         }
 
         // Hooks

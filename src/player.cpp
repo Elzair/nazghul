@@ -1705,8 +1705,9 @@ void PlayerParty::save(save_t *save)
                 save->enter(save, "(list\n");
                 FOR_EACH_MEMBER(elem,ch) {
                         char_save(save, ch);
+			save->write(save, ";; end of PlayerParty member\n\n");
                 }
-                save->exit(save, ")\n");
+                save->exit(save, ")  ; list of party members\n");
         }
 
         save->exit(save, ")\n");

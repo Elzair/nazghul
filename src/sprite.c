@@ -598,7 +598,7 @@ void sprite_save(struct sprite *sprite, struct save *save)
         /* For simple sprites just save the tag. */
         if (!sprite->decor) {
                 assert(sprite->tag);
-                save->write(save, "%s ", sprite->tag);
+                save->write(save, "%s ; sprite\n", sprite->tag);
                 return;
         }
 
@@ -609,7 +609,7 @@ void sprite_save(struct sprite *sprite, struct save *save)
                 save->append(save, "%s ", sprite->tag);
                 sprite = sprite->decor;
         }
-        save->append(save, "))\n");
+        save->append(save, ")) ; composite sprite\n");
 }
 
 static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from, 
