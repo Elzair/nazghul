@@ -624,6 +624,11 @@
         (list 100 "2d10" 't_gold)
         ))  
 
+(define (can-be-dropped? obj loc max_difficulty)
+	(let ((mcost (kern-place-get-movement-cost loc obj)))
+		(and (not (eqv? mcost 0))
+			(< mcost max_difficulty))))
+        
 (define (drop-generic knpc loot)
   (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location knpc))))
            (let ((loc (kern-obj-get-location knpc)))
@@ -632,11 +637,12 @@
                           (dice (cadr triple))
                           (type-tag (caddr triple)))
                       (if (< (modulo (random-next) 100) thresh)
-                          (let ((quantity (max 0 (kern-dice-roll dice))))
+                          (let ((quantity (kern-dice-roll dice)))
                             (if (> quantity 0)
-                                (kern-obj-put-at (kern-mk-obj (eval type-tag)
-                                                              quantity)
-                                                 loc))))))
+                            		(let ((obj (kern-mk-obj (eval type-tag) quantity)))
+                            			(if (can-be-dropped? obj loc cant)
+                                			(kern-obj-put-at obj loc)
+                       			)))))))
                   loot)
              )))
   
