@@ -101,21 +101,21 @@
 	;;	walk	hover	ship	phase	fly	skiff	fish	crawl	vship	rangr	none	wrigl	missl	fly	run	crawl	smallobj	largeobj	fields		
 	(list	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	)	;; none
 	(list	norm	norm	cant	norm	norm	cant	cant	norm	cant	norm	cant	norm	0	fast	fast	fast	norm	norm	norm	)	;; grass/paving
-	(list	cant	cant	norm	cant	norm	vhard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	norm	norm	nodrop	)	;; deep
-	(list	cant	hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	norm	norm	nodrop	)	;; shoals
+	(list	cant	cant	norm	cant	norm	vhard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; deep
+	(list	norm	hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; shoals
 	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	95	fast	cant	cant	nodrop	nodrop	cant	)	;; mountains
 	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	cant	cant	cant	)	;; wall (w/ ceiling)
 	(list	hard	hard	cant	norm	norm	cant	cant	hard	cant	norm	cant	hard	50	fast	norm	norm	norm	norm	norm	)	;; trees
 	(list	vhard	vhard	cant	norm	norm	cant	cant	vhard	cant	norm	cant	vhard	7	fast	hard	hard	norm	norm	norm	)	;; forest/hills/bog
 	(list	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	nodrop	nodrop	norm	)	;; energy fields
-	(list	cant	cant	cant	cant	norm	cant	cant	cant	norm	cant	cant	cant	0	fast	cant	cant	norm	norm	nodrop	)	;; space
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	norm	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; space
 	(list	cant	norm	cant	norm	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	norm	)	;; boulder
 	(list	cant	hard	cant	cant	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	nodrop	)	;; waterboulder
-	(list	cant	norm	vhard	cant	norm	vhard	vhard	cant	cant	cant	cant	cant	0	fast	cant	cant	norm	norm	nodrop	)	;; sludge
-	(list	norm	norm	cant	norm	norm	norm	norm	norm	cant	norm	cant	cant	0	fast	norm	norm	norm	norm	nodrop	)	;; shallow sludge
+	(list	cant	norm	vhard	cant	norm	vhard	vhard	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; sludge
+	(list	norm	norm	cant	norm	norm	norm	norm	norm	cant	norm	cant	cant	0	fast	norm	norm	cant	cant	nodrop	)	;; shallow sludge
 	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	vhard	7	cant	cant	cant	norm	nodrop	norm	)	;; bars (eg portcullis)
 	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	30	fast	cant	cant	nodrop	nodrop	nodrop	)	;; passlos mountains
-	(list	cant	hard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	)	;; float
+	(list	cant	vhard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	)	;; float
 	(list	cant	hard	cant	cant	norm	hard	cant	cant	norm	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	)	;; fly
 )																																																																																																																																																																																																																																																															
 

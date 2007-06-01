@@ -43,8 +43,13 @@
         (gob (gob kobj))
         (loc (kern-obj-get-location kobj))
         )
+     (define (check-fall offset)
+     		(map chasm-fall (kern-get-objects-at (mk-loc (loc-place loc)
+                            (+ (loc-x loc) (car offset))
+                            (+ (loc-y loc) (cadr offset))))
+     		))
     ;;(println "wind=" wind "gob=" gob "loc=" loc)
-    (define (turn map dir)
+     (define (turn amap dir)
       (cond ((< (wind-bridge-delay gob) 2)
              (kern-log-msg "The bridge creaks in the wind!")
              (wind-bridge-inc-delay! gob))
@@ -52,7 +57,23 @@
              (kern-blit-map (kern-place-map (loc-place loc))
                             (loc-x loc)
                             (loc-y loc)
-                            map 0 0 9 9)
+                            amap 0 0 9 9)
+             (map check-fall
+             	(list
+             		(list 4 0)
+             		(list 4 1)
+             		(list 4 2)
+             		(list 4 6)
+             		(list 4 7)
+             		(list 4 8)
+             		(list 0 4)
+             		(list 1 4)
+             		(list 2 4)
+             		(list 6 4)
+             		(list 7 4)
+             		(list 8 4)
+					)             		
+					)
              (wind-bridge-set-facing! gob dir)
              (wind-bridge-reset-delay! gob)
              )))
@@ -74,7 +95,7 @@
   (ifc '()
        (method 'exec wind-bridge-exec)
        ))
-
+       
 ;; Make a kernel portcullis type
 (mk-obj-type 't_wind_bridge nil nil layer-mechanism wind-bridge-ifc)
 
