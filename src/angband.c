@@ -533,8 +533,8 @@ int vinfo_init(struct vinfo_type *vinfo, int width)
 /* gmcnutt: for vlos, track ray strength in each octant */
 static unsigned char ray_strength[VINFO_MAX_SLOPES];
 
-#define OPAQUE(val) ((val)==MAX_RAY_STRENGTH)
-#define VISIBLE(val) ((val)<MAX_RAY_STRENGTH)
+#define OPAQUE(val)  ((val) == (MAX_RAY_STRENGTH))
+#define VISIBLE(val) ((val)  < (MAX_RAY_STRENGTH))
 
 static void check_ray_set(u32b *ray_set, u32b ray_mask, int ray_index, unsigned char tile_val, int diag)
 {
