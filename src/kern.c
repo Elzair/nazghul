@@ -3600,12 +3600,12 @@ KERN_API_CALL(kern_obj_get_movecost)
         int val;
 
         if (unpack(sc, &args, "pd", &obj, &val)) {
-                rt_err("kern-obj-set-pclass: bad args");
+                rt_err("kern_obj_get_movecost: bad args");
                 return sc->NIL;
         }
 
         if (!obj) {
-                rt_err("kern-obj-set-pclass: null object");
+                rt_err("kern_obj_get_movecost: null object");
                 return sc->NIL;
         }
 	
