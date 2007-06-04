@@ -157,7 +157,7 @@
 ;; Shared utilities
 ;;--------------------------------------------------------------
 
-
+;; TODO individual spells should probably handle their own output (they can put more detail into it)
 (define (contest-of-skill offense defense)
   (let ((oprob (+ offense 1))
         (tprob (number->string (+ offense defense 2))))
@@ -393,6 +393,18 @@
 
 (define (powers-field-sleep caster ktarg power)
 	(kern-obj-put-at (kern-mk-field F_sleep (+ 15 (kern-dice-roll (mkdice 1 power)))) ktarg))
+	
+(define (powers-field-energy-weak caster ktarg power)
+	(kern-obj-put-at (kern-mk-field F_energy (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 2)))))) ktarg))
+
+(define (powers-field-fire-weak caster ktarg power)
+	(kern-obj-put-at (kern-mk-field F_fire (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 3)))))) ktarg))
+	
+(define (powers-field-poison-weak caster ktarg power)
+	(kern-obj-put-at (kern-mk-field F_poison (+ 3 (kern-dice-roll (mkdice 1 (ceiling (/ power 3)))))) ktarg))
+
+(define (powers-field-sleep-weak caster ktarg power)
+	(kern-obj-put-at (kern-mk-field F_sleep (+ 4 (kern-dice-roll (mkdice 1 (ceiling (/ power 3)))))) ktarg))
 
 (define (powers-fireball-range power)
 	(+ 3 (/ power 3)))
@@ -572,32 +584,45 @@
 	(kern-add-magic-negated (kern-dice-roll
 		(mkdice 3 (floor (+ (/ power 3) 1))))))
 
+(define (powers-paralyse caster ktarg power)
+  	(if (and (can-paralyze? ktarg)
+  				(contest-of-skill
+						(+ power 5)
+						(occ-ability-magicdef ktarg)))
+        (kern-obj-add-effect ktarg ef_paralyze nil)))
+		
 (define (powers-poison-range power)
 	(+ 3 (/ power 3)))
-
+	
 ;todo contest to resist? to-hit roll required? power based initial damage?
 ;note instant hostility - you cant just cause someone to slowly die and say
 ;sorry afterwards
-(define (powers-poison caster ktarg power)
-	(define (do-poison-effect kmissile kplace x y)
-		(let* ((loc (mk-loc kplace x y))
-				(targchar (get-being-at loc)))
-			(if (not (null? targchar))
-				(begin
-					(if (contest-of-skill
-							(+ power 10)
-							(occ-ability-dexdefend targchar))
-						(apply-poison targchar))
-					(kern-harm-relations targchar caster)
-					(kern-harm-relations targchar caster)
-					(kern-harm-relations targchar caster)
-					(kern-harm-relations targchar caster)
-					))
+(define (powers-poison-effect caster ktarg power)
+	(if (and (kern-obj-is-being? ktarg)
+			(not (null? ktarg)))
+		(begin
+			(if (contest-of-skill
+					power
+					(occ-ability-dexdefend ktarg))
+				(apply-poison ktarg))
 		))
+	)
+
+(define (powers-poison caster ktarg power)
+	(define (do-poison-effect kmissile kuser ktarget kplace x y dam)
+		(on-hit-target ktarget dam 
+              				(lambda (obj) (powers-poison-effect obj (+ power 10))))
+		(on-hit-nontarget ktarget dam 
+              				(lambda (obj) (powers-poison-effect obj power)))
+              			)
 	(temp-ifc-set do-poison-effect)
 	(kern-log-msg (kern-obj-get-name caster)
 				" hurls poison missile at "
 				(kern-obj-get-name ktarg))
+	(kern-harm-relations ktarg caster)
+	(kern-harm-relations ktarg caster)
+	(kern-harm-relations ktarg caster)
+	(kern-harm-relations ktarg caster)
 	(cast-missile-proc caster ktarg t_mpoison_bolt)
 	)
 

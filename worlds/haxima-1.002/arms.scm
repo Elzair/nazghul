@@ -134,7 +134,20 @@
 (define deathball-ifc   (mk-missile-ifc magical-kill))
 (define stunball-ifc (mk-missile-ifc paralyze))
 (define acid-bolt-ifc (mk-missile-ifc apply-acid))
-(define prismatic-bolt-ifc (mk-missile-ifc apply-prismatic))
+
+(define (on-hit-nontarget ktarget loc dam proc)
+	(for-each proc
+		(if (> dam -1)
+   		(filter (lambda (obj) (not (equal? obj ktarget)))
+           	(kern-get-objects-at loc))
+      	(kern-get-objects-at loc)
+           	))
+)
+
+(define (on-hit-target ktarget dam proc)
+	(if (> dam -1)
+		(proc ktarget)
+	))
 
 ;; fireball-hit -- when a fireball hits it burns all characters and leaves a
 ;; fire 
@@ -153,7 +166,6 @@
                						#f))
                			(setfire (and usedmana (equal? (kern-dice-roll "1d3") 1)))
                			(loc (mk-loc kplace x y))
-               			(hit (> dam -1))
                			(hurt (> dam 0))
                			(targdamage (cond
                								(usedmana (if hurt "2d5+3" "2d4+2"))
@@ -166,31 +178,119 @@
                								(else "0")
                								))
                			)
-               		(println kuser havemana usedmana setfire targdamage othdamage)
                		(if (and setfire (terrain-ok-for-field? loc))
               				(kern-obj-put-at (kern-mk-field F_fire (kern-dice-roll "1d5")) loc))
               			(if (not havemana)
               					(kern-log-msg "Attack fizzles!"))
-              			(if hit
-              					(generic-burn ktarget targdamage))
-               		
-               		(println "list " (if hit
-                           	(filter (lambda (obj) (not (equal? obj ktarget)))
-                                   (kern-get-objects-at loc))
-                              (kern-get-objects-at loc)
-                                   ))
+              			(on-hit-target ktarget dam 
+              				(lambda (obj) (generic-burn obj targdamage))
+              			)
                		(if havemana
-               			(for-each (lambda (obj) (generic-burn obj othdamage))
-               				(if hit
-                           	(filter (lambda (obj) (not (equal? obj ktarget)))
-                                   (kern-get-objects-at loc))
-                              (kern-get-objects-at loc)
-                                   ))
-                        )                          
+               			(on-hit-nontarget ktarget loc dam 
+               				(lambda (obj) (generic-burn obj othdamage)))
+               			)                         
                ))
 			)))
 			
+(define (prismatic-acid ktarget power)
+	(if (contest-of-skill power
+			(occ-ability-dexdefend ktarget))
+		(apply-acid ktarget)))
+		
+(define (prismatic-slip ktarget power)
+	(if (and (kern-obj-is-being? ktarget)
+			(contest-of-skill power
+			(occ-ability-dexdefend ktarget)))
+		(slip ktarget)))
+		
+(define prismatic-bolt-ifc
+	(ifc '()
+       (method 'hit-loc
+               (lambda (kmissile kuser ktarget kplace x y dam)
+               	(let* (
+               			(havemana (> (kern-char-get-mana kuser) 0))
+               			(usedmana (if (and havemana (equal? (kern-dice-roll "1d15") 1))
+               						(
+               							begin
+               							(kern-char-set-mana kuser (- (kern-char-get-mana kuser) 1))
+               							#t
+               						)
+               						#f))
+               			(magpower (if havemana
+               					(if usedmana (max 7 (occ-ability-blackmagic kuser)) 5)
+               					0))
+               			(loc (mk-loc kplace x y))
+               			(hit (> dam -1))
+               			(hurt (> dam 0))
+               			(havetarget (not (eqv? ktarget '())))
+               			(pristype (kern-dice-roll "1d100"))
+               			(proclist
+               			
+              					(cond ((< pristype 10)
+              							(list nil
+              						(lambda (obj) (powers-paralyse kuser obj magpower))
+              						(lambda (obj) (powers-paralyse kuser obj (- magpower 3)))))
+              										
+              						((< pristype 20)
+              							(list nil
+              						(lambda (obj) (prismatic-acid obj magpower))
+              						(lambda (obj) (prismatic-acid obj (- magpower 3)))))
+              						          						
+           							((< pristype 30)
+           								(list nil
+            						(lambda (obj) (powers-poison-effect kuser obj (+ magpower 3)))
+              						(lambda (obj) (powers-poison-effect kuser obj (- magpower 2)))))
+              						
+              						((< pristype 40)
+           								(list nil
+            						(lambda (obj) (generic-burn obj "2d3+2"))
+            						(lambda (obj) (generic-burn obj "1d5"))))
+              							
+              						((< pristype 50)
+           								(list nil
+            						(lambda (obj) (apply-lightning obj))
+            						(lambda (obj) (apply-lightning obj))))
+            					
+										((< pristype 60)
+           								(list nil
+            						(lambda (obj) (prismatic-slip obj (+ magpower 5)))
+              						(lambda (obj) (prismatic-slip obj (+ magpower 2)))))
+              							
+    									((< pristype 70)
+           								(list
+           							(lambda (loc) (powers-field-energy-weak kuser loc magpower))
+           							nil nil))
 
+    									((< pristype 80)
+           								(list
+           							(lambda (loc) (powers-field-fire-weak kuser loc magpower))
+           							nil nil))
+           							
+    									((< pristype 90)
+           								(list
+           							(lambda (loc) (powers-field-poison-weak kuser loc magpower))
+           							nil nil))
+           							
+    									((< pristype 100) 
+           								(list
+           							(lambda (loc) (powers-field-sleep-weak kuser loc magpower))
+           							nil nil))
+               			)))
+               			
+              			(if (not havemana)
+              					(kern-log-msg "Attack fizzles!")
+              					(begin
+              						(if (not (null? (car proclist)))
+              							((car proclist) loc))
+              						(if (not (null? (cadr proclist)))
+              							(on-hit-target ktarget dam (cadr proclist)))
+              						(if (not (null? (caddr proclist)))
+              							(on-hit-nontarget ktarget loc dam (caddr proclist)))
+              					)
+              				)
+              		))
+			)))
+			
 (define warhead-ifc
   (ifc nil
        (method 'hit-loc 
