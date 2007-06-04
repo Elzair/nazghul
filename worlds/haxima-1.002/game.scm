@@ -107,7 +107,7 @@
 	(list	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	)	;; none
 	(list	norm	norm	cant	norm	norm	cant	cant	norm	cant	norm	cant	norm	0	fast	fast	fast	norm	norm	norm	)	;; grass/paving
 	(list	cant	cant	norm	cant	norm	vhard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; deep
-	(list	norm	hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; shoals
+	(list	cant	hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; shoals
 	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	95	fast	cant	cant	nodrop	nodrop	cant	)	;; mountains
 	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	cant	cant	cant	)	;; wall (w/ ceiling)
 	(list	hard	hard	cant	norm	norm	cant	cant	hard	cant	norm	cant	hard	50	fast	norm	norm	norm	norm	norm	)	;; trees
