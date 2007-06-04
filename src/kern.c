@@ -1624,7 +1624,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
 {
         class Character *character;
         int str, intl, dex, hpmod, hpmult;
-        int mpmod, mpmult, hp, xp, mp, lvl, dead;
+        int mpmod, mpmult, hp, xp, mp, AP_per_round, lvl, dead;
         char *tag = TAG_UNK, *name;
         struct species *species;
         struct occ *occ;
@@ -1638,11 +1638,11 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         struct sched *sched;
         class Container *inventory;
 
-        if (unpack(sc, &args, "yspppddddddddddddbcpcp",
+        if (unpack(sc, &args, "yspppdddddddddddddbcpcp",
                    &tag, &name, &species, &occ, 
                    &sprite, &base_faction, &str,
                    &intl, &dex, &hpmod, &hpmult, &mpmod, &mpmult, 
-                   &hp, &xp, &mp, &lvl, &dead,
+                   &hp, &xp, &mp, &AP_per_round, &lvl, &dead,
                    &conv, &sched, &ai, &inventory)) {
                 load_err("kern-mk-char %s: bad args", tag);
                 return sc->NIL;
@@ -1659,7 +1659,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         character = new class Character(tag, name, sprite,species, occ,
                                         str, intl, dex, hpmod, hpmult, mpmod, 
                                         mpmult,
-                                        hp, xp, mp, lvl);
+                                        hp, xp, mp, AP_per_round, lvl);
         assert(character);
         character->setBaseFaction(base_faction);
         character->setSchedule(sched);

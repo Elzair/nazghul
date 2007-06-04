@@ -83,7 +83,7 @@ struct species *species_new(char *tag,
         species->str                = str;
         species->intl               = intl;
         species->dex                = dex;
-        species->spd                = spd;
+        species->spd                = spd;  // AP_per_round
         species->vr                 = vr;
         species->hp_mod             = hp_mod;
         species->hp_mult            = hp_mult;

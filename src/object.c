@@ -36,6 +36,7 @@
 #include "dice.h"
 #include "effect.h"
 #include "mmode.h"
+#include "combat.h"  // for combat_get_state()
 #include "log.h"
 
 #include <assert.h>
@@ -1016,6 +1017,12 @@ void Object::endTurn()
         if (action_points > 0) {
                 setActionPoints(0);
         }
+	if (combat_get_state() == COMBAT_STATE_FIGHTING) {
+	    // SAM: Now, how to filter out objects
+            //      which are not combatants...
+	    //      Doing things in Being::endTurn() was very crashy...
+	    log_msg("Turn for %s ended", this->getName() );
+	}
 }
 
 void Object::startTurn()

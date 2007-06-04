@@ -158,7 +158,9 @@ Character::Character(char *tag, char *name,
                      int hpmod, int hpmult, 
                      int mpmod, int mpmult, 
                      int hp, int xp_, 
-                     int mp, int lvl
+                     int mp, 
+		     int AP_per_round,  // aka speed
+		     int lvl
                      )
         : hm(0), xp(xp_), order(-1),
           sleeping(false),
@@ -228,6 +230,7 @@ Character::Character(char *tag, char *name,
 
 	this->hp = min(this->hp, getMaxHp());
 	this->mana = min(this->mana, getMaxMana());
+	this->AP_per_round = AP_per_round;
 
         setOnMap(false);
 	if (xp == 0)
@@ -249,7 +252,9 @@ Character::Character():hm(0), xp(0), order(-1),
                        sleeping(false),
                        ac(0), 
                        str(0), intl(0),
-                       dex(0), mana(0), lvl(0),
+                       dex(0), mana(0),
+		       AP_per_round(NAZGHUL_BASE_ACTION_POINTS),
+		       lvl(0),
                        playerControlled(true), solo(false),
                        target(NULL),
                        rdyArms(NULL),
@@ -296,6 +301,8 @@ Character::Character():hm(0), xp(0), order(-1),
         factionSwitch= 0;
         tmpFaction   = NIL_FACTION;
         ambushedWhileCamping = false;
+
+	AP_per_round = AP_per_round;
 
         setDead(hp <= 0);
 
@@ -1518,8 +1525,9 @@ bool Character::initStock(struct species * species, struct occ * occ,
 
 	lvl = 1;		// fixme: hardcoded hack!
 
-	hp = getMaxHp();
+	hp   = getMaxHp();
 	mana = getMaxMana();
+	AP_per_round = species->spd;
         setDead(false);
 
         defenseBonus = 0;
@@ -1889,7 +1897,15 @@ int Character::getVisionRadius() {
 }
 
 int Character::getSpeed() {
-        return species->spd;
+    // Returns the character-specific number of 
+    // Action Points per round for this character.
+    return AP_per_round;
+    // return species->spd;
+}
+
+int Character::setSpeed(int val) {
+    AP_per_round = val;
+    return AP_per_round;
 }
 
 int Character::getMana() {
@@ -3012,7 +3028,9 @@ void Character::save(struct save *save)
         save->write(save, "%d %d  ;    hp_mod, hp_mult\n",  this->hp_mod,    this->hp_mult);
         save->write(save, "%d %d  ;    mp_mod, mp_mult\n",  this->mp_mod,    this->mp_mult);
         save->write(save, "%d %d  ;    HP, XP\n",           this->getHp(),   this->getExperience());
-        save->write(save, "%d %d  ;    mana, level\n",      this->getMana(), this->getLevel());
+        save->write(save, "%d  ;    mana\n",        this->getMana()  );
+        save->write(save, "%d  ;    AP_per_round\n", this->getSpeed() );
+        save->write(save, "%d  ;    level\n",       this->getLevel() );
         save->write(save, "#%c  ; dead?\n", isDead() ? 't' : 'f');
 
         if (conv != NULL) {

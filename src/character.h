@@ -68,6 +68,7 @@ class Character:public Being {
                   int dex, int hpmod, int hpmult, 
                   int mpmod, int mpmult, 
                   int hp, int xp, int mp,
+		  int AP_per_round,
                   int lvl);
 	virtual ~ Character();
 
@@ -81,9 +82,9 @@ class Character:public Being {
         int getAvoidBonus();
         virtual class Party * getParty();
 	virtual int getType();
-	int getHp();
+	int  getHp();
 	void setHp(int hp);
-	int getMana();
+	int  getMana();
         void setMana(int mana);
 	int getMaxMana();
         class Container *getInventoryContainer();
@@ -113,6 +114,7 @@ class Character:public Being {
 	virtual int getLight();
 	virtual int getVisionRadius();
 	virtual int getSpeed();
+	virtual int setSpeed(int val);
 	virtual struct sprite *getSprite();
         virtual sound_t *getDamageSound();
         virtual sound_t *get_movement_sound();
@@ -255,6 +257,7 @@ class Character:public Being {
 	int intl;
 	int dex;
 	int mana;
+	int AP_per_round;  // Action Points per round (speed)
 	int lvl;
         int defenseBonus;
 	bool playerControlled;
