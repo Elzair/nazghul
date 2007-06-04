@@ -1157,8 +1157,27 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 cmdHelp();
                 break;
 
+	case SDLK_ESCAPE:
+        // SAM: Removed the ESC-to-exit-combat keybinding.
+        //      Using ESC for both exit-from-UI-things and exit-combat-map
+        //      meant it was easy to exit, and miss your loot.
+        //      
+                if (!place_is_wilderness_combat(character->getPlace()))
+                {
+		    // log_msg("");
+		    break;
+                }
+
+                if (place_contains_hostiles(character->getPlace(), character))
+                {
+		    // log_msg("");
+		    break;
+                }
+		log_msg("To exit this combat map, use '<', \nor walk off the edge of the map.");
+		break;
+
         case '<':
-        case SDLK_ESCAPE:
+        // case SDLK_ESCAPE // SAM: Removed the ESC-to-exit-combat keybinding, see above.
                 // ----------------------------------------------------
                 // Quick exit from wilderness combat. The current place
                 // must be the special wildernss combat place and it
