@@ -295,7 +295,7 @@
 ;; tree corners
 
 (define (mk-blend-terrain tag . sprites)
-  (kern-mk-terrain tag "trees" pclass-grass
+  (kern-mk-terrain tag "trees" pclass-trees
                    (mk-composite-sprite (cons s_trees sprites))
                    lgt 0 nil))
 
