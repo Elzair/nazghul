@@ -80,7 +80,7 @@
    0 10 2                ; str/int/dex
    0 1                   ; hp mod/mult
    10 5                  ; mp mod/mult
-   240 -1 8 8             ; hp/xp/mp/lvl
+   240 -1 8 speed-human-med-armor 8             ; hp/xp/mp/AP_per_turn/lvl
    #f                    ; dead
    'conv-thorald         ; conv
    nil                   ; sched

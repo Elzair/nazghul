@@ -414,6 +414,7 @@
      max-health ;;..current hit points
      -1  ;;...........current experience points
      max-health ;;..current magic points
+     speed-human-hvy-armor
      8  ;;..current level
      #f ;;...........dead?
      'alch-conv ;;...conversation (optional)

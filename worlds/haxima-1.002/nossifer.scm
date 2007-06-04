@@ -79,6 +79,7 @@
                   max-health ; hp
                   0                   ; xp
                   max-health ; mp
+                  speed-human-med-armor
                   noss-lvl
                   #f               ; dead
                   'noss-conv       ; conv

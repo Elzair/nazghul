@@ -130,7 +130,7 @@
                  1 2 0               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 max-health -1 max-health 3            ; hp/xp/mp/lvl
+                 max-health -1 max-health speed-human-med-armor 3  ; hp/xp/mp/AP_per_turn/lvl
                  #f                  ; dead
                  'fing-conv         ; conv
                  sch_fing           ; sched

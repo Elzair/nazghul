@@ -380,6 +380,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
+speed-human-med-armor
     silas-lvl
     #f               ; dead
     'silas-conv         ; conv

@@ -101,6 +101,7 @@
       (say knpc "TALK TO PERCY!")
       (jake-trade knpc kpc)))
 
+1
 ;; Trade...
 (define (jake-trade knpc kpc)
   (kern-conv-trade knpc kpc
@@ -151,6 +152,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
+    speed-human-med-armor
     jake-lvl
     #f               ; dead
     'jake-conv         ; conv

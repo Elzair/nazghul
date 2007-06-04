@@ -204,6 +204,7 @@
                  max-health ; hp
                  -1                   ; xp
                  max-health ; mp
+                 speed-human-unarmored
                  the-man-start-lvl
                  #f                  ; dead
                  'man-conv         ; conv

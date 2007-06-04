@@ -175,6 +175,7 @@
      max-health ; hp
      -1                   ; xp
      max-health ; mp
+     speed-human-med-armor
      kama-lvl
      #f               ; dead
      'kama-conv         ; conv

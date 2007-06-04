@@ -121,6 +121,7 @@
     max-health ; hp
     -1                  ; xp
     max-health ; mp
+    speed-human-unarmored
     tooth-lvl
     #f               ; dead
     'tooth-conv         ; conv

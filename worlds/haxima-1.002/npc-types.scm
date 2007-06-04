@@ -38,6 +38,7 @@
    (max-hp species occupation default-level 0 0) ;;.current hit points
    -1  ;;...........current experience points
    (max-mp species occupation default-level 0 0) ;;.current magic points
+   speed-human-med-armor  ;; AP_per_turn
    default-level  ;;............current level
    #f ;;...........dead?
    conv ;;.........conversation (optional)

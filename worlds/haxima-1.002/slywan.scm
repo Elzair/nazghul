@@ -117,6 +117,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
+    speed-human-unarmored
     slywan-lvl
     #f               ; dead
     'slywan-conv         ; conv

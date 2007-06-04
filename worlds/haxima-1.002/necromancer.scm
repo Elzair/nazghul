@@ -246,6 +246,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
+    speed-human-med-armor
     necr-lvl
     #f               ; dead
     'necr-conv         ; conv

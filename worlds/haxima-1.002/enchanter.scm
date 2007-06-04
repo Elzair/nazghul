@@ -401,6 +401,7 @@
      max-health ;;..current hit points
      -1  ;;...........current experience points
      max-health ;;..current magic points
+     speed-human-med-armor
      enchanter-start-lvl  ;;..current level
      #f ;;...........dead?
      'enchanter-conv ;;...conversation (optional)

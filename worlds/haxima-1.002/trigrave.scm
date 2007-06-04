@@ -139,7 +139,7 @@
                4 1 2              ; str/int/dex
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
-               max-health -1 max-health 4            ; hp/xp/mp/lvl
+               max-health -1 max-health speed-human-unarmored 4  ; hp/xp/mp/AP_per_turn/lvl
                #f                  ; dead
                'jim-conv          ; conv
                sch_jim           ; sched
@@ -160,7 +160,7 @@
                0 1 2              ; str/int/dex
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
-               max-health -1 max-health 2            ; hp/xp/mp/lvl
+               max-health -1 max-health speed-human-unarmored 2  ; hp/xp/mp/AP_per_turn/lvl
                #f                  ; dead
                'gwen-conv          ; conv
                sch_gwen           ; sched
@@ -181,7 +181,7 @@
                0 4 2              ; str/int/dex
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
-               max-health -1 max-health 5            ; hp/xp/mp/lvl
+               max-health -1 max-health speed-human-unarmored 5  ; hp/xp/mp/AP_per_turn/lvl
                #f                  ; dead
                'chant-conv         ; conv
                sch_chant           ; sched
@@ -202,7 +202,7 @@
                0 5 3       ;; str/int/dex
                0 0          ;; hp mod/mult
                0 0          ;; mp mod/mult
-               max-health -1 max-health 4     ;; hp/xp/mp/lvl
+               max-health -1 max-health speed-human-unarmored 4  ;; hp/xp/mp/AP_per_turn/lvl
                #f                  ; dead
                'earl-conv   ;; conv
                sch_earl     ;; sched

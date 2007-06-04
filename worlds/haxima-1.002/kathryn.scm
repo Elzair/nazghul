@@ -210,6 +210,7 @@
       max-health ;; current hit points
       -1  ;;...........current experience points
       max-health ;; current magic points
+      speed-human-med-armor
       kathryn-start-lvl  ;;..current level
       #f ;;...........dead?
       'kathryn-conv ;;conversation (optional)

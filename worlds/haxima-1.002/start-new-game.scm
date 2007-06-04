@@ -111,7 +111,7 @@
   pc-hp-gain
   pc-mp-off
   pc-mp-gain
-  max-health 0 max-health 1              ; hp/xp/mp/lvl
+  max-health 0 max-health speed-human-med-armor 1  ; hp/xp/mp/AP_per_turn/lvl
   #f                    ; dead
   nil                   ; conv
   nil                   ; sched
@@ -133,7 +133,7 @@
 ;  0 10 2                ; str/int/dex
 ;  0 1                   ; hp mod/mult
 ;  10 5                  ; mp mod/mult
-;  240 0 8 8             ; hp/xp/mp/lvl
+;  240 0 8 speed-human-med-armor 8             ; hp/xp/mp/AP_per_turn/lvl
 ;  #f                    ; dead
 ;  nil                   ; conv
 ;  nil                   ; sched

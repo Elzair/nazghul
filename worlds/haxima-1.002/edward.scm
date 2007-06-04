@@ -190,6 +190,7 @@
      max-health ;;..current hit points
      -1  ;;...........current experience points
      max-health ;;..current magic points
+     speed-human-med-armor
      edward-start-lvl  ;;..current level
      #f ;;...........dead?
      'edward-conv ;;...conversation (optional)

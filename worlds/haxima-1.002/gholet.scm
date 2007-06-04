@@ -157,6 +157,7 @@
     max-health; hp
     -1                   ; xp
     max-health ; mp
+    speed-human-med-armor
     gholet-lvl
     #f               ; dead
     'gholet-conv         ; conv

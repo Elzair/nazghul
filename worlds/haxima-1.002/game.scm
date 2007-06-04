@@ -15,10 +15,15 @@
 (define slot-helm             64)
 
 ;; Speeds
-(define speed-yellow-slime 40)
-(define speed-human        50)
-(define speed-insect       100)
-(define speed-ship         65)
+(define speed-human            150)  ;; typical AP/round for humans
+(define speed-human-unarmored  200)  ;; unencumbered, optimized for speed
+(define speed-human-med-armor  150)  ;; moderate protection, typical gear
+(define speed-human-hvy-armor  100)  ;; heavy protection, rather slow
+
+(define speed-yellow-slime      40)  ;; 
+(define speed-insect           100)  ;; 
+
+(define speed-ship              65)  ;; 
 
 ;; Action Points
 (define ap-to-use-scroll speed-human)
@@ -39,58 +44,58 @@
 
 ;; Passability Difficulty Levels (Note: 255 is well-known to the kernel to mean
 ;; "impassible" in the case of movement costs)
-(define norm       50)
-(define hard       100)
-(define vhard      150)
-(define fast       30)
-(define sfast   	 40)
-(define nodrop     100)
-(define cant       255)
+(define norm       50)  ;; 1.0
+(define hard      100)  ;; 2.0
+(define vhard     150)  ;; 3.0
+(define fast       30)  ;; 0.6
+(define sfast      40)  ;; 0.4
+(define nodrop    100)  ;; 2.0
+(define cant      255)  ;; 
 
 ;; Passability classes
-(define pclass-none      0)
-(define pclass-grass     1)
-(define pclass-deep      2)
-(define pclass-shoals    3)
-(define pclass-mountains 4) ;; no ceiling
-(define pclass-wall      5) ;; has a ceiling
-(define pclass-trees     6)
-(define pclass-forest    7)
-(define pclass-repel     8) ;; energy shield blocks all
-(define pclass-space     9)
-(define pclass-bridge    pclass-grass)
-(define pclass-road      pclass-grass)
-(define pclass-boulder   10) ;; no ceiling, smaller than mountain
-(define pclass-waterboulder   11) ;; worst case of boulder and water
-(define pclass-sludge    12)
-(define pclass-shallows  13)
-(define pclass-bars      14) ;; portcullis, some windows
-(define pclass-vmountains 15)
-(define pclass-canfloat	16) ;; avoids drowning
-(define pclass-canfly	17) ;; avoids ground based issues
+(define pclass-none          0)
+(define pclass-grass         1)
+(define pclass-deep          2)
+(define pclass-shoals        3)
+(define pclass-mountains     4) ;; no ceiling
+(define pclass-wall          5) ;; has a ceiling
+(define pclass-trees         6)
+(define pclass-forest        7)
+(define pclass-repel         8) ;; energy shield blocks all
+(define pclass-space         9)
+(define pclass-bridge        pclass-grass)
+(define pclass-road          pclass-grass)
+(define pclass-boulder       10) ;; no ceiling, smaller than mountain
+(define pclass-waterboulder  11) ;; worst case of boulder and water
+(define pclass-sludge        12)
+(define pclass-shallows      13)
+(define pclass-bars          14) ;; portcullis, some windows
+(define pclass-vmountains    15)
+(define pclass-canfloat      16) ;; avoids drowning
+(define pclass-canfly        17) ;; avoids ground based issues
 
 ;; Movement modes
 (define mmodes
   (list
-   (list 'mmode-walk     "walking"     0)
-   (list 'mmode-hover    "hovering"    1)
-   (list 'mmode-ship     "sailing"     2)
-   (list 'mmode-phase    "phasing"     3)
-   (list 'mmode-fly      "flying"      4)
-   (list 'mmode-skiff    "rowing"      5)
-   (list 'mmode-fish     "swimming"    6)
-   (list 'mmode-crawl    "crawling"    7) ;; spiders, can cross boulders
-   (list 'mmode-voidship "sailing"     8)
-   (list 'mmode-ranger   "stalking"    9)
-   (list 'mmode-none     "stationary" 10)
-   (list 'mmode-wriggle  "wriggle"    11) ;; rogue special move
-   (list 'mmode-missile  "missile"    12)
-   (list 'mmode-fastfly  "flying"    13)
-   (list 'mmode-fastrun  "running"    14)
-   (list 'mmode-fastcrawl "crawling"  15)
-   (list 'mmode-smallobj "smallobj"  16) ;; for determining dropability of small objects
-   (list 'mmode-largeobj "largeobj"  17) ;; for determining dropability of big objects- basically, stuff that wont fit through bars/windows
-   (list 'mmode-field "field"  18) ;; for determining dropability of fields
+   (list 'mmode-walk      "walking"     0)
+   (list 'mmode-hover     "hovering"    1)
+   (list 'mmode-ship      "sailing"     2)
+   (list 'mmode-phase     "phasing"     3)
+   (list 'mmode-fly       "flying"      4)
+   (list 'mmode-skiff     "rowing"      5)
+   (list 'mmode-fish      "swimming"    6)
+   (list 'mmode-crawl     "crawling"    7) ;; spiders, can cross boulders
+   (list 'mmode-voidship  "sailing"     8)
+   (list 'mmode-ranger    "stalking"    9)
+   (list 'mmode-none      "stationary" 10)
+   (list 'mmode-wriggle   "wriggle"    11) ;; rogue special move
+   (list 'mmode-missile   "missile"    12)
+   (list 'mmode-fastfly   "flying"     13)
+   (list 'mmode-fastrun   "running"    14)
+   (list 'mmode-fastcrawl "crawling"   15)
+   (list 'mmode-smallobj  "smallobj"   16) ;; for determining dropability of small objects
+   (list 'mmode-largeobj  "largeobj"   17) ;; for determining dropability of big objects- basically, stuff that wont fit through bars/windows
+   (list 'mmode-field     "field"      18) ;; for determining dropability of fields
 ))
 (map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
 
@@ -98,7 +103,7 @@
 
 ;; Movement cost table (optimized for cut to/paste from spreadsheet!)
 (kern-mk-ptable
-	;;	walk	hover	ship	phase	fly	skiff	fish	crawl	vship	rangr	none	wrigl	missl	fly	run	crawl	smallobj	largeobj	fields		
+	;;	walk	hover	ship	phase	fly	skiff	fish	crawl	vship	rangr	none	wrigl	missl	f_fly	f_run	f_crawl	sml_obj	lrg_obj	fields		
 	(list	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	)	;; none
 	(list	norm	norm	cant	norm	norm	cant	cant	norm	cant	norm	cant	norm	0	fast	fast	fast	norm	norm	norm	)	;; grass/paving
 	(list	cant	cant	norm	cant	norm	vhard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; deep

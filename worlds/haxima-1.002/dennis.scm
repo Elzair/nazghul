@@ -123,6 +123,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
+    speed-human-med-armor
     dennis-lvl
     #f               ; dead
     'dennis-conv         ; conv

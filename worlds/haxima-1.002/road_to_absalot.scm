@@ -128,6 +128,7 @@
     max-health ; hp
     0                   ; xp
     max-health ; mp
+    speed-human-hvy-armor
     9
     #f               ; dead
     'r2a-statue-conv         ; conv
