@@ -1014,14 +1014,15 @@ void Object::decActionPoints(int points)
 
 void Object::endTurn()
 {
-        if (action_points > 0) {
-                setActionPoints(0);
-        }
-	if (combat_get_state() == COMBAT_STATE_FIGHTING) {
-	    // SAM: Now, how to filter out objects
-            //      which are not combatants...
-	    //      Doing things in Being::endTurn() was very crashy...
-	    log_msg("Turn for %s ended", this->getName() );
+	if (action_points > 0)
+	{
+		setActionPoints(0);
+	}
+	// TODO: remove this before release
+	if (combat_get_state() == COMBAT_STATE_FIGHTING
+			&& getLayer() == being_layer)
+	{
+		log_msg("Turn for %s ended", this->getName() );
 	}
 }
 
