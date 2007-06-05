@@ -395,16 +395,16 @@
 	(kern-obj-put-at (kern-mk-field F_sleep (+ 15 (kern-dice-roll (mkdice 1 power)))) ktarg))
 	
 (define (powers-field-energy-weak caster ktarg power)
-	(kern-obj-put-at (kern-mk-field F_energy (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 2)))))) ktarg))
+	(powers-field-generic ktarg F_energy (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 2))))) apply-lightning))
 
 (define (powers-field-fire-weak caster ktarg power)
-	(kern-obj-put-at (kern-mk-field F_fire (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 3)))))) ktarg))
+	(powers-field-generic ktarg F_fire (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) burn))
 	
 (define (powers-field-poison-weak caster ktarg power)
-	(kern-obj-put-at (kern-mk-field F_poison (+ 3 (kern-dice-roll (mkdice 1 (ceiling (/ power 3)))))) ktarg))
+	(powers-field-generic ktarg F_poison (+ 3 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) apply-poison))
 
 (define (powers-field-sleep-weak caster ktarg power)
-	(kern-obj-put-at (kern-mk-field F_sleep (+ 4 (kern-dice-roll (mkdice 1 (ceiling (/ power 3)))))) ktarg))
+	(powers-field-generic ktarg F_sleep (+ 4 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) apply-sleep))
 
 (define (powers-fireball-range power)
 	(+ 3 (/ power 3)))
