@@ -21,3 +21,8 @@
   
 (define (kobj-place kobj)
   (loc-place (kern-obj-get-location kobj)))
+
+(define (can-be-dropped? obj loc max_difficulty)
+	(let ((mcost (kern-place-get-movement-cost loc obj)))
+		(and (not (eqv? mcost 0))
+			(< mcost max_difficulty))))

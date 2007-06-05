@@ -38,7 +38,7 @@
    (max-hp species occupation default-level 0 0) ;;.current hit points
    -1  ;;...........current experience points
    (max-mp species occupation default-level 0 0) ;;.current magic points
-   speed-human-med-armor  ;; AP_per_turn
+   0  ;; AP_per_turn
    default-level  ;;............current level
    #f ;;...........dead?
    conv ;;.........conversation (optional)
@@ -624,11 +624,6 @@
         (list 50  "1d5"   't_food)
         (list 100 "2d10" 't_gold)
         ))  
-
-(define (can-be-dropped? obj loc max_difficulty)
-	(let ((mcost (kern-place-get-movement-cost loc obj)))
-		(and (not (eqv? mcost 0))
-			(< mcost max_difficulty))))
         
 (define (drop-generic knpc loot)
   (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location knpc))))
@@ -831,7 +826,7 @@
   (kbeing-is-npc-type? kchar 'sludge-tentacle))
 
 (define (can-fly? kobj)
-  (eqv? (kern-obj-get-movecost obj pclass-canfly) norm))
+  (eqv? (kern-obj-get-movecost kobj pclass-canfly) norm))
 
 (define (can-phase? kobj)
   (eqv? (kern-obj-get-mmode kobj)
