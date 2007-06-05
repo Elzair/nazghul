@@ -1899,8 +1899,9 @@ int Character::getVisionRadius() {
 int Character::getSpeed() {
     // Returns the character-specific number of 
     // Action Points per round for this character.
-    return AP_per_round;
-    // return species->spd;
+    if (AP_per_round > 0)
+    	return AP_per_round;
+    return species->spd;
 }
 
 int Character::setSpeed(int val) {
