@@ -158,7 +158,8 @@ nazghul_SOURCES =		\
 	skill_set_entry.h skill_set_entry.c \
 	repstr.h repstr.c \
 	templ.h templ.c \
-	bitfield.h
+	bitfield.h \
+	objectfreezer.h objectfreezer.c
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \
