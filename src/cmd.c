@@ -1977,6 +1977,9 @@ static void cmd_talk_info_visitor(class Object *obj, void *data)
 
         if (obj->isPlayerControlled())
                 return;
+
+        if (TimeStop)
+                return;
         
         if (! obj->isVisible() && ! Reveal)
                 return;
@@ -2051,7 +2054,7 @@ static void cmd_cleanup_talk_info(struct talk_info *info)
 void cmdTalk(Object *member)
 {
 	struct closure *conv = NULL;
-        class Object *obj, *conversant;
+        class Object *obj, *conversant = NULL;
         int x, y;
         struct talk_info info;
         const int max_distance = 5;
@@ -2069,8 +2072,9 @@ void cmdTalk(Object *member)
 
         // start cursor on nearest object with a conversation
         conversant = cmd_get_talk_info(&info, member, max_distance);
-        if (! conversant)
+        if (! conversant) {
                 conversant = member;
+        }
 
         x = conversant->getX();
         y = conversant->getY();
@@ -2093,6 +2097,12 @@ void cmdTalk(Object *member)
         obj = obj->getSpeaker();
         if (! obj) {
                 cmdwin_spush("cancel");
+                goto cleanup;
+        }
+
+        if (TimeStop && !obj->isPlayerPartyMember()) {
+                cmdwin_spush("time stopped!");
+                log_msg("This person seems frozen in time.");
                 goto cleanup;
         }
 
