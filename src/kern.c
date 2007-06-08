@@ -1456,10 +1456,11 @@ static pointer kern_mk_field_type(scheme *sc, pointer args)
         int light, duration, pclass;
         closure_t *clx = NULL;
         pointer func = sc->NIL;
-        pointer ret;        
+        pointer ret;
+        struct mmode *mmode;      
 
         if (unpack(sc, &args, "yspdddc", &tag, &name, &sprite, &light, 
-                   &duration, &pclass, &func)) {
+                   &duration, &pclass, &func, &mmode)) {
                 load_err("kern-mk-field-type %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1469,6 +1470,7 @@ static pointer kern_mk_field_type(scheme *sc, pointer args)
         }
 
         field = new FieldType(tag, name, sprite, light, duration, pclass, clx);
+        field->setMovementMode(mmode);
         session_add(Session, field, field_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, field);
         scm_define(sc, tag, ret);
