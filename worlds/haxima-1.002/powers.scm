@@ -382,6 +382,18 @@
 (define (powers-field-range power)
 	(+ 1 (/ power 5)))
 
+(define (powers-field-generic loc f_type duration proc)
+	(let ((afield (kern-mk-field f_type duration)))
+		(if (can-be-dropped? afield loc cant)
+			(begin
+				(kern-obj-put-at afield loc)
+				(for-each proc (kern-get-objects-at loc))
+				;; remove fields on semi-bad locations
+				(if (not (can-be-dropped? afield loc nodrop))
+					(kern-obj-remove afield))
+			))
+	))
+	
 (define (powers-field-energy caster ktarg power)
 	(kern-obj-put-at (kern-mk-field F_energy (+ 20 (kern-dice-roll (mkdice 2 power)))) ktarg))
 
