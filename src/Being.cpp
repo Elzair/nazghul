@@ -173,7 +173,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         cachedPathPlace = getPlace();
         //dbg("Found path: ");
         //dump_path(cachedPath);
-
+        
         enum MoveResult result;
         result = move(pathPtr->x - getX(), 
                       pathPtr->y - getY());
@@ -181,7 +181,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         // If the move failed because something impassable is there then check
         // for a mech and try to handle it. This is good enough to get through
         // the usual implementation of a door.
-        if (result == WasImpassable) {
+        if (result == WasImpassable && isOnMap()) {
 
                 //dbg("impassable\n");
                 class Object *mech;
@@ -201,9 +201,10 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         // Now try and move again.
                         result = move(pathPtr->x - getX(), 
                                       pathPtr->y - getY());
-                }
 
-                if (WasImpassable == result) {
+                }
+                
+                if (WasImpassable == result  && isOnMap()) {
 
                         //dbg("still impassable\n");
                         // If the move was still impassable then try and find a
@@ -248,7 +249,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         // Try to take the next step along the path.
                         result = move(pathPtr->x - getX(), 
                                       pathPtr->y - getY());
-                        
+                       
                 }
         }
 

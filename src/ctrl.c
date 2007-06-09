@@ -1546,14 +1546,24 @@ static void ctrl_idle(class Character *character)
         // they were visible last turn and they just stepped out of LOS.
         // -------------------------------------------------------------------
         
-        if (!character->canSee(target)) {
-                if (! character->pathfindTo(target->getPlace(), 
-                                            target->getX(), 
-                                            target->getY()))
-                        ctrl_wander(character);
-                return;
-        }
+        // note isOnMap checks so that if something has removed the character
+        // from the map (or killed it) as a result of its move attempt then
+        // you should quit having it wander around
         
+			if (!character->canSee(target))
+			{
+				if (! character->pathfindTo(target->getPlace(),
+						target->getX(),
+						target->getY()))
+				{
+					if (character->isOnMap())
+					{
+						ctrl_wander(character);
+					}
+					return;
+				}
+			}
+			       
         if (ctrl_too_close_to_target(character, target)) {
                 if (! ctrl_move_away_from_target(character, target))
                         /*if (! ctrl_switch_to_melee_weapon(character))*/
@@ -1565,11 +1575,16 @@ static void ctrl_idle(class Character *character)
         // Then try force.
         // -------------------------------------------------------------------
 
-        if (!ctrl_attack_target(character, target))
-                if (! character->pathfindTo(target->getPlace(),
-                                            target->getX(),
-                                            target->getY()))
-                        ctrl_wander(character);
+			if (!ctrl_attack_target(character, target))
+			{
+				if ((! character->pathfindTo(target->getPlace(),
+							target->getX(),
+							target->getY()))
+						&& character->isOnMap())
+				{
+					ctrl_wander(character);
+				}
+			}
 }
 
 void ctrl_character_ai(class Character *character)
