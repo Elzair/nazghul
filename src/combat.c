@@ -1219,7 +1219,7 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
                                                         *info)
 {
         struct terrain_map *map;
-        int player_dx, player_dy, npc_dx, npc_dy;
+        int player_dx, player_dy, npc_dx, npc_dy,pcmap_x,pcmap_y,npcmap_x,npcmap_y;
         struct list *elem;
 
         // If there is no enemy then create a map derived entirely from the
@@ -1238,30 +1238,38 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
 
         // Determine orientation for both parties.
 
+        
         if (info->defend) {
                 player_dx = -info->move->dx;
                 player_dy = -info->move->dy;
                 npc_dx = info->move->dx;
                 npc_dy = info->move->dy;
+                pcmap_x = player_party->getX();
+                pcmap_y = player_party->getY();
+                npcmap_x = pcmap_x - info->move->dx;
+                npcmap_y = pcmap_y - info->move->dy;
         }
         else {
                 player_dx = info->move->dx;
                 player_dy = info->move->dy;
                 npc_dx = -info->move->dx;
                 npc_dy = -info->move->dy;
+                npcmap_x = info->move->npc_party->getX();
+                npcmap_y = info->move->npc_party->getY();
+                pcmap_x = npcmap_x - info->move->dx;
+                pcmap_y = npcmap_y - info->move->dy;
         }
 
         // Fill the player's half of the combat map
         fill_temporary_terrain_map(map,
                                    player_party->getPlace(),
-                                   player_party->getX(),
-                                   player_party->getY(), player_dx, player_dy);
+                                   pcmap_x, pcmap_y,
+                                   player_dx, player_dy);
 
         // Fill the npc party's half of the combat map
         fill_temporary_terrain_map(map,
                                    info->move->npc_party->getPlace(),
-                                   info->move->npc_party->getX(),
-                                   info->move->npc_party->getY(),
+                                   npcmap_x, npcmap_y,
                                    npc_dx, npc_dy);
 
         struct terrain_map *party_map =
