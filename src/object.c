@@ -570,19 +570,30 @@ void Object::setOnMap(bool val)
 
 void Object::remove()
 {
-        obj_inc_ref(this);
-	if (isOnMap()) {
-                setOnMap(false);
-                rmView();
+	obj_inc_ref(this);
+	if (isOnMap())
+	{
+		struct place *oldPlace = getPlace(); // remember for tile exit
+		int oldX = getX(); // remember for tile exit
+		int oldY = getY(); // remember for tile exit
+		setOnMap(false);
+		rmView();
+		
 		place_remove_object(getPlace(), this);
-
-                // Note: do NOT call setPlace(NULL) here. When the player party
-                // object is removed from the map it still needs to "know" what
-                // place the members are in.
+		
+		// Run the exit triggers.
+		if (oldPlace)
+		{
+			triggerOnTileExit(oldPlace, oldX, oldY, 0);
+		}
+		
+		// Note: do NOT call setPlace(NULL) here. When the player party
+		// object is removed from the map it still needs to "know" what
+		// place the members are in.
 	}
-        endTurn();
-        attachCamera(false);
-        obj_dec_ref(this);
+	endTurn();
+	attachCamera(false);
+	obj_dec_ref(this);
 }
 
 void Object::paint(int sx, int sy)
