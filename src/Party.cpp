@@ -155,33 +155,66 @@ bool Party::attackPlayer(int dx, int dy)
         struct combat_info cinfo;
 
         memset(&info, 0, sizeof(info));
+        
          
-        /* Check for a diagonal attack. */
-        if (dx && dy) {
-                
-                /* If an adjacent neighbor is passable make the attack from
-                 * there instead. */
-                if (place_is_passable(getPlace(), getX() + dx, getY(), 
-                                      this, 0)) {
-                        info.x = getX() + dx;
-                        info.y = getY();
-                        info.dx = 0;
-                        info.dy = dy;
-                } else if (place_is_passable(getPlace(), getX(), getY() + dy, 
-                                      this, 0)) {
-                        info.x = getX();
-                        info.y = getY() + dy;
-                        info.dy = 0;
-                        info.dx = dx;
-                } else {
-                        return false;
-                }
-        } else {
-                info.x = getX();
-                info.y = getY();
-                info.dx = dx;
-                info.dy = dy;
-        }
+		/* Check for a diagonal attack. */
+		if (dx && dy)
+		{
+			int xgoodness=0;
+			int ygoodness=0;
+			if (place_is_passable(getPlace(), getX() + dx, getY(), 
+					this, 0))
+			{
+				if (place_is_hazardous(getPlace(), getX() + dx, getY()))
+				{
+					xgoodness=1;
+				}
+				else
+				{
+					xgoodness=2;	
+				}
+			}
+			if ((xgoodness<2) && place_is_passable(getPlace(), getX(), getY() + dy, 
+				this, 0))
+			{
+				if (place_is_hazardous(getPlace(), getX() + dx, getY()))
+				{
+					ygoodness=1;
+				}
+				else
+				{
+					ygoodness=2;	
+				}				
+			}
+			if (xgoodness && xgoodness > ygoodness)
+			{
+				//changing x is better				
+				info.x = getX() + dx;
+				info.y = getY();
+				info.dx = 0;
+				info.dy = dy;
+			}
+			else if (ygoodness)
+			{
+				//changing y is better	
+				info.x = getX();
+				info.y = getY() + dy;
+				info.dy = 0;
+				info.dx = dx;
+			}
+			else
+			{
+				//cant actually get there!
+				return false;	
+			}
+		}
+		else
+		{
+			info.x = getX();
+			info.y = getY();
+			info.dx = dx;
+			info.dy = dy;
+		}
 
         info.place = getPlace();
         info.px = player_party->getX();
