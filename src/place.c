@@ -2093,7 +2093,7 @@ static void place_save_edge_entrances(struct place *place, struct save *save)
 
         save->enter(save, "(list ;; edge entrances\n");
         for (dir = 0; dir < NUM_PLANAR_DIRECTIONS; dir++) {
-                save->write(save, "(list %d %d %d) ;; %s\n", dir,
+                save->write(save, "(list %3d %3d %3d) ;; %s\n", dir,
                             place->edge_entrance[dir][0],
                             place->edge_entrance[dir][1],
                             directionToString(dir));
