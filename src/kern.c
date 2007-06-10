@@ -5419,15 +5419,19 @@ KERN_API_CALL(kern_obj_set_ignore_time_stop)
 
 KERN_API_CALL(kern_obj_wander)
 {
-        class Object *obj;
-
-        obj = unpack_obj(sc, &args, "kern-obj-wander");
-        if (!obj)
-                return sc->NIL;
-
-        ctrl_wander(obj);
-
-        return sc->NIL;
+	class Object *obj;
+	
+	obj = unpack_obj(sc, &args, "kern-obj-wander");
+	if (!obj)
+	return sc->NIL;
+	
+	//moves can have nasty consequences,
+	//so keep our own ref to the object for a bit
+	obj_inc_ref(obj);
+	ctrl_wander(obj);
+	obj_dec_ref(obj);
+	
+	return sc->NIL;
 }
 
 KERN_API_CALL(kern_obj_clone)
@@ -7549,30 +7553,36 @@ KERN_API_CALL(kern_arms_type_set_mmode)
 
 KERN_API_CALL(kern_obj_move)
 {
-        class Object *object;
-        int dx, dy;
-        enum MoveResult result;
-
-        object = (Object*)unpack_obj(sc, &args, "kern-obj-move");
-        if (!object)
-                return sc->F;
-
-        if (unpack(sc, &args, "dd", &dx, &dy)) {
-                rt_err("kern-obj-move: bad args");
-                return sc->F;
-        }
-        
-        result = object->move(dx, dy);
-
-        switch (result) {
-        case MovedOk:
-        case ExitedMap:
-        case SwitchedOccupants:
-                return sc->T;
-                break;
-        default:
-                return sc->F;
-        }
+	class Object *object;
+	int dx, dy;
+	enum MoveResult result;
+	
+	object = (Object*)unpack_obj(sc, &args, "kern-obj-move");
+	if (!object)
+		return sc->F;
+	
+	if (unpack(sc, &args, "dd", &dx, &dy))
+	{
+		rt_err("kern-obj-move: bad args");
+		return sc->F;
+	}
+	
+	//moves can have nasty consequences,
+	//so keep our own ref to the object for a bit
+	obj_inc_ref(object);
+	result = object->move(dx, dy);
+	obj_decc_ref(object);
+	
+	switch (result)
+	{
+		case MovedOk:
+		case ExitedMap:
+		case SwitchedOccupants:
+			return sc->T;
+			break;
+		default:
+			return sc->F;
+	}
 }
 
 KERN_API_CALL(kern_get_ticks)
@@ -8019,23 +8029,32 @@ KERN_API_CALL(kern_ambush_while_camping)
  */
 KERN_API_CALL(kern_being_pathfind_to)
 {
-        class Being *being;
-        struct place *place;
-        int x, y;
-
-        /* unpack being */
-        being = (class Being*)unpack_obj(sc, &args, "kern-being-pathfind-to");
-        if (! being)
-                return sc->F;
-
-        /* unpack destination */
-        if (unpack_loc(sc, &args, &place, &x, &y, "kern-being-pathfind-to"))
-                return sc->F;
-
-        /* pathfind */
-        if (being->pathfindTo(place, x, y))
-                return sc->T;
-        return sc->F;
+	class Being *being;
+	struct place *place;
+	int x, y;
+	
+	/* unpack being */
+	being = (class Being*)unpack_obj(sc, &args, "kern-being-pathfind-to");
+	if (! being)
+		return sc->F;
+	
+	/* unpack destination */
+	if (unpack_loc(sc, &args, &place, &x, &y, "kern-being-pathfind-to"))
+		return sc->F;
+	
+	//moves can have nasty consequences,
+	//so keep our own ref to the object for a bit
+	obj_inc_ref(being);
+		
+		
+	/* pathfind */
+	if (being->pathfindTo(place, x, y))
+	{
+		obj_dec_ref(being);
+		return sc->T;
+	}
+	obj_dec_ref(being);
+	return sc->F;
 }
 
 KERN_API_CALL(kern_get_player)
