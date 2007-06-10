@@ -32,9 +32,9 @@
 ;;
 ;;----------------------------------------------------------------------------
 
-;; Make the default number of required action points the same as the number of
-;; turns it takes a human to cross normal terrain
-(define default-rap norm) 
+;; Make the default number of required action points for an attack
+;; such that "speed-human" suffices for 2 attacks:
+(define default-rap 75)
 
 (kern-mk-sprite-set 'ss_arms 32 32 9 8 0 0 "arms.png")
 
@@ -382,7 +382,7 @@
    ;;     tag            | name           | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile        | ammo  | ubiq | weight | stratt | dexatt | dammod | avoid
    ;;     ==============================================================================================================================================================================
    (list 't_sling          "sling"          s_sling      "1d2-2"  "1d4"    "-1"     slot-weapon   1      4     t_slingstone     nil     #t     0        10       60       30       0.9  )
-   (list 't_sling_4        "+4 sling"       s_sling      "3"      "1d4+4"  "+0"     slot-weapon   1      6     t_slingstone     nil     #t     0        10       60       30       0.9  )
+   (list 't_sling_4        "+4 sling"       s_sling      "+3"     "1d4+4"  "+0"     slot-weapon   1      6     t_slingstone     nil     #t     0        10       60       30       0.9  )
    (list 't_bow            "bow"            s_bow        "1d3-2"  "2d4"    "-2"     slot-weapon   2      6     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
    (list 't_crossbow       "crossbow"       s_crossbow   "1d4-2"  "4d4"    "-1"     slot-weapon   2      4     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
    (list 't_doom_staff     "doom staff"     s_doom_staff "1d4"    "1d2"    "+2"     slot-weapon   2      5     t_fireball       nil     #t     2         0       50        0       1.0  )
