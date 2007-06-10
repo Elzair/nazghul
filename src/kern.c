@@ -7571,7 +7571,7 @@ KERN_API_CALL(kern_obj_move)
 	//so keep our own ref to the object for a bit
 	obj_inc_ref(object);
 	result = object->move(dx, dy);
-	obj_decc_ref(object);
+	obj_dec_ref(object);
 	
 	switch (result)
 	{
