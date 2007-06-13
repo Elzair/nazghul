@@ -329,52 +329,57 @@
 	(ifc obj-ifc
        (method 'hit-loc 
                (lambda (kmissile kuser ktarget kplace x y dam)
-               	(println "testdrop")
                	(if (< (kern-dice-roll "1d100") prob)
                		(let ((dropobj (kern-mk-obj (eval type-tag) 1))
                				(loc (mk-loc kplace x y)))
-               			(println "try")
                			(if (can-be-dropped? dropobj loc cant)
                				(kern-obj-put-at dropobj loc)
-               				(println "cant")
                	))))
       )))
-                 
+                   
                           
 (define missile-arms-types
   (list
-   ;;    ==========================================================================================
+   ;;    ===========================================================================================
    ;;    tag                 | name          | sprite          | gifc              | movement_mode 
-   ;;    ==========================================================================================
-   (list 't_slingstone        "sling stone"    s_sling_stone     nil                 mmode-missile)
-   (list 't_arrow_p           "arrow"          s_arrow           (mk-drop-proj-ifc 't_arrow 5) mmode-missile)
-   (list 't_bolt_p            "bolt"           s_bolt            obj-ifc             mmode-missile)
-   (list 't_warhead_p         "warhead"        s_warhead         warhead-ifc         mmode-missile)
-   (list 't_cannonball_p      "cannonball"     s_cannonball      obj-ifc             mmode-missile)
+   ;;    ===========================================================================================
+   (list 't_slingstone        "sling stone"    s_sling_stone     nil                 mmode-missile  )
+   (list 't_arrow_p           "arrow"          s_arrow           (mk-drop-proj-ifc 't_arrow 5)
+                                                                                     mmode-missile  )
+   (list 't_bolt_p            "bolt"           s_bolt            (mk-drop-proj-ifc 't_bolt 5)             
+                                                                                     mmode-missile  )
+   (list 't_warhead_p         "warhead"        s_warhead         warhead-ifc         mmode-missile  )
+   (list 't_cannonball_p      "cannonball"     s_cannonball      obj-ifc             mmode-missile  )
 
-   (list 't_poison_bolt       "poison bolt"    s_poison_bolt     poison-bolt-ifc     mmode-missile)
-   (list 't_acid_bolt         "acid bolt"      s_acid_bolt       acid-bolt-ifc       mmode-missile)
-   (list 't_fireball          "fireball"       s_fireball        fireball-ifc        mmode-missile)
-   (list 't_deathball         "deathball"      s_deathball       deathball-ifc       mmode-missile)
-   (list 't_stunball          "stunball"       s_projectile      stunball-ifc        mmode-missile)
-   (list 't_slimeglob         "slime glob"     s_acid_bolt       nil                 mmode-missile)
-   (list 't_mfireball         "fireball"       s_fireball        temp-ifc            mmode-missile)
-   (list 't_mpoison_bolt      "poison bolt"    s_poison_bolt     temp-ifc            mmode-missile)
-   (list 't_prismatic_bolt    "prismatic bolt" s_prismatic_bolt  prismatic-bolt-ifc  mmode-missile)
+   
+   (list 't_poison_bolt       "poison bolt"    s_poison_bolt     poison-bolt-ifc     mmode-missile  )
+   (list 't_acid_bolt         "acid bolt"      s_acid_bolt       acid-bolt-ifc       mmode-missile  )
+   (list 't_fireball          "fireball"       s_fireball        fireball-ifc        mmode-missile  )
+   (list 't_deathball         "deathball"      s_deathball       deathball-ifc       mmode-missile  )
+   (list 't_stunball          "stunball"       s_projectile      stunball-ifc        mmode-missile  )
+   (list 't_slimeglob         "slime glob"     s_acid_bolt       nil                 mmode-missile  )
+   (list 't_mfireball         "fireball"       s_fireball        temp-ifc            mmode-missile  )
+   (list 't_mpoison_bolt      "poison bolt"    s_poison_bolt     temp-ifc            mmode-missile  )
+   (list 't_prismatic_bolt    "prismatic bolt" s_prismatic_bolt  prismatic-bolt-ifc  mmode-missile  )
 
-   (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile)
-   (list 't_oil_p             "flaming oil"    s_flaming_oil     flaming-oil-ifc     mmode-missile)
-   (list 't_spear_p           "spear"          s_spear           obj-ifc             mmode-missile)
-   (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      obj-ifc             mmode-missile)
-   (list 't_thrown_rock_p     "thrown rock"    s_cannonball      obj-ifc             mmode-missile)
-   (list 't_thrown_boulder_p  "hurled boulder" s_thrown_boulder  obj-ifc             mmode-missile)
+   
+   (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile  )
+   (list 't_oil_p             "flaming oil"    s_flaming_oil     flaming-oil-ifc     mmode-missile  )
+   (list 't_spear_p           "spear"          s_spear           (mk-drop-proj-ifc 't_spear 25)             
+                                                                                     mmode-missile  )
+   (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      obj-ifc             mmode-missile  )
+   (list 't_thrown_rock_p     "thrown rock"    s_cannonball      (mk-drop-proj-ifc 't_thrown_rock 80)             
+                                                                                     mmode-missile  )
+   (list 't_thrown_boulder_p  "hurled boulder" s_thrown_boulder  (mk-drop-proj-ifc 't_thrown_boulder 80)             
+                                                                                     mmode-missile  )
 
-   (list 't_slime_vial_p      "vial of slime"  s_squat_bubbly_green_potion  vial-of-slime-ifc  mmode-missile)
+   (list 't_slime_vial_p      "vial of slime"  s_squat_bubbly_green_potion  
+                                                                 vial-of-slime-ifc   mmode-missile  )
 
-   (list 't_arrow             "arrow"          s_arrow           obj-ifc             mmode-smallobj)
-   (list 't_bolt              "bolt"           s_bolt            obj-ifc             mmode-smallobj)
-   (list 't_warhead           "warhead"        s_warhead         warhead-ifc         mmode-smallobj)
-   (list 't_cannonball        "cannonball"     s_cannonball      obj-ifc             mmode-smallobj)
+   (list 't_arrow             "arrow"          s_arrow           obj-ifc             mmode-smallobj )
+   (list 't_bolt              "bolt"           s_bolt            obj-ifc             mmode-smallobj )
+   (list 't_warhead           "warhead"        s_warhead         warhead-ifc         mmode-smallobj )
+   (list 't_cannonball        "cannonball"     s_cannonball      obj-ifc             mmode-smallobj )
    ))
    
    
