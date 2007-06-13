@@ -325,13 +325,29 @@
                           (kern-obj-set-temporary knpc #t)
                           (kern-obj-put-at knpc loc))))))))
                           
+(define (mk-drop-proj-ifc type-tag prob)
+	(ifc obj-ifc
+       (method 'hit-loc 
+               (lambda (kmissile kuser ktarget kplace x y dam)
+               	(println "testdrop")
+               	(if (< (kern-dice-roll "1d100") prob)
+               		(let ((dropobj (kern-mk-obj (eval type-tag) 1))
+               				(loc (mk-loc kplace x y)))
+               			(println "try")
+               			(if (can-be-dropped? dropobj loc cant)
+               				(kern-obj-put-at dropobj loc)
+               				(println "cant")
+               	))))
+      )))
+                 
+                          
 (define missile-arms-types
   (list
    ;;    ==========================================================================================
    ;;    tag                 | name          | sprite          | gifc              | movement_mode 
    ;;    ==========================================================================================
    (list 't_slingstone        "sling stone"    s_sling_stone     nil                 mmode-missile)
-   (list 't_arrow_p           "arrow"          s_arrow           obj-ifc             mmode-missile)
+   (list 't_arrow_p           "arrow"          s_arrow           (mk-drop-proj-ifc 't_arrow 5) mmode-missile)
    (list 't_bolt_p            "bolt"           s_bolt            obj-ifc             mmode-missile)
    (list 't_warhead_p         "warhead"        s_warhead         warhead-ifc         mmode-missile)
    (list 't_cannonball_p      "cannonball"     s_cannonball      obj-ifc             mmode-missile)
