@@ -785,6 +785,8 @@
               (kern-char-unready kchar ktype)
               (kern-obj-remove-from-inventory kchar ktype 1))))))
 
+;; TODO: multiply damage by kern-ticks-per-turn?
+;;	TODO: define ifc for objects taking damage from fire
 (define (generic-burn obj dice)
 	(let ((damage (kern-dice-roll dice)))
 		(if (and (> damage 0)
@@ -793,11 +795,12 @@
 			))
 			(begin
 				(if (kern-obj-is-being? obj)
-					(kern-log-msg (kern-obj-get-name obj) " burned!"))
-				;; FIXME: multiply damage by kern-ticks-per-turn?
-				(kern-obj-apply-damage obj "burning" damage)
+					(begin
+					(kern-log-msg (kern-obj-get-name obj) " burned!")
+					(kern-obj-apply-damage obj "burning" damage)
+					)
 			))
-	))
+	)))
 
 (define (burn obj)
   (generic-burn obj "2d3+2"))
@@ -838,11 +841,14 @@
                     (kern-log-msg "Slipped!")
                     (kern-obj-apply-damage obj "slipped" (kern-dice-roll "1d4")))))))))
 
+;; TODO: multiply damage by kern-ticks-per-turn?
+;; TODO: define ifc for objects taking damage from shock
 (define (apply-lightning obj)
   (if (kern-obj-is-being? obj)
-      (kern-log-msg (kern-obj-get-name obj) " shocked!"))
-  ;; FIXME: multiply damage by kern-ticks-per-turn?
-  (kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8")))
+  		(begin
+      	(kern-log-msg (kern-obj-get-name obj) " shocked!"))
+  			(kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8"))
+  	))
 
 ;; Drop a random temporary field on the object's location
 (define (apply-random-field kobj)
