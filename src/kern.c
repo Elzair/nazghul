@@ -5932,6 +5932,30 @@ KERN_API_CALL(kern_terrain_set_combat_map)
         return scm_mk_ptr(sc, terrain);
 }
 
+KERN_API_CALL(kern_terrain_set_combat_handler)
+{
+	struct terrain *terrain;
+	pointer proc;
+	
+	if (unpack(sc, &args, "po", &terrain, &proc)) {
+		rt_err("kern-terrain-set-combat-handler: bad args");
+		return sc->NIL;
+	}
+	
+	if(!terrain) {
+		rt_err("kern-terrain-set-combat-handler: null terrain");
+		return sc->NIL;
+	}
+	
+	if (proc != sc->NIL) {
+		terrain->renderCombat = closure_new(sc, proc);
+		closure_ref(terrain->renderCombat);
+	}
+	
+	return scm_mk_ptr(sc, terrain);
+}
+
+
 KERN_API_CALL(kern_terrain_map_inc_ref)
 {
         struct terrain_map *map;
@@ -8811,6 +8835,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-terrain-blocks-los?", kern_terrain_blocks_los);
         API_DECL(sc, "kern-terrain-get-pclass", kern_terrain_get_pclass);
         API_DECL(sc, "kern-terrain-set-combat-map", kern_terrain_set_combat_map);
+        API_DECL(sc, "kern-terrain-set-combat-handler", kern_terrain_set_combat_handler);
         API_DECL(sc, "kern-terrain-map-inc-ref", kern_terrain_map_inc_ref);
         API_DECL(sc, "kern-terrain-map-dec-ref", kern_terrain_map_dec_ref);
         API_DECL(sc, "kern-terrain-map-blend", kern_terrain_map_blend);

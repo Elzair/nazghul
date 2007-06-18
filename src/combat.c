@@ -1087,7 +1087,6 @@ int combatInit(void)
         return 0;
 }
 
-#ifdef USE_OLD_MAP_FILL
 
 static void fill_map_half(struct terrain_map *map, int dx, int dy,
                           struct terrain *terrain)
@@ -1114,7 +1113,6 @@ static void fill_map_half(struct terrain_map *map, int dx, int dy,
         }
 }
 
-#else                           // ! USE_OLD_MAP_FILL
 
 static void fill_temporary_terrain_map(struct terrain_map *map,
                                        struct place *place, int x, int y,
@@ -1193,7 +1191,6 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
         }
 }
 
-#endif                          // ! USE_OLD_MAP_FILL
 
 static struct terrain_map *create_camping_map(struct place *place, int x, 
                                               int y)
@@ -1215,6 +1212,110 @@ static struct terrain_map *create_camping_map(struct place *place, int x,
         return map;
 }
 
+static void setup_combat_place_part(struct place *place, 
+		struct terrain* our_terrain, struct terrain* other_terrain,
+		int dx, int dy, int mapx, int mapy)
+{
+	int dst_x = 0, dst_y = 0;
+	int face=DIRECTION_NONE;
+	
+	if (our_terrain->renderCombat)
+	{	
+		if (dx < 0) {
+			// facing west, fill east half
+			dst_x = COMBAT_MAP_W / 2;
+			face=WEST;
+		}
+		else if (dx > 0) {
+			// facing east, fill west half
+			dst_x = COMBAT_MAP_W / 2 - COMBAT_MAP_W;
+			face=EAST;
+		}
+		else if (dy < 0) {
+			// facing north, fill south half
+			dst_y = COMBAT_MAP_H / 2;
+			face=NORTH;
+		}
+		else if (dy > 0) {
+			// facing south, fill north half
+			dst_y = COMBAT_MAP_H / 2 - COMBAT_MAP_H;
+			face=SOUTH;
+		}
+		
+		closure_exec(our_terrain->renderCombat, "pppdddd", 
+		 					place, our_terrain, other_terrain,
+		 					dst_x, dst_y, mapx, mapy);
+	}
+	else if (dx || dy)
+	{
+		fill_map_half(place->terrain_map, dx, dy, our_terrain);	
+	}
+	else
+	{
+		terrain_map_fill(place->terrain_map, 0, 0, COMBAT_MAP_W, COMBAT_MAP_H, our_terrain);
+	}
+}
+	
+
+static void setup_combat_place(struct place *place, struct combat_info
+                                                        *info)
+{
+	int player_dx, player_dy, npc_dx, npc_dy,pcmap_x,pcmap_y,npcmap_x,npcmap_y;
+	struct terrain *player_terrain;
+	struct terrain *npc_terrain;
+	
+	// Determine orientation for both parties
+	if (!info->move->npc_party)
+	{
+		player_dx = 0;
+		player_dy = 0;
+		pcmap_x = player_party->getX();
+		pcmap_y = player_party->getY();
+	}
+	else if (info->defend)
+	{
+		player_dx = -info->move->dx;
+		player_dy = -info->move->dy;
+		npc_dx = info->move->dx;
+		npc_dy = info->move->dy;
+		pcmap_x = player_party->getX();
+		pcmap_y = player_party->getY();
+		npcmap_x = pcmap_x - info->move->dx;
+		npcmap_y = pcmap_y - info->move->dy;
+	}
+	else
+	{
+		player_dx = info->move->dx;
+		player_dy = info->move->dy;
+		npc_dx = -info->move->dx;
+		npc_dy = -info->move->dy;
+		npcmap_x = info->move->npc_party->getX();
+		npcmap_y = info->move->npc_party->getY();
+		pcmap_x = npcmap_x - info->move->dx;
+		pcmap_y = npcmap_y - info->move->dy;
+	}
+	
+	// get terrains for each
+	player_terrain=place_get_terrain(player_party->getPlace(), pcmap_x, pcmap_y);
+	
+	if (info->move->npc_party)	
+	{
+		npc_terrain=place_get_terrain(info->move->npc_party->getPlace(), npcmap_x, npcmap_y);
+	}
+	else
+	{
+		npc_terrain=player_terrain; // some sensible definition makes like easier...
+	}
+	
+	setup_combat_place_part(place, player_terrain, npc_terrain, player_dx, player_dy, pcmap_x, pcmap_y);
+	if (info->move->npc_party)	
+	{
+		setup_combat_place_part(place, npc_terrain, player_terrain, npc_dx, npc_dy, npcmap_x, npcmap_y);
+	}
+	
+}
+
+
 static struct terrain_map *create_temporary_terrain_map(struct combat_info
                                                         *info)
 {
@@ -1225,17 +1326,22 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
         // If there is no enemy then create a map derived entirely from the
         // player party's tile. This is the case for camping and zoom-in.
 
-        if (!info->move->npc_party) {
+        /*if (!info->move->npc_party) {
                 return create_camping_map(info->move->place, info->move->x,
                                           info->move->y);
-        }
+        }*/
 
         // Otherwise create a map derived partially from the enemy's tile and
         // partially from the player's tile.
 
-        map = terrain_map_new("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H, 0);
+        map = terrain_map_new("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H,
+        		player_party->getPlace()->terrain_map->palette);
         assert(map);
-
+        
+        //terrain_map_fill(map, 0, 0, COMBAT_MAP_W, COMBAT_MAP_H, 
+        		//place_get_terrain(player_party->getPlace(),player_party->getX(),player_party->getY()));
+        return map;
+        
         // Determine orientation for both parties.
 
         
@@ -1454,6 +1560,8 @@ bool combat_enter(struct combat_info * info)
                 Combat.place->location.x = info->move->px;
                 Combat.place->location.y = info->move->py;
 
+                setup_combat_place(Combat.place,info);
+                
                 place_add_subplace(info->move->place, Combat.place, 
                                    info->move->px, info->move->py);
 

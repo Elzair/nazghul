@@ -58,6 +58,7 @@ struct terrain {
         int pclass;
         int light;
         closure_t *effect; /* when stood on */
+        closure_t *renderCombat; /* closure to set up combat map */
 };
 
 extern struct terrain *terrain_new(char *tag, char *name, 

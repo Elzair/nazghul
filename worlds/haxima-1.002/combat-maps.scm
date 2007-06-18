@@ -507,6 +507,88 @@
 		".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. t% te "
 		".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
     ))
+    
+(kern-mk-map 
+ 'm_trail_combat_base  ;; tag
+ 19                 ;; width
+ 19                 ;; height;
+ pal_expanded       ;; palette
+ (list
+		".. .. .. .. .. .. .. .. .. .. .. .. .. tf .. .. .. .. .. "
+		".. .. tC tf tA .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		".. tC t7 bb tf .. .. .. t3 t5 .. .. .. .. .. .. bb .. .. "
+		".. t3 tt t5 t# .. .. .. ta tc .. .. .. t3 t5 .. .. .. .. "
+		".. te tt te .. .. .. .. .. .. .. .. .. ta tc .. .. t3 t5 "
+		".. t% te t# .. .. .. .. .. .. .. tf .. .. .. .. .. tt tt "
+		".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ta tc "
+		".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		".. tf .. .. .. .. .. .. /f /f /f .. .. .. .. .. .. .. .. "
+		".. .. .. .. .. .. .. .. /f /f /f .. .. .. t3 t5 .. .. .. "
+		".. .. .. tb t5 tA .. .. /f /f /f .. .. .. ta tc .. .. .. "
+		"tf .. .. t% tt t5 .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		".. .. .. .. ta tc .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		".. .. bb .. .. .. .. .. .. .. bb .. .. .. .. .. .. .. .. "
+		".. .. .. .. .. .. .. .. .. .. .. .. .. t7 t7 tA .. .. .. "
+		".. .. .. .. .. .. tf .. t3 t5 .. .. .. t7 t7 t7 .. .. .. "
+		".. t3 t5 tA .. .. .. .. ta tc .. .. .. t7 bb t7 .. .. .. "
+		".. ta tt td .. .. .. .. .. .. .. .. .. t% t7 t7 .. .. .. "
+		".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tf "
+    ))   
+ 
+(kern-mk-map 
+ 'm_trail_combat_road  ;; tag
+ 19                 ;; width
+ 19                 ;; height;
+ pal_expanded       ;; palette
+ (list
+		".. .. .. .. .. .. .. .. /f /f /f .. .. tf .. .. .. .. .. "
+		".. .. tC tf tA .. bb .. /f /f /f .. .. .. .. .. .. .. .. "
+		".. tC t7 bb tf .. .. .. /f /f /f .. .. .. .. .. .. .. .. "
+		".. t3 tt t5 t# .. .. .. /f /f /f .. bb t3 t5 .. .. .. .. "
+		".. te tt te .. .. .. .. /f /f /f .. .. ta tc .. .. t3 t5 "
+		".. t% te t# .. .. .. .. /f /f /f tf .. .. .. .. .. tt tt "
+		".. .. bb .. .. .. bb .. /f /f /f .. .. bb .. .. bb ta tc "
+		".. .. .. .. .. .. .. .. /f /f /f .. .. .. .. .. .. .. .. "
+		"/f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f "
+		"/f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f "
+		"/f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f "
+		".. bb .. .. .. .. .. .. /f /f /f .. .. .. .. .. .. .. .. "
+		".. .. .. .. .. .. bb .. /f /f /f .. .. .. .. .. bb .. .. "
+		".. .. bb .. .. .. .. .. /f /f /f .. bb .. .. .. .. .. .. "
+		".. .. .. .. .. .. .. .. /f /f /f .. .. t7 t7 tA .. .. .. "
+		".. .. .. .. .. .. tf .. /f /f /f .. .. t7 t7 t7 .. .. .. "
+		".. t3 t5 tA .. .. .. .. /f /f /f .. .. t7 bb t7 .. .. .. "
+		".. ta tt td .. .. bb .. /f /f /f .. bb t% t7 t7 .. .. .. "
+		".. .. .. .. .. .. .. .. /f /f /f .. .. .. .. .. .. .. tf "
+    ))    
+    
+(kern-mk-map 
+ 'm_trail_combat_roadend  ;; tag
+ 19                 ;; width
+ 19                 ;; height;
+ pal_expanded       ;; palette
+ (list
+		".. .. .. .. .. .. .. .. .. .. .. .. .. tf .. .. .. .. .. "
+		".. .. tC tf tA .. .. .. .. /f .. .. .. .. .. .. .. .. .. "
+		".. tC t7 bb tf .. .. .. /f .. /f .. .. .. .. .. bb .. .. "
+		".. t3 tt t5 t# .. .. .. .. /f /f .. .. t3 t5 .. .. .. .. "
+		".. te tt te .. .. .. .. .. /f .. .. .. ta tc .. .. t3 t5 "
+		".. t% te t# .. .. .. .. /f .. .. .. .. .. .. .. .. tt tt "
+		".. .. .. .. .. .. .. .. .. /f /f .. .. .. .. .. .. ta tc "
+		".. .. .. .. .. .. .. .. /f /f /f .. .. .. .. .. .. .. .. "
+		".. .. .. .. /f .. /f /f /f /f /f /f .. .. /f .. .. .. .. "
+		".. /f .. /f .. /f .. /f /f /f /f .. /f /f .. /f .. /f .. "
+		".. .. /f .. .. .. /f .. /f /f /f /f /f .. /f .. /f .. .. "
+		".. .. .. .. .. .. .. .. /f .. /f .. .. .. .. .. .. .. .. "
+		".. .. .. .. .. .. .. .. /f /f .. .. .. .. .. .. .. .. .. "
+		".. .. bb .. .. .. .. .. .. /f .. .. .. .. .. .. .. .. .. "
+		".. .. .. .. .. .. .. .. .. .. /f .. .. t7 t7 tA .. .. .. "
+		".. .. .. .. .. .. tf .. .. /f .. .. .. t7 t7 t7 .. .. .. "
+		".. t3 t5 tA .. .. .. .. .. /f .. .. .. t7 bb t7 .. .. .. "
+		".. ta tt td .. .. .. .. .. .. /f .. .. t% t7 t7 .. .. .. "
+		".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tf "
+    ))     
+    
 
 (kern-mk-map 
  'm_bridge_WE_combat  ;; tag
@@ -720,41 +802,154 @@
 	".. {4 {{ {2 !a !! !! !c .. {1 .. .. .. .. {5 {{ {6 {{ {2 "
 )
 
-(kern-terrain-set-combat-map t_grass m_grass_combat2)
-(kern-terrain-set-combat-map t_forest m_forest_combat)
-(kern-terrain-set-combat-map t_hills m_hill_combat)
-(kern-terrain-set-combat-map t_trees m_tree_combat)
-(kern-terrain-set-combat-map t_bog m_bog_combat)
-(kern-terrain-set-combat-map t_mountains m_mountain_combat)
-
-(kern-terrain-set-combat-map t_trail_0 m_trail_0_combat)
-(kern-terrain-set-combat-map t_trail_1 m_trail_1_combat)
-(kern-terrain-set-combat-map t_trail_2 m_trail_2_combat)
-(kern-terrain-set-combat-map t_trail_3 m_trail_3_combat)
-(kern-terrain-set-combat-map t_trail_4 m_trail_4_combat)
-(kern-terrain-set-combat-map t_trail_5 m_trail_5_combat)
-(kern-terrain-set-combat-map t_trail_6 m_trail_6_combat)
-(kern-terrain-set-combat-map t_trail_7 m_trail_7_combat)
-(kern-terrain-set-combat-map t_trail_8 m_trail_8_combat)
-(kern-terrain-set-combat-map t_trail_9 m_trail_9_combat)
-(kern-terrain-set-combat-map t_trail_a m_trail_a_combat)
-(kern-terrain-set-combat-map t_trail_b m_trail_b_combat)
-(kern-terrain-set-combat-map t_trail_c m_trail_c_combat)
-(kern-terrain-set-combat-map t_trail_d m_trail_d_combat)
-(kern-terrain-set-combat-map t_trail_e m_trail_e_combat)
-
-(kern-terrain-set-combat-map t_bridge_WE  m_bridge_WE_combat)
-(kern-terrain-set-combat-map t_bridge_NS  m_bridge_NS_combat)
-(kern-terrain-set-combat-map t_lava_bridge_NS m_lava_bridge_NS_combat)
-
-(define (combat-map-list target-map terrains)
-	(map (lambda (kter)
-		(kern-terrain-set-combat-map kter target-map))
-		terrains
+(define (combat-off-to-dst off)
+	(if (< off 0)
+		0
+		off)
+	)
+	
+(define (combat-off-to-src off)
+	(if (< off 0)
+		(- off)
+		0
+		)
+	)
+	
+(define (combat-off-to-src-max total off)
+	(if (< off 0)
+		total
+		(- total off)
+		)
+	)
+	
+(define (combat-off-to-len total off)
+	(if (< off 0)
+		(+ total off)
+		(- total off)
+		)
+	)
+	
+(define (combat-off-dst-pos total off pos)
+	(let ((opos (+ off pos)))
+		(cond ((> opos total) total)
+				((< opos 0) 0)
+				(else opos))
 	))
 	
-(combat-map-list m_grass_combat2
+
+(define (combat-map-basic place map-tag off-x off-y)
+	(let* ((wid (kern-place-get-width place))
+			(hgt (kern-place-get-height place)))
+		(kern-blit-map (kern-place-get-terrain-map place)
+			(combat-off-to-dst off-x) (combat-off-to-dst off-y)
+			(eval map-tag)
+			(combat-off-to-src off-x) (combat-off-to-src off-y)
+			(combat-off-to-len wid off-x) (combat-off-to-len hgt off-y))	
+	))
+
+(define (combat-map-basic-handler map-tag)
+	(lambda (place our_terrain other_terrain off_x off_y map_x map_y)
+		(combat-map-basic place map-tag off_x off_y)
+		))			
+		
+(define combat-map-road-handler
+	(lambda (place our_terrain other_terrain off_x off_y map_x map_y)
+		(let* ((wid (kern-place-get-width place))
+				(hgt (kern-place-get-height place))
+				(min-y (combat-off-to-src off_y))
+				(min-x (combat-off-to-src off_x))
+				(max-y (combat-off-to-src-max hgt off_y))
+				(max-x (combat-off-to-src-max wid off_x))
+				(dstmap (kern-place-get-terrain-map place))
+				)
+			
+			(define (combat-blit-road-part targ-list srcmap x1 x2 y1 y2)
+				(if (and (in-list? our_terrain targ-list)
+						(>= y2 min-y)
+						(>= x2 min-x)
+						(<= y1 max-y)
+						(<= x1 max-x))
+						(begin
+					(kern-blit-map dstmap
+						(combat-off-dst-pos wid off_x x1) (combat-off-dst-pos hgt off_y y1)
+						srcmap
+						(max x1 min-x) (max y1 min-y)
+						(- (min x2 max-x) (max x1 min-x))
+						(- (min y2 max-y) (max y1 min-y))
+						))
+				))
+				
+			(kern-blit-map dstmap 
+				(combat-off-to-dst off_x) (combat-off-to-dst off_y)
+				m_trail_combat_base
+				min-x min-y 
+				(combat-off-to-len wid off_x) (combat-off-to-len hgt off_y))
+			;;north part
+			(combat-blit-road-part
+				(list t_trail_4 t_trail_5 t_trail_6 t_trail_7 t_trail_8 t_trail_9 t_trail_a t_trail_b)
+				m_trail_combat_road
+				6 13 0 8)
+			;;west part
+			(combat-blit-road-part
+				(list t_trail_1 t_trail_2 t_trail_5 t_trail_6 t_trail_9 t_trail_a t_trail_d t_trail_e)
+				m_trail_combat_road
+				0 8 6 13)
+			;;south part
+			(combat-blit-road-part
+				(list t_trail_0 t_trail_1 t_trail_2 t_trail_3 t_trail_4 t_trail_5 t_trail_6 t_trail_7)
+				m_trail_combat_road
+				6 13 11 20)
+			;;east part
+			(combat-blit-road-part
+				(list t_trail_0 t_trail_1 t_trail_4 t_trail_5 t_trail_8 t_trail_9 t_trail_c t_trail_d)
+				m_trail_combat_road
+				11 20 6 13)
+			;;north end
+			(combat-blit-road-part
+				(list t_trail_3)
+				m_trail_combat_roadend
+				6 13 0 8)
+			;;west end
+			(combat-blit-road-part
+				(list t_trail_c)
+				m_trail_combat_roadend
+				0 8 6 13)
+			;;south end
+			(combat-blit-road-part
+				(list t_trail_b)
+				m_trail_combat_roadend
+				6 13 11 20)
+			;;east end
+			(combat-blit-road-part
+				(list t_trail_e)
+				m_trail_combat_roadend
+				11 20 6 13)
+	))
+	)
+	
+(map (lambda (kter)
+	(kern-terrain-set-combat-handler kter combat-map-road-handler))
+	(list t_trail_0 t_trail_1 t_trail_2 t_trail_3
+	t_trail_4 t_trail_5 t_trail_6 t_trail_7
+	t_trail_8 t_trail_9 t_trail_a t_trail_b
+	t_trail_c t_trail_d t_trail_e t_trail_f)
+)
+	
+
+(kern-terrain-set-combat-handler t_bridge_WE  (combat-map-basic-handler 'm_bridge_WE_combat))
+(kern-terrain-set-combat-handler t_bridge_NS  (combat-map-basic-handler 'm_bridge_NS_combat))
+(kern-terrain-set-combat-handler t_lava_bridge_NS (combat-map-basic-handler 'm_lava_bridge_NS_combat))
+
+(define (combat-map-list target-map terrains)
+	(let ((handler (combat-map-basic-handler target-map)))
+	(map (lambda (kter)
+		(kern-terrain-set-combat-handler kter handler))
+		terrains
+	)))
+	
+(combat-map-list 'm_grass_combat2
 	(list 
+	t_grass
 	t_grassw_ne t_grassw_nw t_grassw_es t_grassw_ws
 	t_grassw_nwe t_grassw_nes t_grassw_nws t_grassw_wes
 	t_grassw_c
@@ -769,7 +964,7 @@
 	t_grasst_c
 	)) 
 
-(combat-map-list m_water_combat
+(combat-map-list 'm_water_combat
 	(list 
 	t_wshore_n t_wshore_w t_wshore_nw t_wshore_e
 	t_wshore_ne t_wshore_we t_wshore_nwe t_wshore_s
@@ -781,8 +976,9 @@
 	t_dshore_nes t_dshore_wes t_dshore_c
 	))	
 
-(combat-map-list m_tree_combat
+(combat-map-list 'm_tree_combat
 	(list
+	t_trees
 	t_treew_ne t_treew_nw t_treew_es t_treew_ws
 	t_treew_nwe t_treew_nes t_treew_nws t_treew_wes
 	t_treew_c
@@ -791,8 +987,9 @@
 	t_trees_c
 	))	  
 
-(combat-map-list m_hill_combat
+(combat-map-list 'm_hill_combat
 	(list
+	t_hills
 	t_hillw_ne t_hillw_nw t_hillw_es t_hillw_ws 
 	t_hillw_nwe  t_hillw_nes t_hillw_nws t_hillw_wes 
 	t_hillw_c  
@@ -803,8 +1000,9 @@
 	t_hillv_nwe t_hillv_nes t_hillv_nws t_hillv_wes
 	))	 
 
-(combat-map-list m_mountain_combat
+(combat-map-list 'm_mountain_combat
 	(list 
+	t_mountains
 	t_mountw_ne t_mountw_nw t_mountw_es t_mountw_ws 
 	t_mountw_nwe t_mountw_nes t_mountw_nws t_mountw_wes 
 	t_mountw_c 
@@ -815,20 +1013,22 @@
 	t_mountv_nwe t_mountv_nes t_mountv_nws t_mountv_wes
 	))
 
-(combat-map-list m_bog_combat
+(combat-map-list 'm_bog_combat
 	(list
+	t_bog
 	t_bog_nw t_bog_ne t_bog_nwe t_bog_ws 
 	t_bog_nws t_bog_es t_bog_nes t_bog_wes 
 	t_bog_c 
 	))	
 
-(combat-map-list m_forest_combat
+(combat-map-list 'm_forest_combat
 	(list
+	t_forest
 	t_forestg_ne t_forestg_nw t_forestg_es t_forestg_ws
 	t_forestg_nwe t_forestg_nes t_forestg_nws t_forestg_wes
 	))
 
-(combat-map-list m_void_combat
+(combat-map-list 'm_void_combat
 	(list
 	t_voids_n t_voids_w t_voids_nw t_voids_e 
 	t_voids_ne t_voids_we t_voids_nwe t_voids_s 
@@ -837,7 +1037,7 @@
 	t_void t_stars t_chasm
 	))
 
-(combat-map-list m_lava_combat
+(combat-map-list 'm_lava_combat
 	(list
 	t_lava_n t_lava_w t_lava_nw t_lava_e 
 	t_lava_ne t_lava_we t_lava_nwe t_lava_s 
@@ -846,7 +1046,7 @@
 	t_lava
 	))
 	
-(combat-map-list m_shore_combat
+(combat-map-list 'm_shore_combat
 	(list
 	t_shore_n t_shore_w t_shore_nw t_shore_e
 	t_shore_ne t_shore_we t_shore_nwe t_shore_s
