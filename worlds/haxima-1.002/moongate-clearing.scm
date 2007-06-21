@@ -27,15 +27,20 @@
     (3 mandrake)
     
     ;; Items
-    (1 t_heal_potion)
-    (1 t_cure_potion)
-    (1 t_mana_potion)
-    (1 t_torch)
-    (1 t_picklock)
+    (2 t_heal_potion)
+    (2 t_cure_potion)
+    (2 t_mana_potion)
+    (6 t_torch)
+    (3 t_picklock)
     
     ;; Arms
-    (1 t_sword)
-    (1 t_shield)
+    (1  t_sword)
+    (1  t_shield)
+    (1  t_staff)
+
+    (1  t_sling)
+    (1  t_self_bow)
+    (20 t_arrow)
 
     ;; Hints/instructions
     (1 t_manual)
