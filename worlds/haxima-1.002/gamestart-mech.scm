@@ -42,9 +42,15 @@
 
 (define (initstats kbeing)
 	(let ((rdata (get-roomdata (car (kern-obj-get-location kbeing)))))
-		(kern-char-set-strength kbeing (/ (- 24 (list-ref rdata 0) (list-ref rdata 1)) 2))
-		(kern-char-set-dexterity kbeing (/ (- (+ 12 (list-ref rdata 0)) (list-ref rdata 2)) 2))
-		(kern-char-set-intelligence kbeing (/ (+ (list-ref rdata 1) (list-ref rdata 2)) 2))
+		(kern-char-set-strength     kbeing (/ (- 24    (list-ref rdata 0)  (list-ref rdata 1)) 2))
+		(kern-char-set-dexterity    kbeing (/ (- (+ 12 (list-ref rdata 0)) (list-ref rdata 2)) 2))
+		(kern-char-set-intelligence kbeing (/ (+       (list-ref rdata 1)  (list-ref rdata 2)) 2))
+
+		(kern-log-msg "Strength: "     (number->string (kern-char-get-strength     kbeing)) ", "
+			      "Dexterity: "    (number->string (kern-char-get-dexterity    kbeing)) ", "
+			      "Intelligence: " (number->string (kern-char-get-intelligence kbeing))
+			      )
+
 	))
 	
 (define (set-stat-info kbeing key value)
