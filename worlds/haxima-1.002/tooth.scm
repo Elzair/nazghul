@@ -64,20 +64,29 @@
   (kern-conv-trade knpc kpc
 		   (list t_picklock            5)
 		   (list t_gem                20)
+
 		   (list t_oil                 5)
+		   (list t_slime_vial         30)
 		   (list t_arrow               3)
 		   (list t_bolt                3)
+
+		   (list t_spiked_helm       300)
+		   (list t_spiked_shield     300)
+
 		   (list t_dagger_4           (* 4 65))
 		   (list t_sword_2            (* 2 85))
 		   (list t_sword_4            (* 4 85))
 		   (list t_morning_star_2     (* 2 105))
+
 		   (list t_leather_helm_2     (* 2 100))
 		   (list t_chain_coif_4       (* 4 100))
 		   (list t_iron_helm_4        (* 4 150))
+
 		   (list t_armor_leather_2    (* 2 150))
 		   (list t_armor_leather_4    (* 4 150))
 		   (list t_armor_chain_4      (* 4 330))
 		   (list t_armor_plate_4      (* 4 660))
+
 		   (list t_xen_corp_scroll    (* 7 base-scroll-cost))
 		   (list t_sanct_lor_scroll   (* 7 base-scroll-cost))
 		   (list t_an_xen_ex_scroll   (* 6 base-scroll-cost))
@@ -85,7 +94,7 @@
 		   (list t_wis_quas_scroll    (* 4 base-scroll-cost))
 		   (list t_in_quas_xen_scroll (* 7 base-scroll-cost))
 		   (list t_an_tym_scroll      (* 8 base-scroll-cost))
-		   (list t_slime_vial 20)
+
 		   ))
 
 

@@ -38,13 +38,24 @@
            "I'm open for business from 7:00AM til 6:00PM.")
       (begin
         (kern-conv-trade knpc kpc
-                         (list t_dagger         60)
-                         (list t_sword          80)
-                         (list t_mace           75)
+                         (list t_dagger          40)
+                         (list t_sword           80)
+			 (list t_axe             70)
+                         (list t_mace            75)
+
+                         (list t_2H_axe         240)
+                         (list t_2H_sword       350)
+
                          (list t_chain_coif     110)
                          (list t_iron_helm      160)
                          (list t_armor_chain    300)
                          (list t_armor_plate    600)
+
+			 (list t_shield          45)
+
+			 (list t_spiked_helm    150)
+			 (list t_spiked_shield  150)
+
                          )
         (say knpc "Strike hard, first and for the good, friend."))))
 

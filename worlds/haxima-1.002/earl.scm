@@ -25,13 +25,8 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Earl is a merchant, and will trade with the player if he's at work. He's a
-;; tall, wiry blacksmith with a very dry wit. If the town has a leader it would
-;; be him because the other townsfolk respect him and look to him in times of
-;; crises. He isn't interested in being a celebrity, however, and doesn't
-;; exercise any real ambition. He's not interested in adventures and considers
-;; (privately) that adventurers are fools. But he's happy to trade with
-;; them. He drinks hard, and probably had a very wild youth.
+;; Earl is a merchant, and will trade with the player if he's at work. 
+;; ...(removed some text which seems to have come from Jim.scm)...
 ;;----------------------------------------------------------------------------
 (define (earl-trade knpc kpc)
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
@@ -41,15 +36,19 @@
       (begin
         (kern-conv-trade knpc kpc
                          (list t_torch               5)
+                         (list t_sling              50)
+                         (list t_staff              25)
+
                          (list t_heal_potion        22)
                          (list t_cure_potion        22)
                          (list t_mana_potion        22)
-                         (list t_sling              50)
-                         (list t_staff              90)
+
                          (list t_arrow               1)
                          (list t_bolt                1)
+
                          (list t_shovel             50)
                          (list t_pick               50)
+
                          (list t_sextant           500)
                          (list t_chrono            300)
                          )

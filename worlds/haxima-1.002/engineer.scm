@@ -255,6 +255,33 @@
 (define (eng-ench knpc kpc)
   (say knpc "Bit of a fanatic if you ask me. But it takes all kinds."))
 
+(define (eng-trade knpc kpc)
+  (say knpc "Let me show you some of my inventions...")
+  (kern-conv-trade knpc kpc
+
+		   ;; Various tools and devices
+		   (list t_picklock       10)  ;; high prices, not his specialty
+		   (list t_shovel        100)  ;; high prices, not his specialty
+		   (list t_pick          100)  ;; high prices, not his specialty
+		   (list t_sextant       200)
+		   (list t_chrono        200)
+
+		   ;; A bit of oil and grease, for a grease-monkey:
+		   (list t_grease         20)
+		   (list t_oil            10)  ;; high prices, not his specialty
+
+		   ;; Crossbows and bolts, as he likes intricate devices
+		   (list t_lt_crossbow    50)
+		   (list t_crossbow      100)
+		   (list t_hvy_crossbow  300)
+		   (list t_trpl_crossbow 500) ;; a mechanism of his devising
+		   (list t_bolt            2)
+
+                   )
+
+  (say knpc "How do you like my devices?"))
+
+
 (define engineer-conv
   (ifc nil
        (method 'default eng-default)
@@ -263,6 +290,10 @@
        (method 'bye eng-bye)
        (method 'job eng-job)
        (method 'join eng-join)
+
+       (method 'trad eng-trade)
+       (method 'buy  eng-trade)
+       (method 'sell eng-trade)
 
        (method 'make eng-make)
        (method 'thin eng-make)
@@ -315,6 +346,8 @@
       (list
        (list 1   t_dagger)
        (list 1   t_doom_staff)
+       (list 1   t_trpl_crossbow)
+       (list 100 t_bolt)
        (list 5   t_cure_potion)
        (list 5   t_heal_potion)
        ))

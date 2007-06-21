@@ -63,27 +63,38 @@
            "between 9:00AM and 6:00PM.")
       (begin
         (kern-conv-trade knpc kpc
+                         (list t_staff            20)
                          (list t_dagger           65)
                          (list t_mace             80)
                          (list t_axe              85)
                          (list t_sword            85)
                          (list t_2H_axe           90)
-                         (list t_staff            90)
                          (list t_2H_sword        100)
                          (list t_morning_star    105)
                          (list t_halberd         150)
+
                          (list t_sling            50)
-                         (list t_bow             300)
-                         (list t_crossbow        380)
-                         (list t_arrow             1)
-                         (list t_bolt              1)
                          (list t_spear            15)
+
+			 (list t_self_bow        120)
+                         (list t_bow             200)
+                         (list t_arrow             1)
+
+                         (list t_crossbow        380)
+			 (list t_hvy_crossbow    600)
+                         (list t_bolt              1)
+
                          (list t_leather_helm     50)
                          (list t_chain_coif      100)
                          (list t_iron_helm       150)
                          (list t_armor_leather   150)
                          (list t_armor_chain     330)
                          (list t_armor_plate    1000)
+
+			 (list t_shield           30)
+
+			 (list t_spiked_helm     250)
+			 (list t_spiked_shield   250)
                          )
         (say knpc "Now go bash some skulls! And come back when you need "
              "an upgrade!"))))

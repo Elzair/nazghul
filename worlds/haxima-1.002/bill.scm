@@ -32,8 +32,10 @@
 ;;----------------------------------------------------------------------------
 (define (bill-trade knpc kpc)
   (kern-conv-trade knpc kpc
-                   (list t_torch 20)
-                   (list t_arrow 3)
+		   (list t_staff 10) ;; rather cheap
+                   (list t_torch  3) ;; rather cheap
+                   (list t_arrow  3)
+		   (list t_bolt   4)
                    )
   (say knpc "If you need more I'll be around."))
 

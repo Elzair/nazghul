@@ -24,7 +24,8 @@
 ;;----------------------------------------------------------------------------
 (define (may-trade knpc kpc)
   (kern-conv-trade knpc kpc
-                   (list t_beer   4)             
+                   (list t_beer  4)             
+		   (list t_food  3)
                    )
   (say knpc "Well enough."))
 

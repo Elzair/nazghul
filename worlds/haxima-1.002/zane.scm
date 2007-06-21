@@ -48,6 +48,16 @@
                    (list t_cure_potion            21)
                    (list t_poison_immunity_potion 21)
 
+		   ;; bows, arrows and bolts 
+		   ;; (as an accomplished Ranger, he is also a bowyer and fletcher)
+		   (list t_self_bow    30)
+		   (list t_bow         90)
+		   (list t_long_bow   300)
+		   (list t_great_bow  700)
+
+		   (list t_arrow        2)
+		   (list t_bolt         2)
+
                    )
 
   (say knpc "Watch your step out there."))
@@ -147,7 +157,7 @@
       (list
        (list 10  t_food)
        (list 100 t_arrow)
-       (list 1   t_bow)
+       (list 1   t_great_bow)
        (list 1   t_dagger)
        (list 1   t_sword)
        (list 1   t_leather_helm)

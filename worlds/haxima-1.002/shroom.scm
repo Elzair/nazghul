@@ -42,18 +42,19 @@
             (begin
               ;; Trading!
               (kern-conv-trade knpc kpc
-                               (list sulphorous_ash (* 2 reagent-price-mult))
-                               (list garlic         (* 3 reagent-price-mult))
-                               (list ginseng        (* 3 reagent-price-mult))
-                               (list blood_moss     (* 4 reagent-price-mult))
-                               (list spider_silk    (* 5 reagent-price-mult))
+                               (list sulphorous_ash (*  2 reagent-price-mult))
+                               (list garlic         (*  3 reagent-price-mult))
+                               (list ginseng        (*  3 reagent-price-mult))
+                               (list blood_moss     (*  4 reagent-price-mult))
+                               (list spider_silk    (*  5 reagent-price-mult))
                                (list nightshade     (* 10 reagent-price-mult))
-                               (list mandrake       (* 8 reagent-price-mult))
+                               (list mandrake       (*  8 reagent-price-mult))
+
                                (list t_heal_potion  20)
                                (list t_mana_potion  20)
                                (list t_cure_potion  20)
                                (list t_poison_immunity_potion 20)
-                               (list t_slime_vial 20)
+                               (list t_slime_vial   20)
                                )
               (say knpc "Be careful with those."))))))
 

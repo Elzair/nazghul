@@ -81,11 +81,19 @@
         (say knpc "I'm sure I have something you'll like! "
              "[He rubs his hands briskly]")
         (kern-conv-trade knpc kpc
-                         (list t_heal_potion       18)
-                         (list t_cure_potion       18)
-                         (list t_mana_potion       18)
-                         (list t_poison_immunity_potion 18)
+                         (list t_heal_potion             18)
+                         (list t_cure_potion             18)
+                         (list t_mana_potion             18)
+
+                         (list t_poison_immunity_potion  18)
                          (list t_invisibility_potion    100)
+			 (list t_str_potion             999)  ;; limited stock would be nice...
+			 (list t_dex_potion             999)  ;; limited stock would be nice...
+			 (list t_int_potion             999)  ;; limited stock would be nice...
+			 (list t_info_potion            150)
+
+			 (list t_oil                      6)
+			 (list t_slime_vial              25)
                          )
         (say knpc "Always carry plenty of potions!"))))
 
