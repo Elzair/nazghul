@@ -173,6 +173,76 @@
    result-ok))
 
 (mk-reusable-item
+ 't_spell_book_white_magick_1 "White Magick: Booke I" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Spells of Healing, of the First Circle"
+    "+-----------------------------------------+"
+    "|  M)ix thy reagents to craft a spell,    |"
+    "|  then C)ast it in thine hour of need.   |"
+    "|  Through lore of WHITE shall ye HEAL,   |"
+    "|  though as ye MEND be ye yet WISE!      |"
+    "+-----------------------------------------+"
+    "Cure Poison - AN NOX"
+    "  Mix Ginseng and Garlic"
+    ""
+    "Awaken - AN ZU"
+    "  Mix Ginseng and Garlic"
+    ""
+    "Heal - MANI"
+    "  Mix Ginseng and Spider Silk"
+    )
+   result-ok))
+
+(mk-reusable-item
+ 't_spell_book_force_magick_123 "Magick of Force: Booke I" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Spells of Might, of the Circles I, II, III "
+    "+-----------------------------------------+"
+    "|  M)ix thy reagents to craft a spell,    |"
+    "|  then C)ast it in thine hour of need.   |"
+    "|  By FORCE shall thy foes know FEAR,     |"
+    "|  yet FOOLS thus casting shall know WOE! |"
+    "+-----------------------------------------+"
+    "Spells of the Circle I:                    "
+    "-----------------------"
+    "- Magic Missile - GRAV POR                 "
+    "Mix Sulphurous Ash and Black Pearl         "
+    ""
+    "- Light - IN LOR                           "
+    "Mix Sulphurous Ash                         "
+    ""
+    "-------------------------------------------"
+    "Spells of the Circle II:                   "
+    "------------------------"
+    "- Change Wind - REL HUR                    "
+    "Mix Sulphurous Ash and Blood Moss          "
+    ""
+    "- Poison Missile - IN NOX POR              "
+    "Mix Nightshade, Blood Moss, and Black Pearl"
+    ""
+    "-------------------------------------------"
+    "Spells of the Circle III:                  "
+    "-------------------------"
+    "- Fire Ball - VAS FLAM                     "
+    "Mix Black Pearl and Sulphurous Ash         "
+    ""
+    "- Great Light - VAS LOR                    "
+    "Mix Sulphurous Ash and Mandrake            "
+    ""
+    "- Fire Field - IN FLAM GRAV                "
+    "Mix Sulphurous Ash, Black Pearl,           "
+    "and Spider Silk                            "
+    ""
+    "- Poison Field - IN NOX GRAV               "
+    "Mix Nightshade, Black Pearl, Spider Silk   "
+    ""
+    "-------------------------------------------"
+    )
+   result-ok))
+
+(mk-reusable-item
  't_basic_spell_book "Spell Book" s_manual (/ norm 3)
  (lambda (kbook kuser)
    (kern-ui-page-text

@@ -45,6 +45,8 @@
     ;; Hints/instructions
     (1 t_manual)
     (1 t_letter_from_enchanter)
+    (1 t_spell_book_white_magick_1   )
+    (1 t_spell_book_force_magick_123 )
     )
    ))
 
