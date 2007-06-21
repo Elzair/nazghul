@@ -126,12 +126,65 @@
          
          
          ;; Arms
+	 ( 1 t_dagger)
+	 ( 1 t_mace)
+	 ( 1 t_axe)
+	 ( 1 t_sword)
+	 ( 1 t_2H_axe)
+	 ( 1 t_2H_sword)
+	 ( 1 t_morning_star)
+	 ( 1 t_halberd)
+	 ( 1 t_staff)
+
+	 ( 1 t_dagger_4)
          ( 1 t_sword_4)
          ( 1 t_morning_star_2)
-         ( 1 t_sling_4)
+	 ( 1 t_stun_wand)
+	 ( 1 t_doom_staff)
+	 ( 1 t_eldritch_blade)
+	 ( 1 t_mystic_sword)
+	 ( 1 t_flaming_sword)
+
          ( 1 t_shield)
+	 ( 1 t_scratched_shield)
+
+	 ( 1 t_leather_helm)
+	 ( 1 t_chain_coif)
+	 ( 1 t_iron_helm)
+
+	 ( 1 t_armor_leather)
+	 ( 1 t_armor_chain)
+	 ( 1 t_armor_plate)
+
          ( 1 t_iron_helm_4)
+	 ( 1 t_armor_leather_4)
+	 ( 1 t_armor_chain_4)
          ( 1 t_armor_plate_4)
+
+	 ( 1 t_spiked_helm)
+	 ( 1 t_spiked_shield)
+
+	 ( 1 t_sling)
+	 ( 3 t_spear)
+
+         ( 1 t_sling_4)
+	 ( 1 t_magic_axe)
+
+	 (20 t_oil)
+	 (20 t_slime_vial)
+
+	 (  1 t_self_bow)
+	 (  1 t_bow)
+	 (  1 t_long_bow)
+	 (  1 t_great_bow)
+	 (500 t_arrow)
+
+	 (  1 t_lt_crossbow)
+	 (  1 t_crossbow)
+	 (  1 t_hvy_crossbow)
+	 (  1 t_trpl_crossbow)
+	 (500 t_bolt)
+
          ))
        (list p_char_setup 16 17))
       (kern-obj-put-at
