@@ -53,7 +53,7 @@
       (begin
         (kern-conv-trade knpc kpc
                          (list t_arrow        1)
-                         (list t_bolt         2)
+                         (list t_bolt         1)
                          (list t_oil          6)
                          (list t_torch        6)
                          (list t_heal_potion 23)
