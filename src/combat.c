@@ -647,7 +647,7 @@ static bool mySetInitialCameraPosition(class Character * pm, void *data)
         return false;
 }
 
-static void combat_overlay_vehicle(Vehicle *vehicle, struct combat_info *cinfo,
+static void combat_overlay_vehicle(Vehicle *vehicle, int dx, int dy,
                                    struct position_info *pinfo)
 {
 
@@ -656,22 +656,22 @@ static void combat_overlay_vehicle(Vehicle *vehicle, struct combat_info *cinfo,
 	
 	int dst_x = 0, dst_y = 0;
 		
-	if (cinfo->pc_dx < 0) {
+	if (dx < 0) {
 		// facing west, fill east half
 		dst_x = COMBAT_MAP_W / 2;
 		set_party_initial_position(pinfo, (COMBAT_MAP_W*3)/4,COMBAT_MAP_H/2);
 	}
-	else if (cinfo->pc_dx > 0) {
+	else if (dx > 0) {
 		// facing east, fill west half
 		dst_x = COMBAT_MAP_W / 2 - COMBAT_MAP_W;
 		set_party_initial_position(pinfo, COMBAT_MAP_W/4,COMBAT_MAP_H/2);
 	}
-	else if (cinfo->pc_dy < 0) {
+	else if (dy < 0) {
 		// facing north, fill south half
 		dst_y = COMBAT_MAP_H / 2;
 		set_party_initial_position(pinfo, COMBAT_MAP_W/2,(COMBAT_MAP_H*3)/4);
 	}
-	else if (cinfo->pc_dy > 0) {
+	else if (dy > 0) {
 		// facing south, fill north half
 		dst_y = COMBAT_MAP_H / 2 - COMBAT_MAP_H;
 		set_party_initial_position(pinfo, COMBAT_MAP_W/2,COMBAT_MAP_H/4);
@@ -681,8 +681,8 @@ static void combat_overlay_vehicle(Vehicle *vehicle, struct combat_info *cinfo,
 		set_party_initial_position(pinfo, COMBAT_MAP_W/2,COMBAT_MAP_H/2);
 	}
 	
-	closure_exec(vehicle->getObjectType()->renderCombat, "ppdddd", 
-	Place, vehicle, dst_x, dst_y, cinfo->pc_x, cinfo->pc_y);
+	closure_exec(vehicle->getObjectType()->renderCombat, "ppdd", 
+	Place, vehicle, dst_x, dst_y);
       
 }
                                    
@@ -784,10 +784,10 @@ static int combat_position_enemy(class Party * foe, int dx, int dy,
         }
         /* Check for a map overlay. */
         if (Combat.enemy_vehicle
-            && Combat.enemy_vehicle->getObjectType()->map 
+            && Combat.enemy_vehicle->getObjectType()->renderCombat 
             && Place == Combat.place) {
-                combat_overlay_map(Combat.enemy_vehicle->getObjectType()->map, 
-                                   &foe->pinfo, 1);
+                combat_overlay_vehicle(Combat.enemy_vehicle, dx,dy,
+                                   &foe->pinfo);
           }
 
         foe->disembark();
@@ -1483,7 +1483,7 @@ static bool position_player_party(struct combat_info *cinfo)
         if (vehicle &&
             vehicle->getObjectType()->renderCombat &&
             Place == Combat.place) {
-                combat_overlay_vehicle(vehicle, cinfo,
+                combat_overlay_vehicle(vehicle, cinfo->pc_dx, cinfo->pc_dy,
                                    &player_party->pinfo);
         }
 
@@ -1498,7 +1498,7 @@ static bool position_player_party(struct combat_info *cinfo)
                                               player_party->getY())) &&
                  vehicle->getObjectType()->renderCombat) {
                 // dbg("party overlay, party over vehicle\n");
-               combat_overlay_vehicle(vehicle, cinfo,
+               combat_overlay_vehicle(vehicle, cinfo->pc_dx, cinfo->pc_dy,
                                    &player_party->pinfo);
         }
         // Finally, since there is no vehicle map check for a camping map.
