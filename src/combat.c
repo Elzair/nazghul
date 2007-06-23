@@ -647,14 +647,45 @@ static bool mySetInitialCameraPosition(class Character * pm, void *data)
         return false;
 }
 
+static void combat_overlay_vehicle(Vehicle *vehicle, struct combat_info *cinfo,
+                                   struct position_info *pinfo)
+{
 
-// Automatically pathfind and move all the party members to the party leader's
-// position.
-//
-// max_path_len - max number of steps to allow for a path, or -1 for no limit
-//
-// returns true if everyony can find a path in max_path_len steps, false
-// otherwise.
+	assert(pinfo->dx || pinfo->dy);
+	assert(!pinfo->dx || !pinfo->dy);	
+	
+	int dst_x = 0, dst_y = 0;
+		
+	if (cinfo->pc_dx < 0) {
+		// facing west, fill east half
+		dst_x = COMBAT_MAP_W / 2;
+		set_party_initial_position(pinfo, (COMBAT_MAP_W*3)/4,COMBAT_MAP_H/2);
+	}
+	else if (cinfo->pc_dx > 0) {
+		// facing east, fill west half
+		dst_x = COMBAT_MAP_W / 2 - COMBAT_MAP_W;
+		set_party_initial_position(pinfo, COMBAT_MAP_W/4,COMBAT_MAP_H/2);
+	}
+	else if (cinfo->pc_dy < 0) {
+		// facing north, fill south half
+		dst_y = COMBAT_MAP_H / 2;
+		set_party_initial_position(pinfo, COMBAT_MAP_W/2,(COMBAT_MAP_H*3)/4);
+	}
+	else if (cinfo->pc_dy > 0) {
+		// facing south, fill north half
+		dst_y = COMBAT_MAP_H / 2 - COMBAT_MAP_H;
+		set_party_initial_position(pinfo, COMBAT_MAP_W/2,COMBAT_MAP_H/4);
+	}
+	else
+	{
+		set_party_initial_position(pinfo, COMBAT_MAP_W/2,COMBAT_MAP_H/2);
+	}
+	
+	closure_exec(vehicle->getObjectType()->renderCombat, "ppdddd", 
+	Place, vehicle, dst_x, dst_y, cinfo->pc_x, cinfo->pc_y);
+      
+}
+                                   
 
 static void combat_overlay_map(struct terrain_map *map, 
                                struct position_info *pinfo, int broadside)
@@ -758,7 +789,6 @@ static int combat_position_enemy(class Party * foe, int dx, int dy,
                 combat_overlay_map(Combat.enemy_vehicle->getObjectType()->map, 
                                    &foe->pinfo, 1);
           }
-
 
         foe->disembark();
         obj_inc_ref(foe);
@@ -1095,7 +1125,7 @@ static void fill_map_half(struct terrain_map *map, int dx, int dy,
 
         if (dx < 0) {
                 // facing west, fill east half
-                terrain_map_fill(map, map->w / 2, 0, map->w / 2, map->h,
+                terrain_map_fill(map, map->w / 2, 0, (map->w+1) / 2, map->h,
                                  terrain);
         }
         else if (dx > 0) {
@@ -1104,7 +1134,7 @@ static void fill_map_half(struct terrain_map *map, int dx, int dy,
         }
         else if (dy < 0) {
                 // facing north, fill south half
-                terrain_map_fill(map, 0, map->h / 2, map->w, map->h / 2,
+                terrain_map_fill(map, 0, map->h / 2, map->w, (map->h+1) / 2,
                                  terrain);
         }
         else if (dy > 0) {
@@ -1217,29 +1247,25 @@ static void setup_combat_place_part(struct place *place,
 		int dx, int dy, int mapx, int mapy)
 {
 	int dst_x = 0, dst_y = 0;
-	int face=DIRECTION_NONE;
 	
 	if (our_terrain->renderCombat)
 	{	
+		fprintf(stderr,"rc\n");
 		if (dx < 0) {
 			// facing west, fill east half
 			dst_x = COMBAT_MAP_W / 2;
-			face=WEST;
 		}
 		else if (dx > 0) {
 			// facing east, fill west half
 			dst_x = COMBAT_MAP_W / 2 - COMBAT_MAP_W;
-			face=EAST;
 		}
 		else if (dy < 0) {
 			// facing north, fill south half
 			dst_y = COMBAT_MAP_H / 2;
-			face=NORTH;
 		}
 		else if (dy > 0) {
 			// facing south, fill north half
 			dst_y = COMBAT_MAP_H / 2 - COMBAT_MAP_H;
-			face=SOUTH;
 		}
 		
 		closure_exec(our_terrain->renderCombat, "pppdddd", 
@@ -1260,57 +1286,53 @@ static void setup_combat_place_part(struct place *place,
 static void setup_combat_place(struct place *place, struct combat_info
                                                         *info)
 {
-	int player_dx, player_dy, npc_dx, npc_dy,pcmap_x,pcmap_y,npcmap_x,npcmap_y;
 	struct terrain *player_terrain;
 	struct terrain *npc_terrain;
 	
 	// Determine orientation for both parties
+	// Also get true locations (after parties have moved to go from diagonal to adjacent)
 	if (!info->move->npc_party)
 	{
-		player_dx = 0;
-		player_dy = 0;
-		pcmap_x = player_party->getX();
-		pcmap_y = player_party->getY();
+		info->pc_dx = 0;
+		info->pc_dy = 0;
+		info->pc_x = player_party->getX();
+		info->pc_y = player_party->getY();
 	}
 	else if (info->defend)
 	{
-		player_dx = -info->move->dx;
-		player_dy = -info->move->dy;
-		npc_dx = info->move->dx;
-		npc_dy = info->move->dy;
-		pcmap_x = player_party->getX();
-		pcmap_y = player_party->getY();
-		npcmap_x = pcmap_x - info->move->dx;
-		npcmap_y = pcmap_y - info->move->dy;
+		info->pc_dx = -info->move->dx;
+		info->pc_dy = -info->move->dy;
+		info->pc_x = player_party->getX();
+		info->pc_y = player_party->getY();
+		info->npc_x = info->pc_x - info->move->dx;
+		info->npc_y = info->pc_y - info->move->dy;
 	}
 	else
 	{
-		player_dx = info->move->dx;
-		player_dy = info->move->dy;
-		npc_dx = -info->move->dx;
-		npc_dy = -info->move->dy;
-		npcmap_x = info->move->npc_party->getX();
-		npcmap_y = info->move->npc_party->getY();
-		pcmap_x = npcmap_x - info->move->dx;
-		pcmap_y = npcmap_y - info->move->dy;
+		info->pc_dx = info->move->dx;
+		info->pc_dy = info->move->dy;
+		info->npc_x = info->move->npc_party->getX();
+		info->npc_y = info->move->npc_party->getY();
+		info->pc_x = info->npc_x - info->move->dx;
+		info->pc_y = info->npc_y - info->move->dy;
 	}
 	
 	// get terrains for each
-	player_terrain=place_get_terrain(player_party->getPlace(), pcmap_x, pcmap_y);
+	player_terrain=place_get_terrain(player_party->getPlace(), info->pc_x, info->pc_y);
 	
 	if (info->move->npc_party)	
 	{
-		npc_terrain=place_get_terrain(info->move->npc_party->getPlace(), npcmap_x, npcmap_y);
+		npc_terrain=place_get_terrain(info->move->npc_party->getPlace(), info->npc_x, info->npc_y);
 	}
 	else
 	{
 		npc_terrain=player_terrain; // some sensible definition makes like easier...
 	}
 	
-	setup_combat_place_part(place, player_terrain, npc_terrain, player_dx, player_dy, pcmap_x, pcmap_y);
+	setup_combat_place_part(place, player_terrain, npc_terrain, info->pc_dx, info->pc_dy, info->pc_x, info->pc_y);
 	if (info->move->npc_party)	
 	{
-		setup_combat_place_part(place, npc_terrain, player_terrain, npc_dx, npc_dy, npcmap_x, npcmap_y);
+		setup_combat_place_part(place, npc_terrain, player_terrain, -info->pc_dx, -info->pc_dy, info->npc_x, info->npc_y);
 	}
 	
 }
@@ -1338,8 +1360,8 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
         		player_party->getPlace()->terrain_map->palette);
         assert(map);
         
-        //terrain_map_fill(map, 0, 0, COMBAT_MAP_W, COMBAT_MAP_H, 
-        		//place_get_terrain(player_party->getPlace(),player_party->getX(),player_party->getY()));
+        terrain_map_fill(map, 0, 0, COMBAT_MAP_W, COMBAT_MAP_H, 
+        		place_get_terrain(player_party->getPlace(),player_party->getX(),player_party->getY()));
         return map;
         
         // Determine orientation for both parties.
@@ -1459,11 +1481,10 @@ static bool position_player_party(struct combat_info *cinfo)
         // with a map.
         vehicle = player_party->getVehicle();
         if (vehicle &&
-            vehicle->getObjectType()->map &&
+            vehicle->getObjectType()->renderCombat &&
             Place == Combat.place) {
-                combat_overlay_map(vehicle->getObjectType()->map,
-                                   &player_party->pinfo,
-                                   cinfo->move->npc_party != NULL);
+                combat_overlay_vehicle(vehicle, cinfo,
+                                   &player_party->pinfo);
         }
 
         // Next check if the player is OVER (on the map) but not in a vehicle
@@ -1475,10 +1496,10 @@ static bool position_player_party(struct combat_info *cinfo)
                  (vehicle = place_get_vehicle(player_party->getPlace(),
                                               player_party->getX(),
                                               player_party->getY())) &&
-                 vehicle->getObjectType()->map) {
+                 vehicle->getObjectType()->renderCombat) {
                 // dbg("party overlay, party over vehicle\n");
-                combat_overlay_map(vehicle->getObjectType()->map,
-                                   &player_party->pinfo, 0);
+               combat_overlay_vehicle(vehicle, cinfo,
+                                   &player_party->pinfo);
         }
         // Finally, since there is no vehicle map check for a camping map.
         else if (cinfo->camping && player_party->campsite_map) {
@@ -1576,7 +1597,7 @@ bool combat_enter(struct combat_info * info)
         // placed, if any.
         if (!position_player_party(info))
                 return false;
-
+               
         // *** Position the Enemy Party Members ***
 
         if (info->move->npc_party) {
@@ -1633,11 +1654,9 @@ bool combat_enter(struct combat_info * info)
         mapUpdate(0);
         foogodRepaint();
 
-
         // ---------------------------------------------------------------------
         // Return to the main loop. Combat will continue from there.
         // ---------------------------------------------------------------------
-
         return true;
 }
 

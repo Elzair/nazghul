@@ -492,6 +492,22 @@
 (kern-mk-sprite 's_secret_rock     ss_overlays 1  73 #f 0 )
 (kern-mk-sprite 's_window_in_rock     ss_overlays 1  74 #f 0 )
 
+(kern-mk-sprite 's_bulwark_ew     ss_ship 1  0 #f 0 )
+(kern-mk-sprite 's_bulwark_ns     ss_ship 1  1 #f 0 )
+(kern-mk-sprite 's_deck_w         ss_ship 1  2 #f 0 )
+(kern-mk-sprite 's_deck_e         ss_ship 1  3 #f 0 )
+(kern-mk-sprite 's_deck_n         ss_ship 1  4 #f 0 )
+(kern-mk-sprite 's_deck_s         ss_ship 1  5 #f 0 )
+(kern-mk-sprite 's_stair_n         ss_ship 1  6 #f 0 )
+(kern-mk-sprite 's_stair_s         ss_ship 1  7 #f 0 )
+(kern-mk-sprite 's_bulwark_ne         ss_ship 1 8 #f 0 )
+(kern-mk-sprite 's_bulwark_se         ss_ship 1 9 #f 0 )
+(kern-mk-sprite 's_bulwark_nw         ss_ship 1 10 #f 0 )
+(kern-mk-sprite 's_bulwark_sw         ss_ship 1 11 #f 0 )
+(kern-mk-sprite 's_stair_w         ss_ship 1  12 #f 0 )
+(kern-mk-sprite 's_stair_e         ss_ship 1  13 #f 0 )
+
+
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces
 (define (mk-sprite tag offset)

@@ -282,6 +282,113 @@
                 t_bridge_NS)))
 
 ;;----------------------------------------------------------------------------
+;; bits of ship
+
+(kern-mk-terrain 't_rail_ew "railing" pclass-boulder
+                   (mk-composite-sprite (list s_deck s_bulwark_ew))
+                   trn 0 nil)               
+                
+(kern-mk-terrain 't_rail_ns "railing" pclass-boulder
+                   (mk-composite-sprite (list s_deck s_bulwark_ns))
+                   trn 0 nil)
+                               
+(kern-mk-terrain 't_bulwark_e "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_shallow s_deck_w s_bulwark_ns))
+                   trn 0 nil)             
+                
+(kern-mk-terrain 't_bulwark_w "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_shallow s_deck_e s_bulwark_ns))
+                   trn 0 nil)     
+                   
+(kern-mk-terrain 't_bulwark_n "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_shallow s_deck_s s_bulwark_ew))
+                   trn 0 nil)              
+                
+(kern-mk-terrain 't_bulwark_s "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_shallow s_deck_n s_bulwark_ew))
+                   trn 0 nil)
+ 
+(kern-mk-terrain 't_stair_un "stairs" pclass-grass
+                   s_stair_n
+                   trn 0 nil)   
+
+(kern-mk-terrain 't_stair_us "stairs" pclass-grass
+                   s_stair_s
+                   trn 0 nil)
+                   
+(kern-mk-terrain 't_stair_uw "stairs" pclass-grass
+                   s_stair_w
+                   trn 0 nil)   
+
+(kern-mk-terrain 't_stair_ue "stairs" pclass-grass
+                   s_stair_e
+                   trn 0 nil)  
+                   
+(kern-mk-terrain 't_bulwark_w_ne "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_shallow s_bulwark_sw))
+                   trn 0 nil)             
+                
+(kern-mk-terrain 't_bulwark_w_nw "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_shallow s_bulwark_se))
+                   trn 0 nil)     
+                   
+(kern-mk-terrain 't_bulwark_w_se "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_shallow s_bulwark_nw))
+                   trn 0 nil)              
+                
+(kern-mk-terrain 't_bulwark_w_sw "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_shallow s_bulwark_ne))
+                   trn 0 nil)
+                   
+(kern-mk-terrain 't_bulwark_d_ne "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_deck s_bulwark_ne))
+                   trn 0 nil)             
+                
+(kern-mk-terrain 't_bulwark_d_nw "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_deck s_bulwark_nw))
+                   trn 0 nil)     
+                   
+(kern-mk-terrain 't_bulwark_d_se "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_deck s_bulwark_se))
+                   trn 0 nil)              
+                
+(kern-mk-terrain 't_bulwark_d_sw "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_deck s_bulwark_sw))
+                   trn 0 nil)
+                                                                 
+(kern-mk-terrain 't_bulwark_v_ne "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_bulwark_sw))
+                   trn 0 nil)             
+                
+(kern-mk-terrain 't_bulwark_v_nw "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_bulwark_se))
+                   trn 0 nil)     
+                   
+(kern-mk-terrain 't_bulwark_v_se "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_bulwark_nw))
+                   trn 0 nil)              
+                
+(kern-mk-terrain 't_bulwark_v_sw "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_bulwark_ne))
+                   trn 0 nil)
+                   
+(kern-mk-terrain 't_bulwark_v_e "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_deck_w s_bulwark_ns))
+                   trn 0 nil)             
+                
+(kern-mk-terrain 't_bulwark_v_w "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_deck_e s_bulwark_ns))
+                   trn 0 nil)     
+                   
+(kern-mk-terrain 't_bulwark_v_n "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_deck_s s_bulwark_ew))
+                   trn 0 nil)              
+                
+(kern-mk-terrain 't_bulwark_v_s "bulwark" pclass-boulder
+                   (mk-composite-sprite (list s_deck_n s_bulwark_ew))
+                   trn 0 nil)
+                   
+;;----------------------------------------------------------------------------
 
 (define bad-terrain-list
   (list t_bog

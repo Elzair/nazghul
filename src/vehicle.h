@@ -25,6 +25,7 @@
 
 #include "object.h"
 #include "sound.h"
+#include <closure.h>
 
 class VehicleType:public ObjectType {
  public:
@@ -58,6 +59,7 @@ class VehicleType:public ObjectType {
 
         struct formation *formation;
         struct terrain_map *map;
+        closure_t *renderCombat;
         struct mmode *mmode;
 
  protected:

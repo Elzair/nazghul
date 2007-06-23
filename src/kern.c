@@ -678,7 +678,8 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
                 terrain->effect = closure_new(sc, proc);
                 closure_ref(terrain->effect);
         }
-
+			terrain->renderCombat = NULL;
+			
         session_add(Session, terrain, terrain_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, terrain);
         scm_define(sc, tag, ret);
@@ -3493,8 +3494,9 @@ KERN_API_CALL(kern_mk_vehicle_type)
         int speed;
         pointer ret;
         struct mmode *mmode;
+		  pointer proc;        
 
-        if (unpack(sc, &args, "yspppbbbspdddddp",
+        if (unpack(sc, &args, "yspppbbbspdddddpo",
                    &tag,
                    &name,
                    &sprite,
@@ -3510,7 +3512,8 @@ KERN_API_CALL(kern_mk_vehicle_type)
                    &crosswind_penalty,
                    &max_hp,
                    &speed,
-                   &mmode
+                   &mmode,
+                   &proc
                     )) {
                 load_err("kern-mk-vehicle-type %s: bad args", tag);
                 return sc->NIL;
@@ -3538,6 +3541,16 @@ KERN_API_CALL(kern_mk_vehicle_type)
         session_add(Session, type, vehicle_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, type);
         scm_define(sc, tag, ret);
+        
+		if (proc != sc->NIL) {
+			type->renderCombat = closure_new(sc, proc);
+			closure_ref(type->renderCombat); //TODO clean up this nasty leaky hack
+		}
+		else
+		{
+			type->renderCombat=NULL;	
+		}
+        
         return ret;
 }
 
@@ -5834,6 +5847,41 @@ KERN_API_CALL(kern_map_set_image)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_map_get_width)
+{
+        struct terrain_map *map;
+
+        if (unpack(sc, &args, "p", &map)) {
+                rt_err("kern-map-get-width: bad args");
+                return sc->NIL;
+        }
+
+        if (!map) {
+                rt_err("kern-map-get-width: null map");
+                return sc->NIL;
+        }
+
+        return scm_mk_integer(sc, map->w);
+}
+
+
+KERN_API_CALL(kern_map_get_height)
+{
+        struct terrain_map *map;
+
+        if (unpack(sc, &args, "p", &map)) {
+                rt_err("kern-map-get-width: bad args");
+                return sc->NIL;
+        }
+
+        if (!map) {
+                rt_err("kern-map-get-width: null map");
+                return sc->NIL;
+        }
+
+        return scm_mk_integer(sc, map->h);
+}
+
 KERN_API_CALL(kern_char_kill)
 {
         class Character *ch;
@@ -5949,12 +5997,11 @@ KERN_API_CALL(kern_terrain_set_combat_handler)
 	
 	if (proc != sc->NIL) {
 		terrain->renderCombat = closure_new(sc, proc);
-		closure_ref(terrain->renderCombat);
+		closure_ref(terrain->renderCombat); //TODO clean up this nasty leaky hack
 	}
 	
 	return scm_mk_ptr(sc, terrain);
 }
-
 
 KERN_API_CALL(kern_terrain_map_inc_ref)
 {
@@ -8839,6 +8886,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-terrain-map-inc-ref", kern_terrain_map_inc_ref);
         API_DECL(sc, "kern-terrain-map-dec-ref", kern_terrain_map_dec_ref);
         API_DECL(sc, "kern-terrain-map-blend", kern_terrain_map_blend);
+        API_DECL(sc, "kern-terrainmap-get-width", kern_map_get_width);
+        API_DECL(sc, "kern-terrainmap-get-height", kern_map_get_height);
 
         /* kern-type api */
         API_DECL(sc, "kern-type-describe", kern_type_describe);
@@ -8936,7 +8985,9 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-map-view-center", kern_map_view_center);
         API_DECL(sc, "kern-map-view-add", kern_map_view_add);
         API_DECL(sc, "kern-map-view-rm", kern_map_view_rm);
-
+        API_DECL(sc, "kern-map-view-add", kern_map_view_add);
+        API_DECL(sc, "kern-map-view-rm", kern_map_view_rm);
+                
         /* kern-log api */
         API_DECL(sc, "kern-log-begin", kern_log_begin);
         API_DECL(sc, "kern-log-continue", kern_log_continue);

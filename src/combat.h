@@ -40,9 +40,15 @@ extern void combatGetCameraCenter(int *x, int *y);
 struct combat_info {
 	int hours;		// for moving into camping
 	class Character *guard;	// for moving into camping
-	bool defend;		// for moving into combat
+	bool defend;		// for moving into combat- true if PC is defending
 	bool camping;		// for moving into combat
 	struct move_info *move;
+	int pc_x;	// cache for final location of player party
+	int pc_y;
+	int npc_x;	// cache for final location of npc party
+	int npc_y;
+	int pc_dx;  // cache for final delta
+	int pc_dy;
 };
 
 enum combat_state {

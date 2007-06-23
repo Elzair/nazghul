@@ -185,23 +185,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Directions	
 
-; order is N W E S
-(define (cardinal-dir-num dir)
-	(/ (- dir 1) 2))
-
-(define (get-cardinal-ref avector dir)
-	;;(println "gcrc " avector)
-	(vector-ref avector
-		(cardinal-dir-num dir))
-		)
-
-(define (get-cardinal-lref alist dir)
-	;;(println "gcrl " alist)
-	(list-ref alist
-		(cardinal-dir-num dir))
-		)
-
-
 (define prmap-room-offsets
 	(vector 
 		(list 0 1)
