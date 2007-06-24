@@ -824,6 +824,10 @@ enum MoveResult Character::move(int dx, int dy)
                                                          newy, this, (getActivity() == COMMUTING ? PFLAG_IGNOREMECHS : 0)));
 	relocate(getPlace(), newx, newy);
 
+	if (mapTileIsVisible(getX(), getY())) {
+	    mapUpdate(0); // show all visible NPC moves
+	}
+
 	return MovedOk;
 }
 
