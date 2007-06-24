@@ -87,7 +87,7 @@
    (list 't_bog             "bog"           pclass-forest    s_bog               trn 0 'terrain-effect-swamp)
    (list 't_lava            "lava"          pclass-grass     s_lava              trn  128 'terrain-effect-lava)
    (list 't_fake_lava       "lava"          pclass-grass     s_lava              trn  128 nil)
-   (list 't_deep_lava       "deep lava"     pclass-deep      s_deep_lava         trn  0  'great-burn)
+   (list 't_deep_lava       "deep lava"     pclass-deep      s_deep_lava         trn   16 'great-burn)
    (list 't_fire_terrain    "fire"          pclass-grass     s_field_fire        trn  512 'burn)
    (list 't_fireplace       "fireplace"     pclass-grass     s_fireplace         trn 2048 'burn)
    (list 't_cobblestone     "cobblestone"   pclass-grass     s_cobblestone       trn 0 nil)
