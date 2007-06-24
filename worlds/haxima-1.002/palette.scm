@@ -425,7 +425,18 @@
     (list	"#j" t_bulwark_v_ne)
     (list	"#k" t_bulwark_v_sw)
     (list	"#l" t_bulwark_v_se)
-    
+  
+    (list	"#m" t_tank_l)
+    (list	"#M" t_tank_d)
+    (list	"#n" t_tank_nw)
+    (list	"#o" t_tank_ne)
+    (list	"#p" t_tank_sw)
+    (list	"#q" t_tank_se)  
+    (list	"#N" t_tank_d_nw)
+    (list	"#O" t_tank_d_ne)
+    (list	"#P" t_tank_d_sw)
+    (list	"#Q" t_tank_d_se) 
+      
     (list	"<n" t_stair_un)
     (list	"<s" t_stair_us)
     (list	"<w" t_stair_uw)

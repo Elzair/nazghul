@@ -512,6 +512,7 @@
 (kern-mk-sprite 's_tank_ne         ss_ship 1  17 #f 0 )
 (kern-mk-sprite 's_tank_sw         ss_ship 1  24 #f 0 )
 (kern-mk-sprite 's_tank_se         ss_ship 1  25 #f 0 )
+(kern-mk-sprite 's_shipswheel      ss_ship 1  18 #f 170 )
 
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces
