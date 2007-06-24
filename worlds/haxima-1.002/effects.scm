@@ -151,6 +151,7 @@
               (kern-obj-remove-effect kchar ef_paralyze)
               #f)
             (begin
+	      (kern-log-msg "** " (kern-obj-get-name kchar) " remains paralyzed! **")
               (kern-obj-set-ap kchar 0)
               #f)))))
 
