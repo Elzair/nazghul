@@ -101,7 +101,7 @@
   ))
 
 (define vehicle-ship-handler
-	(lambda (place vehicle off_x off_y map_x map_y)
+	(lambda (place vehicle off_x off_y)
 		(let* ((facing (vehicle-broadside-facing vehicle off_x off_y))
 			(vmap (get-cardinal-lref (list m_ship_n m_ship_w m_ship_e m_ship_s) facing)))
 		(map-paste-centered (kern-place-get-terrain-map place) vmap 0 0 
@@ -112,7 +112,6 @@
 			(combat-off-to-len (kern-place-get-width place) off_x)
 			(combat-off-to-len (kern-place-get-height place) off_y)	)		
 	)))
-
 		
 (kern-mk-vehicle-type 't_ship   ; tag
                       "ship"    ; name
@@ -133,10 +132,9 @@
                       vehicle-ship-handler;
                       )
 
-
 (define (mk-ship)
   (kern-mk-vehicle t_ship north 100))
-
+	
 ;;----------------------------------------------------------------------------
 ;; voidship
 ;;----------------------------------------------------------------------------
@@ -148,17 +146,17 @@
   "** ** ** #i #A #j ** ** **"
   "** ** #i #E ee #F #j ** **"
   "** #i #E ee ee ee #F #j **"
-  "** #B ee ee ## ee ee #C **"
-  "** #B ee ee ## ee ee #C **"
+  "** #B ee ee 00 ee ee #C **"
+  "** #B ee ee 00 ee ee #C **"
   "** #B ee ee ee ee ee #C **"
   "ee ee ee ee ee ee ee ee ee"
   "** #B ee ee ee ee ee #C **"
-  "#> #> #> ee ee ee #> #> #>"
-  "#> #> #> ee ## ee #> #> #>"
-  "#> #> #> ee ## ee #> #> #>"
-  "#> #> #> #D ## #D #> #> #>"
-  "#> #> #> ** ** ** #> #> #>"
-  "#> #> #> ** ** ** #> #> #>"
+  "#n #m #O ee ee ee #N #m #o"
+  "#m #m #M ee 00 ee #m #m #M"
+  "#m #m #M ee ## ee #m #m #M"
+  "#m #m #M #D ## #D #m #m #M"
+  "#m #m #M ** ** ** #m #m #M"
+  "#p #M #q ** ** ** #p #M #q"
   "** ** ** ** ** ** ** ** **"
   ))
   
@@ -166,17 +164,17 @@
  'm_voidship_s 9 17 pal_expanded
  (list
   "** ** ** ** ** ** ** ** **"
-  "#> #> #> ** ** ** #> #> #>"
-  "#> #> #> ** ** ** #> #> #>"
-  "#> #> #> #A ## #A #> #> #>"
-  "#> #> #> ee ## ee #> #> #>"
-  "#> #> #> ee ## ee #> #> #>"
-  "#> #> #> ee ee ee #> #> #>"
+  "#n #m #o ** ** ** #n #m #o"
+  "#m #m #M ** ** ** #m #m #M"
+  "#m #m #M #A ## #A #m #m #M"
+  "#m #m #M ee ## ee #m #m #M"
+  "#m #m #M ee 00 ee #m #m #M"
+  "#p #M #Q ee ee ee #P #M #q"
   "** #B ee ee ee ee ee #C **"
   "ee ee ee ee ee ee ee ee ee"
   "** #B ee ee ee ee ee #C **"
-  "** #B ee ee ## ee ee #C **"
-  "** #B ee ee ## ee ee #C **"
+  "** #B ee ee 00 ee ee #C **"
+  "** #B ee ee 00 ee ee #C **"
   "** #k #G ee ee ee #H #l **"
   "** ** #k #G ee #H #l ** **"
   "** ** ** #k #D #l ** ** **"
@@ -187,34 +185,34 @@
 (kern-mk-map 
  'm_voidship_e 17 9 pal_expanded
  (list
-  "** #> #> #> #> #> #> ** ee ** ** ** ** ** ** ** **";
-  "** #> #> #> #> #> #> #A ee #A #A #A #j ** ** ** **";
-  "** #> #> #> #> #> #> ee ee ee ee ee #F #j ** ** **";
+  "** #n #m #m #m #m #o ** ee ** ** ** ** ** ** ** **";
+  "** #m #m #m #m #m #M #A ee #A #A #A #j ** ** ** **";
+  "** #p #M #M #M #M #Q ee ee ee ee ee #F #j ** ** **";
   "** ** ** #B ee ee ee ee ee ee ee ee ee #F #j ** **";
-  "** ** ** ## ## ## ee ee ee ee ## ## ee ee #C ** **";
+  "** ** ** ## ## 00 ee ee ee ee 00 00 ee ee #C ** **";
   "** ** ** #B ee ee ee ee ee ee ee ee ee #H #l ** **";
-  "** #> #> #> #> #> #> ee ee ee ee ee #H #l ** ** **";
-  "** #> #> #> #> #> #> #D ee #D #D #D #l ** ** ** **";
-  "** #> #> #> #> #> #> ** ee ** ** ** ** ** ** ** **";
+  "** #n #m #m #m #m #O ee ee ee ee ee #H #l ** ** **";
+  "** #m #m #m #m #m #M #D ee #D #D #D #l ** ** ** **";
+  "** #p #M #M #M #M #q ** ee ** ** ** ** ** ** ** **";
   ))
   
 
 (kern-mk-map 
  'm_voidship_w 17 9 pal_expanded
  (list
-  "** ** ** ** ** ** ** ** ee ** #> #> #> #> #> #> **";
-  "** ** ** ** #i #A #A #A ee #A #> #> #> #> #> #> **";
-  "** ** ** #i #E ee ee ee ee ee #> #> #> #> #> #> **";
+  "** ** ** ** ** ** ** ** ee ** #n #m #m #m #m #o **";
+  "** ** ** ** #i #A #A #A ee #A #m #m #m #m #m #M **";
+  "** ** ** #i #E ee ee ee ee ee #P #M #M #M #M #q **";
   "** ** #i #E ee ee ee ee ee ee ee ee ee #C ** ** **";
-  "** ** #B ee ee ## ## ee ee ee ee ## ## ## ** ** **";
+  "** ** #B ee ee 00 00 ee ee ee ee 00 ## ## ** ** **";
   "** ** #k #G ee ee ee ee ee ee ee ee ee #C ** ** **";
-  "** ** ** #k #G ee ee ee ee ee #> #> #> #> #> #> **";
-  "** ** ** ** #k #D #D #D ee #D #> #> #> #> #> #> **";
-  "** ** ** ** ** ** ** ** ee ** #> #> #> #> #> #> **";
+  "** ** ** #k #G ee ee ee ee ee #N #m #m #m #m #o **";
+  "** ** ** ** #k #D #D #D ee #D #m #m #m #m #m #M **";
+  "** ** ** ** ** ** ** ** ee ** #p #M #M #M #M #q **";
   ))
     
 (define vehicle-voidship-handler
-	(lambda (place vehicle off_x off_y map_x map_y)
+	(lambda (place vehicle off_x off_y)
 		(let* ((facing (vehicle-broadside-facing vehicle off_x off_y))
 			(vmap (get-cardinal-lref (list m_voidship_n m_voidship_w m_voidship_e m_voidship_s) facing)))
 		(map-paste-centered (kern-place-get-terrain-map place) vmap 0 0 

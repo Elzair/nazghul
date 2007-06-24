@@ -387,7 +387,47 @@
 (kern-mk-terrain 't_bulwark_v_s "bulwark" pclass-boulder
                    (mk-composite-sprite (list s_deck_n s_bulwark_ew))
                    trn 0 nil)
+
+(kern-mk-terrain 't_tank_l "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_tank_l))
+                   opq 0 nil)             
+                
+(kern-mk-terrain 't_tank_d "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_tank_d))
+                   opq 0 nil)     
                    
+(kern-mk-terrain 't_tank_nw "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_tank_nw))
+                   opq 0 nil)             
+                
+(kern-mk-terrain 't_tank_ne "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_tank_ne))
+                   opq 0 nil)     
+                   
+(kern-mk-terrain 't_tank_sw "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_tank_sw))
+                   opq 0 nil)              
+                
+(kern-mk-terrain 't_tank_se "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_tank_se))
+                   opq 0 nil)                
+                   
+(kern-mk-terrain 't_tank_d_nw "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_deck s_tank_nw))
+                   opq 0 nil)             
+                
+(kern-mk-terrain 't_tank_d_ne "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_deck s_tank_ne))
+                   opq 0 nil)     
+                   
+(kern-mk-terrain 't_tank_d_sw "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_deck s_tank_sw))
+                   opq 0 nil)              
+                
+(kern-mk-terrain 't_tank_d_se "metal tank" pclass-mountains
+                   (mk-composite-sprite (list s_deck s_tank_se))
+                   opq 0 nil)
+                                    
 ;;----------------------------------------------------------------------------
 
 (define bad-terrain-list

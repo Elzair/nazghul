@@ -506,7 +506,12 @@
 (kern-mk-sprite 's_bulwark_sw         ss_ship 1 11 #f 0 )
 (kern-mk-sprite 's_stair_w         ss_ship 1  12 #f 0 )
 (kern-mk-sprite 's_stair_e         ss_ship 1  13 #f 0 )
-
+(kern-mk-sprite 's_tank_d         ss_ship 1  14 #f 0 )
+(kern-mk-sprite 's_tank_l         ss_ship 1  15 #f 0 )
+(kern-mk-sprite 's_tank_nw         ss_ship 1  16 #f 0 )
+(kern-mk-sprite 's_tank_ne         ss_ship 1  17 #f 0 )
+(kern-mk-sprite 's_tank_sw         ss_ship 1  24 #f 0 )
+(kern-mk-sprite 's_tank_se         ss_ship 1  25 #f 0 )
 
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces
