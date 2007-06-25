@@ -138,7 +138,7 @@
 (define cheerful-bed-5   (mk-zone 10 12  1  1))
 (define oparine-innkeepers-hut   (mk-zone  3 15 2 2))
 (define oparine-innkeepers-bed   (mk-zone  4 15 1 1))
-(define black-barts-ship  (mk-zone 25 27  3  5))
+(define black-barts-ship  (mk-zone 24 26  5  6))
 (define black-barts-broom (mk-zone 15 28  2  2))
 (define black-barts-bed   (mk-zone 15 28  1  1))
 
