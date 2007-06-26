@@ -387,6 +387,30 @@
 (kern-mk-terrain 't_bulwark_v_s "bulwark" pclass-boulder
                    (mk-composite-sprite (list s_deck_n s_bulwark_ew))
                    trn 0 nil)
+                   
+(kern-mk-terrain 't_bulwark_x_ns "bulwark" pclass-wall
+                   (mk-composite-sprite (list s_bulwark_ns))
+                   opq 0 nil)             
+                
+(kern-mk-terrain 't_bulwark_x_ew "bulwark" pclass-wall
+                   (mk-composite-sprite (list s_bulwark_ew))
+                   opq 0 nil)     
+                   
+(kern-mk-terrain 't_bulwark_x_se "bulwark" pclass-wall
+                   (mk-composite-sprite (list s_bulwark_nw))
+                   opq 0 nil)             
+                
+(kern-mk-terrain 't_bulwark_x_sw "bulwark" pclass-wall
+                   (mk-composite-sprite (list s_bulwark_ne))
+                   opq 0 nil)     
+                   
+(kern-mk-terrain 't_bulwark_x_ne "bulwark" pclass-wall
+                   (mk-composite-sprite (list s_bulwark_sw))
+                   opq 0 nil)            
+                
+(kern-mk-terrain 't_bulwark_x_nw "bulwark" pclass-wall
+                   (mk-composite-sprite (list s_bulwark_se))
+                   opq 0 nil)
 
 (kern-mk-terrain 't_tank_l "metal tank" pclass-mountains
                    (mk-composite-sprite (list s_tank_l))
