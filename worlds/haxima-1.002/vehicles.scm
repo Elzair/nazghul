@@ -91,7 +91,7 @@
 
 		
 ;;--------------------------------------------------------------------------
-;; vehicle objects: wheel, cannon
+;; vehicle objects: wheel
 	
 (define shipwheel-ifc
 	(ifc '()
@@ -135,11 +135,6 @@
 										1
 										0)))
 						))
-					(println "doramp!")
-					(println (+ (vehicle-check-ramp (+ rx 1) ry)
-							(vehicle-check-ramp (- rx 1) ry)
-							(vehicle-check-ramp rx (+ ry 1))
-							(vehicle-check-ramp rx (- ry 1))))
 					(if (< 1
 						(+ (vehicle-check-ramp (+ rx 1) ry)
 							(vehicle-check-ramp (- rx 1) ry)
@@ -183,7 +178,7 @@
   "-- -- -- -- -- -- -- -- --";
   "-- -- #e #a #a #a #f -- --";
   "-- #e #E ee ee ee #F #f --";
-  "-- #b ee ee oo ee ee #c --";
+  "-- #b ee ee ee ee ee #c --";
   "-- #b <n #= #= #= <n #c --";
   "-- #b ee ee oo ee ee #c --";
   "-- ee ee ee ee ee ee ee --";
