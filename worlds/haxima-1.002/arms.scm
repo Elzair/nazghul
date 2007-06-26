@@ -51,7 +51,7 @@
   (ifc '()
        (method 'hit-loc
                (lambda (kmissile kuser ktarget kplace x y dam)
-				 ((car temp-ifc-state) kmissile kplace x y)
+				 ((car temp-ifc-state) kmissile kuser ktarget kplace x y dam)
                  ))))
 
 ;;--------------------------------------------------------------------------
