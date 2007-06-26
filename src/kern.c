@@ -4559,6 +4559,7 @@ KERN_API_CALL(kern_fire_missile)
         missile->setPlace(dplace);
         missile->animate(ox, oy, &dx, &dy, 0);
         hitTarget = missile->hitTarget();
+        missile->fireHitLoc(NULL, NULL, oplace,dx,dy,-1);
         delete missile;
         return hitTarget ? sc->T : sc->F;
 }
@@ -7622,6 +7623,44 @@ KERN_API_CALL(kern_arms_type_set_mmode)
         return sc->NIL;
 }
 
+
+KERN_API_CALL(kern_arms_type_fire_in_direction)
+{
+	class ArmsType *type;
+	struct place *place;
+	int startx, starty;
+	int dx,dy;
+	
+	/* unpack the type (should be an arms type, but no way to safely
+	* tell) */
+	if (unpack(sc, &args, "p", &type)) {
+		rt_err("kern_arms_type_fire_in_direction");
+		return sc->NIL;
+	}
+	
+	if (unpack_loc(sc, &args, &place, &startx,&starty, "kern_arms_type_fire_in_direction"))
+		return sc->NIL;
+	
+	if (unpack(sc, &args, "dd", &dx,&dy)) {
+		rt_err("kern_arms_type_fire_in_direction");
+		return sc->NIL;
+	}
+		
+	if (! type) {
+		rt_err("kern_arms_type_fire_in_direction: null type");
+		return sc->NIL;
+	}
+	
+	if (! place) {
+		rt_err("kern_arms_type_fire_in_direction: null place");
+		return sc->NIL;
+	}
+	
+	type->fireInDirection(place, startx, starty, dx, dy, NULL);
+	
+	return sc->NIL;
+}
+
 KERN_API_CALL(kern_obj_move)
 {
 	class Object *object;
@@ -8660,6 +8699,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-arms-type-get-ammo-type", kern_arms_type_get_ammo_type);
         API_DECL(sc, "kern-arms-type-get-range",     kern_arms_type_get_range);
         API_DECL(sc, "kern-arms-type-set-mmode",     kern_arms_type_set_mmode);
+        API_DECL(sc, "kern-arms-type-fire-in-direction", kern_arms_type_fire_in_direction);
 
         /* kern-astral-body api */
         API_DECL(sc, "kern-astral-body-get-gob", kern_astral_body_get_gob);

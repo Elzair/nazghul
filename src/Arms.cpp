@@ -261,7 +261,8 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
         // Release the reference
         obj_dec_ref(missile->getStruck());
 
-        user->decActionPoints(getRequiredActionPoints());
+        if (user)
+        	user->decActionPoints(getRequiredActionPoints());
 
         return true;
 }
