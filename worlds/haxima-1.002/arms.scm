@@ -54,6 +54,13 @@
 				 ((car temp-ifc-state) kmissile kuser ktarget kplace x y dam)
                  ))))
 
+(define temp-cannonball-state (list -1 -1))
+
+(define (temp-cannonball-init x y)
+	(set-car! temp-cannonball-state x)
+	(set-car! (cdr temp-cannonball-state) y)
+		)
+                 
 ;;--------------------------------------------------------------------------
 ;; Curried constructors
 ;;
@@ -645,3 +652,104 @@
                                           s_hum_staffglo_blue))
 
 (kern-type-set-gob t_halberd s_hum_halberd)
+
+;;--------------------------------------------------------------------------
+;; Cannon mounting for shipboard combat (and maybe anywhere else we can think of later)
+;;--------------------------------------------------------------------------
+
+;; uglyhack find target location or set up 'safe' location to simulate cannonball leaving play area
+(define (arms-searchline place x y dx dy)
+	(let* ((wid (kern-place-get-width place))
+		(hgt (kern-place-get-height place)))
+		(define (arms-searchline-iter ix iy)
+			(cond ((< ix 0) (list 0 iy #f))
+				((< iy 0) (list ix 0 #f))
+				((>= ix wid) (list (- wid 1) iy #f))
+				((>= iy hgt) (list ix (- wid 1) #f))
+				((not (null? (get-being-at (mk-loc place ix iy))))
+					(list ix iy #t))
+				(else (arms-searchline-iter (+ ix dx) (+ iy dy)))
+			))
+		(let* ((target (arms-searchline-iter (+ x dx) (+ y dy)))
+				(tx (car target))
+				(ty (cadr target))
+				(havet (caddr target))
+				)
+			(if havet
+				(temp-cannonball-init -1 -1)
+				(temp-cannonball-init tx ty)
+			)
+			(list tx ty)
+			)))
+			
+(define localcannonball-ifc
+	(ifc '()
+		(method 'hit-loc 
+			(lambda (kmissile kuser ktarget kplace x y dam)
+				(let ((ktarget (get-being-at (mk-loc kplace x y))))
+					(if (not (null? ktarget))
+						(
+							begin
+							(kern-log-msg (kern-obj-get-name ktarget) " hit by cannonball!")
+							(kern-obj-apply-damage ktarget "cannon" (kern-dice-roll "1d10+4"))
+						)
+					)
+				))
+		)))
+				
+(mk-missile-arms-type 't_localcannonball "cannonball" s_cannonball localcannonball-ifc mmode-missile)
+		
+(define cannon-ifc
+	(ifc '()
+		(method 'xamine 
+			(lambda (kcannon kuser)
+				(let ((ready (cadr (gob kcannon))))
+					(kern-log-msg "The cannon is "
+						(cond ((equal? ready 2) 
+							 "ready to fire")
+							 ((equal? ready 1) 
+							 "loaded but unready")
+							 (else "unloaded")))
+					result-ok
+			))
+		)
+		(method 'handle
+			(lambda (kcannon kuser)
+				(let ((ready (cadr (gob kcannon)))
+						(facing (car (gob kcannon))))
+					(kern-obj-dec-ap kuser speed-human)
+					(cond
+						((equal? ready 2)
+							(let* ((loc (kern-obj-get-location kcannon))
+								(aimdir (direction-to-lvect facing))
+								(targetloc (arms-searchline (car loc)
+									(cadr loc) (caddr loc)
+									(car aimdir) (cadr aimdir))))
+								(kern-sound-play sound-cannon-fire)
+								(kern-log-msg "BOOOM")
+								(kern-fire-missile t_localcannonball loc (mk-loc (car loc) (car targetloc) (cadr targetloc)))
+								)
+							(bind kcannon (list facing 0)))
+						((equal? ready 1)
+							(kern-log-msg "Cannon ready to fire")
+							(bind kcannon (list facing 2)))
+						(else
+							(kern-log-msg "Cannon loaded")
+							(bind kcannon (list facing 1)))
+					)
+			))
+		)
+		(method 'init
+			(lambda (kcannon)
+				(kern-obj-set-facing kcannon (car (gob kcannon)))
+				(kern-obj-set-pclass kcannon pclass-boulder)
+		))	
+	))
+
+(mk-obj-type 't_cannonobj "cannon" s_cannon layer-mechanism cannon-ifc)     
+         
+(define  (arms-mk-cannon facing)
+	(let ((kcannon (kern-mk-obj t_cannonobj 1)))
+          (kern-obj-set-facing kcannon facing) 
+          (bind kcannon (list facing 0))
+          kcannon))
