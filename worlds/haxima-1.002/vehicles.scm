@@ -368,6 +368,8 @@
 			(vehicle-object-list-rotate facing 9 17 
 			(list
 				(list (vehicle-mk-wheel facing) 4 6)
+				(list (arms-mk-cannon (facing-turn-90right facing)) 7 6)
+				(list (arms-mk-cannon (facing-turn-90left facing)) 1 6)				
 				(list (kern-mk-obj t_onramp 1) 0 8)
 				(list (kern-mk-obj t_onramp 1) 8 8)
 			)))	
