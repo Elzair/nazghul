@@ -111,6 +111,9 @@ extern void mapSetImage(SDL_Surface *image);
  */
 extern void mapClearImage(void);
 
+extern void nextProjectileFrame(int *currentframe, int *currentticks, int framecount, int ticksperframe, int increment);
+
+
 
 END_DECL
 

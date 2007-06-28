@@ -39,6 +39,7 @@ struct save;
 
 extern int sprite_init(void);
 extern void sprite_paint(struct sprite *sprite, int frame, int x, int y);
+extern void sprite_paint_frame(struct sprite *sprite, int frame, int x, int y);
 extern void sprite_advance_frames(void);
 extern int sprite_set_facing(struct sprite *sprite, int direction);
 extern int sprite_get_facing(struct sprite *sprite);
@@ -99,6 +100,8 @@ extern void sprite_strip_decorations(struct sprite *sprite);
  */
 extern void sprite_blit_over(struct sprite *dest, 
                              struct sprite *src);
+                             
+extern int sprite_num_frames(struct sprite *sprite);
 
 END_DECL
 

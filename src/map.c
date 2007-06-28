@@ -31,6 +31,7 @@
 #include "object.h"
 #include "vmask.h"
 #include "session.h"
+#include "sprite.h"
 
 #include <SDL.h>
 #include <math.h>
@@ -1318,7 +1319,7 @@ void mapBlackout(int val)
 }
 
 static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
-                               SDL_Surface *surf, int dur)
+                               SDL_Surface *surf, int dur, int currentframe)
 {
 	// The rect coordinates are in SCREEN coordinates (not map) so I need
 	// to do some clipping here to make sure we don't paint off the map
@@ -1334,7 +1335,7 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 	// Paint the missile at the new location
         sprite_zoom_out(Map.aview->zoom);
         screenZoomOut(Map.aview->zoom);
-	sprite_paint(sprite, 0, rect->x, rect->y);
+	sprite_paint_frame(sprite, currentframe, rect->x, rect->y);
         sprite_zoom_in(Map.aview->zoom);
         screenZoomIn(Map.aview->zoom);
 
@@ -1368,9 +1369,24 @@ void mapPaintDamage(int x, int y)
         mapUpdate(REPAINT_IF_DIRTY);
 
         mapPaintProjectile(&rect, Session->damage_sprite, 
-                           Map.tile_scratch_surf, 100);
+                           Map.tile_scratch_surf, 100, 0);
 }
 
+//determines the next frame of an animated projectile
+void nextProjectileFrame(int *currentframe, int *currentticks, int framecount, int ticksperframe, int increment)
+{
+	*currentticks = *currentticks + increment ;
+	while (*currentticks >= ticksperframe)
+	{
+		*currentframe = *currentframe + 1;	
+		*currentticks -= ticksperframe;
+	}
+	while (*currentframe >= framecount)
+	{
+		*currentframe -= framecount;
+	}
+
+}
 
 void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
                           struct sprite *sprite, struct place *place,
@@ -1381,7 +1397,11 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	// http://www.cs.unc.edu/~hoff/projects/comp235/bresline/breslin1.txt
 	// (no license or copyright noted)
 	// 
-
+	int framecount = sprite_num_frames(sprite);
+	int ticksperframe = 400/framecount;
+	int currentticks = 0;
+	int currentframe = 0;
+	
         int t1, t2;
         SDL_Surface * surf;	// for saving/restoring the background
 
@@ -1499,13 +1519,19 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 			Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy) / tile_h + Oy));
 
                         if (oPx != Px || oPy != Py) {
-
+	                        
                                 if (mapTileIsVisible(Px, Py) && sprite)
-                                        mapPaintProjectile(&rect, sprite, surf, 50);
-
+                                        mapPaintProjectile(&rect, sprite, surf, 50, currentframe);
+                                      
+                                if (framecount > 1)  
+												nextProjectileFrame(&currentframe, &currentticks,
+													framecount, ticksperframe, 50);
+											
                                 if (!missile->enterTile(place, Px, Py)) {
                                         goto done;
                                 }
+                                
+                                
 
                         }
 
@@ -1536,7 +1562,11 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                         if (oPx != Px || oPy != Py) {
 
                                 if (mapTileIsVisible(Px, Py) && sprite)
-                                        mapPaintProjectile(&rect, sprite, surf, 50);
+                                        mapPaintProjectile(&rect, sprite, surf, 50, currentframe);
+                                      
+                                if (framecount > 1)  
+												nextProjectileFrame(&currentframe, &currentticks,
+													framecount, ticksperframe, 50);
 
                                 if (!missile->enterTile(place, Px, Py)) {
                                         goto done;
