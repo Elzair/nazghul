@@ -307,7 +307,8 @@
                                   
 (kern-mk-sprite 's_flaming_oil    ss_arms 1 5 #f 0)
 (kern-mk-sprite 's_spear          ss_arms 1 6 #f 0)
-(kern-mk-sprite 's_thrown_axe     ss_arms 1 29 #f 0)
+(kern-mk-sprite 's_throwing_axe   ss_arms 1 29 #f 0)
+(kern-mk-sprite 's_thrown_axe     ss_arms 8 72 #f 0)
 (kern-mk-sprite 's_thrown_boulder ss_arms 1 7 #f 0)
 
 (define flaming-oil-ifc
@@ -446,7 +447,7 @@
    (list  't_thrown_boulder "loose boulder" s_thrown_boulder            "-2"     "3d4+1"  "-2"  150       slot-weapon   2      5     t_thrown_boulder_p #f     obj-ifc            10       40       20        60      0.9 )
 
    (list  't_spear          "spear"         s_spear                     "+1"     "1d8+1"  "+1"   75       slot-weapon   1      4     t_spear_p          #f     obj-ifc             2       30       60        40      1.0 )
-   (list  't_magic_axe      "magical axe"   s_thrown_axe                "+2"     "2d4+2"  "+0"   75       slot-weapon   1      4     t_thrown_axe_p     #t     obj-ifc             2       30       60        40      1.0 )
+   (list  't_magic_axe      "magical axe"   s_throwing_axe                "+2"     "2d4+2"  "+0"   75       slot-weapon   1      4     t_thrown_axe_p     #t     obj-ifc             2       30       60        40      1.0 )
 
    (list  't_oil            "flaming oil"   s_flaming_oil               "-1"     "1d6"    "-2"   90       slot-weapon   1      4     t_oil_p            #f     flaming-oil-ifc     1       20       30         0      0.9 )
    (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"   90       slot-weapon   1      4     t_slime_vial_p     #f     vial-of-slime-ifc   1       20       30         0      1.0 )
