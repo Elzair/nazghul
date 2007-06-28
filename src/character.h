@@ -304,12 +304,15 @@ class Character:public Being {
 
         struct node *sched_chars_node;   /* for chars with multiplace scheds */
         bool forceContainerDrop; // ensure the container is dropped on death
+        
+  protected:
+        virtual void switchPlaces(class Being *);
 
  private:
         bool atAppointment();
+        bool nextToAppointment();
         bool playerIsInMyBed();
         void kickPlayerOutOfMyBed();
-        void switchPlaces(class Character *);
         void unreadyAll();
         void getEvasionVector(int *dx, int *dy);
         bool locationIsOk(int x2, int y2);

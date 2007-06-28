@@ -51,6 +51,7 @@ class Being:public Object {
 
       protected:
         void setDefaults();
+        virtual void switchPlaces(class Being *);
 
  private:
         char *name;

@@ -2078,19 +2078,37 @@ bool Character::atAppointment()
 
 bool Character::playerIsInMyBed()
 {
-        struct appt *curAppt = &sched->appts[appt];
+	struct appt *curAppt = &sched->appts[appt];
+	
+	if (SLEEPING!=curAppt->act)
+	return false;
+	
+	class Character *sleeper = 
+		(class Character*)place_get_object(getPlace(), 
+			curAppt->x,
+			curAppt->y,
+			being_layer);
+			
+	return (sleeper
+		&& sleeper->isPlayerControlled()
+		&& sleeper->isResting());
+}
 
-        if (SLEEPING!=curAppt->act)
-                return false;
+//return true if character is next to or on the appointment loc
+bool Character::nextToAppointment()
+{
+   struct appt *curAppt = &sched->appts[appt];	
+	
+	if (abs(curAppt->x - getX())>1)
+	{
+		return false;      
+	}
+	if (abs(curAppt->y - getY())>1)
+	{
+		return false;      
+	} 
 
-        class Character *sleeper = 
-                (class Character*)place_get_object(getPlace(), 
-                                                   curAppt->x,
-                                                   curAppt->y,
-                                                   being_layer);
-        return (sleeper
-                && sleeper->isPlayerControlled()
-                && sleeper->isResting());
+	return true;
 }
 
 void Character::kickPlayerOutOfMyBed()
@@ -2113,7 +2131,7 @@ void Character::kickPlayerOutOfMyBed()
        setActivity(curAppt->act);
 }
 
-void Character::switchPlaces(class Character *occupant)
+void Character::switchPlaces(class Being *occupant)
 {
         int oldx = getX();
         int oldy = getY();
@@ -2180,10 +2198,20 @@ bool Character::commute()
         // Special case: if the appointment is the character's bed, and
         // pathfinding failed because the player is sleeping in it, then kick
         // the player out of bed
-        if (playerIsInMyBed()) {
-                kickPlayerOutOfMyBed();
-                return true;
-        }
+			if (playerIsInMyBed())
+			{
+				if (nextToAppointment())
+				{
+					//evict the player if we are close enough
+					kickPlayerOutOfMyBed();
+				}
+				else
+				{
+					//try to reach bed, clambering over other beings as necessary
+					pathfindTo(getPlace(), curAppt->x, curAppt->y, PFLAG_IGNOREBEINGS | PFLAG_IGNOREMECHS);
+				}
+				return true;
+			}
 
         dbg("%s cannot find path to [%d %d %d %d] while commuting\n", 
                getName(), 

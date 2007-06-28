@@ -68,6 +68,22 @@ enum layer Being::getLayer()
         return being_layer;
 }
 
+void Being::switchPlaces(class Being *occupant)
+{
+        int oldx = getX();
+        int oldy = getY();
+        int newx = occupant->getX();
+        int newy = occupant->getY();
+
+        struct place *oldPlace = getPlace();
+        occupant->relocate(oldPlace, oldx, oldy);
+        relocate(oldPlace, newx, newy);
+        decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
+                                                         oldx, oldy,
+                                                         newx, newy,
+                                                         this, 0));
+}
+
 bool Being::pathfindTo(struct place *destplace, int destx, int desty, 
                        int flags)
 {
@@ -178,6 +194,36 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         result = move(pathPtr->x - getX(), 
                       pathPtr->y - getY());
 
+			//if we are marked as IGNOREBEINGS, then try to swap with and current occupants
+			if (result == WasOccupied && isOnMap() && (flags & PFLAG_IGNOREBEINGS))
+			{
+				class Character *occupant;
+				if ((occupant = (class Character *) place_get_object(getPlace(), 
+						pathPtr->x, pathPtr->y, 
+						being_layer)))
+				{
+					if (!are_hostile(this, occupant)
+						&& occupant->isIncapacitated())
+					{
+                  if (!place_is_passable(getPlace(), getX(), getY(), 
+								occupant, 0))
+						{
+							relocate(getPlace(), pathPtr->x, pathPtr->y);
+							runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(),
+									pathPtr->x, pathPtr->y);
+							decActionPoints(place_get_diagonal_movement_cost
+								(
+									getPlace(), 
+									getX(), getY(),
+									pathPtr->x, pathPtr->y, 
+									this, PFLAG_IGNOREMECHS
+								));
+						}					
+						switchPlaces(occupant);
+					}
+				}
+			}
+                      
         // If the move failed because something impassable is there then check
         // for a mech and try to handle it. This is good enough to get through
         // the usual implementation of a door.
