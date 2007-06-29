@@ -425,6 +425,12 @@
     (list	"#j" t_bulwark_v_ne)
     (list	"#k" t_bulwark_v_sw)
     (list	"#l" t_bulwark_v_se)
+    (list	"#I" t_bulwark_x_nw)
+    (list	"#J" t_bulwark_x_ne)
+    (list	"#K" t_bulwark_x_sw)
+    (list	"#L" t_bulwark_x_se)
+    (list	"#s" t_bulwark_x_ns)
+    (list	"#r" t_bulwark_x_ew)    
   
     (list	"#m" t_tank_l)
     (list	"#M" t_tank_d)
