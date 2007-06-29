@@ -392,7 +392,7 @@
    (list 't_spear_p           "spear"          s_spear           (mk-drop-proj-ifc 't_spear 25)             
                                                                                      mmode-missile  )
    (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      magicaxe-ifc        mmode-missile  )
-   (list 't_returning_axe_p   "thrown axe"     s_thrown_axe      obj-ifc            mmode-missile  )
+   (list 't_returning_axe_p   "thrown axe"     s_thrown_axe      obj-ifc             mmode-return  )
    (list 't_thrown_rock_p     "thrown rock"    s_cannonball      (mk-drop-proj-ifc 't_thrown_rock 80)             
                                                                                      mmode-missile  )
    (list 't_thrown_boulder_p  "hurled boulder" s_thrown_boulder  (mk-drop-proj-ifc 't_thrown_boulder 80)             
@@ -483,9 +483,9 @@
 (kern-mk-sprite 's_morning_star   ss_arms 1 37 #f 0)
 (kern-mk-sprite 's_halberd        ss_arms 1 38 #f 0)
 (kern-mk-sprite 's_staff          ss_arms 1 39 #f 0)
-(kern-mk-sprite 's_eldritch_blade ss_arms 1 40 #f 0)
-(kern-mk-sprite 's_mystic_sword   ss_arms 1 42 #f 0)
-(kern-mk-sprite 's_flaming_sword  ss_arms 1 44 #f 0)
+(kern-mk-sprite 's_eldritch_blade ss_arms 2 40 #f 0)
+(kern-mk-sprite 's_mystic_sword   ss_arms 2 42 #f 0)
+(kern-mk-sprite 's_flaming_sword  ss_arms 2 44 #f 0)
 
 ;; Paper-doll sprites
 (kern-mk-sprite 's_hum_staff_gold     ss_arms 4 56 #f 0)
