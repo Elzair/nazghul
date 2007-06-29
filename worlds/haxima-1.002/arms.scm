@@ -344,6 +344,17 @@
                				(kern-obj-put-at dropobj loc)
                	))))
       )))
+            
+;; todo: handle possibility that magicaxe doesnt have a wielder?
+(define magicaxe-ifc
+	(ifc obj-ifc
+		(method 'hit-loc 
+			(lambda (kmissile kuser ktarget kplace x y dam)
+				(kern-fire-missile (eval 't_returning_axe_p) (mk-loc kplace x y) (kern-obj-get-location kuser))
+				(kern-log-msg "Magic axe returns!")
+			)
+ 	))
+)
                    
                           
 (define missile-arms-types
@@ -375,7 +386,8 @@
    (list 't_oil_p             "flaming oil"    s_flaming_oil     flaming-oil-ifc     mmode-missile  )
    (list 't_spear_p           "spear"          s_spear           (mk-drop-proj-ifc 't_spear 25)             
                                                                                      mmode-missile  )
-   (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      obj-ifc             mmode-missile  )
+   (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      magicaxe-ifc        mmode-missile  )
+   (list 't_returning_axe_p   "thrown axe"     s_thrown_axe      obj-ifc            mmode-missile  )
    (list 't_thrown_rock_p     "thrown rock"    s_cannonball      (mk-drop-proj-ifc 't_thrown_rock 80)             
                                                                                      mmode-missile  )
    (list 't_thrown_boulder_p  "hurled boulder" s_thrown_boulder  (mk-drop-proj-ifc 't_thrown_boulder 80)             
@@ -698,7 +710,7 @@
 				))
 		)))
 				
-(mk-missile-arms-type 't_localcannonball "cannonball" s_cannonball localcannonball-ifc mmode-missile)
+(mk-missile-arms-type 't_localcannonball "cannonball" s_cannonball localcannonball-ifc mmode-cannon)
 		
 (define cannon-ifc
 	(ifc '()

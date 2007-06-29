@@ -96,6 +96,8 @@
    (list 'mmode-smallobj  "smallobj"   16) ;; for determining dropability of small objects
    (list 'mmode-largeobj  "largeobj"   17) ;; for determining dropability of big objects- basically, stuff that wont fit through bars/windows
    (list 'mmode-field     "field"      18) ;; for determining dropability of fields
+   (list 'mmode-return    "return"     19) ;; return path for magic axe (for now assume it always returns)
+   (list 'mmode-cannon    "crawling"   20) ;; enhanced missile passibility for cannon shells
 ))
 (map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
 
@@ -103,25 +105,25 @@
 
 ;; Movement cost table (optimized for cut to/paste from spreadsheet!)
 (kern-mk-ptable
-	;;	walk	hover	ship	phase	fly	skiff	fish	crawl	vship	rangr	none	wrigl	missl	f_fly	f_run	f_crawl	sml_obj	lrg_obj	fields		
-	(list	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	)	;; none
-	(list	norm	norm	cant	norm	norm	cant	cant	norm	cant	norm	cant	norm	0	fast	fast	fast	norm	norm	norm	)	;; grass/paving
-	(list	cant	cant	norm	cant	norm	vhard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; deep
-	(list	cant	hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; shoals
-	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	95	fast	cant	cant	nodrop	nodrop	cant	)	;; mountains
-	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	cant	cant	cant	)	;; wall (w/ ceiling)
-	(list	hard	hard	cant	norm	norm	cant	cant	hard	cant	norm	cant	hard	50	fast	norm	norm	norm	norm	norm	)	;; trees
-	(list	vhard	vhard	cant	norm	norm	cant	cant	vhard	cant	norm	cant	vhard	7	fast	hard	hard	norm	norm	norm	)	;; forest/hills/bog
-	(list	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	nodrop	nodrop	norm	)	;; energy fields
-	(list	cant	cant	cant	cant	norm	cant	cant	cant	norm	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; space
-	(list	cant	norm	cant	norm	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	norm	)	;; boulder
-	(list	cant	hard	cant	cant	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	nodrop	)	;; waterboulder
-	(list	cant	norm	vhard	cant	norm	vhard	vhard	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	)	;; sludge
-	(list	norm	norm	cant	norm	norm	norm	norm	norm	cant	norm	cant	cant	0	fast	norm	norm	cant	cant	nodrop	)	;; shallow sludge
-	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	vhard	7	cant	cant	cant	norm	nodrop	norm	)	;; bars (eg portcullis)
-	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	30	fast	cant	cant	nodrop	nodrop	nodrop	)	;; passlos mountains
-	(list	cant	vhard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	)	;; float
-	(list	cant	hard	cant	cant	norm	hard	cant	cant	norm	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	)	;; fly
+	;;	walk	hover	ship	phase	fly	skiff	fish	crawl	vship	rangr	none	wrigl	missl	f_fly	f_run	f_crawl	sml_obj	lrg_obj	fields	return	cannon		
+	(list	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	)	;; none
+	(list	norm	norm	cant	norm	norm	cant	cant	norm	cant	norm	cant	norm	0	fast	fast	fast	norm	norm	norm	0	0	)	;; grass/paving
+	(list	cant	cant	norm	cant	norm	vhard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	0	0	)	;; deep
+	(list	cant	hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	0	0	)	;; shoals
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	95	fast	cant	cant	nodrop	nodrop	cant	0	90	)	;; mountains
+	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	cant	cant	cant	0	100	)	;; wall (w/ ceiling)
+	(list	hard	hard	cant	norm	norm	cant	cant	hard	cant	norm	cant	hard	50	fast	norm	norm	norm	norm	norm	0	30	)	;; trees
+	(list	vhard	vhard	cant	norm	norm	cant	cant	vhard	cant	norm	cant	vhard	7	fast	hard	hard	norm	norm	norm	0	0	)	;; forest/hills/bog
+	(list	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	nodrop	nodrop	norm	0	100	)	;; energy fields
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	norm	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	0	0	)	;; space
+	(list	cant	norm	cant	norm	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	norm	0	4	)	;; boulder
+	(list	cant	hard	cant	cant	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	nodrop	0	4	)	;; waterboulder
+	(list	cant	norm	vhard	cant	norm	vhard	vhard	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	0	0	)	;; sludge
+	(list	norm	norm	cant	norm	norm	norm	norm	norm	cant	norm	cant	cant	0	fast	norm	norm	cant	cant	nodrop	0	0	)	;; shallow sludge
+	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	vhard	7	cant	cant	cant	norm	nodrop	norm	0	7	)	;; bars (eg portcullis)
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	30	fast	cant	cant	nodrop	nodrop	nodrop	0	10	)	;; passlos mountains
+	(list	cant	vhard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; float
+	(list	cant	hard	cant	cant	norm	hard	cant	cant	norm	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; fly
 )																																																																																																																																																																																																																																																															
 
 
