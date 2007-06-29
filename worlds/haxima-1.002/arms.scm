@@ -116,6 +116,10 @@
 (kern-mk-sprite 's_deathball                 ss_arms 1  4  #f   0 )
 (kern-mk-sprite 's_arrow                     ss_arms 1  8  #f 495 )
 (kern-mk-sprite 's_bolt                      ss_arms 1 80  #f 495 )
+(kern-mk-sprite 's_arrowobj                  ss_arms 1 68  #f   0 )
+(kern-mk-sprite 's_arrowstack                ss_arms 1 69  #f   0 )
+(kern-mk-sprite 's_boltobj                   ss_arms 1 70  #f   0 )
+(kern-mk-sprite 's_boltstack                 ss_arms 1 71  #f   0 )
 (kern-mk-sprite 's_poison_bolt               ss_arms 1 16  #f 170 )
 (kern-mk-sprite 's_acid_bolt                 ss_arms 1 20  #f 170 )
 (kern-mk-sprite 's_thrownweb                 ss_arms 1 31  #f   0 )
@@ -306,7 +310,8 @@
                                   (mk-loc kplace x y))))))
                                   
 (kern-mk-sprite 's_flaming_oil    ss_arms 1 5 #f 0)
-(kern-mk-sprite 's_spear          ss_arms 1 6 #f 0)
+(kern-mk-sprite 's_spear          ss_arms 1 88 #f 495 )
+(kern-mk-sprite 's_spearobj       ss_arms 1 6 #f 0)
 (kern-mk-sprite 's_throwing_axe   ss_arms 1 29 #f 0)
 (kern-mk-sprite 's_thrown_axe     ss_arms 8 72 #f 0)
 (kern-mk-sprite 's_thrown_boulder ss_arms 1 7 #f 0)
@@ -396,8 +401,8 @@
    (list 't_slime_vial_p      "vial of slime"  s_squat_bubbly_green_potion  
                                                                  vial-of-slime-ifc   mmode-missile  )
 
-   (list 't_arrow             "arrow"          s_arrow           obj-ifc             mmode-smallobj )
-   (list 't_bolt              "bolt"           s_bolt            obj-ifc             mmode-smallobj )
+   (list 't_arrow             "arrow"          s_arrowobj        obj-ifc             mmode-smallobj )
+   (list 't_bolt              "bolt"           s_boltobj         obj-ifc             mmode-smallobj )
    (list 't_warhead           "warhead"        s_warhead         warhead-ifc         mmode-smallobj )
    (list 't_cannonball        "cannonball"     s_cannonball      obj-ifc             mmode-smallobj )
    ))
@@ -458,8 +463,8 @@
    (list  't_thrown_rock    "small rock"    s_cannonball                "-2"     "1d2"    "-2"  100       slot-weapon   1      4     t_thrown_rock_p    #t     obj-ifc             1       20       20         0      0.9 )
    (list  't_thrown_boulder "loose boulder" s_thrown_boulder            "-2"     "3d4+1"  "-2"  150       slot-weapon   2      5     t_thrown_boulder_p #f     obj-ifc            10       40       20        60      0.9 )
 
-   (list  't_spear          "spear"         s_spear                     "+1"     "1d8+1"  "+1"   75       slot-weapon   1      4     t_spear_p          #f     obj-ifc             2       30       60        40      1.0 )
-   (list  't_magic_axe      "magical axe"   s_throwing_axe                "+2"     "2d4+2"  "+0"   75       slot-weapon   1      4     t_thrown_axe_p     #t     obj-ifc             2       30       60        40      1.0 )
+   (list  't_spear          "spear"         s_spearobj                  "+1"     "1d8+1"  "+1"   75       slot-weapon   1      4     t_spear_p          #f     obj-ifc             2       30       60        40      1.0 )
+   (list  't_magic_axe      "magical axe"   s_throwing_axe              "+2"     "2d4+2"  "+0"   75       slot-weapon   1      4     t_thrown_axe_p     #t     obj-ifc             2       30       60        40      1.0 )
 
    (list  't_oil            "flaming oil"   s_flaming_oil               "-1"     "1d6"    "-2"   90       slot-weapon   1      4     t_oil_p            #f     flaming-oil-ifc     1       20       30         0      0.9 )
    (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"   90       slot-weapon   1      4     t_slime_vial_p     #f     vial-of-slime-ifc   1       20       30         0      1.0 )
