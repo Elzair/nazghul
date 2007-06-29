@@ -357,6 +357,8 @@ static void sprite_paint_preframed(struct sprite *sprite, int frame, int x, int 
                 dest.x -= (sprite->w_pix - TILE_W) / 2;
                 dest.y -= (sprite->h_pix - TILE_H);
         }
+        
+        frame += sprite->sequence * sprite->n_frames;
 
         if (sprite->faded) {
                 sprite_blit_faded(sprite->rsurf->surf,  &sprite->frames[frame],
@@ -838,4 +840,9 @@ void sprite_blit_over(struct sprite *dest, struct sprite *src)
 int sprite_num_frames(struct sprite *sprite)
 {
 	return sprite->n_frames;	
+}
+
+int sprite_facings_list(struct sprite *sprite)
+{
+	return sprite->facings;	
 }

@@ -63,6 +63,12 @@ static unsigned char dir_facing[] = {
 	WEST, SOUTH, EAST,
 };
 
+static unsigned char dir_8facing[] = {
+	NORTHWEST, NORTH, NORTHEAST,
+	WEST, NORTH, EAST,
+	SOUTHWEST, SOUTH, SOUTHEAST,
+};
+
 static int direction_to_rotation_tbl[] = {
 	315, 0, 45,
 	270, 0, 90,
@@ -155,6 +161,24 @@ int vector_to_facing(int dx, int dy)
 	clamp(dx, -1, 1);
 	clamp(dy, -1, 1);
 	return dir_facing[(dy + 1) * 3 + dx + 1];
+}
+
+int vector_to_8facing(int dx, int dy)
+{
+	fprintf(stderr,"vtf1 %d,%d\n", dx,dy);
+	if (abs(dx) > 2* (abs(dy)))
+	{
+		dy = 0;	
+	}
+	if (abs(dy) > 2* (abs(dx)))
+	{
+		dx = 0;	
+	}
+	fprintf(stderr,"vtf2 %d,%d\n", dx,dy);
+	clamp(dx, -1, 1);
+	clamp(dy, -1, 1);
+	fprintf(stderr,"vtf3 %d,%d\n", dx,dy);
+	return dir_8facing[(dy + 1) * 3 + dx + 1];
 }
 
 int vector_to_rotation(int dx, int dy)

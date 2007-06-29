@@ -102,6 +102,7 @@ extern void sprite_blit_over(struct sprite *dest,
                              struct sprite *src);
                              
 extern int sprite_num_frames(struct sprite *sprite);
+extern int sprite_facings_list(struct sprite *sprite);
 
 END_DECL
 

@@ -1464,9 +1464,18 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	int AdY = abs(dY);
 
 	// Select the sprite orientation based on direction of travel
-        if (sprite) {
-                sprite_set_facing(sprite, vector_to_dir(dX, dY));
-        }
+	if (sprite)
+	{
+		if ((sprite_facings_list(sprite) & 495) == 495) //nsew + diagonals
+		{
+			fprintf(stderr,"facing %d\n", vector_to_8facing(dX, dY));
+			sprite_set_facing(sprite, vector_to_8facing(dX, dY));
+		}
+		else if ((sprite_facings_list(sprite) & 170) == 170) //nsew only
+		{
+			sprite_set_facing(sprite, vector_to_dir(dX, dY));
+		}
+	}
 
 	// Moving left?
 	int Xincr = (rect.x > sBx) ? -1 : 1;

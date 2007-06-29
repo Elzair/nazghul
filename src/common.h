@@ -307,6 +307,7 @@ extern void turnAdvance(int turns);
 extern int vector_to_dir(int dx, int dy);
 extern int vector_to_facing(int dx, int dy);
 extern int vector_to_rotation(int dx, int dy);
+extern int vector_to_8facing(int dx, int dy);
 
 extern int stringToDirection(char *str);
 extern int keyToDirection(int key);
