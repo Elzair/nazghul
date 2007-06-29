@@ -1372,22 +1372,6 @@ void mapPaintDamage(int x, int y)
                            Map.tile_scratch_surf, 100, 0);
 }
 
-//determines the next frame of an animated projectile
-void nextProjectileFrame(int *currentframe, int *currentticks, int framecount, int ticksperframe, int increment)
-{
-	*currentticks = *currentticks + increment ;
-	while (*currentticks >= ticksperframe)
-	{
-		*currentframe = *currentframe + 1;	
-		*currentticks -= ticksperframe;
-	}
-	while (*currentframe >= framecount)
-	{
-		*currentframe -= framecount;
-	}
-
-}
-
 void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
                           struct sprite *sprite, struct place *place,
                           class Missile *missile)
@@ -1398,8 +1382,6 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	// (no license or copyright noted)
 	// 
 	int framecount = sprite_num_frames(sprite);
-	int ticksperframe = 400/framecount;
-	int currentticks = 0;
 	int currentframe = 0;
 	
         int t1, t2;
@@ -1504,80 +1486,106 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	
 
 	// Walk the x-axis?
-	if (AdX >= AdY) {
-
+	if (AdX >= AdY)
+	{
 		int dPr = AdY << 1;
 		int dPru = dPr - (AdX << 1);
 		int P = dPr - AdX;
-
+		
 		// For each x
-		for (int i = AdX; i >= 0; i--) {
-
-                        oPx = Px;
-                        oPy = Py;
+		for (int i = AdX; i >= 0; i--)
+		{	
+			oPx = Px;
+			oPy = Py;
 			Px = place_wrap_x(place, ((tile_w_half + rect.x - Sx) / tile_w + Ox));
 			Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy) / tile_h + Oy));
-
-                        if (oPx != Px || oPy != Py) {
-	                        
-                                if (mapTileIsVisible(Px, Py) && sprite)
-                                        mapPaintProjectile(&rect, sprite, surf, 50, currentframe);
-                                      
-                                if (framecount > 1)  
-												nextProjectileFrame(&currentframe, &currentticks,
-													framecount, ticksperframe, 50);
-											
-                                if (!missile->enterTile(place, Px, Py)) {
-                                        goto done;
-                                }
-                                
-                                
-
-                        }
-
-			if (P > 0) {
+		
+			if (oPx != Px || oPy != Py)
+			{
+				if (mapTileIsVisible(Px, Py) && sprite)			
+				{
+					if (framecount > 1)  
+					{
+						mapPaintProjectile(&rect, sprite, surf, 25, currentframe);	
+						currentframe=(currentframe+1)%framecount;
+						mapPaintProjectile(&rect, sprite, surf, 25, currentframe);		
+						currentframe=(currentframe+1)%framecount;
+					}
+					else
+					{
+						mapPaintProjectile(&rect, sprite, surf, 50, 0);	
+					}
+				}
+				else if (framecount > 1)
+				{
+					currentframe=(currentframe+2)%framecount;
+				}
+				
+				if (!missile->enterTile(place, Px, Py))
+					goto done;
+			}
+		
+			if (P > 0)
+			{
 				rect.x += Xincr;
 				rect.y += Yincr;
 				P += dPru;
-			} else {
+			}
+			else
+			{
 				rect.x += Xincr;
 				P += dPr;
 			}
 		}
 	}
 	// Walk the y-axis
-	else {
+	else
+	{
 		int dPr = AdX << 1;
 		int dPru = dPr - (AdY << 1);
 		int P = dPr - AdY;
-
+		
 		// For each y
-		for (int i = AdY; i >= 0; i--) {
-
-                        oPx = Px;
-                        oPy = Py;
+		for (int i = AdY; i >= 0; i--)
+		{
+			oPx = Px;
+			oPy = Py;
 			Px = place_wrap_x(place, ((tile_w_half + rect.x - Sx)/ tile_w + Ox));
 			Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy)/ tile_h + Oy));
-
-                        if (oPx != Px || oPy != Py) {
-
-                                if (mapTileIsVisible(Px, Py) && sprite)
-                                        mapPaintProjectile(&rect, sprite, surf, 50, currentframe);
-                                      
-                                if (framecount > 1)  
-												nextProjectileFrame(&currentframe, &currentticks,
-													framecount, ticksperframe, 50);
-
-                                if (!missile->enterTile(place, Px, Py)) {
-                                        goto done;
-                                }
-                        }
-
-			if (P > 0) {
+			
+			if (oPx != Px || oPy != Py)
+			{
+				if (mapTileIsVisible(Px, Py) && sprite)			
+				{
+					if (framecount > 1)  
+					{
+						mapPaintProjectile(&rect, sprite, surf, 25, currentframe);		
+						currentframe=(currentframe+1)%framecount;
+						mapPaintProjectile(&rect, sprite, surf, 25, currentframe);		
+						currentframe=(currentframe+1)%framecount;
+					}
+					else
+					{
+						mapPaintProjectile(&rect, sprite, surf, 50, 0);	
+					}
+				}
+				else if (framecount > 1)
+				{
+					currentframe=(currentframe+2)%framecount;
+				}
+				
+				if (!missile->enterTile(place, Px, Py))
+					goto done;
+			}
+			
+			if (P > 0)
+			{
 				rect.x += Xincr;
 				rect.y += Yincr;
 				P += dPru;
-			} else {
+			}
+			else 
+			{
 				rect.y += Yincr;
 				P += dPr;
 			}
