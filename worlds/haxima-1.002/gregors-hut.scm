@@ -10,18 +10,18 @@
 		".. .. .. .. ta tt tt td .. .. .. .. .. .. .. .. /7 .. .. .. .. .. t% ta tt || || tt || || tt .. "
 		".. .. .. .. /0 /d /d /d /d /d /d /d /d /d /d /d /9 /d /d /d /d /d /d /2 ta tt || || || tt tc .. "
 		".. .. .. /0 /a t3 tt t5 tA .. .. .. .. .. .. .. .. .. .. .. .. .. .. /8 /d /d /2 ta tt tt t# .. "
-		".. .. .. /7 t3 tt tt tt t5 rr rr ws rr rr rr ws rr rr rr rr rr bb bb bb bb bb /8 /d /2 te .. .. "
+		".. .. .. /7 t3 tt tt tt t5 rr rr wr rr rr rr wr rr rr rr rr rr bb bb bb bb bb /8 /d /2 te .. .. "
 		".. .. .. /7 ta tt tt tt tt rr cc cc cc cc cc cc cc rr cc cc rr .. .. .. .. .. bb .. /7 .. .. .. "
 		".. .. .. /7 t% ta tt tt tt rr cc cc cc cc cc cc cc rr cc cc rr t7 tA .. .. .. bb .. /7 .. .. .. "
 		".. .. .. /7 .. t% tt || || rr cc cc [[ @@ ]] cc cc rr cc cc rr tt t5 tA .. .. bb .. /7 .. .. .. "
 		".. .. .. /7 .. .. ta || |C rr cc cc cc cc cc cc cc rr cc cc rr tt tt t5 tA .. bb .. /7 .. .. .. "
 		".. .. .. /7 .. .. rr rr rr rr cc cc cc cc cc cc cc cc cc cc rr tt tt || td .. bb .. /7 .. .. .. "
-		".. .. .. /7 .. .. ws cc cc rr rr cc rr && rr rr rr rr rr rr rr ta tt tc t# .. bb .. /7 .. .. .. "
+		".. .. .. /7 .. .. wr cc cc rr rr cc rr && rr rr rr rr rr rr rr ta tt tc t# .. bb .. /7 .. .. .. "
 		"/d /d /d /6 .. .. rr cc cc cc cc cc cc cc cc cc cc rr .. .. rr .. .. .. .. .. bb .. /4 /d /d /d "
 		".. .. .. /7 .. .. rr rr rr rr cc cc cc cc cc cc cc rr .. .. rr .. .. .. .. .. bb .. /7 t3 tt tt "
 		".. .. .. /7 .. .. rr cc cc rr cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. bb t7 /7 tt tt tt "
-		".. .. .. /7 .. .. ws cc cc cc cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. bb te /7 tt tc %3 "
-		".. .. .. /7 .. .. rr rr rr rr rr ws rr cc rr ws rr rr .. rr rr bb bb bb bb bb /0 /d /a te %3 %% "
+		".. .. .. /7 .. .. wr cc cc cc cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. bb te /7 tt tc %3 "
+		".. .. .. /7 .. .. rr rr rr rr rr wr rr cc rr wr rr rr .. rr rr bb bb bb bb bb /0 /d /a te %3 %% "
 		".. .. .. /7 .. .. .. .. .. .. .. tb td /7 .. tb tt td /4 /d /d /d /d /d /d /d /a t3 td %3 %% %% "
 		".. .. .. /7 .. .. .. .. .. .. .. .. .. /7 .. .. .. .. /7 .. .. .. .. .. tC t3 tt tc %3 %% ~3 ~9 "
 		".. .. .. /8 /d /d /d /d /d /d /d /d /d /9 /d /1 /d /d /a .. .. .. .. tC t3 tt tt %3 ~3 ~9 ~c %% "
@@ -78,12 +78,12 @@
                 (list ch_ilya   15 15)
 
                 ;; mechanisms
-                (list (mk-door) 13 20)
-                (list (mk-door)  9 19)
-                (list (mk-door)  9 16)
-                (list (mk-door) 11 15)
-                (list (mk-door) 17 14)
-                (list (mk-door) 18 20)
+                (list (mk-door-in-rock) 13 20)
+                (list (mk-door-in-rock)  9 19)
+                (list (mk-door-in-rock)  9 16)
+                (list (mk-door-in-rock) 11 15)
+                (list (mk-door-in-rock) 17 14)
+                (list (mk-door-in-rock) 18 20)
                 (list (mk-clock) 10 10)
                 (list (mk-bridge 'east) 25 26)
                 (put (mk-bed) 7 18)
