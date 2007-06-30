@@ -1023,7 +1023,7 @@
 
 (combat-map-list 'm_forest_combat
 	(list
-	t_forest
+	t_forest t_forest_d t_forest_l
 	t_forestg_ne t_forestg_nw t_forestg_es t_forestg_ws
 	t_forestg_nwe t_forestg_nes t_forestg_nws t_forestg_wes
 	))
