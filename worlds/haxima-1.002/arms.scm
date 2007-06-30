@@ -123,7 +123,7 @@
 (kern-mk-sprite 's_poison_bolt               ss_arms 1 16  #f 170 )
 (kern-mk-sprite 's_acid_bolt                 ss_arms 1 20  #f 170 )
 (kern-mk-sprite 's_thrownweb                 ss_arms 1 31  #f   0 )
-(kern-mk-sprite 's_prismatic_bolt            ss_arms 1 60  #f   0 )
+(kern-mk-sprite 's_prismatic_bolt            ss_arms 4 100  #f   0 )
 (kern-mk-sprite 's_squat_bubbly_green_potion ss_arms 1 30  #f   0 )
 
 ;; ----------------------------------------------------------------------------
@@ -309,7 +309,8 @@
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
                                   
-(kern-mk-sprite 's_flaming_oil    ss_arms 1 5 #f 0)
+(kern-mk-sprite 's_flaming_oil    ss_arms 4 96 #f 0)
+(kern-mk-sprite 's_oil_potion     ss_arms 1 5 #f 0)
 (kern-mk-sprite 's_spear          ss_arms 1 88 #f 495 )
 (kern-mk-sprite 's_spearobj       ss_arms 1 6 #f 0)
 (kern-mk-sprite 's_throwing_axe   ss_arms 1 29 #f 0)
@@ -466,7 +467,7 @@
    (list  't_spear          "spear"         s_spearobj                  "+1"     "1d8+1"  "+1"   75       slot-weapon   1      4     t_spear_p          #f     obj-ifc             2       30       60        40      1.0 )
    (list  't_magic_axe      "magical axe"   s_throwing_axe              "+2"     "2d4+2"  "+0"   75       slot-weapon   1      4     t_thrown_axe_p     #t     obj-ifc             2       30       60        40      1.0 )
 
-   (list  't_oil            "flaming oil"   s_flaming_oil               "-1"     "1d6"    "-2"   90       slot-weapon   1      4     t_oil_p            #f     flaming-oil-ifc     1       20       30         0      0.9 )
+   (list  't_oil            "flaming oil"   s_oil_potion                "-1"     "1d6"    "-2"   90       slot-weapon   1      4     t_oil_p            #f     flaming-oil-ifc     1       20       30         0      0.9 )
    (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"   90       slot-weapon   1      4     t_slime_vial_p     #f     vial-of-slime-ifc   1       20       30         0      1.0 )
 
    ))
