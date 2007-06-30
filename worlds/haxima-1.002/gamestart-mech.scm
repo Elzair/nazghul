@@ -16,17 +16,18 @@
 		))
 		
 (define (one-off-message kbeing message messageid)
-	(begin
-		(kern-log-msg message)
-		(map (lambda (trigobj)
-			(if (equal? (length (gob trigobj)) 3)
-				(if (equal? (caddr (gob trigobj)) messageid)
-					(kern-obj-remove trigobj)
-				))
-			)
-			(kplace-get-objects-of-type (car (kern-obj-get-location kbeing)) t_step_trig))
-		#f
-		))
+	(if (is-player-party-member? kbeing)
+		(begin
+			(kern-log-msg message)
+			(map (lambda (trigobj)
+				(if (equal? (length (gob trigobj)) 3)
+					(if (equal? (caddr (gob trigobj)) messageid)
+						(kern-obj-remove trigobj)
+					))
+				)
+				(kplace-get-objects-of-type (car (kern-obj-get-location kbeing)) t_step_trig))
+			#f
+			)))
 
 (define (get-gamestart-data kbeing key)
 	(let ((rdata (get-roomdata (car (kern-obj-get-location kbeing)))))
