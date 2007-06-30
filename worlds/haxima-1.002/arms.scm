@@ -125,6 +125,7 @@
 (kern-mk-sprite 's_thrownweb                 ss_arms 1 31  #f   0 )
 (kern-mk-sprite 's_prismatic_bolt            ss_arms 4 100  #f   0 )
 (kern-mk-sprite 's_squat_bubbly_green_potion ss_arms 1 30  #f   0 )
+(kern-mk-sprite 's_thrown_green_potion       ss_arms 4 104  #f   0 )
 
 ;; ----------------------------------------------------------------------------
 ;; mk-missile-ifc -- automate missile ifc creation. 'pred?' takes an object as
@@ -399,7 +400,7 @@
    (list 't_thrown_boulder_p  "hurled boulder" s_thrown_boulder  (mk-drop-proj-ifc 't_thrown_boulder 80)             
                                                                                      mmode-missile  )
 
-   (list 't_slime_vial_p      "vial of slime"  s_squat_bubbly_green_potion  
+   (list 't_slime_vial_p      "vial of slime"  s_thrown_green_potion  
                                                                  vial-of-slime-ifc   mmode-missile  )
 
    (list 't_arrow             "arrow"          s_arrowobj        obj-ifc             mmode-smallobj )
