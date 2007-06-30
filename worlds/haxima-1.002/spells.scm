@@ -220,9 +220,6 @@
 ;; This is the table of spells.
 ;; ----------------------------------------------------------------------------
 
-;; shorter alias
-(define s_magic_door s_magically_locked_solid_wood_door_in_stone)
-
 ;; Spell sprite set
 (kern-mk-sprite-set 'ss_spells 32 32 8 8 0 0 "spells.png")
 

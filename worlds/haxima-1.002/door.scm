@@ -7,7 +7,7 @@
 
 (define (mk-door-state sprite opacity pclass)
   (list sprite opacity pclass))
-(define (door-state-sprite ds) (safe-eval (car ds)))
+(define (door-state-sprite ds) (car ds))
 (define (door-state-opacity ds) (cadr ds))
 (define (door-state-pclass ds) (caddr ds))
 
@@ -23,7 +23,7 @@
 (define (door-active? door) (list-ref (gob-data door) 3))
 (define (door-locked? door) (list-ref (gob-data door) 4))
 (define (door-magic-locked? door) (list-ref (gob-data door) 5))
-(define (door-states door) (list-ref (gob-data door) 6))
+(define (door-states door) (eval (list-ref (gob-data door) 6)))
 (define (door-traps door) (list-ref (gob-data door) 7))
 (define (door-trapped? door) (not (null? (door-traps door))))
 (define (door-key door) (list-ref (gob-data door) 8))
@@ -265,31 +265,47 @@
        ))
 
 ;; Create the kernel "door" type
-(mk-obj-type 't_door "door" s_closed_solid_wood_door_in_stone layer-mechanism 
+(mk-obj-type 't_door "door" s_stone_arch layer-mechanism 
              door-ifc)
 
+(define (door-state-factory
+				arch-sprite door-sprite magic-sprite
+				open-opacity closed-opacity
+				open-pclass closed-pclass)
+	(mk-door-states
+		(mk-door-state (mk-composite-sprite (list arch-sprite door-sprite))
+					closed-opacity closed-pclass)
+		(mk-door-state arch-sprite	closed-opacity open-pclass)
+		(mk-door-state (mk-composite-sprite (list arch-sprite door-sprite s_door_lock))
+					closed-opacity closed-pclass)
+		(mk-door-state (mk-composite-sprite (list arch-sprite door-sprite s_door_magiclock))
+					closed-opacity closed-pclass)
+	))
 
 ;; Types for common door types
 (define solid-wood-door-in-stone
-  (mk-door-states
-   (mk-door-state 's_closed_solid_wood_door_in_stone           #t pclass-wall)
-   (mk-door-state 's_open_door_in_stone                        #f pclass-none)
-   (mk-door-state 's_locked_solid_wood_door_in_stone           #t pclass-wall)
-   (mk-door-state 's_magically_locked_solid_wood_door_in_stone #t pclass-wall)))
+	(door-state-factory
+			s_stone_arch s_door_wood s_door_magiclock
+			#f #t
+			pclass-none pclass-wall))
 
-(define windowed-wood-door-in-rock
-  (mk-door-states
-   (mk-door-state 's_closed_windowed_wood_door_in_rock           #f pclass-wall)
-   (mk-door-state 's_open_door_in_rock                           #f pclass-none)
-   (mk-door-state 's_locked_windowed_wood_door_in_rock           #f pclass-wall)
-   (mk-door-state 's_magically_locked_windowed_wood_door_in_rock #f pclass-wall)))
+(define windowed-wood-door-in-stone
+	(door-state-factory
+			s_stone_arch s_door_windowed s_door_magiclock
+			#f #f
+			pclass-none pclass-window))
 
 (define solid-wood-door-in-rock
-  (mk-door-states
-   (mk-door-state 's_closed_solid_wood_door_in_rock           #t pclass-wall)
-   (mk-door-state 's_open_door_in_rock                           #f pclass-none)
-   (mk-door-state 's_locked_solid_wood_door_in_rock           #t pclass-wall)
-   (mk-door-state 's_magically_locked_solid_wood_door_in_rock #t pclass-wall)))
+	(door-state-factory
+			s_rock_arch s_door_wood s_door_magiclock
+			#f #t
+			pclass-none pclass-wall))
+
+(define windowed-wood-door-in-rock
+	(door-state-factory
+			s_rock_arch s_door_windowed s_door_magiclock
+			#f #f
+			pclass-none pclass-window))
    
 ;;----------------------------------------------------------------------------
 ;; mk-door -- make and initialize a door object
@@ -306,14 +322,17 @@
         (door-mk #f 0 connected-to #f locked? magic-locked? type)))
 
 ;; Backward-compatible curried constructors
-(define (mk-door) (mk-door-full solid-wood-door-in-stone #f #f nil))
-(define (mk-door-in-rock) (mk-door-full solid-wood-door-in-rock #f #f nil))
-(define (mk-locked-door) (mk-door-full solid-wood-door-in-stone #t #f nil))
-(define (mk-connected-door tag)(mk-door-full solid-wood-door-in-stone #f #f tag))
-(define (mk-windowed-door) (mk-door-full windowed-wood-door-in-rock #f #f nil))
-(define (mk-magic-locked-door) (mk-door-full solid-wood-door-in-stone #f #t nil))
+(define (mk-door) (mk-door-full 'solid-wood-door-in-stone #f #f nil))
+(define (mk-door-in-rock) (mk-door-full 'solid-wood-door-in-rock #f #f nil))
+(define (mk-locked-door) (mk-door-full 'solid-wood-door-in-stone #t #f nil))
+(define (mk-connected-door tag) (mk-door-full 'solid-wood-door-in-stone #f #f tag))
+(define (mk-windowed-door) (mk-door-full 'windowed-wood-door-in-stone #f #f nil))
+(define (mk-windowed-door-in-rock) (mk-door-full 'windowed-wood-door-in-rock #f #f nil))
+(define (mk-magic-locked-door) (mk-door-full 'solid-wood-door-in-stone #f #t nil))
 (define (mk-locked-windowed-door) 
-  (mk-door-full windowed-wood-door-in-rock #t #f nil))
+  (mk-door-full 'windowed-wood-door-in-stone #t #f nil))
+(define (mk-locked-windowed-door-in-rock) 
+  (mk-door-full 'windowed-wood-door-in-rock #t #f nil))
 
 (define (lock-door-with-key kdoor key-type-tag)
   (lock-door kdoor nil)
@@ -327,7 +346,14 @@
   kdoor
   )
   
-(mk-obj-type 't_archway_rock "archway" s_open_door_in_rock layer-mechanism 
+(mk-obj-type 't_archway_rock "archway" s_rock_arch layer-mechanism 
+             nil)
+
+(mk-obj-type 't_archway_stone "archway" s_stone_arch layer-mechanism 
              nil)
         
 (define (mk-archway-rock) (kern-mk-obj t_archway_rock 1))
+
+(define (mk-archway-stone) (kern-mk-obj t_archway_rock 1))
+
+

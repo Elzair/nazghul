@@ -140,9 +140,15 @@
 			result-no-target)))
 
 (define (cast-ui-dospell-nolos target effect caster power)
-  (if (null? target)
-      result-no-target
-      (effect caster target power)))			
+	(if (null? target)
+		(begin 
+			result-no-target
+			)
+		(begin
+			(effect caster target power)
+			result-ok)))
+			
+			
 			
 (define (cast-ui-basic-member-spell effect caster power)
 	(cast-ui-dospell

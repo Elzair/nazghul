@@ -111,7 +111,7 @@
                 (list (mk-bridge 'north) 11 19)                
 
                 ;; doors/mechanisms
-                (list (mk-door-full windowed-wood-door-in-rock #t #f nil) 13 3)
+                (list (mk-door-full 'windowed-wood-door-in-rock #t #f nil) 13 3)
 
                 ;; existing npc's
                 (put (mk-npc 'blackguard 2) 5 4)

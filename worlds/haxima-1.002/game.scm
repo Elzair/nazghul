@@ -71,10 +71,11 @@
 (define pclass-waterboulder  12) ;; worst case of boulder and water
 (define pclass-sludge        13)
 (define pclass-shallows      14)
-(define pclass-bars          15) ;; portcullis, some windows
-(define pclass-vmountains    16)
-(define pclass-canfloat      17) ;; avoids drowning
-(define pclass-canfly        18) ;; avoids ground based issues
+(define pclass-bars          15) ;; portcullis
+(define pclass-window        16) ;; separating from bars for shoot-but-not-crawl-through passability
+(define pclass-vmountains    17)
+(define pclass-canfloat      18) ;; avoids drowning
+(define pclass-canfly        19) ;; avoids ground based issues
 
 ;; Movement modes
 (define mmodes
@@ -124,6 +125,7 @@
 	(list	cant	norm	v-hard	cant	norm	v-hard	v-hard	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; sludge
 	(list	s-hard	norm	cant	norm	norm	norm	norm	s-hard	cant	norm	cant	cant	0	fast	norm	norm	cant	cant	no-drop	0	0	)	;; shallow sludge
 	(list	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	v-hard	7	cant	cant	cant	norm	no-drop	norm	0	7	)	;; bars (eg portcullis)
+	(list	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	cant	30	cant	cant	cant	no-drop	no-drop	no-drop	0	25	)	;; window
 	(list	cant	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	30	s-fast	cant	cant	no-drop	no-drop	no-drop	0	10	)	;; passlos mountains
 	(list	cant	v-hard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; float
 	(list	cant	hard	cant	cant	norm	hard	cant	cant	norm	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; fly

@@ -93,7 +93,7 @@
    (list 't_cobblestone     "cobblestone"   pclass-grass     s_cobblestone       trn 0 nil)
    (list 't_flagstones      "flagstones"    pclass-grass     s_flagstone         trn 0 nil)
    (list 't_inv_wall        "flagstones"    pclass-repel     s_flagstone         trn 0 'burn)
-   (list 't_doorway         "doorway"       pclass-grass     s_doorway           trn 0 nil)
+   (list 't_doorway         "doorway"       pclass-grass     s_stone_arch        trn 0 nil) ;;dont use this if poss
    (list 't_leftwing        "castle wall"   pclass-wall      s_leftwing          trn 0 nil)
    (list 't_rightwing       "castle wall"   pclass-wall      s_rightwing         trn 0 nil)
    (list 't_ship_hull       "ship's bulwark"   pclass-wall      s_wall           trn 0 nil)
