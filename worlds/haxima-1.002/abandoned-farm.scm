@@ -30,22 +30,22 @@
 		"|| || || tt tt tt tt tt tt tt tc t# .. .. .. .. .. tb tt tt tt tt tt tt tt || || || tt tt bb tt "
 		"|| || || tt tt tt tt tt tt tc t# .. bb bb bb bb bb bb bb bb tD ta tt tt tt tt tt || || tt tt tt "
 		"|| || tt tt t# .. .. .. .. .. .. bb .. .. .. .. .. .. tb tt td t& te bb ta tt tt tt || || tt || "
-		"|| || tt tt .. bb rr rr ws rr rr rr .. .. .. .. .. .. .. .. .. .. t% tf bb tt tt tt || || || || "
+		"|| || tt tt .. bb rr rr wr rr rr rr .. .. .. .. .. .. .. .. .. .. t% tf bb tt tt tt || || || || "
 		"|| || tt tt .. rr .. cc cc cc cc rr .. .. .. .. .. .. .. .. .. && .. .. bb tt tt tt || || || || "
 		"|| tt tt tt .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. bb tt bb ta || || || || "
-		"tt tt tt tc .. ws cc cc cc cc cc ws .. .. .. .. .. .. .. .. .. bb .. tf bb tt td t# .. t% |A || "
+		"tt tt tt tc .. wr cc cc cc cc cc wr .. .. .. .. .. .. .. .. .. bb .. tf bb tt td t# .. t% |A || "
 		"t% ta tc t# .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. bb te t# .. .. .. t% |A "
 		".. .. .. .. .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. bb .. .. tC tf tA .. .. "
 		".. .. .. .. .. rr rr rr cc rr rr bb rr cc rr .. .. .. .. .. .. .. .. .. bb .. tC t7 bb t7 tA .. "
 		"t5 tA .. .. .. rr cc cc cc cc cc cc .. cc rr .. .. .. .. .. .. .. .. .. bb .. t3 tt tt tt tt tt "
-		"tt t5 tA .. .. ws cc cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. bb .. tt tt tt tt tt bb "
-		"tt tt t5 .. .. rr cc cc cc cc cc .. cc cc rr rr rr rr ws rr rr bb rr bb .. tC tt tt tt tt tt tt "
+		"tt t5 tA .. .. wr cc cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. bb .. tt tt tt tt tt bb "
+		"tt tt t5 .. .. rr cc cc cc cc cc .. cc cc rr rr rr rr wr rr rr bb rr bb .. tC tt tt tt tt tt tt "
 		"tt tt tt tA .. rr cc cc cc [[ @@ ]] cc cc rr cc cc cc cc cc .. .. rr .. tC t3 tt || || || tt tt "
-		"|| || tt t5 .. ws cc cc cc cc cc cc cc cc rr cc cc cc cc cc cc cc rr .. t3 tt || || || || || tt "
-		"|| || tt tt .. rr cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc ws tC tt || || || || || || tt "
+		"|| || tt t5 .. wr cc cc cc cc cc cc cc cc rr cc cc cc cc cc cc cc rr .. t3 tt || || || || || tt "
+		"|| || tt tt .. rr cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc wr tC tt || || || || || || tt "
 		"|| || || tt .. rr rr rr cc cc cc cc cc cc rr cc cc cc cc cc cc .. rr t3 tt || || || tt || || || "
 		"|| || || tt .. rr cc cc cc cc cc [[ @@ ]] rr cc cc cc cc cc .. .. bb tt tt || || || || || || || "
-		"|| || || tt .. rr rr rr rr ws rr rr rr rr rr rr rr rr ws rr rr rr rr tt tt || || || || || || tt "
+		"|| || || tt .. rr rr rr rr wr rr rr rr rr rr rr rr rr wr rr rr rr rr tt tt || || || || || || tt "
 		"|| || || tt tA .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tC t3 tt tt tt || || || || || tt tt "
 		"|| || tt tt tt tt tt tt tt tt tt tt tt t5 tA .. .. .. tC t3 tt tt tt tt tt tt || || || || tt tt "
 		"|| || tt tt || || || || || || || || tt tt t5 tA .. tC t3 tt tt || || || tt tt || || || || tt tt "
@@ -71,8 +71,8 @@
                 (put (spawn-pt 'queen-spider) 9 23)
                 (put (spawn-pt 'troll) 19 13)
                 (put (spawn-pt 'troll) 19 14)
-                (list (mk-door) 13 17)
-                (list (mk-door) 7 25)
+                (list (mk-door-in-rock) 13 17)
+                (list (mk-door-in-rock) 7 25)
                 (list (mk-ladder-down 'p_abandoned_cellar 6 25) 6 25)
 				(list (mk-broken-clock s_clock_hand_s s_clock_hand_ne "The clock reads 6:12") 6 23)
                 )

@@ -107,8 +107,8 @@
 
    ;; Hackle's hut
    (list (mk-bed) 5 8)
-   (list (mk-windowed-door) 7 13)
-   (list (mk-windowed-door) 10 10)
+   (list (mk-windowed-door-in-rock) 7 13)
+   (list (mk-windowed-door-in-rock) 10 10)
 
    ;; Thief's door
    (put (mk-thief-door 'p_traps_1 4 16) 43 6)

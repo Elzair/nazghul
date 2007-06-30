@@ -163,7 +163,7 @@
 
 
   ;; Gen's Hut
-  (put (mk-door) 7 13)
+  (put (mk-door-in-rock) 7 13)
   (put (mk-bed) 2 13)
   (put (mk-chest nil 
                  '((100 t_arrow)
@@ -171,8 +171,8 @@
        4 11)
                 
   ;; Deric's Hut
-  (put (mk-door) 11 6)
-  (put (mk-door) 16 6)
+  (put (mk-door-in-rock) 11 6)
+  (put (mk-door-in-rock) 16 6)
   (put (mk-bed) 17 4)
   (put (mk-chest 'burn-trap
                  '((100 t_bolt)

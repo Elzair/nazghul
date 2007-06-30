@@ -124,7 +124,7 @@
  (put (spawn-pt 'cave-goblin-priest)     9  9)
  (put (guard-pt 'cave-goblin-berserker) 14  4)
  (put (guard-pt 'cave-goblin-priest)    16  4)
- (put (mk-locked-door) 13 4)
+ (put (mk-locked-door-in-rock) 13 4)
  (put (mk-treasure-chest) 16 4)
  (put (mk-treasure-chest) 16 5)
  (put (mk-treasure-chest) 15 3)
