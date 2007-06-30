@@ -48,7 +48,7 @@
       (floor (+ (kern-char-get-level kuser) (/ (kern-char-get-dexterity kuser) 3)))
       (floor (/ (+ (kern-char-get-level kuser) (kern-char-get-dexterity kuser)) 4)))
       )
-(mk-reusable-item 't_picklock "picklock" s_picklock vhard
+(mk-reusable-item 't_picklock "picklock" s_picklock v-hard
                   (lambda (kobj kuser)
                     (let ((ktarg (ui-target (kern-obj-get-location kuser)
                                             1 
@@ -77,7 +77,7 @@
                   result-ok))
 
 ;; sledge-hammer -- shatter rocks
-(mk-reusable-item 't_pick "pick" s_pick vhard
+(mk-reusable-item 't_pick "pick" s_pick v-hard
                   (lambda (ktool kuser)
                     (let ((loc (kern-ui-target (kern-obj-get-location kuser)
                                                1)))
@@ -138,7 +138,7 @@
   (eqv? (kern-obj-get-type kobj)
         t_buried))
 
-(mk-reusable-item 't_shovel "shovel" s_shovel vhard
+(mk-reusable-item 't_shovel "shovel" s_shovel v-hard
                 (lambda (kshovel kuser)
                   (let ((ktarg (filter is-buried?
                                        (kern-get-objects-at 

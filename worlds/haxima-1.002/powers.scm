@@ -389,7 +389,7 @@
 				(kern-obj-put-at afield loc)
 				(for-each proc (kern-get-objects-at loc))
 				;; remove fields on semi-bad locations
-				(if (not (can-be-dropped? afield loc nodrop))
+				(if (not (can-be-dropped? afield loc no-drop))
 					(kern-obj-remove afield))
 			))
 	))

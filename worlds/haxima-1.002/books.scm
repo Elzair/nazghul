@@ -72,7 +72,7 @@
 ;;----------------------------------------------------------------------------
 ;; book of the demon gate
 (mk-reusable-item 
- 't_demon_gate_book "Ragged Text" s_scroll vhard
+ 't_demon_gate_book "Ragged Text" s_scroll v-hard
  (lambda (kbook kuser)
    (kern-ui-page-text
    "THE DEMON GATE"
@@ -325,7 +325,7 @@
 ;;----------------------------------------------------------------------------
 ;; Anaxes letters
 (mk-reusable-item
- 't_anaxes_letter "Letter to Anaxes" s_scroll vhard
+ 't_anaxes_letter "Letter to Anaxes" s_scroll v-hard
  (lambda (kletter kuser)
    (kern-ui-page-text
     "Letter"

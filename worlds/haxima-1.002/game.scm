@@ -45,11 +45,12 @@
 ;; Passability Difficulty Levels (Note: 255 is well-known to the kernel to mean
 ;; "impassible" in the case of movement costs)
 (define norm       50)  ;; 1.0
+(define s-hard      75)  ;; 1.5
 (define hard      100)  ;; 2.0
-(define vhard     150)  ;; 3.0
+(define v-hard     150)  ;; 3.0
 (define fast       30)  ;; 0.6
-(define sfast      40)  ;; 0.4
-(define nodrop    100)  ;; 2.0
+(define s-fast      40)  ;; 0.4
+(define no-drop    100)  ;; 2.0
 (define cant      255)  ;; 
 
 ;; Passability classes
@@ -61,18 +62,19 @@
 (define pclass-wall          5) ;; has a ceiling
 (define pclass-trees         6)
 (define pclass-forest        7)
-(define pclass-repel         8) ;; energy shield blocks all
-(define pclass-space         9)
+(define pclass-hills         8)
+(define pclass-repel         9) ;; energy shield blocks all
+(define pclass-space         10)
 (define pclass-bridge        pclass-grass)
 (define pclass-road          pclass-grass)
-(define pclass-boulder       10) ;; no ceiling, smaller than mountain
-(define pclass-waterboulder  11) ;; worst case of boulder and water
-(define pclass-sludge        12)
-(define pclass-shallows      13)
-(define pclass-bars          14) ;; portcullis, some windows
-(define pclass-vmountains    15)
-(define pclass-canfloat      16) ;; avoids drowning
-(define pclass-canfly        17) ;; avoids ground based issues
+(define pclass-boulder       11) ;; no ceiling, smaller than mountain
+(define pclass-waterboulder  12) ;; worst case of boulder and water
+(define pclass-sludge        13)
+(define pclass-shallows      14)
+(define pclass-bars          15) ;; portcullis, some windows
+(define pclass-vmountains    16)
+(define pclass-canfloat      17) ;; avoids drowning
+(define pclass-canfly        18) ;; avoids ground based issues
 
 ;; Movement modes
 (define mmodes
@@ -108,21 +110,22 @@
 	;;	walk	hover	ship	phase	fly	skiff	fish	crawl	vship	rangr	none	wrigl	missl	f_fly	f_run	f_crawl	sml_obj	lrg_obj	fields	return	cannon		
 	(list	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	)	;; none
 	(list	norm	norm	cant	norm	norm	cant	cant	norm	cant	norm	cant	norm	0	fast	fast	fast	norm	norm	norm	0	0	)	;; grass/paving
-	(list	cant	cant	norm	cant	norm	vhard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	0	0	)	;; deep
-	(list	cant	hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	0	0	)	;; shoals
-	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	95	fast	cant	cant	nodrop	nodrop	cant	0	90	)	;; mountains
-	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	cant	cant	cant	0	100	)	;; wall (w/ ceiling)
-	(list	hard	hard	cant	norm	norm	cant	cant	hard	cant	norm	cant	hard	50	fast	norm	norm	norm	norm	norm	0	30	)	;; trees
-	(list	vhard	vhard	cant	norm	norm	cant	cant	vhard	cant	norm	cant	vhard	7	fast	hard	hard	norm	norm	norm	0	0	)	;; forest/hills/bog
-	(list	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	nodrop	nodrop	norm	0	100	)	;; energy fields
-	(list	cant	cant	cant	cant	norm	cant	cant	cant	norm	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	0	0	)	;; space
+	(list	cant	cant	norm	cant	norm	v-hard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; deep
+	(list	cant	s-hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; shoals
+	(list	cant	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	95	sfast	cant	cant	no-drop	no-drop	cant	0	90	)	;; mountains
+	(list	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	cant	cant	cant	0	100	)	;; wall (w/ ceiling)
+	(list	hard	hard	cant	norm	norm	cant	cant	hard	cant	norm	cant	hard	10	fast	norm	norm	norm	norm	norm	0	7	)	;; trees
+	(list	v-hard	v-hard	cant	norm	norm	cant	cant	v-hard	cant	s-hard	cant	v-hard	50	fast	hard	hard	norm	norm	norm	0	30	)	;; forest
+	(list	v-hard	hard	cant	norm	norm	cant	cant	v-hard	cant	s-hard	cant	v-hard	7	fast	hard	hard	norm	norm	norm	0	2	)	;; hills/bog
+	(list	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	no-drop	no-drop	norm	0	100	)	;; energy fields
+	(list	cant	cant	cant	cant	norm	cant	cant	cant	norm	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; space
 	(list	cant	norm	cant	norm	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	norm	0	4	)	;; boulder
-	(list	cant	hard	cant	cant	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	nodrop	0	4	)	;; waterboulder
-	(list	cant	norm	vhard	cant	norm	vhard	vhard	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	nodrop	0	0	)	;; sludge
-	(list	norm	norm	cant	norm	norm	norm	norm	norm	cant	norm	cant	cant	0	fast	norm	norm	cant	cant	nodrop	0	0	)	;; shallow sludge
-	(list	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	vhard	7	cant	cant	cant	norm	nodrop	norm	0	7	)	;; bars (eg portcullis)
-	(list	cant	cant	cant	cant	norm	cant	cant	cant	cant	cant	cant	cant	30	fast	cant	cant	nodrop	nodrop	nodrop	0	10	)	;; passlos mountains
-	(list	cant	vhard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; float
+	(list	cant	hard	cant	cant	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	no-drop	0	4	)	;; waterboulder
+	(list	cant	norm	v-hard	cant	norm	v-hard	v-hard	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; sludge
+	(list	s-hard	norm	cant	norm	norm	norm	norm	s-hard	cant	norm	cant	cant	0	fast	norm	norm	cant	cant	no-drop	0	0	)	;; shallow sludge
+	(list	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	v-hard	7	cant	cant	cant	norm	no-drop	norm	0	7	)	;; bars (eg portcullis)
+	(list	cant	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	30	sfast	cant	cant	no-drop	no-drop	no-drop	0	10	)	;; passlos mountains
+	(list	cant	v-hard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; float
 	(list	cant	hard	cant	cant	norm	hard	cant	cant	norm	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; fly
 )																																																																																																																																																																																																																																																															
 

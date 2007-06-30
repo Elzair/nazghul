@@ -87,7 +87,7 @@
                    lgt 0 nil)
 				   
 (define (mk-blend-terrain tag . sprites)
-  (kern-mk-terrain tag "hills" pclass-trees
+  (kern-mk-terrain tag "hills" pclass-hills
                    (mk-composite-sprite (cons s_shoals (cons s_hills_c sprites)))
                    dns 0 nil))
 
@@ -149,7 +149,7 @@
 ;; inner hill corners
 
 (define (mk-blend-terrain tag . sprites)
-  (kern-mk-terrain tag "hills" pclass-trees
+  (kern-mk-terrain tag "hills" pclass-hills
                    (mk-composite-sprite (cons s_grass (cons s_hills_c sprites)))
                    dns 0 nil))
 
@@ -170,7 +170,7 @@
 ;; swamp corners
 
 (define (mk-blend-terrain tag . sprites)
-  (kern-mk-terrain tag "bog" pclass-grass
+  (kern-mk-terrain tag "bog" pclass-hills
                    (mk-composite-sprite (cons s_bog sprites))
                    trn 0 'terrain-effect-swamp))
 
@@ -264,7 +264,7 @@
 (mk-blend-terrain 't_grassv_wes s_grasso_ne s_grasso_nw)
 
 (define (mk-blend-terrain tag . sprites)
-  (kern-mk-terrain tag "hills" pclass-trees
+  (kern-mk-terrain tag "hills" pclass-hills
                    (mk-composite-sprite (cons s_null (cons s_hills_c sprites)))
                    dns 0 nil))
 
@@ -331,7 +331,7 @@
 ;; lava corners
 
 (define (mk-blend-terrain tag . sprites)
-  (kern-mk-terrain tag "lava" pclass-grass
+  (kern-mk-terrain tag "lava" pclass-hills
                    (mk-composite-sprite (cons s_lava sprites))
                    trn 0 'terrain-effect-lava))
 

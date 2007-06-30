@@ -375,7 +375,7 @@
 ;; Plot type stuff
 
 (mk-reusable-item 
- 't_garrison_log "Garrison Log" s_lexicon vhard
+ 't_garrison_log "Garrison Log" s_lexicon v-hard
  (lambda (klexicon kuser)
    (kern-ui-page-text
    "Garrison Log"
