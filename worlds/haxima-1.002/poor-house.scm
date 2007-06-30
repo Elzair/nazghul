@@ -12,12 +12,12 @@
 		".. /7 .. rr .H .O .U .S .E rr .. .. .. .. .. .. .. .. bb "
 		".. /7 .. ,, ,, ,, ,, ,, ,, rr rr rr ,, rr bb rr .. .. bb "
 		".. /7 .. bb ,, ,, ,, ,, ,, rr ,, ,, ,, ,, .. rr .. .. bb "
-		".. /7 .. rr ,, ,, ,, ,, ,, d, ,, ,, ,, ,, ,, rr bb bb .. "
-		"/d /6 .. rr rr rr d, rr rr bb ,, ,, 00 ,, ,, ws .. /0 /d "
+		".. /7 .. rr ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr bb bb .. "
+		"/d /6 .. rr rr rr ,, rr rr bb ,, ,, 00 ,, ,, wr .. /0 /d "
 		".. /7 .. rr ,, ,, ,, ,, ,, rr ,, ,, 00 ,, ,, rr .. /7 .. "
 		".. /7 .. rr ,, ,, ,, ,, ,, rr ,, ,, 00 ,, ,, rr .. /7 .. "
-		".. /7 .. ws ,, ,, ,, ,, ,, rr ,, ,, ,, ,, ,, rr .. /7 .. "
-		".. /7 .. rr ,, .. ,, ,, ,, rr ,, ,, ,, ,, ,, ws .. /7 .. "
+		".. /7 .. wr ,, ,, ,, ,, ,, rr ,, ,, ,, ,, ,, rr .. /7 .. "
+		".. /7 .. rr ,, .. ,, ,, ,, rr ,, ,, ,, ,, ,, wr .. /7 .. "
 		".. /7 .. rr ,, ,, .. ,, ,, rr ,, bb && bb ,, rr .. /7 .. "
 		".. /7 .. rr rr rr bb rr rr rr rr rr rr rr rr rr .. /7 .. "
 		".. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. "
@@ -62,9 +62,13 @@
   (put (mk-bed)  8 14)
 
   ;; doors
-  (put (mk-door) 3 6)
-  (put (mk-door) 12 6)
-
+  (put (mk-door-in-rock) 3 6)
+  (put (mk-door-in-rock) 12 6)
+  
+  ;empty doorways
+  (put (mk-archway-rock) 6 9)
+  (put (mk-archway-rock) 9 8)
+  
   ;; chests
   (put (mk-chest
         nil

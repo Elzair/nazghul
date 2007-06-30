@@ -284,6 +284,13 @@
    (mk-door-state 's_locked_windowed_wood_door_in_rock           #f pclass-wall)
    (mk-door-state 's_magically_locked_windowed_wood_door_in_rock #f pclass-wall)))
 
+(define solid-wood-door-in-rock
+  (mk-door-states
+   (mk-door-state 's_closed_solid_wood_door_in_rock           #t pclass-wall)
+   (mk-door-state 's_open_door_in_rock                           #f pclass-none)
+   (mk-door-state 's_locked_solid_wood_door_in_rock           #t pclass-wall)
+   (mk-door-state 's_magically_locked_solid_wood_door_in_rock #t pclass-wall)))
+   
 ;;----------------------------------------------------------------------------
 ;; mk-door -- make and initialize a door object
 ;;
@@ -300,6 +307,7 @@
 
 ;; Backward-compatible curried constructors
 (define (mk-door) (mk-door-full solid-wood-door-in-stone #f #f nil))
+(define (mk-door-in-rock) (mk-door-full solid-wood-door-in-rock #f #f nil))
 (define (mk-locked-door) (mk-door-full solid-wood-door-in-stone #t #f nil))
 (define (mk-connected-door tag)(mk-door-full solid-wood-door-in-stone #f #f tag))
 (define (mk-windowed-door) (mk-door-full windowed-wood-door-in-rock #f #f nil))
@@ -318,3 +326,8 @@
   (ifccall kdoor 'add-trap trap-tag)
   kdoor
   )
+  
+(mk-obj-type 't_archway_rock "archway" s_open_door_in_rock layer-mechanism 
+             nil)
+        
+(define (mk-archway-rock) (kern-mk-obj t_archway_rock 1))
