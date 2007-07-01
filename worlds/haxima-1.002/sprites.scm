@@ -497,6 +497,12 @@
 (kern-mk-sprite 's_wall_rock     ss_overlays 1  72 #f 0 )
 (kern-mk-sprite 's_secret_rock     ss_overlays 1  73 #f 0 )
 (kern-mk-sprite 's_window_in_rock     ss_overlays 1  74 #f 0 )
+(kern-mk-sprite 's_nat_rock           ss_overlays 1  75 #f 0 )
+(kern-mk-sprite 's_nat_rock_s         ss_overlays 1  76 #f 0 )
+(kern-mk-sprite 's_nat_rock_n         ss_overlays 1  77 #f 0 )
+(kern-mk-sprite 's_nat_rock_w         ss_overlays 1  78 #f 0 )
+(kern-mk-sprite 's_nat_rock_e         ss_overlays 1  79 #f 0 )
+
 
 (kern-mk-sprite 's_bulwark_ew     ss_ship 1  0 #f 0 )
 (kern-mk-sprite 's_bulwark_ns     ss_ship 1  1 #f 0 )

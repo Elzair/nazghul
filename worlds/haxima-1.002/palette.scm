@@ -448,6 +448,23 @@
     (list	"<w" t_stair_uw)
     (list	"<e" t_stair_ue)
     
+    (list	"rn" t_nat_rock)
+    (list	"r1" t_nat_rock_n)
+    (list	"r2" t_nat_rock_w)
+    (list	"r3" t_nat_rock_nw)
+    (list	"r4" t_nat_rock_e)
+    (list	"r5" t_nat_rock_ne)
+    (list	"r6" t_nat_rock_we)
+    (list	"r7" t_nat_rock_nwe)
+    (list	"r8" t_nat_rock_s)
+    (list	"r9" t_nat_rock_ns)
+    (list	"ra" t_nat_rock_ws)
+    (list	"rb" t_nat_rock_nws)
+    (list	"rc" t_nat_rock_es)
+    (list	"rd" t_nat_rock_nes)
+    (list	"re" t_nat_rock_wes)
+    (list	"rf" t_nat_rock_nwes)
+
   )
 ) ;; palette pal_expanded
 

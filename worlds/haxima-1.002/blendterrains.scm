@@ -351,6 +351,30 @@
 (mk-blend-terrain 't_lava_wes s_grass_se s_grass_sw)
 (mk-blend-terrain 't_lava_c s_grass_se s_grass_sw s_grass_ne s_grass_nw)
 
+;;----------------------------------------------------------------
+;; natural stone edges
+
+(define (mk-blend-terrain tag . sprites)
+  (kern-mk-terrain tag "natural stone wall" pclass-wall
+                   (mk-composite-sprite (cons s_nat_rock sprites))
+                   opq 0 nil))
+
+(mk-blend-terrain 't_nat_rock_n s_nat_rock_n)
+(mk-blend-terrain 't_nat_rock_s s_nat_rock_s)
+(mk-blend-terrain 't_nat_rock_w s_nat_rock_w)
+(mk-blend-terrain 't_nat_rock_e s_nat_rock_e)
+(mk-blend-terrain 't_nat_rock_nw s_nat_rock_n s_nat_rock_w)
+(mk-blend-terrain 't_nat_rock_ne s_nat_rock_n s_nat_rock_e)
+(mk-blend-terrain 't_nat_rock_ns s_nat_rock_n s_nat_rock_s)
+(mk-blend-terrain 't_nat_rock_we s_nat_rock_w s_nat_rock_e)
+(mk-blend-terrain 't_nat_rock_ws s_nat_rock_w s_nat_rock_s)
+(mk-blend-terrain 't_nat_rock_es s_nat_rock_e s_nat_rock_s)
+(mk-blend-terrain 't_nat_rock_nwe s_nat_rock_n s_nat_rock_w s_nat_rock_e)
+(mk-blend-terrain 't_nat_rock_nws s_nat_rock_n s_nat_rock_w s_nat_rock_s)
+(mk-blend-terrain 't_nat_rock_nes s_nat_rock_n s_nat_rock_e s_nat_rock_s)
+(mk-blend-terrain 't_nat_rock_wes s_nat_rock_w s_nat_rock_e s_nat_rock_s)
+(mk-blend-terrain 't_nat_rock_nwes s_nat_rock_n s_nat_rock_w s_nat_rock_e s_nat_rock_s)
+
 ;;--------------------------------------------------------------------
 ;; fix terrain types
 
