@@ -890,7 +890,7 @@ static void stat_show_container()
              ie  = Status.container->next(ie, Status.filter)) {
 
 	        int nn = entry_height_lines(Status.mode, ie);
-		int tt = nn / 2;
+		int tt;
 
 		/* Check the scrolling window */
 		if (top) {
@@ -912,6 +912,7 @@ static void stat_show_container()
 		}
 
 		line += nn;
+		tt    = nn / 2;
 
 		/* Don't print outside the status window. */
 		if (tt >= N_LINES)
