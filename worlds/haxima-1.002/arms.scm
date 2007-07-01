@@ -36,6 +36,9 @@
 ;; such that "speed-human" suffices for 2 attacks:
 (define default-rap 75)
 
+(define (weap-ap mult)
+	(floor (* mult default-rap)))
+
 (kern-mk-sprite-set 'ss_arms 32 32 9 8 0 0 "arms.png")
 
 ;;-------------------------------------------------------------------------
@@ -430,26 +433,26 @@
 (define projectile-arms-types
   (list
    ;;     =========================================================================================================================================================================================
-   ;;     tag            | name           |  sprite     | to-hit | damage | to-def | AP_cost | slots       | hnds | rng | missile        | ammo  | ubiq | weight | stratt | dexatt | dammod | avoid
+   ;;     tag            | name           |  sprite     | to-hit | damage | to-def | AP_cost       | slots       | hnds | rng | missile        | ammo  | ubiq | weight | stratt | dexatt | dammod | avoid
    ;;     =========================================================================================================================================================================================
-   (list 't_sling          "sling"           s_sling      "1d2-2"  "1d4"    "-1"     75        slot-weapon   1      4     t_slingstone     nil     #t     0        10       60       30       0.9  )
-   (list 't_sling_4        "+4 sling"        s_sling      "+3"     "1d4+4"  "+0"     75        slot-weapon   1      6     t_slingstone     nil     #t     0        10       60       30       0.9  )
+   (list 't_sling          "sling"           s_sling      "1d2-2"  "1d4"    "-1"     (weap-ap 1)    slot-weapon   1      4     t_slingstone     nil     #t     0        10       60       30       0.9  )
+   (list 't_sling_4        "+4 sling"        s_sling      "+3"     "1d4+4"  "+0"     (weap-ap 1)    slot-weapon   1      6     t_slingstone     nil     #t     0        10       60       30       0.9  )
 
-   (list 't_self_bow       "self bow"        s_bow        "+1"     "1d6"    "-2"     60        slot-weapon   2      4     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
-   (list 't_bow            "bow"             s_bow        "1d3-2"  "2d4"    "-2"     75        slot-weapon   2      5     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
-   (list 't_long_bow       "longbow"         s_bow        "1d3-2"  "2d6+1"  "-2"     90        slot-weapon   2      6     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
-   (list 't_great_bow      "great bow"       s_bow        "1d3-2"  "2d6+3"  "-2"    100        slot-weapon   2      7     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
+   (list 't_self_bow       "self bow"        s_bow        "+1"     "1d6"    "-2"     (weap-ap 0.8)  slot-weapon   2      4     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
+   (list 't_bow            "bow"             s_bow        "1d3-2"  "2d4"    "-2"     (weap-ap 1)    slot-weapon   2      5     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
+   (list 't_long_bow       "longbow"         s_bow        "1d3-2"  "2d6+1"  "-2"     (weap-ap 1.2)  slot-weapon   2      6     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
+   (list 't_great_bow      "great bow"       s_bow        "1d3-2"  "2d6+3"  "-2"     (weap-ap 1.34) slot-weapon   2      7     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
 
-   (list 't_lt_crossbow    "light crossbow"  s_crossbow   "1d4-2"  "2d5"    "-1"     75        slot-weapon   2      5     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
-   (list 't_crossbow       "crossbow"        s_crossbow   "1d4-2"  "4d4"    "-1"     90        slot-weapon   2      6     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
-   (list 't_hvy_crossbow   "heavy crossbow"  s_crossbow   "1d4-2"  "4d6+2"  "-1"    150        slot-weapon   2      7     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
-   (list 't_trpl_crossbow  "triple crossbow" s_crossbow   "1d4-2"  "2d5"    "-1"     50        slot-weapon   2      5     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
+   (list 't_lt_crossbow    "light crossbow"  s_crossbow   "1d4-2"  "2d5"    "-1"     (weap-ap 1)    slot-weapon   2      5     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
+   (list 't_crossbow       "crossbow"        s_crossbow   "1d4-2"  "4d4"    "-1"     (weap-ap 1)    slot-weapon   2      6     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
+   (list 't_hvy_crossbow   "heavy crossbow"  s_crossbow   "1d4-2"  "4d6+2"  "-1"     (weap-ap 2)    slot-weapon   2      7     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
+   (list 't_trpl_crossbow  "triple crossbow" s_crossbow   "1d4-2"  "2d5"    "-1"     (weap-ap 0.67) slot-weapon   2      5     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
 
-   (list 't_doom_staff     "doom staff"      s_doom_staff "1d4"    "1d2"    "+2"     75        slot-weapon   2      5     t_fireball       nil     #t     2         0       50        0       1.0  )
-   (list 't_acid_spray     "acid spray"      nil          "-7"     "1d6"    "+0"     75        slot-nil      2      2     t_slimeglob      nil     #t     0        10       50       20       1.0  )
-   (list 't_fire_glob      "fire glob"       nil          "-8"     "1d6"    "+0"     75        slot-nil      2      2     t_fireball       nil     #t     0        10       50       20       1.0  )
-   (list 't_stun_wand      "stun wand"       s_stun_wand  "-2"     "1d4"    "-1"     75        slot-weapon   1      6     t_stunball       nil     #t     2         0       80        0       1.0  )
-   (list 't_prismatic_gaze "prismatic gaze"  nil          "1d4"    "0"      "+0"     75        slot-nil      1      3     t_prismatic_bolt nil     #t     0         0        0        0       0.85 )
+   (list 't_doom_staff     "doom staff"      s_doom_staff "1d4"    "1d2"    "+2"     (weap-ap 1)    slot-weapon   2      5     t_fireball       nil     #t     2         0       50        0       1.0  )
+   (list 't_acid_spray     "acid spray"      nil          "-7"     "1d6"    "+0"     (weap-ap 1)    slot-nil      2      2     t_slimeglob      nil     #t     0        10       50       20       1.0  )
+   (list 't_fire_glob      "fire glob"       nil          "-8"     "1d6"    "+0"     (weap-ap 1)    slot-nil      2      2     t_fireball       nil     #t     0        10       50       20       1.0  )
+   (list 't_stun_wand      "stun wand"       s_stun_wand  "-2"     "1d4"    "-1"     (weap-ap 1)    slot-weapon   1      6     t_stunball       nil     #t     2         0       80        0       1.0  )
+   (list 't_prismatic_gaze "prismatic gaze"  nil          "1d4"    "0"      "+0"     (weap-ap 1)    slot-nil      1      3     t_prismatic_bolt nil     #t     0         0        0        0       0.85 )
    ))
 
 ;; ============================================================================
@@ -460,16 +463,16 @@
 (define thrown-arms-types
   (list
    ;;     =================================================================================================================================================================================================================
-   ;;     tag              | name          | sprite                   | to-hit | dmg | to-def | AP_cost | slots       | hnds | rng | missile          | ubiq | ifc              | weight | stratt | dexatt | dammod | avoid
+   ;;     tag              | name          | sprite                   | to-hit | dmg | to-def | AP_cost        | slots       | hnds | rng | missile          | ubiq | ifc              | weight | stratt | dexatt | dammod | avoid
    ;;     =================================================================================================================================================================================================================
-   (list  't_thrown_rock    "small rock"    s_cannonball                "-2"     "1d2"    "-2"  100       slot-weapon   1      4     t_thrown_rock_p    #t     obj-ifc             1       20       20         0      0.9 )
-   (list  't_thrown_boulder "loose boulder" s_thrown_boulder            "-2"     "3d4+1"  "-2"  150       slot-weapon   2      5     t_thrown_boulder_p #f     obj-ifc            10       40       20        60      0.9 )
+   (list  't_thrown_rock    "small rock"    s_cannonball                "-2"     "1d2"    "-2"  (weap-ap 1.33)  slot-weapon   1      4     t_thrown_rock_p    #t     obj-ifc             1       20       20         0      0.9 )
+   (list  't_thrown_boulder "loose boulder" s_thrown_boulder            "-2"     "3d4+1"  "-2"  (weap-ap 2)     slot-weapon   2      5     t_thrown_boulder_p #f     obj-ifc            10       40       20        60      0.9 )
 
-   (list  't_spear          "spear"         s_spearobj                  "+1"     "1d8+1"  "+1"   75       slot-weapon   1      4     t_spear_p          #f     obj-ifc             2       30       60        40      1.0 )
-   (list  't_magic_axe      "magical axe"   s_throwing_axe              "+2"     "2d4+2"  "+0"   75       slot-weapon   1      4     t_thrown_axe_p     #t     obj-ifc             2       30       60        40      1.0 )
+   (list  't_spear          "spear"         s_spearobj                  "+1"     "1d8+1"  "+1"   (weap-ap 1)    slot-weapon   1      4     t_spear_p          #f     obj-ifc             2       30       60        40      1.0 )
+   (list  't_magic_axe      "magical axe"   s_throwing_axe              "+2"     "2d4+2"  "+0"   (weap-ap 1)    slot-weapon   1      4     t_thrown_axe_p     #t     obj-ifc             2       30       60        40      1.0 )
 
-   (list  't_oil            "flaming oil"   s_oil_potion                "-1"     "1d6"    "-2"   90       slot-weapon   1      4     t_oil_p            #f     flaming-oil-ifc     1       20       30         0      0.9 )
-   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"   90       slot-weapon   1      4     t_slime_vial_p     #f     vial-of-slime-ifc   1       20       30         0      1.0 )
+   (list  't_oil            "flaming oil"   s_oil_potion                "-1"     "1d6"    "-2"   (weap-ap 1.2)  slot-weapon   1      4     t_oil_p            #f     flaming-oil-ifc     1       20       30         0      0.9 )
+   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"   (weap-ap 1.2)  slot-weapon   1      4     t_slime_vial_p     #f     vial-of-slime-ifc   1       20       30         0      1.0 )
 
    ))
 
@@ -500,33 +503,33 @@
 (define melee-arms-types
   (list
    ;;     ===================================================================================================================================================
-   ;;     tag          |    name           | sprite         | to-hit | damage | to-def | AP_cost | slots       | hnds | rng | weight | dxmod | stmod | dammod | avoid
+   ;;     tag          |    name           | sprite         | to-hit | damage | to-def | AP_cost        | slots       | hnds | rng | weight | dxmod | stmod | dammod | avoid
    ;;     ===================================================================================================================================================
-   (list  't_hands          "bare hands"     nil              "1d2"    "1d2"    "1d2"     50       slot-nil      1      1     0        50      20       10      1.0  )
-   (list  't_F_fangs        "fangs"          nil              "1d2"    "1d4"    "+0"      50       slot-nil      1      1     0        50      20       30      1.0  )
-   (list  't_fangs          "fangs"          nil              "1d2"    "1d6"    "+0"      75       slot-nil      1      1     0        50      20       30      1.0  )
-   (list  't_G_fangs        "great fangs"    nil              "1d2"    "1d10"   "+0"     100       slot-nil      1      1     0        50      20       30      1.0  )
-   (list  't_horns          "horns"          nil              "1d2"    "1d8"    "1d2"     50       slot-nil      1      1     0        30      40       60      1.0  )
-   (list  't_stinger        "stinger"        nil              "1d2"    "1d2"    "+0"      50       slot-nil      1      1     0        50      20       10      1.0  )
-   (list  't_tentacles      "tentacles"      nil              "1d3"    "4d4"    "4d2"     75       slot-nil      1      1     0        70      20       60      1.0  )
-   (list  't_beak           "beak"           nil              "+0"     "2d4"    "+0"      75       slot-nil      1      1     0        50      30       30      1.0  )
-   (list  't_pincers        "pincers"        nil              "-1"     "4d4"    "4d2"     90       slot-nil      1      1     0        50      30       30      1.0  )
+   (list  't_hands          "bare hands"     nil              "1d2"    "1d2"    "1d2"    (weap-ap 0.67) slot-nil      1      1     0        50      20       10      1.0  )
+   (list  't_F_fangs        "fangs"          nil              "1d2"    "1d4"    "+0"     (weap-ap 0.67) slot-nil      1      1     0        50      20       30      1.0  )
+   (list  't_fangs          "fangs"          nil              "1d2"    "1d6"    "+0"      (weap-ap 1)   slot-nil      1      1     0        50      20       30      1.0  )
+   (list  't_G_fangs        "great fangs"    nil              "1d2"    "1d10"   "+0"     (weap-ap 1.34) slot-nil      1      1     0        50      20       30      1.0  )
+   (list  't_horns          "horns"          nil              "1d2"    "1d8"    "1d2"    (weap-ap 0.67) slot-nil      1      1     0        30      40       60      1.0  )
+   (list  't_stinger        "stinger"        nil              "1d2"    "1d2"    "+0"     (weap-ap 0.67) slot-nil      1      1     0        50      20       10      1.0  )
+   (list  't_tentacles      "tentacles"      nil              "1d3"    "4d4"    "4d2"     (weap-ap 1)   slot-nil      1      1     0        70      20       60      1.0  )
+   (list  't_beak           "beak"           nil              "+0"     "2d4"    "+0"      (weap-ap 1)   slot-nil      1      1     0        50      30       30      1.0  )
+   (list  't_pincers        "pincers"        nil              "-1"     "4d4"    "4d2"     (weap-ap 1.2) slot-nil      1      1     0        50      30       30      1.0  )
 
-   (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"     60       slot-weapon   1      1     0        80      10       10      1.0  )
-   (list  't_dagger_4       "+4 dagger"      s_dagger         "1d4+4"  "1d4+4"  "1d2+4"   60       slot-weapon   1      1     0        80      10       10      1.0  )
-   (list  't_mace           "mace"           s_mace           "1d4"    "1d6+2"  "+0"      75       slot-weapon   1      1     3        20      60       80      0.95 )
-   (list  't_axe            "axe"            s_axe            "1d2"    "2d4+2"  "+0"      90       slot-weapon   1      1     3        30      50       90      0.95 )
-   (list  't_sword          "sword"          s_sword          "1d2"    "1d8+1"  "1d2"     75       slot-weapon   1      1     2        50      20       70      1.0  )
-   (list  't_sword_2        "+2 sword"       s_sword          "1d2+2"  "1d8+3"  "1d2+2"   75       slot-weapon   1      1     2        50      20       70      1.0  )
-   (list  't_sword_4        "+4 sword"       s_sword          "1d2+4"  "1d8+5"  "1d2+4"   75       slot-weapon   1      1     2        50      20       70      1.0  )
-   (list  't_2H_axe         "2H axe"         s_2h_axe         "+0"     "4d4+4"  "-2"     100       slot-weapon   2      1     4        20      60      100      0.9  )
-   (list  't_2H_sword       "2H sword"       s_2h_sword       "+0"     "2d8+2"  "+1"      90       slot-weapon   2      1     4        40      40       90      0.95 )
-   (list  't_morning_star   "morning star"   s_morning_star   "1d2+2"  "1d6+1"  "-1"      75       slot-weapon   1      2     3        20      40       70      0.9  )
-   (list  't_morning_star_2 "+2 morning star" s_morning_star  "1d2+4"  "1d6+3"  "+2"      75       slot-weapon   1      2     3        20      40       70      0.9  )
-   (list  't_halberd        "halberd"        s_halberd        "1d3+1"  "2d8-2"  "1d2"     75       slot-weapon   2      2     4        30      30      100      0.9  )
-   (list  't_staff          "staff"          s_staff          "1d3"    "1d4"    "1d3"     60       slot-weapon   2      2     2        60      30       40      1.0  )
-   (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "+2"     "3d7+5"  "+0"     100       slot-weapon   2      1     2        50      20       70      1.0  )
-   (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+5" "+2"      75       slot-weapon   1      1     1        60      20       70      1.0  )
+   (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"     (weap-ap 0.8) slot-weapon   1      1     0        80      10       10      1.0  )
+   (list  't_dagger_4       "+4 dagger"      s_dagger         "1d4+4"  "1d4+4"  "1d2+4"   (weap-ap 0.8) slot-weapon   1      1     0        80      10       10      1.0  )
+   (list  't_mace           "mace"           s_mace           "1d4"    "1d6+2"  "+0"      (weap-ap 1)   slot-weapon   1      1     3        20      60       80      0.95 )
+   (list  't_axe            "axe"            s_axe            "1d2"    "2d4+2"  "+0"      (weap-ap 1.2) slot-weapon   1      1     3        30      50       90      0.95 )
+   (list  't_sword          "sword"          s_sword          "1d2"    "1d8+1"  "1d2"     (weap-ap 1)   slot-weapon   1      1     2        50      20       70      1.0  )
+   (list  't_sword_2        "+2 sword"       s_sword          "1d2+2"  "1d8+3"  "1d2+2"   (weap-ap 1)   slot-weapon   1      1     2        50      20       70      1.0  )
+   (list  't_sword_4        "+4 sword"       s_sword          "1d2+4"  "1d8+5"  "1d2+4"   (weap-ap 1)   slot-weapon   1      1     2        50      20       70      1.0  )
+   (list  't_2H_axe         "2H axe"         s_2h_axe         "+0"     "4d4+4"  "-2"     (weap-ap 1.34) slot-weapon   2      1     4        20      60      100      0.9  )
+   (list  't_2H_sword       "2H sword"       s_2h_sword       "+0"     "2d8+2"  "+1"      (weap-ap 1.2) slot-weapon   2      1     4        40      40       90      0.95 )
+   (list  't_morning_star   "morning star"   s_morning_star   "1d2+2"  "1d6+1"  "-1"      (weap-ap 1)   slot-weapon   1      2     3        20      40       70      0.9  )
+   (list  't_morning_star_2 "+2 morning star" s_morning_star  "1d2+4"  "1d6+3"  "+2"      (weap-ap 1)   slot-weapon   1      2     3        20      40       70      0.9  )
+   (list  't_halberd        "halberd"        s_halberd        "1d3+1"  "2d8-2"  "1d2"     (weap-ap 1)   slot-weapon   2      2     4        30      30      100      0.9  )
+   (list  't_staff          "staff"          s_staff          "1d3"    "1d4"    "1d3"     (weap-ap 0.8) slot-weapon   2      2     2        60      30       40      1.0  )
+   (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "+2"     "3d7+5"  "+0"     (weap-ap 1.34) slot-weapon   2      1     2        50      20       70      1.0  )
+   (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+5" "+2"      (weap-ap 1)   slot-weapon   1      1     1        60      20       70      1.0  )
    ))
    
 (kern-mk-sprite 's_leather_helm  ss_arms 1 48 #f 0)
@@ -539,22 +542,22 @@
 (define armor-types
   (list
    ;;     ===============================================================================================================
-   ;;     tag               | name            |  sprite        |  to-hit | armor  | slots     | equipap | weight | avoid 
+   ;;     tag               | name            |  sprite        |  to-hit | armor  | slots     | equipap     | weight | avoid 
    ;;     ===============================================================================================================
-   (list   't_leather_helm    "leather helm"     s_leather_helm   "-1"     "1d2"    slot-helm    50        0       1.0  )
-   (list   't_leather_helm_2  "+2 leather helm"  s_leather_helm   "+0"     "1d2+2"  slot-helm    50        0       1.0  )
-   (list   't_leather_helm_4  "+4 leather helm"  s_leather_helm   "+0"     "1d2+4"  slot-helm    50        0       1.0  )
-   (list   't_chain_coif      "chain coif"       s_chain_coif     "-1"     "1d3"    slot-helm    50        1       0.9  )
-   (list   't_chain_coif_4    "+4 chain coif"    s_chain_coif     "+0"     "1d3+4"  slot-helm    50        1       0.9  )
-   (list   't_iron_helm       "iron helm"        s_iron_helm      "-1"     "1d4"    slot-helm    50        2       0.9  )
-   (list   't_iron_helm_4     "+4 iron helm"     s_iron_helm      "+0"     "1d4+4"  slot-helm    50        2       0.9  )
-   (list   't_armor_leather   "leather armor"    s_leather_armor  "-1"     "1d4"    slot-armor  100        2       0.85 )
-   (list   't_armor_leather_2 "+2 leather armor" s_leather_armor  "+0"     "1d4+2"  slot-armor  100        2       0.85 )
-   (list   't_armor_leather_4 "+4 leather armor" s_leather_armor  "+0"     "1d4+4"  slot-armor  100        2       0.9  )
-   (list   't_armor_chain     "chain armor"      s_chain_armor    "-2"     "2d4"    slot-armor  150        4       0.7  )
-   (list   't_armor_chain_4   "+4 chain armor"   s_chain_armor    "+0"     "2d4+4"  slot-armor  150        4       0.8  )
-   (list   't_armor_plate     "plate armor"      s_plate_armor    "-4"     "4d4"    slot-armor  250        8       0.6  )
-   (list   't_armor_plate_4   "+4 plate armor"   s_plate_armor    "+0"     "4d4+4"  slot-armor  250        8       0.7  )
+   (list   't_leather_helm    "leather helm"     s_leather_helm   "-1"     "1d2"    slot-helm   (weap-ap 1)   0       1.0  )
+   (list   't_leather_helm_2  "+2 leather helm"  s_leather_helm   "+0"     "1d2+2"  slot-helm   (weap-ap 1)   0       1.0  )
+   (list   't_leather_helm_4  "+4 leather helm"  s_leather_helm   "+0"     "1d2+4"  slot-helm   (weap-ap 1)   0       1.0  )
+   (list   't_chain_coif      "chain coif"       s_chain_coif     "-1"     "1d3"    slot-helm   (weap-ap 1)   1       0.9  )
+   (list   't_chain_coif_4    "+4 chain coif"    s_chain_coif     "+0"     "1d3+4"  slot-helm   (weap-ap 1)   1       0.9  )
+   (list   't_iron_helm       "iron helm"        s_iron_helm      "-1"     "1d4"    slot-helm   (weap-ap 1)   2       0.9  )
+   (list   't_iron_helm_4     "+4 iron helm"     s_iron_helm      "+0"     "1d4+4"  slot-helm   (weap-ap 1)   2       0.9  )
+   (list   't_armor_leather   "leather armor"    s_leather_armor  "-1"     "1d4"    slot-armor  (weap-ap 2)   2       0.85 )
+   (list   't_armor_leather_2 "+2 leather armor" s_leather_armor  "+0"     "1d4+2"  slot-armor  (weap-ap 2)   2       0.85 )
+   (list   't_armor_leather_4 "+4 leather armor" s_leather_armor  "+0"     "1d4+4"  slot-armor  (weap-ap 2)   2       0.9  )
+   (list   't_armor_chain     "chain armor"      s_chain_armor    "-2"     "2d4"    slot-armor  (weap-ap 3)   4       0.7  )
+   (list   't_armor_chain_4   "+4 chain armor"   s_chain_armor    "+0"     "2d4+4"  slot-armor  (weap-ap 3)   4       0.8  )
+   (list   't_armor_plate     "plate armor"      s_plate_armor    "-4"     "4d4"    slot-armor  (weap-ap 5)   8       0.6  )
+   (list   't_armor_plate_4   "+4 plate armor"   s_plate_armor    "+0"     "4d4+4"  slot-armor  (weap-ap 5)   8       0.7  )
    ))	
 
 (kern-mk-sprite 's_shield            ss_arms 1 54 #f 0)
@@ -584,7 +587,7 @@
 
 (kern-mk-arms-type 't_spiked_helm "spiked helm" s_spiked_helm
                    "0" "1d4" "3" "0"
-                   slot-helm 1 1 30
+                   slot-helm 1 1 (weap-ap 2)
                    nil nil #f #f
                    2 ;; weight
                    nil obj-ifc-cap obj-ifc
@@ -592,7 +595,7 @@
 
 (kern-mk-arms-type 't_spiked_shield "spiked shield" s_spiked_shield
                    "0" "1d5" "0" "5"
-                   slot-shield 1 1 30
+                   slot-shield 1 1 (weap-ap 2)
                    nil nil #f #f
                    3 ;; weight
                    nil obj-ifc-cap obj-ifc
@@ -615,7 +618,7 @@
                	))
          )))          
 							
-(kern-mk-arms-type 't_flaming_sword "flaming sword" s_flaming_sword "1d2" "1d8+2" "0" "1d2" slot-weapon 1 1 default-rap nil nil #f #f 2 nil
+(kern-mk-arms-type 't_flaming_sword "flaming sword" s_flaming_sword "1d2" "1d8+2" "0" "1d2" slot-weapon 1 1 (weap-ap 1) nil nil #f #f 2 nil
 					 (ifc-cap flaming-sword-ifc) flaming-sword-ifc 50 20 70 1.0 mmode-smallobj)
 
 
@@ -629,7 +632,7 @@
                    slot-nil          ;;        slots : slots it will fit in (e.g., hands)
                    0                 ;;        hands : number of slots required to ready it
                    6                 ;;        range : range it will fire
-                   80                ;;          rap : required action points to attack with it
+                   (weap-ap 1.2)     ;;          rap : required action points to attack with it
                    t_cannonball      ;;
                    nil				    ;;      missile : nil or the armament type it fires
                    #f                ;;       thrown : true or false
