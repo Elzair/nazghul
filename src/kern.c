@@ -3029,6 +3029,34 @@ KERN_API_CALL(kern_place_synch)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_place_is_visible)
+{
+	struct place *place;
+	int x, y;
+	
+	if (unpack_loc(sc, &args, &place, &x, &y, "kern_place_is_visible"))
+		return sc->NIL;
+	
+	if (! place) {
+		rt_err("kern_place_is_visible: null place");
+		return sc->NIL;
+	}
+	
+	if (place != player_party->getPlace())
+	{
+		return sc->F;	
+	}
+	
+	if (mapTileIsVisible(x,y))
+	{
+		return sc->T;	
+	}
+	else
+	{
+		return sc->F;	
+	}
+}
+
 static pointer kern_blit_map(scheme *sc, pointer args)
 {
         struct terrain_map *src;
@@ -8899,6 +8927,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-set-terrain", kern_place_set_terrain);
         API_DECL(sc, "kern-place-set-terrain-map", kern_place_set_terrain_map);
         API_DECL(sc, "kern-place-synch", kern_place_synch);
+        API_DECL(sc, "kern-place-is-visible?", kern_place_is_visible);        
+
 
         /* player api */
         API_DECL(sc, "kern-player-get-food", kern_player_get_food);
