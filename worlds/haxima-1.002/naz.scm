@@ -1639,3 +1639,11 @@
 						(number->string size)
 						size)))
 			(string-append numstr "d" sizestr)))
+
+;; output for effects that should only be noted if visible
+
+(define (msg-log-visible loc . args)
+	(if (kern-place-is-visible? loc)
+		(apply kern-log-msg args)
+		)
+	)
