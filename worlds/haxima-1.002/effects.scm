@@ -257,6 +257,11 @@
   (let ((effects (kern-obj-get-effects kobj)))
     (or (in-list? ef_sleep_immunity effects)
         (in-list? ef_temporary_sleep_immunity effects))))
+        
+(define (has-charm-immunity? kobj)
+  (let ((effects (kern-obj-get-effects kobj)))
+    (or (in-list? ef_charm_immunity effects)
+        (in-list? ef_temporary_charm_immunity effects))))
 
 ;; ----------------------------------------------------------------------------
 ;; light

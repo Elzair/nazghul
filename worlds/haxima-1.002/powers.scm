@@ -157,19 +157,14 @@
 ;; Shared utilities
 ;;--------------------------------------------------------------
 
-;; TODO individual spells should probably handle their own output (they can put more detail into it)
 (define (contest-of-skill offense defense)
   (let ((oprob (+ offense 1))
         (tprob (number->string (+ offense defense 2))))
     (println "oprob=" oprob " tprob=" tprob " offense=" offense " defense=" defense)
     (if (< (kern-dice-roll (string-append "1d" tprob))
            oprob)
-        (begin
-          (kern-log-msg "^c+gSpell succeeds!^c-")
-          #t)
-        (begin
-          (kern-log-msg "^c+rSpell resisted!^c-")
-          #f)
+          #t
+          #f
         )))
 
 
@@ -206,14 +201,25 @@
 	
 ;failed charm pisses off target
 (define (powers-charm caster target power)
-	(if (contest-of-skill
+	(cond
+		((has-charm-immunity? target)
+			(msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists charm")
+			)
+		((contest-of-skill
 			(+ power 1)
 			(occ-ability-magicdef target))
-		(kern-obj-add-effect target 
-							ef_charm 
-							(charm-mk (kern-being-get-current-faction caster)))
+				(let ((tloc (kern-obj-get-location target)))
+					(kern-obj-add-effect target 
+								ef_charm 
+								(charm-mk (kern-being-get-current-faction caster)))
+					(kern-map-flash-sprite s_heart (loc-x tloc) (loc-y tloc))
+					(msg-log-visible tloc (kern-obj-get-name target) " is charmed")
+				)
 			)
-		(kern-harm-relations target caster))
+		(else (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists charm"))
+		)
+	(kern-harm-relations target caster)
+)
 
 (define (powers-clone-range power)
 	(+ 1 (/ power 7)))
@@ -798,24 +804,27 @@
 ;   area of effect based on power
 ;	'turned' as an effect? [so it shows on description] or maybe fleeing should show...
 (define (powers-turn-undead caster unused power)
-  (define (is-undead-char? kobj)
-    (and (obj-is-char? kobj)
-         (species-is-undead? (kern-char-get-species kobj))))
-  (define (repel kchar)
-	(if (contest-of-skill
+	(define (is-undead-char? kobj)
+		(and (obj-is-char? kobj)
+		(species-is-undead? (kern-char-get-species kobj)))
+		)
+	(define (repel kchar)
+		(if (contest-of-skill
 			(+ power 3)
 			(occ-ability-magicdef kchar))
-		(kern-char-set-fleeing kchar #t)))
-  (let ((all-kobjs (kern-place-get-objects (car (kern-obj-get-location caster)))))
-    (cond ((null? all-kobjs) 
-           (kern-print "Odd, Nobody here!\n")
-           )
-          (else (let ((all-undead-combatants (filter is-undead-char? all-kobjs)))
-                  (cond ((null? all-undead-combatants) 
-                         (kern-print "No undead here!\n")
-                         )
-                        (else (map repel all-undead-combatants)
-                              )))))))
+		(let ((tloc (kern-obj-get-location kchar)))
+			(kern-map-flash-sprite s_magicflash (loc-x tloc) (loc-y tloc))
+			(msg-log-visible tloc (kern-obj-get-name kchar) " turned")
+			(kern-char-set-fleeing kchar #t))
+		)
+		(begin
+			(msg-log-visible (kern-obj-get-location kchar) (kern-obj-get-name kchar) " resists")
+		)
+	)
+	(let* ((all-kobjs (kern-place-get-objects (car (kern-obj-get-location caster))))
+		(all-undead-combatants (filter is-undead-char? all-kobjs)))
+			(map repel all-undead-combatants)
+	))
 	
 ;todo limit to some (large) range?
 (define (powers-tremor caster unused power)
