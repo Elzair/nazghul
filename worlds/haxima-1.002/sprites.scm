@@ -82,7 +82,7 @@
 (kern-mk-sprite 's_lava         ss_u4_shapes 1 76 #t 0 )
 (kern-mk-sprite 's_projectile   ss_u4_shapes 1 77 #f 0 )
 (kern-mk-sprite 's_magic        ss_u4_shapes 1 78 #f 0 )
-(kern-mk-sprite 's_hit          ss_u4_shapes 1 79 #f 0 )
+;;(kern-mk-sprite 's_hit          ss_u4_shapes 1 79 #f 0 )
 ;;(kern-mk-sprite 's_guard        ss_u4_shapes 2 80 #f 0 )
 ;;(kern-mk-sprite 's_townsman     ss_u4_shapes 2 82 #f 0 )
 ;;(kern-mk-sprite 's_bard         ss_u4_shapes 2 84 #f 0 )
@@ -712,4 +712,12 @@
 
 (mk-sprite 's_hum_med_hair_midnight  mat_gold_to_midnight s_hum_med_hair_gold)
 (mk-sprite 's_hum_long_hair_midnight mat_gold_to_midnight s_hum_long_hair_gold)
+
+
+;;--------------------------------------------------------------------------
+;; 'special effects'
+
+(kern-mk-sprite 's_heart	     ss_sfx   1  0 #f 0 )
+(kern-mk-sprite 's_hit	        ss_sfx   1  1 #f 0 )
+(kern-mk-sprite 's_magicflash	  ss_sfx   1  2 #f 0 )
 
