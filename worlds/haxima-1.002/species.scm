@@ -129,7 +129,7 @@
 ;; This list of the undead species is used by spells which affect the undead.
 ;;----------------------------------------------------------------------------
 (define undead-species-tags
-  (list sp_skeleton sp_lich))
+  (list sp_skeleton sp_lich sp_ghast))
 
 (define (species-is-undead? species)
   (foldr (lambda (x undead) (or x (eqv? species undead)))
