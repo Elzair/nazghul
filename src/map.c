@@ -1372,6 +1372,31 @@ void mapPaintDamage(int x, int y)
                            Map.tile_scratch_surf, 100, 0);
 }
 
+//paint damage, but with custom sprite
+void mapFlashSprite(int x, int y, struct sprite *sprite)
+{
+        int tile_w, tile_h;
+        SDL_Rect rect;
+
+        if (!mapTileIsVisible(x, y))
+                return;
+
+        mapGetTileDimensions(&tile_w, &tile_h);
+        rect.w = tile_w;
+        rect.h = tile_h;
+        rect.x = MX_TO_SX(x);
+        rect.y = MY_TO_SY(y);
+
+        /* Sometimes a damage flash doesn't make sense to the player unless the
+         * map view is updated first. For example, a character that gets 2x the
+         * normal action points per turn might move and then attack. The move
+         * won't be shown until the map is updated. */
+        mapUpdate(REPAINT_IF_DIRTY);
+
+        mapPaintProjectile(&rect, sprite, 
+                           Map.tile_scratch_surf, 100, 0);
+}
+
 void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
                           struct sprite *sprite, struct place *place,
                           class Missile *missile)

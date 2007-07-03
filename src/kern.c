@@ -3109,6 +3109,27 @@ static pointer kern_map_rotate(scheme *sc, pointer args)
         return scm_mk_ptr(sc, map);
 }
 
+
+static pointer kern_map_flash_sprite(scheme *sc, pointer args)
+{
+        int x, y;
+        struct sprite *sprite;
+
+        if (unpack(sc, &args, "pdd", &sprite, &x, &y)) {
+                rt_err("kern_map_flash_sprite: bad args");
+                return sc->NIL;
+        }
+
+        if (!sprite) {
+                rt_err("kern_map_flash_sprite: null sprite");
+                return sc->NIL;
+        }
+
+        mapFlashSprite(x, y, sprite);
+
+        return sc->NIL;
+}
+
 static pointer kern_tag(scheme *sc, pointer  args)
 {
         char *tag;
@@ -8929,7 +8950,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-synch", kern_place_synch);
         API_DECL(sc, "kern-place-is-visible?", kern_place_is_visible);        
 
-
         /* player api */
         API_DECL(sc, "kern-player-get-food", kern_player_get_food);
         API_DECL(sc, "kern-player-get-gold", kern_player_get_gold);
@@ -9022,6 +9042,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-test-recursion", kern_test_recursion);
         API_DECL(sc, "kern-ticks-per-turn", kern_ticks_per_turn);
         API_DECL(sc, "kern-set-turn-count", kern_set_turn_count);
+        API_DECL(sc, "kern-map-flash-sprite", kern_map_flash_sprite); 
         
         /* ui api */
         API_DECL(sc, "kern-ui-direction", kern_ui_direction);

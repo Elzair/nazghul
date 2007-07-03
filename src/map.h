@@ -93,6 +93,7 @@ extern void mapSetLosStyle(char *los);
 extern void mapUpdateTile(struct place *place, int x, int y);
 extern void mapPaintDamage(int x, int y);
 extern void mapSetSelected(class Object *obj);
+extern void mapFlashSprite(int x, int y, struct sprite *sprite);
 
 extern int mapScreenToPlaceCoords(int *x, int *y);
 
