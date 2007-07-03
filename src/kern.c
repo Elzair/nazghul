@@ -3047,7 +3047,7 @@ KERN_API_CALL(kern_place_is_visible)
 		return sc->F;	
 	}
 	
-	if (mapTileIsVisible(x,y))
+	if (mapTileIsVisible(x,y) && (mapTileLightLevel(x,y) >= MIN_XAMINE_LIGHT_LEVEL))
 	{
 		return sc->T;	
 	}
@@ -3112,22 +3112,27 @@ static pointer kern_map_rotate(scheme *sc, pointer args)
 
 static pointer kern_map_flash_sprite(scheme *sc, pointer args)
 {
-        int x, y;
-        struct sprite *sprite;
-
-        if (unpack(sc, &args, "pdd", &sprite, &x, &y)) {
-                rt_err("kern_map_flash_sprite: bad args");
-                return sc->NIL;
-        }
-
-        if (!sprite) {
-                rt_err("kern_map_flash_sprite: null sprite");
-                return sc->NIL;
-        }
-
-        mapFlashSprite(x, y, sprite);
-
-        return sc->NIL;
+	int x, y;
+	struct sprite *sprite;
+	
+	if (unpack(sc, &args, "pdd", &sprite, &x, &y)) {
+		rt_err("kern_map_flash_sprite: bad args");
+		return sc->NIL;
+	}
+	
+	if (!sprite) {
+		rt_err("kern_map_flash_sprite: null sprite");
+		return sc->NIL;
+	}
+	
+	if (mapTileLightLevel(x,y) < MIN_XAMINE_LIGHT_LEVEL || (!mapTileIsVisible(x,y)))
+	{
+		return sc->NIL;   
+	}
+	
+	mapFlashSprite(x, y, sprite);
+	
+	return sc->NIL;
 }
 
 static pointer kern_tag(scheme *sc, pointer  args)

@@ -25,6 +25,8 @@
 #include "macros.h"
 #include "event.h" /* for v_funcpointer_ii */
 
+#define MIN_XAMINE_LIGHT_LEVEL 32
+
 class Character;
 class Object;
 class Party;

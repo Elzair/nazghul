@@ -72,7 +72,6 @@
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
-#define MIN_XAMINE_LIGHT_LEVEL 32
 #define ESCAPE_CHARACTER 110
 
 /* Disabling the '>' command when standing over a subplace. This is generally
