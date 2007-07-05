@@ -259,9 +259,22 @@
 ;; chomp-deck -- convert deck terrain into shallow water terrain
 (define (chomp-deck-proc kchar loc)
   (cond ((not (is-deck? (kern-place-get-terrain loc))) #f)
+  		  ((not (null? (get-being-at loc))) #f)
         (else
          (kern-place-set-terrain loc t_shallow)
-         (kern-log-msg (kern-obj-get-name kchar) " chomps through the deck!")
+         (msg-log-visible (kern-obj-get-location kchar) (kern-obj-get-name kchar) " chomps through the deck!")
+         (map kern-obj-remove
+         	(kern-get-objects-at loc))
+         (if (kern-place-is-combat-map? (loc-place loc))
+				(let* ((vehicle (kern-party-get-vehicle (kern-get-player))))
+					(if (not (null? vehicle))
+						(begin 
+						   (shake-map 10)
+							(kern-obj-apply-damage vehicle "breakage" (floor (/ (kern-obj-get-hp vehicle) 7)))
+						)
+					)
+				)
+			)
          #t)))
 
 (define (deck-to-sludge-proc kchar loc)
