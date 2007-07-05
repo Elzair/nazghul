@@ -3057,6 +3057,30 @@ KERN_API_CALL(kern_place_is_visible)
 	}
 }
 
+KERN_API_CALL(kern_place_is_combat_map)
+{
+	struct place *place;
+	
+  if (unpack(sc, &args, "p", &place)) {
+       rt_err("kern_place_is_combat_map: bad args");
+       return sc->NIL;
+   }
+   
+	if (! place) {
+		rt_err("kern_place_is_combat_map: null place");
+		return sc->NIL;
+	}
+	
+	if (place_is_wilderness_combat(place))
+	{
+		return sc->T;	
+	}
+	else
+	{
+		return sc->F;	
+	}
+}
+
 static pointer kern_blit_map(scheme *sc, pointer args)
 {
         struct terrain_map *src;
@@ -7391,6 +7415,19 @@ KERN_API_CALL(kern_char_get_hp)
         return scm_mk_integer(sc, character->getHp());
 }
 
+KERN_API_CALL(kern_obj_get_hp)
+{
+        class Object *kobj;
+
+        /* unpack the character */
+        kobj = (class Object*)unpack_obj(sc, &args, 
+                                                 "kern-obj-get-hp");
+        if (!kobj)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, kobj->getHp());
+}
+
 KERN_API_CALL(kern_char_get_max_hp)
 {
         class Character *character;
@@ -8873,6 +8910,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-get-ap", kern_obj_get_ap);
         API_DECL(sc, "kern-obj-get-count", kern_obj_get_count);
         API_DECL(sc, "kern-obj-get-dir", kern_obj_get_dir);
+        API_DECL(sc, "kern-obj-get-hp", kern_obj_get_hp);
         API_DECL(sc, "kern-obj-get-effects", kern_obj_get_effects);
         API_DECL(sc, "kern-obj-get-facing", kern_obj_get_facing);
         API_DECL(sc, "kern-obj-get-gob", kern_obj_get_gob);
@@ -8954,6 +8992,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-set-terrain-map", kern_place_set_terrain_map);
         API_DECL(sc, "kern-place-synch", kern_place_synch);
         API_DECL(sc, "kern-place-is-visible?", kern_place_is_visible);        
+        API_DECL(sc, "kern-place-is-combat-map?", kern_place_is_combat_map);        
 
         /* player api */
         API_DECL(sc, "kern-player-get-food", kern_player_get_food);
