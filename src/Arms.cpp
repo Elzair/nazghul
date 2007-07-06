@@ -52,7 +52,8 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
 			int strAttackMod,
 			int dexAttackMod,
 			int charDamageMod,
-			float charAvoidMod
+			float charAvoidMod,
+			bool isBeam
 			)
 			: ObjectType(tag, name, sprite, item_layer),
 				slotMask(slotMask),
@@ -90,6 +91,7 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
 	char_avoid_mod = charAvoidMod;
 	
 	required_action_points = reqActPts;
+	beam=isBeam;
 }
 
 ArmsType::ArmsType()
@@ -167,6 +169,11 @@ void ArmsType::setAmmoType(class ObjectType * ammo_type)
 bool ArmsType::isMissileWeapon()
 {
 	return (missile != NULL && !thrown);
+}
+
+bool ArmsType::isBeam()
+{
+	return beam;
 }
 
 /*

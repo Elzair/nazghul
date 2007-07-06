@@ -1435,9 +1435,10 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
                             range,
                             weight, damage, armor, rap, thrown, ubiq,
                             fire_sound, missile, ammo, str_attack_mod, dex_attack_mod,
-							char_damage_mod, char_avoid_mod);
+							char_damage_mod, char_avoid_mod, false);
+													
 			arms->setMovementMode(mmode);
-
+			
         if (gifc != sc->NIL) {
                 /* arms->get_handler = closure_new(sc, get_handler); */
                 arms->setGifc(closure_new(sc, gifc), gifc_cap);
@@ -1447,6 +1448,54 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         ret = scm_mk_ptr(sc, arms);
         scm_define(sc, tag, ret);
         return ret;
+}
+
+static pointer kern_mk_projectile_type(scheme *sc, pointer args)
+{
+	class ArmsType *arms;
+	char *tag = TAG_UNK, *name;
+	struct sprite *sprite;
+	pointer gifc;
+	pointer ret;
+	int gifc_cap;
+	struct mmode *mmode;
+	int beam;
+	
+	
+	if (unpack(sc, &args, "yspdopb",
+			&tag, 
+			&name,
+			&sprite,
+			&gifc_cap,
+			&gifc,
+			&mmode,
+			&beam))
+	{
+		load_err("kern-mk-projectile-type %s: bad args", tag);
+		return sc->NIL;
+	}
+	
+	arms = new ArmsType(tag, name, sprite, 0, 
+			"0", "0",
+			0, 0, 0,
+			"0", "0",
+			0, false, false,
+			NULL, NULL, NULL,
+			0, 0, 0, 0, beam);
+	
+	arms->setMovementMode(mmode);
+	
+	if (gifc != sc->NIL)
+	{
+		/* arms->get_handler = closure_new(sc, get_handler); */
+		arms->setGifc(closure_new(sc, gifc), gifc_cap);
+	}
+	
+	session_add(Session, arms, arms_type_dtor, NULL, NULL);
+	ret = scm_mk_ptr(sc, arms);
+	scm_define(sc, tag, ret);
+	
+	return ret;
 }
 
 static pointer kern_mk_field_type(scheme *sc, pointer args)
@@ -8880,6 +8929,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-party", kern_mk_party);
         API_DECL(sc, "kern-mk-place", kern_mk_place);
         API_DECL(sc, "kern-mk-player", kern_mk_player);
+        API_DECL(sc, "kern-mk-projectile-type", kern_mk_projectile_type);
         API_DECL(sc, "kern-mk-ptable", kern_mk_ptable);
         API_DECL(sc, "kern-mk-sched", kern_mk_sched);
         API_DECL(sc, "kern-mk-skill", kern_mk_skill);

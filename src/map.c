@@ -1319,7 +1319,7 @@ void mapBlackout(int val)
 }
 
 static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
-                               SDL_Surface *surf, int dur, int currentframe)
+                               SDL_Surface *surf, int dur, int currentframe, bool beam)
 {
 	// The rect coordinates are in SCREEN coordinates (not map) so I need
 	// to do some clipping here to make sure we don't paint off the map
@@ -1330,7 +1330,8 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 		return;
 
 	// Save the backdrop of the new location
-	screenCopy(rect, NULL, surf);
+	if (!beam)
+		screenCopy(rect, NULL, surf);
 
 	// Paint the missile at the new location
         sprite_zoom_out(Map.aview->zoom);
@@ -1344,8 +1345,11 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 	SDL_Delay(dur);
 
 	// Erase the missile by blitting the background
-	screenBlit(surf, NULL, rect);
-	screenUpdate(rect);
+	if (!beam)
+	{
+		screenBlit(surf, NULL, rect);
+		screenUpdate(rect);
+	}
 }
 
 void mapPaintDamage(int x, int y)
@@ -1369,7 +1373,7 @@ void mapPaintDamage(int x, int y)
         mapUpdate(REPAINT_IF_DIRTY);
 
         mapPaintProjectile(&rect, Session->damage_sprite, 
-                           Map.tile_scratch_surf, 100, 0);
+                           Map.tile_scratch_surf, 100, 0, false);
 }
 
 //paint damage, but with custom sprite
@@ -1394,7 +1398,7 @@ void mapFlashSprite(int x, int y, struct sprite *sprite)
         mapUpdate(REPAINT_IF_DIRTY);
 
         mapPaintProjectile(&rect, sprite, 
-                           Map.tile_scratch_surf, 100, 0);
+                           Map.tile_scratch_surf, 100, 0, false);
 }
 
 void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
@@ -1493,7 +1497,6 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	{
 		if ((sprite_facings_list(sprite) & 495) == 495) //nsew + diagonals
 		{
-			fprintf(stderr,"facing %d\n", vector_to_8facing(dX, dY));
 			sprite_set_facing(sprite, vector_to_8facing(dX, dY));
 		}
 		else if ((sprite_facings_list(sprite) & 170) == 170) //nsew only
@@ -1519,116 +1522,89 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	}
 	
 
+	int dPr, dPru, P, i , Xsubincr, Ysubincr;
+	int oldx, oldy, tempx, tempy;
+	bool beam = missile->getObjectType()->isBeam();
+		
 	// Walk the x-axis?
 	if (AdX >= AdY)
 	{
-		int dPr = AdY << 1;
-		int dPru = dPr - (AdX << 1);
-		int P = dPr - AdX;
-		
-		// For each x
-		for (int i = AdX; i >= 0; i--)
-		{	
-			oPx = Px;
-			oPy = Py;
-			Px = place_wrap_x(place, ((tile_w_half + rect.x - Sx) / tile_w + Ox));
-			Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy) / tile_h + Oy));
-		
-			if (oPx != Px || oPy != Py)
-			{
-				if (mapTileIsVisible(Px, Py) && sprite)			
-				{
-					if (framecount > 1)  
-					{
-						mapPaintProjectile(&rect, sprite, surf, 25, currentframe);	
-						currentframe=(currentframe+1)%framecount;
-						mapPaintProjectile(&rect, sprite, surf, 25, currentframe);		
-						currentframe=(currentframe+1)%framecount;
-					}
-					else
-					{
-						mapPaintProjectile(&rect, sprite, surf, 50, 0);	
-					}
-				}
-				else if (framecount > 1)
-				{
-					currentframe=(currentframe+2)%framecount;
-				}
-				
-				if (!missile->enterTile(place, Px, Py))
-					goto done;
-			}
-		
-			if (P > 0)
-			{
-				rect.x += Xincr;
-				rect.y += Yincr;
-				P += dPru;
-			}
-			else
-			{
-				rect.x += Xincr;
-				P += dPr;
-			}
-		}
+		dPr = AdY << 1;
+		dPru = dPr - (AdX << 1);
+		P = dPr - AdX;
+		i = AdX;
+		Xsubincr = Xincr;
+		Ysubincr = 0;
 	}
-	// Walk the y-axis
 	else
 	{
-		int dPr = AdX << 1;
-		int dPru = dPr - (AdY << 1);
-		int P = dPr - AdY;
+		dPr = AdX << 1;
+		dPru = dPr - (AdY << 1);
+		P = dPr - AdY;	
+		i = AdY;
+		Xsubincr = 0;
+		Ysubincr = Yincr;
+	}
+	
+	oldx = rect.x;
+	oldy = rect.y;
 		
-		// For each y
-		for (int i = AdY; i >= 0; i--)
+	// For each step
+	for (; i >= 0; i--)
+	{	
+		oPx = Px;
+		oPy = Py;
+		Px = place_wrap_x(place, ((tile_w_half + rect.x - Sx) / tile_w + Ox));
+		Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy) / tile_h + Oy));
+		
+		if (oPx != Px || oPy != Py)
 		{
-			oPx = Px;
-			oPy = Py;
-			Px = place_wrap_x(place, ((tile_w_half + rect.x - Sx)/ tile_w + Ox));
-			Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy)/ tile_h + Oy));
-			
-			if (oPx != Px || oPy != Py)
+			if (mapTileIsVisible(Px, Py) && sprite)			
 			{
-				if (mapTileIsVisible(Px, Py) && sprite)			
-				{
-					if (framecount > 1)  
-					{
-						mapPaintProjectile(&rect, sprite, surf, 25, currentframe);		
-						currentframe=(currentframe+1)%framecount;
-						mapPaintProjectile(&rect, sprite, surf, 25, currentframe);		
-						currentframe=(currentframe+1)%framecount;
-					}
-					else
-					{
-						mapPaintProjectile(&rect, sprite, surf, 50, 0);	
-					}
-				}
-				else if (framecount > 1)
-				{
-					currentframe=(currentframe+2)%framecount;
-				}
+				tempx = rect.x;
+				tempy = rect.y;
+				rect.x = (rect.x + oldx)/2;
+				rect.y = (rect.y + oldy)/2;
 				
-				if (!missile->enterTile(place, Px, Py))
-					goto done;
+				mapPaintProjectile(&rect, sprite, surf, 25, currentframe, beam);		
+				if (framecount > 1)  
+					currentframe=(currentframe+1)%framecount;
+				
+				rect.x = oldx = tempx;
+				rect.y = oldy = tempy;
+					
+				mapPaintProjectile(&rect, sprite, surf, 25, currentframe, beam);		
+				if (framecount > 1)  
+					currentframe=(currentframe+1)%framecount;		
+			}
+			else if (framecount > 1)
+			{
+				currentframe=(currentframe+2)%framecount;
 			}
 			
-			if (P > 0)
-			{
-				rect.x += Xincr;
-				rect.y += Yincr;
-				P += dPru;
-			}
-			else 
-			{
-				rect.y += Yincr;
-				P += dPr;
-			}
+			if (!missile->enterTile(place, Px, Py))
+				goto done;
+		}
+	
+		if (P > 0)
+		{
+			rect.x += Xincr;
+			rect.y += Yincr;
+			P += dPru;
+		}
+		else
+		{
+			rect.x += Xsubincr;
+			rect.y += Ysubincr;
+			P += dPr;
 		}
 	}
-
       done:
 	// erase the missile
 	// mapRepaintView(NULL, REPAINT_ACTIVE);
+	if (beam)
+		SDL_Delay(100);
+	
 	mapUpdate(0);
 
 	// restore the missile sprite to the default facing

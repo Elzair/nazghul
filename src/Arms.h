@@ -35,25 +35,26 @@ class ArmsType:public ObjectType {
 	virtual int getType();
         ArmsType();
         ArmsType(char *tag, char *name, struct sprite *sprite,
-                 int slotMask,
-                 char *to_hit_dice,
-                 char *to_defend_dice,
-                 int numHands,
-                 int range,
-                 int weight,
-                 char *damage_dice,
-                 char *armor_dice,
-                 int reqActPts,
-                 bool thrown,
-                 bool ubiquitousAmmo,
-                 sound_t *fire_sound,
-                class ArmsType *missileType,
-                class ObjectType *ammoType,
-     				int str_attack_mod,
-				int dex_attack_mod,
-				int char_damage_mod,
-				float char_avoid_mod
-                 );
+			int slotMask,
+			char *to_hit_dice,
+			char *to_defend_dice,
+			int numHands,
+			int range,
+			int weight,
+			char *damage_dice,
+			char *armor_dice,
+			int reqActPts,
+			bool thrown,
+			bool ubiquitousAmmo,
+			sound_t *fireSound,
+			class ArmsType *missileType,
+			class ObjectType *ammo_type,
+			int strAttackMod,
+			int dexAttackMod,
+			int charDamageMod,
+			float charAvoidMod,
+			bool isBeam
+			);
 	virtual ~ ArmsType();
 
 	virtual char * getArmorDice();
@@ -65,6 +66,7 @@ class ArmsType:public ObjectType {
 	virtual int getNumHands();
 	virtual int getRange();
 	virtual bool isMissileWeapon();
+	virtual bool isBeam(); 
 	virtual void setMissileType(class ArmsType * missileType);
 	virtual class ArmsType *getMissileType();
 	virtual bool fire(class Character * target, int ox, int oy, int* misx, int* misy);
@@ -83,7 +85,8 @@ class ArmsType:public ObjectType {
 	virtual int modifyDexAttack(int dexBonus);
 	virtual int modifyDamageBonus(int damBonus);
 	virtual float modifyAvoidBonus(float avoidBonus);
-	       
+      
+	
       protected:
 	int slotMask;
 	int numHands;
@@ -96,6 +99,7 @@ class ArmsType:public ObjectType {
         char *toDefendDice;
         char *toHitDice;
         sound_t *fire_sound;
+        bool beam;
 	int str_attack_mod;
 	int dex_attack_mod;
 	int char_damage_mod;
