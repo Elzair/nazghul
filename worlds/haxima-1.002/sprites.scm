@@ -720,4 +720,5 @@
 (kern-mk-sprite 's_heart	     ss_sfx   1  0 #f 0 )
 (kern-mk-sprite 's_hit	        ss_sfx   1  1 #f 0 )
 (kern-mk-sprite 's_magicflash	  ss_sfx   1  2 #f 0 )
+(kern-mk-sprite 's_lightning	  ss_sfx   3  3 #f 495 )
 
