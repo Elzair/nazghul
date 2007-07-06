@@ -96,10 +96,13 @@
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
                      num-hands range AP_cost missile nil #t ubiq weight nil (ifc-cap ifc) ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
 
-(define (mk-missile-arms-type tag name sprite ifc mmode)
+(define (mk-ammo-arms-type tag name sprite ifc mmode)
   (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil nil #f #f 
                      0 nil (ifc-cap ifc) ifc 20 60 20 1.0 mmode))
 
+(define (mk-missile-arms-type tag name sprite ifc mmode beam)
+  (kern-mk-projectile-type tag name sprite (ifc-cap ifc) ifc mmode beam))
+                     
 (define (mk-armor-type tag name sprite to-hit armor slots equiptime weight avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 equiptime nil nil #f #f 
                      weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod mmode-largeobj))
@@ -369,42 +372,53 @@
                           
 (define missile-arms-types
   (list
+   ;;    ==================================================================================================
+   ;;    tag                 | name          | sprite          | gifc              | movement_mode | beam
+   ;;    ====================================================================================================
+   (list 't_slingstone        "sling stone"    s_sling_stone     nil                 mmode-missile  	#f)
+   (list 't_arrow_p           "arrow"          s_arrow           (mk-drop-proj-ifc 't_arrow 5)
+                                                                                     mmode-missile  	#f  )
+   (list 't_bolt_p            "bolt"           s_bolt            (mk-drop-proj-ifc 't_bolt 5)             
+                                                                                     mmode-missile  	#f  )
+   (list 't_warhead_p         "warhead"        s_warhead         warhead-ifc         mmode-missile  	#f  )
+   (list 't_cannonball_p      "cannonball"     s_cannonball      obj-ifc             mmode-missile  	#f  )
+
+   
+   (list 't_poison_bolt       "poison bolt"    s_poison_bolt     poison-bolt-ifc     mmode-missile  	#f  )
+   (list 't_acid_bolt         "acid bolt"      s_acid_bolt       acid-bolt-ifc       mmode-missile  	#f  )
+   (list 't_fireball          "fireball"       s_fireball        fireball-ifc        mmode-missile  	#f  )
+   (list 't_deathball         "deathball"      s_deathball       deathball-ifc       mmode-missile  	#f  )
+   (list 't_slimeglob         "slime glob"     s_acid_bolt       nil                 mmode-missile  	#f  )
+   (list 't_mfireball         "fireball"       s_fireball        temp-ifc            mmode-missile  	#f  )
+   (list 't_mpoison_bolt      "poison bolt"    s_poison_bolt     temp-ifc            mmode-missile  	#f  )
+   (list 't_prismatic_bolt    "prismatic bolt" s_prismatic_bolt  prismatic-bolt-ifc  mmode-missile  	#f  )
+   (list 't_stunball   			"stun ball" 	  s_lightning       stunball-ifc        mmode-missile  	#t  )
+   
+   
+   (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile  	#f  )
+   (list 't_oil_p             "flaming oil"    s_flaming_oil     flaming-oil-ifc     mmode-missile  	#f  )
+   (list 't_spear_p           "spear"          s_spear           (mk-drop-proj-ifc 't_spear 25)             
+                                                                                     mmode-missile  	#f  )
+   (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      magicaxe-ifc        mmode-missile  	#f  )
+   (list 't_returning_axe_p   "thrown axe"     s_thrown_axe      obj-ifc              mmode-return  	#f  )
+   (list 't_thrown_rock_p     "thrown rock"    s_cannonball      (mk-drop-proj-ifc 't_thrown_rock 80)             
+                                                                                     mmode-missile  	#f  )
+   (list 't_thrown_boulder_p  "hurled boulder" s_thrown_boulder  (mk-drop-proj-ifc 't_thrown_boulder 80)             
+                                                                                     mmode-missile  	#f  )
+
+   (list 't_slime_vial_p      "vial of slime"  s_thrown_green_potion  
+   																					vial-of-slime-ifc  mmode-missile  	#f  )
+
+   ))
+
+(map (lambda (type) (apply mk-missile-arms-type type)) missile-arms-types)  
+         
+                          
+(define ammo-arms-types
+  (list
    ;;    ===========================================================================================
    ;;    tag                 | name          | sprite          | gifc              | movement_mode 
    ;;    ===========================================================================================
-   (list 't_slingstone        "sling stone"    s_sling_stone     nil                 mmode-missile  )
-   (list 't_arrow_p           "arrow"          s_arrow           (mk-drop-proj-ifc 't_arrow 5)
-                                                                                     mmode-missile  )
-   (list 't_bolt_p            "bolt"           s_bolt            (mk-drop-proj-ifc 't_bolt 5)             
-                                                                                     mmode-missile  )
-   (list 't_warhead_p         "warhead"        s_warhead         warhead-ifc         mmode-missile  )
-   (list 't_cannonball_p      "cannonball"     s_cannonball      obj-ifc             mmode-missile  )
-
-   
-   (list 't_poison_bolt       "poison bolt"    s_poison_bolt     poison-bolt-ifc     mmode-missile  )
-   (list 't_acid_bolt         "acid bolt"      s_acid_bolt       acid-bolt-ifc       mmode-missile  )
-   (list 't_fireball          "fireball"       s_fireball        fireball-ifc        mmode-missile  )
-   (list 't_deathball         "deathball"      s_deathball       deathball-ifc       mmode-missile  )
-   (list 't_stunball          "stunball"       s_projectile      stunball-ifc        mmode-missile  )
-   (list 't_slimeglob         "slime glob"     s_acid_bolt       nil                 mmode-missile  )
-   (list 't_mfireball         "fireball"       s_fireball        temp-ifc            mmode-missile  )
-   (list 't_mpoison_bolt      "poison bolt"    s_poison_bolt     temp-ifc            mmode-missile  )
-   (list 't_prismatic_bolt    "prismatic bolt" s_prismatic_bolt  prismatic-bolt-ifc  mmode-missile  )
-
-   
-   (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile  )
-   (list 't_oil_p             "flaming oil"    s_flaming_oil     flaming-oil-ifc     mmode-missile  )
-   (list 't_spear_p           "spear"          s_spear           (mk-drop-proj-ifc 't_spear 25)             
-                                                                                     mmode-missile  )
-   (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      magicaxe-ifc        mmode-missile  )
-   (list 't_returning_axe_p   "thrown axe"     s_thrown_axe      obj-ifc             mmode-return  )
-   (list 't_thrown_rock_p     "thrown rock"    s_cannonball      (mk-drop-proj-ifc 't_thrown_rock 80)             
-                                                                                     mmode-missile  )
-   (list 't_thrown_boulder_p  "hurled boulder" s_thrown_boulder  (mk-drop-proj-ifc 't_thrown_boulder 80)             
-                                                                                     mmode-missile  )
-
-   (list 't_slime_vial_p      "vial of slime"  s_thrown_green_potion  
-                                                                 vial-of-slime-ifc   mmode-missile  )
 
    (list 't_arrow             "arrow"          s_arrowobj        obj-ifc             mmode-smallobj )
    (list 't_bolt              "bolt"           s_boltobj         obj-ifc             mmode-smallobj )
@@ -417,8 +431,7 @@
 ;; them below in the projectile-arms-types table. For example, t_bow needs to
 ;; refer to t_arrow. But the interpreter won't recognize t_arrow as a variable
 ;; name until we call this procedure to create the t_arrow type.
-(map (lambda (type) (apply mk-missile-arms-type type)) missile-arms-types)
-
+(map (lambda (type) (apply mk-ammo-arms-type type)) ammo-arms-types)
 
 ;; ============================================================================
 ;; Projectile Weapons
@@ -720,7 +733,7 @@
 				))
 		)))
 				
-(mk-missile-arms-type 't_localcannonball "cannonball" s_cannonball localcannonball-ifc mmode-cannon)
+(mk-missile-arms-type 't_localcannonball "cannonball" s_cannonball localcannonball-ifc mmode-cannon #f)
 		
 (define cannon-ifc
 	(ifc '()
