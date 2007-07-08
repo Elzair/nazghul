@@ -99,12 +99,12 @@ static struct status {
 	SDL_Rect titleRect;
 	SDL_Rect screenRect;
 	SDL_Rect lineRect;
-	void (*paint)  (void);
+	void (*paint) (void);
 	void (*scroll) (enum StatusScrollDir);
 	int pcIndex;
 	struct inv_entry *selectedEntry;
-	enum ZtatsView    ztatsView;
-	enum StatusMode   mode;
+	enum ZtatsView ztatsView;
+	enum StatusMode mode;
 
         /**
          * The index of the list entry that appears at the top of the status
@@ -114,8 +114,6 @@ static struct status {
 
         /**
          * Not sure what this is.
-	 * ??? The index of the bottom-most line of the status window ???
-	 * ??? in TILE_H or ASCII_H units ???
          */
 	int maxLine;
 
@@ -138,12 +136,12 @@ static struct status {
 
 	char *pg_title, *pg_text;
 	SDL_Surface *pg_surf;
-	SDL_Rect     pg_rect;
+	SDL_Rect pg_rect;
 	int pg_max_y;
 
         char *list_title;
 	int list_sz;
-	struct trade_info      *trades;
+	struct trade_info *trades;
         struct stat_list_entry *list;
         char **strlist;
 
@@ -168,9 +166,7 @@ static struct status {
 
 } Status;
 
-int entry_height_lines (StatusMode mode, struct inv_entry *entry);
-
-/* filtering functions used with stat_show_container() */
+/* filtering functions used with status_show_container() */
 static bool stat_filter_arms(struct inv_entry *ie, void *fdata);
 static bool stat_filter_ready_arms(struct inv_entry *ie, void *fdata);
 static bool stat_filter_reagents(struct inv_entry *ie, void *fdata);
@@ -179,7 +175,7 @@ static bool stat_filter_items(struct inv_entry *ie, void *fdata);
 static bool stat_filter_misc(struct inv_entry *ie, void *fdata);
 static bool stat_filter_drop(struct inv_entry *ie, void *fdata);
 
-/* functions to show specific types of things from stat_show_container() */
+/* functions to show specific types of things from status_show_containe() */
 static void status_show_ztat_character(SDL_Rect *rect, void *thing);
 static void status_show_ztat_arms(SDL_Rect *rect, void *thing);
 static void status_show_generic_object_type(SDL_Rect *rect, void *thing);
@@ -201,66 +197,15 @@ static struct filter stat_drop_filter = {
 
 /* Table for the different Z)tats UI windows. */
 static struct ztats_entry ztats_entries[] = {
-    // Entries are of the form:
-    //  { "Window Title", {stat_filter_function_pointer, fdata}, show_thing_function_pointer } 
-
         { "Party Member", { 0, 0 }, 0 /* different because it doesn't use the
                                        * generic stat_show_container() */ },
-
-        { "Armaments",    { stat_filter_arms,     0 }, status_show_ztat_arms           },
-        { "Reagents",     { stat_filter_reagents, 0 }, status_show_generic_object_type },
-        { "Spells",       { stat_filter_spells,   0 }, status_show_ztat_spells         },
-        { "Usable Items", { stat_filter_items,    0 }, status_show_generic_object_type },
-        { "Misc",         { stat_filter_misc,     0 }, status_show_generic_object_type },
+        { "Armaments", { stat_filter_arms, 0 }, status_show_ztat_arms },
+        { "Reagents", { stat_filter_reagents, 0 }, status_show_generic_object_type },
+        { "Spells", { stat_filter_spells, 0 }, status_show_ztat_spells },
+        { "Usable Items", { stat_filter_items, 0 }, status_show_generic_object_type },
+        { "Misc", { stat_filter_misc, 0 }, status_show_generic_object_type },
 };
 
-int entry_height_lines (StatusMode mode, struct inv_entry *entry) {
-    // Returns the height in lines (ASCII_H) which this entry should consume.
-    // 
-    // This allows different modes to use a different number of lines per entry,
-    // and provides for the possibility of modes containing 
-    // entries with varying numbers of lines to display.
-    // 
-    // SAM: Note that the current status.c implementation elsewhere 
-    //      seems to use uses "line" to mean TILE_H.
-    //      This explains various strange behaviors I ran into 
-    //      when first trying to implement height != 2 entries...
-    // 
-    // TODO: Some cleanup of the units used throughout status.c and callers.
-    //       Using ASCII_H -sized units consistently would be sensible.
-
-    int n;
-
-    // For now, we determine the height based only on mode,
-    // ignoring the "entry" argument.
-    switch (mode) {
-	case Ready:
-	    n = 3;
-	    // SAM: Reorganized Arms-related item stats 
-	    //      needed an extra line to display tidily.
-	    break;
-
-	case ShowParty:
-	case SelectCharacter:
-        case Ztats:
-	case Use:
-	case Page:
-	case Trade:
-	case MixReagents:
-	case GenericList:
-	case StringList:
-	case DisableStatus:
-	case SuperGeneric:
-	case Drop:
-	    n = 2;
-	    break;
-
-	default:
-	    n = 2;
-	    break;
-    }
-    return n;
-} // entry_height_lines()
 
 static bool stat_filter_arms(struct inv_entry *ie, void *fdata)
 {
@@ -421,60 +366,22 @@ static char status_arms_stat_color(char *dice)
  * way for all viewers. */
 static void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
 {
-        char *to_hit   = arms->getToHitDice();
-        char *dmg_dice = arms->getDamageDice();
-
-        char *defense = arms->getToDefendDice();
-        char *armor   = arms->getArmorDice();
-
-	int AP    = arms->getRequiredActionPoints();
-	int range = arms->getRange();
-
-
-	screenPrint(rect, 0, 
-		    "^c+"
-		    "%c   Hit:^c%c%s "
-		    "^c%cDmg:^c%c%s "
-		    "^c%cRng:^c%c%d "
-		    "^c%cAP:^c%c%d "
-		    "^c-", 
-		    STAT_LABEL_CLR,
-		    status_arms_stat_color(to_hit), to_hit,
-		    STAT_LABEL_CLR,
-		    status_arms_stat_color(dmg_dice), dmg_dice,
-		    STAT_LABEL_CLR,
-		    STAT_BONUS_CLR, range,
-		    STAT_LABEL_CLR,
-		    STAT_BONUS_CLR, AP
-	    );
-	rect->y += (ASCII_H);
-	screenPrint(rect, 0, 
-		    "^c+"
-		    "%c   Def:^c%c%s "
-		    "^c%cArm:^c%c%s "
-		    "^c-", 
-		    STAT_LABEL_CLR,
-		    status_arms_stat_color(defense), defense,
-		    STAT_LABEL_CLR,
-		    status_arms_stat_color(armor), armor
-	    );
-	rect->y += (ASCII_H);
-
-// screenPrint(rect, 0, 
-//             "^c+%c   TH:^c%c%s ^c%cTD:^c%c%s ^c%cDA:^c%c%s ^c%cAR:^c%c%s ^c%cAP:^c%c%d^c-", 
-//             STAT_LABEL_CLR,
-//             status_arms_stat_color(to_hit), to_hit,
-//             STAT_LABEL_CLR,
-//             status_arms_stat_color(defense), defense,
-//             STAT_LABEL_CLR,
-//             status_arms_stat_color(dmg_dice), dmg_dice,
-//             STAT_LABEL_CLR,
-//             status_arms_stat_color(armor), armor,
-//             STAT_LABEL_CLR,
-//             STAT_BONUS_CLR, AP
-//             );
-//        rect->y += (TILE_H - ASCII_H);
-
+        char *thd = arms->getToHitDice();
+        char *tdd = arms->getToDefendDice();
+        char *dad = arms->getDamageDice();
+        char *ard = arms->getArmorDice();
+        screenPrint(rect, 0, 
+                 "^c+%c   TH:^c%c%s ^c%cTD:^c%c%s ^c%cDA:^c%c%s ^c%cAR:^c%c%s^c-", 
+                    STAT_LABEL_CLR,
+                    status_arms_stat_color(thd), thd,
+                    STAT_LABEL_CLR,
+                    status_arms_stat_color(tdd), tdd,
+                    STAT_LABEL_CLR,
+                    status_arms_stat_color(dad), dad,
+                    STAT_LABEL_CLR,
+                    status_arms_stat_color(ard), ard
+                );
+        rect->y += (TILE_H - ASCII_H);
 }
 
 /* status_show_member_arms -- called during Ztats when showing Party Members,
@@ -752,28 +659,21 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
 
 static void myShadeLines(int line, int n)
 {
-    // SAM: Note that "line" refers to a TILE_H offset,
-    //      while "n" refers to an ASCII_H height.
 	SDL_Rect rect;
 	rect.x = Status.screenRect.x;
-	rect.y = Status.screenRect.y + (line * TILE_H);
+	rect.y = Status.screenRect.y + line * TILE_H;
 	rect.w = STAT_W;
-	rect.h = (ASCII_H * n);
+	rect.h = ASCII_H * n;
 	screenShade(&rect, 128);
-	// printf("DEBUG: shaded XY=(%d,%d) WH=(%d,%d)\n", rect.x, rect.y, rect.w, rect.h);
 }
 
 static void myShadeHalfLines(int line, int n)
 {
-    // SAM: Note that "line" refers to an ASCII_H offset,
-    //      while "n" refers to an ASCII_H height.
-    // This is surprising, because the ORIGIN of the rectangle-to-shade
-    // differs from myShadeLines(), rather than its' HEIGHT...
 	SDL_Rect rect;
 	rect.x = Status.screenRect.x;
-	rect.y = Status.screenRect.y + (line * ASCII_H);
+	rect.y = Status.screenRect.y + line * ASCII_H;
 	rect.w = STAT_W;
-	rect.h = (ASCII_H * n);
+	rect.h = ASCII_H * n;
 	screenShade(&rect, 128);
 }
 
@@ -879,18 +779,15 @@ static void stat_show_container()
 {
 	SDL_Rect rect;
 	struct inv_entry *ie;
-	int top  = Status.topLine;
+	int top = Status.topLine;
 	int line = 0;
 
 	rect = Status.screenRect;
 	rect.h = LINE_H;
 
-        for (ie  = Status.container->first(Status.filter);
+        for (ie = Status.container->first(Status.filter);
              ie != NULL; 
-             ie  = Status.container->next(ie, Status.filter)) {
-
-	        int nn = entry_height_lines(Status.mode, ie);
-		int tt;
+             ie = Status.container->next(ie, Status.filter)) {
 
 		/* Check the scrolling window */
 		if (top) {
@@ -898,26 +795,24 @@ static void stat_show_container()
 			continue;
 		}
 
-                /* Use a specific function to show whatever it is. 
-		 * This should advance the rect to the next entry position 
-		 * before it returns. 
-		 */
+                /* Use a specific function to show whatever it is. This should
+                 * advance the rect to the next entry position before it
+                 * returns. */
                 Status.show_thing(&rect, ie);
 
-                /* We desire to highlight the selected item,
-		 * thus we shade all other entries:
-		 */
+                /* Highlight the selected item by shading all the other
+                 * entries. */
 		if (Status.selectedEntry && ie != Status.selectedEntry) {
-		    myShadeHalfLines(line, nn);
+			myShadeLines(line, 2);
 		}
 
-		line += nn;
-		tt    = nn / 2;
+		line++;
 
 		/* Don't print outside the status window. */
-		if (tt >= N_LINES)
+		if (line >= N_LINES)
 			break;
-	} // for()
+	}
+
 }
 
 static void stat_scroll_container(enum StatusScrollDir dir)
@@ -1708,7 +1603,6 @@ void statusScroll(enum StatusScrollDir dir)
 
 void statusSetMode(enum StatusMode mode)
 {
-    char title[MAX_TITLE_LEN+1];
         /* Unref the old super generic struct if applicable */
         if (Status.mode == SuperGeneric) {
                 assert(Status.super_generic);
@@ -1730,26 +1624,22 @@ void statusSetMode(enum StatusMode mode)
                 break;
 	case ShowParty:
 		switch_to_short_mode();
-		status_set_title("Party:");	
+		status_set_title("Party");	
 		Status.pcIndex = -1;
 		Status.scroll = 0;
 		Status.paint = myShowParty;
 		break;
 	case SelectCharacter:
 		switch_to_tall_mode();
-		status_set_title("Select Member:");
+		status_set_title("Select Member");
 		Status.scroll = myScrollParty;
 		Status.paint = myShowParty;
 		Status.pcIndex = 0;
 		break;
 	case Ztats:
 		switch_to_tall_mode();
-		// SAM: This seems to affect only the initially-displayed title,
-		//      paging back and forth shows only the character name, afterwards...
-		// FIXME...
-		snprintf(title, MAX_TITLE_LEN, "View Ztats: %s", 
-			 player_party->getMemberAtIndex(Status.pcIndex)->getName() );
-		status_set_title(title);
+		status_set_title(player_party->
+                               getMemberAtIndex(Status.pcIndex)->getName());
 		Status.ztatsView = ViewMember;
 		Status.selectedEntry = 0;
 		Status.topLine = 0;
@@ -1758,23 +1648,22 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Ready:
 		switch_to_tall_mode();
-		snprintf(title, MAX_TITLE_LEN, "Ready Arms: %s", 
-			 player_party->getMemberAtIndex(Status.pcIndex)->getName() );
-		status_set_title(title);
-		Status.topLine       = 0;
-		Status.curLine       = 0;
-		Status.container     = player_party->inventory;
-                Status.filter        = &stat_ready_arms_filter;
-		Status.maxLine       = Status.container->
-		    filter_count(Status.filter) - Status.numLines;
-		Status.paint         = stat_show_container;
-                Status.scroll        = stat_scroll_container;
-                Status.show_thing    = status_show_ready_arms;
+		status_set_title(player_party->
+                               getMemberAtIndex(Status.pcIndex)->getName());
+		Status.topLine = 0;
+		Status.curLine = 0;
+		Status.container = player_party->inventory;
+                Status.filter = &stat_ready_arms_filter;
+		Status.maxLine = Status.container->
+                        filter_count(Status.filter) - Status.numLines;
+		Status.paint = stat_show_container;
+                Status.scroll = stat_scroll_container;
+                Status.show_thing = status_show_ready_arms;
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 	case Use:
 		switch_to_tall_mode();
-		status_set_title("Use Item:");
+		status_set_title("Use");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
@@ -1788,7 +1677,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Drop:
 		switch_to_tall_mode();
-		status_set_title("Drop Item:");
+		status_set_title("Drop");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
@@ -1806,7 +1695,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Trade:
 		switch_to_tall_mode();
-		status_set_title("Trade:");
+		status_set_title("Trade");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.maxLine = Status.list_sz - Status.numLines;
@@ -1816,11 +1705,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case MixReagents:
 		switch_to_tall_mode();
-		snprintf(title, MAX_TITLE_LEN, "Mix Reagents:");
-		// SAM: I'd like a title such as "Mix Reagents: VAS FLAM",
-		//      but it turns out to be non-trivial to get the spell name,
-		//      so TODO...
-		status_set_title(title);
+		status_set_title(ztats_entries[ViewReagents].title);
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
@@ -2132,13 +2017,13 @@ void statusBrowseContainer(class Container *container,
 {
         switch_to_tall_mode();
         status_set_title(title);
-        Status.topLine   = 0;
-        Status.curLine   = 0;
+        Status.topLine = 0;
+        Status.curLine = 0;
         Status.container = container;
-        Status.filter    = filter;
-        Status.maxLine   = container->filter_count(filter) - Status.numLines;
-        Status.paint     = stat_show_container;
-        Status.scroll    = stat_scroll_container;
-        Status.show_thing    = status_show_generic_object_type;
+        Status.filter = filter;
+        Status.maxLine = container->filter_count(filter) - Status.numLines;
+        Status.paint = stat_show_container;
+        Status.scroll = stat_scroll_container;
+        Status.show_thing = status_show_generic_object_type;
         Status.selectedEntry = container->first(filter);
 }
