@@ -28,21 +28,40 @@
 #define MISSILE_IGNORE_LOS (1 << 0)
 #define MISSILE_HIT_PARTY  (1 << 1)
 
-class Missile:public Object {
-      public:
-	Missile(ArmsType*);
+class MissileType:public ObjectType
+{
+		public:
+	MissileType();
+	MissileType(char *tag, char *name, struct sprite *sprite, bool isBeam, struct mmode *mmode);
+	virtual ~ MissileType();
+	
+	virtual bool isType(int classID);
+	virtual int getType();
+
+	virtual bool isBeam();
+	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
+	
+		protected:
+	bool beam;
+};
+
+class Missile:public Object
+{
+		public:
+	Missile(MissileType*);
 	virtual ~Missile();
-	virtual class ArmsType *getObjectType();
+	
+	virtual class MissileType *getObjectType();
 	virtual void animate(int Ax, int Ay, int *Bx, int *By, int flags);
 	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
 	virtual bool hitTarget();
-        virtual class Object *getStruck();
-        virtual bool enterTile(struct place *place, int x, int y);
-
- protected:
+	virtual class Object *getStruck();
+	virtual bool enterTile(struct place *place, int x, int y);
+	
+		protected:
 	bool hit;
-        class Object *struck;
-        int flags;
+	class Object *struck;
+	int flags;
 };
 
 #endif

@@ -47,7 +47,7 @@ class ArmsType:public ObjectType {
 			bool thrown,
 			bool ubiquitousAmmo,
 			sound_t *fireSound,
-			class ArmsType *missileType,
+			class MissileType *missileType,
 			class ObjectType *ammo_type,
 			int strAttackMod,
 			int dexAttackMod,
@@ -67,8 +67,8 @@ class ArmsType:public ObjectType {
 	virtual int getRange();
 	virtual bool isMissileWeapon();
 	virtual bool isBeam(); 
-	virtual void setMissileType(class ArmsType * missileType);
-	virtual class ArmsType *getMissileType();
+	virtual void setMissileType(class MissileType * missileType);
+	virtual class MissileType *getMissileType();
 	virtual bool fire(class Character * target, int ox, int oy, int* misx, int* misy);
 	virtual bool fire(struct place *place, int ox, int oy, int* tx, int* ty);
     virtual bool fireInDirection(struct place *place, int ox, int oy, int dx, int dy, class Object *user);

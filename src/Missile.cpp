@@ -34,7 +34,51 @@
 #include "vehicle.h"
 #include "session.h"
 
-Missile::Missile(ArmsType*type)
+MissileType::MissileType()
+{
+	// Don't ever expect to call this. Defining it to override the default
+	// one c++ automatically creates.
+	assert(false);
+	
+	beam = false;
+}
+
+MissileType::MissileType(char *tag, char *name, struct sprite *sprite, bool isBeam, struct mmode *mmode)
+	: ObjectType(tag, name, sprite, item_layer),
+		beam(isBeam)
+{
+	setMovementMode(mmode);
+}
+
+MissileType::~MissileType()
+{
+	//dont think theres anything here that needs cleaning up?
+}
+
+bool MissileType::isType(int classID)
+{
+	if (classID == MISSILE_TYPE_ID)
+		return true;
+	return ObjectType::isType(classID);
+}
+
+int MissileType::getType()
+{
+        return MISSILE_TYPE_ID;
+}
+
+bool MissileType::isBeam()
+{
+	return beam;
+}
+
+void MissileType::fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam)
+{
+	if (canHitLocation())
+		hitLocation(NULL, attacker, target, place, x, y, dam);	
+}
+
+Missile::Missile(MissileType* type)
         : Object(type)
 {
 
@@ -44,9 +88,9 @@ Missile::~Missile()
 {
 }
 
-class ArmsType *Missile::getObjectType() 
+class MissileType *Missile::getObjectType() 
 {
-        return (class ArmsType *) Object::getObjectType();
+        return (class MissileType *) Object::getObjectType();
 }
 
 /* set hit=true if a party or object has been struck

@@ -281,6 +281,11 @@ static void arms_type_dtor(void *val)
         delete (class ArmsType *)val;
 }
 
+static void missile_type_dtor(void *val)
+{
+        delete (class MissileType *)val;
+}
+
 static void field_type_dtor(void *val)
 {
         delete (class FieldType *)val;
@@ -1376,7 +1381,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         char *hit, *defend, *damage, *armor;
         int rap, thrown, ubiq;
         struct sprite *sprite;
-        class ArmsType *missile;
+        class MissileType *missile;
         class ObjectType *ammo;
         pointer gifc;
         pointer ret;
@@ -1450,9 +1455,9 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         return ret;
 }
 
-static pointer kern_mk_projectile_type(scheme *sc, pointer args)
+static pointer kern_mk_missile_type(scheme *sc, pointer args)
 {
-	class ArmsType *arms;
+	class MissileType *arms;
 	char *tag = TAG_UNK, *name;
 	struct sprite *sprite;
 	pointer gifc;
@@ -1475,15 +1480,7 @@ static pointer kern_mk_projectile_type(scheme *sc, pointer args)
 		return sc->NIL;
 	}
 	
-	arms = new ArmsType(tag, name, sprite, 0, 
-			"0", "0",
-			0, 0, 0,
-			"0", "0",
-			0, false, false,
-			NULL, NULL, NULL,
-			0, 0, 0, 0, beam);
-	
-	arms->setMovementMode(mmode);
+	arms = new MissileType(tag, name, sprite, beam, mmode);
 	
 	if (gifc != sc->NIL)
 	{
@@ -1491,7 +1488,7 @@ static pointer kern_mk_projectile_type(scheme *sc, pointer args)
 		arms->setGifc(closure_new(sc, gifc), gifc_cap);
 	}
 	
-	session_add(Session, arms, arms_type_dtor, NULL, NULL);
+	session_add(Session, arms, missile_type_dtor, NULL, NULL);
 	ret = scm_mk_ptr(sc, arms);
 	scm_define(sc, tag, ret);
 	
@@ -4655,7 +4652,7 @@ KERN_API_CALL(kern_ui_target_generic)
 
 KERN_API_CALL(kern_fire_missile)
 {
-        ArmsType *missile_type;
+        MissileType *missile_type;
         Missile *missile;
         struct place *oplace, *dplace;
         int ox, oy, dx, dy, hitTarget = 0;
@@ -8920,6 +8917,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-field", kern_mk_field);
         API_DECL(sc, "kern-mk-field-type", kern_mk_field_type);
         API_DECL(sc, "kern-mk-map", kern_mk_map);
+        API_DECL(sc, "kern-mk-missile-type", kern_mk_missile_type);
         API_DECL(sc, "kern-mk-composite-map", kern_mk_composite_map);
         API_DECL(sc, "kern-mk-mmode", kern_mk_mmode);
         API_DECL(sc, "kern-mk-obj", kern_mk_obj);
@@ -8929,7 +8927,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-party", kern_mk_party);
         API_DECL(sc, "kern-mk-place", kern_mk_place);
         API_DECL(sc, "kern-mk-player", kern_mk_player);
-        API_DECL(sc, "kern-mk-projectile-type", kern_mk_projectile_type);
         API_DECL(sc, "kern-mk-ptable", kern_mk_ptable);
         API_DECL(sc, "kern-mk-sched", kern_mk_sched);
         API_DECL(sc, "kern-mk-skill", kern_mk_skill);

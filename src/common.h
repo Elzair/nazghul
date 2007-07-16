@@ -208,7 +208,7 @@ extern "C" {
 #define MOONGATE_TYPE_ID        107
 #define REAGENT_TYPE_ID         108
 #define SPELL_TYPE_ID           109
-//#define AMMO_TYPE_ID            110 -- obsolete
+#define MISSILE_TYPE_ID         110 //repurposed from unused AMMO_TYPE_ID
 #define FIELD_TYPE_ID           111
 #define FOOD_TYPE_ID            112
 #define TRAP_TYPE_ID            113

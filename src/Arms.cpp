@@ -47,7 +47,7 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
 			bool thrown,
 			bool ubiquitousAmmo,
 			sound_t *fireSound,
-			class ArmsType *missileType,
+			class MissileType *missileType,
 			class ObjectType *ammo_type,
 			int strAttackMod,
 			int dexAttackMod,
@@ -136,14 +136,14 @@ int ArmsType::getType()
         return ARMS_TYPE_ID;
 }
 
-class ArmsType *ArmsType::getMissileType()
+class MissileType *ArmsType::getMissileType()
 {
 	if (missile == NULL)
 		return NULL;
-	return (class ArmsType *) missile->getObjectType();
+	return (class MissileType *) missile->getObjectType();
 }
 
-void ArmsType::setMissileType(class ArmsType * missileType)
+void ArmsType::setMissileType(class MissileType * missileType)
 {
 	if (missile != NULL) {
 		delete missile;
@@ -288,7 +288,7 @@ void ArmsType::setThrown(bool val)
 		return;
 	}
 	// the usual case:
-	setMissileType(this);
+	setAmmoType(this);
 }
 
 int ArmsType::getSlotMask()
