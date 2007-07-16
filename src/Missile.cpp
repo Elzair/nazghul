@@ -78,6 +78,18 @@ void MissileType::fireHitLoc(Object *attacker, Object *target, struct place *pla
 		hitLocation(NULL, attacker, target, place, x, y, dam);	
 }
 
+bool MissileType::fireEnterTile(Missile *missile, struct place *place, int x, int y)
+{
+	if (closure_exec(gifc, "yppdd", "enter", missile, place, x, y))
+	{
+		return true;	
+	}
+	else
+	{
+		return false;	
+	}
+}
+
 Missile::Missile(MissileType* type)
         : Object(type)
 {
@@ -171,3 +183,4 @@ class Object * Missile::getStruck()
 {
         return struck;
 }
+

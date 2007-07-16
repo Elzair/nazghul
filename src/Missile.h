@@ -40,7 +40,8 @@ class MissileType:public ObjectType
 
 	virtual bool isBeam();
 	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
-	
+	virtual bool fireEnterTile(Missile* missile, struct place *place, int x, int y);
+		
 		protected:
 	bool beam;
 };

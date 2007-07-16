@@ -1425,6 +1425,9 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		// Half tile offset- missiles fly from and to the middle of a tile
 		int tile_w_half = tile_w/2;
 		int tile_h_half = tile_h/2;
+		
+		MissileType *mistype = missile->getObjectType();
+		bool canEnter = missile->canEnter();
 
 	// Create a scratch surface for saving/restoring the background
         surf = Map.tile_scratch_surf;
@@ -1583,6 +1586,9 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 			}
 			
 			if (!missile->enterTile(place, Px, Py))
+				goto done;
+				
+			if (canEnter & !mistype->fireEnterTile(missile, place, Px, Py))
 				goto done;
 		}
 	
