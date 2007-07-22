@@ -101,7 +101,7 @@
                      0 nil (ifc-cap ifc) ifc 20 60 20 1.0 mmode))
 
 (define (mk-missile-arms-type tag name sprite ifc mmode beam)
-  (kern-mk-missile-type tag name sprite (ifc-cap ifc) ifc mmode beam))
+  (kern-mk-missile-type tag name sprite (ifc-cap ifc) ifc mmode beam beam))
                      
 (define (mk-armor-type tag name sprite to-hit armor slots equiptime weight avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 equiptime nil nil #f #f 
