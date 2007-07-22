@@ -201,7 +201,12 @@ bool ArmsType::fire(class Character * target, int ox, int oy, int *misx, int *mi
 		missile->setPlace(target->getPlace());
 		missile->setX(ox);
 		missile->setY(oy);
-		missile->animate(ox, oy, misx, misy, 0);
+		int frange = 0;
+		if (missile->getObjectType()->isFixedRange())
+		{
+			frange = getRange();
+		}
+		missile->animate(ox, oy, misx, misy, 0, frange);
 		if (!missile->hitTarget())
 			return false;
 	}
@@ -218,7 +223,12 @@ bool ArmsType::fire(struct place * place, int ox, int oy, int *tx, int *ty)
 		missile->setPlace(place);
 		missile->setX(ox);
 		missile->setY(oy);
-		missile->animate(ox, oy, tx, ty, 0);
+		int frange = 0;
+		if (missile->getObjectType()->isFixedRange())
+		{
+			frange = getRange();
+		}
+		missile->animate(ox, oy, tx, ty, 0, frange);
 		if (!missile->hitTarget())
 			return false;
 	}
@@ -243,7 +253,7 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
         missile->animate(ox, oy, 
                          &misx, 
                          &misy, 
-                         MISSILE_IGNORE_LOS|MISSILE_HIT_PARTY);
+                         MISSILE_IGNORE_LOS|MISSILE_HIT_PARTY,0);
 
         if (!missile->hitTarget() || !missile->getStruck())
                 return false;

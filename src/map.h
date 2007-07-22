@@ -85,7 +85,8 @@ extern void mapBlackout(int val); // for sleeping in town
 extern void mapAnimateProjectile(int ox, int oy, int *dx, int *dy, 
                                  struct sprite *sprite, 
                                  struct place *place,
-                                 class Missile *missile);
+                                 class Missile *missile,
+                                 float range);
 
 extern void mapAttachCamera(class Object *subject);
 extern void mapDetachCamera(class Object *subject);

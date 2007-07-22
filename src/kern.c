@@ -1465,22 +1465,24 @@ static pointer kern_mk_missile_type(scheme *sc, pointer args)
 	int gifc_cap;
 	struct mmode *mmode;
 	int beam;
+	int fixedrange;
 	
 	
-	if (unpack(sc, &args, "yspdopb",
+	if (unpack(sc, &args, "yspdopbb",
 			&tag, 
 			&name,
 			&sprite,
 			&gifc_cap,
 			&gifc,
 			&mmode,
-			&beam))
+			&beam,
+			&fixedrange))
 	{
 		load_err("kern-mk-projectile-type %s: bad args", tag);
 		return sc->NIL;
 	}
 	
-	arms = new MissileType(tag, name, sprite, beam, mmode);
+	arms = new MissileType(tag, name, sprite, beam, fixedrange, mmode);
 	
 	if (gifc != sc->NIL)
 	{
@@ -4681,7 +4683,7 @@ KERN_API_CALL(kern_fire_missile)
 
         /* Fire the missile */
         missile->setPlace(dplace);
-        missile->animate(ox, oy, &dx, &dy, 0);
+        missile->animate(ox, oy, &dx, &dy, 0, 0);
         hitTarget = missile->hitTarget();
         missile->fireHitLoc(NULL, NULL, oplace,dx,dy,-1);
         delete missile;

@@ -43,9 +43,10 @@ MissileType::MissileType()
 	beam = false;
 }
 
-MissileType::MissileType(char *tag, char *name, struct sprite *sprite, bool isBeam, struct mmode *mmode)
+MissileType::MissileType(char *tag, char *name, struct sprite *sprite, bool isBeam, bool isFixedRange, struct mmode *mmode)
 	: ObjectType(tag, name, sprite, item_layer),
-		beam(isBeam)
+		beam(isBeam),
+		fixedrange(isFixedRange)
 {
 	setMovementMode(mmode);
 }
@@ -70,6 +71,13 @@ int MissileType::getType()
 bool MissileType::isBeam()
 {
 	return beam;
+}
+
+// A fixed range missile always fires to its maximum range (LOS allowing).
+// target selection merely affects the angle it travels at
+bool MissileType::isFixedRange()
+{
+	return fixedrange;
 }
 
 void MissileType::fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam)
@@ -158,7 +166,7 @@ void Missile::fireHitLoc(Object *attacker, Object *target, struct place *place, 
 	Calculates & animates trajectory, returns true if the missile reached the target location
 	alters Bx, By to be where it reached (so you can tell where it wound up if blocked)
 */
-void Missile::animate(int Ax, int Ay, int *Bx, int *By, int _flags)
+void Missile::animate(int Ax, int Ay, int *Bx, int *By, int _flags, float fixedrange)
 {
         int origBx = *Bx;
         int origBy = *By;
@@ -168,7 +176,7 @@ void Missile::animate(int Ax, int Ay, int *Bx, int *By, int _flags)
         flags = _flags;
 
         struct sprite *tmpSprite = sprite_clone(getSprite(), 0);
-        mapAnimateProjectile(Ax, Ay, Bx, By, tmpSprite, getPlace(), this);
+        mapAnimateProjectile(Ax, Ay, Bx, By, tmpSprite, getPlace(), this, fixedrange);
         sprite_del(tmpSprite);
 
         hit = (hit || (origBx == *Bx && origBy == *By));

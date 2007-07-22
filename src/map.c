@@ -1403,7 +1403,7 @@ void mapFlashSprite(int x, int y, struct sprite *sprite)
 
 void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
                           struct sprite *sprite, struct place *place,
-                          class Missile *missile)
+                          class Missile *missile, float range)
 {
 	// 
 	// Derived from Kenny Hoff's Bresenhaum impl at
@@ -1535,18 +1535,34 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		dPr = AdY << 1;
 		dPru = dPr - (AdX << 1);
 		P = dPr - AdX;
-		i = AdX;
 		Xsubincr = Xincr;
 		Ysubincr = 0;
+		/* disabled for now - crashes if it tries to fire off the map 
+		if (range > 0.5) // floating point hence error margins
+		{
+			i = (int)((TILE_W * (range - 0.45) * AdX)/sqrt(AdX*AdX + AdY*AdY));
+		}
+		else
+		{ */
+			i = AdX;	
+		//}
 	}
 	else
 	{
 		dPr = AdX << 1;
 		dPru = dPr - (AdY << 1);
 		P = dPr - AdY;	
-		i = AdY;
 		Xsubincr = 0;
 		Ysubincr = Yincr;
+		/* disabled for now - crashes if it tries to fire off the map 
+		if (range > 0.5) // floating point hence error margins
+		{
+			i = (int)((TILE_H * (range - 0.45) * AdY)/sqrt(AdX*AdX + AdY*AdY));
+		}
+		else
+		{ */
+			i = AdY;	
+		//}
 	}
 	
 	oldx = rect.x;

@@ -32,18 +32,20 @@ class MissileType:public ObjectType
 {
 		public:
 	MissileType();
-	MissileType(char *tag, char *name, struct sprite *sprite, bool isBeam, struct mmode *mmode);
+	MissileType(char *tag, char *name, struct sprite *sprite, bool isBeam, bool isFixedRange, struct mmode *mmode);
 	virtual ~ MissileType();
 	
 	virtual bool isType(int classID);
 	virtual int getType();
 
 	virtual bool isBeam();
+	virtual bool isFixedRange();
 	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
 	virtual bool fireEnterTile(Missile* missile, struct place *place, int x, int y);
 		
 		protected:
 	bool beam;
+	bool fixedrange;
 };
 
 class Missile:public Object
@@ -53,7 +55,7 @@ class Missile:public Object
 	virtual ~Missile();
 	
 	virtual class MissileType *getObjectType();
-	virtual void animate(int Ax, int Ay, int *Bx, int *By, int flags);
+	virtual void animate(int Ax, int Ay, int *Bx, int *By, int flags, float fixedrange);
 	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
 	virtual bool hitTarget();
 	virtual class Object *getStruck();
