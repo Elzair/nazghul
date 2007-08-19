@@ -1413,26 +1413,27 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	int framecount = sprite_num_frames(sprite);
 	int currentframe = 0;
 	
-        int t1, t2;
-        SDL_Surface * surf;	// for saving/restoring the background
+	int t1, t2;
+	SDL_Surface * surf;	// for saving/restoring the background
 
 	t1 = SDL_GetTicks();
 
-        // Get tile dimensions
-        int tile_w;
-        int tile_h;
-        mapGetTileDimensions(&tile_w, &tile_h);
-		// Half tile offset- missiles fly from and to the middle of a tile
-		int tile_w_half = tile_w/2;
-		int tile_h_half = tile_h/2;
-		
-		MissileType *mistype = missile->getObjectType();
-		bool canEnter = missile->canEnter();
-
+	// Get tile dimensions
+	int tile_w;
+	int tile_h;
+	mapGetTileDimensions(&tile_w, &tile_h);
+	
+	// Half tile offset- missiles fly from and to the middle of a tile
+	int tile_w_half = tile_w/2;
+	int tile_h_half = tile_h/2;
+	
+	MissileType *mistype = missile->getObjectType();
+	bool canEnter = missile->canEnter();
+	
 	// Create a scratch surface for saving/restoring the background
-        surf = Map.tile_scratch_surf;
-        assert(surf);
-
+	surf = Map.tile_scratch_surf;
+	assert(surf);
+	
 	// Get the map coordinates of the view origin (upper left corner)
 	int Ox, Oy;
 	mapGetMapOrigin(&Ox, &Oy);
@@ -1443,44 +1444,45 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	// Copy the place coordinates of the origin of flight. I'll walk these
 	// along as the missile flies and check for obstructions.
-	int Px, Py, oPx, oPy;
+	int Px, Py, oPx, oPy, orx, ory;
 	Px = Ax;
 	Py = Ay;
+	orx = Ax;
+	ory = Ay;
 
 	// Convert to screen coordinates. (I need to keep the original
 	// B-coordinates for field effects at the bottom of this routine).
-        int sBx;
-        int sBy;
-
-        if (place_is_wrapping(place)) {
-
-                if (Ax > Ox)
-                        Ax = (Ax - Ox) * tile_w + Sx;
-                else
-                        Ax = (place_w(place) - Ox + Ax)  * tile_w + Sx;
-                if (Ay >= Oy)
-                        Ay = (Ay - Oy) * tile_h + Sy;
-                else
-                        Ay = (place_h(place) - Oy + Ay)  * tile_h + Sy;
-                
-                if (*Bx >= Ox)
-                        sBx = (*Bx - Ox) * tile_w + Sx;
-                else
-                        sBx = (place_w(place) - Ox + *Bx) * tile_w + Sx;
-                if (*By >= Oy)
-                        sBy = (*By - Oy) * tile_h + Sy;
-                else
-                        sBy = (place_h(place) - Oy + *By)  * tile_h + Sy;
-                
-        } else {
-
-                Ax = (Ax - Ox) * tile_w + Sx;
-                Ay = (Ay - Oy) * tile_h + Sy;
-
-                sBx = (*Bx - Ox) * tile_w + Sx;
-                sBy = (*By - Oy) * tile_h + Sy;
-        }
-
+	int sBx;
+	int sBy;
+	
+	if (place_is_wrapping(place))
+	{
+		if (Ax > Ox)
+		      Ax = (Ax - Ox) * tile_w + Sx;
+		else
+		      Ax = (place_w(place) - Ox + Ax)  * tile_w + Sx;
+		if (Ay >= Oy)
+		      Ay = (Ay - Oy) * tile_h + Sy;
+		else
+		      Ay = (place_h(place) - Oy + Ay)  * tile_h + Sy;
+		
+		if (*Bx >= Ox)
+		      sBx = (*Bx - Ox) * tile_w + Sx;
+		else
+		      sBx = (place_w(place) - Ox + *Bx) * tile_w + Sx;
+		if (*By >= Oy)
+		      sBy = (*By - Oy) * tile_h + Sy;
+		else
+		      sBy = (place_h(place) - Oy + *By)  * tile_h + Sy;
+	} 
+	else
+	{
+		Ax = (Ax - Ox) * tile_w + Sx;
+		Ay = (Ay - Oy) * tile_h + Sy;
+		sBx = (*Bx - Ox) * tile_w + Sx;
+		sBy = (*By - Oy) * tile_h + Sy;
+	}
+	
 	// Create the rect which bounds the missile's sprite (used to update
 	// that portion of the screen after blitting the sprite).
 	SDL_Rect rect;
@@ -1524,11 +1526,12 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		tile_h_half--;
 	}
 	
-
 	int dPr, dPru, P, i , Xsubincr, Ysubincr;
 	int oldx, oldy, tempx, tempy;
-	bool beam = missile->getObjectType()->isBeam();
 		
+	//number of steps between missile repaints
+	int paintloopsize = 20;	
+	
 	// Walk the x-axis?
 	if (AdX >= AdY)
 	{
@@ -1537,15 +1540,15 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		P = dPr - AdX;
 		Xsubincr = Xincr;
 		Ysubincr = 0;
-		/* disabled for now - crashes if it tries to fire off the map 
 		if (range > 0.5) // floating point hence error margins
 		{
-			i = (int)((TILE_W * (range - 0.45) * AdX)/sqrt(AdX*AdX + AdY*AdY));
+			i = TILE_W * (place_w(place) + 2); // == "enough": its actually checked in the loop instead
 		}
 		else
-		{ */
+		{ 
 			i = AdX;	
-		//}
+		}
+		paintloopsize = paintloopsize * (AdX*AdX)/((AdX*AdX)+(AdY*AdY));
 	}
 	else
 	{
@@ -1554,20 +1557,30 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		P = dPr - AdY;	
 		Xsubincr = 0;
 		Ysubincr = Yincr;
-		/* disabled for now - crashes if it tries to fire off the map 
+
 		if (range > 0.5) // floating point hence error margins
 		{
-			i = (int)((TILE_H * (range - 0.45) * AdY)/sqrt(AdX*AdX + AdY*AdY));
+			i = TILE_H * (place_h(place) + 2); // == "enough": its actually checked in the loop instead
 		}
 		else
-		{ */
+		{ 
 			i = AdY;	
-		//}
+		}
+		paintloopsize = paintloopsize * (AdY*AdY)/((AdX*AdX)+(AdY*AdY));
 	}
+	
+	// firing past selected range, so work out the map edges if need be.
+	bool checkEdge = ((range >= 1) && !(place_is_wrapping(place)));
 	
 	oldx = rect.x;
 	oldy = rect.y;
-		
+	
+	int paintloop = paintloopsize;	
+
+	bool beam = missile->getObjectType()->isBeam();
+	
+	fprintf(stderr,"base %d\n",i);
+	
 	// For each step
 	for (; i >= 0; i--)
 	{	
@@ -1577,7 +1590,40 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy) / tile_h + Oy));
 		
 		if (oPx != Px || oPy != Py)
+		{			
+			// check edge if required
+			if (checkEdge)
+			{
+				if (Px < 0 || Py < 0 || Px >= place_w(place) || Py >= place_h(place))
+					goto done;		
+			}
+				
+			// check range if required
+			if (range>1)
+			{
+				if (range < place_flying_distance(place, orx, ory, Px, Py))
+				{
+					//need to back up one square, since we the missile shouldnt have gotten this far
+					Px = oPx;
+					Py = oPy;
+					goto done;
+				}
+			}
+		
+			// check if blocked by terrain
+			if (!missile->enterTile(place, Px, Py))
+				goto done;
+			
+			
+			//check if callback indicates blocked
+			if (canEnter & !mistype->fireEnterTile(missile, place, Px, Py))
+				goto done;
+		}
+		
+		if (paintloop == 0)
 		{
+			// if have done paintloop steps, redraw sprite
+			paintloop = paintloopsize;
 			if (mapTileIsVisible(Px, Py) && sprite)			
 			{
 				tempx = rect.x;
@@ -1585,14 +1631,14 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 				rect.x = (rect.x + oldx)/2;
 				rect.y = (rect.y + oldy)/2;
 				
-				mapPaintProjectile(&rect, sprite, surf, 25, currentframe, beam);		
+				mapPaintProjectile(&rect, sprite, surf, 15, currentframe, beam);		
 				if (framecount > 1)  
 					currentframe=(currentframe+1)%framecount;
 				
 				rect.x = oldx = tempx;
 				rect.y = oldy = tempy;
 					
-				mapPaintProjectile(&rect, sprite, surf, 25, currentframe, beam);		
+				mapPaintProjectile(&rect, sprite, surf, 15, currentframe, beam);		
 				if (framecount > 1)  
 					currentframe=(currentframe+1)%framecount;		
 			}
@@ -1600,14 +1646,9 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 			{
 				currentframe=(currentframe+2)%framecount;
 			}
-			
-			if (!missile->enterTile(place, Px, Py))
-				goto done;
-				
-			if (canEnter & !mistype->fireEnterTile(missile, place, Px, Py))
-				goto done;
 		}
-	
+		paintloop--;
+		
 		if (P > 0)
 		{
 			rect.x += Xincr;
@@ -1628,17 +1669,13 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		SDL_Delay(100);
 	
 	mapUpdate(0);
-
+	
 	// restore the missile sprite to the default facing
-        if (sprite)
-                sprite_set_facing(sprite, SPRITE_DEF_FACING);
+	if (sprite)
+		sprite_set_facing(sprite, SPRITE_DEF_FACING);
 
-        // Not anymore, now that we keep it in Map.tile_scratch_surf
-	//if (surf != NULL)
-	//	SDL_FreeSurface(surf);
-
-        *Bx = Px;
-        *By = Py;
+  *Bx = Px;
+  *By = Py;
 
 	t2 = SDL_GetTicks();
 
