@@ -367,10 +367,10 @@
            result-ok))))
 
 ;todo limit range?
-;check critter is viewable before message?
 (define (powers-fear caster unused power)			
 	(define (repel kchar)
-		(kern-log-msg (kern-obj-get-name kchar) " flees in terror!")
+		(msg-log-visible (kern-obj-get-location kchar) (kern-obj-get-name kchar) " flees in terror!")
+		(kern-map-flash-sprite s_magicflash (loc-x tloc) (loc-y tloc))
 		(kern-char-set-fleeing kchar #t)
 		)
 	(define (try-repel kchar)
@@ -445,10 +445,10 @@
                 (begin
                   (kern-log-msg "Burning!")
                   (if (not (has-fire-immunity? kobj))
-                      (kern-obj-inflict-damage kobj "burning" (kern-dice-roll damdf) caster))
-                  (if (not (null? damdi))
-                      (kern-obj-inflict-damage kobj "impact" (kern-dice-roll damdi) caster))
-                  )
+                      (kern-obj-inflict-damage kobj "burning" (kern-dice-roll damdf) caster)
+                		 (if (not (null? damdi))
+                      	(kern-obj-inflict-damage kobj "impact" (kern-dice-roll damdi) caster))
+                  	))
                 (kern-obj-apply-damage kobj "burning" (kern-dice-roll damdf))
                 ))
           (let ((kloc (mk-loc kplace x y)))
@@ -497,7 +497,7 @@
 							" hurls a fireball at "
 						(kern-obj-get-name targchar)))
 		(temp-ifc-set 
-			(lambda (kmissile kplace x y)
+			(lambda (kmissile kuser ktarget kplace x y)
 				(do-fireball-effect kplace x y)
 			)
 		)
@@ -822,7 +822,7 @@
 			)
 		)
 	)
-	(let* ((all-kobjs (kern-place-get-objects (car (kern-obj-get-location caster))))
+	(let* ((all-kobjs (all-hostiles caster))
 		(all-undead-combatants (filter is-undead-char? all-kobjs)))
 			(map repel all-undead-combatants)
 	))
