@@ -375,7 +375,7 @@
    ;;    ==================================================================================================
    ;;    tag                 | name          | sprite          | gifc              | movement_mode | beam
    ;;    ====================================================================================================
-   (list 't_slingstone        "sling stone"    s_sling_stone     nil                 mmode-missile  	#f)
+   (list 't_slingstone        "sling stone"    s_sling_stone     obj-ifc             mmode-missile  	#f)
    (list 't_arrow_p           "arrow"          s_arrow           (mk-drop-proj-ifc 't_arrow 5)
                                                                                      mmode-missile  	#f  )
    (list 't_bolt_p            "bolt"           s_bolt            (mk-drop-proj-ifc 't_bolt 5)             
@@ -388,11 +388,11 @@
    (list 't_acid_bolt         "acid bolt"      s_acid_bolt       acid-bolt-ifc       mmode-missile  	#f  )
    (list 't_fireball          "fireball"       s_fireball        fireball-ifc        mmode-missile  	#f  )
    (list 't_deathball         "deathball"      s_deathball       deathball-ifc       mmode-missile  	#f  )
-   (list 't_slimeglob         "slime glob"     s_acid_bolt       nil                 mmode-missile  	#f  )
+   (list 't_slimeglob         "slime glob"     s_acid_bolt       obj-ifc             mmode-missile  	#f  )
    (list 't_mfireball         "fireball"       s_fireball        temp-ifc            mmode-missile  	#f  )
    (list 't_mpoison_bolt      "poison bolt"    s_poison_bolt     temp-ifc            mmode-missile  	#f  )
    (list 't_prismatic_bolt    "prismatic bolt" s_prismatic_bolt  prismatic-bolt-ifc  mmode-missile  	#f  )
-   (list 't_stunball   			"stun ball" 	  s_lightning       stunball-ifc        mmode-missile  	#t  )
+   (list 't_stunball   			"stun ball" 	  s_lightning    stunball-ifc		 mmode-missile  	#f  )
    
    
    (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile  	#f  )
