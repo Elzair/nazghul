@@ -1,8 +1,11 @@
 ;;----------------------------------------------------------------------------
 ;; Ability "class"
 ;;----------------------------------------------------------------------------
+
+(define default-aap 50)
+
 (define (mk-ability name level mana ap proc rng)
-  (list name level mana ap proc rng))
+  (list name level mana (* ap default-aap) proc rng))
 
 (define (ability-name ability) (car ability))
 (define (ability-level-required ability) (cadr ability))
