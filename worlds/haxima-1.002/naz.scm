@@ -624,32 +624,41 @@
 ;; ADDENDUM: I don't want to allow diagonal evasion, so the "normalized" vector
 ;; must be skipped if it's a diagonal, thus causing us to try the fallbak
 ;; vector(s).
+;;
+;; Now allowing diagonals, since that factor has changed
+;;
+;; TODO: probably shouldnt flee over dangerous terrains
+;;
 ;; ----------------------------------------------------------------------------
 (define (evade kchar foes)
   (let* ((tloc (kern-obj-get-location kchar))
-         (v (loc-canonical (foldr (lambda (a b) 
-                               (loc-sum a 
-                                        (loc-diff (kern-obj-get-location b))
-                                                  tloc))
-                             (mk-loc (loc-place tloc) 0 0)
-                             foes))))
-    (define (move dx dy)
-      (if (kern-place-is-passable (loc-sum (mk-loc (loc-place tloc)
-                                                   dx 
-                                                   dy) 
-                                           tloc) 
-                                  kchar)
-          (kern-obj-move kchar dx dy)
-          #f))
-    (define (evade-on-normal)
-      (and (or (eq? 0 (loc-x v))
-               (eq? 0 (loc-y v)))
-           (move (loc-x v) (loc-y v))))
-    (or (evade-on-normal)
-        (and (not (eq? 0 (loc-y v)))
-             (move (loc-x v) 0))
-        (and (not (eq? 0 (loc-x v)))
-             (move 0 (loc-y v))))))
+         (v (loc-canonical
+				(foldr
+					(lambda (accum thisfoe) 
+						(loc-sum accum 
+							(loc-diff (kern-obj-get-location thisfoe) tloc)
+						))
+					(mk-loc (loc-place tloc) 0 0)
+					foes)
+				))
+			)
+		(define (move dx dy)
+			(if (kern-place-is-passable
+					(loc-sum
+						(mk-loc (loc-place tloc) dx dy) 
+						tloc) 
+					kchar)
+				(kern-obj-move kchar dx dy)
+				#f))
+		(define (evade-on-normal)
+				(move (loc-x v) (loc-y v)))    
+				   
+		(or (evade-on-normal)
+			(and (not (eq? 0 (loc-y v)))
+				(move (loc-x v) 0))
+			(and (not (eq? 0 (loc-x v)))
+				(move 0 (loc-y v))))
+		))
 
 
 ;; ----------------------------------------------------------------------------
