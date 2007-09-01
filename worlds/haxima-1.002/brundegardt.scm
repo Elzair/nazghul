@@ -65,31 +65,31 @@
  (kern-mk-map 
   nil 25 25 pal_expanded
   (list
-   "rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr gg gg gg rr "
-   "rr rr rr rr xx cc cc cc xx rr rr rr rr rr rr rr rr rr rr rr rr rr gg rr rr "
-   "rr rr rr rr xx cc cc cc cc gg gg gg gg gg gg gg gg gg gg rr rr rr gg rr rr "
-   "rr rr rr rr xx cc cc cc xx rr rr xx xx xx xx xx xx xx gg rr rr rr gg rr rr "
-   "rr rr rr rr xx xx cc xx xx xx xx xx cc cc cc cc cc xx gg gg gg gg gg rr rr "
-   "rr rr rr rr xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx xx xx xx xx xx xx "
-   "rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx cc cc cc xx "
-   "rr rr rr rr xx xx gg xx cc cc cc xx cc cc cc cc cc xx xx cc cc cc cc cc xx "
-   "rr rr rr rr xx xx cc xx xx xx xx xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
-   "rr rr xx xx xx cc cc cc w+ cc xx xx xx xx cc xx xx xx xx cc xx xx xx xx xx "
-   "rr xx xx cc cc cc cc cc w+ cc xx xx xx xx cc xx cc cc cc cc cc cc cc cc xx "
-   "xx xx cc cc cc cc cc cc w+ cc xx cc cc xx cc xx cc [[ ]] cc [[ ]] cc cc xx "
-   "cc cc cc cc cc cc cc cc w+ cc cc cc cc cc cc xx cc cc cc cc cc cc cc cc xx "
-   "xx xx cc cc cc cc cc cc w+ cc xx cc cc xx cc xx cc [[ ]] cc [[ ]] cc cc xx "
-   "rr xx xx cc cc cc cc cc w+ cc xx xx xx xx cc xx cc cc cc cc cc cc cc cc xx "
-   "rr rr xx xx xx cc cc cc w+ cc xx xx xx xx cc xx xx xx xx cc xx xx cc xx xx "
-   "rr rr rr rr xx xx cc xx xx xx xx xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
-   "rr rr rr rr xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
-   "rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx cc cc cc xx "
-   "rr rr rr rr xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx xx xx cc cc cc xx "
-   "xx xx xx xx xx xx cc xx xx xx xx xx cc cc cc cc cc xx rr rr xx xx xx xx xx "
-   "xx cc cc cc w+ cc cc cc xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-   "xx cc cc cc w+ cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
-   "xx cc cc cc w+ cc cc cc xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-   "xx xx xx xx xx xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rn rn rn rn xx xx xx xx xx rn rn rn rn rn rn rn rn rn rn rn r4 gg gg gg r2 "
+		"rn rn rn rn xx cc cc cc xx r8 r8 r8 r8 r8 r8 r8 r8 r8 r8 rn rn r5 gg r3 rn "
+		"rn rn rn rn xx cc cc cc cc gg gg gg gg gg gg gg gg gg gg r2 rn r4 gg r2 rn "
+		"rn rn rn rn xx cc cc cc xx r1 r1 xx xx xx xx xx xx xx gg ra r8 rc gg r2 rn "
+		"rn rn rn rn xx xx cc xx xx xx xx xx cc cc cc cc cc xx gg gg gg gg gg r2 rn "
+		"rn rn rn rn xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx xx xx xx xx xx xx "
+		"rn rn rn rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx cc cc cc xx "
+		"rn rn rn rn xx xx gg xx cc cc cc xx cc cc cc cc cc xx xx cc cc cc cc cc xx "
+		"rn rn rn rn xx xx cc xx xx xx xx xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
+		"rn rn xx xx xx cc cc cc w+ cc xx xx xx xx cc xx xx xx xx cc xx xx xx xx xx "
+		"rn xx xx cc cc cc cc cc w+ cc xx xx xx xx cc xx cc cc cc cc cc cc cc cc xx "
+		"xx xx cc cc cc cc cc cc w+ cc xx cc cc xx cc xx cc [[ ]] cc [[ ]] cc cc xx "
+		"cc cc cc cc cc cc cc cc w+ cc cc cc cc cc cc xx cc cc cc cc cc cc cc cc xx "
+		"xx xx cc cc cc cc cc cc w+ cc xx cc cc xx cc xx cc [[ ]] cc [[ ]] cc cc xx "
+		"rn xx xx cc cc cc cc cc w+ cc xx xx xx xx cc xx cc cc cc cc cc cc cc cc xx "
+		"rn rn xx xx xx cc cc cc w+ cc xx xx xx xx cc xx xx xx xx cc xx xx cc xx xx "
+		"rn rn rn rn xx xx cc xx xx xx xx xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
+		"rn rn rn rn xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
+		"rn rn rn rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx cc cc cc xx "
+		"rn rn rn rn xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx xx xx cc cc cc xx "
+		"xx xx xx xx xx xx cc xx xx xx xx xx cc cc cc cc cc xx rn rn xx xx xx xx xx "
+		"xx cc cc cc w+ cc cc cc xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
+		"xx cc cc cc w+ cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
+		"xx cc cc cc w+ cc cc cc xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
+		"xx xx xx xx xx xx xx xx xx rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
    ))
  #f                 ; wraps
  #t                 ; underground
@@ -207,29 +207,29 @@
 (mk-dungeon-room
  'p_cave_shrine "Cave Shrine"
  (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr ,V ,I ,G ,I ,L ,A ,N ,C ,E rr rr rr rr rr "
-  "rr rr rr rr rr !! !! !! !! !! !! !! !! !! rr rr rr rr rr "
-  "rr rr rr gg gg gg gg gg gg gg gg gg gg gg gg gg rr rr rr "
-  "rr rr rr gg gg gg dd bb dd dd dd bb dd gg gg gg rr rr rr "
-  "rr rr gg gg gg gg dd dd dd dd dd dd dd gg gg gg gg rr rr "
-  "rr rr gg gg dd dd dd dd dd dd dd dd dd dd dd gg gg rr rr "
-  "rr rr gg gg bb dd dd dd dd dd dd dd dd dd bb gg gg rr rr "
-  "rr !! gg gg dd dd dd dd gg gg gg dd dd dd dd gg gg !! rr "
-  "rr !! gg gg dd dd dd dd gg aa gg dd dd dd dd gg gg !! rr "
-  "rr !! gg gg dd dd dd dd gg gg gg dd dd dd dd gg gg !! rr "
-  "rr rr gg gg bb dd dd dd dd gg dd dd dd dd bb gg gg rr rr "
-  "rr rr gg gg dd dd dd dd dd gg dd dd dd dd dd gg gg rr rr "
-  "rr rr gg gg gg gg dd dd dd gg dd dd dd gg gg gg gg rr rr "
-  "rr rr rr gg gg gg dd bb dd gg dd bb dd gg gg gg rr rr rr "
-  "rr rr rr gg gg gg gg gg gg gg gg gg gg gg gg gg rr rr rr "
-  "rr rr rr rr rr gg gg gg gg gg gg gg gg gg rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr gg gg gg rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr gg gg gg rr rr rr rr rr rr rr rr "
+		"rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+		"rn rn rn rn rn ,V ,I ,G ,I ,L ,A ,N ,C ,E rn rn rn rn rn "
+		"rn rn rn r8 rc !! !! !! !! !! !! !! !! !! ra r8 rn rn rn "
+		"rn rn r4 gg gg gg gg gg gg gg gg gg gg gg gg gg r2 rn rn "
+		"rn rn rc gg gg gg dd bb dd dd dd bb dd gg gg gg ra rn rn "
+		"rn r4 gg gg gg gg dd dd dd dd dd dd dd gg gg gg gg r2 rn "
+		"rn r4 gg gg dd dd dd dd dd dd dd dd dd dd dd gg gg r2 rn "
+		"rn rc gg gg bb dd dd dd dd dd dd dd dd dd bb gg gg ra rn "
+		"r4 !! gg gg dd dd dd dd gg gg gg dd dd dd dd gg gg !! r2 "
+		"r4 !! gg gg dd dd dd dd gg aa gg dd dd dd dd gg gg !! r2 "
+		"r4 !! gg gg dd dd dd dd gg gg gg dd dd dd dd gg gg !! r2 "
+		"rn r5 gg gg bb dd dd dd dd gg dd dd dd dd bb gg gg r3 rn "
+		"rn r4 gg gg dd dd dd dd dd gg dd dd dd dd dd gg gg r2 rn "
+		"rn r4 gg gg gg gg dd dd dd gg dd dd dd gg gg gg gg r2 rn "
+		"rn rn r5 gg gg gg dd bb dd gg dd bb dd gg gg gg r3 rn rn "
+		"rn rn r4 gg gg gg gg gg gg gg gg gg gg gg gg gg r2 rn rn "
+		"rn rn rn r1 r5 gg gg gg gg gg gg gg gg gg r3 r1 rn rn rn "
+		"rn rn rn rn rn r1 r1 r5 gg gg gg r3 r1 r1 rn rn rn rn rn "
+		"rn rn rn rn rn rn rn r4 gg gg gg r2 rn rn rn rn rn rn rn "
   )
  (put (mk-anaxes) 9 8)
  )
-
+ 
 ;;----------------------------------------------------------------------------
 ;; Ratling Warren
 (kern-mk-place 
@@ -239,31 +239,31 @@
  (kern-mk-map 
   nil 25 25 pal_expanded
   (list
-   "rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-   "rr rr rr rr xx cc cc cc xx rr rr bb dd dd dd bb rr rr rr bb dd dd bb rr rr "
-   "rr rr rr rr xx cc cc cc xx rr dd dd dd dd dd dd dd rr bb dd dd dd dd bb rr "
-   "rr rr rr rr xx cc cc cc xx rr rr bb dd dd dd bb rr rr dd dd dd dd dd dd rr "
-   "rr rr rr rr xx xx cc xx xx rr dd dd dd dd bb rr rr rr dd dd dd dd dd dd rr "
-   "rr rr rr rr %% .. dd .. dd dd dd dd bb dd dd rr rr rr bb dd dd dd dd dd rr "
-   "rr rr dd dd .. dd .. %% .. dd rr rr rr rr rr rr bb rr rr bb dd dd dd bb rr "
-   "rr dd dd bb dd .. %% bb .. rr rr dd dd bb bb dd dd dd dd dd dd dd dd rr rr "
-   "rr rr dd .. dd dd rr rr rr rr dd dd dd dd dd dd dd dd dd dd dd dd dd rr rr "
-   "rr rr rr %% .. rr rr rr rr dd dd dd dd dd dd dd dd dd dd dd dd dd bb rr rr "
-   "rr rr rr rr rr rr rr rr bb dd dd dd dd dd dd dd dd dd bb rr rr rr rr rr rr "
-   "rr rr %% .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd rr rr rr rr rr rr rr "
-   "rr %% %% .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd rr rr rr rr rr rr rr "
-   "rr .. .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd rr rr rr rr rr rr rr "
-   "rr dd dd dd dd rr rr rr bb dd dd dd dd dd dd dd dd dd bb rr rr rr rr rr rr "
-   "rr dd dd dd rr rr rr rr rr .. .. .. dd dd dd dd dd dd dd rr rr rr rr rr rr "
-   "rr dd dd .. rr rr rr rr rr bb %% %% .. dd dd dd dd dd bb rr dd dd rr rr rr "
-   "rr dd .. %% rr rr rr rr rr rr %% .. dd dd dd dd dd dd rr rr dd dd dd rr rr "
-   "rr dd dd .. rr rr rr rr rr rr .. dd dd dd dd dd dd rr rr dd dd dd dd dd rr "
-   "rr bb dd bb rr rr rr rr rr rr bb dd dd dd dd dd bb rr rr dd dd dd dd dd rr "
-   "xx rr dd rr xx rr rr xx xx rr rr bb dd dd dd rr rr rr rr dd dd dd dd dd rr "
-   "xx cc cc cc w+ bb cc cc rr bb dd dd dd dd dd rr rr rr rr rr dd dd dd dd rr "
-   "xx cc cc cc rr cc cc cc dd dd dd dd dd .. dd rr rr rr rr rr rr dd dd rr rr "
-   "xx cc cc bb w+ cc cc cc rr bb dd dd .. %% bb rr rr rr rr rr rr rr rr rr rr "
-   "xx xx rr xx xx xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rn rn rn rn xx xx xx xx xx rn rn r8 r8 r8 r8 r8 rn rn rn r8 r8 r8 r8 rn rn "
+		"rn rn rn rn xx cc cc cc xx rn rc bb dd dd dd bb ra rn rc bb dd dd bb ra rn "
+		"rn rn rn rn xx cc cc cc xx r4 dd dd dd dd dd dd dd r6 bb dd dd dd dd bb r2 "
+		"rn rn rn rn xx cc cc cc xx rn rd bb dd dd dd bb r3 r4 dd dd dd dd dd dd r2 "
+		"rn rn rn rn xx xx cc xx xx rc dd dd dd dd bb r3 rn r4 dd dd dd dd dd dd r2 "
+		"rn rn r8 rc %f .. dd .. dd dd dd dd bb dd dd r2 r8 r4 bb dd dd dd dd dd r2 "
+		"rn rc dd dd .. dd .. %f .. dd r3 r9 r9 r9 r9 rc bb ra rd bb dd dd dd bb r2 "
+		"r4 dd dd bb dd .. %f bb .. r3 rc dd dd bb bb dd dd dd dd dd dd dd dd r3 rn "
+		"rn r5 dd .. dd dd r3 r1 r1 rc dd dd dd dd dd dd dd dd dd dd dd dd dd r2 rn "
+		"rn rn r5 %f .. r3 rn rn rc dd dd dd dd dd dd dd dd dd dd dd dd dd bb r2 rn "
+		"rn rn r8 r9 r9 r8 r8 rc bb dd dd dd dd dd dd dd dd dd bb r3 r1 r1 r1 rn rn "
+		"rn rc %7 .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd r3 rn rn rn rn rn rn "
+		"r4 %b %c .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd r2 rn rn rn rn rn rn "
+		"r4 .. .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd ra rn rn rn rn rn rn "
+		"r4 dd dd dd dd r3 r1 r5 bb dd dd dd dd dd dd dd dd dd bb r2 rn rn rn rn rn "
+		"r4 dd dd dd r3 rn rn rn r5 .. .. .. dd dd dd dd dd dd dd r2 r8 r8 rn rn rn "
+		"r4 dd dd .. r2 rn rn rn r4 bb %3 %d .. dd dd dd dd dd bb r6 dd dd ra rn rn "
+		"r4 dd .. %f r2 rn rn rn rn r5 %e .. dd dd dd dd dd dd r3 rc dd dd dd ra rn "
+		"r4 dd dd .. r2 rn rn rn rn r4 .. dd dd dd dd dd dd r3 r4 dd dd dd dd dd r2 "
+		"r4 bb dd bb r2 rn rn rn rn r4 bb dd dd dd dd dd bb r2 r4 dd dd dd dd dd r2 "
+		"xx rd dd rb xx r8 r8 xx xx r8 rd bb dd dd dd r3 r1 rn r4 dd dd dd dd dd r2 "
+		"xx cc cc cc w+ bb cc cc re bb dd dd dd dd dd r2 rn rn rn r5 dd dd dd dd r2 "
+		"xx cc cc cc rf cc cc cc dd dd dd dd dd .. dd r2 rn rn rn rn r5 dd dd r3 rn "
+		"xx cc cc bb w+ cc cc cc r7 bb dd dd .. %f bb r2 rn rn rn rn rn r1 r1 rn rn "
+		"xx xx r1 xx xx xx xx xx xx r1 r1 r1 r1 r1 r1 rn rn rn rn rn rn rn rn rn rn "
    ))
  #f                 ; wraps
  #t                 ; underground
@@ -339,7 +339,7 @@
   (list 'on-entry-to-dungeon-room) ; hooks
  nil ;; edge entrances
  )
-
+ 
 ;;----------------------------------------------------------------------------
 ;; Tunnel Turn
 (kern-mk-place 
@@ -348,25 +348,25 @@
  (kern-mk-map 
   nil 19 19 pal_expanded
   (list
-   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr xx xx xx xx xx xx xx rr rr rr rr rr rr "
-   "rr rr rr rr rr rr xx cc cc cc cc cc xx rr rr rr rr rr rr "
-   "rr rr rr rr rr rr xx cc pp cc pp cc xx xx xx xx xx xx xx "
-   "rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc "
-   "rr rr rr rr rr rr xx cc pp cc pp cc xx xx xx xx xx xx xx "
-   "rr rr rr rr rr rr xx cc cc cc cc cc xx rr rr rr rr rr rr "
-   "rr rr rr rr rr rr xx xx xx cc xx xx xx rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr xx cc xx rr rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr xx cc xx rr rr rr rr rr rr rr rr "
-   "xx xx xx xx xx xx xx xx xx cc xx rr rr rr rr rr rr rr rr "
-   "cc cc cc cc cc cc cc cc cc cc xx rr rr rr rr rr rr rr rr "
-   "xx xx xx xx xx xx xx xx xx xx xx rr rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+   "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+   "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+   "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+   "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+   "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+   "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+   "rn rn rn rn rn rn xx xx xx xx xx xx xx rn rn rn rn rn rn "
+   "rn rn rn rn rn rn xx cc cc cc cc cc xx rn rn rn rn rn rn "
+   "rn rn rn rn rn rn xx cc pp cc pp cc xx xx xx xx xx xx xx "
+   "rn rn rn rn rn rn xx cc cc cc cc cc cc cc cc cc cc cc cc "
+   "rn rn rn rn rn rn xx cc pp cc pp cc xx xx xx xx xx xx xx "
+   "rn rn rn rn rn rn xx cc cc cc cc cc xx rn rn rn rn rn rn "
+   "rn rn rn rn rn rn xx xx xx cc xx xx xx rn rn rn rn rn rn "
+   "rn rn rn rn rn rn rn rn xx cc xx rn rn rn rn rn rn rn rn "
+   "rn rn rn rn rn rn rn rn xx cc xx rn rn rn rn rn rn rn rn "
+   "xx xx xx xx xx xx xx xx xx cc xx rn rn rn rn rn rn rn rn "
+   "cc cc cc cc cc cc cc cc cc cc xx rn rn rn rn rn rn rn rn "
+   "xx xx xx xx xx xx xx xx xx xx xx rn rn rn rn rn rn rn rn "
+   "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
    ))
  #f                 ; wraps
  #t                 ; underground
@@ -386,42 +386,42 @@
   (list east 0 16)
   )
  )
-
+ 
 ;; randomly scatter gems through the rocks
 (put-random-stuff p_tunnel_turn
                   (mk-rect 0 0 19 19)
                   (lambda (loc)
                     (eqv? (kern-place-get-terrain loc)
-                          t_wall_rock))
+                          t_nat_rock))
                   (lambda (loc)
                     (kern-obj-put-at (kern-mk-obj t_gem 1)
                                      loc))
-                  10)
-
+                  10)         
+                  
 ;;----------------------------------------------------------------------------
 ;; Black River
 (mk-dungeon-room
  'p_black_canal "Black Canal"
  (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr gg gg gg rr rr bb ~s _s _s _s rr rr rr rr rr rr rr "
-  "rr gg gg bb gg gg ~s ~s ~s bb ~s _s _s rr rr rr rr rr rr "
-  "rr gg gg gg gg ~s _s _s ~s ~s ~s _s _s _s rr rr rr rr rr "
-  "rr rr gg gg ~s _s _s _s _s _s ~s bb ~s _s _s _s rr rr rr "
-  "rr rr rr rr _s _s _s _s _s _s ~s ~s ~s bb ~s _s rr rr rr "
-  "rr rr rr _s _s _s _s _s _s _s _s _s ~s ~s ~s _s rr rr rr "
-  "xx xx _s _s _s _s _s _s _s _s _s _s _s ~s _s _s xx xx rr "
-  "xx ee ee oo ee ee ee oo ~s ee ee oo ee ee oo ee ee xx xx "
-  "cc ee ee ee ee ~s ee ee ee ee ee ee ee ee ee ee ee cc cc "
-  "xx ee ee oo ee ee ee oo ee ee ee oo ~s ee oo ee ee xx xx "
-  "xx xx _s ~s _s _s _s ~s _s _s _s ~s _s _s ~s _s xx xx rr "
-  "rr rr rr ~s bb ~s _s _s _s _s _s _s _s _s _s rr rr rr rr "
-  "rr rr rr ~s ~s ~s bb ~s _s _s _s _s _s _s _s ~s rr rr rr "
-  "rr rr ~s _s _s _s ~s _s _s _s _s ~s bb ~s _s _s ~s rr rr "
-  "rr rr _s _s _s _s _s _s _s _s _s _s ~s _s _s _s _s rr rr "
-  "rr rr rr _s _s _s _s _s _s _s _s _s _s _s _s _s rr rr rr "
-  "rr rr rr rr rr _s _s rr rr rr rr rr _s _s rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rn rn r8 r8 r8 rn rn r8 r8 r8 r8 r8 rn rn rn rn rn rn rn "
+		"rn rc gg gg gg ra rc bb ~s _s _s _s ra rn rn rn rn rn rn "
+		"r4 gg gg bb gg gg ~s ~s ~s bb ~s _s _s ra rn rn rn rn rn "
+		"r4 gg gg gg gg ~s _s _s ~s ~s ~s _s _s _s ra r8 rn rn rn "
+		"rn r5 gg gg ~s _s _s _s _s _s ~s bb ~s _s _s _s r2 rn rn "
+		"rn rn r1 rd _s _s _s _s _s _s ~s ~s ~s bb ~s _s r2 rn rn "
+		"rn rn rc _s _s _s _s _s _s _s _s _s ~s ~s ~s _s r2 rn rn "
+		"xx xx _s _s _s _s _s _s _s _s _s _s _s ~s _s _s xx xx rn "
+		"xx ee ee oo ee ee ee oo ~s ee ee oo ee ee oo ee ee xx xx "
+		"cc ee ee ee ee ~s ee ee ee ee ee ee ee ee ee ee ee cc cc "
+		"xx ee ee oo ee ee ee oo ee ee ee oo ~s ee oo ee ee xx xx "
+		"xx xx _s ~s _s _s _s ~s _s _s _s ~s _s _s ~s _s xx xx rn "
+		"rn rn r5 ~s bb ~s _s _s _s _s _s _s _s _s _s rb rn rn rn "
+		"rn rn rc ~s ~s ~s bb ~s _s _s _s _s _s _s _s ~s ra rn rn "
+		"rn r4 ~s _s _s _s ~s _s _s _s _s ~s bb ~s _s _s ~s r2 rn "
+		"rn r4 _s _s _s _s _s _s _s _s _s _s ~s _s _s _s _s r2 rn "
+		"rn rn r5 _s _s _s _s _s _s _s _s _s _s _s _s _s r3 rn rn "
+		"rn rn rn r1 r5 _s _s r3 r1 r1 r1 r5 _s _s r3 r1 rn rn rn "
+		"rn rn rn rn rn r1 r1 rn rn rn rn rn r1 r1 rn rn rn rn rn "
   ) 
  (put (spawn-pt 'sludge-kraken) 9 4)
  )
@@ -436,31 +436,31 @@
                     (kern-obj-put-at (mk-corpse-with-loot)
                                      loc))
                   8)
-
+                  
 ;;----------------------------------------------------------------------------
 ;; Tunnels
 (mk-dungeon-room
  'p_tunnels "Tunnels"
  (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx cc cc cc xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx cc pp cc xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx cc cc cc xx rr rr rr rr rr rr rr "
-  "xx xx xx xx xx xx xx xx cc pp cc xx xx xx xx xx xx xx xx "
-  "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
-  "xx xx xx xx xx xx xx xx cc pp cc xx xx xx xx xx xx xx xx "
-  "rr rr rr rr rr rr rr xx cc cc cc xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx cc pp cc xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx cc cc cc xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn xx xx xx xx xx rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn xx cc cc cc xx rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn xx cc pp cc xx rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn xx cc cc cc xx rn rn rn rn rn rn rn "
+	  "xx xx xx xx xx xx xx xx cc pp cc xx xx xx xx xx xx xx xx "
+	  "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
+	  "xx xx xx xx xx xx xx xx cc pp cc xx xx xx xx xx xx xx xx "
+	  "rn rn rn rn rn rn rn xx cc cc cc xx rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn xx cc pp cc xx rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn xx cc cc cc xx rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn xx xx xx xx xx rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+	  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
   )
  (put (mk-locked-windowed-door) 7 9)
  (put (mk-locked-windowed-door) 11 9)
@@ -477,7 +477,7 @@
                   (mk-rect 0 0 19 19)
                   (lambda (loc)
                     (eqv? (kern-place-get-terrain loc)
-                          t_wall_rock))
+                          t_nat_rock))
                   (lambda (loc)
                     (kern-obj-put-at (kern-mk-obj t_gem 1)
                                      loc))
@@ -488,25 +488,25 @@
 (mk-dungeon-room
  'p_wide_chasm "Wide Chasm"
  (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr vv vv vv vv vv rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr vv vv vv vv vv vv vv rr rr rr rr rr rr "
-  "rr rr rr rr rr vv vv vv vv vv vv vv vv vv rr rr rr rr rr "
-  "rr rr rr xx xx vv vv vv vv vv vv vv vv vv xx xx rr rr rr "
-  "rr rr xx xx cc vv vv vv vv ee vv vv vv vv cc xx xx rr rr "
-  "rr xx xx cc cc vv vv vv vv ee vv vv vv vv cc cc xx xx rr "
-  "xx xx cc cc cc vv vv vv vv ee vv vv vv vv cc cc cc xx xx "
-  "xx cc cc cc cc vv vv vv ee ee ee vv vv vv cc cc cc cc xx "
-  "cc cc cc cc cc vv vv vv ee oo ee vv vv vv cc cc cc cc cc "
-  "xx cc cc cc cc vv vv vv ee ee ee vv vv vv cc cc cc cc xx "
-  "xx xx cc cc cc vv vv vv vv ee vv vv vv vv cc cc cc xx xx "
-  "rr xx xx cc cc vv vv vv vv ee vv vv vv vv cc cc xx xx rr "
-  "rr rr xx xx cc vv vv vv vv ee vv vv vv vv cc xx xx rr rr "
-  "rr rr rr xx xx vv vv vv vv vv vv vv vv vv xx xx rr rr rr "
-  "rr rr rr rr rr vv vv vv vv vv vv vv vv vv rr rr rr rr rr "
-  "rr rr rr rr rr rr vv vv vv vv vv vv vv rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr vv vv vv vv vv rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rn rn rn rn rn rn rn r8 r8 r8 r8 r8 rn rn rn rn rn rn rn "
+		"rn rn rn rn rn rn rc *3 *1 *1 *1 *5 ra rn rn rn rn rn rn "
+		"rn rn rn rn rn rc *3 vv vv vv vv vv *5 ra rn rn rn rn rn "
+		"rn rn rn rn r4 *3 vv vv vv vv vv vv vv *5 r2 rn rn rn rn "
+		"rn rn rn xx xx *2 vv vv vv vv vv vv vv *4 xx xx rn rn rn "
+		"rn rn xx xx cc *2 vv vv vv ee vv vv vv *4 cc xx xx rn rn "
+		"rn xx xx cc cc *2 vv vv *4 ee *2 vv vv *4 cc cc xx xx rn "
+		"xx xx cc cc cc *2 vv vv *c ee *a vv vv *4 cc cc cc xx xx "
+		"xx cc cc cc cc *2 vv vv ee ee ee vv vv *4 cc cc cc cc xx "
+		"cc cc cc cc cc *2 vv *4 ee oo ee *2 vv *4 cc cc cc cc cc "
+		"xx cc cc cc cc *2 vv vv ee ee ee vv vv *4 cc cc cc cc xx "
+		"xx xx cc cc cc *2 vv vv *5 ee *3 vv vv *4 cc cc cc xx xx "
+		"rn xx xx cc cc *2 vv vv *4 ee *2 vv vv *4 cc cc xx xx rn "
+		"rn rn xx xx cc *2 vv vv vv ee vv vv vv *4 cc xx xx rn rn "
+		"rn rn rn xx xx *2 vv vv vv vv vv vv vv *4 xx xx rn rn rn "
+		"rn rn rn rn r4 *a vv vv vv vv vv vv vv *c r2 rn rn rn rn "
+		"rn rn rn rn rn r5 *a vv vv vv vv vv *c r3 rn rn rn rn rn "
+		"rn rn rn rn rn rn r5 *a *8 *8 *8 *c r3 rn rn rn rn rn rn "
+		"rn rn rn rn rn rn rn r1 r1 r1 r1 r1 rn rn rn rn rn rn rn "
   )
   (put (mk-weather-vane) 9 9)
   (put (mk-wind-bridge) 5 5)
@@ -528,11 +528,11 @@
 (mk-dungeon-room
  'p_brundegardt_tower_1 "BrundeGardt Tower L1"
  (list
-  "rr rr rr rr rr xx xx xx xx xx xx xx xx xx rr rr rr rr rr "
-  "rr rr rr xx xx xx xx xx cc cc cc xx xx xx xx xx rr rr rr "
-  "rr rr xx xx xx cc cc xx cc cc cc xx cc cc cc cc xx rr rr "
-  "rr xx xx cc cc cc cc xx cc cc cc cc cc cc xx cc xx xx rr "
-  "rr xx xx cc xx xx xx xx xx cc xx xx xx xx xx cc cc xx rr "
+  "rn rn rn rn rn xx xx xx xx xx xx xx xx xx rn rn rn rn rn "
+  "rn rn rn xx xx xx xx xx cc cc cc xx xx xx xx xx rn rn rn "
+  "rn rn xx xx xx cc cc xx cc cc cc xx cc cc cc cc xx rn rn "
+  "rn xx xx cc cc cc cc xx cc cc cc cc cc cc xx cc xx xx rn "
+  "rn xx xx cc xx xx xx xx xx cc xx xx xx xx xx cc cc xx rn "
   "xx xx cc cc xx cc cc xx cc cc cc xx cc cc xx cc cc xx xx "
   "xx xx cc cc xx cc cc xx cc cc cc cc cc cc xx cc cc xx xx "
   "xx xx xx cc xx xx cc xx xx xx xx xx cc xx xx xx xx xx xx "
@@ -542,11 +542,11 @@
   "xx xx xx cc xx xx xx xx xx xx xx xx xx cc xx xx cc xx xx "
   "xx xx cc cc xx cc cc xx cc cc cc cc cc cc xx cc cc xx xx "
   "xx xx cc cc cc cc cc cc cc cc cc xx cc cc xx cc cc xx xx "
-  "rr xx ?? xx xx xx xx xx xx cc xx xx xx xx xx cc cc xx rr "
-  "rr xx cc xx cc cc cc xx cc cc cc xx cc cc xx cc xx xx rr "
-  "rr rr xx xx cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
-  "rr rr rr xx xx xx xx xx cc cc cc xx xx xx xx xx rr rr rr "
-  "rr rr rr rr rr xx xx xx xx xx xx xx xx xx rr rr rr rr rr "
+  "rn xx ?? xx xx xx xx xx xx cc xx xx xx xx xx cc cc xx rn "
+  "rn xx cc xx cc cc cc xx cc cc cc xx cc cc xx cc xx xx rn "
+  "rn rn xx xx cc cc cc cc cc cc cc cc cc cc cc cc xx rn rn "
+  "rn rn rn xx xx xx xx xx cc cc cc xx xx xx xx xx rn rn rn "
+  "rn rn rn rn rn xx xx xx xx xx xx xx xx xx rn rn rn rn rn "
   )
 
  ;; doors
@@ -645,31 +645,31 @@
                     (kern-obj-put-at (mk-corpse-with-loot)
                                      loc))
                   5)
-
+                  
 ;;----------------------------------------------------------------------------
 ;; Tower L2
 (mk-dungeon-room
  'p_brundegardt_tower_2 "BrundeGardt Tower L2"
  (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr bb bb rr rr xx xx xx xx xx xx xx rr rr rr rr rr rr "
-  "rr bb dd dd bb bb dd cc cc cc cc cc xx xx xx rr rr rr rr "
-  "rr bb dd dd dd dd cc cc cc cc cc cc cc cc xx xx rr rr rr "
-  "rr rr bb dd && dd cc pp cc cc cc pp cc cc cc xx xx rr rr "
-  "rr rr bb dd dd dd cc cc cc cc cc cc cc cc cc cc xx rr rr "
-  "rr xx dd cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx rr "
-  "rr xx cc cc pp cc cc pp cc cc cc pp cc cc pp cc cc xx rr "
-  "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr "
-  "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr "
-  "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr "
-  "rr xx cc cc pp cc cc pp cc cc cc pp cc cc pp cc cc xx rr "
-  "rr xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx rr "
-  "rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
-  "rr rr xx xx cc cc cc pp cc cc cc pp cc cc cc xx xx rr rr "
-  "rr rr rr xx xx cc cc cc cc cc cc cc cc cc xx xx rr rr rr "
-  "rr rr rr rr xx xx xx cc cc cc cc cc xx xx xx rr rr rr rr "
-  "rr rr rr rr rr rr xx xx xx xx xx xx xx rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rn rn r8 r8 rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+		"rn rc bb bb ra r8 xx xx xx xx xx xx xx rn rn rn rn rn rn "
+		"r4 bb dd dd bb bb dd cc cc cc cc cc xx xx xx rn rn rn rn "
+		"r4 bb dd dd dd dd cc cc cc cc cc cc cc cc xx xx rn rn rn "
+		"rn r5 bb dd && dd cc pp cc cc cc pp cc cc cc xx xx rn rn "
+		"rn r4 bb dd dd dd cc cc cc cc cc cc cc cc cc cc xx rn rn "
+		"rn xx dd cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx rn "
+		"rn xx cc cc pp cc cc pp cc cc cc pp cc cc pp cc cc xx rn "
+		"rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rn "
+		"rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rn "
+		"rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rn "
+		"rn xx cc cc pp cc cc pp cc cc cc pp cc cc pp cc cc xx rn "
+		"rn xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx rn "
+		"rn rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rn rn "
+		"rn rn xx xx cc cc cc pp cc cc cc pp cc cc cc xx xx rn rn "
+		"rn rn rn xx xx cc cc cc cc cc cc cc cc cc xx xx rn rn rn "
+		"rn rn rn rn xx xx xx cc cc cc cc cc xx xx xx rn rn rn rn "
+		"rn rn rn rn rn rn xx xx xx xx xx xx xx rn rn rn rn rn rn "
+		"rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
   )
  (put (mk-ladder-down 'p_brundegardt_tower_1 10 9) 10 9)
  (put (mk-ladder-up 'p_brundegardt_tower_3 8 9) 8 9)
@@ -684,25 +684,25 @@
 (mk-dungeon-room
  'p_brundegardt_tower_3 "BrundeGardt Tower L3"
  (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr xx xx xx cc cc cc xx xx xx rr rr rr rr rr "
-  "rr rr rr rr xx xx cc cc cc cc cc cc cc xx xx rr rr rr rr "
-  "rr rr rr xx xx cc cc pp cc cc cc pp cc cc xx xx rr rr rr "
-  "rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc xx rr rr rr "
-  "rr rr xx xx cc pp cc pp cc cc cc pp cc pp cc xx xx rr rr "
-  "rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
-  "rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
-  "rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
-  "rr rr xx xx cc pp cc pp cc cc cc pp cc pp cc xx xx rr rr "
-  "rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc xx rr rr rr "
-  "rr rr rr xx xx cc cc pp cc cc cc pp cc cc xx xx rr rr rr "
-  "rr rr rr rr xx xx cc cc cc cc cc cc cc xx xx rr rr rr rr "
-  "rr rr rr rr rr xx xx xx cc cc cc xx xx xx rr rr rr rr rr "
-  "rr rr rr rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+  "rn rn rn rn rn rn rn xx xx xx xx xx rn rn rn rn rn rn rn "
+  "rn rn rn rn rn xx xx xx cc cc cc xx xx xx rn rn rn rn rn "
+  "rn rn rn rn xx xx cc cc cc cc cc cc cc xx xx rn rn rn rn "
+  "rn rn rn xx xx cc cc pp cc cc cc pp cc cc xx xx rn rn rn "
+  "rn rn rn xx cc cc cc cc cc cc cc cc cc cc cc xx rn rn rn "
+  "rn rn xx xx cc pp cc pp cc cc cc pp cc pp cc xx xx rn rn "
+  "rn rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rn rn "
+  "rn rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rn rn "
+  "rn rn xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rn rn "
+  "rn rn xx xx cc pp cc pp cc cc cc pp cc pp cc xx xx rn rn "
+  "rn rn rn xx cc cc cc cc cc cc cc cc cc cc cc xx rn rn rn "
+  "rn rn rn xx xx cc cc pp cc cc cc pp cc cc xx xx rn rn rn "
+  "rn rn rn rn xx xx cc cc cc cc cc cc cc xx xx rn rn rn rn "
+  "rn rn rn rn rn xx xx xx cc cc cc xx xx xx rn rn rn rn rn "
+  "rn rn rn rn rn rn rn xx xx xx xx xx rn rn rn rn rn rn rn "
+  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+  "rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
   )
  (put (mk-ladder-down 'p_brundegardt_tower_2 8 9) 8 9)
  (put (mk-ladder-up 'p_brundegardt_tower_4 10 9) 10 9)
