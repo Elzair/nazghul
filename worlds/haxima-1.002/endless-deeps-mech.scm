@@ -3,177 +3,174 @@
 ; Deeps template maps
 
 (kern-mk-map 'm_deeptempl_wall 19 19 pal_expanded
-		(list
-			"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-			"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-			"rr rr rr rr rr .. .. rr {e rr rr {4 {{ rr rr rr rr rr rr "
-			"rr rr rr rr rr .. .. .. .. bb .. .. .. .. rr rr rr rr rr "
-			"rr rr rr {{ {2 .. .. {8 .. .. .. .. {8 .. {4 {{ rr rr rr "
-			"rr rr .. {1 {8 .. rr {{ {2 {8 .. {4 {{ rr .. {1 .. rr rr "
-			"rr rr rr {4 {{ {6 {{ rr rr {{ {a .. {1 .. .. .. .. rr rr "
-			"rr rr .. .. {1 .. {5 {{ rr rr {{ rr .. .. {8 .. {4 {{ rr "
-			"rr .. bb .. .. .. .. {1 rr rr rr {8 .. bb {{ {2 .. rr rr "
-			"rr .. .. .. .. rr .. {8 .. rr {{ {{ {2 .. {1 .. rr rr rr "
-			"rr rr .. .. {4 {{ rr {{ rr rr rr rr .. .. .. .. bb rr rr "
-			"rr .. .. .. .. {1 .. {9 rr {{ {6 {{ rr .. .. .. .. .. rr "
-			"rr rr {8 .. bb .. {4 {{ rr {1 .. {1 .. .. .. .. .. .. rr "
-			"rr rr {{ .. .. .. .. rr .. {8 .. .. .. .. bb {8 .. rr rr "
-			"rr rr rr .. rr .. .. .. {4 {{ bb .. .. .. {4 {{ rr rr rr "
-			"rr rr rr rr {{ {2 .. .. .. {1 .. .. .. .. .. rr rr rr rr "
-			"rr rr rr rr rr {{ {2 .. {c {{ {{ {2 bb rr rr rr rr rr rr "
-			"rr rr rr rr rr rr .. rr {{ rr rr .. rr rr rr rr rr rr rr "
-			"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-		)
+	(list
+		"rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
+		"rn rn rn rn rn r8 r8 rn r8 rn rn r8 r8 rn rn rn rn rn rn "
+		"rn rn rn rn r4 .. .. re .. ra rc {4 {{ r2 rn rn rn rn rn "
+		"rn rn rn r8 rc .. .. .. .. bb .. .. .. .. ra r8 rn rn rn "
+		"rn rn r8 {{ {2 .. .. {8 .. .. .. .. {8 .. {4 {{ r8 rn rn "
+		"rn r4 .. {1 {8 .. rf {{ {2 {8 .. {4 {{ rf .. {1 .. r2 rn "
+		"rn rn rd {4 {{ {6 {{ rb r5 {{ {a .. {1 .. .. .. .. ra rn "
+		"rn rc .. .. {1 .. {5 {{ r2 r5 {{ rf .. .. {8 .. {4 {{ r2 "
+		"r4 .. bb .. .. .. .. {1 ra rn rd {8 .. bb {{ {2 .. r3 rn "
+		"r4 .. .. .. .. rf .. {8 .. r6 {{ {{ {2 .. {1 .. rb rn rn "
+		"rn rd .. .. {4 {{ rf {{ r3 r8 r9 rd .. .. .. .. bb ra rn "
+		"r4 .. .. .. .. {1 .. {9 r6 {{ {6 {{ rf .. .. .. .. .. r2 "
+		"rn r5 {8 .. bb .. {4 {{ re {1 .. {1 .. .. .. .. .. .. r2 "
+		"rn r4 {{ .. .. .. .. rf .. {8 .. .. .. .. bb {8 .. r3 rn "
+		"rn rn r1 .. rf .. .. .. {4 {{ bb .. .. .. {4 {{ r1 rn rn "
+		"rn rn rn r5 {{ {2 .. .. .. {1 .. .. .. .. .. r3 rn rn rn "
+		"rn rn rn rn r4 {{ {2 .. {c {{ {{ {2 bb r2 rn rn rn rn rn "
+		"rn rn rn rn rn r5 .. r7 {{ r3 r5 .. r3 rn rn rn rn rn rn "
+		"rn rn rn rn rn rn r1 rn r1 rn rn r1 rn rn rn rn rn rn rn "
 	)
+)
  
-(kern-mk-map
-  'm_deeptempl_passage 19 19 pal_expanded
-		(list
-			"rr rr rr rr rr rr .. .. .. .. {4 {{ {2 .. rr rr rr rr rr "
-			"rr rr rr rr rr rr .. .. .. .. .. {1 .. rr rr rr rr rr rr "
-			"rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
-			"rr rr rr {{ {2 .. .. .. .. .. .. .. .. .. {4 {{ rr rr rr "
-			"rr rr rr {1 .. .. {8 .. .. .. .. .. .. .. .. rr rr rr rr "
-			".. rr .. .. .. {4 {{ {2 .. .. .. .. .. .. {8 .. .. {8 rr "
-			".. {8 .. .. .. .. {1 .. .. {8 .. .. .. {4 {{ {2 {4 {{ {2 "
-			"{4 {{ {2 .. .. .. .. .. {4 {{ {2 .. .. .. {1 .. .. {1 .. "
-			".. {1 .. .. .. .. .. bb .. {1 .. .. .. .. .. .. .. .. .. "
-			".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-			".. .. .. .. .. .. .. .. .. .. .. {8 .. .. .. .. .. .. .. "
-			".. .. bb .. .. .. .. .. .. .. {4 {{ {2 .. .. .. .. .. .. "
-			".. .. .. .. .. .. .. {8 .. .. .. {1 .. .. .. .. .. .. .. "
-			"rr .. .. .. .. .. {4 {{ {2 .. .. .. .. .. .. .. .. rr .. "
-			"rr rr rr .. {8 .. .. {1 .. .. .. .. .. .. .. .. rr rr rr "
-			"rr rr rr rr {{ {2 .. .. .. .. .. .. .. .. .. bb rr rr rr "
-			"rr rr rr rr rr .. .. .. .. {8 .. .. .. rr rr rr rr rr rr "
-			"rr rr rr rr rr rr .. .. {4 {{ {a .. .. rr rr rr rr rr rr "
-			"rr rr rr rr rr .. .. .. .. {5 {{ {2 .. .. rr rr rr rr rr "
-		)
+(kern-mk-map 'm_deeptempl_passage 19 19 pal_expanded
+	(list
+		"rn rn rn rn rn r4 .. .. .. .. {4 {{ {2 .. r2 rn rn rn rn "
+		"rn rn rn rn rn rc .. .. .. .. .. {1 .. rb rn rn rn rn rn "
+		"rn rn rn rn r4 .. .. .. .. .. .. .. .. .. r2 rn rn rn rn "
+		"rn rn rn {{ {2 .. .. .. .. .. .. .. .. .. {4 {{ rn rn rn "
+		"r8 rn r8 {1 .. .. {8 .. .. .. .. .. .. .. .. rb r8 r8 rn "
+		".. re .. .. .. {4 {{ {2 .. .. .. .. .. .. {8 .. .. {8 ra "
+		".. {8 .. .. .. .. {1 .. .. {8 .. .. .. {4 {{ {2 {4 {{ {2 "
+		"{4 {{ {2 .. .. .. .. .. {4 {{ {2 .. .. .. {1 .. .. {1 .. "
+		".. {1 .. .. .. .. .. bb .. {1 .. .. .. .. .. .. .. .. .. "
+		".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		".. .. .. .. .. .. .. .. .. .. .. {8 .. .. .. .. .. .. .. "
+		".. .. bb .. .. .. .. .. .. .. {4 {{ {2 .. .. .. .. .. .. "
+		".. .. .. .. .. .. .. {8 .. .. .. {1 .. .. .. .. .. .. .. "
+		"r5 .. .. .. .. .. {4 {{ {2 .. .. .. .. .. .. .. .. r7 .. "
+		"rn r1 r1 .. {8 .. .. {1 .. .. .. .. .. .. .. .. r1 rn r1 "
+		"rn rn rn r5 {{ {2 .. .. .. .. .. .. .. .. .. bb rn rn rn "
+		"rn rn rn rn r4 .. .. .. .. {8 .. .. .. r2 rn rn rn rn rn "
+		"rn rn rn rn rn rd .. .. {4 {{ {a .. .. ra rn rn rn rn rn "
+		"rn rn rn rn r4 .. .. .. .. {5 {{ {2 .. .. r2 rn rn rn rn "
 	)
+)
 	
  
-(kern-mk-map
-  'm_deeptempl_water 19 19 pal_expanded
-		(list
-			"rr rr rr rr rr rr ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ rr rr rr rr rr "
-			"rr rr rr rr rr ~b ~8 ~8 ~~ ~~ ~~ ~8 ~~ ~4 rr rr rr rr rr "
-			"rr rr rr rr rr .. .. .. ~% ~e %c .. ~% ~e rr rr rr rr rr "
-			"rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
-			"rr rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
-			"~~ ~5 .. .. .. .. ~C ~7 ~A .. .. bb .. .. .. .. .. ~b ~~ "
-			"~~ ~c .. .. .. .. ~3 -- ~d .. .. .. .. .. .. .. .. bb ~~ "
-			"~~ %c bb .. .. .. ~a ~~ {G {2 .. .. .. .. .. .. .. ~3 ~~ "
-			"~4 .. .. .. .. .. %a ~e {1 .. .. .. .. .. .. .. .. ~2 ~~ "
-			"~~ ~A .. .. .. .. .. .. .. .. .. ~7 .. .. .. .. .. ~a ~~ "
-			"~~ ~d .. .. .. .. .. .. .. .. %3 ~~ ~5 ~A .. .. .. ~D ~~ "
-			"~~ %c .. .. .. ~C ~7 ~A .. .. ~3 -- -- ~d .. .. .. ~3 ~~ "
-			"~4 .. .. .. .. ~3 -- ~d .. ~b ~~ -- ~c ~# .. .. .. ~2 ~~ "
-			"~c .. .. .. .. ~a ~c ~# .. .. %a ~e ~# .. .. .. .. ~e rr "
-			"rr rr rr .. .. .. .. .. .. .. .. .. .. .. bb .. rr rr rr "
-			"rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
-			"rr rr rr rr rr .. ~C ~7 ~A .. .. ~C ~3 ~d rr rr rr rr rr "
-			"rr rr rr rr rr rr ~3 ~~ ~~ ~5 ~E ~3 ~~ rr rr rr rr rr rr "
-			"rr rr rr rr rr ~3 ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~5 rr rr rr rr rr "
-		)
+(kern-mk-map 'm_deeptempl_water 19 19 pal_expanded
+	(list
+		"rn rn rn rn rn rc ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ r2 rn rn rn rn "
+		"rn rn rn rn r4 ~b ~8 ~8 ~~ ~~ ~~ ~8 ~~ ~4 r2 rn rn rn rn "
+		"rn rn rn rn r4 .. .. .. ~% ~6 %c .. ~% ~e r2 rn rn rn rn "
+		"rn rn rn rn rc .. .. .. .. .. .. .. .. .. ra r8 rn rn rn "
+		"r8 r8 r8 rc .. .. .. .. .. .. .. .. .. .. .. .. r8 r8 r8 "
+		"~~ ~5 .. .. .. .. ~C ~7 ~A .. .. bb .. .. .. .. .. ~b ~~ "
+		"~~ ~c .. .. .. .. ~3 -- ~d .. .. .. .. .. .. .. .. bb ~~ "
+		"~~ %c bb .. .. .. ~a ~~ {G {2 .. .. .. .. .. .. .. ~3 ~~ "
+		"~4 .. .. .. .. .. %a ~e {1 .. .. .. .. .. .. .. .. ~2 ~~ "
+		"~~ ~A .. .. .. .. .. .. .. .. .. ~7 .. .. .. .. .. ~a ~~ "
+		"~~ ~d .. .. .. .. .. .. .. .. %3 ~~ ~5 ~A .. .. .. ~D ~~ "
+		"~~ %c .. .. .. ~C ~7 ~A .. .. ~3 -- -- ~d .. .. .. ~3 ~~ "
+		"~4 .. .. .. .. ~3 -- ~d .. ~b ~~ -- ~c ~# .. .. .. ~2 ~~ "
+		"~c .. .. .. .. ~a ~c ~# .. .. %a ~e ~# .. .. .. .. ~e r3 "
+		"r1 r1 r1 .. .. .. .. .. .. .. .. .. .. .. bb .. r1 r1 rn "
+		"rn rn rn r1 r5 .. .. .. .. .. .. .. .. .. r3 r1 rn rn rn "
+		"rn rn rn rn r4 .. ~C ~7 ~A .. .. ~C ~3 ~d r2 rn rn rn rn "
+		"rn rn rn rn rn rd ~3 ~~ ~~ ~5 ~E ~3 ~~ rb rn rn rn rn rn "
+		"rn rn rn rn r4 ~3 ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~5 r2 rn rn rn rn "
 	)
+)
 	
 	
-(kern-mk-map
-	'm_deeptempl_hole 19 19 pal_expanded
-		(list
-			"rr rr rr rr rr rr vv vv vv vv vv vv vv *c rr rr rr rr rr "
-			"rr rr rr rr rr *b vv vv *8 *c .i *e .g rr rr rr rr rr rr "
-			"rr rr rr rr rr .h *e .g .. .. .. .. .. .. rr rr rr rr rr "
-			"rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
-			"rr rr rr .. .. *7 {j .. .. .. .. .. {8 .. .. .. rr rr rr "
-			"*5 rr .. .. .. *a vv *5 .j .. .. {4 {{ {a .. .. rr .. *3 "
-			"vv *5 .. .. .. .. .h vv *5 .j .. .. bb {{ {2 .. .. .l vv "
-			"vv *4 .. .. .. .. .. *a vv *5 .j .. .. {1 .. .. *b vv vv "
-			"vv *c .. .. .. .. {4 {h vv vv *5 .j .. .. .. .. .h *a vv "
-			"vv .g .. .. .. {8 .. .. *2 vv vv *d .. .. .. .. .. .m vv "
-			"vv .j .. .. {c {{ {2 .. *a vv vv .g .. .. {8 .. .. *b vv "
-			"vv *d .. {4 {{ rr .. .. rr *a vv {j {2 {4 {{ {2 .. .m vv "
-			"vv .k .. .. {1 .. .. .. .. .h *a *5 .j .. {1 .. .. *3 vv "
-			"vv *d .. .. .. .. .. .. .. .. .h *a *5 .. .. .. .. *e rr "
-			"rr rr rr .. .. .. .. .. .. .. {4 {h *e .. .. .. rr rr rr "
-			"rr rr rr .. .. .. .. .. .. .. .. {1 .. .. .. .. rr rr rr "
-			"rr rr rr rr rr .. .. .. .. .. *7 .j .. .. rr rr rr rr rr "
-			"rr rr rr rr rr *7 .n *3 *5 .n vv *5 .n *7 rr rr rr rr rr "
-			"rr rr rr rr rr vv vv vv vv vv vv vv vv vv rr rr rr rr rr "
-		)
+(kern-mk-map 'm_deeptempl_hole 19 19 pal_expanded
+	(list
+		"rn rn rn rn rn rc vv vv vv vv vv vv vv *c r2 rn rn rn rn "
+		"rn rn rn rn r4 *b vv vv *8 *c .i *e .g rb rn rn rn rn rn "
+		"rn rn rn rn r4 .h *e .g .. .. .. .. .. .. r2 rn rn rn rn "
+		"rn rn rn .. .. .. {8 .. .. .. .. .. .. .. .. .. rn rn rn "
+		"r8 rn r8 .. .. *7 {j .. .. .. .. .. {8 .. .. .. rn r8 r8 "
+		"*5 re .. .. .. *a vv *5 .j .. .. {4 {{ {a .. .. re .. *3 "
+		"vv *5 .. .. .. .. .h vv *5 .j .. .. bb {{ {2 .. .. .l vv "
+		"vv *4 .. .. .. .. .. *a vv *5 .j .. .. {1 .. .. *b vv vv "
+		"vv *c .. .. .. .. {4 {h vv vv *5 .j .. .. .. .. .h *a vv "
+		"vv .g .. .. .. {8 .. .. *2 vv vv *d .. .. .. .. .. .m vv "
+		"vv .j .. .. {c {{ {2 .. *a vv vv .g .. .. {8 .. .. *b vv "
+		"vv *d .. {4 {{ rf .. .. rf *a vv {j {2 {4 {{ {2 .. .m vv "
+		"vv .k .. .. {1 .. .. .. .. .h *a *5 .j .. {1 .. .. *3 vv "
+		"vv *d .. .. .. .. .. .. .. .. .h *a *5 .. .. .. .. *e r3 "
+		"r1 r1 r1 .. .. .. .. .. .. .. {4 {h *e .. .. .. r1 r1 rn "
+		"rn rn rn .. .. .. .. .. .. .. .. {1 .. .. .. .. rn rn rn "
+		"rn rn rn rn r4 .. .. .. .. .. *7 .j .. .. r2 rn rn rn rn "
+		"rn rn rn rn r4 *7 .n *3 *5 .n vv *5 .n *7 r2 rn rn rn rn "
+		"rn rn rn rn r4 vv vv vv vv vv vv vv vv vv r2 rn rn rn rn "
 	)
+)
 
-  (kern-mk-map 'm_deeptempl_lava 19 19 pal_expanded
-		(list
-			"rr rr rr rr rr rr !_ !_ !_ !_ !_ !_ !_ rr rr rr rr rr rr "
-			"rr rr rr rr rr rr !! !! !! !! !! !! !_ !! rr rr rr rr rr "
-			"rr rr rr rr rr !! !c .. .. .. bb !a !c .. rr rr rr rr rr "
-			"rr rr rr bb rr .. .. .. .. .. .. .. .. .. {4 {{ rr rr rr "
-			"rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. {1 rr rr rr "
-			"rr !! !! .. .. .. rr .. .. .. .. !3 !! !5 .. .. !! rr rr "
-			"!_ !_ !c .. .. .. .. {8 .. .. .. !! !_ !c .. .. !! !_ !_ "
-			"!_ !! {# .. .. .. {4 {{ {2 .. .. !a !c .. {8 .. !a !! !_ "
-			"!_ !! {1 .. bb .. .. {1 .. .. .. .. .. {4 {{ {2 .. !! !_ "
-			"!_ !! .. .. .. .. .. !7 .. .. .. .. .. .. {1 .. .. !! !_ "
-			"!_ !! .. .. .. .. !3 !! !5 .. .. .. .. .. .. .. .. !! !_ "
-			"!_ !! .. .. .. !3 !_ !! !c .. .. .. bb .. .. .. .. !! !_ "
-			"!_ !! !5 .. .. !a !c .. .. .. .. !3 !5 .. .. .. {8 !! !_ "
-			"!_ rr !! .. .. .. .. .. .. .. .. !a !c .. .. {4 {{ rr !_ "
-			"rr rr rr .. {8 .. .. .. .. .. .. .. .. .. .. rr rr rr rr "
-			"rr rr rr rr {{ {2 .. .. .. .. .. .. .. .. .. bb rr rr rr "
-			"rr rr rr rr rr .. .. !7 bb .. .. !3 !! !! rr rr rr rr rr "
-			"rr rr rr rr rr !! !! !! !! !! !! !! !_ rr rr rr rr rr rr "
-			"rr rr rr rr rr rr !_ !_ !_ !_ !_ !_ !_ !_ rr rr rr rr rr "
-		)
+(kern-mk-map 'm_deeptempl_lava 19 19 pal_expanded
+	(list
+		"rn rn rn rn rn r4 !_ !_ !_ !_ !_ !_ !_ ra rn rn rn rn rn "
+		"rn rn rn rn rn rc !! !! !! !! !! !! !_ !! r2 rn rn rn rn "
+		"rn rn rn rn r4 !! !c .. .. .. bb !a !c .. r2 rn rn rn rn "
+		"rn rn rn bb re .. .. .. .. .. .. .. .. .. {4 {{ rn rn rn "
+		"rn r8 r8 .. .. .. .. .. .. .. .. .. .. .. .. {1 r8 rn rn "
+		"rc !! !! .. .. .. rf .. .. .. .. !3 !! !5 .. .. !! ra r8 "
+		"!_ !_ !c .. .. .. .. {8 .. .. .. !! !_ !c .. .. !! !_ !_ "
+		"!_ !! {# .. .. .. {4 {{ {2 .. .. !a !c .. {8 .. !a !! !_ "
+		"!_ !! {1 .. bb .. .. {1 .. .. .. .. .. {4 {{ {2 .. !! !_ "
+		"!_ !! .. .. .. .. .. !7 .. .. .. .. .. .. {1 .. .. !! !_ "
+		"!_ !! .. .. .. .. !3 !! !5 .. .. .. .. .. .. .. .. !! !_ "
+		"!_ !! .. .. .. !3 !_ !! !c .. .. .. bb .. .. .. .. !! !_ "
+		"!_ !! !5 .. .. !a !c .. .. .. .. !3 !5 .. .. .. {8 !! !_ "
+		"!_ r7 !! .. .. .. .. .. .. .. .. !a !c .. .. .. {{ r7 !_ "
+		"r1 rn r1 .. {8 .. .. .. .. .. .. .. .. .. .. rb r1 rn r1 "
+		"rn rn rn r5 {{ {2 .. .. .. .. .. .. .. .. .. bb rn rn rn "
+		"rn rn rn rn r4 .. .. !7 bb .. .. !3 !! !! r2 rn rn rn rn "
+		"rn rn rn rn r4 !! !! !! !! !! !! !! !_ rb rn rn rn rn rn "
+		"rn rn rn rn rn r5 !_ !_ !_ !_ !_ !_ !_ !_ r2 rn rn rn rn "
 	)
+)
 	
-  (kern-mk-map 'm_deeptempl_swamp 19 19 pal_expanded
-		(list
-			"bb rr {{ rr rr %a %% %% %% %% %% %% ~f %% rr rr rr rr rr "
-			"rr rr rr rr rr {% %a %c {4 {% %% %% %% %c rr rr rr rr rr "
-			"rr rr rr rr rr rr .. .. .. {1 %a %c {B {2 rr rr rr rr rr "
-			"rr rr rr .. rr %7 .. .. bb .. %3 %% %% %% %d rr rr rr rr "
-			"rr rr rr .. %b %% %5 .. %3 %% %% %c {8 .. .. rr rr rr rr "
-			"rr {{ {2 .. .. %a %% %% %% %c .. {4 {{ {2 .. .. {{ %7 rr "
-			"%% %5 .. .. bb .. .. %% %% .. .. .. {1 .. .. .. {1 %% %% "
-			"%% ~f %5 .. .. .. %3 %% %% %5 .. {8 .. %7 .. .. %3 %% ~f "
-			"%% %5 %% %a %5 .. %% ~b ~d %% %d {{ %3 %% %% %c %a %% %% "
-			"%% %% .. .. %a %% %% %% %% %c rr rr %% %% %c .. .. .. %% "
-			"%% %% bb .. .. %a %% %% %% .. %3 ~e %% .. .. .. .. {8 %% "
-			"%% %c .. .. .. .. %% .. %a %% %% %% %c .. {8 .. {4 {C %% "
-			"%% .. .. .. .. %3 %% .. .. %a %% %% .. {4 {{ {2 .. %b %% "
-			"%c rr .. .. .. %% ~f %5 .. .. .. %% .. .. {1 .. .. rr %a "
-			"rr rr rr .. .. %% %% %c .. .. .. %% %5 .. .. rr rr rr rr "
-			"rr rr rr .. rr %a %c .. .. bb .. %a %% %% %d rr rr rr rr "
-			"rr rr rr rr rr .. {8 .. .. .. %3 %% %5 {# rr rr rr rr rr "
-			"rr rr rr rr rr rr {C %3 %% %% %% %% %% rr rr rr rr rr rr "
-			"rr rr rr rr rr %3 %% %% %% %% %% ~f %% %5 rr rr rr rr rr "
-		)
+(kern-mk-map 'm_deeptempl_swamp 19 19 pal_expanded
+	(list
+		"rn rn rn rn r4 %a %% %% %% %% %% %% ~f %% r2 rn rn rn rn "
+		"rn rn rn rn r4 {% %a %c {4 {% %% %% %% %c r2 rn rn rn rn "
+		"rn rn rn rn rn r5 .. .. .. {1 %% %% {# {2 r2 rn rn rn rn "
+		"rn rn rn .. re %% .. .. bb .. %% %% %% %% %c r2 rn rn rn "
+		"rn r8 r8 .. %b %% %5 .. %3 %% %% %c {8 .. .. ra r8 r8 rn "
+		"rc {{ {2 .. .. %a %% %% %% %c .. {4 {{ {2 .. .. {{ %7 ra "
+		"%% %5 .. .. bb .. .. %% %% .. .. .. {1 .. .. .. {1 %% %% "
+		"%% ~f %% .. .. .. %3 %% %% %5 .. {8 .. %7 .. .. %% %% ~f "
+		"%% %% %% %% %5 .. %% ~b ~d %% %d {{ %3 %% %% %% %% %% %% "
+		"%% %% .. .. %a %% %% %% %% %c rb rd %% %% %c .. .. .. %% "
+		"%% %% bb .. .. %a %% %% %% .. %3 ~e %% .. .. .. .. {8 %% "
+		"%% %c .. .. .. .. %% .. %a %% %% %% %c .. {8 .. {4 {C %% "
+		"%% .. .. .. .. %3 %% .. .. %a %% %% .. {4 {{ {2 .. %b %% "
+		"%c r7 .. .. .. %% ~f %5 .. .. .. %% .. .. {1 .. .. r7 %a "
+		"r1 rn r1 .. .. %% %% %c .. .. .. %% %5 .. .. r3 r1 rn r1 "
+		"rn rn rn .. r7 %% %% .. .. bb .. %% %% %% %5 r2 rn rn rn "
+		"rn rn rn rn r4 .. {8 .. .. .. %% %% %% {{ r2 rn rn rn rn "
+		"rn rn rn rn rn rd {C %3 %% %% %% %% %% rb rn rn rn rn rn "
+		"rn rn rn rn r4 %3 %% %% %% %% %% ~f %% %5 r2 rn rn rn rn "
 	)
+)
 	
 (kern-mk-map 'm_deeptempl_break 19 19 pal_expanded
-		(list
-			"rr rr rr rr rr rr rr rr bb .. .. rr rr rr rr rr rr rr rr "
-			"rr rr rr rr rr rr rr rr .. .. bb rr rr rr rr rr rr rr rr "
-			"rr rr rr rr rr .. .. rr .. .. rr {4 {{ rr rr rr rr rr rr "
-			"rr rr rr rr rr .. .. .. .. bb .. .. .. .. rr rr rr rr rr "
-			"rr rr rr {{ {2 .. .. {8 .. .. .. .. {8 .. {4 {{ rr rr rr "
-			"rr rr .. {1 {8 .. rr {{ {2 {8 .. {4 {{ rr .. {1 .. rr rr "
-			"rr rr rr {4 {{ {6 {{ rr rr {{ {a .. {1 .. .. .. .. rr rr "
-			"rr rr .. .. {1 .. {5 {{ rr rr {{ rr .. .. {8 .. {4 {{ rr "
-			"bb .. bb .. .. .. .. {1 rr rr rr {8 .. bb {{ {2 .. .. bb "
-			".. .. .. .. .. rr .. {8 .. rr {{ {{ {2 .. {1 .. rr .. .. "
-			".. bb .. .. {4 {{ rr {{ rr rr rr rr .. .. .. .. bb .. .. "
-			"rr .. .. .. .. {1 .. {9 rr {{ {6 {{ rr .. .. .. .. .. rr "
-			"rr rr {8 .. bb .. {4 {{ rr {1 .. {1 .. .. .. .. .. .. rr "
-			"rr rr {{ .. .. .. .. rr .. {8 .. .. .. .. bb {8 .. rr rr "
-			"rr rr rr .. rr .. .. .. {4 {{ bb .. .. .. {4 {{ rr rr rr "
-			"rr rr rr rr {{ {2 .. .. .. {1 .. .. .. .. .. rr rr rr rr "
-			"rr rr rr rr rr {{ {2 .. .. .. .. {2 bb rr rr rr rr rr rr "
-			"rr rr rr rr rr rr .. rr .. .. bb .. rr rr rr rr rr rr rr "
-			"rr rr rr rr rr rr rr rr bb .. .. rr rr rr rr rr rr rr rr "
-		)
+	(list
+		"rn rn rn rn rn rn rn r4 bb .. .. r2 rn rn rn rn rn rn rn "
+		"rn rn rn rn rn r8 r8 r4 .. .. bb ra r8 rn rn rn rn rn rn "
+		"rn rn rn rn r4 .. .. re .. .. rf {4 {{ r2 rn rn rn rn rn "
+		"rn rn rn r8 rc .. .. .. .. bb .. .. .. .. ra r8 rn rn rn "
+		"rn rn r8 {{ {2 .. .. {8 .. .. .. .. {8 .. {4 {{ r8 rn rn "
+		"rn r4 .. {1 {8 .. rf {{ {2 {8 .. {4 {{ rf .. {1 .. r2 rn "
+		"rn rn rd {4 {{ {6 {{ rb r5 {{ {a .. {1 .. .. .. .. ra rn "
+		"r8 rc .. .. {1 .. {5 {{ r2 r5 {{ rf .. .. {8 .. {4 {{ ra "
+		"bb .. bb .. .. .. .. {1 ra rn rd {8 .. bb {{ {2 .. {1 bb "
+		".. .. .. .. .. rf .. {8 .. r6 {{ {{ {2 .. {1 .. rf .. .. "
+		".. bb .. .. {4 {{ rf {{ r3 r8 r9 rd .. .. .. .. bb .. .. "
+		"r5 .. .. .. .. {1 .. {9 r6 {{ {6 {{ rf .. .. .. .. .. r3 "
+		"rn r5 {8 .. bb .. {4 {{ re {1 .. {1 .. .. .. .. .. .. r2 "
+		"rn r4 {{ .. .. .. .. rf .. {8 .. .. .. .. bb {8 .. r3 rn "
+		"rn rn r1 .. rf .. .. .. {4 {{ bb .. .. .. {4 {{ r1 rn rn "
+		"rn rn rn r5 {{ {2 .. .. .. {1 .. .. .. .. .. r3 rn rn rn "
+		"rn rn rn rn r4 {{ {2 .. .. .. .. .. bb r2 rn rn rn rn rn "
+		"rn rn rn rn rn r5 .. r7 .. .. bb .. r3 rn rn rn rn rn rn "
+		"rn rn rn rn rn rn r1 r4 bb .. .. r3 rn rn rn rn rn rn rn "
 	)
+)
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Deeps random map
@@ -203,7 +200,7 @@
 
 ;map areas replaced by the various blitting ops
 (define deep-room-blitstats
-	(prmap-mk-blitstats 19 19 3 5 3))
+	(prmap-mk-blitstats 19 19 3 4 3))
 
 
 ;parameters to random number generators
