@@ -62,6 +62,10 @@ sub dumpdata
 
 while (<FILEIN>)
 {
+	if ($_ =~ /"(([^"][^"] )+)"/)
+	{
+		$inmap=1;
+	}
 	if ($inmap)
 	{
 		if ($_ !~ /"(([^"][^"] )+)"/)
@@ -78,10 +82,6 @@ while (<FILEIN>)
 		{
 			push (@{$maps[$mapint]},($1));
 		}
-	}
-	elsif ($_ =~ /\(list/)
-	{
-		$inmap=1;
 	}
 } 
 
