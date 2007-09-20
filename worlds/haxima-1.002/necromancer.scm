@@ -36,8 +36,12 @@
 
 ;; Basics...
 (define (necr-hail knpc kpc)
-  (say knpc "[You meet a thin, pale wizard dressed all in black] "
-       "(COUGH) Hello, Wanderer."))
+  (let ((quest (necr-quest (kobj-gob-data knpc))))
+    (if (and (quest-offered? quest)
+             (not (quest-done? quest)))
+        (necr-meet-lich knpc kpc)
+        (say knpc "[You meet a thin, pale wizard dressed all in black] "
+             "(COUGH) Hello, Wanderer."))))
 
 (define (necr-default knpc kpc)
   (say knpc "[He is seized by a fit of coughing]"))
