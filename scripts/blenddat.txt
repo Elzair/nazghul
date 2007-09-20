@@ -60,9 +60,11 @@
 
 &void ( ** vv )
 
-&wall ( xx d, x. ~x ?? rr r. ~r w! )
+&rockblend ( &nc r1 r2 r3 r4 r5 r6 r7 r8 r9 ra rb rc rd re rf )
 
-&floor ( ,, ~, cc ee )
+&wall ( xx d, x. rn ~x ?? rr r. ~r w! &rockblend )
+
+&floor ( ,, ~, cc ee gg dd )
 
 &lavablend ( &nc &nc &nc !3 &nc !5 &nc !7 &nc &nc !a !b !c !d !e !f )
 
@@ -74,11 +76,13 @@
 
 &grass ( &treesouterblend .. &watergrassblend &voidgrassblend .! )
 
+&slime ( ~s _s )
+
 &bog ( %% &bogblend )
 
 &lava ( &lavablend !! !_ ~! )
 
-&woods ( tt || |. &treesinnerblend &watertreeblend &forestinnerblend )
+&woods ( tt || |. |t t| |X &treesinnerblend &watertreeblend &forestinnerblend )
 
 &notwoods ( &grass &hillsblend &hills &road &bog )
 
@@ -89,6 +93,8 @@
 &land ( &dryland &bog )
 
 &void ( ** vv *. &voidblend )
+
+&wet ( &water &slime )
 
 #round off trees
 basic ( tt ) ( &treesinnerblend ) ( &notwoods &water &bridge &manmade ) ( &woods }{ )
@@ -162,7 +168,15 @@ corner ( ^^ ) ( &voidmountblend ) ( &void &bridge ) ( &void &bridge ) ( &lava &w
 edge ( &void ) ( &voidblend ) ( &water &lava &land &manmade rr ) ( &water &lava &land &manmade rr ) ( &void &bridge }{ )
 corner ( &void ) ( &voidblend ) ( &water &lava &land &manmade rr ) ( &water &lava &land &manmade rr ) ( &void &bridge }{ )
 
+#rock edges
+
+basic ( rn ) ( &rockblend ) ( &land &wet &lava &objects &floor &void ) ( &wall &text &runes }{ )
+
 reset
 
 #randomise void
 random ( ** ) [ 0.5 ] ( ** *. )
+
+random ( || ) [ 0.6 0.8 ] ( || |t |X )
+
+random ( tt ) [ 0.7 ] ( tt t| )

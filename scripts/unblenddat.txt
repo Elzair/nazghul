@@ -58,7 +58,9 @@
 
 &void ( ** vv )
 
-&wall ( xx d, x. ~x ?? rr r. ~r w! )
+&rockblend ( &nc r1 r2 r3 r4 r5 r6 r7 r8 r9 ra rb rc rd re rf )
+
+&wall ( xx d, x. ~x ?? rr rn r. ~r w! )
 
 &floor ( ,, ~, cc ee )
 
@@ -71,6 +73,8 @@
 &treesouterblend ( &nc &nc &nc t# &nc t% &nc t& &nc &nc tA tB tC tD tE tF )
 
 &grass ( &treesouterblend .. &watergrassblend &voidgrassblend )
+
+&slime ( ~s _s )
 
 &bog ( %% &bogblend )
 
@@ -87,6 +91,8 @@
 &land ( &dryland &bog )
 
 &void ( ** VV *. &voidblend )
+
+&wet ( &water &slime )
 
 #inner water edges on:
 #land
@@ -114,3 +120,10 @@ replace ( &lavablend ) ( !! )
 
 #void corners
 replace ( &voidblend *. ) ( ** ) 
+
+#trees
+replace ( |t |X ) ( || ) 
+replace ( t| ) ( tt ) 
+
+#natural rock
+replace ( &rockblend ) ( rn ) 
