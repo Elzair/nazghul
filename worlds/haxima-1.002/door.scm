@@ -275,7 +275,7 @@
 	(mk-door-states
 		(mk-door-state (mk-composite-sprite (list arch-sprite door-sprite))
 					closed-opacity closed-pclass)
-		(mk-door-state arch-sprite	closed-opacity open-pclass)
+		(mk-door-state arch-sprite	open-opacity open-pclass)
 		(mk-door-state (mk-composite-sprite (list arch-sprite door-sprite s_door_lock))
 					closed-opacity closed-pclass)
 		(mk-door-state (mk-composite-sprite (list arch-sprite door-sprite s_door_magiclock))
