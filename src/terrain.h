@@ -49,7 +49,7 @@ struct sprite;
 
 struct terrain {
         int magic;
-        struct list list;
+        struct list session_list; /* list of all terrains in this session */
         char *tag;
         char *name;
         struct sprite *sprite;

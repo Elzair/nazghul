@@ -683,9 +683,9 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
                 terrain->effect = closure_new(sc, proc);
                 closure_ref(terrain->effect);
         }
-			terrain->renderCombat = NULL;
-			
-        session_add(Session, terrain, terrain_dtor, NULL, NULL);
+        terrain->renderCombat = NULL;
+
+        list_add(&Session->terrains, &terrain->session_list);
         ret = scm_mk_ptr(sc, terrain);
         scm_define(sc, tag, ret);
 

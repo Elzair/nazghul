@@ -119,6 +119,8 @@ struct session {
         // when tearing down a session. (aka the "orphan list").
         struct list data_objects;
 
+        struct list terrains; /* list of all terrains */
+
         // The global crosshair type is per-session and several many places
         class ObjectType *crosshair_type;
         class Cursor *crosshair;
@@ -293,9 +295,9 @@ extern void session_run_start_proc(struct session *session);
 extern void session_set_camping_proc(struct session *session, 
                                      struct closure *proc);
 extern void session_set_combat_procs(struct session *session, 
-									struct closure *stra,
-									struct closure *dexa,
-									struct closure *dam,
+                                     struct closure *stra,
+                                     struct closure *dexa,
+                                     struct closure *dam,
                                     struct closure *def);
 extern void save_err(char *fmt, ...);
 extern struct node *session_add_sched_char(struct session *session,

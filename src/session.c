@@ -206,6 +206,7 @@ struct session *session_new(void *interp)
         struct session *session = (struct session*)calloc(1, sizeof(*session));
         assert(session);
         list_init(&session->data_objects);        
+        list_init(&session->terrains);
         session->interp = interp;
         session->status_mode = ShowParty;
         session->los = "angband";
@@ -232,8 +233,9 @@ void session_del(struct session *session)
                 obj_inc_ref(session->player);
         }
 
-		freezer_del();
+        freezer_del();
 
+        /* Cleanup the data objects */
         elem = session->data_objects.next;
         int count = 0;
         while (elem != &session->data_objects) {
@@ -243,6 +245,16 @@ void session_del(struct session *session)
                 entry->dtor(entry->obj);
                 data_obj_entry_unref(entry); /* now release ref */
                 count++;
+        }
+
+        /* Cleanup the terrains */
+        elem = session->terrains.next;
+        while (elem != &session->terrains) {
+                struct terrain *terrain = list_entry(elem, struct terrain, 
+                                                     session_list);
+                elem = elem->next;
+                list_remove(&terrain->session_list);
+                terrain_del(terrain);
         }
 
         if (session->crosshair)
