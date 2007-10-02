@@ -102,7 +102,7 @@
 (define meaney-shop-close-time "6:00PM")
 (define (meaney-trade knpc kpc)
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "Come by the " meaney-shop-name "when I'm working "
+      (say knpc "Come by the " meaney-shop-name " when I'm working "
            "between " meaney-shop-open-time " and " meaney-shop-close-time)
       (if (trade-services knpc kpc
                           (list
