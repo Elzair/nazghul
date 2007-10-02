@@ -344,6 +344,7 @@
        (method 'accu silas-accu)
        (method 'demo silas-demo)
        (method 'deni silas-deni)
+       (method 'denn silas-deni)
        (method 'desi silas-desi)
        (method 'ench silas-ench)
        (method 'evil silas-evil)
