@@ -175,6 +175,13 @@ struct session {
         /* The number of turns until the "time stop" effect expires: */
         global_effect_t time_stop;
 
+        /* During time stop, sprites for player-controlled objects should be
+         * the only ones that animate. Instead of advancing the general
+         * animation tick counter in sprites.c, advance a special tick counter
+         * here. In object.c it will use this special tick counter for
+         * advancing only player-controlled object sprites. */
+        int time_stop_ticks;
+
         /* The number of turns until the "magic negated" effect expires: */
         global_effect_t magic_negated;
 

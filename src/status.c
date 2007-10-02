@@ -969,8 +969,9 @@ static bool status_show_party_view_character(class Character * pm, void *data)
 	if (Status.lineRect.y >= (Status.screenRect.y + Status.screenRect.h))
 		return true;
 
-	/* Paint the sprite */
-	sprite_paint(pm->getSprite(), 0, Status.screenRect.x, 
+	/* Paint the sprite. Using the time_stop_ticks as the frame arg to
+         * animate during Time Stop. */
+	sprite_paint(pm->getSprite(), Session->time_stop_ticks, Status.screenRect.x, 
 		Status.lineRect.y);
 
 	/* Paint the name on line 1 */

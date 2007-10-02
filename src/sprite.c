@@ -55,7 +55,7 @@ struct sprite {
         int wave   : 1;         /* vertical roll                           */
 };
 
-struct {
+static struct {
         int ticks_to_next_animation;
 } Sprite;
 
@@ -464,7 +464,11 @@ int sprite_init(void)
 
 void sprite_advance_frames(void)
 {
-        sprite_ticks++;
+        if (TimeStop) {
+                Session->time_stop_ticks++;
+        } else {
+                sprite_ticks++;
+        }
 	mapSetDirty();
 
 }

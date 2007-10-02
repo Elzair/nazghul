@@ -495,6 +495,11 @@ class Object {
                                int flags);
         int facing;
         bool ignoreTimeStop;
+
+        // Each object has its own sprite_frame, which breaks up the
+        // "synchronized dancing" problem. It also allows us to animate only
+        // player-controlled characters during Time Stop.
+        int sprite_frame;
 };
 
 #include "macros.h"

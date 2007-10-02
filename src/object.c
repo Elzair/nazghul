@@ -602,7 +602,14 @@ void Object::paint(int sx, int sy)
 	if (sprite) {
                 int origFacing = sprite_get_facing(sprite);
                 sprite_set_facing(sprite, facing);
-                sprite_paint(sprite, 0, sx, sy);
+                if (TimeStop
+                    && isPlayerControlled()) {
+                        sprite_paint(sprite, 
+                                     sprite_frame + Session->time_stop_ticks, 
+                                     sx, sy);
+                } else {
+                        sprite_paint(sprite, sprite_frame, sx, sy);
+                }
                 sprite_set_facing(sprite, origFacing);
         }
 }
@@ -717,6 +724,11 @@ void Object::setup()
                 visible = 0;
         else
                 visible = 1;
+
+        // Four is the typical max number of frames, so using more will not
+        // help (it won't hurt either, sprites.c will ensure the frame is
+        // within what the sprite will actually support).
+        sprite_frame = rand() % 4;
 }
 
 Object::~Object()
