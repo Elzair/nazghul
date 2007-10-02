@@ -5,15 +5,15 @@
 (kern-mk-map
  'm_prison 32 9 pal_expanded
  (list
-  "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-  "xx ,, ,, ,, xx xx xx xx xx ,, xx ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
+  "xx xx xx xx xx xx xx xx xx xx xx xx xx rn xx xx xx xx xx xx xx xx xx xx xx xx xx rn rn rn rn rn "
+  "xx ,, ,, ,, xx xx xx xx xx ,, xx ,, xx rn xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx rn rn rn rn rn "
   "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
   "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx ee xx xx ,, xx xx xx ,, xx xx xx ,, xx xx xx ,, ,, ,, xx "
   "xx ,, ,, ,, xx xx ,, ,, ,, x! ,, ,, ,, ee ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
   "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx ee xx xx ,, xx xx xx ,, xx xx xx ,, xx xx xx ,, ,, ,, xx "
-  "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
-  "xx ,, ,, ,, xx xx xx xx xx ,, xx ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
-  "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
+  "xx ,, ,, ,, xx rn xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
+  "xx ,, ,, ,, xx rn xx xx xx ,, xx ,, xx rn xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx rn rn rn rn rn "
+  "xx xx xx xx xx rn xx xx xx xx xx xx xx rn xx xx xx xx xx xx xx xx xx xx xx xx xx rn rn rn rn rn "
   ))
 
 ;;----------------------------------------------------------------------------
