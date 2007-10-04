@@ -59,8 +59,11 @@
   (say knpc "She cannot help it with that."))
 
 (define (hackle-hail knpc kpc)
-  (say knpc "[You meet a disheveled, middle-aged woman] It comes to her! "
-       "It wants something!"))
+  (if (in-player-party? 'ch_mesmeme)
+      (say knpc "[She shrinks back in horror at the sight of Mesmeme] It frightens her!")
+      (say knpc "[You meet a disheveled, middle-aged woman] It comes to her! "
+           "It wants something!")
+  ))
 
 (define (hackle-name knpc kpc)
   (say knpc "She is Hackle."))
@@ -97,6 +100,9 @@
   (say knpc "Not Bole! Hole! The keyhole to the deep! She knows it!"))
 
 ;; misc...
+(define (hackle-mesm knpc kpc)
+  (say knpc "She sees it is only a child! It is deaf and mute to the voice of its own kind!"))
+
 (define (hackle-shee knpc kpc)
   (say knpc "The sheep hides in wolf's clothing! How it howls when it "
        "bleats!"))
@@ -175,6 +181,7 @@
        (method 'gods hackle-wood)
        (method 'hole hackle-hole)
        (method 'mad  hackle-mad)
+       (method 'mesm hackle-mesm)
        (method 'migh hackle-robs)
        (method 'mous hackle-hole)
        (method 'reve hackle-reve)
