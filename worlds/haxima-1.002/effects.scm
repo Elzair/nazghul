@@ -852,8 +852,8 @@
 (define (apply-lightning obj)
   (if (kern-obj-is-being? obj)
   		(begin
-      	(kern-log-msg (kern-obj-get-name obj) " shocked!"))
-  			(kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8"))
+      	(kern-log-msg (kern-obj-get-name obj) " shocked!")
+  			(kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8")))
   	))
 
 ;; Drop a random temporary field on the object's location
