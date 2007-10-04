@@ -289,12 +289,6 @@ struct astar_node *astar_search(struct astar_search_info *info)
         int cost = 0;
         int goodness = 0;
 
-        /* We can save ourselves a long, fruitless search by checking if the
-         * final destination is valid and bailing out now if it isn't. */
-        if (! info->is_valid_location(info->context, info->x0, info->y0,
-                                      info->x1, info->y1))
-                return NULL;
-
 	astar_search_init();
 
         info->heuristic(info, &goodness, &cost, info->x0, info->y0);

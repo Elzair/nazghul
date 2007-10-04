@@ -74,6 +74,7 @@ BEGIN_DECL
 #define PFLAG_IGNOREFIELDS     (1 << 9) /* used by Object::putOnMap */
 #define PFLAG_IGNORETFEAT      (1 << 10)
 #define PFLAG_IGNORESTEPTRIG   (1 << 11)
+#define PFLAG_ADJACENTNOTOK    (1 << 12)
 
 // Flags for placeDescribe:
 #define PLACE_DESCRIBE_TERRAIN (1 << 0)

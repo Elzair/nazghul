@@ -2181,8 +2181,12 @@ bool Character::commute()
                             place_is_hazardous(getPlace(), tx, ty))
                                 continue;
                         
-                        // try to go there
-                        if (!pathfindTo(getPlace(), tx, ty)) {
+                        // Try to go there. Adjacent-to-there is not good
+                        // enough; we will get stuck repeatedly trying to
+                        // pathfind if the last step is impassable (Bug
+                        // 1734069).
+                        if (!pathfindTo(getPlace(), tx, ty, 
+                                        PFLAG_ADJACENTNOTOK|PFLAG_IGNOREMECHS)) {
                                 continue;
                         }
                         

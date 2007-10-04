@@ -1057,14 +1057,14 @@ static int place_pathfind_is_valid_location(
 
         //dbg("[%d %d]...", x, y);
 
-        // --------------------------------------------------------------------
-	// I used to check this after passability, but it really belongs first.
-	// In several cases the target location may not be passable but if the
-	// seeker can get adjacent to it that will be good enough.
-        // --------------------------------------------------------------------
-
-	if (x == context->target_x && 
-            y == context->target_y) {
+        /* I used to check this after passability, but it really belongs first.
+         * In several cases the target location may not be passable but if the
+         * seeker can get adjacent to it that will be good enough. If this is
+         * not what the caller wants, they need to se the PFLAG_ADJACENTNOTOK
+         * flag. */
+	if ((!(context->pflags & PFLAG_ADJACENTNOTOK))
+            && x == context->target_x 
+            && y == context->target_y) {
                 //dbg("ok\n");
 		return 1;
         }
@@ -1184,6 +1184,14 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
  */
 static int place_find_path_impossible(struct place_pathfind_context *context)
 {
+        /* Check final destination */
+        if ((context->pflags & PFLAG_ADJACENTNOTOK) 
+            && ! place_is_passable(context->place, context->target_x, 
+                                   context->target_y, context->requestor, 
+                                   context->pflags)) {
+                return 0;
+        }
+
         /* check four neighbors */
         if (place_pathfind_is_valid_location(context,
                                              context->target_x,
