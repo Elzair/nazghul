@@ -74,6 +74,9 @@
          " " (loc-y angriss-lair-loc) "]")
     (kama-joined-once! (gob knpc))
     (join-player knpc)
+    ;; Improve the player's relations with forest goblins
+    (kern-dtable-inc faction-player faction-forest-goblin)
+    (kern-dtable-inc faction-player faction-forest-goblin)
     (kern-conv-end)
     )
   (if (is-player-party-member? knpc)
