@@ -29,7 +29,16 @@
 
 ;; Basics...
 (define (doug-hail knpc kpc)
-  (say knpc "[You meet a grim paladin] Welcome to hell's doorstep, traveler."))
+  (say knpc "[You meet a grim paladin] Welcome to hell's doorstep, traveler.")
+  (if (and (in-player-party? 'ch_mesmeme)
+           (is-alive? ch_mesmeme))
+      (begin
+        (say knpc "[He points at Mesmeme] Are you taking that to the dungeon?")
+        (if (yes? kpc)
+            (say knpc "It's on the third level, below Paladin's Hold. "
+                 "But I don't think a prison will hold a gazer, "
+                 "it would be better to slay it.")
+            (say knpc "I've never seen a tame one. Beware it doesn't betray you.")))))
 
 (define (doug-default knpc kpc)
   (say knpc "I cannot help you with that."))
