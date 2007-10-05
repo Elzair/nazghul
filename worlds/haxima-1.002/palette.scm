@@ -464,6 +464,7 @@
     (list	"rd" t_nat_rock_nes)
     (list	"re" t_nat_rock_wes)
     (list	"rf" t_nat_rock_nwes)
+     (list	"r~" t_fake_wall_nrock)   
 
   )
 ) ;; palette pal_expanded
