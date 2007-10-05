@@ -646,7 +646,7 @@
                    0                 ;;        hands : number of slots required to ready it
                    6                 ;;        range : range it will fire
                    (weap-ap 1.2)     ;;          rap : required action points to attack with it
-                   t_cannonball      ;;
+                   t_cannonball_p      ;;
                    nil				    ;;      missile : nil or the armament type it fires
                    #f                ;;       thrown : true or false
                    #t                ;;         ubiq : true if it needs ammo in inventory, false otherwise
