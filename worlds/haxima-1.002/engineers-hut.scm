@@ -69,8 +69,11 @@
 
  nil ; hooks
  (list  ;; edge entrances
-  (list east  0 9)
+  (list east  6 18)
   (list south 11 0) 
+  (list southwest 11 0) 
+  (list southeast 11 0) 
+  (list northeast 6 18)
   (list north 9 18)
   (list west  18 9)
   )

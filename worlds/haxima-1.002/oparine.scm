@@ -151,6 +151,8 @@
   (list east 0 19)
   (list north 16 54)
   (list west 30 21)
+  (list northeast 0 50)
+  (list northwest 19 54)
   )
 )
 

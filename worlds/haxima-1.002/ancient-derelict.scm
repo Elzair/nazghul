@@ -56,5 +56,8 @@
   )
 
  (list 'on-entry-to-dungeon-room) ; hooks
- nil ; edge entrances
+ (list ; edge entrances
+ 	(list southeast 0 4)
+ 	(list northeast 0 14)
+ )
  )

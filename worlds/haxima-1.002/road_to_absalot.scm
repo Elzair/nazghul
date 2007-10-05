@@ -241,6 +241,10 @@
 		"^^ ^^ ^^ ^^ {{ {{ {3 .. .. .. .. .. {5 {{ {{ ^^ ^^ ^^ ^^ "
 		"^^ ^^ ^^ {{ {{ {3 .. .. .. .. .. .. .. {5 {{ {{ ^^ ^^ ^^ "
 	)
+	(list
+		(list northwest 14 18)
+		(list northeast 4 18)
+	)
  (put (mk-ladder-down 'p_road_to_absalot_1 9 9) 9 1)
  (put (mk-joel) 9 10)
  (put (mk-npc 'bull 4) 12 12)
@@ -269,6 +273,10 @@
 		"^^ ^^ ^^ ^^ ^5 ta tt tt tt tt tt tt tt tt tc ^3 ^^ ^^ ^^ "
 		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
 		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+	)
+	(list
+		(list southwest 11 0)
+		(list southeast 2 0)
 	)
  (put (mk-ladder-down 'p_road_to_absalot_3 9 7) 9 9)
  (put (spawn-pt 'death-knight) 6 7)

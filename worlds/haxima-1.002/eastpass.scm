@@ -21,6 +21,7 @@
 		".. {4 {{ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
 		".. {4 {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
 	)
+	nil
  (put (mk-ladder-down 'p_westpass 4 14) 14 9)
  (put (mk-windowed-door) 11 9)
  (put (mk-windowed-door)  5 9)

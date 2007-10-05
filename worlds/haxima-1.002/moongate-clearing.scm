@@ -109,6 +109,9 @@
    (list north 16 27)
    (list east   0 11)
    (list west  22 10)
+   (list northeast 8 27)
+   (list southeast   9 0)
+   (list southwest  22 7)
    )
 ) ;; end of place p_moongate_clearing
 

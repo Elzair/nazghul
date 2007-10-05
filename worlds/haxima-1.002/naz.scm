@@ -1267,7 +1267,7 @@
 (define (mk-combat-map tag . terrain)
   (kern-mk-map tag 19 19 pal_expanded terrain))
 
-(define (mk-tower tag name terrain . objects)
+(define (mk-tower tag name terrain entrances . objects)
   (kern-mk-place tag
                  name
                  s_keep     ; sprite
@@ -1283,11 +1283,11 @@
                  (cons (put (mk-monman) 0 0)
                        objects)
                  (list 'on-entry-to-dungeon-room) ; hooks
-                 nil     ; edge entrances
+                 entrances     ; edge entrances
                  ))
 
 ;; Just like mk-tower but make the sprite configurable
-(define (mk-19x19-town tag name sprite terrain . objects)
+(define (mk-19x19-town tag name sprite terrain entrances . objects)
   (kern-mk-place tag
                  name
                  sprite
@@ -1302,7 +1302,7 @@
                  (cons (put (mk-monman) 0 0)
                        objects)
                  (list 'on-entry-to-dungeon-room) ; hooks
-                 nil     ; edge entrances
+                 entrances     ; edge entrances
                  ))
 
 

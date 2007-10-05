@@ -21,7 +21,10 @@
 		"^^ ^^ {{ {{ {{ {{ ^^ ^^ ^^ ^^ {{ {{ tt || || || || || || "
 		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ tt || || || || || || "
 	)
-
+              (list ; edge entrances
+              	(list southwest 12 0)
+              	(list northwest 12 18)
+              	)
  (put (mk-ladder-down 'p_eastpass 14 9) 4 14)
  (put (guard-pt 'ranger) 9 7)
  (put (guard-pt 'ranger) 9 11)

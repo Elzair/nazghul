@@ -80,6 +80,8 @@
   )
 
  nil ; hooks
- nil ; edge entrances
+ (list  ; edge entrances
+ 	(list southwest 10 0)
+ )
  )
 

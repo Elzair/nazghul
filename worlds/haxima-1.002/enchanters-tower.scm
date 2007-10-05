@@ -212,7 +212,11 @@
   )
 
  nil ; hooks
- nil ; edge entrances
+ (list  ; edge entrances
+ 	(list northeast 3 30)
+ 	(list southwest 30 14)
+ )
+ 
  )
  
 (kern-mk-place '

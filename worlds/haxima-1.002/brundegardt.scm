@@ -736,6 +736,7 @@
 		"^. ^. ^. ^. bb bb {c {{ {a {8 {8 {8 {8 bb ^. ^. ^. ^. ^. "
 		"^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
+    nil ;;entrances
  (put (mk-ladder-down 'p_brundegardt_tower_3 10 9) 10 9)
  (put (mk-ladder-up 'p_brundegardt_tower_5 6 9) 6 9)
  (put (mk-tim) 16 9)
@@ -773,6 +774,7 @@
 		"^. ^. ^. ^. bb bb {c {{ {a {8 {8 {8 {8 bb ^. ^. ^. ^. ^. "
 		"^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
+    nil ;;entrances
  (put (mk-ladder-down 'p_brundegardt_tower_4 6 9) 6 9)
  (put (kern-mk-obj t_eye_of_brune 1) 9 9)
  (put (mk-corpse-with-loot) 8 9)
@@ -830,6 +832,7 @@
 		"^v ^v ^v {1 ^v ^v ^v .. .. .. .. .. ^v ^v ^v ^v ^v ^v ^v "
 		"^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v "
   )
+    nil ;;entrances
  (put (spawn-pt 'griffin) 9 13)
  (put (spawn-pt 'griffin) 3 3)
  (put (spawn-pt 'griffin) 9 17)
@@ -894,6 +897,7 @@
 		"{{ t3 tt |. |. tt t5 {{ ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v "
 		"{{ tt |. |. |. |. tt {{ ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v {{ "
   )
+    nil ;;entrances
  (put (spawn-pt 'griffin) 8 7)
  (put (spawn-pt 'griffin) 7 8)
  (put (spawn-pt 'griffin) 9 9)
@@ -938,6 +942,7 @@
 		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^. ^. {2 .. ^v ^v ^v ^v {{ {{ {{ {{ "
 		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^. {{ {2 .. ^v ^v ^v ^v ^v ^v {{ {{ "
   )
+    nil ;;entrances
     (put (spawn-pt 'bat) 18 2)
     (put (spawn-pt 'bat) 15 4)
     (put (spawn-pt 'bat) 17 6)
@@ -968,6 +973,7 @@
 		"^^ ^^ ^. ^. ^v ^v ^v ^v ^v {8 {4 {{ ^. ^^ ^^ ^^ ^^ ^^ ^^ "
 		"^^ ^^ ^. ^. ^. ^v ^v ^v {4 {{ {6 ^. ^. ^^ ^^ ^^ ^^ ^^ ^^ "
   )
+    nil ;;entrances
    (put (spawn-pt 'sea-serpent) 8 7)
  )
 
@@ -999,6 +1005,7 @@
 		"^v ^v ^v {1 ^v ^v ^v .. .. .. .. .. ^v ^v ^v ^v ^v ^v ^v "
 		"^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v ^v "
   )
+    nil ;;entrances
  (put (mk-key t_brundegardt_tower_4_key) 9 9)
  (put (spawn-pt 'griffin-chick) 8 5)
  (put (spawn-pt 'griffin-chick) 10 5)

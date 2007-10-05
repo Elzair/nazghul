@@ -24,6 +24,7 @@
   "cc cc cc cc cc cc cc cc .. .. .. cc cc cc cc cc cc cc cc "
   "cc cc cc cc cc cc cc .. .. .. .. .. cc cc cc cc cc cc cc "
   )
+  nil ;;entrances
  (put (kern-mk-obj t_rune_d 1) 9 9)
 
  (put (kern-mk-obj F_sleep_perm 1)  15 9)

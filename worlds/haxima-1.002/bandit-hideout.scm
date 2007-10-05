@@ -23,6 +23,9 @@
 		"tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tc ta "
 		"tt tt tt tt tc ta tt tt tt tt tt tt tt tt tt tt tt t5 t3 "
   )
+   (list ;;entrances
+   	(list southwest 18 5)
+   )
  (put (mk-ladder-down 'p_bandit_hideout_l2a 9 9) 9 9)
  (put (mk-door) 4 9)
  (put (kern-tag 'p_bhl1_p1 (mk-portcullis)) 7 9)
