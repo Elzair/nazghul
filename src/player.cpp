@@ -220,7 +220,7 @@ enum move_result PlayerParty::check_move_to(struct move_info *info)
 	// portal is accessible iff the player can move across the terrain it
 	// is placed on. The "ladder in the lake to the ladder on land" test
 	// case just plain looks counterintuitive without it.
-	if (!place_is_passable(info->place, info->x, info->y, this, 
+	if (!place_move_is_passable(info->place, info->x - info->dx, info->y-info->dy, info->x, info->y, this, 
                                PFLAG_MOVEATTEMPT))
 		return move_impassable;
 
