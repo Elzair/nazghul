@@ -139,5 +139,8 @@
  (list 'on-entry-to-dungeon-room 
        'lock-inn-room-doors
        )
- nil ; edge entrances
+ (list ;; edge entrances
+ 	(list northwest 16 30)
+ 	(list northeast 14 30)
+ )
 )

@@ -129,6 +129,8 @@
  (list ;; edge entrances
   (list north 26 38)
   (list east  0  30)
+  (list northeast 7 38)
+  (list northwest 45 38)
   )
 
  )
