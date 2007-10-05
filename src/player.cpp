@@ -397,7 +397,7 @@ enum MoveResult PlayerParty::try_to_enter_subplace_from_edge(
 		cmdwin_spush("Enter");
 		dir = ui_get_direction();
 	} else {
-		dir = vector_to_dir(dx, dy);
+		dir = vector_to_8facing(dx, dy);
 	}
 
         // --------------------------------------------------------------------
@@ -407,10 +407,6 @@ enum MoveResult PlayerParty::try_to_enter_subplace_from_edge(
 	switch (dir) {
 	case CANCEL:
 		return UserCanceled;
-	case NORTHWEST:
-	case NORTHEAST:
-	case SOUTHWEST:
-	case SOUTHEAST:
 	case HERE:
 		return NoDestination;
 	default:
