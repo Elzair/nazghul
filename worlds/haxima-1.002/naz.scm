@@ -90,8 +90,8 @@
          lst))
 
 ;; Check if a location is passable to a character
-(define (passable? loc char)
-  (kern-place-is-passable loc char))
+(define (passable? loc kobj)
+  (kern-place-is-passable loc kobj))
 
 (define (obj-is-char? kobj) (kern-obj-is-being? kobj))
 (define (is-being? kobj) (kern-obj-is-being? kobj))
@@ -331,7 +331,9 @@
 
 (define (can-pathfind? kobj dest)
   (println "can-pathfind?")
-  (not (null? (kern-obj-find-path kobj dest))))
+  (or (loc-adjacent? dest 
+                     (kern-obj-get-location kobj))
+      (not (null? (kern-obj-find-path kobj dest)))))
 
 (define (notnull? val) (not (null? val)))
 
