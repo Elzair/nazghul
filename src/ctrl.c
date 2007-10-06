@@ -879,13 +879,22 @@ static void ctrl_move_character(class Character *character, int dir)
                 mech = place_get_object(character->getPlace(), newx, newy, 
                                         mech_layer);
                 
-                if (mech && mech->getObjectType()->canHandle()) {
-                        mech->getObjectType()->handle(mech, character);
-                        mapSetDirty();
-                        result = "handled!";
-                } else {                
-                        result = "impassable!";
-                }
+				if (mech && mech->getObjectType()->canHandle())
+				{
+					mech->getObjectType()->handle(mech, character);
+					mapSetDirty();
+					result = "handled!";
+				} 
+				else if (mech && mech->getObjectType()->canBump())
+				{
+					result = "";
+					mech->getObjectType()->bump(mech, character);
+					mapSetDirty();			
+				}
+				else
+				{                
+					result = "impassable!";
+				}
         }
                 break;
         case SlowProgress:

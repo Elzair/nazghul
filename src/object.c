@@ -1911,7 +1911,7 @@ int ObjectType::open(Object *obj, Object *opener)
 
 int ObjectType::bump(Object *obj, Object *bumper)
 {
-        return closure_exec(gifc, "ypp", "open", obj, bumper);
+        return closure_exec(gifc, "ypp", "bump", obj, bumper);
 }
 
 bool ObjectType::canHandle()

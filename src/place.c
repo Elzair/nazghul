@@ -651,15 +651,8 @@ static int place_obj_is_passable(class Object *obj,
         if (subject->isPassable(obj->getPclass()))
                 return ALLOWS_PASSABILITY;
 
-        // Is the caller actually trying to move the subject there?
-        if (0 == (flags & PFLAG_MOVEATTEMPT))
-                return BLOCKS_PASSABILITY;
-
-        // Does the obj run a bump handler on failed entry?
-        if (obj->getObjectType()->canBump())
-                obj->getObjectType()->bump(obj, subject);
-
         return BLOCKS_PASSABILITY;
+
 }
 
 int place_is_passable(struct place *place, int x, int y,
