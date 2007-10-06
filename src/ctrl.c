@@ -53,9 +53,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 
         class PlayerParty *party = (class PlayerParty*)kh->data;
 
-        Session->subject = player_party;
-
-        cmdwin_flush();
+        Session->subject = player_party;   
         
         G_latency_start = SDL_GetTicks();
 
@@ -206,9 +204,15 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         cmdwin_clear();
 
         Session->subject = NULL;
+        
+        party->absorbMemberAPDebt();
 
         /* Return true when done processing commands. */
+		if(!party->isTurnEnded())
+				cmdwin_push("Party [%d ap]:",party->getActionPoints());
+                
         return party->isTurnEnded();
+
 }
 
 void ctrl_wander(class Object *object)
@@ -1630,7 +1634,8 @@ void ctrl_party_ui(class PlayerParty *party)
 
         /* ready the cmdwin prompt */
         cmdwin_clear();
-
+		  cmdwin_push("Party [%d ap]:",party->getActionPoints());
+				
         kh.fx = &ctrl_party_key_handler;
         kh.data = party;
         eventPushKeyHandler(&kh);
