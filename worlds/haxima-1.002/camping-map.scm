@@ -30,7 +30,8 @@
                   b)))
         (define (willattack? a)
           (and (is-hostile? kplayer a)
-               (can-pathfind? a loc)))
+               (can-pathfind? a loc)
+               (kern-place-is-passable loc a)))
         (define (choose-npc-party)
           (foldr nearest
                  nil
