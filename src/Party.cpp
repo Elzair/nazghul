@@ -316,7 +316,7 @@ MoveResult Party::move(int dx, int dy)
 
 	relocate(newplace, newx, newy);
 
-	action_points -= place_get_movement_cost(getPlace(), getX(), getY(), this,0);
+	action_points -= place_get_diagonal_movement_cost(getPlace(), oldx, oldy, getX(), getY(), this,0);
 
         return MovedOk;
 }
@@ -480,8 +480,6 @@ void Party::forEachReverseMember(bool (*fx) (class Character *, void *), void *d
 			return;
 	}
 }
-
-
 
 static bool party_destroy_and_remove_member(class Character * c, void *data)
 {
@@ -1123,4 +1121,28 @@ void Party::setVehicle(class Vehicle *val)
 class Vehicle *Party::getVehicle()
 {
         return vehicle;
+}
+
+static bool party_absorb_member_apdebt(class Character * c, void *data)
+{
+	int *maxapdebt = (int *) data;
+
+	int apdebt = c->getActionPoints();
+	if (apdebt < 0)
+	{
+		c->resetActionPoints();
+		if (apdebt < *maxapdebt)
+		{
+			*maxapdebt = apdebt;	
+		}	
+	}
+
+	return false;
+}
+
+void Party::absorbMemberAPDebt()
+{
+	int maxapdebt=0;
+	forEachMember(party_absorb_member_apdebt, &maxapdebt);
+	decActionPoints(0-maxapdebt/10); // 0-... because AP debt is negative
 }

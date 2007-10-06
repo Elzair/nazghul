@@ -94,6 +94,8 @@ class Party:public Being {
 	struct node members; // Linked list of party members
 
 	struct position_info pinfo;
+	void absorbMemberAPDebt();
+	
 
       protected:
 	class Vehicle *vehicle;
