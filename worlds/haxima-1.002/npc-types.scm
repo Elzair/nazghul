@@ -372,6 +372,7 @@
         (list 100 "1" t_iron_helm)
         (list 100 "1" t_armor_plate)
         ))
+        
 (define demon-equip
   (list (list 100 "1" t_flaming_sword)
         ))
@@ -406,6 +407,7 @@
         (list 10  "1"     't_an_xen_ex_scroll)
         (list 20  "1"     't_in_an_scroll)
         (list 20  "1"     't_vas_mani_scroll)
+        (list 5   "1"     't_dagger)
         ))
 
 (define std-loot
@@ -421,58 +423,87 @@
         (list 100 "1d6"   't_arrow)
         (list 100 "1d10"  't_gold_coins)
         (list 20  "1d3"   't_food)
+        (list 10  "1"   't_bow)
         ))
 (define stalker-loot 
   (list
         (list 100 "1d15"  't_gold_coins)
         (list 30  "1d3"   't_food)
+        (list 10  "1d2"    't_dagger)
         ))
 (define slinger-loot 
   (list (list 100 "1d10"  't_gold_coins)
         (list 20  "1d3"   't_food)
+        (list 10  "1"     't_sling)
         ))
 (define berserker-loot 
   (list (list 100 "1d2"   't_heal_potion)
         (list 100 "1d15"  't_gold_coins)
         (list 30  "1d3"   't_food)
+        (list 10  "1"   't_axe)
         ))
 (define ranger-loot
   (list (list 100 "1d10" 't_gold_coins)
         (list 100 "1d10" 't_arrow)
         (list 30  "1d3"   't_food)
         (list 100 "1d3-1" 't_heal_potion)
+        (list 3 "1"     t_sword)
+        (list 6 "1"     t_bow)
+        (list 7 "1"     t_leather_helm)
+        (list 4 "1"     t_armor_leather)
         ))
 (define skel-war-loot
   (list (list 100 "1d20"  't_gold_coins)
+  		  (list 3 "1"     t_sword)
+        (list 3 "1"     t_shield)
+        (list 3 "1"     t_iron_helm)
         ))
 (define spear-thrower-loot
   (list (list 50 "1d3" 't_spear)
         (list 100 "1d20"  't_gold_coins)
+        (list 3  "1"     t_iron_helm)
+        (list 3  "1"     t_axe)
         ))
 (define dea-kni-loot
   (list
         (list 100 "1d20"  't_gold_coins)
         (list 100 "1d3-1" 't_mana_potion)
+        (list 2 "1"     t_2h_axe)
+        ;;(list 1 "1"     t_armor_plate)  if you wear anything that comes off one of these, something *really* nasty should happen
+        (list 4 "1"     t_iron_helm)
         ))
 (define cra-arch-loot
   (list (list 100 "1d5" 't_bolt)
         (list 100 "1d20"  't_gold_coins)
         (list 100 "1d3-1" 't_mana_potion)
+		  (list 10  "1"   't_bow)
+        ;;(list 1 "1"     t_armor_plate)  if you wear anything that comes off one of these, something *really* nasty should happen
+        (list 4   "1"     t_iron_helm)
         ))
 (define knight-loot
   (list (list 100 "1d20"  't_gold_coins)
         (list 100 "1d3-1" 't_heal_potion)
+        (list 2 "1"     t_2h_sword)
+        (list 1 "1"     t_armor_plate)
+        (list 4 "1"     t_iron_helm)
         ))
 (define squire-loot
   (list (list 100 "1d10"  't_bolt)
         (list 100 "1d10"  't_gold_coins)
         (list 100 "1d2-1" 't_heal_potion)
+        (list 2  "1"     t_crossbow)
+        (list 10 "1"     t_dagger)
+        (list 3 "1"     t_armor_chain)
+        (list 5 "1"     t_chain_coif)
         ))
 (define halberdier-loot
   (list (list 100 "1d3-1" 't_heal_potion)
         (list 10  "1"     't_vas_mani_scroll)
         (list 10  "1"     't_in_an_scroll)
         (list 50  "1d5"   't_food)
+        (list 1   "1"     t_halberd)
+        (list 5   "1"     t_chain_coif)
+        (list 3   "1"     t_armor_chain)
         ))
 (define crossbowman-loot
   (list (list 100 "1d10"    't_bolt)
@@ -480,17 +511,26 @@
         (list 10  "1"     't_vas_mani_scroll)
         (list 10  "1"     't_in_an_scroll)
         (list 50  "1d5"   't_food)
+        (list 2   "1"     t_crossbow)
+        (list 5   "1"     t_chain_coif)
+        (list 10  "1"     t_dagger)
+        (list 3   "1"     t_armor_chain)
         ))
 (define wrogue-1-loot
   (list (list 100 "2d6-2" 't_gold_coins)
         (list 50  "1d5"   't_food)
         (list 10  "1d3"   't_torch)
+        (list 10  "1"     t_dagger)
         ))
 (define wrogue-2-loot
   (list (list 100 "2d6-2" 't_gold_coins)
         (list 100 "1d3-1" 't_picklock)
         (list 50  "1d5"   't_food)
         (list 10  "1d3"   't_torch)
+        (list 5   "1"     t_sword)
+        (list 7   "1"     t_sling)
+        (list 5   "1"     t_leather_helm)
+        (list 4   "1"     t_armor_leather)
         ))
 (define wrogue-3-loot
   (list (list 100 "2d6-2" 't_gold_coins)
@@ -498,12 +538,16 @@
         (list 50  "1d5"   't_food)
         (list 10  "1d3"   't_torch)
         (list 100 "1d10"  't_arrow)
+        (list 5   "1"     t_sword)
+        (list 6   "1"     t_leather_helm)
+        (list 7   "1"     t_armor_leather)
+        (list 3   "1"   't_bow)
         ))
 (define wrogue-4-loot
   (list (list 100 "2d6-2" 't_gold_coins)
         (list 100 "1d3-1" 't_picklock)
         (list 50  "1d5"   't_food)
-        (list 50  "1d10"  't_arrow)
+        (list 50  "1d10"  't_bolt)
         (list 10  "1"     't_in_ex_por_scroll)
         (list 10  "1"     't_wis_quas_scroll)
         (list 5   "1"     't_sanct_lor_scroll)
@@ -513,6 +557,10 @@
         (list 10  "1"     't_cure_potion)
         (list 10  "1"     't_poison_immunity_potion)
         (list 10  "1d3"   't_torch)
+        (list 3   "1"     t_armor_chain)
+        (list 5   "1"     t_chain_coif)
+        (list 5   "1"     t_sword)
+        (list 3   "1"     t_crossbow)
         ))
 (define medik-loot
   (list (list 100 "1d3"   't_heal_potion)
@@ -527,6 +575,9 @@
         (list 10  "1d3"   black_pearl)
         (list 5   "1d2"   nightshade)
         (list 5   "1d2"   mandrake)
+        (list 5   "1"     t_chain_coif)
+        (list 7   "1"     t_staff)
+        (list 3   "1"     t_armor_chain)
         ))
 (define troll-loot
   (list (list 100 "1d3-1" 't_thrown_boulder)
@@ -542,18 +593,38 @@
   (list (list 100 "4d25"  't_gold_coins)
         (list 100 "1d5"   't_food)
         (list 100 "1d3-1" 't_heal_potion)
+        (list 3   "1"      t_2h_axe)
+        (list 3   "1"      t_2h_sword)
         ))
 (define reaper-loot
   (list (list 100 "1d5"   't_torch)
         ))
 (define headless-loot
   (list (list 100 "1d5-1" 't_gold_coins)
+  		  (list 2 "1"     t_axe)
+        (list 2 "1"     t_shield)
         ))
 (define dragon-loot
   (list (list 100 "1d100+19" 't_gold_coins)
         (list 100 "1d20"     't_food)
         (list 100 "1d5-1"    't_gem)
         (list 100 "1"        't_dragons_blood)
+        ;; none of this is logical, beyond 'dragons oughta have the good stuff'
+        (list 10  "1"     't_in_ex_por_scroll)
+        (list 10  "1"     't_wis_quas_scroll)
+        (list 5   "1"     't_sanct_lor_scroll)
+        (list 5   "1"     't_an_tym_scroll)
+        (list 5   "1"     't_vas_rel_por_scroll)
+        (list 20  "1"     't_mana_potion)
+        (list 10  "1"     't_cure_potion)
+        (list 20  "1d5"   sulphorous_ash)
+        (list 20  "1d5"   ginseng)
+        (list 20  "1d5"   garlic)
+        (list 10  "1d3"   spider_silk)
+        (list 10  "1d3"   blood_moss)
+        (list 10  "1d3"   black_pearl)
+        (list 5   "1d2"   nightshade)
+        (list 5   "1d2"   mandrake)
         ))
 
 (define hydra-loot
@@ -567,33 +638,36 @@
 (define zorn-loot
   (list (list 100 "1d20+9" 't_gold_coins)
         ))
-(define craven-archer-loot
-  (list (list 100 "20"    't_arrow)
-        (list 100 "1d20"  't_gold_coins)
-        (list 100 "1d3-1" 't_mana_potion)
-        ))
+
 (define bomber-loot
   (list (list 50 "1d3" 't_oil)
         ))
+        
 (define dryad-loot
   (list (list 100 "1d5" 't_torch)
         ))
+        
 (define demon-loot
   (list (list 100 "2d20" 't_gold_coins)
         (list 5   "1"    't_flaming_sword)
         ))
+        
 (define ghast-loot
   (list (list 50 "1" 't_mana_potion)
         ))
+        
 (define yellow-slime-loot
   (list (list 50 "1" 't_royal_cape)
         ))
+        
 (define fire-slime-loot
   (list (list 100 "1" 't_oil)
         ))
+        
 (define spider-loot
   (list (list 50 "1" 'spider_silk)
         ))
+        
 (define queen-spider-loot
   (list (list 50 "1d3" 'spider_silk)
         (list 25 "1" 't_poison_immunity_potion)
@@ -623,7 +697,13 @@
         (list 10 "1d3-1" 't_heal_potion)
         (list 50  "1d5"   't_food)
         (list 100 "2d10" 't_gold)
+        (list 4 "1" t_sword)
+        (list 6 "1" t_shield)
+        (list 5 "1" t_chain_coif)
+        (list 7 "1" t_armor_chain)
+        (list 3 "1" t_crossbow)
         ))  
+        
         
 (define (drop-generic knpc loot)
   (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location knpc))))
