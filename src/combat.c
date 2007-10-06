@@ -786,8 +786,10 @@ static int combat_position_enemy(class Party * foe, int dx, int dy,
         if (Combat.enemy_vehicle
             && Combat.enemy_vehicle->getObjectType()->renderCombat 
             && Place == Combat.place) {
-                combat_overlay_vehicle(Combat.enemy_vehicle, dx,dy,
-                                   &foe->pinfo);
+                combat_overlay_vehicle(Combat.enemy_vehicle, 
+                                       defend ? -dx : dx, 
+                                       defend ? -dy : dy,
+                                       &foe->pinfo);
           }
 
         foe->disembark();
