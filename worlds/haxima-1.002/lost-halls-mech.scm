@@ -202,8 +202,8 @@
 		"rn rn rn xx xx .. .. xx xx ,, ,, ,, xx xx .. .. xx xx rn rn rn "
 		"rn rn rn rn xx xx xx xx xx cc cc cc xx xx xx xx xx rn rn rn rn "
 		"rn rn rn rn rn rn rn rn xx ,, ,, ,, xx rn rn rn rn rn rn rn rn "
-		"rn rn rn rn rn rn rn rn xx cc cc cc xx rn rn rn rn rn rn rn rn "
 		"rn rn rn rn rn rn rn rn xx d, d, d, xx rn rn rn rn rn rn rn rn "
+		"rn rn rn rn rn rn rn rn xx xx xx xx xx rn rn rn rn rn rn rn rn "
 	)
 	)
 	

@@ -322,9 +322,9 @@
  
 	(list
 		(put (mk-monman) 0 0)
-	 (put (mk-trap-door 'p_lost_halls_stairu 10 18) 9 7)
-	 (put (mk-trap-door 'p_lost_halls_stairu 10 18) 10 7)
-	 (put (mk-trap-door 'p_lost_halls_stairu 10 18) 11 7)
+	 (put (mk-bump-door 'p_lost_halls_stairu 10 18) 9 7)
+	 (put (mk-bump-door 'p_lost_halls_stairu 10 18) 10 7)
+	 (put (mk-bump-door 'p_lost_halls_stairu 10 18) 11 7)
 	 (put (mk-step-trig 'one-off-message "A huge stairway leads down into the darkness" "losthalls_staird") 9 15)
 	 (put (mk-step-trig 'one-off-message "A huge stairway leads down into the darkness" "losthalls_staird") 10 15)
 	 (put (mk-step-trig 'one-off-message "A huge stairway leads down into the darkness" "losthalls_staird") 11 15)
@@ -382,9 +382,9 @@
  
 	(list
 		(put (mk-monman) 0 0)
-	 (put (mk-trap-door 'p_lost_halls_staird 10 8) 9 19)
-	 (put (mk-trap-door 'p_lost_halls_staird 10 8) 10 19)
-	 (put (mk-trap-door 'p_lost_halls_staird 10 8) 11 19)
+	 (put (mk-bump-door 'p_lost_halls_staird 10 8) 9 19)
+	 (put (mk-bump-door 'p_lost_halls_staird 10 8) 10 19)
+	 (put (mk-bump-door 'p_lost_halls_staird 10 8) 11 19)
 		(put (spawn-pt 'cave-goblin-slinger-m) 11 8)
 		(put (spawn-pt 'cave-goblin-berserker-m) 8 12)
 		(put (spawn-pt 'troll-m) 9 10)
@@ -705,7 +705,7 @@
 		(prmap-room-hardlink-set! xloc yloc zloc losthalls-hardlinks dir target maptemplate passable hooks)
 		)
 
-;; stair down in random loc
+;; stair up in random loc
 (prmap-mk-roomdata 'p_lost_halls_stairu stairup-x 0 1 (list 'p_lost_halls_r1 'p_lost_halls_r2 'p_lost_halls_r3 'p_lost_halls_r4))
 (link-rm	stairup-x	0	1	south	nil		'm_losthalls_stairu	#f)
 (link-rm	stairup-x	1	1	south	'p_lost_halls_stairu	nil		#t)
