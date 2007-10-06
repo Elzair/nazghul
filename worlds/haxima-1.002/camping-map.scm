@@ -19,7 +19,7 @@
 ;;   kplace = camping place
 ;;----------------------------------------------------------------------------
 (define (camping-proc kplayer kplace)
-  (if (> (kern-dice-roll "1d20") 16)
+  (if (> (kern-dice-roll "1d20") 1)
       (let ((loc (kern-place-get-location kplace)))
         (define (nearest a b)
           (if (null? a)
@@ -30,8 +30,7 @@
                   b)))
         (define (willattack? a)
           (and (is-hostile? kplayer a)
-               (can-pathfind? a loc)
-               (kern-place-is-passable loc a)))
+               (can-pathfind? a loc)))
         (define (choose-npc-party)
           (foldr nearest
                  nil
@@ -39,6 +38,13 @@
                          (kern-place-get-beings (loc-place loc)))))
         (let ((kparty (choose-npc-party))) 
           (if (not (null? kparty))
-              (kern-ambush-while-camping kparty kplace))))))
+              (begin
+                (if (loc-adjacent? (kern-obj-get-location kplayer)
+                                   (kern-obj-get-location kparty))
+                    (kern-ambush-while-camping kparty kplace)
+                    ;; Have the party actually move, so if they are in a
+                    ;; vehicle, then when the ambush is over the vehicle will
+                    ;; be in the proper location on the wilderness map.
+                    (pathfind kparty (kern-obj-get-location kplayer)))))))))
 
 (kern-set-camping-proc camping-proc)
