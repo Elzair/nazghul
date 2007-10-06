@@ -41,4 +41,8 @@
 #define clamp(v,a,b) ((v) = (v) < (a) ? (a) : ((v) > (b) ? (b) : (v)))
 #endif
 
+#ifndef normalize
+#define normalize(dv) ((dv)>1?1:((dv)<-1?-1:0))
+#endif
+
 #endif
