@@ -74,6 +74,7 @@
 #include "skill_set.h"
 #include "skill_set_entry.h"
 #include "templ.h"
+#include "macros.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -229,11 +230,6 @@ static void image_dtor(void *val)
 static void sprite_dtor(void *val)
 {
         sprite_del((struct sprite*)val);
-}
-
-static void terrain_dtor(void *val)
-{
-        terrain_del((struct terrain*)val);
 }
 
 static void sound_dtor(void *val)
@@ -8264,6 +8260,23 @@ KERN_API_CALL(kern_ambush_while_camping)
         if ((! dx && ! dy) || (dx && dy)) {
                 dx = - player_party->getDx();
                 dy = - player_party->getDy();
+        }
+
+        /* Partial bugfix for 1612006: If the player is on impassable terrain,
+         * and the npc is in a vehicle, disembark first, and move them directly
+         * over the player's location. This prevents ships from coming ashore
+         * onto your camping map (and bringing part of the ocean with them). */
+        if (! place_is_passable(player_party->getPlace(), 
+                                player_party->getX(), 
+                                player_party->getY(), 
+                                party, 0)
+            && party->getVehicle()) {
+                int newx = player_party->getX();
+                int newy = player_party->getY();
+                party->disembark();
+                place_move_object(party->getPlace(), party, newx, newy);
+                party->setX(newx);
+                party->setY(newy);
         }
 
         if (combat_add_party(party, dx, dy, 0, place, 0, 0)) {
