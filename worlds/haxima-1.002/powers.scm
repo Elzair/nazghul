@@ -508,13 +508,15 @@
 
 ;todo high power should go to user specified gate
 (define (powers-gate-travel caster ktarg power)
-	(define (rmgate kobj)
-		(moongate-close gate)
-		(kern-obj-remove gate))
-	(let ((gate (summon-moongate 'ord)))
-		(kern-obj-put-at gate ktarg)
-		(moongate-open gate)
-		))
+  ;; Fix for bug 1738251, which involved summoning gates over magically locked
+  ;; doors: check passability. Use the passability of the caster as a
+  ;; reasonable estimate for the passability of the gate.
+  (if (not (kern-place-is-passable ktarg caster))
+      result-not-here
+      (let ((gate (summon-moongate 'ord)))
+        (kern-obj-put-at gate ktarg)
+        (moongate-open gate)
+        result-ok)))
 		  
 (define (powers-great-light caster ktarg power)
 	(let ((lightadd 
