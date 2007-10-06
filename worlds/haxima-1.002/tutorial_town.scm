@@ -22,7 +22,9 @@
       "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
 
   )
-  nil
+  (list ;entrances
+  	(list north 9 0)
+  )
  (put (mk-chest 
        nil 
        '( 
