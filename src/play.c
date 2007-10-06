@@ -126,6 +126,11 @@ static void play_reload()
         place_synchronize(Place);
         tick_run();
         vmask_flush_all();
+
+        /* Reset the combat state. Note: otherwise, if you reload in combat,
+         * and the first thing you do is camp, you'll hit an assert in the
+         * combat code. */
+        combatInit();
 }
 
 static void play_loop(void)
