@@ -25,7 +25,7 @@
 		"rn rn rn r1 rn rn rn rn rn rn rn rn rn r1 rn rn rn rn rn "
 	)
   (put (mk-ladder-up 'p_gate_to_absalot 9 1) 9 9)
-  (put (mk-trap-door 'p_absalot_passage 1 38) 18 6)
+  (put (mk-bump-door 'p_absalot_passage 1 38) 18 6)
  (put (spawn-pt 'troll-m) 4 12)
  (put (spawn-pt 'troll-m) 13 4)
  (put (spawn-pt 'headless) 9 4)
@@ -104,7 +104,7 @@
 	)
  (put (mk-magic-locked-door) 9 10)
  (put (mk-ladder-up 'p_tower_of_absalot 9 9) 9 7)
- (put (mk-trap-door 'p_absalot_passage 1 2) 18 12)
+ (put (mk-bump-door 'p_absalot_passage 1 2) 18 12)
  (put (guard-pt 'ghast) 10 8)
  (put (guard-pt 'death-knight) 8 8)
  (put (spawn-pt 'craven-archer) 10 6)
@@ -196,8 +196,8 @@
  nil ; neighbors
  
  (list (put (mk-monman) 0 0) ; objects
- (put (mk-trap-door 'p_road_to_absalot_3 17 12) 0 2)
- (put (mk-trap-door 'p_road_to_absalot_1 17 6) 0 38)
+ (put (mk-bump-door 'p_road_to_absalot_3 17 12) 0 2)
+ (put (mk-bump-door 'p_road_to_absalot_1 17 6) 0 38)
  (put (make-invisible (mk-r2a-statue)) 4 17)
  (put (spawn-pt 'bat) 15 22)
  (put (spawn-pt 'bat) 10 10)

@@ -53,6 +53,16 @@
   ;; tile in the wilderness without entering.
   (ifc '()
        (method 'enter portal-step)))
+       
+(define bump-portal-ifc
+  ;; This is the interface for a pseudo-edge tile
+  ;; Marked impassable, but teleports you to the next area if yu bump into it
+  (ifc '()
+       (method 'init
+               (lambda (kobj)
+                 (kern-obj-set-pclass kobj pclass-wall)
+                 ))
+       (method 'bump portal-step)))
 
 (define auto-portal-ifc
   ;; This is the interface for an "automatic enter" portal, 
@@ -84,6 +94,7 @@
 (mk-obj-type 't_ladder_down "ladder leading down" s_ladder_down   layer-mechanism portal-ifc)
 (mk-obj-type 't_ladder_up   "ladder leading up"   s_ladder_up     layer-mechanism portal-ifc)
 (mk-obj-type 't_trap_door   "trap door"           '()             layer-mechanism auto-portal-ifc)
+(mk-obj-type 't_bump_door   nil           '()             layer-mechanism bump-portal-ifc)
 (mk-obj-type 't_teleporter  "teleporter"          s_floor_plate   layer-mechanism prompting-auto-portal-ifc)
 (mk-obj-type 't_dungeon "dungeon" s_dungeon layer-mechanism       auto-portal-ifc)
 (mk-obj-type 't_ship_relic "ship relic" s_ship layer-mechanism auto-portal-ifc)
@@ -99,6 +110,7 @@
 (define (mk-ladder-down place-tag x y) (mk-portal t_ladder_down place-tag x y))
 (define (mk-ladder-up   place-tag x y) (mk-portal t_ladder_up   place-tag x y))
 (define (mk-trap-door   place-tag x y) (mk-portal t_trap_door   place-tag x y))
+(define (mk-bump-door   place-tag x y) (mk-portal t_bump_door   place-tag x y))
 (define (mk-teleporter  place-tag x y) (mk-portal t_teleporter  place-tag x y))
 (define (mk-dungeon place-tag x y) (mk-portal t_dungeon place-tag x y))
 (define (mk-ship-relic place-tag x y) (mk-portal t_ship_relic place-tag x y))
