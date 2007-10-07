@@ -8253,6 +8253,23 @@ KERN_API_CALL(kern_ambush_while_camping)
                 return sc->F;
         }
 
+        /* Workaround for 1808708: if both the player and npc party are in
+         * vehicles then don't do the normal ambush routine (the combat map
+         * will be wrong). Instead, let's just wake the player up. */
+        if (party->getVehicle()
+            && player_party->getVehicle()) {
+
+                log_begin(0);
+                Session->subject = player_party;
+                party->describe();
+                log_continue(" approaches!");
+                log_end(0);
+
+                player_party->endCamping();
+                player_party->removeMembers();
+                return sc->T;
+        }
+
         /* If the npc party has a null or invalid direction vector then
          * generate a random one. */
         dx = party->getDx();
