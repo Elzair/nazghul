@@ -39,8 +39,8 @@
         (let ((kparty (choose-npc-party))) 
           (if (not (null? kparty))
               (begin
-                (if (loc-adjacent? (kern-obj-get-location kplayer)
-                                   (kern-obj-get-location kparty))
+                (if (loc-8-adjacent? (kern-obj-get-location kplayer)
+                                     (kern-obj-get-location kparty))
                     (kern-ambush-while-camping kparty kplace)
                     ;; Have the party actually move, so if they are in a
                     ;; vehicle, then when the ambush is over the vehicle will

@@ -331,7 +331,7 @@
 
 (define (can-pathfind? kobj dest)
   (println "can-pathfind?")
-  (or (loc-adjacent? dest 
+  (or (loc-8-adjacent? dest 
                      (kern-obj-get-location kobj))
       (not (null? (kern-obj-find-path kobj dest)))))
 
@@ -608,7 +608,7 @@
 ;; ----------------------------------------------------------------------------
 (define (do-or-goto kchar coords proc)
   ;;;(display "do-or-goto")(newline)
-  (if (or (loc-adjacent? (kern-obj-get-location kchar) coords)
+  (if (or (loc-4-adjacent? (kern-obj-get-location kchar) coords)
           (eq? coords (kern-obj-get-location kchar)))
       (proc kchar coords)
       (pathfind kchar coords)))

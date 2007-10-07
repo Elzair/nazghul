@@ -194,22 +194,31 @@
       (append (enum-row x w)
               (loc-enum-rect place x (+ y 1) w (- h 1)))))
 
-;; ----------------------------------------------------------------------------
-;; loc-adjacent? -- check if two locations are adjacent neighbors in one of the
-;; four cardinal directions. This assumes that the locations are in the same
-;; place and that they have been wrapped if necessary.
-;; ----------------------------------------------------------------------------
-(define (loc-adjacent? a b)
-  (define (check dx dy)
-    (or (and (= 1 dx) (= 0 dy))
-        (and (= 0 dx) (= 1 dy))))
+;; Helper procedure. Checks if location b is a neighbor of location a as judged
+;; by is-adjacent?.
+(define (loc-adjacent-generic? a b is-adjacent?)
   (let ((place (loc-place a)))
     (if (kern-place-is-wrapping? place)
         (let ((w (kern-place-get-width place)))
-          (check (mdist (loc-x a) (loc-x b) w)
+          (is-adjacent? (mdist (loc-x a) (loc-x b) w)
                  (mdist (loc-y a) (loc-y b) w)))
-        (check (abs (- (loc-x a) (loc-x b)))
+        (is-adjacent? (abs (- (loc-x a) (loc-x b)))
                (abs (- (loc-y a) (loc-y b)))))))
+
+;; Checks if location b is one of the 4 neighbors of location a
+(define (loc-4-adjacent? a b)
+  (loc-adjacent-generic? a 
+                         b 
+                         (lambda (dx dy)     
+                           (or (and (= 1 dx) (= 0 dy))
+                               (and (= 0 dx) (= 1 dy))))))
+
+;; Checks if location b is one of the 8 neighbors of location a
+(define (loc-8-adjacent? a b)
+  (loc-adjacent-generic? a
+                        b
+                        (lambda (dx dy)
+                          (and (<= 1 dx) (<= 1 dy)))))
 
 (define (mk-lvect dx dy dz) (list dx dy dz))
 (define (lvect-dx lvect) (car lvect))
