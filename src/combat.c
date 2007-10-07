@@ -1510,9 +1510,14 @@ static bool position_player_party(struct combat_info *cinfo)
                                    &player_party->pinfo, 0);
         }
 
+        if (player_party->isLoitering())
+        {
+	     		player_party->forceAbortLoitering();   
+     	  }
         player_party->remove();
         player_party->forEachReverseMember(combat_place_character, 
                                            &player_party->pinfo);
+                                           
         return true;
 }
 

@@ -1129,6 +1129,22 @@ void PlayerParty::endLoitering()
         log_end_group();
 }
 
+
+void PlayerParty::forceAbortLoitering()
+{
+	endLoitering();
+	
+	struct node *entry;
+	class Character *member;
+
+	log_begin_group();
+	FOR_EACH_MEMBER(entry, member) {
+		member->resetActionPoints();
+	}
+	log_end_group();
+}
+
+
 static bool member_begin_resting(class Character *member, void *data)
 {
         member->beginResting(*((int*)data));

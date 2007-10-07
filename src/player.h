@@ -100,6 +100,7 @@ class PlayerParty : public Party {
 
         void beginLoitering(int hours);
         void endLoitering();
+        void forceAbortLoitering();
         bool isLoitering();
         void startSession(void);
         void distributeMembers(struct place *new_place, int new_x, int new_y, 
