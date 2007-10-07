@@ -159,7 +159,8 @@ nazghul_SOURCES =		\
 	repstr.h repstr.c \
 	templ.h templ.c \
 	bitfield.h \
-	objectfreezer.h objectfreezer.c
+	objectfreezer.h objectfreezer.c \
+        kern_intvar.c kern_intvar.h
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \
