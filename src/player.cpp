@@ -649,16 +649,19 @@ void PlayerParty::exec()
                 return;
         }
 
-        /* Loiter */
-        if (isLoitering()) {
-                if (clock_alarm_is_expired(&wakeup_alarm)) {
-                        endLoitering();
-                }
-        }
-
-        startTurn();
+        startTurn();      
         
         absorbMemberAPDebt();
+        
+        /* Loiter */
+        if (isLoitering())
+        {
+				if (clock_alarm_is_expired(&wakeup_alarm))
+				{
+					endLoitering();
+				}
+				endTurn();
+        }  
 
         if (action_points > 0 && ! isDestroyed()) {        
 
