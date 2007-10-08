@@ -53,7 +53,7 @@
                'ilya-conv          ; conv
                sch_ilya           ; sched
                'townsman-ai                 ; special ai
-               nil                 ; container
+               (mk-inventory (list (list 1 t_sword)))                 ; container
                nil                 ; readied
                )
  (ilya-mk #f #f))

@@ -206,7 +206,7 @@
      sch_may ;;.....schedule (optional)
      'townsman-ai ;;..........custom ai (optional)
      nil ;;..........container (and contents)
-     nil ;;.........readied arms (in addition to the container contents)
+     (list t_dagger) ;;.........readied arms (in addition to the container contents)
      nil ;;..........hooks in effect
      ))
    (may-mk)))

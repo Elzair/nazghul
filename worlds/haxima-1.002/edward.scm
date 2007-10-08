@@ -201,9 +201,9 @@
      (mk-inventory
       (list
        (list 1 t_torch)
+       (list 1 t_dagger)
        ))
-
-     nil ;;.........readied arms (in addition to the container contents)
+     (list t_armor_leather)                ; readied ;;.........readied arms (in addition to the container contents)
      nil ;;..........hooks in effect
      ))
    (edward-mk)))

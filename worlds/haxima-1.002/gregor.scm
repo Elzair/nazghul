@@ -230,7 +230,9 @@
                  sch_gregor          ; sched
                  'townsman-ai                 ; special ai
                  nil                 ; container
-                 nil                 ; readied
+					   (list t_axe
+					         t_armor_leather
+					         )              ; readied
                  )
    (gregor-mk)
    ))

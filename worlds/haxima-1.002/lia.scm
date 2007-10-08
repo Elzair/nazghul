@@ -165,7 +165,7 @@
                  'lia-conv         ; conv
                  sch_lia           ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
+                 (mk-inventory (list (list 1 t_dagger)))    ; container
                  nil                 ; readied
                  )
    (lia-mk)))

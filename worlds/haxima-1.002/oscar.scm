@@ -195,8 +195,8 @@
                  #f                  ; dead
                  'oscar-conv         ; conv
                  sch_oscar           ; sched
-                 'townsman-ai                 ; special ai
+                 'townsman-ai        ; special ai
                  nil                 ; container
-                 nil                 ; readied
+                 (list t_dagger)     ; readied
                  )
    (oscar-mk)))

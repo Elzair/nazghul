@@ -172,7 +172,7 @@
                  'bart-conv         ; conv
                  sch_bart           ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
+                 (mk-inventory (list (list 1 t_axe)))                 ; container
                  nil                 ; readied
                  )
    (bart-mk)))

@@ -153,7 +153,7 @@
                  'jess-conv         ; conv
                  sch_jess           ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
+                 (mk-inventory (list (list 1 t_dagger)))                 ; container
                  nil                 ; readied
                  )
    (jess-mk)))

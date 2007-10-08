@@ -135,7 +135,7 @@
                  'fing-conv         ; conv
                  sch_fing           ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
+                 (mk-inventory (list (list 10 t_spear)))                ; container
                  nil                 ; readied
                  )
    (fing-mk)))

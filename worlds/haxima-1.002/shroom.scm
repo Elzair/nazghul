@@ -215,7 +215,7 @@
                  'shroom-conv        ; conv
                  sch_shroom          ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
-                 nil                 ; readied
+                 (mk-inventory (list (list 1 t_sword)))                 ; container
+                 (list t_armor_leather)                 ; readied
                  )
    (shroom-mk #f #f)))

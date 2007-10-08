@@ -187,6 +187,6 @@
                  sch_doris           ; sched
                  'townsman-ai        ; special ai
                  nil                 ; container
-                 nil                 ; readied
+                 (list t_dagger)     ; readied
                  )
    (doris-mk)))

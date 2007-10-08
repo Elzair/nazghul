@@ -127,6 +127,10 @@
     sch_alex           ; sched
     'townsman-ai              ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_sword
+    		t_shield
+    		t_leather_helm
+					         t_armor_leather_2
+					         )               ; readied
     )
    (alex-mk)))

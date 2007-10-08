@@ -150,7 +150,7 @@
                  'henry-conv         ; conv
                  sch_henry           ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
+                 (mk-inventory (list (list 1 t_dagger)))     ; container
                  nil                 ; readied
                  )
    (henry-mk)))

@@ -182,6 +182,7 @@
                  sch_ange            ; sched
                  'townsman-ai                 ; special ai
                  nil                 ; container
-                 nil                 ; readied
+                 (list t_dagger
+					         )                  ; readied
                  )
    (ange-mk)))

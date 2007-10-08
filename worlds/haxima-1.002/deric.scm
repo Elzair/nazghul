@@ -285,6 +285,9 @@
                  sch_deric          ; sched
                  'townsman-ai        ;; special ai
                  nil                 ; container
-                 nil                 ; readied
+                 (list  t_sword_2
+					         t_armor_leather_2
+					         t_leather_helm_2
+					         )                  ; readied
                  )
    (deric-mk #f)))

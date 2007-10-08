@@ -192,6 +192,8 @@
     sch_abe           ; sched
     'townsman-ai              ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_staff
+					         t_armor_leather
+					         )              ; readied
     )
    (abe-mk)))

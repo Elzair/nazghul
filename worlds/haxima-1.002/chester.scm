@@ -164,6 +164,8 @@
                  sch_ches            ; sched
                  'townsman-ai                 ; special ai
                  nil                 ; container
-                 nil                 ; readied
+                 (list t_mace   ; we need a 'hammer'
+                 			t_armor_chain)
+                                 ; readied
                  )
    (ches-mk)))

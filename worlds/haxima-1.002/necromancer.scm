@@ -257,6 +257,6 @@
     sch_necr         ; sched
     'townsman-ai              ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_staff)              ; readied
     )
    (necr-mk)))

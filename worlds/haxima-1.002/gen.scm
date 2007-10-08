@@ -256,7 +256,7 @@
                  'gen-conv           ; conv
                  sch_gen             ; sched
                  'townsman-ai        ; special ai
-                 nil                 ; container
-                 nil                 ; readied
+                 (mk-inventory (list (list 1 t_dagger)))  ; container
+                 (list t_armor_leather)                ; readied
                  )
    (gen-mk #f #f)))

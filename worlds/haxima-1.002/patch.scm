@@ -162,6 +162,6 @@
                  sch_patch           ; sched
                  'townsman-ai                 ; special ai
                  nil                 ; container
-                 nil                 ; readied
+                 (list t_dagger)                 ; readied
                  )
    (patch-mk)))

@@ -145,7 +145,8 @@
                sch_jim           ; sched
                'townsman-ai                 ; special ai
                nil                 ; container
-               nil                 ; readied
+               (list t_mace   ; we need a 'hammer'
+                 			t_armor_chain)
                )
  (jim-mk))
 
@@ -165,7 +166,7 @@
                'gwen-conv          ; conv
                sch_gwen           ; sched
                'townsman-ai                 ; special ai
-               nil                 ; container
+               (mk-inventory (list (list 1 t_dagger)))                 ; container
                nil                 ; readied
                )
  (gwen-mk))
@@ -186,8 +187,8 @@
                'chant-conv         ; conv
                sch_chant           ; sched
                'townsman-ai                 ; special ai
-               nil                 ; container
-               nil                 ; readied
+               (mk-inventory (list (list 1 t_sword)))                 ; container
+               (list t_armor_leather)                 ; readied
                )
  (chant-mk))
 
@@ -207,7 +208,9 @@
                'earl-conv   ;; conv
                sch_earl     ;; sched
                'townsman-ai          ;; special ai
-               nil          ;; container
+               (mk-inventory (list
+               	(list 1 t_staff)
+               	(list 1 t_sling)))          ;; container
                nil          ;; readied
                )
  (earl-mk))

@@ -124,7 +124,9 @@
     sch_slywan           ; sched
     'townsman-ai              ; special ai
     (mk-inventory nil) ;; container
-    nil              ; readied
+    (list t_sword
+					         t_armor_leather
+					         )               ; readied
     )
    #t)
    (slywan-mk)))

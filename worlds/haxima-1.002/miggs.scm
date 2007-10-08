@@ -84,7 +84,7 @@
                  'miggs-conv        ; conv
                  sch_miggs          ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
-                 nil                 ; readied
+                  nil                ; container
+                 (list t_dagger)                 ; readied
                  )
    (miggs-mk)))

@@ -429,7 +429,9 @@
      sch_alch ;;.....schedule (optional)
      'townsman-ai ;;..........custom ai (optional)
      nil ;;..........container (and contents)
-     nil ;;......... readied arms (in addition to the container contents)
+     (list t_dagger
+				t_armor_leather
+				)  ;;......... readied arms (in addition to the container contents)
      nil ;;..........hooks in effect
      ))
    (alch-mk)))

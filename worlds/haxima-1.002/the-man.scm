@@ -211,6 +211,8 @@
                  sch_man           ; sched
                  'townsman-ai                 ; special ai
                  nil                 ; container
-                 nil                 ; readied
+                 (list t_armor_leather_4
+                 		t_leather_helm_2
+                 		t_magic_axe)                 ; readied
                  )
    (man-mk)))

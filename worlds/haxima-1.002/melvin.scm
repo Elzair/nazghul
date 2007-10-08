@@ -158,8 +158,8 @@
                  #f                  ; dead
                  'melvin-conv        ; conv
                  sch_melvin          ; sched
-                 'townsman-ai                 ; special ai
-                 nil                 ; container
-                 nil                 ; readied
+                 'townsman-ai         ; special ai
+                 nil     				; container
+                 (list t_dagger)   ; readied
                  )
    (melvin-mk)))

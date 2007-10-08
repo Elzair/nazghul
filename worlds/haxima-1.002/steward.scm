@@ -185,7 +185,7 @@
                  'stew-conv          ; conv
                  sch_stew            ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
+                 (mk-inventory (list (list 1 t_sword_4)))    ; container
                  nil                 ; readied
                  )
    (stew-mk)))

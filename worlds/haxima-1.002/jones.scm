@@ -99,6 +99,7 @@
     sch_jones           ; sched
     'townsman-ai              ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_axe
+    		t_armor_chain)              ; readied
     )
    (jones-mk)))

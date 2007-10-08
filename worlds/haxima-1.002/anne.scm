@@ -100,6 +100,8 @@
     sch_anne           ; sched
     'townsman-ai              ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_sword
+					         t_armor_leather
+					         )               ; readied
     )
    (anne-mk)))

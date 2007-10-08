@@ -122,6 +122,7 @@
     sch_joel           ; sched
     'townsman-ai              ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_staff
+					         )              ; readied
     )
    (joel-mk)))
