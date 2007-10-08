@@ -198,12 +198,12 @@ static struct filter stat_drop_filter = {
 /* Table for the different Z)tats UI windows. */
 static struct ztats_entry ztats_entries[] = {
 	{ "Party Member", { 0, 0 }, 0 /* different because it doesn't use the
-												* generic stat_show_container() */ },
-	{ "Armaments", { stat_filter_arms, 0 }, status_show_ztat_arms },
-	{ "Reagents", { stat_filter_reagents, 0 }, status_show_generic_object_type },
-	{ "Spells", { stat_filter_spells, 0 }, status_show_ztat_spells },
-	{ "Usable Items", { stat_filter_items, 0 }, status_show_generic_object_type },
-	{ "Misc", { stat_filter_misc, 0 }, status_show_generic_object_type },
+				       * generic stat_show_container() */ },
+	{ "Armaments",    { stat_filter_arms,     0 }, status_show_ztat_arms },
+	{ "Reagents",     { stat_filter_reagents, 0 }, status_show_generic_object_type },
+	{ "Spells",       { stat_filter_spells,   0 }, status_show_ztat_spells },
+	{ "Usable Items", { stat_filter_items,    0 }, status_show_generic_object_type },
+	{ "Misc",         { stat_filter_misc,     0 }, status_show_generic_object_type },
 };
 
 
@@ -366,20 +366,23 @@ static char status_arms_stat_color(char *dice)
  * way for all viewers. */
 static void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
 {
-	char *thd = arms->getToHitDice();
-	char *tdd = arms->getToDefendDice();
-	char *dad = arms->getDamageDice();
-	char *ard = arms->getArmorDice();
+	char *hit   = arms->getToHitDice();
+	char *dmg   = arms->getDamageDice();
+
+	char *def   = arms->getToDefendDice();
+	char *armor = arms->getArmorDice();
+
 	screenPrint(rect, 0, 
-		"^c+%c	TH:^c%c%s ^c%cTD:^c%c%s ^c%cDA:^c%c%s ^c%cAR:^c%c%s^c-", 
-			STAT_LABEL_CLR,
-			status_arms_stat_color(thd), thd,
-			STAT_LABEL_CLR,
-			status_arms_stat_color(tdd), tdd,
-			STAT_LABEL_CLR,
-			status_arms_stat_color(dad), dad,
-			STAT_LABEL_CLR,
-			status_arms_stat_color(ard), ard
+		    "^c+%cHit:^c%c%s ^c%cDmg:^c%c%s ^c%cDef:^c%c%s ^c%cArm:^c%c%s^c-", 
+
+		    STAT_LABEL_CLR,
+		    status_arms_stat_color(hit), hit,
+		    STAT_LABEL_CLR,
+		    status_arms_stat_color(dmg), dmg,
+		    STAT_LABEL_CLR,
+		    status_arms_stat_color(def), def,
+		    STAT_LABEL_CLR,
+		    status_arms_stat_color(armor), armor
 		);
 	rect->y += (TILE_H - ASCII_H);
 }
@@ -392,7 +395,11 @@ static void status_show_member_arms(SDL_Rect * rect, ArmsType *arms)
 	rect->x += TILE_W;
 
 	/* name */
-	screenPrint(rect, 0, "%s", arms->getName());
+	// SAM: I don't like cluttering the name line, but the range and AP 
+	//      are essential information, and previous attempts at multi-line 
+	//      status entries foundered.  So, until the thing can be re-written...
+	screenPrint(rect, 0, "%s  (Rng:%d, AP:%d, Spd:%d)", 
+		    arms->getName(), arms->getRange(), arms->getRequiredActionPoints(), arms->get_AP_mod() );
 	rect->y += ASCII_H;
 
 	/* stats */
@@ -580,48 +587,81 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
 	/* Push the current color. */
 	screenPrint(rect, 0, "^c+=");
 
-	/* Show the level and base attributes */
+	// Show experience level and XP information:
 	screenPrint(rect, 0, 
-			"^c%cLvl:^cw%d ^c%cStr:^cw%d ^c%cInt:^cw%d ^c%cDex:^cw%d"
-			, STAT_LABEL_CLR
-			, pm->getLevel()
-			, STAT_LABEL_CLR
-			, pm->getStrength()
-			, STAT_LABEL_CLR
-			, pm->getIntelligence()
-			, STAT_LABEL_CLR
-			, pm->getDexterity()
+		    "^c%cLevel:^cw%d "
+		    "^c%cXP:^cw%d "
+		    "^c%cNext Level:^cw%d ",
+
+		    STAT_LABEL_CLR,pm->getLevel(),
+		    STAT_LABEL_CLR,pm->getExperience(),
+		    STAT_LABEL_CLR,pm->getXpForLevel(pm->getLevel()+1)
+	    );
+	rect->y += ASCII_H;
+
+	// Show the basic character attributes:
+	screenPrint(rect, 0, 
+		    "^c%cStr:^cw%d "
+		    "^c%cInt:^cw%d "
+		    "^c%cDex:^cw%d ",
+
+		    STAT_LABEL_CLR, pm->getStrength(),
+		    STAT_LABEL_CLR, pm->getIntelligence(),
+		    STAT_LABEL_CLR, pm->getDexterity()
 		);
 	rect->y += ASCII_H;
 
-	/* Show the xp, hp and mp */
-	status_show_character_var_stats_full(rect, pm);
+	// Show highly variable information such as HP/max, MP/max, and AP/max
+	screenPrint(rect, 0, 
+		    "^c%cHP:^c%c%d^cw/%d "
+		    "^c%cMP:^c%c%d^cw/%d "
+		    "^c%cAP:^c%c%d^cw/%d ",
 
-	/* Show movement mode, class and species */
+		    STAT_LABEL_CLR, 
+		    status_range_color(pm->getHp(), pm->getMaxHp()),
+		    pm->getHp(), pm->getMaxHp(),
+
+		    STAT_LABEL_CLR, 
+		    status_range_color(pm->getMana(), pm->getMaxMana()),
+		    pm->getMana(), pm->getMaxMana(),
+
+		    STAT_LABEL_CLR, 
+		    status_range_color(pm->getActionPoints(), pm->getActionPointsPerTurn()), 
+		    pm->getActionPoints(), pm->getActionPointsPerTurn()
+		);
+	rect->y += ASCII_H;
+
+	// Show species, class, and movement mode:
 	mmode = pm->getMovementMode();
 	assert(mmode);
-	screenPrint(rect, 0
-			, "^c%cMove:^cw%s ^c%cSpe:^cw%s ^c%cOcc:^cw%s"
-			, STAT_LABEL_CLR
-			, mmode->name
-			, STAT_LABEL_CLR
-			, pm->species ? pm->species->name:"?"
-			, STAT_LABEL_CLR
-			, pm->occ ? pm->occ->name : "none"
-		);
+	screenPrint(rect, 0, 
+		    "^c%cSpecies:    ^cw%s", 
+		    STAT_LABEL_CLR, pm->species ? pm->species->name:"Unknown");
+	rect->y += ASCII_H;
+
+	screenPrint(rect, 0, 
+		    "^c%cOccupation: ^cw%s", 
+		    STAT_LABEL_CLR, pm->occ ? pm->occ->name : "None");
+	rect->y += ASCII_H;
+
+	screenPrint(rect, 0, 
+		    "^c%cMovement:   ^cw%s", 
+		    STAT_LABEL_CLR, mmode->name);
+	rect->y += ASCII_H;
 	rect->y += ASCII_H;
 
 	/* Show effects */
-	screenPrint(rect, SP_CENTERED , "^c%c*** Effects ***^cw", 
+	screenPrint(rect, 0 /*SP_CENTERED*/ , "^c%c*** Effects ***^cw", 
 						STAT_LABEL_CLR);
 	rect->y += ASCII_H;
 	for (i = 0; i < OBJ_NUM_HOOKS; i++)
 	{
 				pm->hookForEach(i, status_show_effect, rect);
 	}
+	rect->y += ASCII_H;
 
 	/* Show arms */
-	screenPrint(rect, SP_CENTERED , "^c%c*** Arms ***^cw", STAT_LABEL_CLR);
+	screenPrint(rect, 0 /*SP_CENTERED*/ , "^c%c*** Arms ***^cw", STAT_LABEL_CLR);
 	rect->y += ASCII_H;
 
 #if 1
