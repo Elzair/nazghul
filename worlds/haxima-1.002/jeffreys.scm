@@ -159,7 +159,7 @@
                  2 1 1               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 max-health -1 max-health speed-human-hvy-armor 5  ; hp/xp/mp/AP_per_turn/lvl
+                 max-health -1 max-health 0 5  ; hp/xp/mp/AP_per_turn/lvl
                  #f                  ; dead
                  'jeff-conv         ; conv
                  sch_jeff           ; sched

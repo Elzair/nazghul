@@ -115,7 +115,7 @@
     max-health ; hp
     -1                ; xp
     max-health ; mp
-    speed-human-unarmored
+    0
     jorn-lvl
     #f               ; dead
     'jorn-conv       ; conv

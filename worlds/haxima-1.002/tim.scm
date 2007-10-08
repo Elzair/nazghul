@@ -95,7 +95,7 @@
      max-health ;;..current hit points
      -1  ;;...........current experience points
      max-health ;;..current magic points
-     speed-human-med-armor
+     0
      tim-start-lvl  ;;..current level
      #f ;;...........dead?
      'tim-conv ;;...conversation (optional)

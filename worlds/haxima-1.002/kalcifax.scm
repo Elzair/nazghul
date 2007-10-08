@@ -125,7 +125,7 @@
     max-health ; hp
     -1  ; xp
     max-health ; mp
-    speed-human-unarmored
+    0
     kalc-lvl
     #f               ; dead
     'kalc-conv         ; conv

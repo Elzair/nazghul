@@ -100,7 +100,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
-    speed-human-unarmored
+    0
     lux-lvl
     #f               ; dead
     'lux-conv         ; conv
@@ -128,7 +128,7 @@
             max-health ; hp
             -1                   ; xp
             max-health ; mp
-            speed-human-unarmored
+            0
             8
             #f               ; dead
             nil              ; conv

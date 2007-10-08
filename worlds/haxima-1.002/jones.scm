@@ -92,7 +92,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
-    speed-human-med-armor
+    0
     jones-lvl
     #f               ; dead
     'jones-conv         ; conv

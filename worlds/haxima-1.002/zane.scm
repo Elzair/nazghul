@@ -145,7 +145,7 @@
      max-health ;;..current hit points
      -1  ;;...........current experience points
      max-health ;;..current magic points
-     speed-human-med-armor ;; AP_per_turn
+     0 ;; AP_per_turn
      zane-start-lvl  ;;..current level
      #f ;;...........dead?
      'zane-conv ;;...conversation (optional)

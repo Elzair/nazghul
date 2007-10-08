@@ -120,7 +120,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
-    speed-human-med-armor
+    0
     alex-lvl
     #f               ; dead
     'alex-conv         ; conv

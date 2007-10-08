@@ -161,7 +161,7 @@
      pc-hp-gain          ; hp per-level bonus
      0                   ; mp off
      0                   ; mp gain
-     max-health -1 max-health speed-human-hvy-armor 3            ; hp/xp/mp/AP_per_turn/lvl
+     max-health -1 max-health 0 3            ; hp/xp/mp/AP_per_turn/lvl
      #f                  ; dead
      'roland-conv        ; conv
      nil                 ; sched

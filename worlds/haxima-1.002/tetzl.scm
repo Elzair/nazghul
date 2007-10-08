@@ -48,7 +48,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
-speed-human-unarmored
+	0
     tetzl-lvl
     #f               ; dead
     nil         ; conv

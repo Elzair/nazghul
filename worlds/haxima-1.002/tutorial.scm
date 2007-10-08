@@ -61,7 +61,7 @@
   pc-mp-off
   pc-mp-gain
   40 0 12               ; hp/xp/mp
-  speed-human-med-armor ; MP_per_turn
+  0 ; MP_per_turn
   5                     ; lvl
   #f                    ; dead
   nil                   ; conv

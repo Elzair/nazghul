@@ -170,7 +170,7 @@
             max-health       ; hp
             -1               ; xp
             max-health       ; mp
-            speed-human-med-armor
+            0
             anaxes-lvl       ; level
             #f               ; dead
             'anaxes-conv     ; conv

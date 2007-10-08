@@ -90,7 +90,7 @@
     max-health ; hp
     0                   ; xp
     max-health ; mp
-    speed-human-med-armor
+    0
     abigail-lvl
     #f               ; dead
     'abigail-conv         ; conv

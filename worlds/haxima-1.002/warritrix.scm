@@ -164,7 +164,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
-    speed-human-hvy-armor  ;; AP_per_turn
+    0  ;; AP_per_turn
     warr-lvl
     #f               ; dead
     'warr-conv         ; conv

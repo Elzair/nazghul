@@ -105,7 +105,7 @@
     (max-hp ankh-species ankh-occ ankh-lvl 0 0) ; hp
     0                   ; xp
     (max-mp ankh-species ankh-occ ankh-lvl 0 0) ; mp
-speed-human-hvy-armor
+		0
     ankh-lvl
     #f               ; dead
     'ankh-conv         ; conv

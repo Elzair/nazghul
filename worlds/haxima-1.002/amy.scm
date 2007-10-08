@@ -117,7 +117,7 @@
     max-health ; hp
     -1                   ; xp
     max-health ; mp
-    speed-human-med-armor
+    0
     amy-lvl
     #f               ; dead
     'amy-conv         ; conv
