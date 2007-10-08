@@ -44,6 +44,7 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
 			char *damage_dice,
 			char *armor_dice,
 			int reqActPts,
+		   int AP_mod,
 			bool thrown,
 			bool ubiquitousAmmo,
 			sound_t *fireSound,
@@ -91,7 +92,8 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
 	char_avoid_mod = charAvoidMod;
 	
 	required_action_points = reqActPts;
-	beam=isBeam;
+	modifier_to_AP_of_user = AP_mod;
+	beam = isBeam;
 }
 
 ArmsType::ArmsType()
@@ -108,6 +110,7 @@ ArmsType::ArmsType()
         layer          = item_layer;
         fire_sound     = NULL_SOUND;
         required_action_points = 1;
+	modifier_to_AP_of_user = 0;
 }
 
 ArmsType::~ArmsType()
@@ -379,4 +382,8 @@ int ArmsType::modifyDamageBonus(int damBonus)
 float ArmsType::modifyAvoidBonus(float avoidBonus)
 {
 	return avoidBonus * char_avoid_mod;
+}
+
+int ArmsType::get_AP_mod(void) {
+    return modifier_to_AP_of_user;
 }

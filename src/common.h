@@ -256,7 +256,7 @@ extern "C" {
 #define CONFIG_MOVEMENT_COST_FOR_CHARACTERS false
 
 /* Action point values (temporary - should be moved to the load file) */
-#define NAZGHUL_BASE_ACTION_POINTS  50
+// #define NAZGHUL_BASE_ACTION_POINTS  50 // SAM: should be obsolete now, with the use of kern_intvar_get()
 
 /* Hard-coded experience point values */
 #define COMBAT_VICTORY_XP 5

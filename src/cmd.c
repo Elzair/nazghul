@@ -54,6 +54,7 @@
 #include "result.h"
 #include "dice.h"
 #include "menus.h"
+#include "kern_intvar.h"
 
 #include "skill.h"
 #include "skill_set.h"
@@ -988,7 +989,8 @@ bool cmdSearch(class Character *pc)
 	place_describe(place, x2, y2, PLACE_DESCRIBE_ALL);
         log_end(".");
         Reveal = old_reveal;
-        pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
+        pc->decActionPoints(kern_intvar_get("AP_COST:search"));  // SAM: We may want a '-1' value here, to signify "all remaining AP"...
+	
 	return true;
 }
 
@@ -1041,7 +1043,8 @@ bool cmdGet(class Object *actor)
 	
 	mapSetDirty();
 	actor->runHook(OBJ_HOOK_GET_DONE, 0);
-	actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS/4);
+	actor->decActionPoints(kern_intvar_get("AP_COST:get_item"));  // SAM: Better to have a number of AP by item type...
+	
 	
 	return true;
 }
@@ -1158,7 +1161,7 @@ bool cmdOpen(class Character * pc)
                  mech->getObjectType()->open(mech, pc);
                  mapSetDirty();
                  pc->runHook(OBJ_HOOK_OPEN_DONE, "p", mech);
-                 pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
+                 pc->decActionPoints(kern_intvar_get("AP_COST:open_mechanism"));
                  return true;
          }
 
@@ -1174,7 +1177,7 @@ bool cmdOpen(class Character * pc)
         log_begin_group();
 
         pc->runHook(OBJ_HOOK_OPEN_DONE, "p", container);
-        pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
+        pc->decActionPoints(kern_intvar_get("AP_COST:open_container"));
         cmdwin_push("%s!", container->getName());
 
         // Describe the contents of the container.
@@ -1776,7 +1779,7 @@ bool cmdHandle(class Character * pc)
         log_msg("%s handles %s", pc->getName(), mechName);
         mech->getObjectType()->handle(mech, pc);
         pc->runHook(OBJ_HOOK_HANDLE_DONE, "p", mech);
-        pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
+        pc->decActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
         mapSetDirty();
 
         // I think the following was added to update LOS in cases where the
@@ -1834,7 +1837,7 @@ bool cmdUse(class Character * member, int flags)
         member->runHook(OBJ_HOOK_USE_DONE, "p", item);
 
         // Item's appear to decrement AP in the script...
-        //member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
+        //member->decActionPoints(kern_intvar_get("AP_COST:use_item"));
 	statusRepaint();
 
 	return true;
@@ -2882,16 +2885,33 @@ bool cmdMixReagents(class Character *character)
                 
                 if (!spell)
                 {
-	              	character->decActionPoints(dice_roll_numeric(3, 50, 20));  
+		    // Failed attempt (mixing a spell which does not exist)
+		    int num  = kern_intvar_get("AP_COST:mix_reagents_nospell_num");
+		    int dice = kern_intvar_get("AP_COST:mix_reagents_nospell_dice");
+		    int plus = kern_intvar_get("AP_COST:mix_reagents_nospell_plus");
+		    int AP_wasted = dice_roll_numeric(num, dice, plus);
+		    character->decActionPoints(AP_wasted);
+		    // was 3d50+20 -- dice_roll_numeric(3, 50, 20)
                 }
                 else if (mistake)
                 {
-	              	character->decActionPoints(dice_roll_numeric(1 ,(2 * spell->action_points) , 100));  
+		    int level = spell->level;
+		    int num  = kern_intvar_get("AP_COST:mix_reagents_badmix_num");
+		    int dice = kern_intvar_get("AP_COST:mix_reagents_badmix_dice");
+		    int plus = kern_intvar_get("AP_COST:mix_reagents_badmix_plus");
+		    int AP_wasted = dice_roll_numeric(level * num, dice, plus);
+		    character->decActionPoints(AP_wasted);
+		    // was 1d(2*AP)+100 -- dice_roll_numeric(1 ,(2 * spell->action_points) , 100)
             	 }
             	else
             	{
-	            	// mixing should be SLOW
-	            	character->decActionPoints(100 + 2 * spell->action_points);
+		    // mixing should be SLOW
+		    int base      = kern_intvar_get("AP_COST:mix_reagents_base");
+		    int per_mix   = kern_intvar_get("AP_COST:mix_reagents_per_mix");
+		    int per_level = kern_intvar_get("AP_COST:mix_reagents_per_level");
+		    int AP_spent  = base + (quantity * per_mix) + (spell->level * per_level);
+		    character->decActionPoints(AP_spent);
+		    // was 100 + 2 * spell->action_points
             	}
         }
 
@@ -3875,7 +3895,7 @@ void cmdDrop(class Character *actor)
 			 log_msg("Couldnt drop %s!", ie->type->getName());
 		 }
         /* remove from party inventory */
-        actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
+        actor->decActionPoints(kern_intvar_get("AP_COST:drop_item"));
 
         statusRepaint();
         mapUpdate(REPAINT_IF_DIRTY);

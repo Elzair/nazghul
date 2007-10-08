@@ -14,19 +14,76 @@
 (define slot-boot             32)
 (define slot-helm             64)
 
-;; Speeds
-(define speed-human            150)  ;; typical AP/round for humans
-(define speed-human-unarmored  200)  ;; unencumbered, optimized for speed
-(define speed-human-med-armor  150)  ;; moderate protection, typical gear
-(define speed-human-hvy-armor  100)  ;; heavy protection, rather slow
+;; AP costs of various actions which the kernal needs to know about:
+(kern-set-kern-intvar "AP_TOTAL:normal_human"    24)
 
-(define speed-yellow-slime      40)  ;; 
-(define speed-insect           100)  ;; 
+(kern-set-kern-intvar "AP_COST:default"           6)
+(kern-set-kern-intvar "AP_COST:search"           18)
+(kern-set-kern-intvar "AP_COST:get_item"          3)
+(kern-set-kern-intvar "AP_COST:drop_item"         3)
+(kern-set-kern-intvar "AP_COST:open_mechanism"    9)
+(kern-set-kern-intvar "AP_COST:open_container"    9)
+(kern-set-kern-intvar "AP_COST:handle_mechanism" 12)
+(kern-set-kern-intvar "AP_COST:use_item"          6)  ;; may be unused, per comment in cmd.c cmdUse()
 
-(define speed-ship              65)  ;; 
+;; Normal mixing: 18 + (num_mixed * 12) + (spell_level * 12) AP
+(kern-set-kern-intvar "AP_COST:mix_reagents_base"         18)
+(kern-set-kern-intvar "AP_COST:mix_reagents_per_mix"      12)
+(kern-set-kern-intvar "AP_COST:mix_reagents_per_level"    12)
+;; Attempt at non-existent spell: 3d18+6 AP
+(kern-set-kern-intvar "AP_COST:mix_reagents_nospell_num"   3)
+(kern-set-kern-intvar "AP_COST:mix_reagents_nospell_dice" 18)
+(kern-set-kern-intvar "AP_COST:mix_reagents_nospell_plus"  6)
+;; Missing or additional ingredients: (2 * spell_level)d18+18 AP
+(kern-set-kern-intvar "AP_COST:mix_reagents_badmix_num"    2)  ;; times spell Level
+(kern-set-kern-intvar "AP_COST:mix_reagents_badmix_dice"  18)
+(kern-set-kern-intvar "AP_COST:mix_reagents_badmix_plus"  18)
 
-;; Action Points
-(define ap-to-use-scroll speed-human)
+;; These values are used by ctrl.c ctrl_attack_target() 
+;; to adjust weapon AP costs in the event of dual wielding.
+;; The dual weapon rules can thus be tweaked here...
+(kern-set-kern-intvar "AP_MULT12:second_wpn_attack"       6)  ;; AP cost * 6/12 for 2nd weapon attack if dual wpns used
+(kern-set-kern-intvar "AP_MULT12:third_plus_wpn_attack"   6)  ;; AP cost * 6/12 for 3rd+ weapon attacks, if 3+ weapons used
+(kern-set-kern-intvar "AP_THRESHOLD:multi_attack_overage" 0)  ;; attack sequence can continue if AP overage is not > 0
+
+
+
+
+;; Speeds  ;; TODO: move most of these into kern-intvars ?
+(define speed-human            24)  ;; typical AP/round for humans
+(define speed-human-unarmored  24)  ;; unencumbered, optimized for speed
+(define speed-human-med-armor  18)  ;; moderate protection, typical gear
+(define speed-human-hvy-armor  12)  ;; heavy protection, rather slow
+
+(define speed-yellow-slime      5)  ;; 
+(define speed-insect           12)  ;; 
+
+(define speed-ship              8)  ;; 
+
+;; These values are from the old 50 AP -based scheme...
+;(define speed-human            150)  ;; typical AP/round for humans
+;(define speed-human-unarmored  200)  ;; unencumbered, optimized for speed
+;(define speed-human-med-armor  150)  ;; moderate protection, typical gear
+;(define speed-human-hvy-armor  100)  ;; heavy protection, rather slow
+; 
+;(define speed-yellow-slime      40)  ;; 
+;(define speed-insect           100)  ;; 
+; 
+;(define speed-ship              65)  ;; 
+
+
+;; Action Point costs for various basic actions:
+(define ap-for-1H-melee-attack   9)
+(define ap-for-2H-melee-attack  12)
+
+(define ap-for-1H-thrown-attack 12)
+(define ap-for-2H-thrown-attack 18)
+
+(define ap-for-shooting-attack  12)
+
+(define ap-for-combat-spell      9)
+(define ap-to-use-scroll        12)
+
 
 ;; Difficulty Classes
 (define dc-escape-ensnare  26)
@@ -42,16 +99,28 @@
 (define pmask-bridge (+ pmask-land pmask-water pmask-shoals))
 (define pmask-all    (+ pmask-solid pmask-land pmask-water pmask-shoals))
 
-;; Passability Difficulty Levels (Note: 255 is well-known to the kernel to mean
-;; "impassible" in the case of movement costs)
-(define norm       50)  ;; 1.0
-(define s-hard      75)  ;; 1.5
-(define hard      100)  ;; 2.0
-(define v-hard     150)  ;; 3.0
-(define fast       30)  ;; 0.6
-(define s-fast      40)  ;; 0.4
-(define no-drop    100)  ;; 2.0
-(define cant      255)  ;; 
+;; Passability Difficulty Levels 
+;;   (Note: 255 is well-known to the kernel to mean
+;;   "impassible" in the case of movement costs)
+(define s-fast      3)  ;; 0.5  (1/2)
+(define fast        4)  ;; 0.66 (2/3)
+(define norm        6)  ;; 1.0
+(define s-hard      9)  ;; 1.5
+(define hard       12)  ;; 2.0
+(define v-hard     18)  ;; 3.0
+
+(define no-drop    12)  ;; special, used for terrains such as chasms
+(define cant      255)  ;; special
+
+;(define norm       50)  ;; 1.0
+;(define s-hard     75)  ;; 1.5
+;(define hard      100)  ;; 2.0
+;(define v-hard    150)  ;; 3.0
+;(define fast       30)  ;; 0.6
+;(define s-fast     40)  ;; 0.4
+;(define no-drop   100)  ;; 2.0
+;(define cant      255)  ;; 
+
 
 ;; Passability classes
 (define pclass-none          0)
@@ -129,7 +198,9 @@
 	(list	cant	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	30	s-fast	cant	cant	no-drop	no-drop	no-drop	0	10	)	;; passlos mountains
 	(list	cant	v-hard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; float
 	(list	cant	hard	cant	cant	norm	hard	cant	cant	norm	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; fly
-)																																																																																																																																																																																																																																																															
+)
+;; Note that pclass 'missl' is using the value as a percentage chance 
+;; for a missile to be blocked by obscuring terrain, not as an AP cost
 
 
 ;; Factions. The diplomacy table (which defines the relationship between

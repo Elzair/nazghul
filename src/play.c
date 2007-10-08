@@ -55,6 +55,7 @@
 #include "tick.h"
 #include "vmask.h"
 #include "menus.h"
+#include "kern_intvar.h"  // SAM
 
 #include <string.h>
 #include <stdlib.h>
@@ -116,6 +117,7 @@ static void play_reload()
         log_begin("Loading from %s...", fname);
         log_flush();
         log_disable();
+	kern_intvar_init();  // SAM: Clear the kern_invar hash for the new session
         result = session_load(fname);
         free(fname);
         log_enable();
@@ -296,6 +298,8 @@ int playRun(char *fname)
         log_begin("Loading from %s...", fname);
         log_flush();
         log_disable();
+
+	kern_intvar_init();  // SAM: Clear the kern_invar hash for the new session
 
 	session_load(fname);
 

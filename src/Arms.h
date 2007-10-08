@@ -44,6 +44,7 @@ class ArmsType:public ObjectType {
 			char *damage_dice,
 			char *armor_dice,
 			int reqActPts,
+		 int AP_mod,
 			bool thrown,
 			bool ubiquitousAmmo,
 			sound_t *fireSound,
@@ -85,6 +86,7 @@ class ArmsType:public ObjectType {
 	virtual int modifyDexAttack(int dexBonus);
 	virtual int modifyDamageBonus(int damBonus);
 	virtual float modifyAvoidBonus(float avoidBonus);
+	virtual int get_AP_mod(void);
       
 	
       protected:
@@ -92,6 +94,7 @@ class ArmsType:public ObjectType {
 	int numHands;
 	int range;
 	int weight;
+	int modifier_to_AP_of_user;
 	bool thrown;
 	bool ubiquitousAmmo;
         char *armorDice;

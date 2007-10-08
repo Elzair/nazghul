@@ -35,6 +35,7 @@
 #include "session.h"
 #include "log.h"
 #include "factions.h"
+#include "kern_intvar.h"
 
 #ifndef CONFIG_DIAGONAL_MOVEMENT
 #define CONFIG_DIAGONAL_MOVEMENT 1
@@ -612,33 +613,59 @@ static void ctrl_attack_ui(class Character *character)
 
         // Loop over all readied weapons
         int armsIndex=0;
-        int tempAP;
-        int totalAP=0;
-        int firstAP=0;
+	int this_is_nth_attack = 1;
+        int this_wpn_AP;
         for (weapon = character->enumerateWeapons(&armsIndex); weapon != NULL; 
              weapon = character->getNextWeapon(&armsIndex)) {
-
-                struct nearest_hostile_info info;
+	    struct nearest_hostile_info info;
                 				
                 // prompt the user
                 cmdwin_clear();
                 cmdwin_spush("Attack");
 
+		// Determine AP for this (potential) attack,
+		// as a discount may be applied for dual weapon attacks and such,
+		// and we need the discounted figure to display in the UI:
+                this_wpn_AP = weapon->getRequiredActionPoints();
+		if (this_is_nth_attack ==  1) {
+		    // 1st weapon attack (usual case), no AP cost adjustments
+		}
+		else if (this_is_nth_attack == 2) {
+		    // 2nd weapon attack (dual weapon, 2nd weapon)
+		    int mult = kern_intvar_get("AP_MULT12:second_wpn_attack");
+		    this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
+		}
+		else if (this_is_nth_attack >= 3) {
+		    // 3rd+ weapon attack (unusual case for multi-limbed beings...)
+		    int mult = kern_intvar_get("AP_MULT12:third_plus_wpn_attack");
+		    this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
+		}
+
+		//log_msg("DEBUG: wpn = %s (AP=%d-->%d), remaining AP=%d\n", 
+		//	weapon->getName(), weapon->getRequiredActionPoints(), this_wpn_AP,
+		//	character->getActionPoints() );
+
                 if (weapon->isMissileWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_spush("%s (range %d, %d ammo)", 
-                                     weapon->getName(), weapon->getRange(), 
+                        cmdwin_spush("%s (%d AP, range %d, %d ammo)", 
+                                     weapon->getName(), 
+				     this_wpn_AP,
+				     weapon->getRange(), 
                                      character->hasAmmo(weapon));
                 }
                 else if (weapon->isThrownWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_spush("%s (range %d, %d left)",
-                                     weapon->getName(), weapon->getRange(), 
+                        cmdwin_spush("%s ($d AP, range %d, %d left)",
+                                     weapon->getName(), 
+				     this_wpn_AP,
+				     weapon->getRange(), 
                                      character->hasAmmo(weapon));
                 }
                 else {
-                        cmdwin_spush("%s (reach %d)", 
-                                     weapon->getName(), weapon->getRange() );
+                        cmdwin_spush("%s (%d AP, reach %d)", 
+                                     weapon->getName(), 
+				     this_wpn_AP,
+				     weapon->getRange() );
                 }
 
 
@@ -731,9 +758,10 @@ static void ctrl_attack_ui(class Character *character)
                                   , weapon->getName()
                                 );
 				
-								int misx = x;
-								int misy = y;
-								
+			int misx = x;
+			int misy = y;
+			
+			this_is_nth_attack++;					
                         bool miss = ! weapon->fire(character->getPlace(), 
                                      character->getX(), 
                                      character->getY(), 
@@ -745,7 +773,7 @@ static void ctrl_attack_ui(class Character *character)
 	                        log_end("obstructed!");
                         }
                                      
-                        weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,-1);                                     
+                        weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,-1);
                                      
                         ctrl_attack_done(character, weapon, NULL);
 
@@ -769,6 +797,7 @@ static void ctrl_attack_ui(class Character *character)
                          * the next weapon if no target is in range and they
                          * aren't interested in attacking the ground. */
                         cmdwin_spush("skip weapon!");
+			// no attack made, so don't increment this_is_nth_attack
                         continue;
                 } else {
                         // confirmed_attack_ally:
@@ -796,6 +825,7 @@ static void ctrl_attack_ui(class Character *character)
                         }
 
                         // Strike the target
+			this_is_nth_attack++;
                         ctrl_do_attack(character, weapon, target, character->getToHitPenalty());
 
                         // If we hit a party member then show their new hit
@@ -803,15 +833,6 @@ static void ctrl_attack_ui(class Character *character)
                         if (target->isPlayerControlled())
                                 statusRepaint();
                 }
-                
-                                
-                //sum up AP requirement
-                tempAP = weapon->getRequiredActionPoints();
-                if (tempAP > firstAP)
-                {
-	              	firstAP = tempAP;  
-                }
-                totalAP += tempAP;
 
                 /* Warn the user if out of ammo. Originally this code used
                  * character->getCurrentWeapon() instead of weapon, that may
@@ -820,10 +841,11 @@ static void ctrl_attack_ui(class Character *character)
                 if (! character->hasAmmo(weapon))
                         log_msg("%s : %s now out of ammo\n", 
                                      character->getName(), weapon->getName());
+                                
+		character->decActionPoints(this_wpn_AP);
+		//log_msg("DEBUG: after attack, used %d, remaining AP=%d\n", 
+		//	this_wpn_AP, character->getActionPoints() );
         }
-        
-        character->decActionPoints((totalAP+firstAP)/2);
-        
         
 }
 
@@ -1368,13 +1390,16 @@ static bool ctrl_attack_target(class Character *character,
                                          character->getX(), character->getY(), 
                                          target->getX(), target->getY());
 
-		int armsIndex=0;
-		int firstAP=0;
-		int totalAP=0;
-		int tempAP;
-        for (class ArmsType * weapon = character->enumerateWeapons(&armsIndex); 
+		int armsIndex = 0;
+		int this_is_nth_attack = 0;
+		int slowest_attack_AP = 0;
+		int total_AP = 0;
+		int this_wpn_AP;
+        for (class ArmsType * weapon = character->enumerateWeapons(&armsIndex);
              weapon != NULL; weapon = character->getNextWeapon(&armsIndex)) {
 
+	    // log_msg("DEBUG: wpn = %s (AP=%d), remaining AP=%d\n",
+	    //         weapon->getName(), weapon->getRequiredActionPoints(), character->getActionPoints() );
                 if (distance > weapon->getRange()) {
                         continue;
                 }
@@ -1388,28 +1413,47 @@ static bool ctrl_attack_target(class Character *character,
                         continue;
                 }
 
+		this_is_nth_attack++;
                 ctrl_do_attack(character, weapon, target, character->getToHitPenalty());
                 
-                //sum up AP requirement
-                tempAP = weapon->getRequiredActionPoints();
-                if (tempAP > firstAP)
+                // sum up AP requirement
+                this_wpn_AP = weapon->getRequiredActionPoints();
+                if (this_wpn_AP > slowest_attack_AP)
                 {
-	              	firstAP = tempAP;  
+	              	slowest_attack_AP = this_wpn_AP;
                 }
-                totalAP += tempAP;
+                total_AP += this_wpn_AP;
                 attacked = true;
-                
+
+		if (this_is_nth_attack == 1) {
+		    // 1st weapon attack (usual case)
+		}
+		else if (this_is_nth_attack == 2) {
+		    // 2st weapon attack (dual weapon, 2nd weapon)
+		    int mult = kern_intvar_get("AP_MULT12:second_wpn_attack");
+		    this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
+		}
+		else if (this_is_nth_attack >= 3) {
+		    // 3rd+ weapon attack (unusual case for multi-limbed beings...)
+		    int mult = kern_intvar_get("AP_MULT12:third_plus_wpn_attack");
+		    this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
+		}
+		character->decActionPoints(this_wpn_AP);
+		//log_msg("DEBUG: after attack, used %d, remaining AP=%d\n",
+                //        this_wpn_AP, character->getActionPoints() );
                 statusRepaint();
 
                 if (target->isDead())
                         break;
 
-                //continue if havent used a turn and a half
-                if (2 * character->getActionPoints() + NAZGHUL_BASE_ACTION_POINTS < firstAP + totalAP)
-                        break;
-        }
-
-        character->decActionPoints((totalAP+firstAP)/2);
+		// If the AP use is not over the multi-weapon extra allowance, continue:
+		int threshold = kern_intvar_get("AP_THRESHOLD:multi_attack_overage");
+		if (character->getActionPoints() + threshold < 0) {
+		    //log_msg("DEBUG: AP = %d, threshold = %d -- breaking multi-attack\n",
+		    //    character->getActionPoints(), threshold );
+		    break;
+		}
+	}
         
         if (character->needToRearm())
                 character->armThyself();

@@ -50,6 +50,7 @@
 #include "mmode.h"
 #include "log.h"
 #include "factions.h"
+#include "kern_intvar.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -253,7 +254,7 @@ Character::Character():hm(0), xp(0), order(-1),
                        ac(0), 
                        str(0), intl(0),
                        dex(0), mana(0),
-		       AP_per_round(NAZGHUL_BASE_ACTION_POINTS),
+		       AP_per_round(kern_intvar_get("AP_TOTAL:normal_human")),
 		       lvl(0),
                        playerControlled(true), solo(false),
                        target(NULL),
@@ -1903,9 +1904,26 @@ int Character::getVisionRadius() {
 int Character::getSpeed() {
     // Returns the character-specific number of 
     // Action Points per round for this character.
+
+    int total_AP;
+    int AP_modifier_from_equipped_items = 0;
+
     if (AP_per_round > 0)
-    	return AP_per_round;
-    return species->spd;
+    	total_AP = AP_per_round;
+    else
+	total_AP = species->spd;
+
+    int armsIndex = 0;
+    for (class ArmsType * arms = enumerateArms(&armsIndex); arms != NULL; 
+	 arms = getNextArms(&armsIndex)) {
+	AP_modifier_from_equipped_items += arms->get_AP_mod();
+    }
+    total_AP += AP_modifier_from_equipped_items;
+
+    if (total_AP < 1)
+	total_AP = 1; // SAM: perhaps revisit this...
+
+    return total_AP;
 }
 
 int Character::setSpeed(int val) {

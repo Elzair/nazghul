@@ -68,6 +68,7 @@
 #include "factions.h"
 #include "cmdwin.h"
 #include "cfg.h"
+#include "kern_intvar.h"  // SAM
 #include "menus.h"
 #include "file.h"
 #include "skill.h"
@@ -1375,7 +1376,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         sound_t *fire_sound;
         int slots, hands, range, weight;
         char *hit, *defend, *damage, *armor;
-        int rap, thrown, ubiq;
+        int rap, AP_mod, thrown, ubiq;
         struct sprite *sprite;
         class MissileType *missile;
         class ObjectType *ammo;
@@ -1389,12 +1390,12 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
 		  struct mmode *mmode;
 		
 
-        if (unpack(sc, &args, "yspssssddddppbbdpdodddrp",
+        if (unpack(sc, &args, "yspssssdddddppbbdpdodddrp",
         					&tag, 
         					&name, 
         					&sprite, 
                    	&hit, &damage, &armor, &defend,
-                   	&slots, &hands, &range, &rap,
+		   &slots, &hands, &range, &rap, &AP_mod, 
                    	&missile, &ammo,
                    	&thrown, &ubiq,
                    	&weight, 
@@ -1434,7 +1435,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
 
         arms = new ArmsType(tag, name, sprite, slots, hit, defend, hands, 
                             range,
-                            weight, damage, armor, rap, thrown, ubiq,
+                            weight, damage, armor, rap, AP_mod, thrown, ubiq,
                             fire_sound, missile, ammo, str_attack_mod, dex_attack_mod,
 							char_damage_mod, char_avoid_mod, false);
 													
@@ -7673,6 +7674,37 @@ KERN_API_CALL(kern_char_set_intelligence)
         return scm_mk_ptr(sc, character);
 }
 
+KERN_API_CALL(kern_char_get_speed)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-speed");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getSpeed());
+}
+
+KERN_API_CALL(kern_char_set_speed)
+{
+        class Character *character;
+        int val = 0;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-set-speed");
+        if (!character)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-set-speed: bad args");
+                return sc->NIL;
+        }
+
+	character->setSpeed(val);
+        return scm_mk_ptr(sc, character);
+}
+
 KERN_API_CALL(kern_obj_get_ap)
 {
         class Object *object;
@@ -8690,6 +8722,35 @@ KERN_API_CALL(kern_cfg_get)
         return scm_mk_string(sc, cfg_get(key));
 }
 
+KERN_API_CALL(kern_set_kern_intvar)
+{
+        char *key;
+	int   value;
+
+        while (scm_is_pair(sc, args)) {
+                if (unpack(sc, &args, "sd", &key, &value)) {
+                        rt_err("kern-set-kern-intvar: bad args");
+                        return sc->NIL;
+                }
+		kern_intvar_set(key, value);
+        }
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_get_kern_intvar)
+{
+    char *key;
+    int   value;
+
+        if (unpack(sc, &args, "s", &key)) {
+                rt_err("kern_get_kern_intvar: bad args");
+                return sc->NIL;
+        }
+        value = kern_intvar_get(key);
+
+        return scm_mk_integer(sc, value);
+}
+
 KERN_API_CALL(kern_add_save_game)
 {
         char *fname;
@@ -8909,12 +8970,17 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-readied-weapons", 
                  kern_char_get_readied_weapons);
         API_DECL(sc, "kern-char-get-species", kern_char_get_species);
+
         API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
         API_DECL(sc, "kern-char-get-dexterity", kern_char_get_dexterity);
         API_DECL(sc, "kern-char-get-intelligence", kern_char_get_intelligence);
         API_DECL(sc, "kern-char-get-base-strength", kern_char_get_base_strength);
         API_DECL(sc, "kern-char-get-base-dexterity", kern_char_get_base_dexterity);
         API_DECL(sc, "kern-char-get-base-intelligence", kern_char_get_base_intelligence);
+
+        API_DECL(sc, "kern-char-set-speed", kern_char_set_speed);
+        API_DECL(sc, "kern-char-get-speed", kern_char_get_speed);
+
         API_DECL(sc, "kern-char-set-strength", kern_char_set_strength);
         API_DECL(sc, "kern-char-set-dexterity", kern_char_set_dexterity);
         API_DECL(sc, "kern-char-set-intelligence", kern_char_set_intelligence);
@@ -9237,6 +9303,10 @@ scheme *kern_init(void)
         /* kern-cfg api */
         API_DECL(sc, "kern-cfg-set", kern_cfg_set);
         API_DECL(sc, "kern-cfg-get", kern_cfg_get);
+
+        API_DECL(sc, "kern-set-kern-intvar", kern_set_kern_intvar);
+        API_DECL(sc, "kern-get-kern-intvar", kern_get_kern_intvar);
+
 
         /* kern-image api */
         API_DECL(sc, "kern-image-load", kern_image_load);
