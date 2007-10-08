@@ -54,7 +54,7 @@
                     level  ;; level
                     level  ;; mana cost
                     context 
-                    (/ (* (+ level 1) norm) 2) ;; action point cost
+                    (/ (* (+ level 1) base-spell-ap) 2) ;; action point cost
                     sprite ;; sprite (FIXME)
                     reagents
                     )))

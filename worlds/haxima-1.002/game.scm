@@ -18,9 +18,12 @@
 
 (define speed-human            24)  ;; typical AP/round for humans
 
+(define base-move-ap			6)  ;; this may not bear a neat relationship to speed-human
 (define default-weapon-rap      9)  ;; this may not bear a neat relationship to speed-human
-(define default-armour-apmod           1)  ;; this may not bear a neat relationship to speed-human
-(define base-skill-ap			6)  ;; this may not bear a neat relationship to speed-human
+(define default-armour-apmod    1)  ;; this may not bear a neat relationship to speed-human
+
+(define base-skill-ap			base-move-ap)  ;; this may not bear a neat relationship to speed-human
+(define base-spell-ap			base-move-ap)  ;; this may not bear a neat relationship to speed-human
 
 ;; AP costs of various actions which the kernal needs to know about:
 (kern-set-kern-intvar "AP_TOTAL:normal_human"    speed-human)
@@ -89,12 +92,12 @@
 ;; Passability Difficulty Levels 
 ;;   (Note: 255 is well-known to the kernel to mean
 ;;   "impassible" in the case of movement costs)
-(define fast        (* 0.66 speed-human))  ;; 0.66 (2/3)
-(define s-fast      (* 0.8 speed-human))  ;; 'slightly fast' 0.8
-(define norm        speed-human)  ;; 1.0
-(define s-hard      (* 1.5 speed-human))  ;; 1.5
-(define hard       (* 2 speed-human))  ;; 2.0
-(define v-hard     (* 3 speed-human))  ;; 3.0
+(define fast        (* 0.66 base-move-ap))  ;; 0.66 (2/3)
+(define s-fast      (* 0.8 base-move-ap))  ;; 'slightly fast' 0.8
+(define norm        base-move-ap)  ;; 1.0
+(define s-hard      (* 1.5 base-move-ap))  ;; 1.5
+(define hard       (* 2 base-move-ap))  ;; 2.0
+(define v-hard     (* 3 base-move-ap))  ;; 3.0
 
 (define no-drop    100)  ;; special, used for dropability (not related to speed-human)
 (define cant      255)  ;; special

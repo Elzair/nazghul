@@ -89,8 +89,14 @@
 ;;                <list-of-required-tools>
 ;;                <list-of-required-consumables>)
 
+(define (mk-skill name description relative-ap-cost mp-cost use-in-wilderness
+					is-passive yusage-proc yusage-special-check-proc list-of-required-tools list-of-required-consumables)
+		(kern-mk-skill name description (* base-skill-ap relative-ap-cost) mp-cost use-in-wilderness
+					is-passive yusage-proc yusage-special-check-proc list-of-required-tools list-of-required-consumables))
+					
+
 (define sk_unlock 
-  (kern-mk-skill "Unlock" "Unlock a door with a picklock"
+  (mk-skill "Unlock" "Unlock a door with a picklock"
                  1 2 #f #f
                  'skill-unlock nil 
                  (list t_picklock) 
@@ -98,35 +104,35 @@
                  ))
 
 (define sk_jump
-  (kern-mk-skill "Jump" "Jump over impassable terrain"
+  (mk-skill "Jump" "Jump over impassable terrain"
                  2 1 #f #f
                  'skill-jump nil
                  nil
                  nil))
 
 (define sk_detect_trap
-  (kern-mk-skill "Detect Trap" "Check if a door or chest is trapped"
+  (mk-skill "Detect Trap" "Check if a door or chest is trapped"
                  2 2 #f #f
                  'skill-detect-trap nil
                  nil
                  nil))
 
 (define sk_arm_trap
-  (kern-mk-skill "Arm Trap" "Allows character to use beartraps and caltrops"
+  (mk-skill "Arm Trap" "Allows character to use beartraps and caltrops"
                  2 2 #f #t
                  nil nil
                  nil
                  nil))
 
 (define sk_sprint
-  (kern-mk-skill "Sprint" "Move quickly, in a straight line, for a short distance"
+  (mk-skill "Sprint" "Move quickly, in a straight line, for a short distance"
                  1 1 #f #f
                  'skill-sprint
-                 nil
+                 nil nil nil
                  nil))
 
 (define sk_wriggle
-  (kern-mk-skill "Wriggle" "Squeeze through tight spots"
+  (mk-skill "Wriggle" "Squeeze through tight spots"
                  1              ;; ap
                  1              ;; mp
                  #f             ;; wilderness?
@@ -139,7 +145,7 @@
 
 (define sk_disarm_trap
   ;; fixme: should some special tools be required?
-  (kern-mk-skill "Disarm Trap" "Disarm a trap on a door or chest"
+  (mk-skill "Disarm Trap" "Disarm a trap on a door or chest"
                  1              ;; ap
                  1              ;; mp
                  #f             ;; wilderness?
@@ -151,7 +157,7 @@
                  ))
 
 (define sk_stealth
-  (kern-mk-skill "Stealth" "Avoid detection"
+  (mk-skill "Stealth" "Avoid detection"
                  1              ;; ap
                  1              ;; mp
                  #f             ;; wilderness?
@@ -163,7 +169,7 @@
                  ))
 
 (define sk_reach
-  (kern-mk-skill "Reach" "Handle objects more than one tile away"
+  (mk-skill "Reach" "Handle objects more than one tile away"
                  1              ;; ap
                  1              ;; mp
                  #f             ;; wilderness?
