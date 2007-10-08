@@ -14,30 +14,38 @@
 (define slot-boot             32)
 (define slot-helm             64)
 
-;; AP costs of various actions which the kernal needs to know about:
-(kern-set-kern-intvar "AP_TOTAL:normal_human"    24)
+;; Speeds  ;; TODO: move most of these into kern-intvars ?
 
-(kern-set-kern-intvar "AP_COST:default"           6)
-(kern-set-kern-intvar "AP_COST:search"           18)
-(kern-set-kern-intvar "AP_COST:get_item"          3)
-(kern-set-kern-intvar "AP_COST:drop_item"         3)
-(kern-set-kern-intvar "AP_COST:open_mechanism"    9)
-(kern-set-kern-intvar "AP_COST:open_container"    9)
-(kern-set-kern-intvar "AP_COST:handle_mechanism" 12)
-(kern-set-kern-intvar "AP_COST:use_item"          6)  ;; may be unused, per comment in cmd.c cmdUse()
+(define speed-human            24)  ;; typical AP/round for humans
+
+(define default-weapon-rap      9)  ;; this may not bear a neat relationship to speed-human
+(define default-armour-apmod           1)  ;; this may not bear a neat relationship to speed-human
+
+
+;; AP costs of various actions which the kernal needs to know about:
+(kern-set-kern-intvar "AP_TOTAL:normal_human"    speed-human)
+
+(kern-set-kern-intvar "AP_COST:default"           speed-human)
+(kern-set-kern-intvar "AP_COST:search"           (* 3 speed-human))
+(kern-set-kern-intvar "AP_COST:get_item"          (* 0.34 speed-human))
+(kern-set-kern-intvar "AP_COST:drop_item"         (* 0.34 speed-human))
+(kern-set-kern-intvar "AP_COST:open_mechanism"    speed-human)
+(kern-set-kern-intvar "AP_COST:open_container"    speed-human)
+(kern-set-kern-intvar "AP_COST:handle_mechanism"  speed-human)
+(kern-set-kern-intvar "AP_COST:use_item"          speed-human)  ;; may be unused, per comment in cmd.c cmdUse()
 
 ;; Normal mixing: 18 + (num_mixed * 12) + (spell_level * 12) AP
-(kern-set-kern-intvar "AP_COST:mix_reagents_base"         18)
-(kern-set-kern-intvar "AP_COST:mix_reagents_per_mix"      12)
-(kern-set-kern-intvar "AP_COST:mix_reagents_per_level"    12)
+(kern-set-kern-intvar "AP_COST:mix_reagents_base"         (* 3 speed-human))
+(kern-set-kern-intvar "AP_COST:mix_reagents_per_mix"      (* 2 speed-human))
+(kern-set-kern-intvar "AP_COST:mix_reagents_per_level"    (* 2 speed-human))
 ;; Attempt at non-existent spell: 3d18+6 AP
 (kern-set-kern-intvar "AP_COST:mix_reagents_nospell_num"   3)
-(kern-set-kern-intvar "AP_COST:mix_reagents_nospell_dice" 18)
-(kern-set-kern-intvar "AP_COST:mix_reagents_nospell_plus"  6)
+(kern-set-kern-intvar "AP_COST:mix_reagents_nospell_dice" (* 3 speed-human))
+(kern-set-kern-intvar "AP_COST:mix_reagents_nospell_plus"  speed-human)
 ;; Missing or additional ingredients: (2 * spell_level)d18+18 AP
 (kern-set-kern-intvar "AP_COST:mix_reagents_badmix_num"    2)  ;; times spell Level
-(kern-set-kern-intvar "AP_COST:mix_reagents_badmix_dice"  18)
-(kern-set-kern-intvar "AP_COST:mix_reagents_badmix_plus"  18)
+(kern-set-kern-intvar "AP_COST:mix_reagents_badmix_dice"  (* 3 speed-human))
+(kern-set-kern-intvar "AP_COST:mix_reagents_badmix_plus"  (* 3 speed-human))
 
 ;; These values are used by ctrl.c ctrl_attack_target() 
 ;; to adjust weapon AP costs in the event of dual wielding.
@@ -46,43 +54,22 @@
 (kern-set-kern-intvar "AP_MULT12:third_plus_wpn_attack"   6)  ;; AP cost * 6/12 for 3rd+ weapon attacks, if 3+ weapons used
 (kern-set-kern-intvar "AP_THRESHOLD:multi_attack_overage" 0)  ;; attack sequence can continue if AP overage is not > 0
 
-
-
-
-;; Speeds  ;; TODO: move most of these into kern-intvars ?
-(define speed-human            24)  ;; typical AP/round for humans
-(define speed-human-unarmored  24)  ;; unencumbered, optimized for speed
-(define speed-human-med-armor  18)  ;; moderate protection, typical gear
-(define speed-human-hvy-armor  12)  ;; heavy protection, rather slow
-
-(define speed-yellow-slime      5)  ;; 
-(define speed-insect           12)  ;; 
-
-(define speed-ship              8)  ;; 
-
-;; These values are from the old 50 AP -based scheme...
-;(define speed-human            150)  ;; typical AP/round for humans
-;(define speed-human-unarmored  200)  ;; unencumbered, optimized for speed
-;(define speed-human-med-armor  150)  ;; moderate protection, typical gear
-;(define speed-human-hvy-armor  100)  ;; heavy protection, rather slow
-; 
-;(define speed-yellow-slime      40)  ;; 
-;(define speed-insect           100)  ;; 
-; 
-;(define speed-ship              65)  ;; 
-
+;; ship speeds are better handled using mmodes/pclasses-
+;; it should only affect actual movement
+(define speed-ship            speed-human)  
 
 ;; Action Point costs for various basic actions:
-(define ap-for-1H-melee-attack   9)
-(define ap-for-2H-melee-attack  12)
+;; are these used anywhere?
+;;(define ap-for-1H-melee-attack   9)
+;;(define ap-for-2H-melee-attack  12)
 
-(define ap-for-1H-thrown-attack 12)
-(define ap-for-2H-thrown-attack 18)
+;;(define ap-for-1H-thrown-attack 12)
+;;(define ap-for-2H-thrown-attack 18)
 
-(define ap-for-shooting-attack  12)
+;;(define ap-for-shooting-attack  12)
 
-(define ap-for-combat-spell      9)
-(define ap-to-use-scroll        12)
+;;(define ap-for-combat-spell      9)
+;;(define ap-to-use-scroll        12)
 
 
 ;; Difficulty Classes
@@ -102,14 +89,14 @@
 ;; Passability Difficulty Levels 
 ;;   (Note: 255 is well-known to the kernel to mean
 ;;   "impassible" in the case of movement costs)
-(define s-fast      3)  ;; 0.5  (1/2)
-(define fast        4)  ;; 0.66 (2/3)
-(define norm        6)  ;; 1.0
-(define s-hard      9)  ;; 1.5
-(define hard       12)  ;; 2.0
-(define v-hard     18)  ;; 3.0
+(define fast        (* 0.66 speed-human))  ;; 0.66 (2/3)
+(define s-fast      (* 0.8 speed-human))  ;; 'slightly fast' 0.8
+(define norm        speed-human)  ;; 1.0
+(define s-hard      (* 1.5 speed-human))  ;; 1.5
+(define hard       (* 2 speed-human))  ;; 2.0
+(define v-hard     (* 3 speed-human))  ;; 3.0
 
-(define no-drop    12)  ;; special, used for terrains such as chasms
+(define no-drop    100)  ;; special, used for dropability (not related to speed-human)
 (define cant      255)  ;; special
 
 ;(define norm       50)  ;; 1.0
@@ -180,7 +167,7 @@
 	;;	walk	hover	ship	phase	fly	skiff	fish	crawl	vship	rangr	none	wrigl	missl	f_fly	f_run	f_crawl	sml_obj	lrg_obj	fields	return	cannon		
 	(list	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	)	;; none
 	(list	norm	norm	cant	norm	norm	cant	cant	norm	cant	norm	cant	norm	0	fast	fast	fast	norm	norm	norm	0	0	)	;; grass/paving
-	(list	cant	cant	norm	cant	norm	v-hard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; deep
+	(list	cant	cant	s-fast	cant	norm	v-hard	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; deep
 	(list	cant	s-hard	cant	cant	norm	norm	norm	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; shoals
 	(list	cant	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	95	s-fast	cant	cant	no-drop	no-drop	cant	0	90	)	;; mountains
 	(list	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	cant	100	cant	cant	cant	cant	cant	cant	0	100	)	;; wall (w/ ceiling)
@@ -191,12 +178,12 @@
 	(list	cant	cant	cant	cant	norm	cant	cant	cant	norm	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; space
 	(list	cant	norm	cant	norm	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	norm	0	4	)	;; boulder
 	(list	cant	hard	cant	cant	norm	cant	cant	hard	cant	cant	cant	hard	10	fast	cant	norm	norm	norm	no-drop	0	4	)	;; waterboulder
-	(list	cant	norm	v-hard	cant	norm	v-hard	v-hard	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; sludge
+	(list	cant	norm	hard	cant	norm	v-hard	v-hard	cant	cant	cant	cant	cant	0	fast	cant	cant	cant	cant	no-drop	0	0	)	;; sludge
 	(list	s-hard	norm	cant	norm	norm	norm	norm	s-hard	cant	norm	cant	cant	0	fast	norm	norm	cant	cant	no-drop	0	0	)	;; shallow sludge
 	(list	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	v-hard	7	cant	cant	cant	norm	no-drop	norm	0	7	)	;; bars (eg portcullis)
 	(list	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	cant	30	cant	cant	cant	no-drop	no-drop	no-drop	0	25	)	;; window
 	(list	cant	cant	cant	cant	s-hard	cant	cant	cant	cant	cant	cant	cant	30	s-fast	cant	cant	no-drop	no-drop	no-drop	0	10	)	;; passlos mountains
-	(list	cant	v-hard	norm	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; float
+	(list	cant	v-hard	s-fast	cant	norm	cant	norm	cant	cant	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; float
 	(list	cant	hard	cant	cant	norm	hard	cant	cant	norm	cant	cant	cant	norm	norm	cant	cant	cant	cant	norm	norm	norm	)	;; fly
 )
 ;; Note that pclass 'missl' is using the value as a percentage chance 
