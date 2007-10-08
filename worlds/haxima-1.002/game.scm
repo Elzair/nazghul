@@ -20,7 +20,7 @@
 
 (define default-weapon-rap      9)  ;; this may not bear a neat relationship to speed-human
 (define default-armour-apmod           1)  ;; this may not bear a neat relationship to speed-human
-
+(define base-skill-ap			6)  ;; this may not bear a neat relationship to speed-human
 
 ;; AP costs of various actions which the kernal needs to know about:
 (kern-set-kern-intvar "AP_TOTAL:normal_human"    speed-human)
