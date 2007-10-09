@@ -141,6 +141,11 @@ void sound_play(sound_t *sound, int volume)
 
 	/* Look for an empty (or finished) sound slot */
 	for (index = 0; index < NUM_SOUNDS; ++index) {
+		if (active_sounds[index].sound == sound)
+		{
+			// dont repeat playing a sound
+			return;
+		}
 		if (! active_sounds[index].sound) {
                         active = &active_sounds[index];
 			break;
