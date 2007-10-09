@@ -547,8 +547,9 @@ void Object::relocate(struct place *newplace, int newx, int newy, int flags,
                 distance = place_flying_distance(foc_place, foc_x, foc_y, 
                                                  getX(), getY());
                 if (distance > 1)
-                        volume /= (distance/2);
-                sound_play(get_movement_sound(), volume);
+                        volume = (volume * (20 - distance))/20;
+                if (volume > 0)
+                	sound_play(get_movement_sound(), volume);
         }
 
         // If the camera is attached to this object then update it to focus on
