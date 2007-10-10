@@ -1462,7 +1462,7 @@ static int inchar(scheme *sc) {
   c=basic_inchar(pt);
   if(c==EOF && sc->inport==sc->loadport && sc->file_i!=0) {
     file_pop(sc);
-    if(sc->nesting!=0) {
+    if(sc->nesting!=0 || sc->tok==TOK_COMMENT) {
       return EOF;
     }
     goto again;
