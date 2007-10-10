@@ -100,6 +100,9 @@ static struct map {
         Uint32 last_repaint;
         class Object *selected; /* selected object -- don't shade the tile it's
                                  * on */
+
+        /* FIXME: why is this dynamically allocated when we're using
+         * MAX_LIGHTS? */
         struct light_source *lights;
         unsigned char *lmap;
         unsigned char *tmp_lmap;
@@ -293,6 +296,12 @@ static void mapDumpRect(char *name, SDL_Rect *rect, unsigned char *data)
 }
 #endif
 
+/**
+ * Given a light source, add its contribution to the light map (Map.lmap).
+ *
+ * @param light is the light source to add
+ * @param main_view is the view containing the light source
+ */
 static void mapMergeLightSource(struct light_source *light, struct mview *main_view)
 {
         int radius;
@@ -366,11 +375,15 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
 
 }
 
+/**
+ * This clears and rebuilds Map.lmap, which is a grid of values indicating how
+ * much light is hitting each tile. The results are used in mapShadeScene to
+ * darken the scene.
+ *
+ * @param view specifies which part of the map to use
+ */
 static void mapBuildLightMap(struct mview *view)
 {
-        //
-        // New lightmap-building code
-        //
         int x;
         int y;
         int lt_i;
@@ -378,37 +391,32 @@ static void mapBuildLightMap(struct mview *view)
         int map_y;
         int ambient_light;
 
-        ambient_light = sky_get_ambient_light(&Session->sky);
 
-        // Initialize the main lightmap to ambient light levels.
+        /* Initialize the main lightmap to ambient light levels. */
+        ambient_light = sky_get_ambient_light(&Session->sky);
         memset(Map.lmap, 
                (Map.place->underground ? UNLIT : ambient_light),
                LMAP_SZ);
 
-        // --------------------------------------------------------------------
-        // Optimization: if we're already getting max light everywhere from the
-        // sun then skip further processing. Building a lightmap usually takes
-        // about 1/3 of the time devoted to rendering.
-        // --------------------------------------------------------------------
-
-        if (! Map.place->underground && 
-            ambient_light == MAX_AMBIENT_LIGHT)
+        /* Optimization: if we're already getting max light everywhere from the
+         * sun then skip further processing. Building a lightmap usually takes
+         * about 1/3 of the time devoted to rendering. */
+        if (! Map.place->underground 
+            && ambient_light == MAX_AMBIENT_LIGHT) {
                 return;
+        }
 
-        // Build the list of light sources visible in the current map viewer
-        // window. (Note: might expand this to see the light from sources
-        // outside the viewer window).
+        /* Build the list of light sources visible in the current map viewer
+         * window. This actually searches outside of the current view to the
+         * entire mview rectangle, so light sources that are just out-of-view
+         * may cast light into the view. */
         lt_i = 0;
 	for (y = 0; y < LMAP_H; y++) {
-		map_y = place_wrap_y(Map.place, 
-                                     view->vrect.y + view->subrect.y + y);
+		map_y = place_wrap_y(Map.place, view->vrect.y + y);
 		for (x = 0; x < LMAP_W; x++) {
 			int light;
 
-			map_x = place_wrap_x(Map.place, 
-                                             view->vrect.x + view->subrect.x + 
-                                             x);
-
+			map_x = place_wrap_x(Map.place, view->vrect.x + x);
 			light = place_get_light(Map.place, map_x, map_y);
 			if (!light)
 				continue;
@@ -420,13 +428,14 @@ static void mapBuildLightMap(struct mview *view)
 		}
 	}
         
-	// Skip further processing if there are no light sources
-        if (!lt_i)
+	/* Skip further processing if there are no light sources */
+        if (!lt_i) {
                 return;
+        }
 
 
-        // For each light source build a lightmap centered on that source and
-        // merge it into the main lightmap.
+        /* For each light source build a lightmap centered on that source and
+         * merge it into the main lightmap. */
         while (lt_i--) {
                 mapMergeLightSource(&Map.lights[lt_i], view);
         }
@@ -979,7 +988,13 @@ static void mapRepaintLatency(void)
         screenUpdate(&Map.latencyRect);
 }
 
-void mapRepaintView(struct mview *view, int flags)
+/**
+ * This is the main paint routine. 
+ *
+ * @param view defines which part of the map to show
+ * @param flags controls controls policies of whether and what to paint
+ */
+static void mapRepaintView(struct mview *view, int flags)
 {
 	int t1, t2, t3, t4, t5, t6, t7, t8;
 
