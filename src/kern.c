@@ -4687,6 +4687,46 @@ KERN_API_CALL(kern_fire_missile)
         return hitTarget ? sc->T : sc->F;
 }
 
+
+KERN_API_CALL(kern_fire_missile_to_max)
+{
+        MissileType *missile_type;
+        Missile *missile;
+        struct place *oplace, *dplace;
+        int ox, oy, dx, dy, hitTarget = 0;
+        int range;
+
+        /* Unpack the missile type */
+        if (unpack(sc, &args, "pd", &missile_type, &range)) {
+                rt_err("kern-fire-missile: bad missile type arg");
+                return sc->NIL;
+        }
+        if (! missile_type) {
+                rt_err("kern-fire-missile: null missile type");
+                return sc->NIL;
+        }
+
+        /* Unpack the origin */
+        if (unpack_loc(sc, &args, &oplace, &ox, &oy, "kern-fire-missile"))
+                return sc->NIL;
+
+        /* Unpack the destination */
+        if (unpack_loc(sc, &args, &dplace, &dx, &dy, "kern-fire-missile"))
+                return sc->NIL;
+
+        /* Create the missile */
+        missile = new Missile(missile_type);
+        assert(missile);
+
+        /* Fire the missile */
+        missile->setPlace(dplace);
+        missile->animate(ox, oy, &dx, &dy, 0, range);
+        hitTarget = missile->hitTarget();
+        missile->fireHitLoc(NULL, NULL, oplace,dx,dy,-1);
+        delete missile;
+        return hitTarget ? sc->T : sc->F;
+}
+
 KERN_API_CALL(kern_obj_inc_light)
 {
         int light;
@@ -9192,6 +9232,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-dice-roll", kern_dice_roll);
         API_DECL(sc, "kern-end-game" , kern_end_game);
         API_DECL(sc, "kern-fire-missile", kern_fire_missile);
+        API_DECL(sc, "kern-fire-missile-to-max", kern_fire_missile_to_max);
         API_DECL(sc, "kern-fold-rect", kern_fold_rect);
         API_DECL(sc, "kern-get-distance", kern_get_distance);
         API_DECL(sc, "kern-get-objects-at", kern_get_objects_at);
