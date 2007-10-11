@@ -154,6 +154,14 @@
 (define stunball-ifc (mk-missile-ifc paralyze))
 (define acid-bolt-ifc (mk-missile-ifc apply-acid))
 
+(define lightningbolt-ifc 
+	(ifc '()
+		(method 'enter
+			(lambda (kmissile kplace x y)
+				((car temp-ifc-state) kmissile nil nil kplace x y 0)
+				))
+		))
+
 (define (on-hit-nontarget ktarget loc dam proc)
 	(for-each proc
 		(if (> dam -1)
@@ -394,6 +402,7 @@
    (list 't_mpoison_bolt      "poison bolt"    s_poison_bolt     temp-ifc            mmode-missile  	#f  )
    (list 't_prismatic_bolt    "prismatic bolt" s_prismatic_bolt  prismatic-bolt-ifc  mmode-missile  	#f  )
    (list 't_stunball   			"stun ball" 	  s_lightning    stunball-ifc		 mmode-missile  	#f  )
+   (list 't_lightning_bolt  	"lightning bolt"	s_lightning      lightningbolt-ifc   mmode-missile  	#t  )   
    
    
    (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile  	#f  )

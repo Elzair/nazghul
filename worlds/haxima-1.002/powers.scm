@@ -565,6 +565,43 @@
 				(mkdice 5 power))))
 		(light-apply-new ktarg (+ 400 (* 5 power)))))
 		  
+(define (powers-lightning-range power)
+	(+ 3 (/ power 2.5)))	
+		
+(define (powers-lightning caster ktarg apower)
+	(println "ls")
+	(let ((targets (list nil))
+			(dam (mkdice (floor (+ 1 (/ apower 3))) 4))
+			)
+		(println "tis")
+		(temp-ifc-set 
+			(lambda (kmissile kuser ktarget kplace x y unused)
+				(let (
+							(targchar (get-being-at (mk-loc kplace x y)))
+						)
+					(if (not (null? targchar))
+						(set-car! targets (cons targchar (car targets)))
+					))
+				#t	
+			))
+		(println "kfm")
+		(kern-fire-missile-to-max t_lightning_bolt (powers-lightning-range apower)
+			(kern-obj-get-location caster)
+			ktarg
+		)
+		(println "dam")
+		(println targets)
+		(if (not (null? (car targets)))
+			(map
+				(lambda (zappee)
+					(println zappee)
+					(kern-log-msg (kern-obj-get-name zappee) " shocked!")
+					(kern-obj-inflict-damage zappee "shocked" (kern-dice-roll dam) caster)						
+				)
+				(car targets)
+			))
+	))
+		
 (define (powers-lock caster ktarg power)
 	((kobj-ifc ktarg) 'lock ktarg caster)
 	)

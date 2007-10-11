@@ -385,6 +385,11 @@
 	(powers-protect-vs-poison-all caster caster (occ-ability-whitemagic caster))
 		result-ok)
 
+(define (ort-grav  caster)
+	(cast-ui-ranged-loc powers-lightning caster
+		(powers-lightning-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
+		
 ;;----------------------------------------------------------------------------
 ;; Fifth Circle
 ;;----------------------------------------------------------------------------

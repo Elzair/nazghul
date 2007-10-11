@@ -318,10 +318,10 @@
 (mk-spell 'in_flam_grav  "In Flam Grav spell"  in-flam-grav  "IFG" 3 context-town s_in_flam_grav (list sulphorous_ash black_pearl spider_silk))
 (mk-spell 'in_nox_grav   "In Nox Grav spell"   in-nox-grav   "ING" 3 context-town s_in_nox_grav (list nightshade black_pearl spider_silk))
 (mk-spell 'in_zu_grav    "In Zu Grav spell"    in-zu-grav    "IZG" 3 context-town s_in_zu_grav (list ginseng black_pearl spider_silk))
-(mk-spell 'vas_flam      "Vas Flam"            vas-flam      "VF"  3 context-town s_vas_flam (list sulphorous_ash black_pearl))
-(mk-spell 'vas_lor       "Vas Lor"             vas-lor       "VL"  3 context-any s_vas_lor (list mandrake sulphorous_ash))
+(mk-spell 'vas_flam      "Vas Flam spell"            vas-flam      "VF"  3 context-town s_vas_flam (list sulphorous_ash black_pearl))
+(mk-spell 'vas_lor       "Vas Lor spell"             vas-lor       "VL"  3 context-any s_vas_lor (list mandrake sulphorous_ash))
 (mk-spell 'in_flam_sanct "In Flam Sanct spell" in-flam-sanct "IFS" 3 context-any s_in_flam_sanct (list garlic sulphorous_ash t_royal_cape))
-(mk-spell 'vas_an_nox    "Vas Na Nox"          vas-an-nox    "VAN" 3 context-any s_vas_an_nox (list mandrake garlic ginseng))
+(mk-spell 'vas_an_nox    "Vas Na Nox spell"          vas-an-nox    "VAN" 3 context-any s_vas_an_nox (list mandrake garlic ginseng))
 
 ;; Fourth Circle
 (mk-spell 'an_grav       "An Grav spell"       an-grav       "AG"  4 context-any s_an_grav (list black_pearl sulphorous_ash))
@@ -332,6 +332,7 @@
 (mk-spell 'wis_quas      "Wis Quas spell"      wis-quas      "WQ"  4 context-any s_wis_quas (list nightshade sulphorous_ash))
 (mk-spell 'bet_por       "Bet Por spell"       bet-por       "BP"  4 context-town  s_bet_por (list black_pearl blood_moss))
 (mk-spell 'vas_sanct_nox  "Vas Sanct Nox spell"  vas-sanct-nox  "VSN" 3 context-any s_vas_sanct_nox (list mandrake nightshade garlic))
+(mk-spell 'ort_grav      "Ort Grav spell"             ort-grav       "OG"  1 context-town s_vas_lor (list black_pearl mandrake sulphorous_ash))
 
 ;; Fifth Circle
 (mk-spell 'in_ex_por   "In Ex Por spell"   in-ex-por   "IEP" 5 context-any  s_in_ex_por (list sulphorous_ash blood_moss))
