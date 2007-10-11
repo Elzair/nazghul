@@ -74,6 +74,7 @@
 
     (list  ".A"   t_a)                  ;; "an A"
     (list  ".B"   t_b)                  ;; "a B"
+    (list  "?B"   t_fake_b)                  ;; "a B"
     (list  ".C"   t_c)                  ;; "a C"
     (list  ".D"   t_d)                  ;; "a D"
     (list  ".E"   t_e)                  ;; "an E"

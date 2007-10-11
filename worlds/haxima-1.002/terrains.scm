@@ -157,6 +157,7 @@
    (list 't_trail_f         "trail"         pclass-grass     s_trail_f           trn 0 nil)
    (list 't_A               "an A"          pclass-wall      s_A                 trn 0 nil)
    (list 't_B               "a B"           pclass-wall      s_B                 trn 0 nil)
+   (list 't_fake_B          "a B"           pclass-forest    s_B                 trn 0 nil)
    (list 't_C               "a C"           pclass-wall      s_C                 trn 0 nil)
    (list 't_D               "a D"           pclass-wall      s_D                 trn 0 nil)
    (list 't_E               "an E"          pclass-wall      s_E                 trn 0 nil)
