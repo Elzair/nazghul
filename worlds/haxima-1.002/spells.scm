@@ -285,6 +285,7 @@
 (mk-sprite 's_in_mani_corp 56)
 (mk-sprite 's_vas_rel_por 57)
 (mk-sprite 's_vas_an_nox 58)
+(mk-sprite 's_ort_grav 59)
 
 ;; ----------------------------------------------------------------------------
 ;; Now rip through the list of spells, adding them to the kernel.
@@ -332,7 +333,7 @@
 (mk-spell 'wis_quas      "Wis Quas spell"      wis-quas      "WQ"  4 context-any s_wis_quas (list nightshade sulphorous_ash))
 (mk-spell 'bet_por       "Bet Por spell"       bet-por       "BP"  4 context-town  s_bet_por (list black_pearl blood_moss))
 (mk-spell 'vas_sanct_nox  "Vas Sanct Nox spell"  vas-sanct-nox  "VSN" 3 context-any s_vas_sanct_nox (list mandrake nightshade garlic))
-(mk-spell 'ort_grav      "Ort Grav spell"             ort-grav       "OG"  1 context-town s_vas_lor (list black_pearl mandrake sulphorous_ash))
+(mk-spell 'ort_grav      "Ort Grav spell"             ort-grav       "OG"  1 context-town s_ort_grav (list black_pearl mandrake sulphorous_ash))
 
 ;; Fifth Circle
 (mk-spell 'in_ex_por   "In Ex Por spell"   in-ex-por   "IEP" 5 context-any  s_in_ex_por (list sulphorous_ash blood_moss))
