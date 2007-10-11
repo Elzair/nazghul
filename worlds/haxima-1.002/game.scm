@@ -18,7 +18,7 @@
 
 (define speed-human            24)  ;; typical AP/round for humans
 
-(define base-move-ap			6)  ;; this may not bear a neat relationship to speed-human
+(define base-move-ap		6)  ;; this may not bear a neat relationship to speed-human
 (define default-weapon-rap      9)  ;; this may not bear a neat relationship to speed-human
 (define default-armour-apmod    1)  ;; this may not bear a neat relationship to speed-human
 
@@ -29,7 +29,7 @@
 (kern-set-kern-intvar "AP_TOTAL:normal_human"    speed-human)
 
 (kern-set-kern-intvar "AP_COST:default"           speed-human)
-(kern-set-kern-intvar "AP_COST:search"           (* 3 speed-human))
+(kern-set-kern-intvar "AP_COST:search"            (* 3 speed-human))
 (kern-set-kern-intvar "AP_COST:get_item"          (* 0.34 speed-human))
 (kern-set-kern-intvar "AP_COST:drop_item"         (* 0.34 speed-human))
 (kern-set-kern-intvar "AP_COST:open_mechanism"    speed-human)

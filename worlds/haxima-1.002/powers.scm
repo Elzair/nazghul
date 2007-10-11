@@ -323,8 +323,8 @@
 (define (powers-cure-poison caster ktarg power)
 	(kern-obj-remove-effect ktarg ef_poison)
 	(if (< (kern-dice-roll "1d25") power)
-		(kern-obj-remove-effect ktarg ef_disease))
-	)
+            (kern-obj-remove-effect ktarg ef_disease))
+	result-ok)
 	
 ;todo currently only checks topmost item
 (define (powers-detect-traps caster ktarg power)

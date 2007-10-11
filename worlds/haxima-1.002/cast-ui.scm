@@ -198,6 +198,18 @@
                            )
    effect caster power))
 
+(define (cast-ui-party-spell effect caster power)
+  (let ((party (kern-char-get-party caster)))
+    (if (null? party) 
+        (effect caster caster power)
+        (foldr (lambda (final-result target)
+                 (let ((result (effect caster target power)))
+                   (if (= result-ok final-result)
+                       final-result
+                       result)))
+               result-no-effect
+               (kern-party-get-members party)))))
+
 ;;----------------------------------------------------------------------------
 ;; First Circle
 ;;----------------------------------------------------------------------------
@@ -329,6 +341,12 @@
 (define (in-nox-sanct caster)
 	(cast-ui-basic-member-spell powers-protect-vs-poison
 			caster (occ-ability-whitemagic caster)))
+
+(define (vas-an-nox caster)
+  (cast-ui-party-spell powers-cure-poison
+                       caster (occ-ability-whitemagic caster)))
+
+
 
 ;;----------------------------------------------------------------------------
 ;; Fourth Circle

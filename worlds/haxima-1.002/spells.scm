@@ -284,6 +284,7 @@
 (mk-sprite 's_kal_xen_corp 55)
 (mk-sprite 's_in_mani_corp 56)
 (mk-sprite 's_vas_rel_por 57)
+(mk-sprite 's_vas_an_nox 58)
 
 ;; ----------------------------------------------------------------------------
 ;; Now rip through the list of spells, adding them to the kernel.
@@ -320,6 +321,7 @@
 (mk-spell 'vas_flam      "Vas Flam"            vas-flam      "VF"  3 context-town s_vas_flam (list sulphorous_ash black_pearl))
 (mk-spell 'vas_lor       "Vas Lor"             vas-lor       "VL"  3 context-any s_vas_lor (list mandrake sulphorous_ash))
 (mk-spell 'in_flam_sanct "In Flam Sanct spell" in-flam-sanct "IFS" 3 context-any s_in_flam_sanct (list garlic sulphorous_ash t_royal_cape))
+(mk-spell 'vas_an_nox    "Vas Na Nox"          vas-an-nox    "VAN" 3 context-any s_vas_an_nox (list mandrake garlic ginseng))
 
 ;; Fourth Circle
 (mk-spell 'an_grav       "An Grav spell"       an-grav       "AG"  4 context-any s_an_grav (list black_pearl sulphorous_ash))
