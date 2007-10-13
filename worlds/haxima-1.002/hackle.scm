@@ -60,7 +60,10 @@
 
 (define (hackle-hail knpc kpc)
   (if (in-player-party? 'ch_mesmeme)
-      (say knpc "[She shrinks back in horror at the sight of Mesmeme] It frightens her!")
+      (begin
+        (say knpc "[She shrinks back in horror at the sight of Mesmeme] AHHH! It frightens her!")
+        (aside kpc 'ch_mesmeme "No frighten.")
+        )
       (say knpc "[You meet a disheveled, middle-aged woman] It comes to her! "
            "It wants something!")
   ))
@@ -101,7 +104,10 @@
 
 ;; misc...
 (define (hackle-mesm knpc kpc)
-  (say knpc "She sees it is only a child! It is deaf and mute to the voice of its own kind!"))
+  (say knpc "It is only a child. Deaf and dumb it is, to its own kind. "
+       "But the pet will make a pet of its master.")
+  (aside kpc 'ch_mesmeme "No pet")
+  )
 
 (define (hackle-shee knpc kpc)
   (say knpc "The sheep hides in wolf's clothing! How it howls when it "
@@ -118,7 +124,9 @@
 
 (define (hackle-gaze knpc kpc)
   (say knpc "If it meets one, it should kill one without question! They know "
-       "the answer to any question, and in the answer lies bondage!"))
+       "the answer to any question, and in the answer lies bondage!")
+  (aside kpc 'ch_mesmeme "[Blinks nervously]")
+)
 
 ;; thief quest...
 (define (hackle-thie knpc kpc)
