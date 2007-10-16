@@ -79,6 +79,7 @@
    (list t_slime_vial         30 "Kal Xen Nox in a bottle! Great for escaping the guards!")
    (list t_arrow               3 "Gotta have lots of arrows!")
    (list t_bolt                3 "Can't have too many bolts!")
+   (list t_smoke_bomb          4 "Make a clean getaway under cover!")
 
    (list t_spiked_helm       300 "Use your head in a fight!")
    (list t_spiked_shield     300 "Rare item! For aggressive fighters!")

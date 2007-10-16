@@ -53,6 +53,7 @@
    
    (list t_arrow               1 "If you've got a bow then you can't have too many arrows.")
    (list t_bolt                1 "I've got the least expensive bolts anywhere around.")
+   (list t_smoke_bomb          3 "Just throw these smoke bombs at enemy archers and they won't be able to see you.")
    
    (list t_shovel             50 "When you find that buried treasure you'll want a shovel to dig it up.")
    (list t_pick               50 "A pick is essential for busting up boulders that block your path.")
