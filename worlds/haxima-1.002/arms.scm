@@ -423,7 +423,9 @@
    (list 't_mpoison_bolt      "poison bolt"    s_poison_bolt     temp-ifc            mmode-missile  	#f  )
    (list 't_prismatic_bolt    "prismatic bolt" s_prismatic_bolt  prismatic-bolt-ifc  mmode-missile  	#f  )
    (list 't_stunball   			"stun ball" 	  s_lightning    stunball-ifc		 mmode-missile  	#f  )
-   (list 't_lightning_bolt  	"lightning bolt"	s_lightning      lightningbolt-ifc   mmode-missile  	#t  )   
+   (list 't_lightning_bolt  	"lightning bolt"	s_lightning      lightningbolt-ifc   mmode-missile  	#t  )  
+   (list 't_magicarrow_p      "arrow"          s_arrow           obj-ifc             mmode-missile  	#f  )
+ 
    
    
    (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile  	#f  )

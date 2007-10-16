@@ -613,7 +613,7 @@
 	(kern-log-msg (kern-obj-get-name kchar)
 			" fires magic missile at "
 			(kern-obj-get-name ktarg))
-	(if (cast-missile-proc kchar ktarg t_arrow)
+	(if (cast-missile-proc kchar ktarg t_magicarrow_p)
 		(let* (
 			(apower 
 				(ceiling (- 
