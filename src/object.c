@@ -588,6 +588,10 @@ void Object::remove()
 			triggerOnTileExit(oldPlace, oldX, oldY, 0);
 		}
 		
+                if (isOpaque()) {
+                        vmask_flush_all();
+                }
+
 		// Note: do NOT call setPlace(NULL) here. When the player party
 		// object is removed from the map it still needs to "know" what
 		// place the members are in.
