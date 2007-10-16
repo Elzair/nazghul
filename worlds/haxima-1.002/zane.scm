@@ -67,7 +67,7 @@
    (list t_long_bow   300 "These are perfect for hunting fast game in the open.")
    (list t_great_bow  700 "The paladin's worst nightmare. This baby will take out armored troops at long range.")
    
-   (list t_arrow        2 "I make these special, put I can part with a quiverful.")
+   (list t_arrow        2 "I make these special, but I can part with a quiverful.")
    (list t_bolt         2 "I make crossbow bolts to trade with town militias.")
    ))
 
