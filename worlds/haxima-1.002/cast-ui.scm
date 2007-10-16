@@ -288,9 +288,12 @@
   (powers-locate caster nil nil)
   result-ok)
 
-(define (kal-xen caster)
-	(powers-summon-snake caster caster (occ-ability-whitemagic caster))
-	result-ok)
+(define (in-bet-xen  caster)
+  (let ((power (occ-ability-whitemagic caster)))
+    (cond ((< power 7) (powers-summon-insect caster caster power))
+          ((< power 8) (powers-summon-rat caster caster power))
+          (else (powers-summon-bat caster caster power)))
+    result-ok))
 
 (define (rel-hur  caster)
   (let ((dir (ui-get-direction)))
@@ -403,10 +406,6 @@
 		caster 1 (occ-ability-whitemagic caster)
 		(mk-ifc-query 'magic-lock)))
 
-(define (in-bet-xen  caster)
-	(powers-summon-insect caster caster (occ-ability-whitemagic caster))
-	result-ok)
-
 (define (in-zu  caster)
         (powers-sleep-area caster caster (occ-ability-blackmagic caster)))
 
@@ -418,6 +417,13 @@
 	(powers-quickness caster caster (occ-ability-whitemagic caster))
 	result-ok)
 	
+
+(define (kal-xen caster)
+  (let ((power (occ-ability-whitemagic caster)))
+    (cond ((< power 9) (powers-summon-snake caster caster power))
+          ((< power 10) (powers-summon-spider caster caster power))
+          (else (powers-summon-wolf caster caster power)))
+    result-ok))
 	
 ;; ----------------------------------------------------------------------------
 ;; Sixth Circle

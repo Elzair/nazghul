@@ -309,7 +309,7 @@
 (mk-spell 'sanct       "Sanct spell"       sanct       "S"   2 context-town s_sanct (list sulphorous_ash spider_silk))
 (mk-spell 'an_xen_corp "An Xen Corp spell" an-xen-corp "AXC" 2 context-town s_an_xen_corp (list garlic sulphorous_ash))
 (mk-spell 'in_wis      "In Wis spell"      in-wis      "IW"  2 context-any  s_in_wis (list nightshade))
-(mk-spell 'kal_xen     "Kal Xen spell"     kal-xen     "KX"  2 context-town s_kal_xen (list spider_silk mandrake))
+(mk-spell 'in_bet_xen  "In Bet Xen spell"  in-bet-xen  "IBX" 2 context-town s_in_bet_xen (list spider_silk blood_moss sulphorous_ash))
 (mk-spell 'rel_hur     "Rel Hur spell"     rel-hur     "RH"  2 context-any  s_rel_hur (list sulphorous_ash blood_moss))
 (mk-spell 'in_nox_por  "In Nox Por spell"  in-nox-por  "INP" 2 context-town s_in_nox_por (list nightshade blood_moss black_pearl))
 (mk-spell 'an_xen_bet  "An Xen Bet spell"  an-xen-bet  "AXB" 2 context-town s_an_xen_bet (list spider_silk garlic))
@@ -338,10 +338,10 @@
 ;; Fifth Circle
 (mk-spell 'in_ex_por   "In Ex Por spell"   in-ex-por   "IEP" 5 context-any  s_in_ex_por (list sulphorous_ash blood_moss))
 (mk-spell 'an_ex_por   "An Ex Por spell"   an-ex-por   "AEP" 5 context-any  s_an_ex_por (list sulphorous_ash blood_moss garlic))
-(mk-spell 'in_bet_xen  "In Bet Xen spell"  in-bet-xen  "IBX" 5 context-town s_in_bet_xen (list spider_silk blood_moss sulphorous_ash))
 (mk-spell 'in_zu       "In Zu spell"       in-zu       "IZ"  5 context-town s_in_zu (list nightshade spider_silk ginseng))
 (mk-spell 'vas_mani    "Vas Mani spell"    vas-mani    "VM"  5 context-any  s_vas_mani (list mandrake spider_silk ginseng))
 (mk-spell 'rel_tym     "Rel Tym spell"     rel-tym     "RT"  5 context-any  s_rel_tym (list sulphorous_ash blood_moss mandrake))
+(mk-spell 'kal_xen     "Kal Xen spell"     kal-xen     "KX"  5 context-town s_kal_xen (list spider_silk mandrake))
 
 ;; Sixth Circle
 (mk-spell 'in_an           "In An spell"           in-an           "IA"   6 context-any  s_in_an (list garlic mandrake sulphorous_ash))

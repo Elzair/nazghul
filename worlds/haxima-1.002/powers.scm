@@ -772,24 +772,48 @@
 	))
 
 ;todo enable remote summoning for high power?
-(define (powers-summon-snake caster ktarg power)
+(define (powers-summon-medium-size caster ktarg power type-tag)
   (let ((spower (floor (+ (/ power 4) 1))))
 	(powers-summon (kern-obj-get-location caster)
 			(kern-dice-roll (mkdice 1 spower))
-			(powers-summon-single-type 'snake)
+			(powers-summon-single-type type-tag)
 			(powers-summon-simple-levelgen power)
 			(kern-being-get-base-faction caster))
 	))	
 
 ;todo enable remote summoning for high power?
-(define (powers-summon-insect caster ktarg power)
+(define (powers-summon-snake caster ktarg power)
+  (powers-summon-medium-size caster ktarg power 'snake))
+
+;todo enable remote summoning for high power?
+(define (powers-summon-spider caster ktarg power)
+  (powers-summon-medium-size caster ktarg power 'giant-spider))
+
+;todo enable remote summoning for high power?
+(define (powers-summon-wolf caster ktarg power)
+  (powers-summon-medium-size caster ktarg power 'wolf))
+
+;todo enable remote summoning for high power?
+(define (powers-summon-small caster ktarg power type-tag)
   (let ((spower (floor (+ (/ power 4) 1))))
 	(powers-summon (kern-obj-get-location caster)
 			(kern-dice-roll (mkdice 2 spower))
-			(powers-summon-single-type 'insect)
+			(powers-summon-single-type type-tag)
 			(powers-summon-simple-levelgen power)
 			(kern-being-get-base-faction caster))
 	))
+
+;todo enable remote summoning for high power?
+(define (powers-summon-insect caster ktarg power)
+  (powers-summon-small caster ktarg power 'insect))
+
+;todo enable remote summoning for high power?
+(define (powers-summon-rat caster ktarg power)
+  (powers-summon-small caster ktarg power 'rat))
+
+;todo enable remote summoning for high power?
+(define (powers-summon-bat caster ktarg power)
+  (powers-summon-small caster ktarg power 'bat))
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-undead caster ktarg power)
