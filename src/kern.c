@@ -5287,7 +5287,7 @@ KERN_API_CALL(kern_place_get_objects)
 /*         struct place *place; */
 /*         int ox;  /\* looker's x *\/ */
 /*         int oy;  /\* looker's y *\/ */
-/*         int rad; /\* looker's rad *\/ */
+/*         int rad; /\* looke r's rad *\/ */
 /*         int vx;  /\* vmask ulc x *\/ */
 /*         int vy;  /\* vmask ulc y *\/ */
 /*         char *vmask; */
@@ -8734,28 +8734,11 @@ KERN_API_CALL(kern_sprite_apply_matrix)
 }
 
 
-#if 0
 KERN_API_CALL(kern_los_invalidate)
 {
-        struct place *place;
-        int x;
-        int y;
-        int w;
-        int h;
-
-        if (unpack_loc(sc, &args, &place, &x, &y, "kern-los-invalidate")) {
-                return sc->NIL;
-        }
-
-        if (unpack(sc, &args, "dd", &w, &h)) {
-                rt_err("kern-los-invalidate: bad args");
-                return sc->NIL;
-        }
-        
-        vmask_invalidate(place, x, y, w, h);
-        return sc->NIL;
+        vmask_flush_all();
+        return sc->T;
 }
-#endif
 
 KERN_API_CALL(kern_cfg_set)
 {
@@ -9266,7 +9249,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-get-total-minutes", kern_get_total_minutes);
         API_DECL(sc, "kern-harm-relations", kern_harm_relations);		
         API_DECL(sc, "kern-in-los?", kern_in_los);
-        /*API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);*/
+        API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);
         API_DECL(sc, "kern-include", kern_include);
         API_DECL(sc, "kern-interp-error", kern_interp_error);
         API_DECL(sc, "kern-is-valid-location?", kern_is_valid_location);
