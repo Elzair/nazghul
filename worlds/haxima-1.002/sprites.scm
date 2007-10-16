@@ -296,6 +296,7 @@
 ;;(kern-mk-sprite 's_magically_locked_solid_wood_door_in_rock   ss_addon 3 59 #f 0 )
 ;;(kern-mk-sprite 's_closed_windowed_wood_door_in_rock          ss_addon 1 68 #f 0 )
 ;;(kern-mk-sprite 's_locked_windowed_wood_door_in_rock          ss_addon 1 69 #f 0 )
+(kern-mk-sprite 's_smoke                                      ss_addon 2 68 #f 0)
 (kern-mk-sprite 's_spider_web                                 ss_addon 1 70 #f 0)
 (kern-mk-sprite 's_corpse                                     ss_addon 1 71 #f 0)
 ;;(kern-mk-sprite 's_magically_locked_windowed_wood_door_in_rock ss_addon 3 76 #f 0 )

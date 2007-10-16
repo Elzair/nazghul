@@ -354,6 +354,27 @@
                           (kern-being-set-base-faction knpc faction-none)
                           (kern-obj-set-temporary knpc #t)
                           (kern-obj-put-at knpc loc))))))))
+
+(define smoke-bomb-ifc
+  (ifc obj-ifc
+       (method 'hit-loc
+               (lambda (kmissile kuser ktarget kplace x y dam)
+                 (define (tryput loc)
+                   (if (terrain-ok-for-field? loc)
+                       (let ((kfield (kern-mk-obj F_smoke 1)))
+                         (kern-obj-set-opacity kfield #t)
+                         (kern-obj-put-at kfield loc))))
+                 (tryput (mk-loc kplace x y))
+                 (tryput (mk-loc kplace (- x 1) y))
+                 (tryput (mk-loc kplace (+ x 1) y))
+                 (tryput (mk-loc kplace x (- y 1)))
+                 (tryput (mk-loc kplace x (+ y 1)))
+                 (tryput (mk-loc kplace (- x 1) (- y 1)))
+                 (tryput (mk-loc kplace (- x 1) (+ y 1)))
+                 (tryput (mk-loc kplace (+ x 1) (- y 1)))
+                 (tryput (mk-loc kplace (+ x 1) (+ y 1)))
+                 (kern-los-invalidate)
+                 ))))
                           
 (define (mk-drop-proj-ifc type-tag prob)
 	(ifc obj-ifc
@@ -407,6 +428,7 @@
    
    (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile  	#f  )
    (list 't_oil_p             "flaming oil"    s_flaming_oil     flaming-oil-ifc     mmode-missile  	#f  )
+   (list 't_smoke_bomb_p      "smoke bomb"     s_flaming_oil     smoke-bomb-ifc      mmode-missile  	#f  )
    (list 't_spear_p           "spear"          s_spear           (mk-drop-proj-ifc 't_spear 25)             
                                                                                      mmode-missile  	#f  )
    (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      magicaxe-ifc        mmode-missile  	#f  )
@@ -495,7 +517,7 @@
 
    (list  't_oil            "flaming oil"   s_oil_potion                "-1"     "1d6"    "-2"  (weap-ap 1.2) 0  slot-weapon   1      4     t_oil_p            #f     flaming-oil-ifc     1       20       30         0      0.9 )
    (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"  (weap-ap 1.2) 0  slot-weapon   1      4     t_slime_vial_p     #f     vial-of-slime-ifc   1       20       30         0      1.0 )
-
+   (list  't_smoke_bomb     "smoke bomb"    s_oil_potion                "-1"     "1"      "-2"  (weap-ap 1.2) 0  slot-weapon   1      6     t_smoke_bomb_p     #f     smoke-bomb-ifc      1       20       30         0      0.9 )
    ))
 
 (map (lambda (type) (apply mk-thrown-arms-type type)) thrown-arms-types)  
