@@ -2,17 +2,6 @@
 ;; This stuff needs to be somewhere more generic
 ;;--------------------------------------------------------------
 
-;; ----------------------------------------------------------------------------
-;; terrain-ok-for-field? -- check if the terrain at a given location will allow
-;; a field to be dropped on it. Terrains with passability class equivalent to
-;; Grass, trees and forest are ok, everything else is not.
-;; ----------------------------------------------------------------------------
-(define (terrain-ok-for-field? loc)
-  (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
-    (foldr (lambda (a b) (or a (= pclass b)))
-           #f
-           (list pclass-grass pclass-trees pclass-forest))))
-
 (define pi (* 2 (acos 0)))
 		   
 (define (xy->angle x y)

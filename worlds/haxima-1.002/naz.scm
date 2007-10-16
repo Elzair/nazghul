@@ -803,11 +803,14 @@
 ;; Grass, trees and forest are ok, everything else is not.
 ;; ----------------------------------------------------------------------------
 (define (terrain-ok-for-field? loc)
-  (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
-    ;;;(display "pclass=");;(display pclass)(newline)
-    (foldr (lambda (a b) (or a (= pclass b)))
-           #f
-           (list pclass-grass pclass-trees pclass-forest))))
+  (let ((kter (kern-place-get-terrain loc)))
+    (println "kter: " kter)
+    (if (null? kter)
+        #f
+        (let ((pclass (kern-terrain-get-pclass kter)))
+          (foldr (lambda (a b) (or a (= pclass b)))
+                 #f
+                 (list pclass-grass pclass-trees pclass-forest))))))
 
 (define (get-8-neighboring-tiles loc)
   (let ((kplace (loc-place loc))
