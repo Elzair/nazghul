@@ -56,17 +56,24 @@
 (define (jess-bye knpc kpc)
   (say knpc "So long, come back again!"))
 
+(define jess-catalog
+  (list
+   (list t_food 7  "The paladins love my roast beef.")
+   (list t_beer 12 "Have a grail-ful!")
+   ))
+
+(define jess-merch-msgs
+  (list "Come by the Holy Grail when I'm working. Breakfast is between 7:00AM and 9:00AM, lunch is 10:00AM to 1:00PM and I reopen at 2:00PM until midnight."
+        "Here's a menu!"
+        nil ;; sell
+        nil ;; trade
+        "Enjoy!" ;; sold-something
+        "Well, it beats hard-tack!" ;; sold-nothing
+        nil ;; the rest are nil
+        ))
+
 ;; Trade...
-(define (jess-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "Come by the Holy Grail when I'm working, "
-           "breakfast is between 7:00AM and 9:00AM, "
-           "lunch is 10:00AM to 1:00PM and I reopen at 2:00PM until midnight.")
-      (begin
-        (kern-conv-trade knpc kpc
-                         (list t_food 7)
-                         (list t_beer 12)
-                         ))))
+(define (jess-buy knpc kpc) (conv-trade knpc kpc "buy" jess-merch-msgs jess-catalog))
 
 ;; Holy Grail
 (define (jess-grai knpc kpc)
@@ -116,16 +123,15 @@
        ;; trade
        (method 'grai jess-grai)
        (method 'holy jess-grai)
-       (method 'trad jess-trade)
-       (method 'room jess-trade)
-       (method 'buy jess-trade)
-       (method 'sell jess-trade)
-       (method 'drin jess-trade)
-       (method 'ware jess-trade)
-       (method 'food jess-trade)
+       (method 'trad jess-buy)
+       (method 'room jess-buy)
+       (method 'buy jess-buy)
+       (method 'drin jess-buy)
+       (method 'ware jess-buy)
+       (method 'food jess-buy)
 
        ;; scar
-       (method 'trade jess-trade)
+       (method 'trade jess-buy)
        (method 'scar jess-scar)
        (method 'serv jess-serv)
        (method 'wood jess-wood)

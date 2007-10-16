@@ -24,7 +24,7 @@
 (define dest-moon-ifc nil)
        
 
-(define (mk-moon tag name hours-per-phase hours-per-rev arc phase ifc gates)
+(define (mk-moon tag name hours-per-phase hours-per-rev arc phase ifc gates color)
   (bind-astral-body (kern-mk-astral-body 
                      tag                          ; tag
                      name                         ; name
@@ -35,14 +35,34 @@
                      phase                        ; initial phase
                      ifc                          ; script interface
                      ;; phase sprites
-                     (list 
-                      (list s_new_moon                0   "new")
-                      (list s_wax_quarter_moon        32  "1/4 waxing")
-                      (list s_wax_half_moon           64  "1/2 waxing")
-                      (list s_wax_three_quarter_moon  96  "3/4 waxing")
-                      (list s_full_moon               128 "full")
-                      (list s_wane_three_quarter_moon 96  "3/4 waning")
-                      (list s_wane_half_moon          64  "1/2 waning")
-                      (list s_wane_quarter_moon       32  "1/4 waning")))
+                     (cond ((string=? color "yellow")
+                            (list 
+                             (list s_yellow_new_moon                0   "new")
+                             (list s_yellow_wax_quarter_moon        32  "1/4 waxing")
+                             (list s_yellow_wax_half_moon           64  "1/2 waxing")
+                             (list s_yellow_wax_three_quarter_moon  96  "3/4 waxing")
+                             (list s_yellow_full_moon               128 "full")
+                             (list s_yellow_wane_three_quarter_moon 96  "3/4 waning")
+                             (list s_yellow_wane_half_moon          64  "1/2 waning")
+                             (list s_yellow_wane_quarter_moon       32  "1/4 waning")))
+                           ((string=? color "blue")
+                            (list 
+                             (list s_blue_new_moon                0   "new")
+                             (list s_blue_wax_quarter_moon        32  "1/4 waxing")
+                             (list s_blue_wax_half_moon           64  "1/2 waxing")
+                             (list s_blue_wax_three_quarter_moon  96  "3/4 waxing")
+                             (list s_blue_full_moon               128 "full")
+                             (list s_blue_wane_three_quarter_moon 96  "3/4 waning")
+                             (list s_blue_wane_half_moon          64  "1/2 waning")
+                             (list s_blue_wane_quarter_moon       32  "1/4 waning")))
+                           (else
+                            (list 
+                             (list s_new_moon                0   "new")
+                             (list s_wax_quarter_moon        32  "1/4 waxing")
+                             (list s_wax_half_moon           64  "1/2 waxing")
+                             (list s_wax_three_quarter_moon  96  "3/4 waxing")
+                             (list s_full_moon               128 "full")
+                             (list s_wane_three_quarter_moon 96  "3/4 waning")
+                             (list s_wane_half_moon          64  "1/2 waning")
+                             (list s_wane_quarter_moon       32  "1/4 waning")))))
                     gates))
-        

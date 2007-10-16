@@ -77,14 +77,15 @@
   (say knpc "Too busy. Try the Warritrix, she likes adventures."))
 
 (define (eng-warr knpc kpc)
-  (say knpc "I understand she's one the finest warriors to ever live, "
+  (say knpc "I understand she's one of the finest warriors to ever live, "
        "but I know for a fact she's one of the most noble. When she isn't "
        "off doing something incredibly brave and stupid you can find her "
        "at Glasdrin."))
 
 (define (eng-make knpc kpc)
   (say knpc "I work on all kinds of different things. Lately I've been "
-       "interested in devices for traveling: gates, voidships, etc."))
+       "interested in devices for traveling: gates, voidships, etc. "
+       "Inventing is an obsession of mine."))
 
 (define (eng-wand knpc kpc)
   (say knpc "You're a Wanderer? I've always wanted to meet one. "
@@ -255,32 +256,37 @@
 (define (eng-ench knpc kpc)
   (say knpc "Bit of a fanatic if you ask me. But it takes all kinds."))
 
-(define (eng-trade knpc kpc)
-  (say knpc "Let me show you some of my inventions...")
-  (kern-conv-trade knpc kpc
+(define eng-merch-msgs
+  (list "Not now."
+        "Let me show you some of my inventions..."
+        nil
+        nil
+        "Always glad to help out a fellow tinkerer."
+        "No problem."
+   ))
 
-		   ;; Various tools and devices
-		   (list t_picklock       10)  ;; high prices, not his specialty
-		   (list t_shovel        100)  ;; high prices, not his specialty
-		   (list t_pick          100)  ;; high prices, not his specialty
-		   (list t_sextant       200)
-		   (list t_chrono        200)
+(define eng-catalog
+  (list
+   ;; Various tools and devices
+   (list t_picklock       10 "I happen to have some spare picklocks. They're handy for all kinds of things.")  ;; high prices, not his specialty
+   (list t_shovel        100 "I hate to part with my shovel, you never know when it might come in handy.")  ;; high prices, not his specialty
+   (list t_pick          100 "I've actually used this pick. Once. I suppose I can part with it.")  ;; high prices, not his specialty
+   (list t_sextant       200 "This is one of my most successful inventions. With this sextant you don't neet the In Wis spell to find your location on the surface.")
+   (list t_chrono        200 "It's a little PORTABLE CLOCK! Isn't it amazing? [He giggles with glee]")
+   
+   ;; A bit of oil and grease, for a grease-monkey:
+   (list t_grease         20 "I've got plenty of grease. I use it for everything.")
+   (list t_oil            10 "If I could figure out how to harness the explosive power of this oil, I'm sure I could make a useful engine.")  ;; high prices, not his specialty
 
-		   ;; A bit of oil and grease, for a grease-monkey:
-		   (list t_grease         20)
-		   (list t_oil            10)  ;; high prices, not his specialty
+   ;; Crossbows and bolts, as he likes intricate devices
+   (list t_lt_crossbow    50 "Isn't this little crossbow cute? The little levers and actions are quite clever.")
+   (list t_crossbow      100 "I'm a terrible shot, but I wanted to study crossbows to see if I could figure out how to shoot myself safely across the void.")
+   (list t_hvy_crossbow  300 "I couldn't help making some improvements on the standard crossbow. This one works best if you mount it on something first.")
+   (list t_trpl_crossbow 500 "What if a crossbow could fire more than one bolt at a time? I had to try it out, so I made this.") ;; a mechanism of his devising
+   (list t_bolt            2 "I went through a lot of bolts while testing crossbows modifications, and I have a few crates left over.")
+   ))
 
-		   ;; Crossbows and bolts, as he likes intricate devices
-		   (list t_lt_crossbow    50)
-		   (list t_crossbow      100)
-		   (list t_hvy_crossbow  300)
-		   (list t_trpl_crossbow 500) ;; a mechanism of his devising
-		   (list t_bolt            2)
-
-                   )
-
-  (say knpc "How do you like my devices?"))
-
+(define (eng-trade knpc kpc) (conv-trade knpc kpc "buy" eng-merch-msgs eng-catalog))
 
 (define engineer-conv
   (ifc nil
@@ -293,7 +299,7 @@
 
        (method 'trad eng-trade)
        (method 'buy  eng-trade)
-       (method 'sell eng-trade)
+       (method 'inve eng-trade)
 
        (method 'make eng-make)
        (method 'thin eng-make)

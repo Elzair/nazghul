@@ -29,34 +29,38 @@
 ;; Conv
 ;;----------------------------------------------------------------------------
 
-;; Shroom's merchant procedure
-(define (shroom-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "Yes, I trade in mushrooms and the like. "
-           "Come by my shop in the northeast corner when I'm open.")
-      (begin
-        (say knpc "Are ye interested in mushrooms or other reagents?")
-        (if (not (kern-conv-get-yes-no? kpc))
-            (say knpc "Don't try to pick your own. "
-                 "Kill you, the bad ones will!")
-            (begin
-              ;; Trading!
-              (kern-conv-trade knpc kpc
-                               (list sulphorous_ash (*  2 reagent-price-mult))
-                               (list garlic         (*  3 reagent-price-mult))
-                               (list ginseng        (*  3 reagent-price-mult))
-                               (list blood_moss     (*  4 reagent-price-mult))
-                               (list spider_silk    (*  5 reagent-price-mult))
-                               (list nightshade     (* 10 reagent-price-mult))
-                               (list mandrake       (*  8 reagent-price-mult))
+(define shroom-merch-msgs
+  (list "Yes, I trade in mushrooms and the like. Come by my shop in the northeast corner when I'm open."
+        "I know where to find the best in the forest."
+        "If you have something worthwhile perhaps I may be interested."
+        "I have mushrooms and other reagents to trade. Would you care to buy or sell?"
+        "Be careful with those."
+        "Don't try to pick your own. Kill you, the bad ones will!"
+        "Come back when you have more to sell."
+        "Have it your way."
+        "That was a pleasant little bit of business."
+        "I see. Perhaps you'd rather just chat with an old woman."
+   ))
 
-                               (list t_heal_potion  20)
-                               (list t_mana_potion  20)
-                               (list t_cure_potion  20)
-                               (list t_poison_immunity_potion 20)
-                               (list t_slime_vial   20)
-                               )
-              (say knpc "Be careful with those."))))))
+(define shroom-catalog
+  (list
+   (list sulphorous_ash (*  2 reagent-price-mult) "I have to travel far into the hills to find these foul-smelling clods.")
+   (list garlic         (*  3 reagent-price-mult) "This comes from my own garden. The cook in Bole loves my garlic.")
+   (list ginseng        (*  3 reagent-price-mult) "The forest folk have shown me where to gather wild ginseng.")
+   (list blood_moss     (*  4 reagent-price-mult) "The rare blood moss grows on dead wood in the deep forest.")
+   (list spider_silk    (*  5 reagent-price-mult) "Spider silk is common enough, but dangerous to gather.")
+   (list nightshade     (* 10 reagent-price-mult) "I must search near the rivers of the south to find the deadly nightshade.")
+   (list mandrake       (*  8 reagent-price-mult) "The mandrake root grows wild in these woods, but few know where to find it!")
+   
+   (list t_heal_potion  20 "Most dangerous, the woods are. Take some of these in case you have an accident.")
+   (list t_mana_potion  20 "One of these will refresh me enough to cast a light spell on the way home from a long day of picking.")
+   (list t_cure_potion  20 "If you're careless enough to get poisoned this will cure you.")
+   (list t_poison_immunity_potion 20 "I always drink one of these before gathering reagents in noxious bogs.")
+   (list t_slime_vial   20 "Lazy adventurers like these, so I carry them. As if there aren't enough slimes in the world.")
+   ))
+
+;; Shroom's merchant procedure
+(define (shroom-trade knpc kpc) (conv-trade knpc kpc "trade" shroom-merch-msgs shroom-catalog))
 
 ;; Shroom's mushroom quest
 (define (shroom-wards knpc kpc)
@@ -161,9 +165,9 @@
                                            "was once a fair war-maiden? [she "
                                            "cackles obscenely]")))
        (method 'mush shroom-trade)
-       (method 'buy shroom-trade)
+       (method 'buy (lambda (knpc kpc) (conv-trade knpc kpc "buy" shroom-merch-msgs shroom-catalog)))
        (method 'trad shroom-trade)
-       (method 'sell shroom-trade)
+       (method 'sell (lambda (knpc kpc) (conv-trade knpc kpc "sell" shroom-merch-msgs shroom-catalog)))
        (method 'reag shroom-trade)
        (method 'poti shroom-trade)
        (method 'join (lambda (knpc) (say knpc "You're too young for me, "

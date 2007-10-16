@@ -21,16 +21,22 @@
 ;;
 ;; Miggs is the tavern-keeper.
 ;;----------------------------------------------------------------------------
-(define (miggs-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "Come by the tavern when I'm open. I open at 7:00AM and close "
-           "at midnight.")
-      (begin
-        (kern-conv-trade knpc kpc
-                         (list t_food 5)
-                         (list t_beer 3)
-                         )
-        )))
+(define miggs-merch-msgs
+  (list "Come by the tavern when I'm open. I open at 7:00AM and close at midnight."
+        "[She silently points to a menu]"
+        nil
+        nil
+        "Thank you."
+        "Ok."
+        ))
+
+(define miggs-catalog
+  (list
+   (list t_food 5 "[She ladles some delicious-smelling stew]")
+   (list t_beer 3 "[She points to a cask labeled Fenmire's Finest]")
+  ))
+
+(define (miggs-trade knpc kpc) (conv-trade knpc kpc "buy" miggs-merch-msgs miggs-catalog))
 
 (define (miggs-hail knpc kpc)
   (kern-print "[You meet a large woman with a pretty face. She shyly avoids "
@@ -59,7 +65,6 @@
 
        (method 'trad miggs-trade)
        (method 'buy miggs-trade)
-       (method 'sell miggs-trade)
        (method 'food miggs-trade)
        (method 'lust miggs-lust)
        (method 'jugs miggs-lust)

@@ -43,23 +43,27 @@
       (say knpc "If you ever need any I'll be right here.")))
 
 ;; Trade...
-(define jones-shop-name "Supply Depot")
-(define jones-shop-open-time "9:00AM")
-(define jones-shop-close-time "6:00PM")
-(define (jones-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "Come by the " jones-shop-name "when I'm working "
-           "between " jones-shop-open-time " and " jones-shop-close-time)
-      (begin
-        (kern-conv-trade knpc kpc
-                         (list t_arrow        1)
-                         (list t_bolt         1)
-                         (list t_oil          6)
-                         (list t_torch        6)
-                         (list t_heal_potion 23)
-                         (list t_mana_potion 23)
-                         (list t_food        10)
-                         ))))
+(define jones-merch-msgs
+  (list "Come by the Supply Depot between 9:00AM and 6:00PM."
+        "I keep the basics in stock."
+        nil
+        nil
+        "Are you sure you have enough? You better get some more."
+        "I hope you've got enough, for your sake."
+   ))
+
+(define jones-catalog
+  (list
+   (list t_arrow        1 "Down here you'll go through arrows like a troll goes through grog!")
+   (list t_bolt         1 "You can run out of bolts in the blink of a gazer's eye!")
+   (list t_oil          6 "Yes, stock up on plenty of that flaming oil. It gets worse deeper down.")
+   (list t_torch        6 "You don't want to run out of torches down here!")
+   (list t_heal_potion 23 "Yes, they are spendy, but healing potions are hard to get and critical to have.")
+   (list t_mana_potion 23 "You better buy extra mana potions. Your mages will be working overtime.")
+   (list t_food        10 "There's nothing worse than runnning out of food when you're lost in the lower levels.")
+   ))
+
+(define (jones-trade knpc kpc) (conv-trade knpc kpc "buy" jones-merch-msgs jones-catalog))
 
 ;; Quest-related
 
@@ -73,7 +77,6 @@
        ;; trade
        (method 'trad jones-trade)
        (method 'buy jones-trade)
-       (method 'sell jones-trade)
 
        ))
 

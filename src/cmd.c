@@ -3469,12 +3469,12 @@ int ui_getline(char *buf, int len)
         return ui_getline_plain(buf, len);
 }
 
-static void buy(struct merchant *merch)
+int ui_buy(struct merchant *merch)
 {
 	struct KeyHandler kh;
 	struct ScrollerContext sc;
 	struct trade_info *trade;
-	int quantity, cost, max_q;
+	int quantity, cost, max_q, bought = 0;
 
 	statusSetTradeInfo(merch->n_trades, merch->trades);
 	statusSetMode(Trade);
@@ -3503,6 +3503,12 @@ static void buy(struct merchant *merch)
 			cmdwin_spush("none!");
 			break;
 		}
+
+                /* Print the sales pitch to the console, if one exists */
+                if (trade->sales_pitch) {
+                        log_msg("^c+%c%s:^c- %s", CONV_NPC_COLOR, merch->name,
+                                trade->sales_pitch);
+                }
 
 		cmdwin_spush("%s", trade->name);
 
@@ -3545,9 +3551,11 @@ static void buy(struct merchant *merch)
                 trade->quantity = player_party->inventory->numAvail(type);
                 statusRepaint();
 		foogodRepaint();
+                bought++;
 	}
 
 	statusSetMode(ShowParty);
+        return bought;
 }
 
 static bool conv_filter_trade(struct inv_entry *ie, void *fdata)
@@ -3574,6 +3582,7 @@ static int fill_sell_list(struct merchant *merch, struct trade_info *trades)
                 if (!ie)
                         continue;
 
+                /* Why don't aren't we setting show_sprite here, too? */
                 trades[j] = merch->trades[i];
                 trades[j].cost /= MARKUP;
                 trades[j].quantity = ie->count - ie->ref;
@@ -3584,7 +3593,7 @@ static int fill_sell_list(struct merchant *merch, struct trade_info *trades)
 	return j;
 }
 
-static void sell(struct merchant *merch)
+int ui_sell(struct merchant *merch)
 {
 	// A bit trickier than the "Buy" scenario. A merchant will only buy
 	// items that it is willing to turn around and sell at a profit. When
@@ -3598,13 +3607,14 @@ static void sell(struct merchant *merch)
 	struct KeyHandler kh;
 	struct ScrollerContext sc;
 	struct trade_info *trade;
+        int sold = 0;
 
 	// Allocate the trade list.
 	trades = new struct trade_info[merch->n_trades];
 	if (!trades) {
 		log_msg("^c+%c%s:^c- I don't need anything.\n", 
-                        CONV_NPC_COLOR, merch->name);
-		return;
+                        CONV_NPC_COLOR, merch->name);                
+		return 0;
 	}
 	// Fill out the list
 	n_trades = fill_sell_list(merch, trades);
@@ -3674,11 +3684,13 @@ static void sell(struct merchant *merch)
 		n_trades = fill_sell_list(merch, trades);
 		statusSetTradeInfo(n_trades, trades);
 		statusUpdateTradeInfo(n_trades, trades);
+                sold++;
 	}
 
 	statusSetMode(ShowParty);
 
 	delete trades;
+        return sold;
 }
 
 static int get_buy_or_sell_key(struct KeyHandler *kh, int key, int keymod)
@@ -3702,9 +3714,9 @@ static int get_buy_or_sell_key(struct KeyHandler *kh, int key, int keymod)
 	}
 }
 
-void ui_trade(struct merchant *merch)
+int ui_trade(struct merchant *merch)
 {
-	int key;
+	int key, traded = 0;
 
 	for (;;) {
 		cmdwin_clear();
@@ -3714,15 +3726,15 @@ void ui_trade(struct merchant *merch)
 
 		switch (key) {
 		case 'b':
-			buy(merch);
+			traded += ui_buy(merch);
 			break;
 		case 's':
-			sell(merch);
+			traded += ui_sell(merch);
 			break;
 		default:
 			cmdwin_pop();
 			cmdwin_spush("none!");
-			return;
+			return traded;
 		}
 	}
 }

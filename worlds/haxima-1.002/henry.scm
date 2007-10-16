@@ -41,18 +41,29 @@
 (define (henry-bye knpc kpc)
   (say knpc "Keep a weather eye!"))
 
-;; Trade...
-(define (henry-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "It's always time for a drink at the Bilge Water. "
-           "What'll ye be 'avin' then, lads?")
-      (begin
-        (kern-conv-trade knpc kpc
-                         (list t_food 5)
-                         (list t_beer 5)
-                         (list t_wine 7)
-                         ))))
+(define henry-catalog
+  (list
+   (list t_food 5 "My famous clam chowder will warm you to your toes.")
+   (list t_beer 5 "Aye, drink and be merry, fer tomorro' mornin' you'll be wishin' you were dead!")
+   (list t_wine 7 "I keep some o' the fancy-shmancy stuff fer the occasional gen'leman.")
+   ))
 
+(define henry-merch-msgs
+  (list "I'll serve ye when my hangover's gone."
+        "Let the good times roll!"
+        "I've no interest in used food or drink."
+        "Now we're talkin'!"
+        "Don't drink and sail!"
+        "If yer just lookin' for someplace to loiter, there's a dock outside."
+        "I suppose I can make stew from this."
+        "Good. Fine."
+        "Come back when you need a refill!"
+        "If yer just lookin' for someplace to loiter, there's a dock outside."
+        ))
+
+;; Trade...
+(define (henry-buy knpc kpc) (conv-trade knpc kpc "buy" henry-merch-msgs henry-catalog))
+(define (henry-sell knpc kpc) (say knpc "I've no use for solicitors."))
 
 ;; Hook...
 (define (henry-hook knpc kpc)
@@ -109,11 +120,10 @@
        (method 'join henry-join)
        
        ;; trade
-       (method 'trad henry-trade)
-       (method 'room henry-trade)
-       (method 'buy henry-trade)
-       (method 'sell henry-trade)
-       (method 'sacr henry-trade)
+       (method 'trad henry-buy)
+       (method 'buy henry-buy)
+       (method 'sell henry-sell)
+       (method 'sacr henry-buy)
 
        ;; hand
        (method 'hook henry-hook)

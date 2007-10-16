@@ -51,6 +51,36 @@
 ;; Conv
 ;;----------------------------------------------------------------------------
 
+(define alch-catalog
+  (list
+   (list t_heal_potion             18 "When you run out of Mani or mana in the pitch of battle, these will save your life!")
+   (list t_cure_potion             18 "An Nox may be cheaper, but nothing works better than my cure potions!")
+   (list t_mana_potion             18 "No other potions rejuvenate your mana like mine do!")
+   
+   (list t_poison_immunity_potion  18 "Prevention is better than a cure! With my immunity potions you need never fear poison again!")
+   (list t_invisibility_potion    100 "One quaff of this and your enemies will never find you!")
+   (list t_str_potion             999 "The strength of a troll will be yours with this potion!" )  ;; limited stock would be nice...
+   (list t_dex_potion             999 "Your arrows will fly straight as truth when you drink this potion!")  ;; limited stock would be nice...
+   (list t_int_potion             999 "The wise man seeks more wisdom! With this potion, it can be yours for a very reasonable price!")  ;; limited stock would be nice...
+   (list t_info_potion            150 "The sage said to 'Know thyself'. This potion will help!")
+   
+   (list t_oil                      6 "Hurl fire at your foes! Protect your flanks or cover your retreat with flaming fields of death!")
+   (list t_slime_vial              25 "More fun than a barrel of monkeys! Confound your foes with a multiplying army of slimes!")
+   ))
+
+(define alch-merch-msgs
+  (list "I'm afraid my shop is closed now. Come by between 9:00AM to 5:00PM."
+        "I'm sure I have something you'll like! [He rubs his hands briskly]"
+        "I sometimes buy used goods... at a discount of course."
+        "Yes, let's get down to business!"
+        "You'll be back for more when you see for yourself how good my potions are!"
+        "I hope you don't regret passing up these fine potions."
+        "I can probably find some use for these."
+        "I doubt you'll find a better offer anywhere else."
+        "A pleasure doing business with you!"
+        "Perhaps next time."
+        ))
+
 ;; Basics...
 (define (alch-hail knpc kpc)
   (say knpc "[You meet a short, fat old man with a long nose] "
@@ -73,29 +103,9 @@
   (say knpc "Farewell! Come back again soon!"))
 
 ;; Trade...
-(define (alch-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "My shop is open from 9:00AM to 5:00PM, "
-           "come by then.")
-      (begin
-        (say knpc "I'm sure I have something you'll like! "
-             "[He rubs his hands briskly]")
-        (kern-conv-trade knpc kpc
-                         (list t_heal_potion             18)
-                         (list t_cure_potion             18)
-                         (list t_mana_potion             18)
-
-                         (list t_poison_immunity_potion  18)
-                         (list t_invisibility_potion    100)
-			 (list t_str_potion             999)  ;; limited stock would be nice...
-			 (list t_dex_potion             999)  ;; limited stock would be nice...
-			 (list t_int_potion             999)  ;; limited stock would be nice...
-			 (list t_info_potion            150)
-
-			 (list t_oil                      6)
-			 (list t_slime_vial              25)
-                         )
-        (say knpc "Always carry plenty of potions!"))))
+(define (alch-trade knpc kpc) (conv-trade knpc kpc "trade" alch-merch-msgs alch-catalog))
+(define (alch-buy knpc kpc) (conv-trade knpc kpc "buy" alch-merch-msgs alch-catalog))
+(define (alch-sell knpc kpc) (conv-trade knpc kpc "sell" alch-merch-msgs alch-catalog))
 
 ;; Rune...
 ;; offered: shown k rune
@@ -371,9 +381,9 @@
        (method 'join alch-join)
 
        (method 'trad alch-trade)
-       (method 'buy  alch-trade)
-       (method 'sell alch-trade)
-       (method 'poti alch-trade)
+       (method 'buy  alch-buy)
+       (method 'sell alch-sell)
+       (method 'poti alch-buy)
 
        (method 'rune alch-rune)
        (method 'drag alch-drag)

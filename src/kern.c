@@ -2809,20 +2809,35 @@ static pointer kern_conv_trade(scheme *sc, pointer args)
         Object *npc;
         Object *pc;
         struct merchant merch;
-        int i;
+        int i, traded = 0;
+        char *menu = 0;
+        pointer catalog = sc->NIL;
 
-        if (unpack(sc, &args, "pp", &npc, &pc)) {
+        if (unpack(sc, &args, "pps", &npc, &pc, &menu)) {
                 rt_err("kern-conv-trade: bad args");
                 return sc->NIL;
         }
+
         if (! npc || ! pc) {
                 rt_err("kern-conv-trade: null kernel object(s)");
+                return sc->NIL;
+        }
+
+        /* Get the catalog */
+        if (! scm_is_pair(sc, args)) {
+                rt_err("kern-conv-trade: no catalog!");
+                return sc->NIL;
+        }
+        catalog = scm_car(sc, args);
+        args = scm_cdr(sc, args);
+        if (! scm_is_pair(sc, catalog)) {
+                rt_err("kern-conv-trade: catalog is not a list");
                 return sc->NIL;
         }
         
         /* setup the merchant struct */
         merch.name = npc->getName();
-        merch.n_trades = scm_len(sc, args);
+        merch.n_trades = scm_len(sc, catalog);
         if (! merch.n_trades) {
                 rt_err("kern-conv-trade: nothing in trade list");
                 return sc->NIL;
@@ -2835,11 +2850,11 @@ static pointer kern_conv_trade(scheme *sc, pointer args)
         for (i = 0; i < merch.n_trades; i++) {
 
                 ObjectType *type;
-                pointer p = scm_car(sc, args);
+                pointer p = scm_car(sc, catalog);
                 struct trade_info *trade = &merch.trades[i];
-                args = scm_cdr(sc, args);
+                catalog = scm_cdr(sc, catalog);
 
-                if (unpack(sc, &p, "pd", &type, &trade->cost)) {
+                if (unpack(sc, &p, "pds", &type, &trade->cost, &trade->sales_pitch)) {
                         rt_err("kern-conv-trade: bad args in trade list %d", i);
                         goto abort;
                 }
@@ -2849,6 +2864,8 @@ static pointer kern_conv_trade(scheme *sc, pointer args)
                         goto abort;
                 }
 
+                /* This is kind of dumb. We should just point to the ObjectType
+                 * and be done with it. */
                 trade->sprite = type->getSprite();
                 trade->name = type->getName();
                 trade->data = type;
@@ -2857,11 +2874,17 @@ static pointer kern_conv_trade(scheme *sc, pointer args)
                 trade->show_quantity = 1;
         }
 
-        ui_trade(&merch);
+        if (! strcmp(menu, "buy")) {
+                traded = ui_buy(&merch);
+        } else if (! strcmp(menu, "sell")) {
+                traded = ui_sell(&merch);
+        } else {
+                traded = ui_trade(&merch);
+        }
 
  abort:
         free(merch.trades);
-        return sc->NIL;
+        return traded ? sc->T : sc->F;
 }
 
 static pointer kern_obj_get_activity(scheme *sc, pointer args)

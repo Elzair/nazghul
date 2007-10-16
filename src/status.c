@@ -48,7 +48,7 @@
 #define Y_TO_LINE(Y) (((Y) - Status.screenRect.y) / TILE_H)
 #define N_LINES Status.numLines	/* (STAT_H / TILE_H) */
 
-#define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
+#define TALL_H (SCREEN_H - 4 * BORDER_H - 8 * ASCII_H)
 #define MAX_TITLE_LEN (STAT_CHARS_PER_LINE-2)
 #define STAT_MAX_H TALL_H
 
@@ -1419,7 +1419,7 @@ static void myPaintTrade(void)
 
 		// quantity
 		if (Status.trades[i].show_quantity) {
-			screenPrint(&qrect, 0, "[%d]", 
+			screenPrint(&qrect, 0, "[You have %d]", 
 												Status.trades[i].quantity);
 		}
 		// price

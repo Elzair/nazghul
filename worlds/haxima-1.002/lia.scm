@@ -43,30 +43,45 @@
   (say knpc "Goodbye, Wanderer."))
 
 ;; Trade...
-(define (lia-trade knpc kpc)  
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "My shop is open from 8:00AM to 8:00PM.")
-      (kern-conv-trade knpc kpc
-                       (list sulphorous_ash         (*  2 reagent-price-mult))
-                       (list garlic                 (*  4 reagent-price-mult))
-                       (list ginseng                (*  4 reagent-price-mult))
-                       (list black_pearl            (*  4 reagent-price-mult))
-                       (list blood_moss             (*  6 reagent-price-mult))
-                       (list nightshade             (* 11 reagent-price-mult))
-                       (list mandrake               (* 11 reagent-price-mult))
+(define lia-merch-msgs
+  (list "My shop is open from 8:00AM to 8:00PM."
+        "Here are my wares."
+        "I will buy rare ingredients if they are a good value."
+        "Do you wish to buy or do you have something to sell?"
+        "A blessing on your magic."
+        "Very well."
+        "I will be happy to purchase more."
+        "I only offer what is fair."
+        "May the gods of the deep favour you."
+        "As you wish."
+   ))
 
-                       (list t_in_an_scroll         (*  6 base-scroll-cost))
-                       (list t_in_mani_corp_scroll  (*  8 base-scroll-cost))
-                       (list t_vas_rel_por_scroll   (*  8 base-scroll-cost))
-                       (list t_vas_mani_scroll      (*  5 base-scroll-cost))
-                       (list t_wis_quas_scroll      (*  4 base-scroll-cost))
-                       )))
+(define lia-catalog
+  (list
+   (list sulphorous_ash         (*  2 reagent-price-mult) "This ash comes from the bed of dragons in the Fire Sea.")
+   (list garlic                 (*  4 reagent-price-mult) "Garlic is a common enough herb, but useful in spells.")
+   (list ginseng                (*  4 reagent-price-mult) "I grow this ginseng myself alongside mandrake.")
+   (list black_pearl            (*  4 reagent-price-mult) "These come from my own special source. You will find no others like them.")
+   (list blood_moss             (*  6 reagent-price-mult) "It is difficult to get blood moss here.")
+   (list nightshade             (* 11 reagent-price-mult) "The nightshade is rare in these parts.")
+   (list mandrake               (* 11 reagent-price-mult) "I grow mandrake with my ginseng.")
+   
+   (list t_in_an_scroll         (*  6 base-scroll-cost) "When faced with magic stronger than your own, use this to even the score.")
+   (list t_in_mani_corp_scroll  (*  8 base-scroll-cost) "You need not mourn a fallen companion when you carry one of these.")
+   (list t_vas_rel_por_scroll   (*  8 base-scroll-cost) "You can travel great distances or escape dire circumstances with this gate scroll.")
+   (list t_vas_mani_scroll      (*  5 base-scroll-cost) "When sorely wounded this will restore you to health.")
+   (list t_wis_quas_scroll      (*  4 base-scroll-cost) "This scroll will open your eyes to the invisible world.")
+   ))
+
+(define (lia-trade knpc kpc)  (conv-trade knpc kpc "trade" lia-merch-msgs lia-catalog))
+(define (lia-buy knpc kpc)  (conv-trade knpc kpc "buy" lia-merch-msgs lia-catalog))
+(define (lia-sell knpc kpc)  (conv-trade knpc kpc "sell" lia-merch-msgs lia-catalog))
 
 (define (lia-pear knpc kpc)
   (say knpc "I have my own source for the rare black pearl. "
        "Would you like to purchase some?")
   (if (kern-conv-get-yes-no? kpc)
-      (lia-trade knpc kpc)
+      (lia-buy knpc kpc)
       (say knpc "You won't get this quality anywhere else!")))
 
 ;; Shores...
@@ -132,11 +147,11 @@
 
        ;; trade
        (method 'trad lia-trade)
-       (method 'reag lia-trade)
-       (method 'buy lia-trade)
-       (method 'sell lia-trade)
-       (method 'blac lia-pear)
-       (method 'pear lia-pear)
+       (method 'reag lia-buy)
+       (method 'buy lia-buy)
+       (method 'sell lia-sell)
+       (method 'blac lia-buy)
+       (method 'pear lia-buy)
 
        ;; town & people
        (method 'opar lia-opar)

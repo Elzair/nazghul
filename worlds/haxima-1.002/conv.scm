@@ -473,3 +473,43 @@
                (lambda (knpc kpc) 
                  (say knpc "I don't know anything about a thief. Ask Gwen, maybe a traveler told her something.")))                       
        ))
+
+;;----------------------------------------------------------------------------
+;; Merchant
+
+;; Indices into the merchant message list
+(define merch-closed           0)
+(define merch-buy              1)
+(define merch-sell             2)
+(define merch-trade            3)
+(define merch-sold-something   4)
+(define merch-sold-nothing     5)
+(define merch-bought-something 6)
+(define merch-bought-nothing   7)
+(define merch-traded-something 8)
+(define merch-traded-nothing   9)
+
+(define (conv-trade knpc kpc menu msgs catalog)
+  (println "conv-trade: " (kern-obj-get-activity knpc))
+  ;;(println "conv-trade: " menu msgs catalog)
+  (if (and (not (string=? "working" (kern-obj-get-activity knpc)))
+           (not (null? (list-ref msgs merch-closed))))
+      (say knpc (list-ref msgs merch-closed) 
+           " I'm " (kern-obj-get-activity knpc) " right now.")
+      (cond ((string=? menu "buy")
+             (say knpc (list-ref msgs merch-buy))
+             (if (kern-conv-trade knpc kpc "buy" catalog)
+                 (say knpc (list-ref msgs merch-sold-something))
+                 (say knpc (list-ref msgs merch-sold-nothing))))
+            ((string=? menu "sell")
+             (say knpc (list-ref msgs merch-sell))
+             (if (kern-conv-trade knpc kpc "sell" catalog)
+                 (say knpc (list-ref msgs merch-bought-something))
+                 (say knpc (list-ref msgs merch-bought-nothing))))
+            (else
+             (say knpc (list-ref msgs merch-trade))
+             (if (kern-conv-trade knpc kpc "trade" catalog)
+                 (say knpc (list-ref msgs merch-traded-something))
+                 (say knpc (list-ref msgs merch-traded-nothing))))
+            )))
+

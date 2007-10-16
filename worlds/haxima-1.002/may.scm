@@ -23,11 +23,7 @@
 ;; Conv
 ;;----------------------------------------------------------------------------
 (define (may-trade knpc kpc)
-  (kern-conv-trade knpc kpc
-                   (list t_beer  4)             
-		   (list t_food  3)
-                   )
-  (say knpc "Well enough."))
+  (say knpc "Talk to my husband Melvin in the kitchen."))
 
 (define (may-hail knpc kpc)
   (say knpc "[You meet a stout older woman who looks at you keenly] "
@@ -154,7 +150,6 @@
        (method 'buy may-trade)
        (method 'food may-trade)
        (method 'drin may-trade)
-       (method 'sell may-trade)
        (method 'supp may-trade)
        (method 'trade may-trade)
 

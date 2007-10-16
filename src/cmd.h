@@ -132,13 +132,26 @@ extern int ui_getline(char *buf, int len);
 extern int ui_getline_plain(char *buf, int len);
 extern void ui_name_vehicle(class Vehicle *vehicle);
 
+/**
+ * The merchant information for a trading session.
+ */
 struct merchant {
-        char *name;
-        int n_trades;
-        struct trade_info *trades;
+        char *name;                /* The merchant's name */
+        int n_trades;              /* Num entries in the array of items */
+        struct trade_info *trades; /* The array of trade items */
 };
 
-extern void ui_trade(struct merchant *merch);
+/**
+ * These three functions all engage in the trading UI with a merchant. ui_trade
+ * will allow the player to choose between buying and selling, and will call
+ * the other two functions.
+ *
+ * @param merch is the merchant info
+ * @returns the quantity of items traded
+ */
+extern int ui_trade(struct merchant *merch);
+extern int ui_buy(struct merchant *merch);
+extern int ui_sell(struct merchant *merch);
 
 /**
  * Prompt the player to enter a line. By default (no filter provided) this will

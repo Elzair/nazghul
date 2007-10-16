@@ -382,3 +382,11 @@ void astar_path_destroy(struct astar_node *node)
 		astar_path_destroy(node->next);
 	astar_node_destroy(node);
 }
+
+void astar_dbg_dump_path(struct astar_node *path)
+{
+        while (path) {
+                dbg("(%d, %d)", path->x, path->y);
+                path = path->next;
+        }
+}

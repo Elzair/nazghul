@@ -101,15 +101,29 @@
       (say knpc "TALK TO PERCY!")
       (jake-trade knpc kpc)))
 
-1
+
 ;; Trade...
-(define (jake-trade knpc kpc)
-  (kern-conv-trade knpc kpc
-                   (list t_food 7)
-                   (list t_beer 4)
-                   (list t_wine 6)
-                   )
-  )
+(define jake-merch-msgs
+  (list nil ;; closed
+        "Let me show you a menu." ;; buy
+        nil ;; sell
+        nil ;; trade
+        "I'm delighted I could be of assistance." ;; bought-something
+        "[sniff] Well, I shan't be offended." ;; bought-nothing
+        nil
+        nil
+        nil
+        nil
+   ))
+
+(define jake-catalog
+  (list
+   (list t_food 7 "My roast lamb is to die for! I'm afraid it's quite wasted on the usual riff-raff.")
+   (list t_beer 4 "I import casks of lager all the way from the famous brewers of Gintspar.")
+   (list t_wine 6 "We get some very good wine from a wrogue who specializes in pilfering wine cellars. I hope you don't recognize any of these bottles... Ahem")
+   ))
+
+(define (jake-trade knpc kpc) (conv-trade knpc kpc "buy" jake-merch-msgs jake-catalog))
 
 ;; Town & Townspeople
 
@@ -130,7 +144,6 @@
        (method 'drin jake-drin)
        (method 'trad jake-trade)
        (method 'buy jake-trade)
-       (method 'sell jake-trade)
 
        ;; town & people
        (method 'jake jake-jake)

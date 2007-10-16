@@ -50,11 +50,8 @@ extern void mapAddView(struct mview *view);
 extern void mapRmView(struct mview *mview);
 extern void mapCenterView(struct mview *view, int x, int y);
 extern void mapRecomputeLos(struct mview *view);
-// extern void mapRepaintView(struct mview *view, int flags);
-// extern void mapMarkAsDirty(struct mview *view);
 extern void mapSetRadius(struct mview *view, int rad);
 extern int mapGetRadius(struct mview *view);
-// extern void mapSetActiveView(struct mview *view);
 
 // Hacked in to support missile animation:
 extern void mapGetMapOrigin(int *x, int *y);

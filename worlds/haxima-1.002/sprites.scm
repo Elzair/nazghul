@@ -353,7 +353,26 @@
 (kern-mk-sprite 's_wax_quarter_moon         ss_moons 1 5 #f 0 )
 (kern-mk-sprite 's_wax_half_moon            ss_moons 1 6 #f 0 )
 (kern-mk-sprite 's_wax_three_quarter_moon   ss_moons 1 7 #f 0 )
-(kern-mk-sprite 's_sun                      ss_moons 1 8 #f 0 )
+
+(kern-mk-sprite 's_yellow_full_moon                ss_moons 1 8 #f 0 )
+(kern-mk-sprite 's_yellow_wane_three_quarter_moon  ss_moons 1 9 #f 0 )
+(kern-mk-sprite 's_yellow_wane_half_moon           ss_moons 1 10 #f 0 )
+(kern-mk-sprite 's_yellow_wane_quarter_moon        ss_moons 1 11 #f 0 )
+(kern-mk-sprite 's_yellow_new_moon                 ss_moons 1 12 #f 0 )
+(kern-mk-sprite 's_yellow_wax_quarter_moon         ss_moons 1 13 #f 0 )
+(kern-mk-sprite 's_yellow_wax_half_moon            ss_moons 1 14 #f 0 )
+(kern-mk-sprite 's_yellow_wax_three_quarter_moon   ss_moons 1 15 #f 0 )
+
+(kern-mk-sprite 's_blue_full_moon                ss_moons 1 16 #f 0 )
+(kern-mk-sprite 's_blue_wane_three_quarter_moon  ss_moons 1 17 #f 0 )
+(kern-mk-sprite 's_blue_wane_half_moon           ss_moons 1 18 #f 0 )
+(kern-mk-sprite 's_blue_wane_quarter_moon        ss_moons 1 19 #f 0 )
+(kern-mk-sprite 's_blue_new_moon                 ss_moons 1 20 #f 0 )
+(kern-mk-sprite 's_blue_wax_quarter_moon         ss_moons 1 21 #f 0 )
+(kern-mk-sprite 's_blue_wax_half_moon            ss_moons 1 22 #f 0 )
+(kern-mk-sprite 's_blue_wax_three_quarter_moon   ss_moons 1 23 #f 0 )
+
+(kern-mk-sprite 's_sun                      ss_moons 1 24 #f 0 )
 
 (kern-mk-sprite 's_torch_sign ss_signs     1 0 #f 0)
 (kern-mk-sprite 's_shield_sign ss_signs    1 1 #f 0)

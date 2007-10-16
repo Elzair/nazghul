@@ -22,16 +22,26 @@
 ;;
 ;; Melvin is the tavern-keeper.
 ;;----------------------------------------------------------------------------
-(define (melvin-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "Come by the tavern when I'm open. I open at 7:00AM and close "
-           "at midnight.")
-      (begin
-        (kern-conv-trade knpc kpc
-			 (list t_beer  4)             
-			 (list t_food  3)
-                         )
-        )))
+(define melv-merch-msgs
+  (list "Come by the tavern when I'm open. I open at 7:00AM and close at midnight."
+        "Try the daily special." ;; buy
+        nil ;; sell
+        nil ;; trade
+        "Not bad, eh?" ;; sold-something
+        "Now don't be shy." ;; sold-nothing
+        nil ;; bought-something
+        nil ;; bought-nothing
+        nil ;; traded-something
+        nil ;; traded-nothing
+   ))
+
+(define melv-catalog
+  (list
+   (list t_beer  4 "Beer; it's what's for breakfast!")
+   (list t_food  3 "Folks say I make the best jalapeno quiche in the Shard!")
+   ))
+
+(define (melvin-buy knpc kpc) (conv-trade knpc kpc "buy" melv-merch-msgs melv-catalog))
 
 ;; basics...
 (define (melvin-default knpc kpc)
@@ -99,7 +109,7 @@
 (define (melvin-hung knpc kpc)
   (say knpc "Are you hungry?")
   (if (kern-conv-get-yes-no? kpc)
-      (melvin-trade knpc kpc)
+      (melvin-buy knpc kpc)
       (say knpc "Well if you get hungry just say so!")))
 
 (define melvin-conv
@@ -115,10 +125,15 @@
        (method 'name melvin-name)
        (method 'join melvin-join)
 
-       (method 'food melvin-trade)
-       (method 'trad melvin-trade)
-       (method 'buy  melvin-trade)
-       (method 'sell melvin-trade)
+       (method 'buy melvin-buy)
+       (method 'food melvin-buy)
+       (method 'drin melvin-buy)
+       (method 'supp melvin-buy)
+       (method 'trad melvin-buy)
+
+       (method 'food melvin-buy)
+       (method 'trad melvin-buy)
+       (method 'buy  melvin-buy)
 
        (method 'bill melvin-bill)
        (method 'cook melvin-inn)

@@ -32,7 +32,7 @@
 #include <common.h>
 
 #ifndef DEBUG_KEYS
-# define DEBUG_KEYS 0
+# define DEBUG_KEYS 1
 #endif
 
 #define EVENT_NONBLOCK   (1 << 0)
@@ -90,12 +90,6 @@ static int backlog_dequeue(SDL_Event *event)
 
 static int mapKey(SDL_keysym * keysym)
 {
-	static int map_arrows[] = {
-		KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST,
-		KEY_SHIFT_NORTH, KEY_SHIFT_SOUTH, KEY_SHIFT_EAST, 
-                KEY_SHIFT_WEST
-	};
-
 	int key = keysym->sym;
         
         if (DEBUG_KEYS) {
@@ -121,13 +115,20 @@ static int mapKey(SDL_keysym * keysym)
                 /* Code page not supported... fall through */
         }
 
-        /* Map the arrow keys */
-	if (key >= SDLK_UP && key <= SDLK_LEFT)
-		return map_arrows[key - SDLK_UP +
-				  ((keysym->mod & KMOD_SHIFT) ? 4 : 0)];
+        /* Arrow keys */
+        if (key >= SDLK_UP && key <= SDLK_LEFT) {
+                static int map[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, 
+                                     KEY_WEST };
+                key = map[key - SDLK_UP];
+        }
+
+        /* Set the "shift" bit */
+        if (keysym->mod & KMOD_SHIFT) {
+                key |= KEY_SHIFT;
+        }
 
         /* Unsupported? fallback to the SDL sym */
-	return keysym->sym;
+	return key;
 }
 
 static int event_get_next_event(SDL_Event *event, int flags)

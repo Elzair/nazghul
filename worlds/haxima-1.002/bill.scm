@@ -30,19 +30,34 @@
 ;;
 ;; Bill is a woodcutter who lives in Bole. Not the sharpest tool in the shed.
 ;;----------------------------------------------------------------------------
-(define (bill-trade knpc kpc)
-  (kern-conv-trade knpc kpc
-		   (list t_staff 10) ;; rather cheap
-                   (list t_torch  3) ;; rather cheap
-                   (list t_arrow  3)
-		   (list t_bolt   4)
-                   )
-  (say knpc "If you need more I'll be around."))
+(define bill-catalog
+  (list
+   (list t_staff 10 "It's hard tuh find branches straight enought to make a staff.") ;; rather cheap
+   (list t_torch  3 "Ah always like tuh see at night, so I make torches.") ;; rather cheap
+   (list t_arrow  3 "The rangers from Green Tower sometimes buy my arrows.")
+   (list t_bolt   4 "Not many folks use crossbows 'round here.")
+   ))
+
+(define bill-merch-msgs
+  (list nil ;; closed
+        "I make all this stuff my self." ;; buy
+        nil ;; sell
+        nil ;; trade
+        "I hope they work ok for you." ;; sold-something
+        "If ye change yer mind ah'll be around." ;; sold-nothing
+        nil ;; bought-something
+        nil ;; bought-nothing
+        nil ;; traded-something
+        nil ;; traded-nothing
+        ))
+
+
+(define (bill-buy knpc kpc) (conv-trade knpc kpc "buy" bill-merch-msgs bill-catalog))
 
 (define (bill-goods knpc kpc)
   (say knpc "Want to buy some?")
   (if (kern-conv-get-yes-no? kpc)
-      (bill-trade knpc kpc)
+      (bill-buy knpc kpc)
       (say knpc "Just ask if you ever do.")))
 
 (define (bill-may knpc kpc)
@@ -98,7 +113,7 @@
        (method 'axe
                (lambda (knpc kpc)
                  (say knpc "It works better than muh knife on most trees.")))
-       (method 'buy bill-trade)
+       (method 'buy bill-buy)
        (method 'bole bill-bole)
        (method 'chop
                (lambda (knpc kpc)
@@ -128,14 +143,13 @@
                       "May's alwiz tellin' me not tuh say words lak shit and "
                       "damn. Ladies don' lak that, you know.")))
        (method 'scar bill-scared)
-       (method 'sell bill-trade)
        (method 'thie bill-thie)
        (method 'mous bill-mous)
        (method 'man  bill-thie)
        (method 'scur bill-thie)
        (method 'torc bill-goods)
        (method 'town bill-bole)
-       (method 'trade bill-trade)
+       (method 'trad bill-buy)
        (method 'tree
                (lambda (knpc kpc)
                  (say knpc "There be all kinds uh trees in this forest. "

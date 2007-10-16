@@ -91,6 +91,11 @@ extern void astar_path_destroy(struct astar_node *node);
  */
 extern void astar_node_destroy(struct astar_node *node);
 
+/**
+ * Dump the path for dbg.
+ */
+extern void astar_dbg_dump_path(struct astar_node *path);
+
 END_DECL
 
 #endif

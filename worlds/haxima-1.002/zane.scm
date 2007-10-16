@@ -33,34 +33,45 @@
 ;;
 ;; Zane is a ranger of the Fens. He camps at the Enchanter's Tower.
 ;;----------------------------------------------------------------------------
-(define (zane-trade knpc kpc)
-  (kern-conv-trade knpc kpc
+(define zane-merch-msgs
+  (list nil ;; closed
+        "I don't trust those town armories. I make my own equipment. Lemme show you what I got." ;; buy
+        nil ;; sell
+        nil ;; trade
+        "Watch your step out there." ;; bought-something
+        "Suit yourself, bub." ;; bought-nothing
+        nil
+        nil
+        nil
+        nil
+        ))
 
-                   ;; reagents
-                   (list ginseng        (* 5 reagent-price-mult))
-                   (list garlic         (* 4 reagent-price-mult))
-                   (list blood_moss     (* 6 reagent-price-mult))
-                   (list nightshade     (* 8 reagent-price-mult))
-                   (list mandrake       (* 10 reagent-price-mult))
+(define zane-catalog
+  (list
+   ;; reagents
+   (list ginseng        (* 5 reagent-price-mult) "This stuffs good for healing.")
+   (list garlic         (* 4 reagent-price-mult) "You gotta have garlic for warding.")
+   (list blood_moss     (* 6 reagent-price-mult) "Hard to find this stuff.")
+   (list nightshade     (* 8 reagent-price-mult) "This only grows in really damp places.")
+   (list mandrake       (* 10 reagent-price-mult) "All the powerful spells require these guys.")
+   
+   ;; potions
+   (list t_heal_potion            21 "This stuff really helps in emergencies.")
+   (list t_cure_potion            21 "Even the best get poisoned sometimes. You gotta carry extra of these guys.")
+   (list t_poison_immunity_potion 21 "If you know you have to cross poisonous terrain, drink one of these first.")
+   
+   ;; bows, arrows and bolts 
+   ;; (as an accomplished Ranger, he is also a bowyer and fletcher)
+   (list t_self_bow    30 "This little guy is lightweight and rapid fire.")
+   (list t_bow         90 "The basic bow is the perfect all-around weapon. Cheap, light, with good range.")
+   (list t_long_bow   300 "These are perfect for hunting fast game in the open.")
+   (list t_great_bow  700 "The paladin's worst nightmare. This baby will take out armored troops at long range.")
+   
+   (list t_arrow        2 "I make these special, put I can part with a quiverful.")
+   (list t_bolt         2 "I make crossbow bolts to trade with town militias.")
+   ))
 
-                   ;; potions
-                   (list t_heal_potion            21)
-                   (list t_cure_potion            21)
-                   (list t_poison_immunity_potion 21)
-
-		   ;; bows, arrows and bolts 
-		   ;; (as an accomplished Ranger, he is also a bowyer and fletcher)
-		   (list t_self_bow    30)
-		   (list t_bow         90)
-		   (list t_long_bow   300)
-		   (list t_great_bow  700)
-
-		   (list t_arrow        2)
-		   (list t_bolt         2)
-
-                   )
-
-  (say knpc "Watch your step out there."))
+(define (zane-trade knpc kpc) (conv-trade knpc kpc "buy" zane-merch-msgs zane-catalog))
 
 (define (zane-ench knpc kpc)
   (say knpc "Yeah, he's locked himself inside, see. "
@@ -119,7 +130,7 @@
                       "I can sell you my extras.")))
        (method 'buy zane-trade)
        (method 'sell zane-trade)
-       (method 'trade zane-trade)
+       (method 'trad zane-trade)
        ))
 
 ;;----------------------------------------------------------------------------

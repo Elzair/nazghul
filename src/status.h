@@ -37,6 +37,7 @@ struct trade_info {
         int quantity;
         int cost;
         void *data; /* object type */
+        char *sales_pitch;
         char show_quantity:1;
         char show_sprite:1;
 };

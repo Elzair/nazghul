@@ -93,8 +93,6 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
 	if (!flags)
 		flags = PFLAG_IGNORECOMPANIONS | PFLAG_IGNOREMECHS;
 
-        //printf("Being::pathfindTo %s -> %s (%d, %d)\n", getName(), destplace->name, destx, desty);
-
         if (isStationary())
                 return false;
 
@@ -106,13 +104,13 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         }
 
         //dbg("%s pathfind from (%d %d) to (%d %d)\n", 
-        //    getName(), getX(), getY(), destx, desty);
+        //getName(), getX(), getY(), destx, desty);
 
         // Check the cachedPath
         if (USE_CACHED_PATH && cachedPath) {
 
                 //dbg("cachedPath: ");
-                //dump_path(cachedPath);
+                //astar_dbg_dump_path(cachedPath);
 
                 // If the cached path is for a different place then we can't
                 // use it
@@ -188,7 +186,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         // Otherwise the path is good, so cache the place.
         cachedPathPlace = getPlace();
         //dbg("Found path: ");
-        //dump_path(cachedPath);
+        //astar_dbg_dump_path(cachedPath);
         
         enum MoveResult result;
         result = move(pathPtr->x - getX(), 
@@ -277,7 +275,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         }
                         
                         //dbg("New path: ");
-                        //dump_path(cachedPath);
+                        //astar_dbg_dump_path(cachedPath);
 
                         // Otherwise the path is good, so cache the place.
                         cachedPathPlace = getPlace();

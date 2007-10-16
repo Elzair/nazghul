@@ -207,7 +207,8 @@
          ;; gates (moons are fixed at 8 phases in mk-moon):
          (list 'mg-1 'mg-2 'mg-3 'mg-4
                'mg-5 'mg-6 'mg-7 'mg-8
-               ))
+               )
+         "yellow")
 
 ;;----------------------------------------------------------------------------
 ;; Ord is the destination gate, which means its phase decides the destination
@@ -225,7 +226,8 @@
          ;; gates (moons are fixed at 8 phases in mk-moon):
          (list 'mg-1 'mg-2 'mg-3 'mg-4
                'mg-5 'mg-6 'mg-7 'mg-8
-               ))
+               )
+         "blue")
 
 ;; ----------------------------------------------------------------------------
 ;; The diplomacy table. Each entry defines the attitude of the row to the

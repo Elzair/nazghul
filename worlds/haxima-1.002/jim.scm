@@ -31,33 +31,41 @@
 ;; (privately) that adventurers are fools. But he's happy to trade with
 ;; them. He drinks hard, and probably had a very wild youth.
 ;;----------------------------------------------------------------------------
-(define (jim-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "Come by my shop when I'm open. "
-           "It's the Iron Works in the northeast corner. "
-           "I'm open for business from 7:00AM til 6:00PM.")
-      (begin
-        (kern-conv-trade knpc kpc
-                         (list t_dagger          40)
-                         (list t_sword           80)
-			 (list t_axe             70)
-                         (list t_mace            75)
+(define jim-merch-msgs
+  (list "Come by my shop when I'm open. It's the Iron Works in the northeast corner. I'm open for business from 7:00AM til 6:00PM."
+        "Let me know if you see something that interests you."
+        "I'll buy back some items for salvage."
+        "Let me know if you see something that interests you."
+        "Strike hard, first and for the good, friend."
+        "Maybe some other time."
+        "I can melt down or re-use parts of this."
+        "Fine."
+        "Strike hard, first and for the good, friend."
+        "Fine."
+   ))
 
-                         (list t_2H_axe         240)
-                         (list t_2H_sword       350)
+(define jim-catalog
+  (list
+   (list t_dagger          40 "This is a good weapon for the non-fighting classes.")
+   (list t_sword           80 "It's not fancy, but note the perfect balance on that sword.")
+   (list t_axe             70 "An axe is necessary if you camp in the wild, but it can be tricky to keep ahold of in a fight.")
+   (list t_mace            75 "The mace is a simple but effective weapon against lightly armoured foes.")
+   
+   (list t_2H_axe         240 "The battle-axe is made for cleaving armour and shields.")
+   (list t_2H_sword       350 "If you are strong enough to wield it, a two-handed sword is an excellent offensive weapon.")
+   
+   (list t_chain_coif     110 "The chain coif will protect your neck from decapitating strokes.")
+   (list t_iron_helm      160 "With an iron helm you can survive a direct hit from a mace.")
+   (list t_armor_chain    300 "Chain armor will turn aside most blades and arrows.")
+   (list t_armor_plate    600 "Although heavy, plate armour will protect you from all but the mightiest blows or armour-piercing tips.")
+   
+   (list t_shield          45 "A shield is vital for close-in combat.")
+   
+   (list t_spiked_helm    150 "The spiked helm is favored by those with a more... direct style.")
+   (list t_spiked_shield  150 "A spiked shield augments the footsoldier's basic thrust-and-push with extra damage.")
+   ))
 
-                         (list t_chain_coif     110)
-                         (list t_iron_helm      160)
-                         (list t_armor_chain    300)
-                         (list t_armor_plate    600)
-
-			 (list t_shield          45)
-
-			 (list t_spiked_helm    150)
-			 (list t_spiked_shield  150)
-
-                         )
-        (say knpc "Strike hard, first and for the good, friend."))))
+(define (jim-trade knpc kpc) (conv-trade knpc kpc "trade" jim-merch-msgs jim-catalog))
 
 (define jim-conv
   (ifc basic-conv
@@ -75,8 +83,8 @@
                                 (jim-trade knpc kpc)
                                 (say knpc "Look around all you like."))))
        (method 'name (lambda (knpc kpc) (say knpc "Folks call me Jim.")))
-       (method 'buy jim-trade)
-       (method 'sell jim-trade)
+       (method 'buy (lambda (knpc kpc) (conv-trade knpc kpc "buy" jim-merch-msgs jim-catalog)))
+       (method 'sell (lambda (knpc kpc) (conv-trade knpc kpc "sell" jim-merch-msgs jim-catalog)))
        (method 'trad jim-trade)
        (method 'join (lambda (knpc kpc) 
                        (say knpc "Here I make my stand, come what may.")))

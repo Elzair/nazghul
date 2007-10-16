@@ -57,46 +57,58 @@
        "[He goes on like this as you walk away]")
   )
 
-(define (tooth-trade knpc kpc)
-  (say knpc "Always open! I'm always ready! Look here, look at this marvelous stuff! "
-       "All quality! Rare, valuable, hard-to-find! Reasonably priced! "
-       "How do I stay in business? I don't know! See for yourself!")
-  (kern-conv-trade knpc kpc
-		   (list t_picklock            5)
-		   (list t_gem                20)
+(define tooth-merch-msgs
+  (list nil ;; closed
+        "Look here, look at this marvelous stuff! All quality! Rare, valuable, hard-to-find!" ;; buy
+        "Got stuff? I'll take it. Where did you get it? I don't want to know." ;; sell
+        "Everything reasonably priced! How do I stay in business? I don't know! See for yourself!" ;; trade
+        "Is that all? I've got more!" ;; sold-something
+        "Wait! Where you going? Come back, have another look! Did you see my collection of scrolls?" ;; sold-nothing
+        "Come back when you have more! I'm always looking!" ;; bought-something
+        "I need the good stuff! Magical stuff, gems, artifacts!" ;; bought-nothing
+        "Don't forget the basics! Oil, gems, picklocks!" ;; traded-something
+        "Wait! Where you going? Come back, have another look! Did you see my collection of scrolls?" ;; traded-nothing
+        ))
 
-		   (list t_oil                 5)
-		   (list t_slime_vial         30)
-		   (list t_arrow               3)
-		   (list t_bolt                3)
+(define tooth-catalog
+  (list
+   (list t_picklock            5 "Unlock doors! Takes a bit of skill!")
+   (list t_gem                20 "Find hidden rooms and passages! Thieves love 'em!")
 
-		   (list t_spiked_helm       300)
-		   (list t_spiked_shield     300)
+   (list t_oil                 5 "Perfect for fighting slimes!")
+   (list t_slime_vial         30 "Kal Xen Nox in a bottle! Great for escaping the guards!")
+   (list t_arrow               3 "Gotta have lots of arrows!")
+   (list t_bolt                3 "Can't have too many bolts!")
 
-		   (list t_dagger_4           (* 4 65))
-		   (list t_sword_2            (* 2 85))
-		   (list t_sword_4            (* 4 85))
-		   (list t_morning_star_2     (* 2 105))
+   (list t_spiked_helm       300 "Use your head in a fight!")
+   (list t_spiked_shield     300 "Rare item! For aggressive fighters!")
 
-		   (list t_leather_helm_2     (* 2 100))
-		   (list t_chain_coif_4       (* 4 100))
-		   (list t_iron_helm_4        (* 4 150))
+   (list t_dagger_4           (* 4 65) "Very nice! Small, easy to conceal, but with a fierce bite!")
+   (list t_sword_2            (* 2 85) "Better than the average sword! Look at that keen edge!")
+   (list t_sword_4            (* 4 85) "The finest! The very best! A weapon for the true artist of death!")
+   (list t_morning_star_2     (* 2 105) "A truly awesome weapon! Lay waste to whole parties!")
 
-		   (list t_armor_leather_2    (* 2 150))
-		   (list t_armor_leather_4    (* 4 150))
-		   (list t_armor_chain_4      (* 4 330))
-		   (list t_armor_plate_4      (* 4 660))
+   (list t_leather_helm_2     (* 2 100) "For the wrogue who needs that little bit of extra protection!")
+   (list t_chain_coif_4       (* 4 100) "See that tight weave? The banded reinforcement? Turns any blade and softens the blow!")
+   (list t_iron_helm_4        (* 4 150) "Very rare! Blows to the head will feel like pillows!")
 
-		   (list t_xen_corp_scroll    (* 7 base-scroll-cost))
-		   (list t_sanct_lor_scroll   (* 7 base-scroll-cost))
-		   (list t_an_xen_ex_scroll   (* 6 base-scroll-cost))
-		   (list t_in_ex_por_scroll   (* 4 base-scroll-cost))
-		   (list t_wis_quas_scroll    (* 4 base-scroll-cost))
-		   (list t_in_quas_xen_scroll (* 7 base-scroll-cost))
-		   (list t_an_tym_scroll      (* 8 base-scroll-cost))
+   (list t_armor_leather_2    (* 2 150) "Want to pilfer a Gint armory? Steal gems from trolls? You'll need something light but effective like this!")
+   (list t_armor_leather_4    (* 4 150) "This once belonged to an old wrogue! He died of old age on a bed of gold coins! Now you can, too!")
+   (list t_armor_chain_4      (* 4 330) "This is perfect for the scrapper who likes to be in the thick without getting slowed down!")
+   (list t_armor_plate_4      (* 4 660) "Shrug off the blows of gints and trolls in this amazing plate armour! There's nothing like it anywhere else!")
 
-		   ))
+   (list t_xen_corp_scroll    (* 7 base-scroll-cost) "The assassin's favorite! Kills instantly!")
+   (list t_sanct_lor_scroll   (* 7 base-scroll-cost) "The wrogue's favorite! Perfect for sneaking in and out unseen!")
+   (list t_an_xen_ex_scroll   (* 6 base-scroll-cost) "If you can't beat them, have them join you with this charm spell!")
+   (list t_in_ex_por_scroll   (* 4 base-scroll-cost) "Magic doors won't stop you when you carry plenty of these!")
+   (list t_wis_quas_scroll    (* 4 base-scroll-cost) "Perfect for finding hidden doors (and invisible foes)!")
+   (list t_in_quas_xen_scroll (* 7 base-scroll-cost) "Ever wish there was two of you? With this scroll there can be!")
+   (list t_an_tym_scroll      (* 8 base-scroll-cost) "For when you really get into trouble this scroll will stop time and let you get out!")
+   ))
 
+(define (tooth-trade knpc kpc) (conv-trade knpc kpc "trade" tooth-merch-msgs tooth-catalog))
+(define (tooth-buy knpc kpc) (conv-trade knpc kpc "buy" tooth-merch-msgs tooth-catalog))
+(define (tooth-sell knpc kpc) (conv-trade knpc kpc "sell" tooth-merch-msgs tooth-catalog))
 
 (define tooth-conv
   (ifc nil
@@ -110,8 +122,8 @@
        (method 'join tooth-join)
 
        (method 'trad tooth-trade)
-       (method 'buy tooth-trade)
-       (method 'sell tooth-trade)
+       (method 'buy tooth-buy)
+       (method 'sell tooth-sell)
        (method 'deal tooth-trade)
        ))
 

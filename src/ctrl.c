@@ -46,8 +46,6 @@ int G_turnaround_start = 0;
 int G_turnaround  = 0;
 extern int DeveloperMode;
 
-static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
-
 static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
         int dir;
@@ -92,6 +90,12 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         }
         break;
 
+#if CONFIG_DIAGONAL_MOVEMENT
+        case KEY_SHIFT_NORTHWEST:
+        case KEY_SHIFT_NORTHEAST:
+        case KEY_SHIFT_SOUTHWEST:
+        case KEY_SHIFT_SOUTHEAST:
+#endif   /* CONFIG_DIAGONAL_MOVEMENT */
         case KEY_SHIFT_NORTH:
         case KEY_SHIFT_EAST:
         case KEY_SHIFT_SOUTH:
@@ -101,7 +105,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 // Pan the camera.
                 // ----------------------------------------------------
                         
-                key = unshift[(key - KEY_SHIFT_NORTH)];
+                key &= ~KEY_SHIFT; /* clear shift bit */
                 dir = keyToDirection(key);
                 mapMoveCamera(directionToDx(dir), directionToDy(dir));
                 mapSetDirty();
@@ -1082,6 +1086,12 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 break;
 
 
+#if CONFIG_DIAGONAL_MOVEMENT
+        case KEY_SHIFT_NORTHWEST:
+        case KEY_SHIFT_NORTHEAST:
+        case KEY_SHIFT_SOUTHWEST:
+        case KEY_SHIFT_SOUTHEAST:
+#endif   /* CONFIG_DIAGONAL_MOVEMENT */
         case KEY_SHIFT_NORTH:
         case KEY_SHIFT_EAST:
         case KEY_SHIFT_SOUTH:
@@ -1091,7 +1101,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 // Pan the camera.
                 // ----------------------------------------------------
                         
-                key = unshift[(key - KEY_SHIFT_NORTH)];
+                key &= ~KEY_SHIFT; /* clear shift bit */
                 dir = keyToDirection(key);
                 mapMoveCamera(directionToDx(dir), directionToDy(dir));
                 mapSetDirty();

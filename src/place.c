@@ -1244,7 +1244,7 @@ struct astar_node *place_find_path(struct place *place,
 	/* Run the pathfinding alg */
         t1 = SDL_GetTicks();
 	path = astar_search(info);
-        //dbg("place_find_path: %d msecs\n", SDL_GetTicks() - t1);
+        ////dbg("place_find_path: %d msecs\n", SDL_GetTicks() - t1);
 
 	return path;
 
