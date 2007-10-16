@@ -106,7 +106,7 @@
 	(list
 		"rn rn rn rn rn rn r4 .. bb .. .. .. .. r2 rn rn rn rn rn r4 bb "
 		"rn rn rn rn rn rn r4 .. {8 .. .. .. .. r2 rn rn rn rn rn rn r1 "
-		"rn rn rn rn rn xx xx bb {{ xx .. rf w+ xx xx rn rn rn rn rn rn "
+		"rn rn rn rn rn xx xx bb {{ xx .. rr w+ xx xx rn rn rn rn rn rn "
 		"rn rn rn rn rn rc .. .. {1 .. .. bb .. .. ra r8 rn rn rn rn rn "
 		"rn rn rn rn rn .. .. .. .. .. .. .. .. {4 {{ {{ rn rn rn rn rn "
 		"rn rn rr {{ {{ .. .. .. bb .. .. .. .. .. .. .. {{ ra rn rn rn "
