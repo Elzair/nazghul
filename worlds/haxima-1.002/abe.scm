@@ -73,7 +73,40 @@
 
 (define (abe-rune knpc kpc)
   (if (any-in-inventory? kpc rune-types)
-      (say knpc "[He whistles softly] That, my friend, is one of the Eight Keys to the Demon Gate.")
+      ( (say knpc "\n[He whistles softly]\n"
+	     "You have some of the Eight Keys to the Demon Gate?\n"
+	     "I shall examine them for you!")
+	(if (any-in-inventory? kpc t_rune_k)
+	    (say kpnc "[He examines a rune] This is the Rune of KNOWLEDGE!")
+	    )
+	(if (any-in-inventory? kpc t_rune_p)
+	    (say kpnc "[He examines a rune] This is the Rune of POWER!")
+	    )
+	(if (any-in-inventory? kpc t_rune_s)
+	    (say kpnc "[He examines a rune] This is the Rune of SKILL!")
+	    )
+	(if (any-in-inventory? kpc t_rune_c)
+	    (say kpnc "[He examines a rune] This is the Rune of CURIOUSITY!")
+	    )
+	(if (any-in-inventory? kpc t_rune_f)
+	    (say kpnc "[He examines a rune] This is the Rune of FREEDOM!")
+	    )
+	(if (any-in-inventory? kpc t_rune_w)
+	    (say kpnc "[He examines a rune] This is the Rune of WISDOM!")
+	    )
+	(if (any-in-inventory? kpc t_rune_d)
+	    (say kpnc "[He examines a rune] This is the Rune of DISCRETION!")
+	    )
+	(if (any-in-inventory? kpc t_rune_l)
+	    (say kpnc "[He examines a rune] This is the Rune of LEADERSHIP!")
+	    )
+	(if (has-all-runes? kpc) 
+	    (say knpc "This is incredible!\n"
+		 "You have all of the Eight Keys to the Demon Gate!!!\n"
+		 "What do you intend to do with them?")
+	    (say knpc "Legend says that there are eight runes in all, are you seeking the others?")
+	    )
+	)
       (say knpc "There are many runes. Perhaps if you brought me an example...?")))
 
 (define (abe-demo knpc kpc)
@@ -100,6 +133,7 @@
 
 (define (abe-keys knpc kpc)
   (say knpc "Yes, the Demon Gate was locked with eight locks and the keys separated. "
+       "Each takes the form of a powerful rune. "
        "They've been lost or hidden since then. Are you looking for them?")
   (if (yes? kpc)
       (say knpc "There's a legend that King Clovis carried one as a charm. "
