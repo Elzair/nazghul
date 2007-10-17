@@ -1,7 +1,7 @@
 (kern-load "nate.scm")
 
 (mk-19x19-town
- 'p_bandit_hideout_l1 "Bandit Stockade" s_forest
+ 'p_bandit_hideout_l1 "Bandit Stockade" s_ruin
  (list
 		"tt tt tt tt t5 t3 tt tt tt tt tt tt tt tt tc rr rr rr rr "
 		"tt tt tt tt tt tt tt tt tt tt tt tt tc rr rr rr ~7 rr rr "

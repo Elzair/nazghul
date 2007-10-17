@@ -82,7 +82,7 @@
 			"*. ** ** *. *. ** ^g ^h *a *8 *c ^g ^^ ^^ ^^ ^^ ^^ ^h *a *c ^g ^^ ^^ ^^ ^^ ^^ {2 {1 {4 ^^ ^5 |A "
 			"*. ** *. *. ** *. ^j ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ tb tt td ^^ ^^ ^^ "
 			"*. ** *. ** ** ** *5 ^j ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-			"** ** *. *. ** ** *. *5 ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+			"** ** *. *. ** ** *. *5 ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^~ ^^ ^^ ^^ "
 			"** ** ** *. *. ** ** *c ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ ^^ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ "
 			"*. *. *. *. ** ** ** ^g ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ {{ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ "
 			"** *. *. *. *. *. *4 ^^ ^^ ^^ ^^ {{ {{ ^^ ^^ ^L -3 -1 -1 -1 -5 ^J {{ {{ {{ ^^ ^^ ^^ {{ {{ ^^ ^^ "
@@ -220,7 +220,7 @@
 			"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ /7 {{ ^^ ^^ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ -2 __ __ __ __ __ __ __ "
 			"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ /7 ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ -a -- __ __ __ __ __ __ "
 			"^c |# || |% ^a ^^ ^^ ^^ ^^ ^^ /8 /2 ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^H -a -8 -- -- __ __ __ "
-			"|# || || || |% ^a ^^ ^^ ^^ ^^ ^d /7 ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^c tf ^a ^^ ^^ ^^ ^H -a -- __ __ "
+			"|# || || || |% ^a ^^ ^^ ^^ ^^ ^d /7 ^~ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^c tf ^a ^^ ^^ ^^ ^H -a -- __ __ "
 			"|| || || || || t5 ^a ^^ ^^ ^^ /0 /a ^^ ^^ ^^ ^c |& ^a ^^ tb tt td /7 t7 ^^ ^^ ^^ ^^ ^H -- -- __ "
 			"|A || || || || tt t5 ^a ^^ ^c /7 ^3 ^^ ^^ ^^ |# || |% ^e /0 /d /d /a te ^^ ^^ ^^ ^^ ^^ -2 -- __ "
 			"^5 |A || |C ^7 ta tt tt tt t5 /7 ^^ ^^ ^^ ^c || || || t5 /7 tb tt td ^3 ^^ ^^ ^^ ^^ ^^ -2 -- __ "
@@ -436,32 +436,40 @@
 
  ;; subplaces:
  (list
-  (list p_moongate_clearing 51 46)
-  (list p_gregors_hut       61 67)
-  (list p_abandoned_farm    43 51)
-  (list p_trigrave          29 51)
-  (list p_enchanters_tower  29 21)
-  (list p_green_tower       80 59)
-  (list p_bole              86 40)
-  (list p_glasdrin          82 18)
-  (list p_oparine           12 78)
-  (list p_absalot           120 4)
-  (list p_mans_hideout      (loc-x the-mans-hideout-loc) (loc-y the-mans-hideout-loc))
-  (list p_engineers_hut     50  4)
-  (list p_void_temple        7 39)
-  (list p_poor_house        19 65)
-  (list p_ankh_shrine       97 4)
-  (list p_westpass         45 61)
-  (list p_eastpass         43 61)
-  (list p_ancient_derelict 43 17)
-  (list p_gate_to_absalot 120 10)
-  (list p_tower_of_absalot 120 8)
-  (list p_kun               60 38)
-  (list p_bandit_hideout_l1 72 63)
-  (list p_brundegardt       76 40)
+  (list p_moongate_clearing 51  46)
+  (list p_gregors_hut       61  67)
+  (list p_abandoned_farm    43  51)
+  (list p_trigrave          29  51)
+  (list p_enchanters_tower  29  21)
+  (list p_green_tower       80  59)
+  (list p_bole              86  40)
+  (list p_glasdrin          82  18)
+  (list p_oparine           12  78)
+  (list p_absalot           120  4)
+  (list p_engineers_hut     50   4)
+  (list p_void_temple        7  39)
+  (list p_poor_house        19  65)
+  (list p_ankh_shrine       97   4)
+  (list p_westpass          45  61)
+  (list p_eastpass          43  61)
+  (list p_ancient_derelict  43  17)
+  (list p_gate_to_absalot  120  10)
+  (list p_tower_of_absalot 120   8)
+  (list p_kun               60  38)
   (list p_lost_halls_entrance (loc-x lost-halls-loc)
        (loc-y lost-halls-loc))
   )
+ ;; SAM: For some Scheme reason, the interpreter throws a fit 
+ ;;      when the following block of comments is placed prior to 
+ ;;      the preceding close-paren, where they belong...
+ ;; 
+  ;; Secret locations, player must find these
+  ;; These are placed by step triggers, which are placed in shard.scm and defined in special.scm
+  ;; p_bandit_hideout_l1
+  ;; p_angriss_lair
+  ;; p_brundegart
+  ;; p_mans_hideout
+
 
  nil ; neighbors
 
@@ -495,10 +503,27 @@
        merciful-death-x 
        merciful-death-y)
 
+  ;; Bandit Hideout
+  (put (mk-step-trig 'mk-bandit-hideout nil)
+       (loc-x bandit-hideout-loc)
+       (loc-y bandit-hideout-loc))
+
   ;; Angriss's Lair
   (put (mk-step-trig 'mk-angriss-lair nil)
        (loc-x angriss-lair-loc)
        (loc-y angriss-lair-loc))
+
+ ;; Brundegardt
+  (put (mk-step-trig 'mk-brundegardt nil)
+       (loc-x brundegardt-loc)
+       (loc-y brundegardt-loc))
+
+  ;; The MAN's hideout
+  (put (mk-step-trig 'mk-mans-hideout nil)
+       (loc-x the-mans-hideout-loc)
+       (loc-y the-mans-hideout-loc))
+
+
 
   ) ;; end of objects
 

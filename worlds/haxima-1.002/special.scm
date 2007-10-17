@@ -9,6 +9,24 @@
 (kern-mk-sprite 's_power_core ss_special 1 1 #f 0)
 
 ;;----------------------------------------------------------------------------
+;; Bandit-Hideout generator -- 
+;; procedure invoked by a step trigger to place the bandit hideout on the world map.
+;; Should return true iff it triggers to remove the step generator that invokes it.
+;;----------------------------------------------------------------------------
+(define bandit-hideout-loc (list 'p_shard 72 63))
+(define (mk-bandit-hideout kbeing)
+  (if (eqv? kbeing 
+            (kern-get-player))
+      (begin
+        (kern-log-msg "You stumble upon a hidden forest glade.\nKnavish figures skulk about with drawn blades!")
+        (kern-place-set-subplace p_bandit_hideout_l1
+                                 (eval-loc bandit-hideout-loc))
+        (kern-map-set-dirty)
+        #t)
+      #f))
+
+
+;;----------------------------------------------------------------------------
 ;; Angriss Lair generator -- procedure invoked by a step trigger to create
 ;; Angriss's Lair. Should return true iff it triggers to remove the step
 ;; generator that invokes it.
@@ -18,12 +36,49 @@
   (if (eqv? kbeing 
             (kern-get-player))
       (begin
-        (kern-log-msg "You find the entrance to Angriss's Lair!")
+        (kern-log-msg "The forest grows wild...\nThe trees here are choked with webbing, and horrid wrapped HUSKS dangle.\nYou have found the entrance to Angriss's Lair!")
         (kern-place-set-subplace p_angriss_lair 
                                  (eval-loc angriss-lair-loc))
         (kern-map-set-dirty)
         #t)
       #f))
+
+
+;;----------------------------------------------------------------------------
+;; Mans-Hideout generator -- 
+;; procedure invoked by a step trigger to place the MAN's hideout on the world map.
+;; Should return true iff it triggers to remove the step generator that invokes it.
+;;----------------------------------------------------------------------------
+(define the-mans-hideout-loc (list 'p_shard 92 10))
+(define (mk-mans-hideout kbeing)
+  (if (eqv? kbeing 
+            (kern-get-player))
+      (begin
+        (kern-log-msg "You find a hidden entrance to a secure, undisclosed location!")
+        (kern-place-set-subplace p_mans_hideout
+                                 (eval-loc the-mans-hideout-loc))
+        (kern-map-set-dirty)
+        #t)
+      #f))
+
+
+;;----------------------------------------------------------------------------
+;; Brundegardt generator -- 
+;; procedure invoked by a step trigger to place Brundegardt on the world map.
+;; Should return true iff it triggers to remove the step generator that invokes it.
+;;----------------------------------------------------------------------------
+(define brundegardt-loc (list 'p_shard 76 40))
+(define (mk-brundegardt kbeing)
+  (if (eqv? kbeing 
+            (kern-get-player))
+      (begin
+        (kern-log-msg "Through a hidden track, you find a strange forested nook in the mountainside!")
+        (kern-place-set-subplace p_brundegardt
+                                 (eval-loc brundegardt-loc))
+        (kern-map-set-dirty)
+        #t)
+      #f))
+
 
 ;; ----------------------------------------------------------------------------
 ;; The Warritrix's note
@@ -52,7 +107,6 @@
   #t)
 
 ;; Locations referred to more than once
-(define the-mans-hideout-loc (list 'p_shard 92 10))
 (define lost-halls-loc (list 'p_shard 39 75))
 
 ;; Power core for voidship

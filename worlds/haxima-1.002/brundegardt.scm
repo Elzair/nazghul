@@ -5,7 +5,7 @@
 (kern-mk-place 
  'p_brundegardt     ; tag
  "Brundegardt"      ; name
- s_mountains           ; sprite
+ s_dungeon          ; sprite
  (kern-mk-map 
   nil 19 19 pal_expanded
   (list

@@ -37,7 +37,7 @@
 (kern-mk-place 
  'p_mans_hideout ; tag
  "The MAN's Hideout"   ; name
- s_mountains      ; sprite
+ s_dungeon      ; sprite
  m_mans_hideout  ; map
  #f               ; wraps
  #t                     ; underground
