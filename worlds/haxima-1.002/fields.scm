@@ -24,7 +24,6 @@
 (kern-mk-field-type 'F_sleep  "sleep field"  s_field_sleep    256  20 pclass-none  'apply-sleep	mmode-field)
 (kern-mk-field-type 'F_energy "energy field" s_field_energy   512  20 pclass-repel 'apply-lightning	mmode-field)
 (kern-mk-field-type 'web-type "spider web"   s_spider_web     0    20 pclass-none  'ensnare	mmode-field)
-(kern-mk-field-type 'F_smoke  "smoke"        s_smoke          0    15 pclass-none  nil mmode-field)
 
 (kern-mk-field-type 'F_poison_perm "poison field" s_field_poison 256 -1 pclass-none  'apply-poison	mmode-field)
 (kern-mk-field-type 'F_sleep_perm  "sleep field"  s_field_sleep  256 -1 pclass-none  'apply-sleep	mmode-field)

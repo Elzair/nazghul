@@ -355,13 +355,21 @@
                           (kern-obj-set-temporary knpc #t)
                           (kern-obj-put-at knpc loc))))))))
 
+(define smoke-ifc
+  (ifc nil
+       (method 'exec (lambda (ksmoke)
+                       (if (> (kern-dice-roll "1d20") 16)
+                           (kern-obj-remove ksmoke))))))
+
+(mk-obj-type 't_smoke_cloud "smoke" s_smoke layer-projectile smoke-ifc)
+
 (define smoke-bomb-ifc
   (ifc obj-ifc
        (method 'hit-loc
                (lambda (kmissile kuser ktarget kplace x y dam)
                  (define (tryput loc)
                    (if (terrain-ok-for-field? loc)
-                       (let ((kfield (kern-mk-obj F_smoke 1)))
+                       (let ((kfield (kern-mk-obj t_smoke_cloud 1)))
                          (kern-obj-set-opacity kfield #t)
                          (kern-obj-put-at kfield loc))))
                  (tryput (mk-loc kplace x y))
