@@ -255,6 +255,11 @@
 (define up        9)
 (define down      10)
 
+(define opposite-dir (vector southeast south southwest
+                             east here west
+                             northeast north northwest
+                             down up))
+
 ;; Player character bonuses
 (define pc-hp-off  25)
 (define pc-hp-gain 5)
