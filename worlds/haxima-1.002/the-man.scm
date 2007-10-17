@@ -137,6 +137,13 @@
        "that virtuous vein of his! But he really should keep his stuff more "
        "secure."))
 
+;; Accursed Queries
+(define (man-accu knpc kpc)
+  (say knpc "They speak of freedom, by which they mean the freedom to enslave others. "
+       "Some who would break the rules join them, only to find themselves enchained. "
+       "A nasty bunch."))
+
+
 ;; Rune
 (define (man-rune knpc kpc)
   (say knpc "Runes... I once knew a pirate that carried a Rune. Have you "
@@ -174,6 +181,7 @@
        ;; special
        (method 'man man-man)
        (method 'wrog man-wrog)
+       (method 'rogu man-wrog)  ;; a synonym
        (method 'rule man-rule)
        (method 'secr man-secr)
        (method 'enem man-enem)
@@ -186,6 +194,7 @@
        (method 'alch man-alch)
        (method 'engi man-engi)
        (method 'ench man-ench)
+       (method 'accu man-accu)
        (method 'rune man-rune)
        (method 'chan man-chan)
        ))
