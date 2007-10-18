@@ -100,6 +100,11 @@ enum MoveResult Cursor::move(int dx, int dy)
 
         // move the cursor
         relocate(getPlace(), newx, newy, REL_NOTRIG);
+
+        // Keep the cursor in view.
+        if (! mapIsInCameraView(getPlace(), getX(), getY())) {
+                mapCenterCamera(getX(), getY());
+        }
         
         return MovedOk;
 }

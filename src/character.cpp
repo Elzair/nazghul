@@ -826,7 +826,12 @@ enum MoveResult Character::move(int dx, int dy)
 	relocate(getPlace(), newx, newy);
 
 	if (mapTileIsVisible(getX(), getY())) {
-	    mapUpdate(0); // show all visible NPC moves
+                if (isPlayerControlled() 
+                    // Keep player characters in view.
+                    && ! mapIsInCameraView(getPlace(), getX(), getY())) {
+                        mapCenterCamera(getX(), getY());
+                }
+                mapUpdate(0); // show all visible NPC moves
 	}
 
 	return MovedOk;
