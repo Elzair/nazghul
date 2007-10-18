@@ -177,7 +177,8 @@
 	))
 	
 (define (powers-blink-party-range power)
-	(* power 0.75))
+	(cond ((< power 20) (* power 0.75))
+		(else 15)))
 	
 (define (powers-blink-party caster ktarg power)
 	(if (kern-place-is-passable ktarg (kern-char-get-party caster))
