@@ -139,6 +139,13 @@ int dirkey(struct KeyHandler *kh, int key, int keymod)
 		return 1;
 	}
 
+        /* Special case: let '.' mean KEY_HERE for the numeric keypad
+         * challenged. */
+        if (key == '.') {
+                *dir = keyToDirection(KEY_HERE);
+                return 1;
+        }
+
 	return 0;
 }
 
