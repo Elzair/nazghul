@@ -46,6 +46,77 @@
 (define (necr-default knpc kpc)
   (say knpc "[He is seized by a fit of coughing]"))
 
+(define (necr-heal knpc kpc)
+  (begin
+    (say knpc "\n[He is seized by a fit of coughing]\n"
+	 "I'm fine [COUGH] [WHEEZE]")
+    (prompt-for-key)
+
+    (say knpc "Really.\n")
+    (prompt-for-key)
+
+    (say knpc "\nI am quite wel...[COUGH]")
+    (prompt-for-key)
+
+    (say knpc "\n  [WHEEZE]...")
+    (prompt-for-key)
+
+    (say knpc "[CHOKE]")
+    (kern-sleep 100)
+    (say knpc "[the slight figure slumps]")
+    (kern-sleep 100)
+    (say knpc "[GASP]")
+    (kern-sleep 3000)
+    (say knpc " ...")
+    (prompt-for-key)
+
+    (say knpc "\n[All is silence]")
+    (prompt-for-key)
+
+    (if (in-player-party? 'ch_mesmeme)
+	(begin	
+	  (say knpc "\n[The silence stretches on...]")
+	  (kern-sleep 3000)
+	  (aside kpc 'ch_mesmeme "[Looks at the slumped figure]\nFood now?")
+	  (aside kpc 'ch_amy "EEEWWW!  Bad Gazer!")
+	  (prompt-for-key)
+	  )
+	)
+
+    (if (in-player-party? 'ch_nate)
+	(begin
+	  (say knpc "\n[The dead sound of the crypt presses on]")
+	  (kern-sleep 3000)
+	  (aside kpc 'ch_nate "Erm...")
+	  (kern-sleep 100)
+	  (aside kpc 'ch_nate "  should we maybe...")
+	  (kern-sleep 1000)
+	  (aside kpc 'ch_nate "  take his stuff?")
+	  (kern-sleep 500)
+	  (aside kpc 'ch_roland "Nay!  'Twould be dishonour!")
+	  (prompt-for-key)
+	  )
+	)
+    
+    (if (in-player-party? 'ch_amy)
+	(begin
+	  (aside kpc 'ch_amy "I could maybe...dig a hole, somewhere?")
+	  (prompt-for-key)
+	  )
+	)
+
+    (kern-sleep 3000)
+    (say knpc
+	 "\n[His still form twitches]\n"
+	 "[His arm gropes for his chest]\n"
+	 "  ^c+bIN VAS MANI CORP XEN^c-\n"
+	 "")
+    ;; (vas-mani knpc)  ;; SAM: Alas, this invoked UI, and emitted extra messages
+    (say knpc
+	 "\n[He straightens, and breathes deeply]\n"
+	 "As I was saying, I am quite well, thank you.")
+    ))
+
 (define (necr-name knpc kpc)
   (say knpc "I am the Necromancer."))
 
@@ -81,7 +152,9 @@
         (say knpc "Ask the spirit of King Luximene! Can't you see him?")
         (if (no? kpc)
             (begin
-              (say knpc "Oh, sorry. Let me fix that: Wis Quas!")
+              (say knpc "Oh, sorry. Let me fix that:\n"
+		   "[He intones words of magic]"
+		   "  ^c+bWIS QUAS^c-!")
               (wis-quas knpc))
             (say knpc "Well...")))
       (begin
@@ -89,7 +162,9 @@
              "No doubt there's a good story to go along with this, "
              "but let's hear about that later. For now...")
         (kern-obj-remove-from-inventory kpc t_lich_skull 1)
-        (say knpc "Kal An Xen Corp! Luximene, come forth!")
+        (say knpc "\n[He intones words of magic]\n"
+	     "  ^c+bKAL AN XEN CORP^c-!\n"
+	     "Luximene, come forth!")
         (kern-obj-put-at (mk-luximene)
                          (loc-offset (kern-obj-get-location knpc)
                                      south))
@@ -97,8 +172,10 @@
         (say knpc "There! Do you see him?")
         (if (no? kpc)
             (begin
-              (say knpc "Of course, his spirit is invisible to the uninitiated. "
-                   "Let me fix that: Wis Quas!")
+              (say knpc "Of course, his spirit is invisible to the uninitiated.\n"
+                   "Let me fix that:\n"
+		   "[He intones words of magic]"
+		   "  ^c+bWIS QUAS^c-!")
               (wis-quas knpc))
             (say knpc "Ask him of the rune now.")))))
 
@@ -112,9 +189,18 @@
                   (say knpc "Ask the spirit of King Luximene! Can't you see him?")
                   (if (no? kpc)
                       (begin
-                        (say knpc "Try a Wis Quas spell.")
-                        (wis-quas knpc))
-                      (say knpc "Well...")))
+                        (say knpc "Try a Reveal spell...\n"
+			     "[He intones words of magic]\n"
+			     "  ^c+bWIS QUAS^c-\n"
+			     "Speak to his shade, ask of the RUNE.")
+			(wis-quas knpc)
+			(kern-conv-end)
+			)
+                      (begin
+			(say knpc "Well then, ask his shade.")
+			(kern-conv-end)
+		      )
+		  ))
                 (say knpc "Bring me the skull of King Luximene the lich "
                      "and we can learn more.")))
         (if (not (any-in-inventory? kpc rune-types))
@@ -137,10 +223,15 @@
                     (quest-offered! quest #t)
                     (if (yes? kpc)
                         (say knpc "A most useful spell when dealing with the angry dead.")
-                        (say knpc "An Xen Corp. A most useful spell. Mix garlic "
-                             "and sulphurous ash to make it. "
-                             "(COUGH) I probably have some "
-                             "around here which you may borrow.")))))))))
+                        (say knpc "Learn ye [An Xen Corp].\n"
+			     "A most useful spell.\n"
+			     "Mix ^c+ggarlic^c- and ^c+gsulphurous ash^c-\n"
+			     "to make it.\n"
+                             "(COUGH)\n"
+			     "I probably have some "
+                             "around here.\n"
+			     "You may borrow it."))
+		    )))))))
 
 (define (necr-absa knpc kpc)
   (say knpc "Ah, Absalot, ancient city of Wisdom, now fallen. "
@@ -216,6 +307,7 @@
        (method 'job necr-job)
        (method 'name necr-name)
        (method 'join necr-join)
+       (method 'heal necr-heal)
        
        (method 'dead necr-dead)
        (method 'coug necr-coug)
