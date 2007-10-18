@@ -20,6 +20,7 @@
 (kern-load "pseudorandom-map.scm")
 (kern-load "endless-deeps-mech.scm")
 (kern-load "lost-halls-mech.scm")
+(kern-load "voidgap-mech.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms
@@ -95,6 +96,7 @@
 (load "gamestart.scm")
 (load "bandit-hideout.scm")
 (load "brundegardt.scm")
+(load "voidgap-passage.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
