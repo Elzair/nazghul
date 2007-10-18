@@ -58,7 +58,8 @@
        "and the present age, the Lost Age, began. Do you wish to know a great secret?")
   (if (yes? kpc)
       (say knpc "Then I will tell you, for you are the Last Keeper.")
-      (say knpc "[The room fills with his terrible laughter] But it is thine to know, "
+      (say knpc "\n[The room fills with his terrible laughter]\n"
+	   "But it is thine to know,\n"
            "Last of the Keepers!"))
   (say knpc "The Lost Age will end when the Demon Gate is opened."))
 
@@ -70,6 +71,50 @@
       (say knpc "Find them. One honorable man will save an Age from disgrace, "
            "though perhaps not himself.")))
 
+(define (lux-wise knpc kpc)
+  (say knpc "The Wise?  [He laughs]\n"
+       "Rebels against the ruler of an Age!\n"
+       "\n"
+       "The Warrior Argus,\n"
+       "  who defeated my armies\n"
+       "  and led their expedition\n"
+       "The Wizard Xileph,\n"
+       "  who counseled rebellion\n"
+       "  and countered my sorceries\n"
+       "The Wrogue Narthax,\n"
+       "  whose thefts made bold mine enemies\n"
+       "  and found my secret passages\n"
+       "The Wright Weilend,\n"
+       "  who outfitted the quest\n"
+       "  against my stronghold\n"
+       "\n"
+       "Yet in my defeat, was wrought their DOOM!"
+       "\n")
+  (say knpc "\n[He gazes at you in expectation]\n"
+       "What?  Know ye not these names?")
+  (if (yes? kpc)
+      (say knpc "Then marvel, at my legend!")
+      (begin
+	(say knpc
+	     "\n[His cold eyes glint in anger]\n"
+	     "Ah, rather you refer to those called Wise of this Age.\n"
+	     "I know nothing of such trifling matters.\n"
+	     "Begone, mortal!")
+	(kern-conv-end)
+	))
+  )
+
+(define (lux-accu knpc kpc)
+  (say knpc "Accursed?\n"
+       "In each Age there are those who seek power, "
+       "who will not be swayed from that search by warning or scruples.\n"
+       "\n"
+       "Some will be destroyed by this search, "
+       "while others land in thrall to those few who gain true power.\n"
+       "\n"
+       "Such must be, the worms of which you speak.")
+  )
+
 
 (define lux-conv
   (ifc basic-conv
@@ -78,8 +123,16 @@
        (method 'default lux-default)
        (method 'hail lux-hail)
        (method 'name lux-name)
+
        (method 'rune lux-rune)
+       (method 'key  lux-rune) ;; A synonym
+
+       (method 'demo lux-gate) ;; A synonym
        (method 'gate lux-gate)
+
+       (method 'wise lux-wise)
+       (method 'accu lux-accu)
+
        (method 'age  lux-age)
        (method 'keep lux-keep)
 
