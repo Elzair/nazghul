@@ -8,19 +8,19 @@
 		"rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
 		"rn rn rn rn rn rn rn rn rn rn rn rn rn rn r8 rn rn rn rn "
 		"rn rn r8 r8 r8 r8 r8 rn r8 rn rn rn rn rc {{ ra r8 r8 rn "
-		"rn rc {4 {{ {{ {{ {2 re bb ra r8 r8 rc {{ {{ {2 .. .. ra "
-		"rc .. {4 {{ {{ {3 .. .. .. .. {4 {{ {{ {{ {{ {2 .. .. .! "
-		".. .. .. {1 {1 .. .. .. .. .. .. {1 {5 {{ {3 .. .. .! .. "
-		".. .. .. .. .. .. .. .. .. .. .. .. .. {1 .. .. .. .. .! "
+		"rn rc {4 {{ {{ {{ {2 re bb ra r8 xx rc {{ {{ {2 .. .. ra "
+		"rc .. {4 {{ {{ {3 .. .. .. .. {4 xx {{ {{ {{ {2 .. .. .! "
+		".. .. .. {1 {1 .. .. .. .. .. .. x! {5 {{ {3 .. .. .! .. "
+		".. .. .. .. .. .. .. .. .. .. .. w+ .. {1 .. .. .. .. .! "
 		".. .. .. .. .. bb .. .. .. .. .. .. .. .. bb .. .. .. .. "
-		".. .. .. .. .. .. .. .. {8 .. .. .. .. .. .. .. .. .. .! "
+		".. .. .. .. .. .. .. .. {8 .. .. w+ .. .. .. .. .. .. .! "
 		".. .. .. .. .. .. {8 {c {{ {2 .. .. .. .. .. .. .. .! .. "
-		".. .. bb .. .. {c {{ {{ {{ {2 .. .. .. .. .. .. .. {8 .! "
-		".. .. .. .. {c {{ {{ rf {{ {2 .. bb .. .. .. .. {4 {{ {a "
-		".. .. .. {4 {{ {{ {{ {{ {3 .. .. .. .. .. .. .. {4 {{ {{ "
-		".. r7 .. .. r3 r5 {{ {{ {2 {8 {8 .. .. r3 r5 .. .. {5 {{ "
-		"r1 rn r1 r1 rn rn r1 r5 {4 {{ {{ {2 r3 rn rn r1 r1 r1 r1 "
-		"rn rn rn rn rn rn rn rn r5 {{ {{ r3 rn rn rn rn rn rn rn "
+		".. .. bb .. .. {c {{ {{ {{ {2 .. w+ .. .. .. .. .. {8 .! "
+		".. .. .. .. {c {{ {{ rf {{ {2 .. x! .. .. .. .. {4 {{ {a "
+		".. .. .. {4 {{ {{ {{ {{ {3 .. .. xx .. .. .. .. {4 {{ {{ "
+		".. r7 .. .. r3 r5 {{ {{ {2 {8 {8 xx .. r3 r5 .. .. {5 {{ "
+		"r1 rn r1 r1 rn rn r1 r5 {4 {{ {{ xx r3 rn rn r1 r1 r1 r1 "
+		"rn rn rn rn rn rn rn rn r5 {{ {{ rn rn rn rn rn rn rn rn "
 		"rn rn rn rn rn rn rn rn rn r1 r1 rn rn rn rn rn rn rn rn "
 		"rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn rn "
 
@@ -34,9 +34,27 @@
 	 nil ; subplaces
 	 nil ; neighbors
  
-	 nil ; objects
+	 (list ; objects
+		(put (mk-monman) 0 0)
+		
+		 (put (mk-windowed-door) 11 8)
+ 		(put (mk-windowed-door)  11 10)
+		
+		 (put (guard-pt 'knight)  13 8)
+		 (put (guard-pt 'knight)  13 10)
+		 (put (guard-pt 'halberdier)  14 9)
+		 (put (guard-pt 'crossbowman)  15 10)
+		 (put (guard-pt 'crossbowman)  15 8)
+		 
+		(put (spawn-pt 'cave-goblin-slinger-m) 3 7)
+		(put (spawn-pt 'cave-goblin-berserker-m) 6 12)
+		(put (spawn-pt 'cave-goblin-slinger-m) 4 11)
+		(put (spawn-pt 'cave-goblin-berserker-m) 7 8)
+		(put (spawn-pt 'troll-m) 2 8)
+	 )
 
 	 (list
+		 'on-entry-to-dungeon-room
 	 	'voidgap-room-handle-start
 		) ;; hooks
  (list  ;; edge entrances

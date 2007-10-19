@@ -187,8 +187,8 @@
 
 					(prmap-room-addmonster kplace monster)))
 				(prmap-mk-monster-group voidgap-group-types voidgap-monster-types 
-					(string-append "1d" (number->string (min 200 (ceiling (* 60 (sqrt distance))))))
-					(+ 300 (* 50 (sqrt distance)))))
+					(string-append "1d" (number->string (+ 100 (ceiling (* 40 (sqrt distance))))))
+					(+ 200 (* 30 (sqrt distance)))))
 					)
 		)
 	))
@@ -224,7 +224,6 @@
 		(voidgap-init-cohesion mapdata)
 		(prmap-room-freeze-current mapdata)
 		(prmap-roomdata-setxyz roomdata -1 0 0)
-		(voidgap-room-init-contents kplace roomdata)
 		(kern-place-set-neighbor west kplace (eval 'p_voidgap_1))
 	))	
 	
