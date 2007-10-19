@@ -342,9 +342,14 @@
 			(if (not (null? members))
 				(let ((kchar (random-select members)))
 					(say kchar msg)
-				)))
+					#t)
+				#f)
+			)
 		(if (in-player-party? kchar-tag)
-			(say (eval kchar-tag) msg))
+			(begin
+				(say (eval kchar-tag) msg)
+				#t)
+			#f)
 	))
          
 ;;----------------------------------------------------------------------------
