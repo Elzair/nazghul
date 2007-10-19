@@ -457,6 +457,11 @@
       (ai-summon kchar summon-skeleton)
       (spell-sword-ai kchar)))
 
+(define (flee kchar)
+  (println (kern-obj-get-name kchar) " flees")
+  (kern-char-set-fleeing kchar #t)
+  )
+
 ;; A kraken will chomp through planking to get at its foes. If foes exist, and
 ;; they are not in melee range, and the kraken cannot pathfind to them, it will
 ;; attempt a directional move toward them. If the move is blocked by deck, the
@@ -466,7 +471,7 @@
 (define (generic-kraken-ai kchar ability)
   (let ((foes (all-visible-hostiles kchar)))
     (if (null? foes)
-        #f
+        (flee kchar)
         (let* ((kfoe (nearest-obj kchar foes))
                (dest (kern-obj-get-location kfoe)))
           (if (pathfind kchar dest)
@@ -478,9 +483,66 @@
                          (dest (loc-add cloc vect)))
                     (if (passable? dest kchar)
                         (kern-obj-move kchar (loc-x vect) (loc-y vect))
-                        (and (is-deck? (kern-place-get-terrain dest))
-                             (can-use-ability? ability kchar)
-                             (use-ability ability kchar dest))))))))))
+                        (or (and (is-deck? (kern-place-get-terrain dest))
+                                 (can-use-ability? ability kchar)
+                                 (use-ability ability kchar dest))
+                            (flee kchar)
+                        )))))))))
+
+(define (submerge kchar) 
+  ;;(println "SUBMERGE")
+  (kern-obj-set-submerged kchar #t)
+  )
+
+(define (surface kchar) 
+  ;;(println "SURFACE") 
+  (kern-obj-set-submerged kchar #f)
+  )
+
+(define (generic-kraken-ai kchar ability)
+  (let ((foes (all-visible-hostiles kchar)))
+    (if (null? foes)
+        (begin
+          ;;(println "no foes, flee.")
+          (flee kchar)
+          )
+        (if (not (null? (get-hostiles-in-range kchar 1)))
+            (begin
+              ;;(println "foes in range 1, attack.")
+              (surface kchar)
+              #f)
+            (let* ((kfoe (nearest-obj kchar foes))
+                   (dest (kern-obj-get-location kfoe)))
+              ;;(println "no foes in range, submerging and selecting " (kern-obj-get-name kfoe) " as target...")
+              (submerge kchar)
+              (if (pathfind kchar dest)
+                  (begin
+                    ;;(println " pathfinding...")
+                    #f
+                    )
+                  (let* ((cloc (kern-obj-get-location kchar))
+                         (vect (loc-to-delta (loc-diff cloc dest)))
+                         (dest (loc-add cloc vect)))
+                    ;;(println " can't pathfind...")
+                    (if (passable? dest kchar)
+                        (begin
+                          ;;(println "   moving directly.")
+                          (kern-obj-move kchar (loc-x vect) (loc-y vect))
+                          )
+                        (begin
+                          ;;(println "   trying to chomp...")
+                          (if (and (is-deck? (kern-place-get-terrain dest))
+                                   (can-use-ability? ability kchar)
+                                   (use-ability ability kchar dest))
+                              (begin
+                                ;;(println "    success!")
+                                (surface kchar)
+                                #t)
+                              (begin
+                                ;;(println "    can't chomp, so flee.")
+                                (flee kchar)
+                                )
+                              ))))))))))
 
 ;; A kraken will chomp through planking to get at its foes. If foes exist, and
 ;; they are not in melee range, and the kraken cannot pathfind to them, it will

@@ -62,9 +62,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; mk-npc-party
-(define (mk-npc-party ptype) 
-  ;;(println "mk-npc-party")
-  (ptype-generate (eval ptype)))
+(define (mk-npc-party ptype-tag) 
+  (ptype-generate (eval ptype-tag)))
 
 ;;----------------------------------------------------------------------------
 ;; NPC PARTY TYPES

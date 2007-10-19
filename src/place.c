@@ -305,7 +305,9 @@ static void tile_paint(struct tile *tile, int sx, int sy)
 			if (!Reveal && !obj->isShaded())
 				continue;
 			sprite_fade(sprite);
-		}
+		} else if (obj->isShaded()) {
+                        sprite_fade(sprite);
+                }
 
 		obj->paint(sx, sy);
 

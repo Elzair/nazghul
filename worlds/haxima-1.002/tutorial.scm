@@ -122,36 +122,36 @@
   )
  )
 
-;; The moon Lumis is the source gate, which means it opens the source moongates
-;; on its phases. We designate this by using the source-moon-ifc as its ifc.
-(mk-moon 'lumis  ; tag
-         "Lumis" ; name
-         2       ; hours per phase
-         24      ; hours per revolution
-         90      ; initial arc
-         0       ; initial phase
-         'source-moon-ifc ; ifc
-         ;; gates (moons are fixed at 8 phases in mk-moon):
-         (list 'mg-1 'mg-2 'mg-3 'mg-4
-               'mg-5 'mg-6 'mg-7 'mg-8
-               ))
+; ;; The moon Lumis is the source gate, which means it opens the source moongates
+; ;; on its phases. We designate this by using the source-moon-ifc as its ifc.
+; (mk-moon 'lumis  ; tag
+;          "Lumis" ; name
+;          2       ; hours per phase
+;          24      ; hours per revolution
+;          90      ; initial arc
+;          0       ; initial phase
+;          'source-moon-ifc ; ifc
+;          ;; gates (moons are fixed at 8 phases in mk-moon):
+;          (list 'mg-1 'mg-2 'mg-3 'mg-4
+;                'mg-5 'mg-6 'mg-7 'mg-8
+;                ))
 
-;; The moon Ord is the destination gate, which means its phase decides the
-;; destination when the player steps through a moongate. We designate this by
-;; giving it a nil ifc. Note that its gates do not need to be listed in the
-;; same order as Lumis. In fact, they don't even need to be the same set of
-;; gates.
-(mk-moon 'ord    ; tag
-         "Ord"   ; name
-         1       ; hours per phase
-         12      ; hours per revolution
-         180     ; initial arc
-         1       ; initial phase
-         nil     ; ifc
-         ;; gates (moons are fixed at 8 phases in mk-moon):
-         (list 'mg-1 'mg-2 'mg-3 'mg-4
-               'mg-5 'mg-6 'mg-7 'mg-8
-               ))
+; ;; The moon Ord is the destination gate, which means its phase decides the
+; ;; destination when the player steps through a moongate. We designate this by
+; ;; giving it a nil ifc. Note that its gates do not need to be listed in the
+; ;; same order as Lumis. In fact, they don't even need to be the same set of
+; ;; gates.
+; (mk-moon 'ord    ; tag
+;          "Ord"   ; name
+;          1       ; hours per phase
+;          12      ; hours per revolution
+;          180     ; initial arc
+;          1       ; initial phase
+;          nil     ; ifc
+;          ;; gates (moons are fixed at 8 phases in mk-moon):
+;          (list 'mg-1 'mg-2 'mg-3 'mg-4
+;                'mg-5 'mg-6 'mg-7 'mg-8
+;                ))
 
 ;; ----------------------------------------------------------------------------
 ;; The diplomacy table. Each entry defines the attitude of the row to the

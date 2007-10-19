@@ -3033,6 +3033,26 @@ static pointer kern_obj_set_visible(scheme *sc, pointer args)
         return scm_mk_ptr(sc, obj);
 }
 
+static pointer kern_obj_set_submerged(scheme *sc, pointer args)
+{
+        class Object *obj;
+        int val;
+
+        if (unpack(sc, &args, "pb", &obj, &val)) {
+                rt_err("kern-obj-set-submerged: bad args");
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("kern-obj-set-submerged: null object");
+                return sc->NIL;
+        }
+
+        obj->setSubmerged(val);
+
+        return scm_mk_ptr(sc, obj);
+}
+
 static pointer kern_obj_set_pclass(scheme *sc, pointer args)
 {
         class Object *obj;
@@ -5096,6 +5116,17 @@ KERN_API_CALL(kern_obj_is_visible)
                 return sc->F;
 
         return obj->isVisible() ? sc->T : sc->F;
+}
+
+KERN_API_CALL(kern_obj_is_submerged)
+{
+        Object *obj;
+
+        obj = unpack_obj(sc, &args, "kern-obj-is-submerged?");
+        if (!obj)
+                return sc->F;
+
+        return obj->isSubmerged() ? sc->T : sc->F;
 }
 
 KERN_API_CALL(kern_char_set_fleeing)
@@ -9122,6 +9153,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-is-container?", kern_obj_is_container);
         API_DECL(sc, "kern-obj-is-field?", kern_obj_is_field);
         API_DECL(sc, "kern-obj-is-mech?", kern_obj_is_mech);
+        API_DECL(sc, "kern-obj-is-submerged?", kern_obj_is_submerged);
         API_DECL(sc, "kern-obj-is-visible?", kern_obj_is_visible);
         API_DECL(sc, "kern-obj-move", kern_obj_move);
         API_DECL(sc, "kern-obj-put-at", kern_obj_put_at);
@@ -9140,6 +9172,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-pclass", kern_obj_set_pclass);
         API_DECL(sc, "kern-obj-set-mmode", kern_obj_set_mmode);
         API_DECL(sc, "kern-obj-set-sprite", kern_obj_set_sprite);
+        API_DECL(sc, "kern-obj-set-submerged", kern_obj_set_submerged);
         API_DECL(sc, "kern-obj-set-temporary", kern_obj_set_temporary);
         API_DECL(sc, "kern-obj-set-ttl", kern_obj_set_ttl);
         API_DECL(sc, "kern-obj-set-visible", kern_obj_set_visible);

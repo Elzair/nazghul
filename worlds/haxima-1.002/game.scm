@@ -57,6 +57,8 @@
 (kern-set-kern-intvar "AP_MULT12:third_plus_wpn_attack"   6)  ;; AP cost * 6/12 for 3rd+ weapon attacks, if 3+ weapons used
 (kern-set-kern-intvar "AP_THRESHOLD:multi_attack_overage" 0)  ;; attack sequence can continue if AP overage is not > 0
 
+(kern-set-kern-intvar "submerged_def_bonus" 10) ;; defense bonus for submerged critters
+
 ;; ship speeds are better handled using mmodes/pclasses-
 ;; it should only affect actual movement
 (define speed-ship            speed-human)  

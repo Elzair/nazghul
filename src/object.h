@@ -318,6 +318,8 @@ class Object {
         virtual void start();
 	virtual bool isVisible();
         virtual void setVisible(bool val);
+	virtual bool isSubmerged();
+        virtual void setSubmerged(bool val);
 	virtual bool isShaded();
 	virtual void describe();
 		virtual void examine();
@@ -500,6 +502,9 @@ class Object {
         // "synchronized dancing" problem. It also allows us to animate only
         // player-controlled characters during Time Stop.
         int sprite_frame;
+
+        // Used for critters that can go underwater.
+        bool submerged;
 };
 
 #include "macros.h"

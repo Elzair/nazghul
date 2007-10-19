@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdio.h>
+
 #define KERN_INTVAR_HASH_SIZE 31
 
 struct kern_intvar_entry {
@@ -53,11 +55,11 @@ static int hashfn(char *key)
     const char *c; 
     static const int bits_per_int = sizeof(unsigned int)*8; 
 
-    for (c = key; *c; c++) { 
+     for (c = key; *c; c++) { 
         /* letters have about 5 bits in them */ 
         hashed = (hashed<<5) | (hashed>>(bits_per_int-5)); 
         hashed ^= *c; 
-    } 
+     } 
     return hashed % KERN_INTVAR_HASH_SIZE;
 }
 

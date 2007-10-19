@@ -1705,7 +1705,8 @@ bool Character::isVisible()
 bool Character::isShaded()
 {
 	// Friendly invisible characters are shaded
-	return isPlayerControlled();
+	return ((! isVisible() && isPlayerControlled()) 
+                || Object::isShaded());
 }
 
 void Character::describe()
@@ -1728,6 +1729,9 @@ void Character::describe()
 #endif
         if (!isVisible())
                 log_continue(" (invisible)");
+        if (isSubmerged()) {
+                log_continue(" (submerged)");
+        }
 }
 
 void Character::examine()
@@ -1970,6 +1974,10 @@ int Character::getDefend()
         }
         
         defend += defenseBonus;
+
+        if (isSubmerged()) {
+                defend += kern_intvar_get("submerged_def_bonus");
+        }
 
         return defend;
 }
@@ -3072,6 +3080,8 @@ void Character::save(struct save *save)
                 save->enter(save, "(kern-char-force-drop");
         }
 
+        // Create the object within a 'let' block
+        save->enter(save, "(let ((kchar ");
         save->enter(save, "(kern-mk-char\n");
         if (this->tag) {
                 save->write(save, "\'%s  ; tag\n", this->tag );
@@ -3130,7 +3140,15 @@ void Character::save(struct save *save)
         // Hooks
         Object::saveHooks(save);
 
-        save->exit(save, ")\n");
+        // Close the <var-list> part of the 'let' block
+        save->exit(save, "))) ;; end ((kchar ...)\n");
+
+        if (isSubmerged()) {
+                save->write(save, "(kern-obj-set-submerged kchar #t)\n");
+        }
+
+        // Close the 'let' block
+        save->exit(save, "kchar) ;; end (let ...)\n");
 
         if (getForceContainerDrop()) {
                 save->exit(save, "#t) ;; kern-char-force-drop\n");

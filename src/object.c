@@ -623,8 +623,12 @@ void Object::describe()
 {
         assert(getObjectType()); // else implement this method in subclass
         getObjectType()->describe(this);
-        if (!isVisible())
-                consolePrint(" (invisible)");
+        if (!isVisible()) {
+                log_continue(" (invisible)");
+        }
+        if (isSubmerged()) {
+                log_continue(" (submerged)");
+        }
 }
 
 void Object::examine()
@@ -724,6 +728,7 @@ void Object::setup()
         started         = false;
         facing          = SPRITE_DEF_FACING;
         ignoreTimeStop  = false;
+        submerged       = false;
 
         if (getObjectType() && ! getObjectType()->isVisible())
                 visible = 0;
@@ -947,9 +952,19 @@ void Object::setVisible(bool val)
         }
 }
 
+bool Object::isSubmerged()
+{
+        return submerged;
+}
+
+void Object::setSubmerged(bool val)
+{
+        submerged = val;
+}
+
 bool Object::isShaded()
 {
-        return false;
+        return isSubmerged();
 }
 
 void Object::setOpacity(bool val)
@@ -1519,6 +1534,11 @@ void Object::save(struct save *save)
         // Set the ignore-time-stop flag
         if (ignoreTimeStop) {
                 save->write(save, "(kern-obj-set-ignore-time-stop kobj #t)\n");
+        }
+
+        // Set the submerged flag
+        if (submerged) {
+                save->write(save, "(kern-obj-set-submerged kobj #t)\n");
         }
 
         // Close the 'let' block, returning kobj as the last thing evaluated.
