@@ -22,6 +22,7 @@
 #include "cmd.h"
 #include "place.h"
 #include "constants.h"
+#include "file.h"
 #include "foogod.h"
 #include "images.h"
 #include "sprite.h"
@@ -3340,7 +3341,7 @@ bool cmd_save_current_place (struct place * place)
 
     file_path = "_test_save_place";
 
-    file = fopen(file_path, "w");
+    file = file_open_in_save_dir(file_path, "w");
     if (file == NULL) {
 	log_msg("Save place to file '%s' failed.", file_path);
 	printf("Error on fopen() for file '%s': '%s'\n", file_path, strerror(errno));
