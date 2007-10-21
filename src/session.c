@@ -533,6 +533,7 @@ save_t *save_new(FILE *file)
         assert(save);
 
         save->file = file;
+	// SAM: Where is indent ever initialized???
         save->write = save_write;
         save->enter = save_enter;
         save->exit = save_exit;

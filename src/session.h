@@ -267,6 +267,9 @@ typedef struct save {
 
 } save_t;
 
+save_t * save_new(FILE *   file);
+void     save_del(save_t * save);
+
 extern int session_load(char *filename);
 extern int session_save(char *fname);
 struct session *session_new(void *interp);
