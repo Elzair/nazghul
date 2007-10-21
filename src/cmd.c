@@ -3310,7 +3310,7 @@ bool cmd_terraform(struct place *place, int x, int y)
         log_end_group();
 
 	return true;
-} // cmdTerraform()
+} // cmd_terraform()
 
 static void print_terraform_help (void)
 {
@@ -3326,6 +3326,49 @@ static void print_terraform_help (void)
         log_msg("            ESC = Exit Terraform mode");
         log_msg("              ? = This help text");
         log_msg("");
+}
+
+bool cmd_save_current_place (struct place * place)
+{
+    FILE *   file;
+    char *   file_path;
+    save_t * save;
+    int ret;
+
+    //log_msg("cmd_save_current_place");
+    //printf("cmd_save_current_place()\n");
+
+    file_path = "_test_save_place";
+
+    file = fopen(file_path, "w");
+    if (file == NULL) {
+	log_msg("Save place to file '%s' failed.", file_path);
+	printf("Error on fopen() for file '%s': '%s'\n", file_path, strerror(errno));
+	return 0;
+    }
+    Session->session_id++;  // Must increment to cause saving.
+
+    save = save_new(file);
+    save->indent     = 0;
+    save->session_id = Session->session_id;
+
+    //terrain_map_print(file, 0, place->terrain_map);
+    terrain_map_save(save, place->terrain_map);
+    log_msg("Saved map to file:\n'%s'", file_path);
+    printf( "Saved map to file '%s'\n", file_path);
+
+    save_del(save);
+
+    ret = fclose(file);
+    if (ret != 0) {
+	// SAM: Not sure what we can do about it, 
+	//      and this seems kind of low-level to log_msg() about...
+	printf("Error on fclose() for file '%s': '%s'\n", file_path, strerror(errno));
+	// It seems that the save method should return non-void, 
+	// so that we know success/failure in this and other cases...
+	return 0;
+    }
+    return 1;
 }
 
 void cmdZoomIn(void)

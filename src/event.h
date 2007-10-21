@@ -57,15 +57,17 @@ BEGIN_DECL
 #define KEY_SHIFT_SOUTHWEST (KEY_SOUTHWEST|KEY_SHIFT)
 
 /* 
- * Give canonical names to the UNICODE versions of the CTRL keypresses that we
- * care about.
+ * Give canonical names to the UNICODE versions of the CTRL keypresses 
+ * that we care about.
+ * CTRL-A is 0x01 and CTRL-Z is 0x1A, others are in-between of course.
  */
 #define KEY_CTRL_D      0x04
+#define KEY_CTRL_O      0x0F
 #define KEY_CTRL_Q      0x11
 #define KEY_CTRL_R      0x12
 #define KEY_CTRL_S      0x13
 #define KEY_CTRL_T      0x14
-#define KEY_CTRL_Z      0x1a
+#define KEY_CTRL_Z      0x1A
 
 struct TickHandler {
         struct list list;

@@ -105,6 +105,7 @@ extern bool cmdCastSpell(class Character * pc);
 extern bool cmdQuit(void);
 extern bool cmdLook(int x, int y);
 extern bool cmd_terraform(struct place *place, int x, int y);
+extern bool cmd_save_current_place (struct place * place);
 extern bool cmdSaveTerrainMap(class Character * pc);
 extern void cmdSettings(void);
 extern void cmdDrop(class Character *pc);

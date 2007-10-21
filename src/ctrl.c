@@ -58,16 +58,20 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 
         /* Commands which are only enabled in developer mode */
         if (DeveloperMode) {
-                switch (key) {
+	    switch (key) {
                         
                 case KEY_CTRL_T:
-                        cmd_terraform(party->getPlace(), party->getX(), party->getY());
-                        break;
-                        
+		    cmd_terraform(party->getPlace(), party->getX(), party->getY());
+		    break;
+
+		case KEY_CTRL_O:
+		    cmd_save_current_place(party->getPlace());
+		    break;
+
                 case KEY_CTRL_Z:
-                        mapTogglePeering();
-                        break;
-                }
+		    mapTogglePeering();
+		    break;
+	    }
         }
 
         switch (key) {
@@ -975,7 +979,11 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         cmd_terraform(character->getPlace(), character->getX(),
                                       character->getY());
                         break;
-                        
+
+		case KEY_CTRL_O:
+		    cmd_save_current_place(character->getPlace() );
+		    break;
+
                 case KEY_CTRL_Z:
                         mapTogglePeering();
                         break;
