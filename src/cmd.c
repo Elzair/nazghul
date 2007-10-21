@@ -723,7 +723,7 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
                 index = palette_get_terrain_index(pp, tt);
                 if (index >= 0) {
                         palette_set_current_terrain(pp, index);
-                        emit_terraform_status("Here", pp, tt);
+                        emit_terraform_status("Copy", pp, tt);
                 }
                 return 0;
         }
@@ -741,6 +741,7 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
                                                    Session->crosshair->getPlace(),
                                                    Session->crosshair->getX(),
                                                    Session->crosshair->getY());
+				emit_terraform_status("Flood-Fill", pp, tt);
                         }
                         mapUpdate(0);
                 }
