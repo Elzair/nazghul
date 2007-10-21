@@ -374,31 +374,82 @@ void print_horizontal_guideline (FILE * fp, int indent, struct terrain_map *map)
     // TODO: width 3 and 4 palettes.
 }
 
+static void terrain_map_composite_print_block_header (struct save * save, int nn, int n_blocks, int x, int y, int sub_w, int sub_h) {
+    int  west_x,  east_x;
+    int north_y, south_y;
+
+    west_x = x * sub_w;
+    east_x = ((x+1) * sub_w) - 1;
+
+    north_y = y * sub_h;
+    south_y = ((y+1) * sub_h) - 1;
+
+    save->write(save,
+		";; Map Block #%d/%d (%d,%d)\n",
+		nn, n_blocks, x, y);
+    save->write(save,
+		";;   NW=%3d,%-3d  NE=%3d,%-3d \n",
+		west_x, north_y, /* NW corner */
+		east_x, north_y  /* NE corner */ );
+    save->write(save,
+		";;   SW=%3d,%-3d  SE=%3d,%-3d \n",
+		west_x, south_y, /* SW corner */
+		east_x, south_y  /* SE corner */ );
+    save->write(save, "\n");
+}
 
 static void terrain_map_composite_save(struct save *save, struct terrain_map *map)
 {
-        int x, y, w, h, sub_y, sub_x;
+    int w, h, sub_w, sub_h;
+    int x, y, sub_x, sub_y;
+    int nn;
+    char * tag;
 
         map->saved = save->session_id;
 
+	sub_w = map->submap_w;
+	sub_h = map->submap_h;
+
+        w = map->w / sub_w;
+        h = map->h / sub_h;
+
         /* write the composite map constructor */
-        save->enter(save, "(kern-mk-composite-map\n");
         if (map->tag)
-                save->write(save, "'%s ", map->tag);
+	    tag = map->tag;
         else
-                save->write(save, "nil ");
-        w = map->w/map->submap_w;
-        h = map->h/map->submap_h;
-        save->write(save, "%d %d\n", w, h);
+	    tag = "nil";
+
+        save->enter(save, 
+		    "(kern-mk-composite-map %s%s %d %d\n", 
+		    map->tag ? "'" : "", tag, 
+		    w, h);
+	save->write(save,
+		    ";; %d x %d map blocks: %d blocks, each %d x %d tiles\n",
+		    w, h, (w * h), sub_w, sub_h);
+
+	save->write(save, ";; Map block layout:\n");
+	nn = 1;
+	for (y = 0; y < h; y++) {
+	    save->write(save, ";; ");
+	    for (x = 0; x < w; x++) {
+		fprintf(save->file, 
+			"Block %2d (%d,%d)  ",
+			nn, x, y);
+		nn++;
+	    }
+	    fprintf(save->file, "\n");
+	}
+	fprintf(save->file, "\n");
 
         /* for each submap */
+	nn = 1;
         for (y = 0; y < h; y++) {
                 for (x = 0; x < w; x++) {
-
-                        /* write the submap constructor */
-                        save->enter(save, "(kern-mk-map nil %d %d %s\n",
-                                    map->submap_w, map->submap_h, 
-                                    map->palette->tag);
+		    /* write the submap constructor */
+		    save->enter(save, 
+				"(kern-mk-map nil %d %d %s\n", 
+				sub_w, sub_h, map->palette->tag);
+		    terrain_map_composite_print_block_header(save, nn, (w*h), x, y, sub_w, sub_h);
 
                         /* write the submap terrain list */
                         save->enter(save, "(list\n");
@@ -432,6 +483,7 @@ static void terrain_map_composite_save(struct save *save, struct terrain_map *ma
                         
                         save->exit(save, ")\n");
                         save->exit(save, ")\n");
+			nn++;
                 }
         }
         
@@ -444,6 +496,8 @@ void terrain_map_save(struct save *save, void *val)
         int x, y, i;
 
         map = (struct terrain_map*)val;
+
+	assert(is_terrain_map(map));
 
         if (map->saved == save->session_id) {
                 save->write(save, "%s\n", map->tag);
