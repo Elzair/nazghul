@@ -122,6 +122,7 @@ static int select_target_rlcb(struct place *place,
                               struct list *suggest,
                               v_fncptr_iiv_t each_tile_func,
                               i_fncptr_iiv_t each_target_func);
+static void print_terraform_help (void);
 
 /* functions */
 
@@ -747,6 +748,11 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
                 }
                 return 0;
         }
+
+	if (key == '?') {
+	    print_terraform_help();
+	    return 0;
+	}
 
         if (key == SDLK_PAGEUP) {
                 // Page Up == Cycle back through terrain in palette
@@ -1721,6 +1727,7 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         mapSetDirty();
   
         cmdwin_spush("Done.");
+        log_msg("---Terraform Done---");
 
         return 0;
 }
@@ -3287,6 +3294,11 @@ bool cmd_terraform(struct place *place, int x, int y)
         log_msg("      \"%s\"", place->name );
         log_msg("Map   %s",     map->tag    );
         log_msg("Palette %s",   palette->tag);
+        log_msg("");
+
+	print_terraform_help();
+	log_msg("Press '?' for Terraform command help.");
+
         emit_terraform_status("Trrn", palette, terrain);
 
         cmd_dm_xray_look_at_xy(place, x,y, NULL);
@@ -3299,6 +3311,22 @@ bool cmd_terraform(struct place *place, int x, int y)
 
 	return true;
 } // cmdTerraform()
+
+static void print_terraform_help (void)
+{
+        log_msg("");
+        log_msg(" PageUp/PageDn/ = Select terrain");
+        log_msg("      Home/End    from palette");
+        log_msg("    Arrow Keys  = Move cursor");
+        log_msg("    SPACE/ENTER = Paint terrain");
+        log_msg("              C = Copy from ground");
+        log_msg("              F = Flood-Fill");
+        log_msg("     1234567890 = Get from QuickKey");
+        log_msg("CTRL-1234567890 = Set QuickKey");
+        log_msg("            ESC = Exit Terraform mode");
+        log_msg("              ? = This help text");
+        log_msg("");
+}
 
 void cmdZoomIn(void)
 {
