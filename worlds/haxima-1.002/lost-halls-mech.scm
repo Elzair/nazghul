@@ -584,10 +584,10 @@
 (define (losthalls-init-cohesion mapdata ruindata)
 	(if (list-ref mapdata 10)
 		(begin
-			(kern-log-msg "begin cohesion check")
+			;;(kern-log-msg "begin cohesion check")
 			(prmap-ensure-cohesion mapdata -3 3 1 7 0 losthalls-link-factory)
 			(prmap-ensure-cohesion ruindata 0 5 0 5 1 losthalls-link-factory-ruin)
-			(kern-log-msg "end cohesion check")
+			;;(kern-log-msg "end cohesion check")
 			(mutable-list-set mapdata 10 #f)
 		)))
   

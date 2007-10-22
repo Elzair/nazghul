@@ -196,9 +196,9 @@
 (define (voidgap-init-cohesion mapdata)
 	(if (list-ref mapdata 10)
 		(begin
-			(kern-log-msg "begin cohesion check")
+			;;(kern-log-msg "begin cohesion check")
 			(prmap-ensure-cohesion mapdata -5 0 -5 0 0 voidgap-link-factory)
-			(kern-log-msg "end cohesion check")
+			;;(kern-log-msg "end cohesion check")
 			(mutable-list-set mapdata 10 #f)
 		)))
 		
