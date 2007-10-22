@@ -165,7 +165,8 @@
 ;todo add area effect for high powered users?
 (define (powers-awaken caster ktarg power)
 	(kern-obj-remove-effect ktarg ef_sleep)
-	(kern-char-set-sleep ktarg #f))
+	(kern-char-set-sleep ktarg #f)
+	result-ok)
 	
 (define (powers-blink-range power)
 	(+ 3 power))
@@ -174,17 +175,20 @@
 	(if (kern-place-is-passable ktarg caster)
 		(kern-obj-relocate caster ktarg nil)
 		(kern-log-msg "Blink Failed: Impassable terrain")
-	))
+	)
+	result-ok)
 	
 (define (powers-blink-party-range power)
 	(cond ((< power 20) (* power 0.75))
-		(else 15)))
+		(else 15))
+	result-ok)
 	
 (define (powers-blink-party caster ktarg power)
 	(if (kern-place-is-passable ktarg (kern-char-get-party caster))
 		(kern-obj-relocate (kern-char-get-party caster) ktarg nil)
 		(kern-log-msg "Blink Failed: Impassable terrain")
-	))
+	)
+	result-ok)
 
 (define (powers-charm-range power)
 	(+ 3 (/ power 3)))
@@ -209,6 +213,7 @@
 		(else (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists charm"))
 		)
 	(kern-harm-relations target caster)
+	result-ok
 )
 
 (define (powers-clone-range power)
@@ -221,7 +226,8 @@
 		(loc (pick-loc (kern-obj-get-location target) clone)))
 			(kern-being-set-base-faction clone (kern-being-get-current-faction caster))
 			(kern-obj-put-at clone loc)
-		))
+		)
+		result-ok)
 	
 (define (powers-cone-flamespray caster ktarg power)
 	(let ((damage (mkdice 2 (min (floor (+ 2 (/ power 2))) 10))))
@@ -232,7 +238,8 @@
 				))
 		(cone-do-simple caster ktarg 3.3
 			(mk-basic-cone-proc flambe-all F_fire (lambda () 0))
-			)))
+			))
+			result-ok)
 
 (define (powers-cone-basic-leaveproc balance width)
 	(lambda ()
@@ -250,7 +257,8 @@
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
 			(mk-basic-cone-proc energize-all F_energy 
 				(powers-cone-basic-leaveproc 40 (+ 30 (* 4 power)))
-			))))
+			)))
+			result-ok)
 
 (define (powers-cone-fire caster ktarg power)
 	(let ((damage (mkdice (floor (/ power 2)) 3)))
@@ -264,7 +272,8 @@
 		(cone-do-simple caster ktarg (+ 2 (powers-cone-basic-range power))
 			(mk-basic-cone-proc burn-all F_fire 
 				(powers-cone-basic-leaveproc 30 (+ 20 (* 5 power)))
-			))))
+			)))
+			result-ok)
 
 (define (powers-cone-poison caster ktarg power)
 	(let ((damage (mkdice 1 (floor (/ power 4)))))
@@ -282,7 +291,8 @@
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
 			(mk-basic-cone-proc poison-all F_poison 
 				(powers-cone-basic-leaveproc 60 (+ 40 (* 3 power)))
-			))))
+			)))
+			result-ok)
 
 (define (powers-cone-sleep caster ktarg power)
 	(let ((damage (mkdice 1 (floor (/ power 4)))))
@@ -298,7 +308,8 @@
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
 			(mk-basic-cone-proc sleep-all F_sleep 
 				(powers-cone-basic-leaveproc 40 (+ 30 (* 4 power)))
-			))))
+			)))
+			result-ok)
 
 ;todo limit to some range?
 (define (powers-confuse caster unused power)
@@ -308,7 +319,8 @@
 				(+ (occ-ability-magicdef kchar) 2))
 			(kern-being-set-base-faction kchar (random-faction))
 			))
-	(map confuse (all-hostiles caster)))	
+	(map confuse (all-hostiles caster))
+	result-ok)
 	
 (define (powers-cure-poison caster ktarg power)
 	(kern-obj-remove-effect ktarg ef_poison)
@@ -337,7 +349,8 @@
 (define (powers-dispel-field caster ktarg power)
    (kern-print "Dispelled field!\n")
    (kern-obj-remove ktarg)
-   (kern-map-repaint))	
+   (kern-map-repaint)
+   result-ok)
 
 ;todo currently only checks topmost item
 (define (powers-disarm-traps caster ktarg power)
@@ -368,7 +381,8 @@
 				(+ power 8)
 				(occ-ability-magicdef kchar))
 			(repel kchar)))
-	(map try-repel (all-hostiles caster)))
+	(map try-repel (all-hostiles caster))
+	result-ok)
 
 ;todo
 ; fields would be a lot more useful if a wall was created instead of one square
@@ -391,28 +405,36 @@
 	))
 	
 (define (powers-field-energy caster ktarg power)
-	(kern-obj-put-at (kern-mk-field F_energy (+ 20 (kern-dice-roll (mkdice 2 power)))) ktarg))
+	(kern-obj-put-at (kern-mk-field F_energy (+ 20 (kern-dice-roll (mkdice 2 power)))) ktarg)
+	result-ok)
 
 (define (powers-field-fire caster ktarg power)
-	(kern-obj-put-at (kern-mk-field F_fire (+ 20 (kern-dice-roll (mkdice 1 power)))) ktarg))
+	(kern-obj-put-at (kern-mk-field F_fire (+ 20 (kern-dice-roll (mkdice 1 power)))) ktarg)
+	result-ok)
 	
 (define (powers-field-poison caster ktarg power)
-	(kern-obj-put-at (kern-mk-field F_poison (+ 10 (kern-dice-roll (mkdice 1 power)))) ktarg))
+	(kern-obj-put-at (kern-mk-field F_poison (+ 10 (kern-dice-roll (mkdice 1 power)))) ktarg)
+	result-ok)
 
 (define (powers-field-sleep caster ktarg power)
-	(kern-obj-put-at (kern-mk-field F_sleep (+ 15 (kern-dice-roll (mkdice 1 power)))) ktarg))
+	(kern-obj-put-at (kern-mk-field F_sleep (+ 15 (kern-dice-roll (mkdice 1 power)))) ktarg)
+	result-ok)
 	
 (define (powers-field-energy-weak caster ktarg power)
-	(powers-field-generic ktarg F_energy (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 2))))) apply-lightning))
+	(powers-field-generic ktarg F_energy (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 2))))) apply-lightning)
+	result-ok)
 
 (define (powers-field-fire-weak caster ktarg power)
-	(powers-field-generic ktarg F_fire (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) burn))
+	(powers-field-generic ktarg F_fire (+ 5 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) burn)
+	result-ok)
 	
 (define (powers-field-poison-weak caster ktarg power)
-	(powers-field-generic ktarg F_poison (+ 3 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) apply-poison))
+	(powers-field-generic ktarg F_poison (+ 3 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) apply-poison)
+	result-ok)
 
 (define (powers-field-sleep-weak caster ktarg power)
-	(powers-field-generic ktarg F_sleep (+ 4 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) apply-sleep))
+	(powers-field-generic ktarg F_sleep (+ 4 (kern-dice-roll (mkdice 1 (ceiling (/ power 3))))) apply-sleep)
+	result-ok)
 
 (define (powers-fireball-range power)
 	(+ 3 (/ power 3)))
@@ -494,7 +516,7 @@
 		(kern-fire-missile t_mfireball
                      (kern-obj-get-location caster)
                      ktarg))
-	)
+	result-ok)
 
 ;todo high power should go to user specified gate
 (define (powers-gate-travel caster ktarg power)
@@ -512,7 +534,8 @@
 	(let ((lightadd 
 			(kern-dice-roll
 				(mkdice 5 power))))
-		(light-apply-new ktarg (+ 6000 (* 50 power)))))
+		(light-apply-new ktarg (+ 6000 (* 50 power))))
+		result-ok)
 
 ;todo should the messages be in the ui part?
 (define (powers-great-heal kchar ktarg power)
@@ -540,30 +563,31 @@
 	
 ;todo vary duration with power
 (define (powers-invisibility kchar ktarg power)
-	(kern-obj-add-effect ktarg ef_invisibility nil))
+	(kern-obj-add-effect ktarg ef_invisibility nil)
+	result-ok)
 
 ;todo hack in something for xp & hostility
 (define (powers-kill kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
                 " casts kill at "
                 (kern-obj-get-name ktarg))
-  (cast-missile-proc kchar ktarg t_deathball))
+  (cast-missile-proc kchar ktarg t_deathball)
+  result-ok)
 	
 (define (powers-light caster ktarg power)
 	(let ((lightadd 
 			(kern-dice-roll
 				(mkdice 5 power))))
-		(light-apply-new ktarg (+ 400 (* 5 power)))))
+		(light-apply-new ktarg (+ 400 (* 5 power))))
+		result-ok)
 		  
 (define (powers-lightning-range power)
-	(+ 3 (/ power 2.5)))	
+	(+ 3 (/ power 2.5)))
 		
 (define (powers-lightning caster ktarg apower)
-	(println "ls")
 	(let ((targets (list nil))
 			(dam (mkdice (floor (+ 1 (/ apower 3))) 4))
 			)
-		(println "tis")
 		(temp-ifc-set 
 			(lambda (kmissile kuser ktarget kplace x y unused)
 				(let (
@@ -574,13 +598,10 @@
 					))
 				#t	
 			))
-		(println "kfm")
 		(kern-fire-missile-to-max t_lightning_bolt (powers-lightning-range apower)
 			(kern-obj-get-location caster)
 			ktarg
 		)
-		(println "dam")
-		(println targets)
 		(if (not (null? (car targets)))
 			(map
 				(lambda (zappee)
@@ -590,21 +611,22 @@
 				)
 				(car targets)
 			))
-	))
+	)
+	result-ok)
 		
 (define (powers-lock caster ktarg power)
 	((kobj-ifc ktarg) 'lock ktarg caster)
-	)
+	result-ok)
 
 (define (powers-lock-magic caster ktarg power)
 	((kobj-ifc ktarg) 'magic-lock ktarg caster)
-	)
+	result-ok)
 	
 (define (powers-locate caster ktarg power)
 	(let ((loc (kern-obj-get-location caster)))
 		(kern-log-msg "You are in " (kern-place-get-name (car loc)) 
                               " at [x=" (cadr loc) " y=" (caddr loc) "]"))
-	)
+	result-ok)
 
 (define (powers-magic-missile-range power)
 	(+ 4 (/ power 3)))
@@ -625,18 +647,21 @@
 				(number->string (if (> apower 0) apower 1))
 				"d3")))
 		(kern-obj-inflict-damage ktarg
-							 "magic" (kern-dice-roll damagedice) kchar))))
+							 "magic" (kern-dice-roll damagedice) kchar)))
+	result-ok)
 
 (define (powers-negate-magic caster ktarg power)
 	(kern-add-magic-negated (kern-dice-roll
-		(mkdice 3 (floor (+ (/ power 3) 1))))))
+		(mkdice 3 (floor (+ (/ power 3) 1)))))
+	result-ok)
 
 (define (powers-paralyse caster ktarg power)
   	(if (and (can-paralyze? ktarg)
   				(contest-of-skill
 						(+ power 5)
 						(occ-ability-magicdef ktarg)))
-        (kern-obj-add-effect ktarg ef_paralyze nil)))
+        (kern-obj-add-effect ktarg ef_paralyze nil))
+	result-ok)
 		
 (define (powers-poison-range power)
 	(+ 3 (/ power 3)))
@@ -671,7 +696,7 @@
 	(kern-harm-relations ktarg caster)
 	(kern-harm-relations ktarg caster)
 	(cast-missile-proc caster ktarg t_mpoison_bolt)
-	)
+	result-ok)
 
 ;todo duration based on power?
 (define (powers-protect caster ktarg power)
@@ -680,15 +705,18 @@
         (kern-obj-add-effect caster ef_protection nil)
         (kern-obj-add-effect party ef_protection nil)
         )
-    ))
+    )
+	result-ok)
 
 ;todo duration based on power?
 (define (powers-protect-vs-fire caster ktarg power)
-	(kern-obj-add-effect ktarg ef_temporary_fire_immunity nil))
+	(kern-obj-add-effect ktarg ef_temporary_fire_immunity nil)
+	result-ok)
 
 ;todo duration based on power?
 (define (powers-protect-vs-poison caster ktarg power)
-	(kern-obj-add-effect ktarg ef_temporary_poison_immunity nil))
+	(kern-obj-add-effect ktarg ef_temporary_poison_immunity nil)
+	result-ok)
 
 ;todo duration based on power?
 (define (powers-protect-vs-poison-all caster ktarg power)
@@ -697,11 +725,13 @@
         (kern-obj-add-effect caster ef_temporary_poison_immunity nil)
         (kern-obj-add-effect party ef_temporary_poison_immunity nil)
         )
-    ))
+    )
+	result-ok)
 
 (define (powers-quickness caster dir power)
 	(kern-add-quicken (kern-dice-roll
-		(mkdice 3 (floor (+ (/ power 3) 1))))))
+		(mkdice 3 (floor (+ (/ power 3) 1)))))
+	result-ok)
 
 ;note is different scenarios, could have other uses
 (define (powers-raise-lost-area caster loc power)
@@ -710,7 +740,8 @@
 		(if (not (null? kobjs))
 			(let ((kgen (car kobjs)))                
 				(signal-kobj kgen 'raise kgen caster)
-			))))
+			)))
+	result-ok)
 
 ;resurrect should have side effects, diminishing with power
 (define (powers-resurrect caster ktarg power)
@@ -719,10 +750,12 @@
          (apply-sleep ktarg)
          result-ok)
         (else
-         result-no-effect)))
+         result-no-effect))
+	result-ok)
 				
 (define (powers-reveal caster ktarg power)
-	(kern-add-reveal (* power 4)))
+	(kern-add-reveal (* power 4))
+	result-ok)
 
 ;todo sleep single target
 
@@ -741,7 +774,8 @@
 
 ;todo duration based on power?
 (define (powers-spider-calm caster ktarg power)
-	(kern-obj-add-effect ktarg ef_spider_calm nil))
+	(kern-obj-add-effect ktarg ef_spider_calm nil)
+	result-ok)
 
 (define (powers-summon targetloc quantity typegen levelgen faction)
 	(define (run-loop count done)
@@ -780,19 +814,22 @@
 			(powers-summon-single-type type-tag)
 			(powers-summon-simple-levelgen power)
 			(kern-being-get-base-faction caster))
-	))	
+	))
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-snake caster ktarg power)
-  (powers-summon-medium-size caster ktarg power 'snake))
+  (powers-summon-medium-size caster ktarg power 'snake)
+	result-ok)
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-spider caster ktarg power)
-  (powers-summon-medium-size caster ktarg power 'giant-spider))
+  (powers-summon-medium-size caster ktarg power 'giant-spider)
+	result-ok)
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-wolf caster ktarg power)
-  (powers-summon-medium-size caster ktarg power 'wolf))
+  (powers-summon-medium-size caster ktarg power 'wolf)
+	result-ok)
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-small caster ktarg power type-tag)
@@ -806,15 +843,18 @@
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-insect caster ktarg power)
-  (powers-summon-small caster ktarg power 'insect))
+  (powers-summon-small caster ktarg power 'insect)
+	result-ok)
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-rat caster ktarg power)
-  (powers-summon-small caster ktarg power 'rat))
+  (powers-summon-small caster ktarg power 'rat)
+	result-ok)
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-bat caster ktarg power)
-  (powers-summon-small caster ktarg power 'bat))
+  (powers-summon-small caster ktarg power 'bat)
+	result-ok)
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-undead caster ktarg power)
@@ -825,7 +865,8 @@
                 (random-select (list 'skeletal-warrior 'skeletal-spear-thrower 'ghast)))
 			(powers-summon-simple-levelgen power)
 			(kern-being-get-base-faction caster))
-	))
+	)
+	result-ok)
 	
 (define (powers-summon-slime caster ktarg power)
   (let ((spower (floor (+ (/ power 4) 1))))
@@ -834,11 +875,13 @@
 			(powers-summon-single-type 'green-slime)
 			(powers-summon-simple-levelgen power)
 			(kern-being-get-base-faction caster))
-	))
+	)
+	result-ok)
 		 
 	
 (define (powers-telekinesis-range power)
-	(+ (/ power 3) 1))
+	(+ (/ power 3) 1)
+	result-ok)
 	
 ;todo damage/knock away critters?
 ;should fail on no handler squares rather than aborting?
@@ -848,7 +891,8 @@
 	
 (define (powers-timestop caster dir power)
 	(kern-add-time-stop (kern-dice-roll
-		(mkdice 3 (floor (+ (/ power 3) 1))))))
+		(mkdice 3 (floor (+ (/ power 3) 1)))))
+	result-ok)
 	
 ; a few things needed here:
 ;	check for visibility before messages
@@ -878,7 +922,8 @@
 	(let* ((all-kobjs (all-hostiles caster))
 		(all-undead-combatants (filter is-undead-char? all-kobjs)))
 			(map repel all-undead-combatants)
-	))
+	)
+	result-ok)
 	
 ;todo limit to some (large) range?
 (define (powers-tremor caster unused power)
@@ -907,7 +952,8 @@
     (map kern-obj-dec-ref foes)
     (map wakeup (kern-place-get-beings (loc-place (kern-obj-get-location caster))))
 	(kern-log-enable #t)
-	))
+	)
+	result-ok)
 
 (define (powers-unlock caster ktarg power)
   (if ((kobj-ifc ktarg) 'unlock ktarg caster)
@@ -925,7 +971,8 @@
 	(kern-print "Hit a key when done gazing...\n")
 	(ui-waitkey)
 	(kern-map-set-peering #f)
-	(kern-map-repaint))
+	(kern-map-repaint)
+	result-ok)
 
 (define (powers-web-range power)
 	(+ 3 (/ power 3)))
@@ -960,14 +1007,17 @@
 		(kern-fire-missile t_mweb
                      (kern-obj-get-location caster)
                      target)
-	))
+	)
+	result-ok)
 
 (define (powers-wind-change caster dir power)
-	(kern-set-wind dir (kern-dice-roll (mkdice (* 2 power) 6))))
+	(kern-set-wind dir (kern-dice-roll (mkdice (* 2 power) 6)))
+	result-ok)
 	
 (define (powers-xray caster dir power)
 	(kern-add-xray-vision (kern-dice-roll
-		(mkdice 10 (floor (+ (/ power 3) 1))))))
+		(mkdice 10 (floor (+ (/ power 3) 1)))))
+	result-ok)
 		
 ;; vttjo - "Vectors to tiles jumped over"
 (define (powers-jump-vttjo dx dy)
@@ -1049,7 +1099,7 @@
     ;; any terrain/field effects. The way should be passable (unless we do
     ;; something weird like along the way trigger a mech which throws up a
     ;; wall, in which case I guess that's an advantage of having the sprint
-    ;; skill ;)) Note that the dude may die along the way due to tile effects,
+    ;; skill ;) Note that the dude may die along the way due to tile effects,
     ;; so keep a ref count just to be safe and check for death in the move-dude
     ;; function.
     (define (move-dude xy)
@@ -1061,9 +1111,9 @@
     (kern-obj-inc-ref caster)
     (for-each move-dude path)
     (kern-obj-dec-ref caster)
-    result-ok
     )
-  )
+	result-ok)
+
 
 (define (powers-wriggle caster ktarg power)
   (kern-obj-set-mmode caster mmode-wriggle)
