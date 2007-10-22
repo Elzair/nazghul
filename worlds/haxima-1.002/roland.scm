@@ -49,9 +49,11 @@
       (set-free knpc)
       (try-to-escape)))
 
+;; Note: (can-pathfind? ...) will pathfind through the locked door nowadays, so
+;; it cannot be relied on. Let's just let Roland try to get out and he'll know
+;; he's free.
 (define (roland-is-or-can-be-free? knpc)
-  (or (roland-is-free? knpc)
-      (can-pathfind? knpc (roland-exit-point knpc))))
+  (roland-is-free? knpc))
 
 (define (roland-join-player knpc)
   (or (roland-joined? knpc)
