@@ -24,7 +24,9 @@
 #include "skill.h"
 
 #include <assert.h>
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
+#endif
 #include <string.h>
 
 static void skill_set_entry_del(struct skill_set_entry *ssent)

@@ -24,7 +24,9 @@
 #include "skill_set_entry.h"
 
 #include <assert.h>
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
+#endif
 #include <string.h>
 
 
