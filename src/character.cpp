@@ -3099,7 +3099,7 @@ void Character::save(struct save *save)
         save->write(save, "%d %d  ;    mp_mod, mp_mult\n",  this->mp_mod,    this->mp_mult);
         save->write(save, "%d %d  ;    HP, XP\n",           this->getHp(),   this->getExperience());
         save->write(save, "%d  ;    mana\n",        this->getMana()  );
-        save->write(save, "%d  ;    AP_per_round\n", this->getSpeed() );
+        save->write(save, "%d  ;    AP_per_round\n", this->AP_per_round );
         save->write(save, "%d  ;    level\n",       this->getLevel() );
         save->write(save, "#%c  ; dead?\n", isDead() ? 't' : 'f');
 
