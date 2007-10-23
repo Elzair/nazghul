@@ -880,8 +880,7 @@
 		 
 	
 (define (powers-telekinesis-range power)
-	(+ (/ power 3) 1)
-	result-ok)
+	(+ (/ power 3) 1))
 	
 ;todo damage/knock away critters?
 ;should fail on no handler squares rather than aborting?
