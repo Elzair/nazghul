@@ -16,11 +16,11 @@
 
 ;; Speeds  ;; TODO: move most of these into kern-intvars ?
 
-(define speed-human             6)  ;; typical AP/round for humans
+(define speed-human             50)  ;; typical AP/round for humans
 
-(define base-move-ap		6)  ;; this may not bear a neat relationship to speed-human
-(define default-weapon-rap      9)  ;; this may not bear a neat relationship to speed-human
-(define default-armour-apmod    1)  ;; this may not bear a neat relationship to speed-human
+(define base-move-ap		50)  ;; this may not bear a neat relationship to speed-human
+(define default-weapon-rap      50)  ;; this may not bear a neat relationship to speed-human
+(define default-armour-apmod    2)  ;; this may not bear a neat relationship to speed-human
 
 (define base-skill-ap			base-move-ap)  ;; this may not bear a neat relationship to speed-human
 (define base-spell-ap			base-move-ap)  ;; this may not bear a neat relationship to speed-human
