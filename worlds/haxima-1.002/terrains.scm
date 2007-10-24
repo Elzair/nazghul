@@ -75,10 +75,13 @@
    (list 't_gravel          "gravel"        pclass-grass     s_gravel            trn 0 nil)
    (list 't_trees           "trees"         pclass-trees     s_trees             lgt 0 nil)
    (list 't_trees_d         "trees"         pclass-trees     s_trees             dns 0 nil)
+
    (list 't_forest_v        "forest"        pclass-forest    s_forest            trn 0 nil)
-   (list 't_forest          "forest"        pclass-forest    s_forest            opq 0 nil)
+   (list 't_forest          "forest"        pclass-forest    s_forest            hvy 0 nil)
    (list 't_forest_d        "forest"        pclass-forest    s_forest            7   0 nil)
-   (list 't_forest_l        "forest"        pclass-forest    s_forest            dns   0 nil)
+   (list 't_forest_l        "forest"        pclass-forest    s_forest            dns 0 nil)
+   (list 't_forest_b        "forest"        pclass-forest    s_forest            opq 0 nil)
+
    (list 't_hills           "hills"         pclass-hills     s_hills             dns 0 nil)
    (list 't_mountains_v     "mountains"     pclass-vmountains s_mountains         trn 0 nil)
    (list 't_mountains_b     "mountains (below)"     pclass-space s_mountains         trn 0 nil)

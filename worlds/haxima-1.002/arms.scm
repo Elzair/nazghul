@@ -337,7 +337,7 @@
   (ifc obj-ifc
        (method 'hit-loc 
                (lambda (kmissile kuser ktarget kplace x y dam)
-                 (kern-obj-put-at (kern-mk-obj F_fire 1) 
+                 (kern-obj-put-at (kern-mk-obj F_energy 1) 
                                   (mk-loc kplace x y))))))
 
 (define vial-of-slime-ifc

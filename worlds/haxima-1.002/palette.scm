@@ -31,7 +31,8 @@
     (list  "||"   t_forest)             ;; "forest"
     (list  "|X"   t_forest_d)           ;; "forest (denser)"
     (list  "|t"   t_forest_l)           ;; "forest (lighter)"
-    (list  "|."   t_forest_v)           ;; "forest"  (non-LOS-blocking)
+    (list  "|."   t_forest_v)           ;; "forest (non-LOS-blocking)"
+    (list  "|v"   t_forest_b)           ;; "forest (totally LOS-blocking)"
 
     (list  "{{"   t_hills)              ;; "hills"
 
