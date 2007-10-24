@@ -24,9 +24,10 @@
 #include "closure.h"
 
 #include <assert.h>
-#ifdef HAVE_MALLOC_H
+#include <config.h>
+//#ifdef HAVE_MALLOC_H
 #include <malloc.h>
-#endif
+//#endif
 #include <string.h>
 
 static void skill_del(struct skill *skill)

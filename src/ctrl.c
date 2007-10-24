@@ -164,9 +164,11 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         case 'u':
                 cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                 break;
+#ifdef ENABLE_YUSE
         case 'y':
                 cmdYuse(NULL);
                 break;
+#endif
         case 'x':
                 cmdXamine(party);
                 break;
@@ -1193,9 +1195,11 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         case 'x':
                 cmdXamine(character);
                 break;
+#ifdef ENABLE_YUSE
         case 'y':
                 cmdYuse(character);
                 break;
+#endif
         case 'z':
                 cmdZtats(character);
                 break;
