@@ -314,6 +314,7 @@
 (mk-spell 'in_nox_por       "Poison Bolt <In Nox Por>"          in-nox-por       "INP"  2 context-town  s_in_nox_por       (list nightshade blood_moss black_pearl))
 (mk-spell 'an_xen_bet       "Calm Spiders <An Xen Bet>"         an-xen-bet       "AXB"  2 context-town  s_an_xen_bet       (list spider_silk garlic))
 (mk-spell 'bet_flam_hur     "Fire Spray <Bet Flam Hur>"         bet-flam-hur     "BFH"  2 context-town  s_bet_flam_hur     (list black_pearl sulphorous_ash blood_moss))
+(mk-spell 'in_quas_wis      "Vision <In Quas Wis>"              in-quas-wis      "IQW"  2 context-any   s_in_quas_wis      (list nightshade mandrake))
 
 ;; Third Circle
 (mk-spell 'in_flam_grav     "Fire Field <In Flam Grav>"         in-flam-grav     "IFG"  3 context-town  s_in_flam_grav     (list sulphorous_ash black_pearl spider_silk))
@@ -357,7 +358,6 @@
 (mk-spell 'in_nox_hur       "Poison Wind <In Nox Hur>"          in-nox-hur       "INH"  7 context-town  s_in_nox_hur       (list nightshade sulphorous_ash blood_moss))
 (mk-spell 'in_zu_hur        "Wind of Sleep <In Zu Hur>"         in-zu-hur        "IZH"  7 context-town  s_in_zu_hur        (list mandrake ginseng blood_moss))
 (mk-spell 'in_quas_corp     "Fear <In Quas Corp>"               in-quas-corp     "IQC"  7 context-town  s_in_quas_corp     (list nightshade mandrake garlic))
-(mk-spell 'in_quas_wis      "Vision <In Quas Wis>"              in-quas-wis      "IQW"  7 context-any   s_in_quas_wis      (list nightshade mandrake))
 (mk-spell 'sanct_lor        "Invisibility <Sanct Lor>"          sanct-lor        "SL"   7 context-any   s_sanct_lor        (list nightshade mandrake blood_moss))
 (mk-spell 'xen_corp         "Death Bolt <Xen Corp>"             xen-corp         "XC"   7 context-town  s_xen_corp         (list nightshade black_pearl))
 (mk-spell 'in_quas_xen      "Clone <In Quas Xen>"               in-quas-xen      "IQX"  7 context-town  s_in_quas_xen      (list nightshade mandrake sulphorous_ash spider_silk blood_moss ginseng))
