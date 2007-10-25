@@ -825,13 +825,25 @@ enum MoveResult Character::move(int dx, int dy)
                                                          newy, this, (getActivity() == COMMUTING ? PFLAG_IGNOREMECHS : 0)));
 	relocate(getPlace(), newx, newy);
 
+        // If this move was visible to the player
 	if (mapTileIsVisible(getX(), getY())) {
-                if (isPlayerControlled() 
-                    // Keep player characters in view.
-                    && ! mapIsInCameraView(getPlace(), getX(), getY())) {
-                        mapCenterCamera(getX(), getY());
+                // And this is a party member following the player
+                if (isPlayerPartyMember()
+                    && (CONTROL_MODE_FOLLOW == getControlMode())) {
+                        // Don't update the map now, just mark it dirty. This
+                        // helps reduce the sluggishness in town maps.
+                        mapSetDirty();
+                } else {
+                        // If this character is being moved by the player and
+                        // they are not in view of the camera
+                        if (isPlayerControlled() 
+                            && ! mapIsInCameraView(getPlace(), getX(), getY())) {
+                                // Recenter the camera to keep the character in view.
+                                mapCenterCamera(getX(), getY());
+                        }
+                        // Repaint the map now
+                        mapUpdate(0);
                 }
-                mapUpdate(0); // show all visible NPC moves
 	}
 
 	return MovedOk;
