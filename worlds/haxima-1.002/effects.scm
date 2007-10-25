@@ -761,7 +761,9 @@
   (cond ((and (obj-is-char? obj)
            (not (has-poison-immunity? obj)))
          (kern-log-msg (kern-obj-get-name obj) " poisoned!")
-         (kern-obj-add-effect obj ef_poison nil)))
+         (kern-obj-add-effect obj ef_poison nil))
+        (else
+         (kern-log-msg (kern-obj-get-name obj) " immune to poison!")))
   obj)
 
 ;; Used by species that are inherently immune:

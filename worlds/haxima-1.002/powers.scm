@@ -672,19 +672,20 @@
 	(if (and (kern-obj-is-being? ktarg)
 			(not (null? ktarg)))
 		(begin
-			(if (contest-of-skill
-					power
-					(occ-ability-dexdefend ktarg))
-				(apply-poison ktarg))
-		))
+                  (if (contest-of-skill
+                       power
+                       (occ-ability-dexdefend ktarg))
+                      (apply-poison ktarg)
+                      (kern-log-msg (kern-obj-get-name ktarg) " avoids poison!")
+		)))
 	)
 
 (define (powers-poison caster ktarg power)
 	(define (do-poison-effect kmissile kuser ktarget kplace x y dam)
 		(on-hit-target ktarget dam 
-              				(lambda (obj) (powers-poison-effect obj (+ power 10))))
-		(on-hit-nontarget ktarget dam 
-              				(lambda (obj) (powers-poison-effect obj power)))
+              				(lambda (obj) (powers-poison-effect kuser obj (+ power 10))))
+		(on-hit-nontarget ktarget (loc-mk kplace x y) dam 
+              				(lambda (obj) (powers-poison-effect kuser obj power)))
               			)
 	(temp-ifc-set do-poison-effect)
 	(kern-log-msg (kern-obj-get-name caster)
