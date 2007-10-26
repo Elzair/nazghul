@@ -360,15 +360,18 @@
        (method 'exec (lambda (ksmoke)
                        (if (> (kern-dice-roll "1d20") 16)
                            (kern-obj-remove ksmoke)
-                           (let ((loc (loc-offset (kern-obj-get-location ksmoke) 
-                                                  (vector-ref opposite-dir (kern-get-wind)))))
-                             (println "loc: " loc)
-                             (if (not (kern-is-valid-location? loc))                                 
-                                 (kern-obj-remove ksmoke)
-                                 (begin
-                                   (kern-obj-relocate ksmoke loc nil)
-                                   (kern-los-invalidate)
-                                   ))))))))
+
+                           ;; smoke drifts with the wind in wilderness combat
+                           (let ((curloc (kern-obj-get-location ksmoke)))
+                             (if (kern-place-is-combat-map? (loc-place curloc))
+                                 (let ((loc (loc-offset (kern-obj-get-location ksmoke) 
+                                                        (vector-ref opposite-dir (kern-get-wind)))))
+                                   (if (not (kern-is-valid-location? loc))                            
+                                       (kern-obj-remove ksmoke)
+                                       (begin
+                                         (kern-obj-relocate ksmoke loc nil)
+                                         (kern-los-invalidate)
+                                         ))))))))))
 
 
 (mk-obj-type 't_smoke_cloud "smoke" s_smoke layer-projectile smoke-ifc)
