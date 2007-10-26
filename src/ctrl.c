@@ -665,7 +665,7 @@ static void ctrl_attack_ui(class Character *character)
                 }
                 else if (weapon->isThrownWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_spush("%s ($d AP, range %d, %d left)",
+                        cmdwin_spush("%s (%d AP, range %d, %d left)",
                                      weapon->getName(), 
 				     this_wpn_AP,
 				     weapon->getRange(), 
