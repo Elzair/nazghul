@@ -338,7 +338,7 @@
 
 ;; Fifth Circle
 (mk-spell 'in_ex_por        "Magic Unlock <In Ex Por>"          in-ex-por        "IEP"  5 context-any   s_in_ex_por        (list sulphorous_ash blood_moss))
-(mk-spell 'an_ex_por        "Magick Lock <An Ex Por>"           an-ex-por        "AEP"  5 context-any   s_an_ex_por        (list sulphorous_ash blood_moss garlic))
+(mk-spell 'an_ex_por        "Magic Lock <An Ex Por>"            an-ex-por        "AEP"  5 context-any   s_an_ex_por        (list sulphorous_ash blood_moss garlic))
 (mk-spell 'in_zu            "Mass Sleep <In Zu>"                in-zu            "IZ"   5 context-town  s_in_zu            (list nightshade spider_silk ginseng))
 (mk-spell 'vas_mani         "Great Heal <Vas Mani>"             vas-mani         "VM"   5 context-any   s_vas_mani         (list mandrake spider_silk ginseng))
 (mk-spell 'rel_tym          "Quickness <Rel Tym>"               rel-tym          "RT"   5 context-any   s_rel_tym          (list sulphorous_ash blood_moss mandrake))
