@@ -316,6 +316,7 @@
 (mk-spell 'an_xen_bet       "Calm Spiders <An Xen Bet>"         an-xen-bet       "AXB"  2 context-town  s_an_xen_bet       (list spider_silk garlic))
 (mk-spell 'bet_flam_hur     "Fire Spray <Bet Flam Hur>"         bet-flam-hur     "BFH"  2 context-town  s_bet_flam_hur     (list black_pearl sulphorous_ash blood_moss))
 (mk-spell 'in_quas_wis      "Vision <In Quas Wis>"              in-quas-wis      "IQW"  2 context-any   s_in_quas_wis      (list nightshade mandrake))
+(mk-spell 'xen_zu           "Sleep <Xen Zu>"                    xen-zu           "XZ"   2 context-town  s_in_zu            (list spider_silk ginseng))
 
 ;; Third Circle
 (mk-spell 'in_flam_grav     "Fire Field <In Flam Grav>"         in-flam-grav     "IFG"  3 context-town  s_in_flam_grav     (list sulphorous_ash black_pearl spider_silk))
@@ -349,7 +350,7 @@
 ;; Sixth Circle
 (mk-spell 'in_an            "Negate Magic <In An>"              in-an            "IA"   6 context-any   s_in_an            (list garlic mandrake sulphorous_ash))
 (mk-spell 'wis_an_ylem      "X-Ray Vision <Wis An Ylem>"        wis-an-ylem      "WAY"  6 context-any   s_wis_an_ylem      (list mandrake sulphorous_ash))
-(mk-spell 'an_xen_ex        "Charm Monster <An Xen Ex>"         an-xen-ex        "AXE"  6 context-town  s_an_xen_ex        (list black_pearl nightshade spider_silk))
+(mk-spell 'an_xen_ex        "Charm <An Xen Ex>"                 an-xen-ex        "AXE"  6 context-town  s_an_xen_ex        (list black_pearl nightshade spider_silk))
 (mk-spell 'in_vas_por_ylem  "Tremor <In Vas Por Ylem>"          in-vas-por-ylem  "IVPY" 6 context-town  s_in_vas_por_ylem  (list mandrake blood_moss sulphorous_ash))
 (mk-spell 'quas_an_wis      "Confusion <Quas An Wis>"           quas-an-wis      "QAW"  6 context-town  s_quas_an_wis      (list mandrake nightshade))
 (mk-spell 'vas_uus_ylem     "Raise Ship <Vas Uus Ylem>"         vas-uus-ylem     "VUY"  6 context-world s_vas_uus_ylem     (list mandrake blood_moss spider_silk))

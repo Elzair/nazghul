@@ -762,20 +762,34 @@
 	(kern-add-reveal (* power 4))
 	result-ok)
 
-;todo sleep single target
+
+(define (powers-sleep-target-range power)
+	(+ (/ power 3) 3))
+
+(define (powers-sleep-apply target power)
+	(if (contest-of-skill power (occ-ability-magicdef target))
+			(begin
+				(msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " slept")
+				(apply-sleep target))
+			(begin 
+				(msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists sleep"))
+	))
+	
+(define (powers-sleep-target caster ktarg power)
+	(powers-sleep-apply ktarg (+ power 6))
+	(kern-harm-relations ktarg caster)
+  result-ok)
 
 ;todo limit to some range?
 (define (powers-sleep-area caster ktarg power)
 	(let ((hostiles (all-hostiles caster)))
 		(define (trysleep target)
-			(if (contest-of-skill
-				(+ power 3)
-				(occ-ability-magicdef target))
-			(apply-sleep target)))
-                (cond ((null? hostiles) result-no-hostiles)
-                      (else
-                       (map apply-sleep hostiles)
-                       result-ok))))
+			(powers-sleep-apply target (+ power 3))
+			)
+       (cond ((null? hostiles) result-ok)
+             (else
+              (map apply-sleep hostiles)
+              result-ok))))
                        
 (define (powers-smoke-range power)
 	(+ 3 (/ power 3)))

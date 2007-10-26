@@ -321,6 +321,12 @@
 		caster 
 		4
 		(occ-ability-blackmagic caster)))
+		
+(define (xen-zu caster)
+	(cast-ui-basic-ranged-spell powers-sleep-target
+		caster 
+		(powers-sleep-target-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
 
 ;;----------------------------------------------------------------------------
 ;; Third Circle
