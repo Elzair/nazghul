@@ -57,7 +57,7 @@
 
 (define (tim-lion knpc kpc)
   (say knpc "[He shrieks and cowers] Do you see them?! "
-       "Have come for my other arm? The chicks are so hungry! So cruel!"))
+       "Have they come for my other arm? The chicks are so hungry! So cruel!"))
 
 (define tim-conv
   (ifc basic-conv
