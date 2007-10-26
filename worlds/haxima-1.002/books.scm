@@ -172,10 +172,14 @@
     "one (1) prisoner to the gaoler.")
    result-ok))
 
+
+;;;;;;;;;;;;;;;;;;;; White Magick ;;;;;;;;;;;;;;;;;;;;
+
 (mk-reusable-item
  't_spell_book_white_magick_1 "White Magick: Booke I" s_manual (/ norm 3)
  (lambda (kbook kuser)
    (kern-ui-page-text
+    "White Magick: Booke I"
     "Spells of Healing, of the First Circle"
     "+-----------------------------------------+"
     "|  M)ix thy reagents to craft a spell,    |"
@@ -184,63 +188,374 @@
     "|  though as ye MEND be ye yet WISE!      |"
     "+-----------------------------------------+"
     "Cure Poison <AN NOX>"
-    "  Mix Ginseng and Garlic"
+    "- Mix Ginseng and Garlic"
     ""
     "Awaken <AN ZU>"
-    "  Mix Ginseng and Garlic"
+    "- Mix Ginseng and Garlic"
     ""
-    "Heal <MANI>"
-    "  Mix Ginseng and Spider Silk"
+    "Minor Healing <MANI>"
+    "- Mix Ginseng and Spider Silk"
     )
    result-ok))
 
 (mk-reusable-item
- 't_spell_book_force_magick_123 "Magick of Force: Booke I" s_manual (/ norm 3)
+ 't_spell_book_white_magick_2 "White Magick: Booke II"  s_manual (/ norm 3)
  (lambda (kbook kuser)
    (kern-ui-page-text
-    "Spells of Might, of the Circles I, II, III "
+    "White Magick: Booke II"
+    "Spells of Healing and Protection"
+    "+-----------------------------------------+"
+    "|  The Lore ye know to Mix and Cast.      |"
+    "|  Well-served by these chants be.        |"
+    "|  Yet forget not, oh Wise, of Duty,      |"
+    "|  to Heal all which come to thee.        |"
+    "+-----------------------------------------+"
+    "Poison Ward <SANCT NOX>"
+    "- Mix Garlic and Nightshade"
+    ""
+    "Fire Ward <IN FLAM SANCT>"
+    "- Mix Sulphurous Ash, Garlic, "
+    "- and forget ye not: [SMUDGED WORD]"
+    ""
+    "Protection <IN SANCT>"
+    "- Mix Sulphurous Ash, Garlic, Ginseng"
+    ""
+    "Mass Cure Poison <VAS AN NOX>"
+    "- Mix Garlic, Ginseng, Mandrake"
+    ""
+    "Great Heal <VAS MANI>"
+    "- Mix Ginseng, Spider Silk, Mandrake"
+    )
+   result-ok))
+
+(mk-reusable-item
+ 't_spell_book_white_magick_3 "White Magick: Booke III"  s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "White Magick: Booke III"
+    "Spells of Healing, of High Magick"
+    "+-----------------------------------------+"
+    "|  Mix ye now, and Crowned Master, Cast!  |"
+    "|   But beckon, Power to thee hastens!    |"
+    "|    If ye be Wise, then act ye thus:     |"
+    "|  KAL WIS - IN MANI - AN CORP - ZU QUAS  |"
+    "+-----------------------------------------+"
+    "Mass Cure Poison <VAS AN NOX>"
+    "- Mix Ginseng, Garlic, Mandrake"
+    ""
+    "Mass Poison Ward <VAS SANCT NOX>"
+    "- Mix Garlic, Nightshade, Mandrake"
+    ""
+    "Great Heal <VAS MANI>"
+    "- Mix Ginseng, Spider Silk, Mandrake"
+    ""
+    ""
+    "--------------- HIGH MAGICK --------------"
+    ""
+    "Resurrection <IN MANI CORP>"
+    "- Mix Ginseng, Garlic, Spider Silk"
+    "-     Sulphurous Ash, Blood Moss, Mandrake"
+    ""
+    "  -- Slay not that which should live! -- "
+    "  -- Raise not that which ought rest! -- "
+
+    )
+   result-ok))
+
+
+;;;;;;;;;;;;;;;;;;;; Force Magick ;;;;;;;;;;;;;;;;;;;;
+
+(mk-reusable-item
+ 't_spell_book_force_magick_12 "Magick of Force: Booke I" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Magick of Force: Booke I"
+    "Spells of Might, of the Circles I, II      "
     "+-----------------------------------------+"
     "|  M)ix thy reagents to craft a spell,    |"
     "|  then C)ast it in thine hour of need.   |"
     "|  By FORCE shall thy foes know FEAR,     |"
     "|  yet FOOLS thus casting shall know WOE! |"
     "+-----------------------------------------+"
-    "Spells of the Circle I:                    "
+    "Spells of the Circle I:"
     "-----------------------"
-    "- Magic Missile <GRAV POR>                 "
-    "Mix Sulphurous Ash and Black Pearl         "
+    "Magic Missile <GRAV POR>"
+    "- Mix Sulphurous Ash and Black Pearl"
     ""
-    "- Light <IN LOR>                           "
-    "Mix Sulphurous Ash                         "
+    "Light <IN LOR>"
+    "- Mix Sulphurous Ash"
     ""
-    "-------------------------------------------"
-    "Spells of the Circle II:                   "
     "------------------------"
-    "- Change Wind <REL HUR>                    "
-    "Mix Sulphurous Ash and Blood Moss          "
+    "Spells of the Circle II:"
+    "------------------------"
+    "Change Wind <REL HUR>"
+    "- Mix Sulphurous Ash and Blood Moss"
     ""
-    "- Poison Missile <IN NOX POR>              "
-    "Mix Nightshade, Blood Moss, and Black Pearl"
-    ""
-    "-------------------------------------------"
-    "Spells of the Circle III:                  "
-    "-------------------------"
-    "- Fire Ball <VAS FLAM>                     "
-    "Mix Black Pearl and Sulphurous Ash         "
-    ""
-    "- Great Light <VAS LOR>                    "
-    "Mix Sulphurous Ash and Mandrake            "
-    ""
-    "- Fire Field <IN FLAM GRAV>                "
-    "Mix Sulphurous Ash, Black Pearl,           "
-    "and Spider Silk                            "
-    ""
-    "- Poison Field <IN NOX GRAV>               "
-    "Mix Nightshade, Black Pearl, Spider Silk   "
-    ""
-    "-------------------------------------------"
+    "Fire Spray <BET FLAM HUR>"
+    "- Mix Sulphurous Ash, Blood Moss, "
+    "-     and Black Pearl"
     )
    result-ok))
+
+(mk-reusable-item
+ 't_spell_book_force_magick_battle "Magick of Force: Of Battle"  s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Magick of Force: Of Battle"
+    "+-----------------------------------------+"
+    "|    Battle near: Chant runes and Mix     |"
+    "|      Battle on: Cast and hurl           |"
+    "|  Thy foes know pain, and death indeed   |"
+    "|  Yet wield ye but Might, or be ye Wise? |"
+    "+-----------------------------------------+"
+    "Spells of the Circle I:"
+    "-----------------------"
+    "Magic Missile <GRAV POR>"
+    "- Mix Sulphurous Ash and Black Pearl"
+    ""
+    "Lightning Bolt <ORT GRAV>"
+    "- Mix Sulphurous Ash, Black Pearl, Mandrake"
+    ""
+    "-------------------------"
+    "Spells of the Circle III:"
+    "-------------------------"
+    "Fire Ball <VAS FLAM>"
+    "- Mix Sulphurous Ash, Black Pearl"
+    ""
+    "Fire Ward <IN FLAM SANCT>"
+    "- Mix Sulphurous Ash, [CHARRED WORD], "
+    "- and forget ye not: Royal [ASHY SMUDGE]"
+    ""
+    "------------------------"
+    "Spells of the Circle VI:"
+    "------------------------"
+    "Tremor <IN VAS POR YLEM>"
+    "- Mix Sulphurous Ash, Blood Moss, Mandrake"
+    )
+   result-ok))
+
+
+(mk-reusable-item
+'t_spell_book_force_magick_winds "Magick of Force: Deadly Winds"  s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Magick of Force: Deadly Winds"
+    "+-----------------------------------------+"
+    "|  For Wind ye shall Mix, for Wind Cast!  |"
+    "|  Thy foe, sleeping, shall know naught,  |"
+    "|  Thy foe, struck, shall burn or fester, |"
+    "|       Yet, can ye Change the Wind?      |"
+    "|  For what Wind changes not, blows not.  |"
+    "|      Shall ye then have Changed it?     |"
+    "+-----------------------------------------+"
+    "Spells of the Circle II:"
+    "------------------------"
+    "Change Wind <REL HUR>"
+    "- Mix Sulphurous Ash, Blood Moss"
+    ""
+    "Fire Spray <BET FLAM HUR>"
+    "- Mix Sulphurous Ash, Blood Moss, "
+    "-     and Black Pearl"
+    ""
+    "-------------------------"
+    "Spells of the Circle VII:"
+    "-------------------------"
+    "Wind of Sleep <IN ZU HUR>"
+    "- Mix Ginseng, Blood Moss, Mandrake"
+    ""
+    "Poison Wind <IN NOX HUR>"
+    "- Mix Sulphurous Ash, Blood Moss, "
+    "-     and Nightshade"
+    ""
+    "--------------------------"
+    "Spells of the Circle VIII:"
+    "--------------------------"
+    "Flame Wind <IN FLAM HUR>"
+    "- Mix Sulphurous Ash, Blood Moss, "
+    "-     and Mandrake"
+    )
+   result-ok))
+(mk-reusable-item
+'t_spell_book_force_magick_matter "Magick of Force: Upon Matter"  s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Magick of Force: Upon Matter"
+    "+-----------------------------------------+"
+    "|  Mix and Cast, by Force control Matter. |"
+    "|  Powers subtle and grand both wield.    |"
+    "|  If ye be wise then riddle this rede:   |"
+    "|    What secret, steel? (Flesh is soft)  |"
+    "|    What sound, one hand? (Butterfly)    |"
+    "+-----------------------------------------+"
+    "Spells of the Circles I and II:"
+    "-------------------------------"
+    "Disarm Trap <AN SANCT YLEM>"
+    "- Mix Blood Moss"
+    ""
+    "Unlock <AN SANCT>"
+    "- Mix Sulphurous Ash, Blood Modd"
+    ""
+    "Lock <SANCT>"
+    "- Mix Sulphurous Ash, Spider Silk"
+    ""
+    "Change Wind <REL HUR>"
+    "- Mix Sulphurous Ash, Blood Moss"
+    ""
+    "------------------------"
+    "Spells of the Circle VI:"
+    "------------------------"
+    "Tremor <IN VAS POR YLEM>"
+    "- Mix Sulphurous Ash, Blood Moss, Mandrake"
+    ""
+    "Telekinesis <IN REL POR>"
+    "- Mix Spider Silk, Blood Moss, Black Pearl"
+    ""
+    "----------------"
+    "[Scrawled Notes]"
+    "----------------"
+    "Raise Matter Above Water <VAS UUS YLEM>"
+    "- Trial 1: Mix Ash, Pearl, Mandrake ???"
+    "- Trial 2: Mix [CHARRED], Eye of Newt ?"
+    "- Gazer eyes? Dragon spleen? Ogre spittle?"
+    )
+   result-ok))
+
+(mk-reusable-item
+'t_spell_book_force_magick_mechanismus "Magick of Force: Mechanismus"  s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Magick of Force: Mechanismus"
+    "+-----------------------------------------+"
+    "|  Knowing, Mix, and with craft, Cast!    |"
+    "|  Fear ye luggage? Chest dangers, past!  |"
+    "|  Keys bereft? Claviger be thou despite! |"
+    "|    Glowing portal bar not this wight!   |"
+    "|      Keep in tempo, keep in vogue       |"
+    "|        Keep in Time (or its Lord)       |"
+    "|      With such runes, let no wrogue     |"
+    "|     snatch the closing [MISSING WORD]   |"
+    "+-----------------------------------------+"
+    "Spells of the Circles I and II:"
+    "-------------------------------"
+    "Disarm Trap <An Sanct Ylem>"
+    "- Mix Blood Moss"
+    ""
+    "Unlock <An Sanct>"
+    "- Mix Sulphurous Ash, Blood Moss"
+    ""
+    "Lock <Sanct>"
+    "- Mix Sulphurous Ash, Spider Silk"
+    ""
+    "-----------------------"
+    "Spells of the Circle V:"
+    "-----------------------"
+    "Magic Unlock <In Ex Por>"
+    "- Mix Sulphurous Ash, Blood Moss"
+    ""
+    "Magic Lock <An Ex Por>"
+    "- Mix Sulphurous Ash, Garlic, Blood Moss"
+    )
+   result-ok))
+
+(mk-reusable-item
+'t_spell_book_force_magick_fields "Magick of Force: Upon Fields"  s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Magick of Force: Upon Fields"
+    "+-----------------------------------------+"
+    "|  Mix and Cast, by powers form Fields.   |"
+    "|  Conjure Sleep, Poison, Fire, or Force, |"
+    "|  or should such bar ye, then Dispel.    |"
+    "|  IN GRAV - AN POR - AN GRAV - EX POR    |"
+    "+-----------------------------------------+"
+    "Spells of the Circle III:"
+    "-------------------------"
+    "Sleep Field <In Zu Grav>"
+    "- Mix Ginseng, Spider Silk, Black Pearl"
+    ""
+    "Poison Field <In Nox Grav>"
+    "- Mix Spider Silk, Black Pearl, Nightshade"
+    ""
+    "Fire Field <In Flam Grav>"
+    "- Mix Sulphurous Ash, Spider Silk, "
+    "-     Black Pearl"
+    ""
+    "------------------------"
+    "Spells of the Circle IV:"
+    "------------------------"
+    "Force Field <In Sanct Grav>"
+    "- Mix Spider Silk, Black Pearl, Mandrake"
+    ""
+    "Dispel Field <An Grav>"
+    "- Mix Sulphurous Ash, Black Pearl"
+    )
+   result-ok))
+
+(mk-reusable-item
+'t_spell_book_force_magick_high_magick "Magick of Force: High Magick"  s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Magick of Force: High Magick"
+    "+-----------------------------------------+"
+    "|  BE WARE, be ye not Mighty in deed!     |"
+    "|    BEWARE, be ye not Wise indeed!       |"
+    "|  Written here are runes of HIGH MAGICK  |"
+    "|  If ye be a FOOL, ye shall know DEATH   |"
+    "|  Yet if you would, here is graven POWER |"
+    "+-----------------------------------------+"
+    "Circle VI - Negate Magic <In An>"
+    "- Mix Sulphurous Ash, Garlic, Mandrake"
+    ""
+    "Circle VII - Death Bolt <Xen Corp>"
+    "- Mix Black Pearl, Mandrake"
+    ""
+    "Circle VIII - Death Wind <In Vas Grav Corp>"
+    "- Mix Sulphurous Ash, Nighthsade, Mandrake"
+    ""
+    "Circle VIII - Time Stop <An Tym>"
+    "- Mix Garlic, Blood Moss, Mandrake"
+    )
+   result-ok))
+
+
+;;;;;;;;;;;;;;;;;;;; Necromancy ;;;;;;;;;;;;;;;;;;;;
+
+(mk-reusable-item
+ 't_spell_book_necromancy "Mysteries of Death and Undeath" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Mysteries of DEATH and UNDEATH             "
+    "+-----------------------------------------+"
+    "| Sanctus Corporem ex Nihilo, Rel Oculume |"
+    "| De Vermiis Mysteriis, Astralis Sangrem  |"
+    "+-----------------------------------------+"
+    "II - Turn Undead <An Xen Corp>"
+    "- Mix Sulphurous Ash, Garlic"
+    ""
+    "VIII - Summon Undead <Kal Xen Corp>"
+    "- Mix Spider Silk, Nightshade, Mandrake"
+    ""
+    "II - Poison Bolt <In Nox Por>"
+    "- Mix Blood Moss, Black Pearl, Nightshade"
+    ""
+    "VII - Poison Wind <In Nox Hur>"
+    "- Mix Sulphrous Ash, Blood Moss, Nightshade"
+    ""
+    "VII - Death Bolt <Xen Corp>"
+    "- Mix Black Pearl, Nightshade"
+    ""
+    "VII - Clone <In Quas Xen>"
+    "- Mix Sulphurous Ash, Ginseng, Spider Silk,"
+    "-     Blood Moss, Nightshade, Mandrake"
+    ""
+    "VIII - Resurrection <In Mani Corp>"
+    "- Mix Sulphurous Ash, Ginseng, Garlic, "
+    "-     Spider Silk, Blood Moss, Mandrake"
+    )
+   result-ok))
+
+
+;;;;;;;;;;;;;;;;;;;; Master Spellbook ;;;;;;;;;;;;;;;;;;;;
 
 (mk-reusable-item
  't_basic_spell_book "Spell Book" s_manual (/ norm 3)
@@ -273,9 +588,9 @@
     "An Sanct         Unlock         SA, BM     "
     "An Xen Corp      Repel Undead   GA, SA     "
     "In Wis           Locate         NI         "
-    "Kal Xen          Summon Snakes  SS, MA     "
     "Rel Hur          Change Wind    SA, BM     "
     "In Nox Por       Poison Missile NI, BM, BP "
+    "In Bet Xen       Summon Vermin  SS, BM, SA "
     "-------------- Third Circle ---------------"
     "In Flam Grav     Fire Field     SA, BP, SS "
     "In Zu Grav       Sleep Field    GI, BP, SS "
@@ -291,10 +606,10 @@
     "-------------- Fifth Circle ---------------"
     "In Ex Por        Unlock Magic   SA, BM     "
     "An Ex Por        Magic Lock     SA, BM, GA "
-    "In Bet Xen       Insect Swarm   SS, BM, SA "
     "In Zu            Sleep          GI, NI, SS "
     "Vas Mani         Great Heal     GI, SS, MA "
     "Rel Tym          Quickness      SA, BM, MA "
+    "Kal Xen          Summon Beast   SS, MA     "
     "-------------- Sixth Circle ---------------"
     "An Xen Ex        Charm          BP, NI, SS "
     "In An            Negate Magic   GA, MA, SA "
@@ -302,7 +617,7 @@
     "Quas An Wis      Confuse        MA, NI     "
     "Wis An Ylen      Xray Vision    MA, SA     "
     "In Rel Por       Telekinesis    BP, BM, SS "
-    "Vas Por          Blink (Party)  MA, BP, BM "
+    "Vas Por          Teleport Party MA, BP, BM "
     "------------- Seventh Circle --------------"
     "In Nox Hur       Poison Wind    NI, SA, BM "
     "In Quas Corp     Fear           NI, MA, GA "
@@ -312,7 +627,7 @@
     "Sanct Lor        Invisibility   NI, MA, BM "
     "Xen Corp         Kill           NI, BP     "
     "-------------- Eighth Circle --------------"
-    "An Tym           Stop Time      MA, GA, BM "
+    "An Tym           Time Stop      MA, GA, BM "
     "In Flam Hur      Flame Wind     MA, SA, BM "
     "In Vas Grav Corp Energy Wind    MA, SA, NI "
     "In Mani Corp     Resurrect      GA, GI, SS,"
