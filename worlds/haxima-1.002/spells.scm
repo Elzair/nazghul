@@ -302,6 +302,7 @@
 (mk-spell 'wis_sanct        "Detect Traps <Wis Sanct>"          wis-sanct        "WS"   1 context-town  s_wis_sanct        (list sulphorous_ash))
 (mk-spell 'an_sanct_ylem    "Disarm Trap <An Sanct Ylem>"       an-sanct-ylem    "ASY"  1 context-town  s_an_sanct_ylem    (list blood_moss))
 (mk-spell 'ylem_an_ex       "Web <Ylem An Ex>"                  ylem-an-ex       "YAE"  1 context-town  s_ylem_an_ex       (list spider_silk black_pearl))
+(mk-spell 'bet_ylem_hur     "Conjure Smoke <Bet Ylem Hur>"      bet-ylem-hur     "BYH"  1 context-town  nil                (list sulphorous_ash))
 
 ;; Second Circle
 (mk-spell 'sanct_nox        "Poison Ward <Sanct Nox>"           sanct-nox        "SN"   2 context-any   s_sanct_nox        (list nightshade garlic))
@@ -324,6 +325,7 @@
 (mk-spell 'vas_lor          "Great Light <Vas Lor>"             vas-lor          "VL"   3 context-any   s_vas_lor          (list mandrake sulphorous_ash))
 (mk-spell 'in_flam_sanct    "Fire Ward <In Flam Sanct>"         in-flam-sanct    "IFS"  3 context-any   s_in_flam_sanct    (list garlic sulphorous_ash t_royal_cape))
 (mk-spell 'vas_an_nox       "Mass Cure Poison <Vas An Nox>"     vas-an-nox       "VAN"  3 context-any   s_vas_an_nox       (list mandrake garlic ginseng))
+(mk-spell 'an_ort_xen       "Dispel Magic <An Ort Xen>"         an-ort-xen       "AOX"  3 context-any   s_in_an            (list garlic mandrake sulphorous_ash))
 
 ;; Fourth Circle
 (mk-spell 'an_grav          "Dispel Field <An Grav>"            an-grav          "AG"   4 context-any   s_an_grav          (list black_pearl sulphorous_ash))

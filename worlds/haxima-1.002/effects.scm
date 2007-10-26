@@ -897,3 +897,30 @@
   (douse ktarg)
   #f ;; prevents removal of trigger
   )
+
+  
+;;--------------------------------------------------------------------------
+;; Dispell Magic effects
+
+(define (effects-dispel-magic ktarg)
+	(map (lambda (effect)
+			(kern-obj-remove-effect ktarg effect)
+			)
+		(list
+			ef_sleep
+			ef_light
+			ef_protection
+			ef_charm
+			ef_invisibility
+			ef_spider_calm
+			ef_temporary_poison_immunity
+			ef_temporary_disease_immunity
+			ef_temporary_paralysis_immunity
+			ef_temporary_charm_immunity
+			ef_temporary_sleep_immunity
+			ef_temporary_fire_immunity
+			ef_temporary_magical_kill_immunity
+			ef_paralyze
+			ef_temporary_grow_head
+		)
+	))

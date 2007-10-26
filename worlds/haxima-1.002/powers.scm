@@ -350,6 +350,11 @@
    (kern-obj-remove ktarg)
    (kern-map-repaint)
    result-ok)
+   
+;; todo saving throw vs caster power for different effects?
+(define (powers-dispel-magic caster ktarg power)
+	(effects-dispel-magic ktarg)
+	result-ok)
 
 ;todo currently only checks topmost item
 (define (powers-disarm-traps caster ktarg power)
@@ -771,7 +776,15 @@
                       (else
                        (map apply-sleep hostiles)
                        result-ok))))
-
+                       
+(define (powers-smoke-range power)
+	(+ 3 (/ power 3)))
+                   
+(define (powers-smoke-field caster ktarg apower)
+	(fields-smoke-apply (loc-place ktarg) (loc-x ktarg) (loc-y ktarg) apower)
+	result-ok
+	)
+                       
 ;todo duration based on power?
 (define (powers-spider-calm caster ktarg power)
 	(kern-obj-add-effect ktarg ef_spider_calm nil)

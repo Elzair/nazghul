@@ -65,3 +65,47 @@
           ((is-poison-field? ktype) (has-poison-immunity? kchar))
           ((is-sleep-field? ktype) (has-sleep-immunity? kchar))
           (else #f))))
+          
+;; smoke is here since it more closely resembles a field than anything else
+;; TODO: smoke should calculate a duration and store that in a gob
+;;   so that denser smoke can be created  
+          
+(define smoke-ifc
+  (ifc nil
+       (method 'exec (lambda (ksmoke)
+                       (if (> (kern-dice-roll "1d20") 16)
+                           (kern-obj-remove ksmoke)
+
+                           ;; smoke drifts with the wind in wilderness combat
+                           (let ((curloc (kern-obj-get-location ksmoke)))
+                             (if (kern-place-is-combat-map? (loc-place curloc))
+                                 (let ((loc (loc-offset (kern-obj-get-location ksmoke) 
+                                                        (vector-ref opposite-dir (kern-get-wind)))))
+                                   (if (not (kern-is-valid-location? loc))                            
+                                       (kern-obj-remove ksmoke)
+                                       (begin
+                                         (kern-obj-relocate ksmoke loc nil)
+                                         (kern-los-invalidate)
+                                         ))))))))))
+
+
+(mk-obj-type 't_smoke_cloud "smoke" s_smoke layer-projectile smoke-ifc)
+
+(define (fields-smoke-apply kplace x y power)
+	(define (tryput loc)
+		(if (terrain-ok-for-field? loc)
+			(let ((kfield (kern-mk-obj t_smoke_cloud 1)))
+				(kern-obj-set-opacity kfield #t)
+				(kern-obj-put-at kfield loc)))
+	)
+	(tryput (mk-loc kplace x y))
+	(tryput (mk-loc kplace (- x 1) y))
+	(tryput (mk-loc kplace (+ x 1) y))
+	(tryput (mk-loc kplace x (- y 1)))
+	(tryput (mk-loc kplace x (+ y 1)))
+	(tryput (mk-loc kplace (- x 1) (- y 1)))
+	(tryput (mk-loc kplace (- x 1) (+ y 1)))
+	(tryput (mk-loc kplace (+ x 1) (- y 1)))
+	(tryput (mk-loc kplace (+ x 1) (+ y 1)))
+	(kern-los-invalidate)
+)

@@ -262,6 +262,12 @@
 	(cast-ui-ranged-loc powers-web caster
 		(powers-web-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
+		
+(define (bet-ylem-hur caster)
+	(cast-ui-ranged-loc powers-smoke-field caster
+		(powers-smoke-range (occ-ability-whitemagic caster))
+		(occ-ability-whitemagic caster)))
+	
 	
 ;;----------------------------------------------------------------------------
 ;; Second Circle
@@ -349,7 +355,9 @@
   (cast-ui-party-spell powers-cure-poison
                        caster (occ-ability-whitemagic caster)))
 
-
+(define (an-ort-xen caster)
+	(cast-ui-basic-member-spell powers-dispel-magic
+		caster (occ-ability-whitemagic caster)))
 
 ;;----------------------------------------------------------------------------
 ;; Fourth Circle
