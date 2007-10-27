@@ -88,6 +88,11 @@
   (put (kern-mk-obj t_vas_mani_scroll 1) 6 8)
   (put (kern-mk-obj t_wis_quas_scroll 1) 6 7)
 
+ ;; spellbooks
+(put (kern-mk-obj t_spell_book_illusion_1          1)  3  1)
+(put (kern-mk-obj t_spell_book_force_magick_fields 1)  2 12)
+(put (kern-mk-obj t_spell_book_force_magick_matter 1) 18 17)
+
   ;; lucre
   (put (kern-mk-obj t_gold_coins 74) 6 2)
   (put (kern-mk-obj t_gold_coins 112) 2 9)
