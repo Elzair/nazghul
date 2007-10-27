@@ -120,7 +120,11 @@
   (put (mk-locked-door) 6 8)
   (put (mk-magic-locked-door) 4 6)
   (put (mk-chest 'bomb-trap
-                 '((1 t_demon_gate_book)))
+                 '((1 t_demon_gate_book)
+		   (1 t_spell_book_gate_magick)
+		   (1 t_spell_book_summoning)
+		   (1 t_spell_book_enchantment_curses)
+		   ))
        4 5)
 
   ;; Bunkroom
