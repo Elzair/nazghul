@@ -27,6 +27,8 @@
  (put (kern-mk-obj t_gold_coins (kern-dice-roll "5d50+5")) 10 8)
  (put (kern-mk-obj t_iron_helm_4 1) 10 8)
  (put (kern-mk-obj t_gold_coins (kern-dice-roll "5d50+5")) 9 9)
+ (put (kern-mk-obj t_spell_book_enchantment_miscellanea 1) 9 10)
+ (put (kern-mk-obj t_spell_book_illusion_2 1) 9 11)
  (put (kern-mk-obj t_gem (kern-dice-roll "5d4+1")) 10 9)
  (put (kern-mk-obj t_gold_coins (kern-dice-roll "5d50+5")) 11 9)
  (put (kern-mk-obj t_gold_coins (kern-dice-roll "5d50+5")) 9 10)
@@ -69,6 +71,9 @@
  (put (spawn-pt 'fire-slime) 9 1)
  (put (spawn-pt 'fire-slime) 7 3)
  (put (spawn-pt 'fire-slime) 10 4)
+
+ ;; Asbestos spellbook, floating in the lava...
+ (put (kern-mk-obj t_spell_book_force_magick_winds) 2 11)
  )
 
 (mk-dungeon-level 
