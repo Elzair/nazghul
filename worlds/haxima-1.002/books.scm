@@ -217,6 +217,9 @@
     "- Mix Sulphurous Ash, Garlic, "
     "- and forget ye not: [SMUDGED WORD]"
     ""
+    "Dispel Magic <An Ort Xen>"
+    "- Mix Sulphurous Ash, Garlic, Mandrake"
+    ""
     "Protection <IN SANCT>"
     "- Mix Sulphurous Ash, Garlic, Ginseng"
     ""
@@ -348,8 +351,11 @@
     "|  For what Wind changes not, blows not.  |"
     "|      Shall ye then have Changed it?     |"
     "+-----------------------------------------+"
-    "Spells of the Circle II:"
-    "------------------------"
+    "Spells of the Circle I and II:"
+    "------------------------------"
+    "Conjure Smoke <Bet Ylem Hur>"
+    "- Mix Sulphurous Ash"
+    ""
     "Change Wind <REL HUR>"
     "- Mix Sulphurous Ash, Blood Moss"
     ""
@@ -551,6 +557,273 @@
     "VIII - Resurrection <In Mani Corp>"
     "- Mix Sulphurous Ash, Ginseng, Garlic, "
     "-     Spider Silk, Blood Moss, Mandrake"
+    )
+   result-ok))
+
+
+;;;;;;;;;;;;;;;;;;;; Summoning ;;;;;;;;;;;;;;;;;;;;
+
+(mk-reusable-item
+ 't_spell_book_summoning "Summoning: Beasts and Entities" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Summoning: Beasts and Entities"
+    "+-----------------------------------------+"
+    "| KAL     To the Summoner - BEWARE    KAL |"
+    "| CORP         Lest ye Call Up,       XEN |"
+    "| BET  That which ye cannot Send Back ORT |"
+    "| SANCT  [ABRAD] - [ACAD] - [ABRA]   YLEM |"
+    "+-----------------------------------------+"
+    "II - Summon Vermin <In Bet Xen>"
+    "- Mix Sulphurous Ash, Blood Moss, "
+    "-     Spider Silk"
+    ""
+    "V - Summon Beast <Kal Xen>"
+    "- Mix Spider Silk, Mandrake"
+    ""
+    "VIII - Summon Slime <Kal Xen Nox>"
+    "- Mix Spider Silk, Nightshade, Mandrake"
+    ""
+    "VIII - Summon Undead <Kal Xen Corp>"
+    "- Mix Spider Silk, Nightshade, Mandrake"
+    )
+   result-ok))
+
+
+;;;;;;;;;;;;;;;;;;;; Dimensions and Gate Magick ;;;;;;;;;;;;;;;;;;;;
+
+(mk-reusable-item
+ 't_spell_book_gate_magick "Upon Dimensions: Gates" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Upon Dimensions: Gates"
+    "+-----------------------------------------+"
+    "| In Travel, is Freedom indeed, oh Seeker |"
+    "|       IN POR - IN WIS - EX POR WIS      |"
+    "|                                         |"
+    "| The Lore of Moons - Controls the Gates! |"
+    "|      SUN - FYER  Radiant 24  (12,12)    |"
+    "|     MOON - LUMIS Yellow  60, (5)x8      |"
+    "|     MOON - ORD   Blue    36, (9)x8      |"
+    "|                                         |"
+    "| If ye be Wise        Watch Wax and Wane |"
+    "+-----------------------------------------+"
+    "Locate <In Wis>"
+    "- Mix Nightshade"
+    ""
+    "Vision <In Quas Wis>"
+    "- Mix Nightshade, Mandrake"
+    ""
+    "Blink <Bet Por>"
+    "- Mix Blood Moss, Black Pearl"
+    ""
+    "Ascend <Uus Por>"
+    "- Mix it not, cast it not! Space tears!"
+    ""
+    "Descend <Des Por>"
+    "- Beware the warp! Seek ye not this lore!"
+    ""
+    "Quickness <Rel Tym>"
+    "- Mix Sulphurous Ash, Blood Moss, Mandrake"
+    ""
+    "Teleport Party <Vas Por>"
+    "- Mix Blood Moss, Black Pearl, Mandrake"
+    ""
+    "Gate <Vas Rel Por>"
+    "- Mix Sulphurous Ash, Black Pearl, Mandrake"
+    )
+   result-ok))
+
+
+;;;;;;;;;;;;;;;;;;;; Enchantment ;;;;;;;;;;;;;;;;;;;;
+
+(mk-reusable-item
+ 't_spell_book_enchantment_wards "Enchantment: Wards" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Enchantment: Wards"
+    "+-----------------------------------------+"
+    "| SANCT -     Protect Thyself!    - SANCT |"
+    "|  Mix Wards!  Cast spells of Protection! |"
+    "|  Surround thyself with Fields of Force  |"
+    "| Seeker   - Ye are in Danger! -  Beware! |"
+    "+-----------------------------------------+"
+    "Poison Ward <Sanct Nox>"
+    "- Mix Garlic, Nightshade"
+    ""
+    "Fire Ward <In Flam Sanct>"
+    "- Mix [BLURRED], [SMEARED],"
+    "      and the Cap of the Coastal Prince"
+    ""
+    "Mass Poison Ward <Vas Sanct Nox>"
+    "- Mix Garlic, Nightshade, Mandrake"
+    ""
+    "Protection <In Sanct>"
+    "- Mix Sulphurous Ash, Ginseng, Garlic"
+    ""
+    "Dispel Magic <An Ort Xen>"
+    "- Mix Sulphurous Ash, Garlic, Mandrake"
+    ""
+    "Negate Magic <In An>"
+    "- Mix Sulphurous Ash, Garlic, Mandrake"
+    ""
+    "Force Field <In Sanct Grav>"
+    "- Mix Spider Silk, Black Pearl, Mandrake"
+    )
+   result-ok))
+
+(mk-reusable-item
+ 't_spell_book_enchantment_curses "Enchantment: Curses" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Enchantment: Curses"
+    "+-----------------------------------------+"
+    "|             To the Reader               |"
+    "|    Be ye ACCURSED, I strike ye BLIND!   |"
+    "|    ----------------------------------   |"
+    "|        Gentle Reader - Be ye Wise       |"
+    "|     Mix and Cast these Runes at Need    |"
+    "+-----------------------------------------+"
+    "Web <Ylem An Ex>"
+    "- Mix Spider Silk, Black Pearl"
+    ""
+    "Calm Spiders <An Xen Bet>"
+    "- Mix Garlic, Spider Silk"
+    ""
+    "Sleep <Xen Zu>"
+    "- Mix Ginseng, Spider Silk"
+    ""
+    "Charm Monster <An Xen Ex>"
+    "- Mix Spider Silk, Black Pearl, Nightshade"
+    ""
+    "Confusion <Quas An Wis>"
+    "- Mix Nightshade, Mandrake"
+    ""
+    "Fear <In Quas Corp>"
+    "- Mix Garlic, Nightshade, Mandrake"
+    )
+   result-ok))
+
+(mk-reusable-item
+ 't_spell_book_enchantment_miscellanea "Enchantment: Miscellanea" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Enchantment: Miscellanea"
+    "+-----------------------------------------+"
+    "| [SMUDGED TEXT] the Secrets!   [BLURRED] |"
+    "| Conceal the [STAIN] from [SMEARED WORD] |"
+    "| AN EX WIS -                  - KAL QUAS |"
+    "+-----------------------------------------+"
+    "Quickness <Rel Tym>"
+    "- Mix Sulphurous Ash, Blood Moss, Mandrake"
+    ""
+    "X-Ray Vision <Wis An Ylem>"
+    "- Mix Sulphurous Ash, Mandrake"
+    ""
+    "Invisibility <Sanct Lor>"
+    "- Mix Blood Moss, Nightshade, Mandrake"
+    ""
+    "Telekinesis <In Rel Por>"
+    "- Mix Spider Silk, Blood Moss, Black Pearl"
+    ""
+    "Poison Wind <In Nox Hur>"
+    "- Mix Sulphurous Ash,Blood Moss, Nightshade"
+    ""
+    "Wind of Sleep <In Zu Hur>"
+    "- Mix Ginseng, Blood Moss, Mandrake"
+    ""
+    "Time Stop <An Tym>"
+    "- Mix Garlic, Blood Moss, Mandrake"
+    )
+   result-ok))
+
+
+;;;;;;;;;;;;;;;;;;;; Illusions, Misdirections, and Schemes ;;;;;;;;;;;;;;;;;;;;
+
+(mk-reusable-item
+ 't_spell_book_illusion_1 "Illusions: Lesser Secrets" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Illusions: Lesser Secrets"
+    "+-----------------------------------------+"
+    "|          Be ye Wrogue, or Mage?         |"
+    "|   By Artifice, by Cunning, ye Survive   |"
+    "| Use well these Runes, Mix and Cast them |"
+    "+-----------------------------------------+"
+    "Conjure Smoke <Bet Ylem Hur>"
+    "- Mix Sulphurous Ash"
+    ""
+    "Detect Traps <Wis Sanct>"
+    "- Mix Sulphurous Ash"
+    ""
+    "Sleep <Xen Zu>"
+    "- Mix Ginseng, Spider Silk"
+    ""
+    "Calm Spiders <An Xen Bet>"
+    "- Mix Garlic, Spider Silk"
+    )
+   result-ok))
+
+(mk-reusable-item
+'t_spell_book_illusion_2 "Illusions: Greater Secrets" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Illusions: Greater Secrets"
+    "+-----------------------------------------+"
+    "|   Be ye Master Thief, or Cloaked Mage?  |"
+    "| Artifice Superlative                    |"
+    "|     Cunning Extraordinary               |"
+    "|         Survival Quotidian              |"
+    "|             Mix and Cast the Runes      |"
+    "|                 CAVEAT LECTOR           |"
+    "| NON CARBORUNDUM ILLEGITEMI              |"
+    "+-----------------------------------------+"
+    "Confusion <Quas An Wis>"
+    "- Mix Nightshade, Mandrake"
+    ""
+    "Charm Monster <An Xen Ex>"
+    "- Mix Spider Silk, Black Pearl, Nightshade"
+    ""
+    "Fear <In Quas Corp>"
+    "- Mix Garlic, Nightshade, Mandrake"
+    ""
+    "Invisibility <Sanct Lor>"
+    "- Mix Blood Moss, Nightshade, Mandrake"
+    )
+   result-ok))
+
+
+;;;;;;;;;;;;;;;;;;;; Divination Magick ;;;;;;;;;;;;;;;;;;;;
+
+(mk-reusable-item
+'t_spell_book_divination "Mysteries of Divination" s_manual (/ norm 3)
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+    "Mysteries of Divination"
+    "+-----------------------------------------+"
+    "|     IN WIS - AN QUAS - VAS KAL EX WIS   |"
+    "| Oh Seeker, are ye Wise? Riddle me then  |"
+    "|   I Seek the Seeker,  I Slay the Slayer |"
+    "|   I Wreak the Wrogue, I Work the Wright |"
+    "|              What then am I?            |"
+    "+-----------------------------------------+"
+    "Detect Traps <Wis Sanct>"
+    "- Mix Sulphurous Ash"
+    ""
+    "Disarm Trap <An Sanct Ylem>"
+    "- Mix Blood Moss"
+    ""
+    "Locate <In Wis>"
+    "- Mix Nightshade"
+    ""
+    "Vision <In Quas Wis>"
+    "- Mix Nightshade Mandrake"
+    ""
+    "Reveal <Wis Quas>"
+    "- Mix Sulphurous Ash, Nightshade"
+    ""
+    "X-Ray Vision <Wis An Ylem>"
+    "- Mix Sulphurous Ash, Mandrake"
     )
    result-ok))
 
