@@ -86,6 +86,7 @@
 			 (10 t_gem)
 			 (10 t_torch)
 			 (10 t_picklock)
+			 (1  t_spell_book_illusion_1)
          )) 13 2)
   ;; arms...
   (put (mk-chest
@@ -103,6 +104,7 @@
 			 (10 t_cure_potion)
 			 (10 t_poison_immunity_potion)
 			 (10 t_invisibility_potion)
+			 (1  t_spell_book_force_magick_mechanismus)
          )) 13 4)
   ;; potions 2...
   (put (mk-chest
