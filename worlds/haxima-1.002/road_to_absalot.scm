@@ -76,6 +76,8 @@
   (put (guard-pt 'death-knight) 8 3)
   (put (guard-pt 'death-knight) 10 3)
   (put (spawn-pt 'demon) 16 2)
+
+  (put (kern-mk-obj t_spell_book_force_magick_matter 1) 17 9)
  )
 
 
