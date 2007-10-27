@@ -73,7 +73,7 @@
  (put (spawn-pt 'fire-slime) 10 4)
 
  ;; Asbestos spellbook, floating in the lava...
- (put (kern-mk-obj t_spell_book_force_magick_winds) 2 11)
+ (put (kern-mk-obj t_spell_book_force_magick_winds 1) 2 11)
  )
 
 (mk-dungeon-level 

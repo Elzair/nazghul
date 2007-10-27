@@ -65,16 +65,16 @@
   ;; library
   (put (mk-door) 15 12)
 
-  (put (kern-mk-obj t_spell_book_white_magick_1) 13 14)
-  (put (kern-mk-obj t_spell_book_white_magick_2) 13 15)
-  (put (kern-mk-obj t_spell_book_white_magick_3) 13 16)
+  (put (kern-mk-obj t_spell_book_white_magick_1 1) 13 14)
+  (put (kern-mk-obj t_spell_book_white_magick_2 1) 13 15)
+  (put (kern-mk-obj t_spell_book_white_magick_3 1) 13 16)
 
-  (put (kern-mk-obj t_spell_book_necromancy)        15 17)
-  (put (kern-mk-obj t_spell_book_enchantment_wards) 16 17)
+  (put (kern-mk-obj t_spell_book_necromancy        1) 15 17)
+  (put (kern-mk-obj t_spell_book_enchantment_wards 1) 16 17)
 
-  (put (kern-mk-obj t_spell_book_summoning)   17 14)
-  (put (kern-mk-obj t_spell_book_gate_magick) 17 15)
-  (put (kern-mk-obj t_spell_book_divination) 17 16)
+  (put (kern-mk-obj t_spell_book_summoning   1) 17 14)
+  (put (kern-mk-obj t_spell_book_gate_magick 1) 17 15)
+  (put (kern-mk-obj t_spell_book_divination  1) 17 16)
 
   ;; center
   (put (mk-door) 9 12)
