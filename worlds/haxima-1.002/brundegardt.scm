@@ -780,6 +780,7 @@
  (put (mk-corpse-with-loot) 8 9)
  (put (mk-corpse-with-loot) 9 8)
  (put (mk-corpse-with-loot) 10 10)
+ (put (kern-mk-obj t_spell_book_divination 1) 9 10)
  )
 
 (block-teleporting 
@@ -1007,6 +1008,7 @@
   )
     nil ;;entrances
  (put (mk-key t_brundegardt_tower_4_key) 9 9)
+(put (kern-mk-obj t_spell_book_force_magick_winds 1) 9 10)
  (put (spawn-pt 'griffin-chick) 8 5)
  (put (spawn-pt 'griffin-chick) 10 5)
  (put (spawn-pt 'griffin-chick) 8 7)
