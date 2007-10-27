@@ -176,7 +176,10 @@
                      (10 blood_moss)
                      (10 black_pearl)
                      (10 nightshade)
-                     (10 mandrake)))
+                     (10 mandrake)
+		     (1 t_spell_book_white_magick_1)
+		     (1 t_spell_book_white_magick_2)
+		     ))
        11 14)
   (put (mk-chest
         'spike-trap
@@ -184,11 +187,15 @@
                      (10 t_mana_potion)
                      (5 t_cure_potion)
                      (5 t_poison_immunity_potion)
-                     (1 t_invisibility_potion)))
+                     (1 t_invisibility_potion)
+		     (1 t_spell_book_force_magick_fields)
+		     ))
        11 15)
   (put (mk-chest
         'lightning-trap
-        '((100 t_gold_coins)))
+        '(
+	  (100 t_gold_coins)
+	  ))
        11 16)
 
   (put (mk-bed) 21 11)
@@ -263,13 +270,24 @@
 	(put (mk-hidden 't_bet_flam_hur_book 1) 11 10)
    
     ;; treasure in east store room
-	(put (kern-mk-obj t_doom_staff 1) 20 13)
-  (put (kern-mk-obj t_xen_corp_scroll 1) 21 13)
-  (put (kern-mk-obj t_an_tym_scroll 1) 21 14)
-  (put (kern-mk-obj t_vas_rel_por_scroll 1) 20 17)
-  (put (kern-mk-obj t_in_vas_por_ylem_scroll 1) 21 17)
-  (put (kern-mk-obj t_gold_coins 500) 21 16)
-  (put (kern-mk-obj t_mans_note 1) 19 16)
+  (put (kern-mk-obj t_doom_staff               1) 20 13)
+  (put (kern-mk-obj t_xen_corp_scroll          1) 21 13)
+
+  (put (kern-mk-obj t_an_tym_scroll            1) 21 14)
+
+  (put (kern-mk-obj t_vas_rel_por_scroll       1) 20 17)
+  (put (kern-mk-obj t_spell_book_divination    1) 20 17)
+  (put (kern-mk-obj t_in_vas_por_ylem_scroll   1) 21 17)
+  (put (kern-mk-obj t_spell_book_gate_magick   1) 21 17)
+
+  (put (kern-mk-obj t_spell_book_enchantment_wards       1) 21 15)
+  (put (kern-mk-obj t_spell_book_enchantment_curses      1) 21 15)
+  (put (kern-mk-obj t_spell_book_enchantment_miscellanea 1) 21 15)
+
+  (put (kern-mk-obj t_gold_coins             500) 21 16)
+
+  (put (kern-mk-obj t_mans_note                1) 19 16)
+
   
     (put (kern-tag 'openlibwall 
                  (mk-tblitter 'p_
