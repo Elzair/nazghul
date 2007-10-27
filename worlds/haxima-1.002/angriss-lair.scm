@@ -203,6 +203,7 @@
  (put (kern-mk-obj web-type 1) 17 5)
  (put (kern-mk-obj web-type 1) 15 6)
  (put (kern-mk-obj web-type 1) 13 5)
+ (put (kern-mk-obj t_spell_book_white_magick_2 1) 15 1)
  (put (kern-mk-obj t_gold_coins 52) 14 2)
  (put (kern-mk-obj t_gold_coins 34) 17 5)
  (put (kern-mk-obj t_bow 1) 15 6)
@@ -211,6 +212,7 @@
  (put (kern-mk-obj t_halberd 1) 12 3)
  (put (kern-mk-obj t_heal_potion 3) 15 1)
  (put (kern-mk-obj t_mana_potion 5) 16 6)
+ (put (kern-mk-obj t_spell_book_force_magick_battle 1) 17 6)
 )
 
 (mk-dungeon-level 
