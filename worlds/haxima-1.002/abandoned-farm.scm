@@ -71,6 +71,7 @@
                 (put (spawn-pt 'queen-spider) 9 23)
                 (put (spawn-pt 'troll) 19 13)
                 (put (spawn-pt 'troll) 19 14)
+		(put (kern-mk-obj t_spell_book_enchantment_curses 1) 10 12)  ;; Belonged to Ilya's mother
                 (list (mk-door-in-rock) 13 17)
                 (list (mk-door-in-rock) 7 25)
                 (list (mk-ladder-down 'p_abandoned_cellar 6 25) 6 25)
