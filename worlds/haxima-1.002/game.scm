@@ -231,9 +231,9 @@
 (define layer-crosshair  11)
 
 ;; Contexts
-(define context-world	 1)
-(define context-town       2)
-(define context-any        (+ context-town context-world))
+(define context-world 1)
+(define context-town  2)
+(define context-any      (+ context-town context-world))
 
 ;; Damage/Immunity types (ordinal, not bitmasks)
 (define damage-none   0)
