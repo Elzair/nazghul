@@ -992,6 +992,7 @@
       result-no-effect))
 	
 (define (powers-view caster ktarg power)
+	(kern-map-center-camera (kern-obj-get-location caster))
 	(kern-map-set-peering #t)
 	(kern-map-repaint)
 	(kern-print "Hit a key when done gazing...\n")
