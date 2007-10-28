@@ -72,15 +72,15 @@
            "the phase of Ord decides where you emerge!")))
 
 (define (kalc-lumi knpc kpc)
-  (say knpc "Lumis is the slow-moving moon."))
+  (say knpc "Lumis is the yellow slow-moving moon."))
 
 (define (kalc-ord knpc kpc)
-  (say knpc "Ord is the fast-moving moon."))
+  (say knpc "Ord is the blue fast-moving moon."))
 
 (define (kalc-engi knpc kpc)
   (say knpc "I'm one of the only people who ever visits the Engineer! "
        "You have to use a moongate to get to his place. "
-       "Enter when Ord is a waning quarter moon."))
+       "Enter when Ord has waxed almost full."))
 
 (define (kalc-peop knpc kpc)
   (say knpc "I deliver messages and packages for the Engineer, the Enchanter, city officials. "
