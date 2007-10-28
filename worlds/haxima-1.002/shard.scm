@@ -516,11 +516,11 @@
   (list (kern-tag 'mg-1 (mk-moongate 'ord)) 62 50) ;; near green tower
   (list (kern-tag 'mg-2 (mk-moongate 'ord)) 34 56) ;; near trigrave
   (list (kern-tag 'mg-3 (mk-moongate 'ord)) 19 82) ;; near oparine
-  (list (kern-tag 'mg-4 (mk-moongate 'ord)) 21 19) ;; near enchanter's tower
+  (list (kern-tag 'mg-8 (mk-moongate 'ord)) 21 19) ;; near enchanter's tower
   (list (kern-tag 'mg-5 (mk-moongate 'ord)) 56 27) ;; near kurpolis
   (list (kern-tag 'mg-6 (mk-moongate 'ord)) 90 26) ;; near lost halls & the man
   (list (kern-tag 'mg-7 (mk-moongate 'ord)) 125 18) ;; near absalot
-  (list (kern-tag 'mg-8 (mk-moongate 'ord)) 50 7) ;; engineer's hut
+  (list (kern-tag 'mg-4 (mk-moongate 'ord)) 50 7) ;; engineer's hut
 
   ;; npc party generator
   (put (mk-edge-spawn-generator) 0 0)
