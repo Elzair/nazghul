@@ -702,7 +702,7 @@
   (list (list 100 "1d10"    't_bolt)
         (list 10 "1d3-1" 't_heal_potion)
         (list 50  "1d5"   't_food)
-        (list 100 "2d10" 't_gold)
+        (list 100 "2d10" 't_gold_coins)
         (list 4 "1" 't_sword)
         (list 6 "1" 't_shield)
         (list 5 "1" 't_chain_coif)
