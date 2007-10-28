@@ -3130,7 +3130,9 @@ KERN_API_CALL(kern_place_is_visible)
 		return sc->NIL;
 	}
 	
-	if (place != player_party->getPlace())
+	// the player party doesnt wind up being in a temporary combat map,
+	// but by its existance we can infer the player is there
+	if (!place_is_wilderness_combat(place) && place != player_party->getPlace())
 	{
 		return sc->F;	
 	}
