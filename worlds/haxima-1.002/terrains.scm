@@ -11,12 +11,18 @@
            (kern-obj-add-effect obj ef_poison nil))
       (kern-log-msg "Noxious fumes!")))
 	
+;; swamp logic:
+;; 1) swamp only effects you on your turn (ie the 'slow progress' doesnt mean you get whacked 3 times before your next turn)
+;;			this is calculated by whether your character speed is enough to bring your ap positive in your next turn
+;; 2) swamp is weaker in the worldmap, where you are assumed to have some lattitude to go around the noxious bits
+;; 3) swamp gives 'noxious fumes' feedback if someone in your party gets poisoned, or you see an individual critter get poisoned
+;;       you dont get feedback when a npc party moves over swamp
 (define (terrain-effect-swamp obj)
   (if (and (kern-obj-is-being? obj)
 			(if (kern-place-is-wilderness? (loc-place (kern-obj-get-location obj)))
-				(> (kern-obj-get-ap (kern-char-get-party obj)) -1)
-				(> (kern-obj-get-ap obj) -1))
-				)
+				(> (kern-obj-get-ap (kern-char-get-party obj)) (- 0 (kern-char-get-speed obj)))
+				(> (kern-obj-get-ap obj) (- 0 (kern-char-get-speed obj)))
+				))
 	(let* (
 			(difficulty
 				(cond ((< (kern-obj-get-movecost obj pclass-canfly) cant) 1)
@@ -29,10 +35,15 @@
 			(resistroll (- (kern-dice-roll (mkdice 1 (+ strength 10))) strength ))
 			)
 		(if (> avoidroll 0)
-			(begin
-				(if (> resistroll 0)
-					(kern-obj-add-effect obj ef_poison nil))
-				(kern-log-msg "Noxious fumes!")
+			(if (> resistroll 0)
+				(begin
+					(kern-obj-add-effect obj ef_poison nil)
+					(if (kern-place-is-wilderness? (loc-place (kern-obj-get-location obj)))
+						(if (is-player-party-member? obj)
+							(kern-log-msg "Noxious fumes!"))
+						(msg-log-visible (kern-obj-get-location obj) "Noxious fumes!")
+					)			
+				)
 			))
 	)))
 	
