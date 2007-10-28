@@ -28,7 +28,7 @@
   (bind-astral-body (kern-mk-astral-body 
                      tag                          ; tag
                      name                         ; name
-                     0                            ; relative distance
+                     2                            ; relative distance
                      (* hours-per-phase 60)       ; minutes per phase
                      (/ (* hours-per-rev 60) 360) ; minutes per degree
                      arc                          ; initial arc

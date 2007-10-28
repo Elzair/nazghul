@@ -198,13 +198,16 @@
 ;;----------------------------------------------------------------------------
 ;; Lumis is the source gate, which means it opens the source moongates on its
 ;; phases. We designate this by using the source-moon-ifc as its ifc.
+;;
+;; Note: the arc and phase are calculated to give the moon the right orientation
+;; with respect to phase vs sun position
 ;;----------------------------------------------------------------------------
 (mk-moon 'lumis  ; tag
          "Lumis" ; name
          5       ; hours per phase
          60      ; hours per revolution
-         222     ; initial arc
-         2       ; initial phase
+         22      ; initial arc
+         0       ; initial phase
          'source-moon-ifc ; ifc
          ;; gates (moons are fixed at 8 phases in mk-moon):
          (list 'mg-1 'mg-2 'mg-3 'mg-4
@@ -217,13 +220,16 @@
 ;; when the player steps through a moongate. We designate this by giving it a
 ;; nil ifc. Note that its gates do not need to be listed in the same order as
 ;; Lumis. In fact, they don't even need to be the same set of gates.
+;;
+;; Note: the arc and phase are calculated to give the moon the right orientation
+;; with respect to phase vs sun position
 ;;----------------------------------------------------------------------------
 (mk-moon 'ord    ; tag
          "Ord"   ; name
          9       ; hours per phase
          36      ; hours per revolution
-         267     ; initial arc
-         1       ; initial phase
+         67     ; initial arc
+         7       ; initial phase
          nil     ; ifc
          ;; gates (moons are fixed at 8 phases in mk-moon):
          (list 'mg-1 'mg-2 'mg-3 'mg-4
