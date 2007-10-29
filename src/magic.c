@@ -276,7 +276,7 @@ int magic_spell_code_to_name(struct magic *magic, char *buf, int len,
 int magic_spell_name_to_code(struct magic *magic, char *code, int len, 
                              char *name)
 {
-        int state = 0, i = 0;
+        int state = 2, i = 0;
         char *ptr = name;
 
         len--; /* leave space for null terminator */
@@ -308,6 +308,12 @@ int magic_spell_name_to_code(struct magic *magic, char *code, int len,
                                 state = 0;
                         }
                         break;
+                case 2:
+                			/* spell names have code in <> */
+                			if (c == '<') {
+	                			state = 0;		
+                			}
+                			break;
                 default:
                         assert(0);
                         break;
