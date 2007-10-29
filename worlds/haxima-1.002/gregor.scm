@@ -25,31 +25,28 @@
 
 (define (gregor-hail knpc kpc)
   (if (in-inventory? kpc t_letter_from_enchanter)
-      (say knpc "I see you got your stuff,\nand that letter from the ^c+rEnchanter^c-, eh?"
+      (say knpc "I see you got your stuff, and that letter from the ^c+rEnchanter^c-, eh?"
 	   "Don't forget to ^c+rready^c- your weapons before leaving. "
            "It's ^c+rdangerous^c- out there!")
-      (say knpc "\n[You meet a grizzled old peasant]\n"
-           "Welcome, Wanderer. I've been watching for you.\n"
-	   "\n"
-           "There's some things that belong to you, \nover in yonder cave.\n"
-           "  Go in where the ^c+rchest^c- is,\n"
-	   "  ^c+ropen^c- it,\n"
-	   "  and ^c+rget^c- the things inside.\n"
-	   "It's all for you.")))
+      (say knpc "[You meet a grizzled old peasant]"
+           " Welcome, Wanderer. I've been watching for you."
+           " There's some things that belong to you, over in yonder cave."
+           " Go in where the ^c+rchest^c- is, ^c+ropen^c- it, and ^c+rget^c- the things inside."
+	   " It's all for you.")))
 
 ;; Some prompting with initial commands:
 (define (gregor-open knpc kpc)
-  (say knpc "\nUse the 'o' key to ^c+gOPEN^c- chests."))
+  (say knpc "Use the 'o' key to ^c+gOPEN^c- chests."))
 
 (define (gregor-get knpc kpc)
-  (say knpc "\nUse the 'g' key to ^c+gGET^c- stuff that's on the ground."))
+  (say knpc "Use the 'g' key to ^c+gGET^c- stuff that's on the ground."))
 
 (define (gregor-read knpc kpc)
-  (say knpc "\nUse the 'r' key to ^c+gREADY^c- weapons or armor. "
+  (say knpc "Use the 'r' key to ^c+gREADY^c- weapons or armor. "
        "You can't use a weapon in combat until it's ready."))
 
 (define (gregor-camp knpc kpc)
-  (say knpc "\nUse the 'k' key to ^c+gKAMP^c-, err...camp, in the wilderness and heal up."))
+  (say knpc "Use the 'k' key to ^c+gKAMP^c-, err...camp, in the wilderness and heal up."))
 
 
 (define (gregor-dang knpc kpc)
@@ -70,11 +67,10 @@
        "Just myself and my granddaughter living there now."))
 
 (define (gregor-ench knpc kpc)
-  (say knpc "\nThe ^c+rEnchanter^c-?\n"
-       "He's one of the ^c+rWise^c-, and is a kind and noble soul.\n"
-       "It is said that he forsaw the coming of a ^c+rWanderer^c-, such as yourself.\n"
-       "He wishes to speak with you, and has asked me to direct you to him.\n"
-       "\n"
+  (say knpc "The ^c+rEnchanter^c-? "
+       "He's one of the ^c+rWise^c-, and is a kind and noble soul. "
+       "It is said that he forsaw the coming of a ^c+rWanderer^c-, such as yourself. "
+       "He wishes to speak with you, and has asked me to direct you to him. "
        "Do you want directions? ")
   (cond ((yes? kpc)
 	 (say knpc "He dwells in a tower in the middle of a terrible swamp.\n"
@@ -91,7 +87,7 @@
 	      "\n"
 	      "The journey from there, I'm afraid may be difficult -- fear the swamps!"))
 	(else 
-	 (say knpc "As you wish.\nIf you should want directions later, ask me of the ^c+rEnchanter^c-.")
+	 (say knpc "As you wish. If you should want directions later, ask me of the ^c+rEnchanter^c-.")
 	 ))
 )
 
@@ -101,13 +97,13 @@
        "Come back and we'll talk again, if you have more questions."))
 
 (define (gregor-ches knpc kpc)
-  (say knpc "Yes. ^c+rOpen^c- it!  ^c+rGet^c- the stuff inside!"))
+  (say knpc "Yes. ^c+rOpen^c- it! ^c+rGet^c- the stuff inside!"))
 
 (define (gregor-stuf knpc kpc)
   (say knpc "The common folk made offerings of such things for you, knowing one day a Wanderer would come again."))
 
 (define (gregor-leav knpc kpc)
-  (say knpc "When you're ready to leave just follow the trail South and step off the map."))
+  (say knpc "When you're ready to leave just follow the trail south and step off the map."))
 
 (define (gregor-band knpc kpc)
   (let ((quest (gregor-quest (kobj-gob-data knpc))))
@@ -121,13 +117,13 @@
                   (say knpc "Go to ^c+gGreen Tower^c- and ask around about the ^c+rbandits^c-.")
                   )))
           (else
-           (say knpc "\nBandits are in the woods.\n"
-                "They robbed me in my own hut.\n"
+           (say knpc "Bandits are in the woods. "
+                "They robbed me in my own hut. "
                 "I tried to fight them, "
-                "and now I walk with a limp and a cane.\n"
-                "The rangers would not help me.\n"
+                "and now I walk with a limp and a cane. "
+                "The rangers would not help me. "
                 "I have a granddaughter living with me now, "
-                "and I am afraid of what they will do the next time they come...\n"
+                "and I am afraid of what they will do the next time they come... "
                 "If it's not too much trouble, will you help me?")
            (cond ((yes? kpc)
                   (say knpc "Thank you. "
@@ -210,8 +206,8 @@
                                              "These are hard times in a hard land.")))
        (method 'hill (lambda (knpc kpc) (say knpc "Trolls are always a threat in the foothills, "
                                              "but more so of late.")))
-       (method 'husb (lambda (knpc kpc) (say knpc "\nMy son-in-law was a simple farmer.\n"
-                                             "Why the trolls attacked I don't know.\n"
+       (method 'husb (lambda (knpc kpc) (say knpc "My son-in-law was a simple farmer. "
+                                             "Why the trolls attacked I don't know. "
                                              "Maybe they were driven out of the hills "
                                              "by something else.")))
        (method 'hut gregor-hut)
@@ -232,33 +228,33 @@
 
        (method 'shar (lambda (knpc kpc) (say knpc "The Shard?  That's what we call this land, ^c+rWanderer^c-.")))
 
-       (method 'shri (lambda (knpc kpc) (say knpc "This shrine is for those who come through the gate.\n"
-                                             "^c+rWanderers^c- like yourself.\n"
+       (method 'shri (lambda (knpc kpc) (say knpc "This shrine is for those who come through the gate. "
+                                             "^c+rWanderers^c- like yourself. "
                                              "Folks leave simple ^c+rofferings^c- here to help you on "
                                              "your journey.")))
 
-       (method 'spid (lambda (knpc kpc) (say knpc "\nSome of the spiders in the deep parts \n"
-					     "of the woods are monstrous -- \n"
-					     "  as big as oxen!\n"
+       (method 'spid (lambda (knpc kpc) (say knpc "Some of the spiders in the deep parts  "
+					     "of the woods are monstrous --  "
+					     " as big as oxen! "
 					     "Children of ^c+rAngriss^c-, we call those.")))
-       (method 'angr (lambda (knpc kpc) (say knpc "Just a legend.\n"
-					     "Mother of all wood spiders.\n"
+       (method 'angr (lambda (knpc kpc) (say knpc "Just a legend. "
+					     "Mother of all wood spiders. "
                                              "Scares the kids, keeps them out o' the woods "
                                              "where they can get lost.")))
 
-       (method 'town (lambda (knpc kpc) (say knpc "\n^c+gTrigrave^c- is the closest town.\n"
+       (method 'town (lambda (knpc kpc) (say knpc "^c+gTrigrave^c- is the closest town. "
 					     "Follow the road South and you can't miss it.")))
 
-       (method 'trol (lambda (knpc kpc) (say knpc "Trolls eat folks.\n"
-					     "Even crack the bones and suck the marrow.\n"
+       (method 'trol (lambda (knpc kpc) (say knpc "Trolls eat folks. "
+					     "Even crack the bones and suck the marrow. "
 					     "Nothing left to bury.")))
 
        (method 'wand (lambda (knpc kpc) (say knpc "We call those who come through the gate Wanderers. "
                                              "No one knows where they come from or where they go. "
                                              "You are the first to come through in a long, long time.")))
 
-       (method 'wise (lambda (knpc kpc) (say knpc "\nThe Wise are both strong and -mostly- good.\n"
-                                             "They help the land, as they can,\n"
+       (method 'wise (lambda (knpc kpc) (say knpc "The Wise are both strong and -mostly- good. "
+                                             "They help the land, as they can, "
 					     "and keep the ^c+rAccursed^c- at bay.")))
        (method 'accu (lambda (knpc kpc) 
                        (say knpc "The Accursed? Rumour has it they trade their souls for power. "
