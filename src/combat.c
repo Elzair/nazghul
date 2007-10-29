@@ -216,7 +216,7 @@ static int location_is_safe(struct position_info *info, int current)
         struct astar_node *path;
         struct astar_search_info as_info;
         struct terrain *terrain;
-        int returntype;
+        int returntype=0;
 
         // Is it passable?
         if (!place_is_passable(info->place, info->px, info->py, 
