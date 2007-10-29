@@ -209,12 +209,14 @@ void combat_set_state(enum combat_state new_state)
         Combat.state = new_state;
 }
 
-static int location_is_safe(struct position_info *info)
+// returns 0 for ok position, -1 for no position, or a PFLAG type for fallback positions with problems
+// input includes current best case problemness
+static int location_is_safe(struct position_info *info, int current)
 {
         struct astar_node *path;
-        int flags = PFLAG_IGNOREBEINGS;
         struct astar_search_info as_info;
         struct terrain *terrain;
+        int returntype;
 
         // Is it passable?
         if (!place_is_passable(info->place, info->px, info->py, 
@@ -225,7 +227,9 @@ static int location_is_safe(struct position_info *info)
         // Is it occupied?
         if (place_is_occupied(info->place, info->px, info->py)) {
                 dbg("occupied\n");
-                return -1;
+                returntype= PFLAG_IGNOREBEINGS;
+                if (current & (PFLAG_IGNOREHAZARDS || PFLAG_IGNOREBEINGS || PFLAG_IGNOREFIELDS))
+                	return -1;
         }
 
         // I added the next two checks because a character was getting
@@ -237,14 +241,17 @@ static int location_is_safe(struct position_info *info)
         // Is it dangerous? Hack: check for a field and dangerous terrain
         if (place_get_object(info->place, info->px, info->py, field_layer)) {
                 dbg("possibly dangerous field\n");
-                return -1;
+                returntype= PFLAG_IGNOREFIELDS;
+                if (current & (PFLAG_IGNOREHAZARDS || PFLAG_IGNOREFIELDS))
+                	return -1;
         }
         terrain = place_get_terrain(info->place, info->px, info->py);
         if (terrain->effect) {
                 dbg("possibly dangerous terrain\n");
-                return -1;
+                returntype= PFLAG_IGNOREHAZARDS;
+                if (current & (PFLAG_IGNOREHAZARDS ))
+                	return -1;
         }
-        
 
         memset(&as_info, 0, sizeof (as_info));
         if (info->find_party) {
@@ -257,7 +264,7 @@ static int location_is_safe(struct position_info *info)
                 as_info.y0 = info->py;
                 as_info.x1 = info->x;
                 as_info.y1 = info->y;
-                as_info.flags = flags;
+                as_info.flags = PFLAG_IGNOREBEINGS;
                 as_info.limit_depth = true;
                 as_info.max_depth = 5;
 
@@ -268,23 +275,26 @@ static int location_is_safe(struct position_info *info)
         }
         else {
                 // skip the pathfinding check
-                return 0;
+                return returntype;
         }
 
         if (path) {
                 astar_path_destroy(path);
-                return 0;
+                return returntype;
         }
 
         return -1;
 }
 
-static int combat_search_for_safe_position(struct position_info *info)
+// returns 0 for ok position, -1 for no position, or a PFLAG type for fallback positions with problems
+// input includes current best case problemness
+static int combat_search_for_safe_position(struct position_info *info, int currentsafety)
 {
         unsigned int i;
         int index;
         static int x_offsets[] = { -1, 1, 0, 0 };
         static int y_offsets[] = { 0, 0, -1, 1 };
+        int locationsafety=-1;
 
         dbg("checking [%d %d]...", info->px, info->py);
 
@@ -313,7 +323,8 @@ static int combat_search_for_safe_position(struct position_info *info)
         rmap[index] = 1;
 
         // If the current location is safe then the search succeeded.
-        if (location_is_safe(info) == 0) {
+        locationsafety = location_is_safe(info,currentsafety);
+        if (locationsafety == 0) {
                 dbg("OK!\n");
                 return 0;
         }
@@ -328,9 +339,10 @@ static int combat_search_for_safe_position(struct position_info *info)
         }
 
         // Return still not found.
-        return -1;
+        return locationsafety;
 }
 
+// returns 0 for ok position, -1 for no position, or a PFLAG type for fallback positions with problems
 static int combat_find_safe_position(struct position_info *info)
 {
         // Here's my new definition of a safe place: a safe place is a tile
@@ -338,6 +350,11 @@ static int combat_find_safe_position(struct position_info *info)
         // question and from which the character in question can pathfind to
         // the edge from which the party entered.
 
+    	  // store data on a fallback not-so-safe position
+    	  int currentsafety = 0;
+    	  int cur_x, cur_y;
+    	  int newsafety = -1;
+    	  
         // Clear the search queue.
         q_head = q_tail = 0;
 
@@ -356,10 +373,24 @@ static int combat_find_safe_position(struct position_info *info)
                 q_head++;
 
                 // If it is ok then we're done.
-                if (combat_search_for_safe_position(info) == 0)
+                newsafety = combat_search_for_safe_position(info, currentsafety);
+                if (newsafety == 0)
                         return 0;
+                else if (newsafety != -1)
+                {
+	                currentsafety = newsafety;
+	                cur_x = info->px;
+	                cur_y = info->py;
+             	 }
         }
 
+        if (currentsafety != 0)
+        {
+	       info->px = cur_x;
+	       info->py = cur_y;  
+	       return currentsafety;
+     		}
+        
         return -1;
 }
 
@@ -586,7 +617,7 @@ bool combat_place_character(class Character * pm, void *data)
         info->py = pm->getY();
         dbg("Placing %s\n", pm->getName());
 
-        if (combat_find_safe_position(info) == -1) {
+        if (combat_find_safe_position(info) != 0) {
 
                 // Ok, so that didn't work. This can happen when the party
                 // leader is right on the map border facing towards the map
@@ -623,7 +654,7 @@ bool combat_place_character(class Character * pm, void *data)
                         info->py = leader->getY();
                         dbg("Retrying %s\n", pm->getName());
 
-                        if (combat_find_safe_position(info) == -1) {
+                        if (combat_find_safe_position(info) != 0) {
                                 dbg("Putting %s on start location "
                                        "[%d %d]\n",
                                        pm->getName(), info->x, info->y);
