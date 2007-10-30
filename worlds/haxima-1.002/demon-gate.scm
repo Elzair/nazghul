@@ -50,12 +50,7 @@
 
 (define (demon-gate-on kgate kchar)
   (let ((dgate (gob kgate)))
-    (demon-gate-unlock dgate)
-    (if (demon-gate-completely-unlocked? dgate)
-        (begin
-          (open-demon-gate (get-place kchar))
-          (demon-gate-opened! dgate)
-          ))))
+    (demon-gate-unlock dgate)))
 
 (define (nossifer-vanquished?)
   (= 0 (num-hostiles (kern-get-player))))
@@ -85,14 +80,24 @@
   )
 
 (define (demon-gate-exec kgate)
-  (let ((dgate (gob kgate)))
-    (if (and (not (end-game-played? dgate))
-             (demon-gate-opened? dgate)
-             (nossifer-vanquished?))
-        (begin
-          (end-game)
-          (end-game-played! dgate)
-          ))))
+	(let ((dgate (gob kgate)))
+		(if (and (not (end-game-played? dgate))
+				(demon-gate-opened? dgate)
+				(nossifer-vanquished?))
+			(begin
+				(end-game)
+				(end-game-played! dgate)
+			))
+		(println (demon-gate-completely-unlocked? dgate) " "
+					(demon-gate-opened? dgate) " " (nossifer-vanquished?))
+		(if (and (demon-gate-completely-unlocked? dgate)
+				(not (demon-gate-opened? dgate)))
+			(begin
+				(open-demon-gate (get-place kgate))
+				(demon-gate-opened! dgate)
+			)
+		)
+	))
         
 
 ;; demon gate type ifc
