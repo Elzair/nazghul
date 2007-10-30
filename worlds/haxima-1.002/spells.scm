@@ -286,6 +286,7 @@
 (mk-sprite 's_vas_rel_por      57)
 (mk-sprite 's_vas_an_nox       58)
 (mk-sprite 's_ort_grav         59)
+(mk-sprite 's_bet_ylem_hur     60)
 
 ;; ----------------------------------------------------------------------------
 ;; Now rip through the list of spells, adding them to the kernel.
@@ -302,7 +303,7 @@
 (mk-spell 'wis_sanct        "Detect Traps <Wis Sanct>"          wis-sanct        "WS"   1 context-town  s_wis_sanct        (list sulphorous_ash))
 (mk-spell 'an_sanct_ylem    "Disarm Trap <An Sanct Ylem>"       an-sanct-ylem    "ASY"  1 context-town  s_an_sanct_ylem    (list blood_moss))
 (mk-spell 'ylem_an_ex       "Web <Ylem An Ex>"                  ylem-an-ex       "YAE"  1 context-town  s_ylem_an_ex       (list spider_silk black_pearl))
-(mk-spell 'bet_ylem_hur     "Conjure Smoke <Bet Ylem Hur>"      bet-ylem-hur     "BYH"  1 context-town  nil                (list sulphorous_ash))
+(mk-spell 'bet_ylem_hur     "Conjure Smoke <Bet Ylem Hur>"      bet-ylem-hur     "BYH"  1 context-town  s_bet_ylem_hur     (list sulphorous_ash))
 
 ;; Second Circle
 (mk-spell 'sanct_nox        "Poison Ward <Sanct Nox>"           sanct-nox        "SN"   2 context-any   s_sanct_nox        (list nightshade garlic))
