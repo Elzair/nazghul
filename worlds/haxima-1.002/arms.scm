@@ -332,6 +332,8 @@
 (kern-mk-sprite 's_throwing_axe   ss_arms 1 29 #f 0)
 (kern-mk-sprite 's_thrown_axe     ss_arms 8 72 #f 0)
 (kern-mk-sprite 's_thrown_boulder ss_arms 1 7 #f 0)
+(kern-mk-sprite 's_smoke_bomb     ss_arms 4 112 #f 0)
+(kern-mk-sprite 's_smoke_potion   ss_arms 1 108 #f 0)
 
 (define flaming-oil-ifc
   (ifc obj-ifc
@@ -416,7 +418,7 @@
    
    (list 't_mweb              "web"            s_thrownweb       temp-ifc            mmode-missile  	#f  )
    (list 't_oil_p             "flaming oil"    s_flaming_oil     flaming-oil-ifc     mmode-missile  	#f  )
-   (list 't_smoke_bomb_p      "smoke bomb"     s_flaming_oil     smoke-bomb-ifc      mmode-missile  	#f  )
+   (list 't_smoke_bomb_p      "smoke bomb"     s_smoke_bomb      smoke-bomb-ifc      mmode-missile  	#f  )
    (list 't_spear_p           "spear"          s_spear           (mk-drop-proj-ifc 't_spear 25)             
                                                                                      mmode-missile  	#f  )
    (list 't_thrown_axe_p      "thrown axe"     s_thrown_axe      magicaxe-ifc        mmode-missile  	#f  )
@@ -505,7 +507,7 @@
 
    (list  't_oil            "flaming oil"   s_oil_potion                "-1"     "1d6"    "-2"  (weap-ap 1.2) 0  slot-weapon   1      4     t_oil_p            #f     flaming-oil-ifc     1       20       30         0      0.9 )
    (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"  (weap-ap 1.2) 0  slot-weapon   1      4     t_slime_vial_p     #f     vial-of-slime-ifc   1       20       30         0      1.0 )
-   (list  't_smoke_bomb     "smoke bomb"    s_oil_potion                "-1"     "1"      "-2"  (weap-ap 1.2) 0  slot-weapon   1      6     t_smoke_bomb_p     #f     smoke-bomb-ifc      1       20       30         0      0.9 )
+   (list  't_smoke_bomb     "smoke bomb"    s_smoke_potion                "-1"     "1"      "-2"  (weap-ap 1.2) 0  slot-weapon   1      6     t_smoke_bomb_p     #f     smoke-bomb-ifc      1       20       30         0      0.9 )
    ))
 
 (map (lambda (type) (apply mk-thrown-arms-type type)) thrown-arms-types)  
