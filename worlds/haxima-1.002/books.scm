@@ -297,6 +297,10 @@
     "Fire Spray <BET FLAM HUR>"
     "- Mix Sulphurous Ash, Blood Moss, "
     "-     and Black Pearl"
+    ""
+    "Poison Bolt <IN NOX POR>"
+    "- Mix Nightshade, Blood Moss, "
+    "-     and Black Pearl"
     )
    result-ok))
 
