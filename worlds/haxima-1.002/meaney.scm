@@ -97,26 +97,20 @@
        "to minister to the poor."))
 
 ;; Trade...
-(define meaney-shop-name "Poor House")
-(define meaney-shop-open-time "6:00AM")
-(define meaney-shop-close-time "6:00PM")
 (define (meaney-trade knpc kpc)
-  (if (not (string=? "working" (kern-obj-get-activity knpc)))
-      (say knpc "Come by the " meaney-shop-name " when I'm working "
-           "between " meaney-shop-open-time " and " meaney-shop-close-time)
-      (if (trade-services knpc kpc
-                          (list
-                           (svc-mk "Heal" 0 heal-service)
-                           (svc-mk "Cure" 0 cure-service)
-                           ))
-          (begin
-            (say knpc "How else can I aid you?")
-            (meaney-trade knpc kpc))
-          (begin
-            (say knpc "Will there be anything else?")
-            (if (kern-conv-get-yes-no? kpc)
-                (meaney-trade knpc kpc)
-                (meaney-get-donation knpc kpc))))))
+  (if (trade-services knpc kpc
+                      (list
+                       (svc-mk "Heal" 0 heal-service)
+                       (svc-mk "Cure" 0 cure-service)
+                       ))
+      (begin
+        (say knpc "How else can I aid you?")
+        (meaney-trade knpc kpc))
+      (begin
+        (say knpc "Will there be anything else?")
+        (if (kern-conv-get-yes-no? kpc)
+            (meaney-trade knpc kpc)
+            (meaney-get-donation knpc kpc)))))
 
 ;; Town & Townspeople
 
