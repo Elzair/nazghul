@@ -220,12 +220,13 @@
 			)))
 			
 (define (prismatic-acid ktarget power)
-	(if (contest-of-skill power
-			(occ-ability-dexdefend ktarget))
+	(if (and (kern-obj-is-char? ktarget)
+			(contest-of-skill power
+				(occ-ability-dexdefend ktarget)))
 		(apply-acid ktarget)))
 		
 (define (prismatic-slip ktarget power)
-	(if (and (kern-obj-is-being? ktarget)
+	(if (and (kern-obj-is-char? ktarget)
 			(contest-of-skill power
 			(occ-ability-dexdefend ktarget)))
 		(slip ktarget)))
@@ -298,12 +299,11 @@
            							(lambda (loc) (powers-field-poison-weak kuser loc magpower))
            							nil nil))
            							
-    									((< pristype 100) 
+    									((< pristype 101) 
            								(list
            							(lambda (loc) (powers-field-sleep-weak kuser loc magpower))
            							nil nil))
                			)))
-               			
               			(if (not havemana)
               					(kern-log-msg "Attack fizzles!")
               					(begin
@@ -818,3 +818,4 @@
           (kern-obj-set-facing kcannon facing) 
           (bind kcannon (list facing 0))
           kcannon))
+          

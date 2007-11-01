@@ -674,7 +674,7 @@
 ;note instant hostility - you cant just cause someone to slowly die and say
 ;sorry afterwards
 (define (powers-poison-effect caster ktarg power)
-	(if (and (kern-obj-is-being? ktarg)
+	(if (and (kern-obj-is-char? ktarg)
 			(not (null? ktarg)))
 		(begin
                   (if (contest-of-skill
