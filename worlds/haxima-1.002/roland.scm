@@ -39,7 +39,9 @@
     (kern-log-enable #t))
   (define (set-free)
     (roland-set-free! knpc)
-    (kern-char-set-ai knpc nil))
+    (kern-char-set-ai knpc nil)
+    (kern-being-set-base-faction knpc faction-men)
+    )
   (or (roland-greeted? knpc)
       (and (any-player-party-member-visible? knpc)
            (begin
@@ -157,7 +159,7 @@
      sp_human            ; species
      oc_warrior          ; occ
      s_knight            ; sprite
-     faction-men         ; starting alignment
+     faction-prisoner    ; starting alignment
      6 0 6               ; str/int/dex
      pc-hp-off           ; hp bonus
      pc-hp-gain          ; hp per-level bonus

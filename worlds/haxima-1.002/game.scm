@@ -216,6 +216,7 @@
 (define faction-oparine       faction-men)
 (define faction-trigrave      faction-men)
 (define faction-nixie         faction-monster)
+(define faction-prisoner      13)
 
 ;; Layers (must match object.h)
 (define layer-none       0)
