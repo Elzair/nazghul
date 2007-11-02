@@ -1,3 +1,40 @@
+Changes between 0.5.6 and 0.6.0
+Engine
+o Detailed speed handling added
+o Backend support for multiple actions per turn
+o Better support for diagonal movement
+o Terrains can now have partial opacity
+o Backend support for skills- wrogue skills added, but not enabled yet
+o Enhanced weapon callbacks and behaviour
+o Enhancements to the built in map editor
+o Better support for script/engine integration via script defined engine variables
+o Revisions to Zstats screens
+o Improved npc party behaviour when player is camping
+o Fixed: Memory leaks are hopefully all cleaned up now
+o New effects: smoke, beam attacks
+o Fixed: several crashes
+o Objects are not dropped on water or air
+Module
+o New spells
+o Random dungeon code generalized, new random dungeons added
+o More movement types added, to distinguish fast creatures from merely fast-moving ones
+o New items, weapons and shopping options
+o Equipment now affects character speed
+o Fixes and additions to conversations
+o Fixed: problems with porcullises not working
+o Visibly distinguishable moons
+o Burning glass maze fairer
+o Characters will no longer voluntarily walk off cliffs (chasm terrain now only selectively lethal))
+o Improved hidden map behaviour
+o Many spellbooks added and distributed
+o Several tweaks to combat balance
+o Fixed: problems entering places diagonally
+o More sprites
+o More hires terrains, directional 'natural rock' walls
+o First pass at a template for new games (now out of date already, sigh)
+o Vehicle combat maps upgraded
+o Various minor bugfixes
+
 Changes between nazghul 0.5.6 and 0.5.5:
 o Fixed: crash when dying upon exit from tutorial cave
 o Fixed: various minor bug-fixes
