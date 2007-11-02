@@ -27,7 +27,7 @@
 ;; npc's that want them to get them. 'drink-proc' should return one of the
 ;; result-* codes.
 (define (mk-clingy-potion tag name sprite drink-proc wants-it?)
-  (mk-usable-clingy-item tag name sprite 1 drink-proc wants-it?))
+  (mk-usable-clingy-item tag name sprite norm drink-proc wants-it?))
 
 ;; healing (red) potion     
 (mk-clingy-potion 't_heal_potion "healing potion" s_healing_potion 
