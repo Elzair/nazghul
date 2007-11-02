@@ -6,14 +6,16 @@ PART 0: BEFORE RELEASE
 PART I: PREPARE FOR RELEASE
 
 * INSTALL is up-to-date
-* BUGS is up-to-date
-* ChangeLog is up-to-date (use C-x v a)
+* BUGS is up-to-date (use whatever is currently in the SourceForge bugs list)
+* ChangeLog is up-to-date (if you use emacs, C-x v a)
 * NEWS is up-to-date with differences since last version (note which
-  differences work with saved games and which require a restart)
+  differences work with saved games and which require a restart). This should
+  be a summary of user-visible changes like features added and major bugs
+  fixed.
 * AUTHORS is up-to-date with _ALL_ contributions (legal reasons)
 * Version number is correct in configure.ac
 * The SUBDIRS of Makefile.am and worlds/Makefile.am are correct for this 
-    release
+  release
 * USERS_GUIDE is up-to-date
 
 PART II: BUILD AND TEST SOURCE DIST
@@ -140,9 +142,9 @@ Use the ANNOUNCE template in this directory to create the release announcement.
     distro maintainers monitor nazghul-devel. You might email them individually
     to check if they are still committed to managing their releases.
 
-(4) On the nazghul homepage add a news item
+(4) On the nazghul home page add a news item
 
-(5) On the haxima.com homepage add a news item
+(5) On the haxima.com homepage add a news item (or ask Sam to do this)
 
 
 
