@@ -4,6 +4,10 @@ Maintainers of GNU Software" (maintain.texi), the section called
 
 In alphabetical order by last name....
 
+Amorim, Roberto:
+scripts/nazghul.iss:
+	Adding the Inno Setup script file used to generate the Windows installer
+
 Bauer, Andreas:
 In src/Makefile.in, worlds/Makefile.in, configure, configure.ac, configure.in,
 depcomp, install-sh, ltmain.sh, missing, mkinstalldirs, src/Makefile.am,
@@ -14,6 +18,8 @@ config.guess, config.sub, AUTHORS, ChangeLog, Makefile.am
 Douglas, Tim:
 In src/scheme.c:
         Fixed compile error on Max OS X
+In src/skill.c, src/skill_set.c, src/skill_set_entry.c, src/templ.c:
+	checks for malloc.h, to fix OsX Build
 
 Gabbert, Kevin:
 In worlds/haxima-1.001/images/kgabbert
@@ -28,6 +34,7 @@ In worlds/haxima-1.001/images/dgervais
         Created images in .png file(s)
 
 Glasby, Sam:
+(See user sglasby in the ChangeLog)
 In src/combat.c, src/cursor.cpp, src/event.h, src/play.c, src/play.h:
 	Added an (X)amine command, which is an extended (L)ook.
 In src/play.c, src/character.cpp, src/character.h, src/combat.c, src/status.c:
@@ -51,6 +58,10 @@ In worlds/haxima-1.001 made changes throughout:
 Johansson, Janne:
 In src/terrain_map.c, fixes for compiler warnings.
 In configure.ac, fix for SDL_image.h include path
+In doc/GAME_RULES, doc/MAP_HACKERS_GUIDE, doc/USERS_GUIDE, doc/world_building/sound_sample_media.txt:
+	various nitpicks in docs and spelling fixes
+In src/ascii.c, uninitialized nitpickings. shuts gcc4 up
+In src/terrain_map.c, fixing compiler warnings
 
 Links, Bernhard:
 In configure.ac, change for checking SDL install
