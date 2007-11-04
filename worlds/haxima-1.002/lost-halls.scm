@@ -11,7 +11,7 @@
 (kern-mk-place 
 	'p_lost_halls_entrance
 	"Gate to the Lost Halls"
-	nil          ; sprite
+	s_dungeon          ; sprite
 	(kern-mk-map nil 21 21 pal_expanded
 	(list
 		"rn rn rn r4 {8 .. bb .. {8 .. .. .. .. .. .. {8 r2 rn rn rn rn "
