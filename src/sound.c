@@ -56,6 +56,8 @@ struct active_sound {
 	Uint32 dpos;
 	Uint32 dlen;
         int volume;
+        int repeatVolume;
+        int nextVolume;
         sound_t *sound;
 } active_sounds[NUM_SOUNDS];
 
@@ -107,9 +109,18 @@ static void sound_mix(void *unused, Uint8 * stream, int len)
 
                 /* If done then stop playing */
                 if (0 == amount) {
+	                if (active->repeatVolume == 0)
+	                {
                         sound_unref(active->sound);
                         active->sound = 0;
                         continue;
+                	}
+                	else
+                	{
+	                	  active->volume=active->repeatVolume;
+	               	  active->dpos = 0;
+	               	  amount = active->dlen;
+                	}
                 }
 
                 /* Clip to the number of bytes allowed */
@@ -125,7 +136,7 @@ static void sound_mix(void *unused, Uint8 * stream, int len)
 	}
 }
 
-void sound_play(sound_t *sound, int volume)
+void sound_play(sound_t *sound, int volume, bool ambient)
 {
 	int index;
         struct active_sound *active = NULL;
@@ -143,11 +154,27 @@ void sound_play(sound_t *sound, int volume)
 	for (index = 0; index < NUM_SOUNDS; ++index) {
 		if (active_sounds[index].sound == sound)
 		{
-			// dont repeat playing a sound
+			// dont repeat playing a sound, but up the volume to match our volume
+			if (active_sounds[index].volume < volume)
+			{
+				active_sounds[index].volume = volume;
+			}
+			if (ambient)
+			{
+				if (active_sounds[index].repeatVolume < volume)
+				{
+					active_sounds[index].repeatVolume = volume;
+				}
+				if (active_sounds[index].nextVolume < volume)
+				{
+					active_sounds[index].nextVolume = volume;
+				}
+			}
 			return;
 		}
 		if (! active_sounds[index].sound) {
                         active = &active_sounds[index];
+
 			break;
 		}
 	}
@@ -162,7 +189,35 @@ void sound_play(sound_t *sound, int volume)
 	active->dlen = sound->cvt.len_cvt;
 	active->dpos = 0;
         active->volume = volume;
+         if (ambient)
+         {
+	      	active->repeatVolume=volume;
+	      	active->nextVolume=volume;   
+      	}
+      	else
+      	{
+	      	active->repeatVolume=0;
+	      	active->nextVolume=0;   	      	
+      	}
 	SDL_UnlockAudio();
+}
+
+void sound_flush_ambient()
+{
+	unsigned int i;
+	struct active_sound *active;
+	
+	for (i = 0; i < NUM_SOUNDS; ++i)
+	{
+		active = &active_sounds[i];
+		
+		/* Skip idle entries */
+		if (! active->sound)
+			continue;
+		
+		active->repeatVolume = active->nextVolume;
+		active->nextVolume = 0;
+	}
 }
 
 void sound_del(sound_t *sound)

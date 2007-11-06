@@ -20,6 +20,7 @@
 //
 /* 12/14/2002 Sam Glasby added place_get_terrain()
  */
+#include "sound.h"
 #include "place.h"
 #include "sprite.h"
 #include "terrain.h"
@@ -1815,9 +1816,13 @@ void place_exec(struct place *place)
 
         /* FIXME: not sure if we still need this assert */
         assert(Place == place);
-
+        
         /* Prevent destruction of the place. */
         place_lock(place);
+        
+        /* Flush ambient noises one cycle */
+        sound_play(NULL, SOUND_MAX_VOLUME);
+      sound_flush_ambient();
 
         /* Start with the first node */
         place->turn_elem = place->turn_list.next;

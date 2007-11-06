@@ -36,6 +36,7 @@ BEGIN_DECL
 #include "astar.h"
 #include "common.h"
 #include "sky.h"
+#include "sound.h"
 
 #include <SDL.h>
 

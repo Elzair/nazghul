@@ -3936,6 +3936,33 @@ KERN_API_CALL(kern_sound_play)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_sound_play_ambient)
+{
+        sound_t *sound;
+        struct place *place, *foc_place;
+        int x, foc_x;
+        int y, foc_y;
+        if (unpack(sc, &args, "p", &sound)) {
+                rt_err("kern-sound-play: bad args");
+                return sc->NIL;
+        }
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-sound-play: bad loc")) {
+                return sc->NIL;
+        }
+        int volume = SOUND_MAX_VOLUME;
+        int distance;
+        mapGetCameraFocus(&foc_place, &foc_x, &foc_y);
+        if (foc_place == place) {
+                distance = place_flying_distance(foc_place, foc_x, foc_y, 
+                                                 x, y);
+                if (distance > 1)
+                        volume = (volume * (20 - distance))/20;
+                if (volume > 0)
+                	sound_play(sound, volume, true);
+        }
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_set_spell_words)
 {
         int i = 0;
@@ -9309,6 +9336,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-set-time-accel", kern_set_time_accel);
         API_DECL(sc, "kern-sleep", kern_sleep);
         API_DECL(sc, "kern-sound-play", kern_sound_play);
+        API_DECL(sc, "kern-sound-play-ambient", kern_sound_play_ambient);
         API_DECL(sc, "kern-tag", kern_tag);
         API_DECL(sc, "kern-test-recursion", kern_test_recursion);
         API_DECL(sc, "kern-ticks-per-turn", kern_ticks_per_turn);
