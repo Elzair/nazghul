@@ -205,6 +205,10 @@
                  (lambda (kmirror)
                    (kern-obj-set-pclass kmirror pclass-wall)
                    ))	
+         (method 'exec
+                 (lambda (kclock)
+                   (kern-sound-play-ambient sound-clock (kern-obj-get-location kclock))
+                   ))	
          )))
 
 (define broken-clock-ifc
