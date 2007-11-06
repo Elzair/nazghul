@@ -239,7 +239,7 @@ int sound_init(void)
 	fmt.freq = 22050;
 	fmt.format = AUDIO_S16;
 	fmt.channels = 2;
-	fmt.samples = 512;	/* A good value for games */
+	fmt.samples = 1024;	/* A good value for games */
 	fmt.callback = sound_mix;
 	fmt.userdata = NULL;
 
@@ -248,7 +248,7 @@ int sound_init(void)
                 warn("SDL_OpenAudio: %s", SDL_GetError());
 		return -1;
 	}
-
+	
         /* Create the mutex */
         sound_mutex = SDL_CreateMutex();
         assert(sound_mutex);
