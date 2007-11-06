@@ -149,8 +149,8 @@ void sound_play(sound_t *sound, int volume, bool ambient)
                 return;
 
         assert(IS_SOUND(sound));
-
-	/* Look for an empty (or finished) sound slot */
+        
+	/* Look for an empty (or finished) sound slot, or if the sound is already playing*/
 	for (index = 0; index < NUM_SOUNDS; ++index) {
 		if (active_sounds[index].sound == sound)
 		{
@@ -172,10 +172,8 @@ void sound_play(sound_t *sound, int volume, bool ambient)
 			}
 			return;
 		}
-		if (! active_sounds[index].sound) {
+		if (! active_sounds[index].sound && active == NULL) {
                         active = &active_sounds[index];
-
-			break;
 		}
 	}
 	if (NULL == active)
