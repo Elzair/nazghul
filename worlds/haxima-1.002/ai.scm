@@ -240,10 +240,30 @@
           (or (ai-attack-target kchar ktarg)
               (ai-pathfind-to-target kchar ktarg))))))
 
+;; --------------------------------------------------
+;; sound effects            
+              
+(kern-mk-sound 'npc-sound-bark          "dog_9.wav")
+
+(define (npc-sound ksound prob)
+	(lambda (kobject)
+		(if (< (kern-dice-roll "1d100") prob)
+			(kern-sound-play-at ksound (kern-obj-get-location kobject))
+		)
+		#f
+	))
+
+(define npc-dosound-bark (npc-sound npc-sound-bark 8))
+
+;; --------------------------------------------------
 
 (define (animal-ai kchar)
   (get-off-bad-tile? kchar))
 
+(define (wolf-ai kchar)
+	(or (npc-dosound-bark kchar)
+		(animal-ai kchar)))
+  
 (define (nolight-ai kchar)
   (or 
    (get-off-bad-tile? kchar)

@@ -797,7 +797,7 @@
 (define green-slime     (mk-npct "green slime"            sp_green_slime   nil        s_slime        nil          nil           slime-effects 'animal-ai       faction-monster       nil))
 (define kraken          (mk-npct "kraken"                 sp_kraken        nil        s_kraken       nil          nil           nil           'kraken-ai       faction-monster       nil))
 (define sea-serpent     (mk-npct "sea serpent"            sp_sea_serpent   nil        s_sea_serpent  nil          nil           nil           'sea-serpent-ai  faction-monster       nil))
-(define wolf            (mk-npct "wolf"                   sp_wolf          nil        s_wolf         nil          nil           nil           'animal-ai       faction-monster       nil))
+(define wolf            (mk-npct "wolf"                   sp_wolf          nil        s_wolf         nil          nil           nil           'wolf-ai       faction-monster       nil))
 (define wisp            (mk-npct "wisp"                   sp_wisp          nil        s_wisp         nil          nil           wisp-effects  'wisp-ai         faction-monster       nil))
 (define nixie-spearman  (mk-npct "nixie spearman"         sp_nixie         oc_warrior s_nixie_spear  no-traps     nixie-1-equip nil           'nixie-ai        faction-monster       nil))
 (define nixie-swordsman (mk-npct "nixie swordsman"        sp_nixie         oc_warrior s_nixie_sword  no-traps     nixie-2-equip nil           'nixie-ai        faction-monster       nil))
