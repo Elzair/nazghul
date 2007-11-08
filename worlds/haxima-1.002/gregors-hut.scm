@@ -86,6 +86,7 @@
                 (list (mk-door-in-rock) 18 20)
                 (list (mk-clock) 10 10)
                 (list (mk-bridge 'east) 25 26)
+                (list (mk-ambient-sound 'sound-river) 25 26)
                 (put (mk-bed) 7 18)
                 (put (mk-bed) 7 16)
                 
