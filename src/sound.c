@@ -55,8 +55,7 @@ struct active_sound {
 	Uint8 *data;
 	Uint32 dpos;
 	Uint32 dlen;
-        int volume;         // current playback volume
-        bool oneoff;        // one off sound rather than repeat (one off sounds should not be volume-reduced over gameturns)
+        int oneoffVolume;   // one off sound (minimum sound over gameturns)
         int repeatVolume;   // max sound to repeatedly play now
         int nextVolume;	    // max sound queued for next turn
         sound_t *sound;
@@ -96,6 +95,7 @@ static void sound_mix(void *unused, Uint8 * stream, int len)
 	unsigned int i;
 	int amount;
         struct active_sound *active;
+        int volume;
 
 	for (i = 0; i < NUM_SOUNDS; ++i) {
 
@@ -118,17 +118,20 @@ static void sound_mix(void *unused, Uint8 * stream, int len)
                 	}
                 	else
                 	{
-	                	  active->volume=active->repeatVolume;
-	                	  active->oneoff=false;
+	                	  active->oneoffVolume=0;
 	               	  active->dpos = 0;
 	               	  amount = active->dlen;
                 	}
                 }
                 
-      if (!active->oneoff)
+      if (active->oneoffVolume > active->repeatVolume)
       {
-	   	active->volume = active->repeatVolume;   
+	   	volume = active->oneoffVolume;   
       }
+      else
+      {
+	     	volume = active->repeatVolume;
+   	}
 
                 /* Clip to the number of bytes allowed */
 		if (amount > len) {
@@ -137,7 +140,7 @@ static void sound_mix(void *unused, Uint8 * stream, int len)
 
                 /* Tell SDL to continue playing */
 		SDL_MixAudio(stream, &active->data[active->dpos], amount,
-			     active->volume);
+			     volume);
 
 		active->dpos += amount;
 	}
@@ -162,10 +165,6 @@ void sound_play(sound_t *sound, int volume, bool ambient)
 		if (active_sounds[index].sound == sound)
 		{
 			// dont repeat playing a sound, but up the volume to match our volume
-			if (active_sounds[index].volume < volume)
-			{
-				active_sounds[index].volume = volume;
-			}
 			if (ambient)
 			{
 				if (active_sounds[index].repeatVolume < volume)
@@ -179,7 +178,8 @@ void sound_play(sound_t *sound, int volume, bool ambient)
 			}
 			else
 			{
-				active_sounds[index].oneoff = true;
+				if (active_sounds[index].oneoffVolume < volume)
+					active_sounds[index].oneoffVolume = volume;
 			}
 			return;
 		}
@@ -197,18 +197,17 @@ void sound_play(sound_t *sound, int volume, bool ambient)
 	active->data = sound->cvt.buf;
 	active->dlen = sound->cvt.len_cvt;
 	active->dpos = 0;
-        active->volume = volume;
          if (ambient)
          {
 	      	active->repeatVolume=volume;
 	      	active->nextVolume=volume;   
-	      	active->oneoff=false;
+	      	active->oneoffVolume=0;
       	}
       	else
       	{
 	      	active->repeatVolume=0;
 	      	active->nextVolume=0;
-	      	active->oneoff=true;      	
+	      	active->oneoffVolume=volume;      	
       	}
 	SDL_UnlockAudio();
 }
