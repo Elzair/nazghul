@@ -66,6 +66,14 @@
                (lambda (kmirror)
 					(kern-obj-set-pclass kmirror pclass-wall)
                  ))
+		(method 'exec
+                 (lambda (kclock)
+                   (kern-sound-play-ambient sound-clock (kern-obj-get-location kclock))
+                   ))	
+		(method 'on-entry
+                 (lambda (kclock)
+                   (kern-sound-play-ambient sound-clock (kern-obj-get-location kclock))
+                   ))	
        ))
 
 (mk-obj-type 't_mag_mirror "mirror"

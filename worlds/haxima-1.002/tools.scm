@@ -209,6 +209,10 @@
                  (lambda (kclock)
                    (kern-sound-play-ambient sound-clock (kern-obj-get-location kclock))
                    ))	
+         (method 'on-entry
+                 (lambda (kclock)
+                   (kern-sound-play-ambient sound-clock (kern-obj-get-location kclock))
+                   ))
          )))
 
 (define broken-clock-ifc

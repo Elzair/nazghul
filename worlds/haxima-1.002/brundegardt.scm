@@ -781,6 +781,7 @@
  (put (mk-corpse-with-loot) 9 8)
  (put (mk-corpse-with-loot) 10 10)
  (put (kern-mk-obj t_spell_book_divination 1) 9 10)
+ (put (mk-ambient-sound 'sound-wind) 18 18)
  )
 
 (block-teleporting 
@@ -837,6 +838,7 @@
  (put (spawn-pt 'griffin) 9 13)
  (put (spawn-pt 'griffin) 3 3)
  (put (spawn-pt 'griffin) 9 17)
+ (put (mk-ambient-sound 'sound-wind) 10 10)
  )
 
 ;; random loot corpses
@@ -907,6 +909,7 @@
  (put (spawn-pt 'troll) 13 12)
  (put (spawn-pt 'troll-geomancer) 14 13)
  (put (spawn-pt 'troll) 13 14)
+ (put (mk-ambient-sound 'sound-wind) 13 13)
  )
 
 ;; random loot corpses
@@ -949,6 +952,7 @@
     (put (spawn-pt 'bat) 17 6)
     (put (spawn-pt 'bat) 13 3)
     (put (mk-landslide 6 11 3 3) 8 11)
+    (put (mk-ambient-sound 'sound-wind) 13 9)
  )
 
 (mk-19x19-town
@@ -976,6 +980,7 @@
   )
     nil ;;entrances
    (put (spawn-pt 'sea-serpent) 8 7)
+   (put (mk-ambient-sound 'sound-wind) 9 9)
  )
 
 ;; Note: Griffin Peak is a copy of the South Face, but with different mountain
@@ -1014,6 +1019,7 @@
  (put (spawn-pt 'griffin-chick) 8 7)
  (put (spawn-pt 'griffin-chick) 10 7)
  (put (spawn-pt 'griffin) 9 6)
+ (put (mk-ambient-sound 'sound-wind) 9 9)
  )
 
 ;; random loot corpses

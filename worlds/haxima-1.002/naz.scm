@@ -1248,6 +1248,14 @@
        (kplace-get-objects-of-type kplace t_monman))
   )
        
+;; trigger anything with an 'on-entry' ifc
+(define (on-entry-trigger-all kplace kplayer)
+  (map (lambda (kobj)
+         (signal-kobj kobj 'on-entry kobj))
+       (kern-place-get-objects kplace))
+  )
+     
+  
 ;; mk-dungeon-room -- make a 19x19 dungeon room (simplified form of
 ;; kern-mk-place)
 (define (mk-dungeon-room tag name terrain . objects)
@@ -1306,7 +1314,7 @@
                  ;; objects -- automatically add a monster manager
                  (cons (put (mk-monman) 0 0)
                        objects)
-                 (list 'on-entry-to-dungeon-room) ; hooks
+                 (list 'on-entry-to-dungeon-room 'on-entry-trigger-all) ; hooks
                  entrances     ; edge entrances
                  ))
 

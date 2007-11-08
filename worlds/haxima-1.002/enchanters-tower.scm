@@ -218,7 +218,7 @@
   (put (mk-shelf) 19 10)
   )
 
- nil ; hooks
+ (list 'on-entry-trigger-all) ; hooks
  (list  ; edge entrances
  	(list northeast 3 30)
  	(list southwest 30 14)
@@ -310,7 +310,7 @@
        0)
   
  )
- nil ; hooks
+ (list 'on-entry-trigger-all) ; hooks
  nil ; edge entrances
  )
  
@@ -409,7 +409,7 @@
 	;; this needs a telescope 
  )
  
- nil ; hooks
+ (list 'on-entry-trigger-all) ; hooks
  nil ; edge entrances
  )
 

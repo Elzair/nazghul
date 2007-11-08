@@ -8,6 +8,7 @@
 (kern-mk-sound 'sound-cannon-fire    "cannon.wav")
 (kern-mk-sound 'sound-clock          "ticktock.wav")
 (kern-mk-sound 'sound-river          "river.wav")
+(kern-mk-sound 'sound-wind          "wind_1a.wav")
 
 ;; Aliases
 (define sound-ship-move sound-splashing)
@@ -19,7 +20,11 @@
          (method 'exec
                  (lambda (ksound)
                    (kern-sound-play-ambient (eval (gob ksound)) (kern-obj-get-location ksound))
-                   ))	
+                   ))
+         (method 'on-entry
+                 (lambda (ksound)
+                   (kern-sound-play-ambient (eval (gob ksound)) (kern-obj-get-location ksound))
+                   ))
          ))
 
 (mk-obj-type 't_ambience nil
