@@ -55,9 +55,10 @@ struct active_sound {
 	Uint8 *data;
 	Uint32 dpos;
 	Uint32 dlen;
-        int volume;
-        int repeatVolume;
-        int nextVolume;
+        int volume;         // current playback volume
+        bool oneoff;        // one off sound rather than repeat (one off sounds should not be volume-reduced over gameturns)
+        int repeatVolume;   // max sound to repeatedly play now
+        int nextVolume;	    // max sound queued for next turn
         sound_t *sound;
 } active_sounds[NUM_SOUNDS];
 
@@ -118,10 +119,16 @@ static void sound_mix(void *unused, Uint8 * stream, int len)
                 	else
                 	{
 	                	  active->volume=active->repeatVolume;
+	                	  active->oneoff=false;
 	               	  active->dpos = 0;
 	               	  amount = active->dlen;
                 	}
                 }
+                
+      if (!active->oneoff)
+      {
+	   	active->volume = active->repeatVolume;   
+      }
 
                 /* Clip to the number of bytes allowed */
 		if (amount > len) {
@@ -170,6 +177,10 @@ void sound_play(sound_t *sound, int volume, bool ambient)
 					active_sounds[index].nextVolume = volume;
 				}
 			}
+			else
+			{
+				active_sounds[index].oneoff = true;
+			}
 			return;
 		}
 		if (! active_sounds[index].sound && active == NULL) {
@@ -191,11 +202,13 @@ void sound_play(sound_t *sound, int volume, bool ambient)
          {
 	      	active->repeatVolume=volume;
 	      	active->nextVolume=volume;   
+	      	active->oneoff=false;
       	}
       	else
       	{
 	      	active->repeatVolume=0;
-	      	active->nextVolume=0;   	      	
+	      	active->nextVolume=0;
+	      	active->oneoff=true;      	
       	}
 	SDL_UnlockAudio();
 }
