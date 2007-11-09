@@ -163,7 +163,7 @@
 (define (silas-wise knpc kpc)
   (say knpc "Ah, yes. The so-called Wise. You know, they are part of a "
        "venerable and useful tradition. At least, it was a useful tradition in bygone "
-       "days. Sigh, I fear that now the Wise are as often an impediment to the Shard as "
+       "days. [Sigh] I fear that now the Wise are as often an impediment to the Shard as "
        "they are a help. Consider this whole business with Absalot."))
  
 (define (silas-absa knpc kpc)
