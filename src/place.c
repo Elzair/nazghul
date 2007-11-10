@@ -37,6 +37,7 @@
 #include "factions.h"
 #include "vmask.h"
 #include "combat.h"
+#include "event.h" /* for demo */
 
 // #define DEBUG
 // #undef debug_h
@@ -1900,6 +1901,12 @@ void place_exec(struct place *place)
                 }
 
                 obj_dec_ref(obj);
+
+                /* Reduce the latency of keystroke handling while running the
+                 * demo in parallel with the menus. */
+                if (Session->is_demo) {
+                        eventHandlePending();
+                }
         }
 
         if (PLACE_PROFILE) {

@@ -33,6 +33,11 @@
 #include "status.h"
 #include "file.h"
 
+#include "session.h" /* added for demo */
+#include "place.h" /* added for demo */
+#include "sprite.h" /* added for demo */
+#include "tick.h" /* added for demo */
+
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
@@ -50,7 +55,6 @@
  * "J)ourney Onward" menu item. When this is enabled J)ourney Onward
  * automatically picks the last saved game. Otherwise, J)ourney Onward works
  * like L)oad Game, providing a list of all saved games, with the most recently
-q
  * saved one at the top.
  */
 #ifndef CONFIG_LOAD_GAME_OPTION
@@ -108,6 +112,44 @@ static saved_game_t *menu_current_saved_game = 0;
  * This is what the Save Game menu shows for the new game option.
  */
 static char *MENU_NEW_GAME_STR = "N)ew Saved Game";
+
+/**
+ * This is a hack added to support demo mode. I'll try to explain, because it's
+ * convoluted. Normally (before I added demo support) the main menu runs an
+ * event loop by calling eventHandle(), which returns when the user makes a
+ * choice.
+ *
+ * For demo mode, I added an extra wrinkle. When I setup the demo I push a tick
+ * handler (I mean animation ticks, which are usually disabled until we start
+ * the game, but for demo mode I need them). The tick handler calls
+ * place_exec() to run the demo. The idea is we would run the demo more or less
+ * concurrently with our processing of user keystrokes in the main menu, but of
+ * course we're doing it all on a single thread.
+ *
+ * Running place_exec() on every tick caused a lot of latency in our response
+ * to handling user keypresses. So I added the first hack: place_exec() will
+ * call eventHandlePending() after processing each object. That gives us a
+ * chance to process user keystrokes more frequently while the demo is
+ * running. The simplified call tree when the user hits <enter> to select a
+ * menu item is something like this:
+ *
+ * main_menu
+ * `-eventHandle
+ *   `-menu_demo_tick_handler
+ *     `-place_exec
+ *       `-eventHandlePending
+ *
+ * Normally we're directly in eventHandle when the player presses <enter>, and
+ * we fall back to main_menu and handle the selection. But if we're in
+ * eventHandlePending this doesn't happen, and we keep on handling events, so
+ * the player perceives this as a dropped keystroke.
+ *
+ * To "fix" it I added the main_menu_handled variable. This causes the
+ * menu_demo_tick_handler to return a value that kicks eventHandle out of its
+ * loop when the user selects <enter>.
+ */
+int main_menu_handled = 0;
+
 
 /**
  * Delete a saved game struct and all it's strings. Don't call this, use
@@ -733,10 +775,12 @@ int main_menu_scroller(struct KeyHandler * kh, int key, int keymod)
         case KEY_HERE:
 	case '\n':
                 data->entry = (char*)statusGetSelected(String);
+                main_menu_handled = 1;
 		return 1;
 	case SDLK_ESCAPE:
 	case 'q':
                 data->abort = 1;
+                main_menu_handled = 1;
 		return 1;
 	default:
                 return 0;
@@ -1125,6 +1169,23 @@ reselect:
         return 0;
 }
 
+static bool menus_demo_tick_handler(struct TickHandler *th)
+{
+        static int in_tick = 0; /* hack: prevent recursive entry */
+        if (!in_tick) {
+                in_tick = 1;
+                Tick++;
+                sprite_advance_ticks(1);
+                if (Place) {
+                        place_exec(Place);
+                }
+                in_tick = 0;
+        }
+
+        /* See the comment over main_menu_handled. */
+        return (bool)main_menu_handled;
+}
+
 char * main_menu(void)
 {
         static char *START_NEW_GAME="S)tart New Game";
@@ -1149,11 +1210,34 @@ char * main_menu(void)
                             cfg_get("tutorial-filename"));
         char *load_fname = 0;
         char *save_game_fname = cfg_get("save-game-filename");
+        struct TickHandler th;
+        int run_demo = 0;
 
         /* setup main menu quit handler so player can click close window to
          * exit */
 	qh.fx = main_menu_quit_handler;
 	eventPushQuitHandler(&qh);
+
+        /* Does the config file mention a demo? */
+        if (cfg_get("demo-filename")) {
+                char *demo_fname = file_mkpath(cfg_get("include-dirname"),
+                                               cfg_get("demo-filename"));
+
+                /* Can we find it? */
+                if (file_exists(demo_fname)) {
+
+                        /* Setup the demo to run in parallel with the main
+                         * menu. */
+                        run_demo = 1;
+                        session_load(demo_fname);
+                        Session->is_demo = 1;
+                        session_run_start_proc(Session);
+                        th.fx = menus_demo_tick_handler;
+                        eventPushTickHandler(&th);
+                        Quit = false;
+                }
+        }
+
 
  start_main_menu:
         n_items = 0;
@@ -1208,9 +1292,22 @@ char * main_menu(void)
         data.hotkeys = hotkeys;
         kh.fx   = main_menu_scroller;
         kh.data = &data;
+
+        /* If running a demo then start/resume it. */
+        if (run_demo) {
+                main_menu_handled = 0;
+                tick_run();
+        }
+
 	eventPushKeyHandler(&kh);
 	eventHandle();
 	eventPopKeyHandler();
+
+        /* Pause the demo while running the submenus. This is really only
+         * necessary for the load_game_menu(). */
+        if (run_demo) {
+                tick_pause();
+        }
 
         selection = data.entry;
 
@@ -1232,7 +1329,7 @@ char * main_menu(void)
                         goto start_main_menu;
         }
         else if (CONFIG_LOAD_GAME_OPTION
-                 && ! strcmp(selection, LOAD_GAME)) {
+                 && ! strcmp(selection, LOAD_GAME)) {                
                 load_fname = load_game_menu();
                 if (!load_fname)
                         goto start_main_menu;
@@ -1261,6 +1358,12 @@ char * main_menu(void)
 
         /* pop main menu quit handler, new one will be pushed in play.c */
         eventPopQuitHandler();
+
+        /* Cleanup after the demo. */
+        if (run_demo) {
+                tick_pause();
+                eventPopTickHandler();
+        }
         
         return load_fname;
 }
