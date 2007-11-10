@@ -83,7 +83,7 @@ static void sound_unref(sound_t *sound)
 	assert(sound->refcount > 0);
 	
 	/* what if this fails? */
-	SDL_LockMutex(sound_mutex);
+	//SDL_LockMutex(sound_mutex);
 	
 	sound->refcount--;
 	if (! sound->refcount)
@@ -101,7 +101,7 @@ static void sound_unref(sound_t *sound)
 	}
 	
 	/* what if this fails? */
-	SDL_UnlockMutex(sound_mutex);
+	//SDL_UnlockMutex(sound_mutex);
 }
 
 static void sound_mix(void *unused, Uint8 * stream, int len)
@@ -469,22 +469,29 @@ Mix_Music *music_track;
 
 void music_load_track(char *file)
 {
+	Mix_Music *prev_track = NULL;
 	if (Mix_PlayingMusic())
 	{
 		Mix_HaltMusic();
-		Mix_FreeMusic(music_track);
+		Mix_FadeOutMusic(300);
+		prev_track = music_track;
 	}
 	char *fn;
 	fn = file_mkpath(cfg_get("include-dirname"), file);
 	music_track=Mix_LoadMUS(fn?fn:file);
-	if (!music_track)
+	if (music_track)
 	{
-      warn("Mix_LoadMusic:%s:%s", fn?fn:file, SDL_GetError());
-      free(fn);
-		return;
+		Mix_PlayMusic(music_track,-1);
+	}
+	else
+	{
+      warn("Mix_LoadMusic:%s:%s\n", fn?fn:file, SDL_GetError());
 	}	
 	free(fn);
-	Mix_PlayMusic(music_track,-1);
+	if (prev_track)
+	{
+		Mix_FreeMusic(prev_track);
+	}
 }
 
 
