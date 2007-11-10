@@ -24,6 +24,9 @@
  ;; option from the main menu.
  "tutorial-filename"     "tutorial.scm"
 
+ ;; This is the script file which runs the demo scene on startup.
+ "demo-filename" "demo.scm"
+
  ;; These are the filenames of the splash image shown on startup for the
  ;; various supported screen sizes. The format of the key must be
  ;; <width>x<height>-splash-image-filename.
