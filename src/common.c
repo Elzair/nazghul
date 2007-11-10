@@ -165,7 +165,6 @@ int vector_to_facing(int dx, int dy)
 
 int vector_to_8facing(int dx, int dy)
 {
-	fprintf(stderr,"vtf1 %d,%d\n", dx,dy);
 	if (abs(dx) > 2* (abs(dy)))
 	{
 		dy = 0;	
@@ -174,10 +173,8 @@ int vector_to_8facing(int dx, int dy)
 	{
 		dx = 0;	
 	}
-	fprintf(stderr,"vtf2 %d,%d\n", dx,dy);
 	clamp(dx, -1, 1);
 	clamp(dy, -1, 1);
-	fprintf(stderr,"vtf3 %d,%d\n", dx,dy);
 	return dir_8facing[(dy + 1) * 3 + dx + 1];
 }
 

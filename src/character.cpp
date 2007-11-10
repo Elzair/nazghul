@@ -2014,7 +2014,6 @@ int Character::getBaseAttackBonus(class ArmsType * weapon)
 	int strbonus = weapon->modifyStrAttack(closure_exec(Session->str_based_attack, "p", this));
 	int dexbonus = weapon->modifyDexAttack(closure_exec(Session->dex_based_attack, "p", this));
 	int totalbonus = (strbonus + dexbonus) / (100 * 1000);
-	fprintf(stderr,"attack bonus: %f + %f = %d\n", strbonus/1000.0, dexbonus/1000.0,totalbonus);
 	return (1+ totalbonus);
 }
 
@@ -2026,7 +2025,6 @@ int Character::getAttackBonus(class ArmsType * weapon)
 int Character::getDamageBonus(class ArmsType * weapon)
 {
 	int dambonus = weapon->modifyDamageBonus(closure_exec(Session->damage_bonus, "p", this))/(100 * 1000);
-	fprintf(stderr,"damage bonus: %d\n", dambonus);
 	return (rand() % (1+ dambonus));
 }
 
@@ -2048,7 +2046,6 @@ int Character::getAvoidBonus()
 	}
 	
 	int totalbonus = (int)(avoidBonus * (avoidMod/1000));
-	fprintf(stderr,"defense bonus: %f%% %f = %d\n", avoidMod, avoidBonus/1000.0, totalbonus);
 	return (rand() % (1+ totalbonus));
 }
 
