@@ -52,7 +52,7 @@ struct sound {
         //char *fname;
         int refcount;
         bool ambient;
-        int repeatVolume;
+        int volume;
         int nextVolume;
 };
 
@@ -80,21 +80,28 @@ static SDL_mutex *sound_mutex = NULL;
 
 static void sound_unref(sound_t *sound)
 {
-        assert(sound->refcount > 0);
-
-        /* what if this fails? */
-        //SDL_LockMutex(sound_mutex);
-
-        sound->refcount--;
-        if (! sound->refcount) {
-                //free(sound->cvt.buf);
-                free(sound->tag);
-                Mix_FreeChunk(sound->data);
-                free(sound);
-        }
-
-        /* what if this fails? */
-        //SDL_UnlockMutex(sound_mutex);
+	assert(sound->refcount > 0);
+	
+	/* what if this fails? */
+	SDL_LockMutex(sound_mutex);
+	
+	sound->refcount--;
+	if (! sound->refcount)
+	{
+		fprintf(stderr,"Del sound: %d\n",(int)sound);
+		// make sure it isnt being played
+		if (sound->channel >= 0)
+		{
+			Mix_HaltChannel(sound->channel);
+		}
+		//free(sound->cvt.buf);
+		free(sound->tag);
+		Mix_FreeChunk(sound->data);
+		free(sound);
+	}
+	
+	/* what if this fails? */
+	SDL_UnlockMutex(sound_mutex);
 }
 
 static void sound_mix(void *unused, Uint8 * stream, int len)
@@ -219,46 +226,93 @@ void sound_play(sound_t *sound, int volume, bool ambient)
 	      	active->oneoffVolume=volume;      	
       	}
 	SDL_UnlockAudio();*/
-	
+	fprintf(stderr,"playsound\n");
 
-	if (!sound_enabled || !sound_activated) {                
+	if (!sound_enabled || !sound_activated) {   
+		fprintf(stderr,"playsound- nosound\n");             
 		return;
 	}	
-	
+		fprintf(stderr,"playsound a\n");
 	if (NULL_SOUND == sound)
+	{
+		fprintf(stderr,"playsound- nullsound\n");             
 	    return;
-	
+	}
+		fprintf(stderr,"playsound b\n");
 	assert(IS_SOUND(sound)); 
-	    
+	    	fprintf(stderr,"playsound c\n");
+	fprintf(stderr,"playsound! (%d)\n",sound->channel);
+	
 	if (sound->channel < 0)
 	{
-		sound->channel = Mix_PlayChannel(-1, sound->data, 0);	
-		sound_reverse_lookup[sound->channel] = sound;
+		if (ambient)
+		{
+			sound->channel = Mix_PlayChannel(-1, sound->data,-1);
+			Mix_VolumeChunk(sound->data,volume);
+			sound->volume = volume;
+			sound->ambient = true;
+			sound->nextVolume = volume;
+		}
+		else
+		{
+			sound->channel = Mix_PlayChannel(-1, sound->data,0);
+			Mix_VolumeChunk(sound->data,volume);
+			sound->volume = volume;
+			sound->ambient = false;
+			sound->nextVolume = 0;
+		}		
+		sound->refcount++;
+		sound_reverse_lookup[sound->channel] = sound;		
+		fprintf(stderr,"playing sound %d\n",sound->channel);
+	}
+	else if (ambient)
+	{
+		if (sound->volume < volume)
+		{
+			Mix_VolumeChunk(sound->data,volume);
+			sound->volume = volume;
+		}
+		if (sound->nextVolume < volume)
+		{
+			sound->nextVolume = volume;
+		}
+	}
+	else
+	{
+		if (sound->volume < volume)
+		{
+			sound->volume = volume;
+			Mix_VolumeChunk(sound->data,volume);
+		}
 	}
 }
 
 void sound_played(int channel)
 {
 	sound_t *sound = sound_reverse_lookup[channel];
+	fprintf(stderr,"played sound %d\n",sound->channel);
 	sound->channel=-1;
+	sound->volume=0;
+	sound->refcount--;
 }
 
 void sound_flush_ambient()
 {
-	/*unsigned int i;
-	struct active_sound *active;
+	unsigned int i;
+	sound_t *active;
 	
 	for (i = 0; i < NUM_SOUNDS; ++i)
 	{
-		active = &active_sounds[i];
+		active = sound_reverse_lookup[i];
 		
-		/* Skip idle entries * /
-		if (! active->sound)
+		// Skip idle or oneoff entries
+		if (! active || !active->ambient)
 			continue;
 		
-		active->repeatVolume = active->nextVolume;
+		active->volume = active->nextVolume;
 		active->nextVolume = 0;
-	}*/
+		Mix_VolumeChunk(active->data,active->volume);
+	}
 }
 
 void sound_del(sound_t *sound)
@@ -324,7 +378,7 @@ sound_t *sound_new(char *tag, char *file)
         /* Release the memory holding the original WAV file */
         //SDL_FreeWAV(data);
         
-
+		fprintf(stderr,"New sound: %s @ %d\n",tag,(int)sound);
         return sound;
 }
 
@@ -380,6 +434,11 @@ void sound_exit(void)
         /* Does this invoke the mixer callback on all active sounds? If not
          * then how will I unref active sounds? */
         Mix_CloseAudio();
+}
+
+void sound_haltall()
+{
+	//Mix_HaltChannel(-1);
 }
 
 char *sound_get_tag(sound_t *sound)
