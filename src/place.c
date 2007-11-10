@@ -1821,8 +1821,7 @@ void place_exec(struct place *place)
         place_lock(place);
         
         /* Flush ambient noises one cycle */
-        sound_play(NULL, SOUND_MAX_VOLUME);
-      sound_flush_ambient();
+   	   sound_flush_ambient();
 
         /* Start with the first node */
         place->turn_elem = place->turn_list.next;
