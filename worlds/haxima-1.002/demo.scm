@@ -34,13 +34,11 @@
 ;; Gate Traveler
 ;;----------------------------------------------------------------------------
 (define (traveler-goto-dest kchar)
-  (println "traveler-goto-dest")
   (let* ((trvl (gob kchar))
          (loc (kern-obj-get-location kchar))
          (dest (cons (loc-place loc) 
                      (npcg-get-post trvl)))
          )
-    (println "loc=" loc " dest=" dest)
     (if (equal? loc dest)
         (begin
           (kern-obj-remove kchar)
@@ -49,7 +47,6 @@
           (pathfind kchar dest)))))
 
 (define (wizard-traveler-ai kchar)
-  (println "traveler-ai")
   (or (spell-sword-ai kchar)
       (traveler-goto-dest kchar)))
 
@@ -60,7 +57,6 @@
           (traveler-goto-dest kchar))))
 
 (define (traveler-mk kplace)
-  (println "traveler-mk")
   (let* ((type-ai (random-select (list (cons 'wizard 'wizard-traveler-ai) 
                                        (cons 'wizard 'wizard-traveler-ai) 
                                        (cons 'wizard 'wizard-traveler-ai) 
@@ -79,11 +75,8 @@
                                     )))
          (kchar (mk-npc (car type-ai) 9))
          )
-    (println "path=" path)
     (npcg-set-post! (gob kchar) (cadr path))
     (kern-char-set-ai kchar (cdr type-ai) kchar)
-    (println "traveler-mk @ " (car path))
-    ;;(if (caddr path) (kern-map-flash 100))
     (kern-obj-put-at kchar (car path))
     kchar))
 
@@ -139,7 +132,7 @@
     (define (put-demon dir)
       (let ((kdemon (mk-npc 'demon 9)))
         (kern-char-set-ai kdemon 'std-ai)
-        (kern-map-flash 1000)
+        ;;(kern-map-flash 1000)
         (kern-obj-put-at kdemon 
                          (loc-offset (mk-loc (loc-place (kern-obj-get-location kobj)) 9 9)
                                      dir)))
@@ -157,11 +150,13 @@
 
 (define (scene-mgr-exec kobj) 
   (let* ((smgr (kobj-gob-data kobj))
-        (state (scene-mgr-state smgr)))
+         (state (scene-mgr-state smgr)))
     (println "scene-mgr-exec: state=" state)
     (cond ((= 0 state) (scene-mgr-intro-travelers-phase kobj))
           ((= 1 state) (scene-mgr-intro-demons-phase kobj))
-          )))
+          (else
+           ))
+    ))
 
 (define scene-mgr-ifc
   (ifc nil
@@ -234,26 +229,37 @@
 
 ;;----------------------------------------------------------------------------
 ;; Characters
+;;
+;; Make an invisible, passive character for the player party, because there has
+;; to be a player party to get the camera on the scene, and the player party
+;; has to have at least one living member. Yes, this is a blatant hack.
 ;;----------------------------------------------------------------------------
- (kern-mk-char 
-  'ch_wanderer
-  "The Wanderer"        ; name
-  sp_human              ; species
-  oc_wanderer           ; occ
-  s_wanderer    ; sprite
-  faction-player        ; starting alignment
-  5 5 5                ; str/int/dex
-  pc-hp-off
-  pc-hp-gain
-  pc-mp-off
-  pc-mp-gain
-  max-health 0 max-health 0 1  ; hp/xp/mp/AP_per_turn/lvl
-  #f                    ; dead
-  nil                   ; conv
-  nil                   ; sched
-  nil                   ; special ai
-  nil                   ; container
-  nil                   ; readied
+
+(define (passive-ai kchar)
+  (or (std-ai kchar)
+      #t))
+  
+(let ((kchar (kern-mk-char 
+              'ch_wanderer
+              "Wanderer"       ; name
+              sp_human              ; species
+              oc_wanderer           ; occ
+              s_wanderer    ; sprite
+              faction-player        ; starting alignment
+              5 5 5                ; str/int/dex
+              pc-hp-off
+              pc-hp-gain
+              pc-mp-off
+              pc-mp-gain
+              max-health 0 max-health 0 1  ; hp/xp/mp/AP_per_turn/lvl
+              #f                    ; dead
+              nil                   ; conv
+              nil                   ; sched
+              nil                   ; special ai
+              nil                   ; container
+              nil                   ; readied
+              )))
+  (kern-char-set-ai kchar 'passive-ai)
   )
  
 ;;----------------------------------------------------------------------------
@@ -276,9 +282,6 @@
  nil ;; party members (should be nil for initial load file)
  )
 
-;;----------------------------------------------------------------------------
-;; Party members
-;;----------------------------------------------------------------------------
 (kern-party-add-member player ch_wanderer)
 
 ;;----------------------------------------------------------------------------
@@ -369,6 +372,13 @@
 )																	
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_demo_scene 9 16)))
+  (kern-obj-put-at kplayer (list p_demo_scene 9 16))
+
+  (kern-char-set-control-mode ch_wanderer "auto")
+
+  ;; Do this to initialize the map viewer's active view, and to replace the
+  ;; splash screen with the scene.
+  (kern-map-repaint)
+  )
 
 (kern-set-start-proc simple-start)
