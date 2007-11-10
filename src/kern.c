@@ -4452,7 +4452,7 @@ KERN_API_CALL(kern_char_set_ai)
         class Character *ch;
         pointer ai;
 
-        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-sleep");
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-ai");
         if (!ch)
                 return sc->F;
 
@@ -4468,6 +4468,38 @@ KERN_API_CALL(kern_char_set_ai)
         }
 
         return sc->T;
+}
+
+KERN_API_CALL(kern_char_set_control_mode)
+{
+        static struct { char *str; enum control_mode mode; } tbl[] = {
+                { "auto", CONTROL_MODE_AUTO },
+                { "player", CONTROL_MODE_PLAYER },
+                { "idle", CONTROL_MODE_IDLE },
+                { "follow", CONTROL_MODE_FOLLOW }
+        };
+        class Character *ch;
+        char *modestr = 0;
+        int i;
+
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-control-mode");
+        if (!ch)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "s", &modestr)) {
+                rt_err("kern-char-set-control-mode: bad args");
+                return sc->NIL;
+        }
+
+        for (i = 0; i < array_sz(tbl); i++) {
+                if (! strcmp(tbl[i].str, modestr)) {
+                        ch->setControlMode(tbl[i].mode);
+                        return sc->NIL;
+                }
+        }
+
+        return sc->NIL;
 }
 
 KERN_API_CALL(kern_char_attack)
@@ -9124,20 +9156,16 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-max-hp", kern_char_get_max_hp);
         API_DECL(sc, "kern-char-get-max-mana", kern_char_get_max_mana);
         API_DECL(sc, "kern-char-get-party", kern_char_get_party);
-        API_DECL(sc, "kern-char-get-readied-weapons", 
-                 kern_char_get_readied_weapons);
+        API_DECL(sc, "kern-char-get-readied-weapons", kern_char_get_readied_weapons);
         API_DECL(sc, "kern-char-get-species", kern_char_get_species);
-
         API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
         API_DECL(sc, "kern-char-get-dexterity", kern_char_get_dexterity);
         API_DECL(sc, "kern-char-get-intelligence", kern_char_get_intelligence);
         API_DECL(sc, "kern-char-get-base-strength", kern_char_get_base_strength);
         API_DECL(sc, "kern-char-get-base-dexterity", kern_char_get_base_dexterity);
         API_DECL(sc, "kern-char-get-base-intelligence", kern_char_get_base_intelligence);
-
         API_DECL(sc, "kern-char-set-speed", kern_char_set_speed);
         API_DECL(sc, "kern-char-get-speed", kern_char_get_speed);
-
         API_DECL(sc, "kern-char-set-strength", kern_char_set_strength);
         API_DECL(sc, "kern-char-set-dexterity", kern_char_set_dexterity);
         API_DECL(sc, "kern-char-set-intelligence", kern_char_set_intelligence);
@@ -9150,6 +9178,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-leave-player", kern_char_leave_player);
         API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
         API_DECL(sc, "kern-char-set-ai", kern_char_set_ai);
+        API_DECL(sc, "kern-char-set-control-mode", kern_char_set_control_mode);
         API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
         API_DECL(sc, "kern-char-set-hp", kern_char_set_hp);
         API_DECL(sc, "kern-char-set-level", kern_char_set_level);
