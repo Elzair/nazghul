@@ -1242,7 +1242,10 @@ char * main_menu(void)
  start_main_menu:
         n_items = 0;
         cmdwin_clear();
-        nazghul_splash();
+
+        if (! run_demo) {
+                nazghul_splash();
+        }
 
         /* check for a previously saved game to Journey Onward */
         if (file_exists_in_save_dir(save_game_fname)) {
