@@ -237,8 +237,9 @@ struct session {
         class PlayerParty *player;
 
         char show_boxes : 1;  /* draw red/green/yellow boxes around npcs */
-		
-		struct tree *freezer;
+	char is_demo : 1; /* demo mode session */
+	
+        struct tree *freezer;
 };
 
 // Callback table for saving objects
