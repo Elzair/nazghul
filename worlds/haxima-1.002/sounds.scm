@@ -10,6 +10,8 @@
 (kern-mk-sound 'sound-river          "river.wav")
 (kern-mk-sound 'sound-wind          "wind_1a.wav")
 
+(kern-music-play "insertmusic.mid")
+
 ;; Aliases
 (define sound-ship-move sound-splashing)
 
