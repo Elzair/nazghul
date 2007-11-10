@@ -3932,6 +3932,7 @@ KERN_API_CALL(kern_sound_play)
                 rt_err("kern-sound-play: bad args");
                 return sc->NIL;
         }
+        fprintf(stderr,"kernsound\n");
         sound_play(sound, SOUND_MAX_VOLUME);
         return sc->NIL;
 }
@@ -3961,11 +3962,13 @@ KERN_API_CALL(kern_sound_play_at)
 		if (distance > 1)
 			volume = (volume * (20 - distance))/20;
 		if (volume > 0)
+		{
+         fprintf(stderr,"kernsoundat\n");
 			sound_play(sound, volume, false);
+		}
 	}
 	return sc->NIL;
 }
-
 
 KERN_API_CALL(kern_sound_play_ambient)
 {
@@ -3991,8 +3994,23 @@ KERN_API_CALL(kern_sound_play_ambient)
 		if (distance > 1)
 			volume = (volume * (20 - distance))/20;
 		if (volume > 0)
+		{
+         fprintf(stderr,"kernsoundambient\n");
 			sound_play(sound, volume, true);
+		}
 	}
+	return sc->NIL;
+}
+
+KERN_API_CALL(kern_music_play)
+{
+	char *file;
+	if (unpack(sc, &args, "s", &file))
+	{
+	       rt_err("kern-music-play: bad args");
+	       return sc->NIL;
+	}
+	music_load_track(file);
 	return sc->NIL;
 }
 
@@ -9368,6 +9386,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-get-wind", kern_get_wind);
         API_DECL(sc, "kern-set-time-accel", kern_set_time_accel);
         API_DECL(sc, "kern-sleep", kern_sleep);
+        API_DECL(sc, "kern-music-play", kern_music_play);
         API_DECL(sc, "kern-sound-play", kern_sound_play);
         API_DECL(sc, "kern-sound-play-at", kern_sound_play_at);
         API_DECL(sc, "kern-sound-play-ambient", kern_sound_play_ambient);

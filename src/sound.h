@@ -47,4 +47,6 @@ extern void sound_off();
  * called) */
 extern int sound_is_activated();
 
+extern void music_load_track(char *file);
+
 #endif

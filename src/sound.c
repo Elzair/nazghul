@@ -344,6 +344,7 @@ sound_t *sound_new(char *tag, char *file)
 	if (!wave)
 	{
       warn("Mix_LoadWav:%s:%s", fn?fn:file, SDL_GetError());
+      	free(fn);
 		return NULL_SOUND;
 	}
 	free(fn);
@@ -464,12 +465,26 @@ int sound_is_activated(void)
 //////////////////////////////////////////////////////////////////////////////
 // Music API
 
-Mix_Chunk *currentTrack;
+Mix_Music *music_track;
 
-bool music_load_track()
+void music_load_track(char *file)
 {
-	
-	
+	if (Mix_PlayingMusic())
+	{
+		Mix_HaltMusic();
+		Mix_FreeMusic(music_track);
+	}
+	char *fn;
+	fn = file_mkpath(cfg_get("include-dirname"), file);
+	music_track=Mix_LoadMUS(fn?fn:file);
+	if (!music_track)
+	{
+      warn("Mix_LoadMusic:%s:%s", fn?fn:file, SDL_GetError());
+      free(fn);
+		return;
+	}	
+	free(fn);
+	Mix_PlayMusic(music_track,-1);
 }
 
 
