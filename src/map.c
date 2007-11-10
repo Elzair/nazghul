@@ -1594,8 +1594,6 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	bool beam = missile->getObjectType()->isBeam();
 	
-	fprintf(stderr,"base %d\n",i);
-	
 	// For each step
 	for (; i >= 0; i--)
 	{	
