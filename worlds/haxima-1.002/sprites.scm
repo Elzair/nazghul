@@ -78,7 +78,7 @@
 (kern-mk-sprite 's_field_sleep  ss_u4_shapes 1 71 #t 0 )
 (kern-mk-sprite 's_wall         ss_u4_shapes 1 72 #f 0 )
 (kern-mk-sprite 's_secret_door  ss_u4_shapes 1 73 #f 0 )
-(kern-mk-sprite 's_altar        ss_u4_shapes 1 74 #f 0 )
+(kern-mk-sprite 's_altar_obj        ss_u4_shapes 1 74 #f 0 )
 (kern-mk-sprite 's_lava         ss_u4_shapes 1 76 #t 0 )
 (kern-mk-sprite 's_projectile   ss_u4_shapes 1 77 #f 0 )
 (kern-mk-sprite 's_magic        ss_u4_shapes 1 78 #f 0 )
@@ -334,7 +334,7 @@
 ;;(kern-mk-sprite 's_human_knight ss_addon 4 120 #f 0 )
 (kern-mk-sprite 's_red_slime ss_addon 4 124 #f 0)
 (kern-mk-sprite 's_red_slime_asleep ss_addon 1 124 #f 0)
-(kern-mk-sprite 's_active_altar ss_addon 4 128 #f 0)
+(kern-mk-sprite 's_active_altar_obj ss_addon 4 128 #f 0)
 (kern-mk-sprite 's_tentacle ss_addon 4 132 #f 0)
 (kern-mk-sprite 's_sludge ss_addon 1 136 #t 0)
 (kern-mk-sprite 's_dirt ss_addon 1 137 #f 0)
@@ -547,6 +547,9 @@
 (kern-mk-sprite 's_tank_se         ss_ship 1  25 #f 0 )
 (kern-mk-sprite 's_shipswheel      ss_ship 1  18 #f 170 )
 (kern-mk-sprite 's_cannon          ss_ship 1  26 #f 170 )
+
+(define s_altar (mk-composite-sprite (list s_cobblestone s_altar_obj)))
+(define s_active_altar (mk-composite-sprite (list s_cobblestone s_active_altar_obj)))
 
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces
