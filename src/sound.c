@@ -56,16 +56,6 @@ struct sound {
         int nextVolume;
 };
 
-/*struct active_sound {
-	Uint8 *data;
-	Uint32 dpos;
-	Uint32 dlen;
-        int oneoffVolume;   // one off sound (minimum sound over gameturns)
-        int repeatVolume;   // max sound to repeatedly play now
-        int nextVolume;	    // max sound queued for next turn
-        sound_t *sound;
-} active_sounds[NUM_SOUNDS];*/
-
 sound_t *sound_reverse_lookup[NUM_SOUNDS];
 
 int SOUND_MAX_VOLUME = SDL_MIX_MAXVOLUME;
@@ -82,166 +72,34 @@ static void sound_unref(sound_t *sound)
 {
 	assert(sound->refcount > 0);
 	
-	/* what if this fails? */
-	//SDL_LockMutex(sound_mutex);
-	
 	sound->refcount--;
 	if (! sound->refcount)
 	{
-		fprintf(stderr,"Del sound: %d\n",(int)sound);
 		// make sure it isnt being played
 		if (sound->channel >= 0)
 		{
 			Mix_HaltChannel(sound->channel);
 		}
-		//free(sound->cvt.buf);
 		free(sound->tag);
 		Mix_FreeChunk(sound->data);
 		free(sound);
 	}
 	
-	/* what if this fails? */
-	//SDL_UnlockMutex(sound_mutex);
-}
-
-static void sound_mix(void *unused, Uint8 * stream, int len)
-{
-	/*unsigned int i;
-	int amount;
-        struct active_sound *active;
-        int volume;
-
-	for (i = 0; i < NUM_SOUNDS; ++i) {
-
-                active = &active_sounds[i];
-
-                // Skip idle entries
-                if (! active->sound)
-                        continue;
-
-                // Calculate how many more bytes can be played
-		amount = (active->dlen - active->dpos);
-		
-                // If done then stop playing 
-                if (0 == amount) {
-	                if (active->repeatVolume == 0)
-	                {
-                        sound_unref(active->sound);
-                        active->sound = 0;
-                        continue;
-                	}
-                	else
-                	{
-	                	  active->oneoffVolume=0;
-	               	  active->dpos = 0;
-	               	  amount = active->dlen;
-                	}
-                }
-                
-      if (active->oneoffVolume > active->repeatVolume)
-      {
-	   	volume = active->oneoffVolume;   
-      }
-      else
-      {
-	     	volume = active->repeatVolume;
-   	}
-
-                // Clip to the number of bytes allowed
-		if (amount > len) {
-			amount = len;
-		}
-
-                // Tell SDL to continue playing
-		SDL_MixAudio(stream, &active->data[active->dpos], amount,
-			     volume);
-
-		active->dpos += amount;
-	}*/
-	
-	
 }
 
 void sound_play(sound_t *sound, int volume, bool ambient)
 {
-	/*int index;
-        struct active_sound *active = NULL;
 
-	if (!sound_enabled || !sound_activated) {                
-		return;
-	}
 
-        if (NULL_SOUND == sound)
-                return;
-
-        assert(IS_SOUND(sound));
-        
-	// Look for an empty (or finished) sound slot, or if the sound is already playing
-	for (index = 0; index < NUM_SOUNDS; ++index) {
-		if (active_sounds[index].sound == sound)
-		{
-			// dont repeat playing a sound, but up the volume to match our volume
-			if (ambient)
-			{
-				if (active_sounds[index].repeatVolume < volume)
-				{
-					active_sounds[index].repeatVolume = volume;
-				}
-				if (active_sounds[index].nextVolume < volume)
-				{
-					active_sounds[index].nextVolume = volume;
-				}
-			}
-			else
-			{
-				if (active_sounds[index].oneoffVolume < volume)
-					active_sounds[index].oneoffVolume = volume;
-			}
-			return;
-		}
-		if (! active_sounds[index].sound && active == NULL) {
-                        active = &active_sounds[index];
-		}
-	}
-	if (NULL == active)
-		return;
-
-	// Put the sound data in the slot (it starts playing immediately) 
-	SDL_LockAudio();
-        sound->refcount++;
-        active->sound = sound;
-	active->data = sound->cvt.buf;
-	active->dlen = sound->cvt.len_cvt;
-	active->dpos = 0;
-         if (ambient)
-         {
-	      	active->repeatVolume=volume;
-	      	active->nextVolume=volume;   
-	      	active->oneoffVolume=0;
-      	}
-      	else
-      	{
-	      	active->repeatVolume=0;
-	      	active->nextVolume=0;
-	      	active->oneoffVolume=volume;      	
-      	}
-	SDL_UnlockAudio();*/
-	fprintf(stderr,"playsound\n");
-
-	if (!sound_enabled || !sound_activated) {   
-		fprintf(stderr,"playsound- nosound\n");             
+	if (!sound_enabled || !sound_activated) {              
 		return;
 	}	
-		fprintf(stderr,"playsound a\n");
+
 	if (NULL_SOUND == sound)
-	{
-		fprintf(stderr,"playsound- nullsound\n");             
+	{         
 	    return;
 	}
-		fprintf(stderr,"playsound b\n");
 	assert(IS_SOUND(sound)); 
-	    	fprintf(stderr,"playsound c\n");
-	fprintf(stderr,"playsound! (%d)\n",sound->channel);
 	
 	if (sound->channel < 0)
 	{
@@ -263,7 +121,6 @@ void sound_play(sound_t *sound, int volume, bool ambient)
 		}		
 		sound->refcount++;
 		sound_reverse_lookup[sound->channel] = sound;		
-		fprintf(stderr,"playing sound %d\n",sound->channel);
 	}
 	else if (ambient)
 	{
@@ -290,7 +147,6 @@ void sound_play(sound_t *sound, int volume, bool ambient)
 void sound_played(int channel)
 {
 	sound_t *sound = sound_reverse_lookup[channel];
-	fprintf(stderr,"played sound %d\n",sound->channel);
 	sound->channel=-1;
 	sound->volume=0;
 	sound->refcount--;
@@ -323,9 +179,6 @@ void sound_del(sound_t *sound)
 
 sound_t *sound_new(char *tag, char *file)
 {
-	//SDL_AudioSpec wave;
-	//Uint8 *data;
-	//Uint32 dlen;
    sound_t *sound;
 	char *fn;
 	Mix_Chunk *wave = NULL;
@@ -363,58 +216,31 @@ sound_t *sound_new(char *tag, char *file)
         sound->channel = -1;
         sound->data = wave;
         
-        /* Initialize the SDL convert structure */
-	//SDL_BuildAudioCVT(&sound->cvt, wave.format, wave.channels, wave.freq,
-			 // AUDIO_S16, 2, 22050);
-
-        /* Allocate the sound buffer */
-	//sound->cvt.buf = (Uint8 *) malloc(dlen * sound->cvt.len_mult);
-       // assert(sound->cvt.buf);
-
-        /* Copy the data into the sound buffer */
-	//memcpy(sound->cvt.buf, data, dlen);
-	//sound->cvt.len = dlen;
-	//SDL_ConvertAudio(&sound->cvt);
-
-        /* Release the memory holding the original WAV file */
-        //SDL_FreeWAV(data);
-        
-		fprintf(stderr,"New sound: %s @ %d\n",tag,(int)sound);
         return sound;
 }
 
 int sound_init(void)
 {
-	SDL_AudioSpec fmt;
 
         if (sound_activated)
                 return 0;
 
         /* Init the active sound list */
-       // memset(active_sounds, 0, sizeof(active_sounds));
 
 	/* Set 16-bit stereo audio at 22Khz */
-	fmt.freq = 22050;
-	fmt.format = AUDIO_S16;
-	fmt.channels = 2;
-	fmt.samples = 1024;	/* A good value for games */
-	fmt.callback = sound_mix;
-	fmt.userdata = NULL;
-
 	/* Open the audio device and start playing sound! */
-	if (Mix_OpenAudio(fmt.freq,fmt.format,fmt.channels,fmt.samples) < 0) {
+	if (Mix_OpenAudio(22050,AUDIO_S16,2,1024) < 0) {
           warn("Mix_OpenAudio: %s", SDL_GetError());
 		return -1;
 	}
 	
         /* Create the mutex */
-        //sound_mutex = SDL_CreateMutex();
-        //assert(sound_mutex);
+
 
 	atexit(Mix_CloseAudio);
 
 	sound_activated = 1;
-	//SDL_PauseAudio(0);
+
 	for (int i=0;i<NUM_SOUNDS;i++)
 	{
 		sound_reverse_lookup[i]=NULL;	
@@ -473,7 +299,7 @@ void music_load_track(char *file)
 	if (Mix_PlayingMusic())
 	{
 		Mix_HaltMusic();
-		Mix_FadeOutMusic(300);
+		Mix_FadeOutMusic(3000);
 		prev_track = music_track;
 	}
 	char *fn;
