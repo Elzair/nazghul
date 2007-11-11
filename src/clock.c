@@ -65,6 +65,11 @@ int clock_minute(void)
         return Clock.min;
 }
 
+int clock_tick(void)
+{
+        return Clock.tick;
+}
+
 unsigned int clock_time_of_day(void)
 {
         return (Clock.hour * 60 + Clock.min);
