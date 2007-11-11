@@ -235,6 +235,9 @@ void session_del(struct session *session)
 
         freezer_del();
 
+        /* stop sound so sound entries will be purged */
+        sound_haltall();
+        
         /* Cleanup the data objects */
         elem = session->data_objects.next;
         int count = 0;
@@ -438,6 +441,8 @@ int session_load(char *filename)
                 session_del(old_session);
         }
 
+        combat_reset_state();
+        
         Session->player->startSession();
 
         /* Now setup stuff that with known defaults. */
@@ -453,7 +458,7 @@ int session_load(char *filename)
                         entry->start(entry->obj);
                 }
         }     
-
+ 
 		/* need to start all the objects in the freezer too */
 		freezer_start_contents();
 
@@ -465,7 +470,7 @@ int session_load(char *filename)
         // game first starts up but apparently not necessarily on a
         // reload. Should be safe to call more than once, I think.
         //session_synch_sched_chars(Session);
-
+ 
         /* Paint all the windows for the first time in the new session. */
         screenErase(0);
 	screen_repaint_frame();

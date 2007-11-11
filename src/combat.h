@@ -60,6 +60,7 @@ enum combat_state {
 
 extern enum combat_state combat_get_state(void);
 extern void combat_set_state(enum combat_state);
+extern void combat_reset_state(void);
 extern bool combat_enter(struct combat_info *info);
 extern bool combat_rendezvous_party(int max_path_len);
 extern void combat_exit(void);

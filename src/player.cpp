@@ -1651,7 +1651,7 @@ void PlayerParty::startSession(void)
                 combat_set_state(COMBAT_STATE_FIGHTING);
         } else {
                 enableFollowMode();
-                combat_set_state(COMBAT_STATE_LOOTING);
+                combat_set_state(COMBAT_STATE_DONE);
         }        
 
 }
