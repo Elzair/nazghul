@@ -7,6 +7,7 @@
 (kern-mk-sound 'sound-moongate-enter "enter_moongate.wav")
 (kern-mk-sound 'sound-cannon-fire    "cannon.wav")
 (kern-mk-sound 'sound-clock          "ticktock.wav")
+(kern-mk-sound 'sound-clock-chime    "gong.wav")
 (kern-mk-sound 'sound-river          "river.wav")
 (kern-mk-sound 'sound-wind          "wind_1a.wav")
 

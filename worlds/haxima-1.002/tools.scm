@@ -208,6 +208,14 @@
          (method 'exec
                  (lambda (kclock)
                    (kern-sound-play-ambient sound-clock (kern-obj-get-location kclock))
+                   (let (
+                   			(minute (time-minute (kern-get-time)))
+                   			(ticks (kern-time-get-remainder))
+                   		)
+                   		;; TODO it may be possible to get this to work while loitering too
+                   		(if (and (equal? minute 0) (equal? ticks 0))
+                   			(kern-sound-play-at sound-clock-chime (kern-obj-get-location kclock)))
+                   )
                    ))	
          (method 'on-entry
                  (lambda (kclock)
