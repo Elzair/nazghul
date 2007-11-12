@@ -1,0 +1,5 @@
+cp config.h ..
+cp src_config.h ../src/config.h
+cp Makefile ../src
+cp res.rc ../src
+cp haxima.ico ../src
