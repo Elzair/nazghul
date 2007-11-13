@@ -453,9 +453,3 @@
 			t_bulwark_v_e
 			t_bulwark_v_s
 	)))
-
-;;----------------------------------------------------------------------------
-;; terrain map blenders (automatically run within kern-mk-map)
-;;(kern-mk-blender t_blendable_shoals tset_water tset_shore)
-;;(kern-mk-blender t_shallow tset_water tset_wshore)
-;;(kern-mk-blender t_grass tset_grass tset_foothills) 
