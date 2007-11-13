@@ -104,7 +104,7 @@
    (list supplies_chest   1 24)
    )
 
-  nil ;; hooks
+  (list 'music-places) ;; hooks
   (list  ;; edge entrances
    (list north 16 27)
    (list east   0 11)

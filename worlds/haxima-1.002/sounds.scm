@@ -10,8 +10,8 @@
 (kern-mk-sound 'sound-clock-chime    "gong.wav")
 (kern-mk-sound 'sound-river          "river.wav")
 (kern-mk-sound 'sound-wind          "wind_1a.wav")
-
-(kern-music-play "insertmusic.mid")
+(kern-mk-sound 'sound-missile          "swish.wav")
+(kern-mk-sound 'sound-explode          "boom.wav")
 
 ;; Aliases
 (define sound-ship-move sound-splashing)
@@ -38,3 +38,29 @@
   (let ((ksound (kern-mk-obj t_ambience 1)))
     (bind ksound soundtag)
     ksound))
+
+(println "esounds")
+
+(define music (list 0))
+
+(define (music-handler code file)
+	(if (not (equal? (car music) code))
+		(begin
+			(println "music: " file)
+			(kern-music-play file)
+			(set-car! music code)
+		)))
+
+(define (music-battle)
+	(music-handler 1 "battle.mid")
+	)
+	
+(define (music-shard)
+	(music-handler 2 "overworld.mid")
+	)
+	
+(define (music-places)
+	(music-handler 3 "places.mid")
+	)
+
+(music-shard)

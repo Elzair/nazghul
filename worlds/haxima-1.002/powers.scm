@@ -479,6 +479,7 @@
 		(damf (fireball-damage-dice apower))
 		(dami (if (> apower 5) (fireball-damage-dice (/ apower 3)) nil)))
 		(define (do-fireball-effect kplace x y)
+			(kern-sound-play-at sound-explode (mk-loc kplace x y))
 			(do-fireball-hit kplace x y damf dami)
 			(if (> apower 10) (let ((apower (- apower 5))
 					(damf (fireball-damage-dice apower))
@@ -517,6 +518,8 @@
 				(do-fireball-effect kplace x y)
 			)
 		)
+		(kern-sound-play-at sound-missile (kern-obj-get-location caster))
+		(kern-sound-play-at sound-missile ktarg)
 		(kern-fire-missile t_mfireball
                      (kern-obj-get-location caster)
                      ktarg))
@@ -575,6 +578,8 @@
   (kern-log-msg (kern-obj-get-name kchar)
                 " casts kill at "
                 (kern-obj-get-name ktarg))
+	(kern-sound-play-at sound-missile (kern-obj-get-location kchar))
+	(kern-sound-play-at sound-missile (kern-obj-get-location ktarg))
   (cast-missile-proc kchar ktarg t_deathball)
   result-ok)
 	
@@ -637,6 +642,8 @@
 		  
 ;todo messages out?
 (define (powers-magic-missile kchar ktarg power)
+	(kern-sound-play-at sound-missile (kern-obj-get-location kchar))
+	(kern-sound-play-at sound-missile (kern-obj-get-location ktarg))
 	(kern-log-msg (kern-obj-get-name kchar)
 			" fires magic missile at "
 			(kern-obj-get-name ktarg))

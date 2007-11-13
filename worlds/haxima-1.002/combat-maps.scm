@@ -850,6 +850,7 @@
 (define (combat-map-basic-handler map-tag)
 	(lambda (place our_terrain other_terrain off_x off_y map_x map_y)
 		(combat-map-basic place map-tag off_x off_y)
+		(music-battle)
 		))			
 		
 (define combat-map-road-handler
@@ -862,6 +863,7 @@
 				(max-x (combat-off-to-src-max wid off_x))
 				(dstmap (kern-place-get-terrain-map place))
 				)
+		(music-battle)
 			
 			(define (combat-blit-road-part targ-list srcmap x1 x2 y1 y2)
 				(if (and (in-list? our_terrain targ-list)

@@ -563,6 +563,6 @@
 
   ) ;; end of objects
 
- nil ; hooks
+ (list 'music-shard) ; hooks
  nil ; edge entrances
  )
