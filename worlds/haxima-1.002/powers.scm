@@ -707,6 +707,8 @@
 	(kern-harm-relations ktarg caster)
 	(kern-harm-relations ktarg caster)
 	(kern-harm-relations ktarg caster)
+	(kern-sound-play-at sound-missile (kern-obj-get-location caster))
+	(kern-sound-play-at sound-missile (kern-obj-get-location ktarg))
 	(cast-missile-proc caster ktarg t_mpoison_bolt)
 	result-ok)
 
@@ -1038,6 +1040,8 @@
 			(lambda (kmissile kplace x y)
 				(do-web-effect kplace x y)
 			))
+		(kern-sound-play-at sound-missile (kern-obj-get-location caster))
+		(kern-sound-play-at sound-missile target)
 		(kern-fire-missile t_mweb
                      (kern-obj-get-location caster)
                      target)
