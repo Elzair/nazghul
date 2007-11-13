@@ -136,6 +136,35 @@
 					(kern-map-repaint)
 					(cleanfields loc)
 				))))
+				
+(define (line-do-proc proc location)
+	(if (kern-is-valid-location? location)
+		(begin (println "doproc")
+			(let ((procres (proc location)))
+				(println procres)
+				procres
+			))
+		#f))
+		
+(define (line-cell place x y dx dy endx endy proc)
+	(let ((curx (floor (+ x 0.4999)))
+			(cury (floor (+ y 0.4999))))
+		(if (and (line-do-proc proc (loc-mk place curx cury))
+				(not (and (equal? curx endx) (equal? cury endy))))
+			(line-cell place (+ x dx) (+ y dy) dx dy endx endy proc))
+	))
+				
+(define (line-draw place startx starty stopx stopy proc)
+	(if (and (equal? startx stopx)
+				(equal? starty stopy))
+		(line-do-proc proc (loc-mk place startx starty))
+		(let* ((xdif (- stopx startx))
+				(ydif (- stopy starty))
+				(div (if (> (abs xdif) (abs ydif)) (abs xdif) (abs ydif)))
+				(dx (/ xdif div))
+				(dy (/ ydif div)))
+			(line-cell place (+ startx 0.5) (+ starty 0.5) dx dy stopx stopy proc)
+		)))
 			
 (define (cast-missile-proc kchar ktarg ktype)
   (kern-fire-missile ktype
@@ -394,8 +423,14 @@
 ; I need a 'line' utility anyway, perhaps a ui along the lines of (select center point) (select end point)
 ;   -> draw line from centre to end and opposite side
 (define (powers-field-range power)
-	(+ 1 (/ power 5)))
+	(if (> power 30)
+		7
+		(+ 1 (/ power 5))
+	))
 
+(define (powers-field-length power)
+	(+ 1 (/ power 4)))
+	
 (define (powers-field-generic loc f_type duration proc)
 	(let ((afield (kern-mk-field f_type duration)))
 		(if (can-be-dropped? afield loc cant)
@@ -407,6 +442,25 @@
 					(kern-obj-remove afield))
 			))
 	))
+	
+(define (powers-field-wall start stop f_type duration leng proc)
+	(let ((lengremaining (list leng)))
+		(define (put-field location)
+			(powers-field-generic location f_type duration proc)
+			(set-car! lengremaining (- (car lengremaining) 1))
+			(> (car lengremaining) 0)
+			)
+		(line-draw (loc-place start) (loc-x start) (loc-y start) (loc-x stop) (loc-y stop) put-field)
+	))
+	
+(define (powers-field-fire-wall caster start stop power)
+	(define (do-burn kobj)
+		(if (and (kern-obj-is-char? kobj)
+				(not (has-fire-immunity? kobj)))
+			(kern-obj-inflict-damage kobj "burning" (kern-dice-roll "2d3+2") caster)
+		))
+	(powers-field-wall start stop F_fire (+ 20 (kern-dice-roll (mkdice 1 power))) (powers-field-length power) do-burn)
+	result-ok)
 	
 (define (powers-field-energy caster ktarg power)
 	(kern-obj-put-at (kern-mk-field F_energy (+ 20 (kern-dice-roll (mkdice 2 power)))) ktarg)

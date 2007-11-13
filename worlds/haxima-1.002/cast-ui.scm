@@ -186,6 +186,20 @@
 				(kern-log-msg "Not in LOS!")
 				result-no-target))))	
 
+(define (cast-ui-wall effect caster range power)
+	(let ((target (kern-ui-target (kern-obj-get-location caster) range)))
+		(cond ((null? target) result-no-target)
+			((not (kern-in-los? (kern-obj-get-location caster) target)) (kern-log-msg "Not in LOS!") result-no-target)
+			(else 
+				(let ((targetb (kern-ui-target (kern-obj-get-location caster) range)))
+					(cond ((and (not (null? targetb)) (not (kern-in-los? (kern-obj-get-location caster) target))) (kern-log-msg "Not in LOS!") result-no-target)
+						(else
+							(effect caster target (if (null? targetb) target targetb) power)
+							result-ok
+						))
+				)))
+	))
+
 (define (cast-ui-template-loc effect caster template power)
   (cast-ui-dospell-loc
    (kern-ui-target-generic (kern-obj-get-location caster)
@@ -332,7 +346,7 @@
 ;; Third Circle
 ;;----------------------------------------------------------------------------
 (define (in-flam-grav caster)
-  (cast-ui-field powers-field-fire caster 1 (occ-ability-whitemagic caster)))
+  (cast-ui-wall powers-field-fire-wall caster (powers-field-range (occ-ability-whitemagic caster)) (occ-ability-whitemagic caster)))
 
 (define (in-nox-grav  caster)
   (cast-ui-field powers-field-poison caster 1 (occ-ability-whitemagic caster)))
