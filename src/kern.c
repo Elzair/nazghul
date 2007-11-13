@@ -2678,6 +2678,12 @@ static pointer kern_log_continue(scheme *sc,  pointer args)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_log_flush)
+{
+        log_flush();
+        return sc->T;
+}
+
 static pointer kern_stdout_msg(scheme *sc,  pointer args)
 {
 
@@ -9472,6 +9478,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-log-continue", kern_log_continue);
         API_DECL(sc, "kern-log-end", kern_log_end);
         API_DECL(sc, "kern-log-enable", kern_log_enable);
+        API_DECL(sc, "kern-log-flush", kern_log_flush);
         API_DECL(sc, "kern-log-msg", kern_log_msg);
         API_DECL(sc, "kern-stdout-msg", kern_stdout_msg);
 		
