@@ -464,6 +464,51 @@
     kchar))
 
 ;;----------------------------------------------------------------------------
+;; Wise
+;;----------------------------------------------------------------------------
+(define (wait-ai kchar)
+  #t)
+
+(define (wise-ai kchar)
+  (let* ((wise (gob kchar))
+         (loc (kern-obj-get-location kchar))
+         (dest (cons (loc-place loc) (npcg-get-post wise)))
+         )
+    (if (equal? loc dest)
+        (let ((kmgr (npcg-get-subgob wise)))
+          ;; Tell the mgr this one is in position and switch it over to waiting
+          ;; mode.
+          (scene-mgr-incr-num-wise-in-pos! (gob kmgr))
+          (kern-char-set-ai kchar 'wait-ai)
+          #t)
+        (pathfind kchar dest))))
+
+(define (wise-mk kplace n kmgr)
+  (let* ((kchar (mk-npc 'wizard 9))
+         (pos (list-ref (list (cons (list 0 9) (list 4 9))
+                              (cons (list 9 0) (list 9 4))
+                              (cons (list 18 9) (list 14 9))
+                              (cons (list 9 18) (list 9 14))
+                              (cons (list 0 9) (list 5 5))
+                              (cons (list 9 0) (list 13 5))
+                              (cons (list 18 9) (list 13 13))
+                              (cons (list 9 18) (list 5 13))
+                              )
+                        n))
+         (enter-pos (cons kplace (car pos)))
+         (altar-pos (cdr pos))
+        )
+    (kern-char-set-ai kchar 'wise-ai)
+    (npcg-set-post! (gob kchar) altar-pos)    
+
+    ;; Save the kmgr object in the gob so the wise can notify it when they are
+    ;; in position.
+    (npcg-set-subgob! (gob kchar) kmgr)
+
+    (kern-obj-put-at kchar enter-pos)
+    kchar))
+
+;;----------------------------------------------------------------------------
 ;; Special Object Types
 ;;----------------------------------------------------------------------------
 (define portal-ifc
@@ -479,7 +524,7 @@
 ;;----------------------------------------------------------------------------
 ;; Scene Manager
 ;;----------------------------------------------------------------------------
-(define (scene-mgr-mk) (list 'scene-mgr 0 0 0))
+(define (scene-mgr-mk) (list 'scene-mgr 3 0 0 0 0))
 (define (scene-mgr-state gob) (list-ref gob 1))
 (define (scene-mgr-set-state! gob val) (set-car! (list-tail gob 1) val))
 (define (scene-mgr-advance-state! gob) (set-car! (list-tail gob 1) (+ 1 (scene-mgr-state gob))))
@@ -489,6 +534,13 @@
 (define (scene-mgr-get-num-travelers gob) (list-ref gob 3))
 (define (scene-mgr-set-num-travelers! gob val) (set-car! (list-tail gob 3) val))
 (define (scene-mgr-incr-num-travelers! gob) (set-car! (list-tail gob 3) (+ 1 (scene-mgr-get-num-travelers gob))))
+(define (scene-mgr-get-num-wise gob) (list-ref gob 4))
+(define (scene-mgr-set-num-wise! gob val) (set-car! (list-tail gob 4) val))
+(define (scene-mgr-incr-num-wise! gob) (set-car! (list-tail gob 4) (+ 1 (scene-mgr-get-num-wise gob))))
+(define (scene-mgr-get-num-wise-in-pos gob) (list-ref gob 5))
+(define (scene-mgr-set-num-wise-in-pos! gob val) (set-car! (list-tail gob 5) val))
+(define (scene-mgr-incr-num-wise-in-pos! gob) (set-car! (list-tail gob 5) (+ 1 (scene-mgr-get-num-wise-in-pos gob))))
+
 
 (define (scene-mgr-intro-travelers-phase kobj)
   (println "scene-mgr-intro-travelers-phase")
@@ -531,12 +583,43 @@
            (scene-mgr-advance-state! smgr)))
     ))
 
+(define (scene-mgr-wait-for-no-demons-phase kobj)
+  (if (null? (all-hostiles (kern-get-player)))
+      (scene-mgr-advance-state! kobj)))
+
+(define (scene-mgr-intro-wise kobj)
+  (println "scene-mgr-intro-wise")
+  (let* ((smgr (kobj-gob-data kobj))
+         (n (scene-mgr-get-num-wise smgr))
+         )
+    (cond ((< n 8) 
+           (wise-mk (loc-place (kern-obj-get-location kobj)) n kobj)
+           (scene-mgr-incr-num-wise! smgr)
+           )
+          (else
+           (scene-mgr-advance-state! smgr)))
+    )
+  )
+
+(define (scene-mgr-wait-for-wise kobj)
+  (println "scene-mgr-wait-for-wise")
+  (let ((smgr (gob kobj)))
+    (if (= 8 (scene-mgr-get-num-wise-in-pos smgr))
+      (scene-mgr-advance-state! smgr))))
+
+(define (scene-mgr-close-gate kobj)
+  (println "scene-mgr-close-gate"))
+
 (define (scene-mgr-exec kobj) 
   (let* ((smgr (kobj-gob-data kobj))
          (state (scene-mgr-state smgr)))
     (println "scene-mgr-exec: state=" state)
     (cond ((= 0 state) (scene-mgr-intro-travelers-phase kobj))
           ((= 1 state) (scene-mgr-intro-demons-phase kobj))
+          ((= 2 state) (scene-mgr-wait-for-no-demons-phase kobj))
+          ((= 3 state) (scene-mgr-intro-wise kobj))
+          ((= 4 state) (scene-mgr-wait-for-wise kobj))
+          ((= 5 state) (scene-mgr-close-gate kobj))
           (else
            ))
     ))
