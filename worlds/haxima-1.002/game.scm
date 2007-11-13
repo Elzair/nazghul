@@ -320,6 +320,9 @@
 (load "ai.scm")
 (load "species.scm")
 (load "conv.scm") ;; basic conversation
+(load "yellow-slime.scm")
+(load "troll.scm")
+(load "spider.scm")
 (load "npc-types.scm")
 (load "mimic.scm")
 (load "parties.scm")
