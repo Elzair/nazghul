@@ -137,20 +137,38 @@
 					(cleanfields loc)
 				))))
 				
+;; todo- inc these in line-cell to simplify?
 (define (line-do-proc proc location)
 	(if (kern-is-valid-location? location)
-		(begin (println "doproc")
-			(let ((procres (proc location)))
-				(println procres)
-				procres
-			))
-		#f))
+		(proc location 1)
+		#f
+	))
+		
+(define (line-diag place x y dx dy proc)
+	(let* ((curx (floor x))
+			(cury (floor y))
+			(newx (floor (+ x (/ dx 2))))
+			(newy (floor (+ y (/ dy 2))))
+			(location (loc-mk place newx newy)))
+		(if (or (not (equal? newx curx))
+					(not (equal? newy cury)))
+			(if (kern-is-valid-location? location)
+				(proc location 0.5)
+				#f
+			)
+			#t
+		)
+	))
 		
 (define (line-cell place x y dx dy endx endy proc)
-	(let ((curx (floor (+ x 0.4999)))
-			(cury (floor (+ y 0.4999))))
-		(if (and (line-do-proc proc (loc-mk place curx cury))
-				(not (and (equal? curx endx) (equal? cury endy))))
+	(let ((curx (floor x))
+			(cury (floor y)))
+		(if (and 
+				(if (equal? (abs dx) 1) (line-diag place x y 0 (* dy 1.0000001) proc) (line-diag place x y (* dx 1.0000001) 0 proc))
+				(line-do-proc proc (loc-mk place curx cury))
+				(not (and (equal? curx endx) (equal? cury endy)))
+				(if (equal? (abs dx) 1) (line-diag place (+ x dx) (+ y dy) 0 (* dy -0.9999999) proc) (line-diag place (+ x dx) (+ y dy) (* dx -0.9999999) 0 proc))
+				)
 			(line-cell place (+ x dx) (+ y dy) dx dy endx endy proc))
 	))
 				
@@ -436,18 +454,20 @@
 		(if (can-be-dropped? afield loc cant)
 			(begin
 				(kern-obj-put-at afield loc)
+				(kern-map-repaint)
 				(for-each proc (kern-get-objects-at loc))
 				;; remove fields on semi-bad locations
 				(if (not (can-be-dropped? afield loc no-drop))
 					(kern-obj-remove afield))
+				(kern-map-repaint)
 			))
 	))
 	
 (define (powers-field-wall start stop f_type duration leng proc)
 	(let ((lengremaining (list leng)))
-		(define (put-field location)
+		(define (put-field location delta)
 			(powers-field-generic location f_type duration proc)
-			(set-car! lengremaining (- (car lengremaining) 1))
+			(set-car! lengremaining (- (car lengremaining) delta))
 			(> (car lengremaining) 0)
 			)
 		(line-draw (loc-place start) (loc-x start) (loc-y start) (loc-x stop) (loc-y stop) put-field)
