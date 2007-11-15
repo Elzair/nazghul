@@ -5,6 +5,7 @@
 #include "place.h"
 #include "session.h"
 #include "log.h"
+#include "terrain.h"
 
 // USE_CACHED_PATH works but it can cause some strange-seeming behavior. If a
 // new, better route opens than the cached path then the being won't find it,
@@ -93,65 +94,85 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
 	if (!flags)
 		flags = PFLAG_IGNORECOMPANIONS | PFLAG_IGNOREMECHS;
 
-        if (isStationary())
-                return false;
+	if (isStationary())
+		return false;
+	
+	// For now, don't try to pathfind between places.
+	if (destplace != getPlace())
+	{
+		warn("%s in %s, can't pathfind to %s", getName(),
+	   		getPlace()->name, destplace->name);
+		return false;
+	}
+	
+	//dbg("%s pathfind from (%d %d) to (%d %d)\n", 
+	//getName(), getX(), getY(), destx, desty);
 
-        // For now, don't try to pathfind between places.
-        if (destplace != getPlace()) {
-                warn("%s in %s, can't pathfind to %s", getName(),
-                     getPlace()->name, destplace->name);
-                return false;
-        }
-
-        //dbg("%s pathfind from (%d %d) to (%d %d)\n", 
-        //getName(), getX(), getY(), destx, desty);
-
-        // Check the cachedPath
-        if (USE_CACHED_PATH && cachedPath) {
-
-                //dbg("cachedPath: ");
-                //astar_dbg_dump_path(cachedPath);
-
-                // If the cached path is for a different place then we can't
-                // use it
-                if (getPlace() != cachedPathPlace) {
-                        //dbg("old place\n");
-                        astar_path_destroy(cachedPath);
-                        cachedPath = NULL;
-                        cachedPathPlace = NULL;
-
-                } else {
-
-                        pathPtr = cachedPath;
-
-                        // If the cached path does not start from the current
-                        // coordinates then we can't use it.
-                        if (pathPtr->x != getX() ||
-                            pathPtr->y != getY()) {
-                                //dbg("old start\n");
-                                astar_path_destroy(cachedPath);
-                                cachedPath = NULL;
-                                cachedPathPlace = NULL;
-                        } else {
-                                //dbg("tracing\n");
-                                // Trace down the path until it ends or hits
-                                // the target
-                                while (pathPtr && 
-                                       (pathPtr->x != destx ||
-                                        pathPtr->y != desty))
-                                        pathPtr = pathPtr->next;
-                                
-                                // If this path is no good then destroy it,
-                                // we'll have to get a new one.
-                                if (! pathPtr) {
-                                        //dbg("won't reach\n");
-                                        astar_path_destroy(cachedPath);
-                                        cachedPath = NULL;
-                                        cachedPathPlace = NULL;
-                                }
-                        }
-                }
-        }
+	// Check the cachedPath
+	if (USE_CACHED_PATH && cachedPath)
+	{
+		
+		//dbg("cachedPath: ");
+		//astar_dbg_dump_path(cachedPath);
+		
+		// If the cached path is for a different place then we can't
+		// use it
+		if (getPlace() != cachedPathPlace)
+		{
+			//dbg("old place\n");
+			astar_path_destroy(cachedPath);
+			cachedPath = NULL;
+			cachedPathPlace = NULL;
+		} 
+		else 
+		{
+			pathPtr = cachedPath;
+			
+			
+			// If the cached path does not start from the current
+			// coordinates then we can't use it.
+			if (pathPtr->x != getX() || pathPtr->y != getY())
+			{
+				//dbg("old start\n");
+				astar_path_destroy(cachedPath);
+				cachedPath = NULL;
+				cachedPathPlace = NULL;
+			}
+			else if (pathPtr->x != destx || pathPtr->y != desty)
+			{
+				pathPtr = pathPtr->next;
+				
+				// if we are about to hit nasty terrain, reevaluate our options
+				if (pathPtr && place_get_terrain(getPlace(),pathPtr->x,pathPtr->y)->effect)
+				{
+					dbg("recheck path (terrain)\n");
+					pathPtr = NULL;
+				}
+				if (pathPtr && place_get_object(getPlace(),pathPtr->x,pathPtr->y, field_layer) != NULL)
+				{
+					dbg("recheck path (field)\n");
+					pathPtr = NULL;
+				}
+				
+				//dbg("tracing\n");
+				// Trace down the path until it ends or hits
+				// the target
+				while (pathPtr && 
+						(pathPtr->x != destx || pathPtr->y != desty))
+					pathPtr = pathPtr->next;
+				
+				// If this path is no good then destroy it,
+				// we'll have to get a new one.
+				if (! pathPtr)
+				{
+					dbg("won't reach\n");
+					astar_path_destroy(cachedPath);
+					cachedPath = NULL;
+					cachedPathPlace = NULL;
+				}
+			}
+		}
+	}
 
         // If we don't have a valid path then try to find one, first by
         // ignoring mechanisms.
