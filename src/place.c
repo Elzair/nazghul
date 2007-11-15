@@ -38,6 +38,7 @@
 #include "vmask.h"
 #include "combat.h"
 #include "event.h" /* for demo */
+#include "kern_intvar.h"
 
 // #define DEBUG
 // #undef debug_h
@@ -1167,11 +1168,11 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
 	 * different penalties to different hazerds. */
 	terrain = place_get_terrain(context->place, info->x0, info->y0);
 	if (terrain->effect)
-		*cost += 9;
+		*cost += kern_intvar_get("AP_TOTAL:normal_human") * 9;
 
 	if (place_get_object(context->place, info->x0, info->y0,
 			     field_layer) != NULL)
-		*cost += 9;
+		*cost += kern_intvar_get("AP_TOTAL:normal_human") * 9;
 }
 
 /* If pathfinding over a nontrivial distance, make a quick check to see if a
