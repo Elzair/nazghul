@@ -349,11 +349,11 @@
   (cast-ui-wall powers-field-fire-wall caster (powers-field-range (occ-ability-whitemagic caster)) (occ-ability-whitemagic caster)))
 
 (define (in-nox-grav  caster)
-  (cast-ui-field powers-field-poison caster 1 (occ-ability-whitemagic caster)))
+  (cast-ui-wall powers-field-poison-wall caster (powers-field-range (occ-ability-whitemagic caster)) (occ-ability-whitemagic caster)))
 
 (define (in-zu-grav  caster)
-  (cast-ui-field powers-field-sleep caster 1 (occ-ability-whitemagic caster)))
-
+  (cast-ui-wall powers-field-sleep-wall caster (powers-field-range (occ-ability-whitemagic caster)) (occ-ability-whitemagic caster)))
+  
 (define (vas-flam  caster)
 	(cast-ui-ranged-loc powers-fireball caster
 		(powers-fireball-range (occ-ability-blackmagic caster))
@@ -396,7 +396,7 @@
   (cast-teleport-spell caster down))
 
 (define (in-sanct-grav  caster)
-  (cast-ui-field powers-field-energy caster 1 (occ-ability-whitemagic caster)))
+  (cast-ui-wall powers-field-energy-wall caster (powers-field-range (occ-ability-whitemagic caster)) (occ-ability-whitemagic caster)))
 
 (define (in-sanct  caster)
 	(powers-protect caster caster (occ-ability-whitemagic caster))
