@@ -1503,9 +1503,9 @@ static pointer kern_mk_field_type(scheme *sc, pointer args)
         closure_t *clx = NULL;
         pointer func = sc->NIL;
         pointer ret;
-        struct mmode *mmode;      
+        struct mmode *mmode = NULL;      
 
-        if (unpack(sc, &args, "yspdddc", &tag, &name, &sprite, &light, 
+        if (unpack(sc, &args, "yspdddcp", &tag, &name, &sprite, &light, 
                    &duration, &pclass, &func, &mmode)) {
                 load_err("kern-mk-field-type %s: bad args", tag);
                 return sc->NIL;
@@ -3938,7 +3938,6 @@ KERN_API_CALL(kern_sound_play)
                 rt_err("kern-sound-play: bad args");
                 return sc->NIL;
         }
-        fprintf(stderr,"kernsound\n");
         sound_play(sound, SOUND_MAX_VOLUME);
         return sc->NIL;
 }
@@ -3969,7 +3968,6 @@ KERN_API_CALL(kern_sound_play_at)
 			volume = (volume * (20 - distance))/20;
 		if (volume > 0)
 		{
-         fprintf(stderr,"kernsoundat\n");
 			sound_play(sound, volume, false);
 		}
 	}
@@ -4001,7 +3999,6 @@ KERN_API_CALL(kern_sound_play_ambient)
 			volume = (volume * (20 - distance))/20;
 		if (volume > 0)
 		{
-         fprintf(stderr,"kernsoundambient\n");
 			sound_play(sound, volume, true);
 		}
 	}
