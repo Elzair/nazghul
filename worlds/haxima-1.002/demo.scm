@@ -304,7 +304,6 @@
 (load "sounds.scm")
 (load "effects.scm")
 (load "terrains.scm")
-(load "palette.scm")
 (load "fields.scm")
 ;;(load "combat-maps.scm")
 
@@ -396,10 +395,14 @@
 
 (kern-load "runes.scm")
 
+(define logo-image (kern-image-load "haximatext.png"))
+(define yoff 8)
+(define xoff -3)
+
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms
 ;;----------------------------------------------------------------------------
-(define hour 07)
+(define hour 12)
 (define minutes 00)
 (define time-in-minutes (+ (* hour 60) minutes))
 (define game-start-time (time-mk 0 0 0 0 hour minutes))
@@ -448,14 +451,14 @@
                                        (cons 'tinker 'normal-traveler-ai)
                                        (cons 'ranger 'normal-traveler-ai)
                                        )))
-         (path (random-select (list (list (loc-mk kplace 9 0) (list 9 9) #f)
-                                    (list (loc-mk kplace 0 9) (list 9 9) #f)
-                                    (list (loc-mk kplace 18 9) (list 9 9) #f)
-                                    (list (loc-mk kplace 9 18) (list 9 9) #f)
-                                    (list (loc-mk kplace 9 8) (list 9 0) #t)
-                                    (list (loc-mk kplace 9 10) (list 9 18) #t)
-                                    (list (loc-mk kplace 8 9) (list 0 9) #t)
-                                    (list (loc-mk kplace 10 9) (list 18 9) #t)
+         (path (random-select (list (list (loc-mk kplace  (+ xoff 9) (+ yoff  0)) (list  (+ xoff 9) (+ yoff  5)) #f)
+                                    (list (loc-mk kplace  (+ xoff 3) (+ yoff  5)) (list  (+ xoff 9) (+ yoff  5)) #f)
+                                    (list (loc-mk kplace (+ xoff 18) (+ yoff  5)) (list  (+ xoff 9) (+ yoff  5)) #f)
+                                    (list (loc-mk kplace  (+ xoff 9) (+ yoff 10)) (list  (+ xoff 9) (+ yoff  5)) #f)
+                                    (list (loc-mk kplace  (+ xoff 9) (+ yoff  8)) (list  (+ xoff 9) (+ yoff  0)) #t)
+                                    (list (loc-mk kplace  (+ xoff 9) (+ yoff  6)) (list  (+ xoff 9) (+ yoff 10)) #t)
+                                    (list (loc-mk kplace  (+ xoff 8) (+ yoff  5)) (list  (+ xoff 3) (+ yoff  8)) #t)
+                                    (list (loc-mk kplace (+ xoff 10) (+ yoff  5)) (list (+ xoff 18) (+ yoff  8)) #t)
                                     )))
          (kchar (mk-npc (car type-ai) 9))
          )
@@ -502,14 +505,14 @@
 (define (wise-mk kplace n kmgr)
   (let* ((kchar (mk-npc 'wizard 9))
          (pos (list-ref (list 
-                         (cons (list 0 9) (list 5 5))
-                         (cons (list 9 0) (list 13 5))
-                         (cons (list 18 9) (list 13 13))
-                         (cons (list 9 18) (list 5 13))
-                         (cons (list 0 9) (list 4 9))
-                         (cons (list 9 0) (list 9 4))
-                         (cons (list 18 9) (list 14 9))
-                         (cons (list 9 18) (list 9 14))
+                         (cons (list (+ xoff 3)  (+ yoff  4)) (list (+ xoff 5)   (+ yoff  1)))
+                         (cons (list (+ xoff 9)  (+ yoff  0)) (list (+ xoff 13)  (+ yoff  1)))
+                         (cons (list (+ xoff 18) (+ yoff  4)) (list (+ xoff 13)  (+ yoff  9)))
+                         (cons (list (+ xoff 9)  (+ yoff 10)) (list (+ xoff 5)   (+ yoff  9)))
+                         (cons (list (+ xoff 3)  (+ yoff  4)) (list (+ xoff 4)   (+ yoff  5)))
+                         (cons (list (+ xoff 9)  (+ yoff  0)) (list (+ xoff 9)   (+ yoff  0)))
+                         (cons (list (+ xoff 18) (+ yoff  4)) (list (+ xoff 14)  (+ yoff  5)))
+                         (cons (list (+ xoff 9)  (+ yoff 10)) (list (+ xoff 9)   (+ yoff 10)))
                               )
                         n))
          (enter-pos (cons kplace (car pos)))
@@ -594,7 +597,7 @@
         (kern-char-set-ai kdemon 'std-ai)
         ;;(kern-map-flash 1000)
         (kern-obj-put-at kdemon 
-                         (loc-offset (mk-loc (loc-place (kern-obj-get-location kobj)) 9 9)
+                         (loc-offset (mk-loc (loc-place (kern-obj-get-location kobj)) (+ xoff 9)  (+ yoff 5))
                                      dir)))
       (scene-mgr-incr-num-demons! smgr)
       )
@@ -652,14 +655,14 @@
   ;;(println "scene-mgr-drop-runes")
   (kern-map-flash 100)
   (let ((kplace (loc-place (kern-obj-get-location kobj))))
-    (kern-obj-put-at (kern-tag 'rune_k (kern-mk-obj t_rune_k 1)) (loc-mk kplace 6 6))
-    (kern-obj-put-at (kern-tag 'rune_p (kern-mk-obj t_rune_p 1)) (loc-mk kplace 12 6))
-    (kern-obj-put-at (kern-tag 'rune_s (kern-mk-obj t_rune_s 1)) (loc-mk kplace 12 12))
-    (kern-obj-put-at (kern-tag 'rune_c (kern-mk-obj t_rune_c 1)) (loc-mk kplace 6 12))
-    (kern-obj-put-at (kern-tag 'rune_f (kern-mk-obj t_rune_f 1)) (loc-mk kplace 5 9))
-    (kern-obj-put-at (kern-tag 'rune_w (kern-mk-obj t_rune_w 1)) (loc-mk kplace 9 5))
-    (kern-obj-put-at (kern-tag 'rune_d (kern-mk-obj t_rune_d 1)) (loc-mk kplace 13 9))
-    (kern-obj-put-at (kern-tag 'rune_l (kern-mk-obj t_rune_l 1)) (loc-mk kplace 9 13))
+    (kern-obj-put-at (kern-tag 'rune_k (kern-mk-obj t_rune_k 1)) (loc-mk kplace (+ xoff  6)  (+ yoff  2)))
+    (kern-obj-put-at (kern-tag 'rune_p (kern-mk-obj t_rune_p 1)) (loc-mk kplace (+ xoff 12)  (+ yoff  2)))
+    (kern-obj-put-at (kern-tag 'rune_s (kern-mk-obj t_rune_s 1)) (loc-mk kplace (+ xoff 12)  (+ yoff  8)))
+    (kern-obj-put-at (kern-tag 'rune_c (kern-mk-obj t_rune_c 1)) (loc-mk kplace (+ xoff  6)  (+ yoff  8)))
+    (kern-obj-put-at (kern-tag 'rune_f (kern-mk-obj t_rune_f 1)) (loc-mk kplace (+ xoff  5)  (+ yoff  5)))
+    (kern-obj-put-at (kern-tag 'rune_w (kern-mk-obj t_rune_w 1)) (loc-mk kplace (+ xoff  9)  (+ yoff  1)))
+    (kern-obj-put-at (kern-tag 'rune_d (kern-mk-obj t_rune_d 1)) (loc-mk kplace (+ xoff 13)  (+ yoff  5)))
+    (kern-obj-put-at (kern-tag 'rune_l (kern-mk-obj t_rune_l 1)) (loc-mk kplace (+ xoff  9)  (+ yoff 10)))
     )
   (kern-map-repaint)
   (scene-mgr-advance-state! (gob kobj))
@@ -719,6 +722,8 @@
           ((= 14 state) (scene-mgr-wait-for-wise kobj))
           ((= 15 state) 
            ;;(println "done")
+           ;; Keep repainting to show the sprite animations.
+           (kern-map-repaint)
            )
           (else
            ))
@@ -735,6 +740,931 @@
         (scene-mgr-mk)
         ))
 
+;;----------------------------------------------------------------------------
+;; Haxima Logo Terrain
+;;----------------------------------------------------------------------------
+(kern-mk-sprite-set 'ss_hl 32 32 8 19 0 0  "haximatext.png")
+
+(kern-mk-sprite 's_hl_0 ss_hl 1 0 #f 0)
+(kern-mk-sprite 's_hl_1 ss_hl 1 1 #f 0)
+(kern-mk-sprite 's_hl_2 ss_hl 1 2 #f 0)
+(kern-mk-sprite 's_hl_3 ss_hl 1 3 #f 0)
+(kern-mk-sprite 's_hl_4 ss_hl 1 4 #f 0)
+(kern-mk-sprite 's_hl_5 ss_hl 1 5 #f 0)
+(kern-mk-sprite 's_hl_6 ss_hl 1 6 #f 0)
+(kern-mk-sprite 's_hl_7 ss_hl 1 7 #f 0)
+(kern-mk-sprite 's_hl_8 ss_hl 1 8 #f 0)
+(kern-mk-sprite 's_hl_9 ss_hl 1 9 #f 0)
+(kern-mk-sprite 's_hl_10 ss_hl 1 10 #f 0)
+(kern-mk-sprite 's_hl_11 ss_hl 1 11 #f 0)
+(kern-mk-sprite 's_hl_12 ss_hl 1 12 #f 0)
+(kern-mk-sprite 's_hl_13 ss_hl 1 13 #f 0)
+(kern-mk-sprite 's_hl_14 ss_hl 1 14 #f 0)
+(kern-mk-sprite 's_hl_15 ss_hl 1 15 #f 0)
+(kern-mk-sprite 's_hl_16 ss_hl 1 16 #f 0)
+(kern-mk-sprite 's_hl_17 ss_hl 1 17 #f 0)
+(kern-mk-sprite 's_hl_18 ss_hl 1 18 #f 0)
+(kern-mk-sprite 's_hl_19 ss_hl 1 19 #f 0)
+(kern-mk-sprite 's_hl_20 ss_hl 1 20 #f 0)
+(kern-mk-sprite 's_hl_21 ss_hl 1 21 #f 0)
+(kern-mk-sprite 's_hl_22 ss_hl 1 22 #f 0)
+(kern-mk-sprite 's_hl_23 ss_hl 1 23 #f 0)
+(kern-mk-sprite 's_hl_24 ss_hl 1 24 #f 0)
+(kern-mk-sprite 's_hl_25 ss_hl 1 25 #f 0)
+(kern-mk-sprite 's_hl_26 ss_hl 1 26 #f 0)
+(kern-mk-sprite 's_hl_27 ss_hl 1 27 #f 0)
+(kern-mk-sprite 's_hl_28 ss_hl 1 28 #f 0)
+(kern-mk-sprite 's_hl_29 ss_hl 1 29 #f 0)
+(kern-mk-sprite 's_hl_30 ss_hl 1 30 #f 0)
+(kern-mk-sprite 's_hl_31 ss_hl 1 31 #f 0)
+(kern-mk-sprite 's_hl_32 ss_hl 1 32 #f 0)
+(kern-mk-sprite 's_hl_33 ss_hl 1 33 #f 0)
+(kern-mk-sprite 's_hl_34 ss_hl 1 34 #f 0)
+(kern-mk-sprite 's_hl_35 ss_hl 1 35 #f 0)
+(kern-mk-sprite 's_hl_36 ss_hl 1 36 #f 0)
+(kern-mk-sprite 's_hl_37 ss_hl 1 37 #f 0)
+(kern-mk-sprite 's_hl_38 ss_hl 1 38 #f 0)
+(kern-mk-sprite 's_hl_39 ss_hl 1 39 #f 0)
+(kern-mk-sprite 's_hl_40 ss_hl 1 40 #f 0)
+(kern-mk-sprite 's_hl_41 ss_hl 1 41 #f 0)
+(kern-mk-sprite 's_hl_42 ss_hl 1 42 #f 0)
+(kern-mk-sprite 's_hl_43 ss_hl 1 43 #f 0)
+(kern-mk-sprite 's_hl_44 ss_hl 1 44 #f 0)
+(kern-mk-sprite 's_hl_45 ss_hl 1 45 #f 0)
+(kern-mk-sprite 's_hl_46 ss_hl 1 46 #f 0)
+(kern-mk-sprite 's_hl_47 ss_hl 1 47 #f 0)
+(kern-mk-sprite 's_hl_48 ss_hl 1 48 #f 0)
+(kern-mk-sprite 's_hl_49 ss_hl 1 49 #f 0)
+(kern-mk-sprite 's_hl_50 ss_hl 1 50 #f 0)
+(kern-mk-sprite 's_hl_51 ss_hl 1 51 #f 0)
+(kern-mk-sprite 's_hl_52 ss_hl 1 52 #f 0)
+(kern-mk-sprite 's_hl_53 ss_hl 1 53 #f 0)
+(kern-mk-sprite 's_hl_54 ss_hl 1 54 #f 0)
+(kern-mk-sprite 's_hl_55 ss_hl 1 55 #f 0)
+(kern-mk-sprite 's_hl_56 ss_hl 1 56 #f 0)
+(kern-mk-sprite 's_hl_57 ss_hl 1 57 #f 0)
+(kern-mk-sprite 's_hl_58 ss_hl 1 58 #f 0)
+(kern-mk-sprite 's_hl_59 ss_hl 1 59 #f 0)
+(kern-mk-sprite 's_hl_60 ss_hl 1 60 #f 0)
+(kern-mk-sprite 's_hl_61 ss_hl 1 61 #f 0)
+(kern-mk-sprite 's_hl_62 ss_hl 1 62 #f 0)
+(kern-mk-sprite 's_hl_63 ss_hl 1 63 #f 0)
+(kern-mk-sprite 's_hl_64 ss_hl 1 64 #f 0)
+(kern-mk-sprite 's_hl_65 ss_hl 1 65 #f 0)
+(kern-mk-sprite 's_hl_66 ss_hl 1 66 #f 0)
+(kern-mk-sprite 's_hl_67 ss_hl 1 67 #f 0)
+(kern-mk-sprite 's_hl_68 ss_hl 1 68 #f 0)
+(kern-mk-sprite 's_hl_69 ss_hl 1 69 #f 0)
+(kern-mk-sprite 's_hl_70 ss_hl 1 70 #f 0)
+(kern-mk-sprite 's_hl_71 ss_hl 1 71 #f 0)
+(kern-mk-sprite 's_hl_72 ss_hl 1 72 #f 0)
+(kern-mk-sprite 's_hl_73 ss_hl 1 73 #f 0)
+(kern-mk-sprite 's_hl_74 ss_hl 1 74 #f 0)
+(kern-mk-sprite 's_hl_75 ss_hl 1 75 #f 0)
+(kern-mk-sprite 's_hl_76 ss_hl 1 76 #f 0)
+(kern-mk-sprite 's_hl_77 ss_hl 1 77 #f 0)
+(kern-mk-sprite 's_hl_78 ss_hl 1 78 #f 0)
+(kern-mk-sprite 's_hl_79 ss_hl 1 79 #f 0)
+(kern-mk-sprite 's_hl_80 ss_hl 1 80 #f 0)
+(kern-mk-sprite 's_hl_81 ss_hl 1 81 #f 0)
+(kern-mk-sprite 's_hl_82 ss_hl 1 82 #f 0)
+(kern-mk-sprite 's_hl_83 ss_hl 1 83 #f 0)
+(kern-mk-sprite 's_hl_84 ss_hl 1 84 #f 0)
+(kern-mk-sprite 's_hl_85 ss_hl 1 85 #f 0)
+(kern-mk-sprite 's_hl_86 ss_hl 1 86 #f 0)
+(kern-mk-sprite 's_hl_87 ss_hl 1 87 #f 0)
+(kern-mk-sprite 's_hl_88 ss_hl 1 88 #f 0)
+(kern-mk-sprite 's_hl_89 ss_hl 1 89 #f 0)
+(kern-mk-sprite 's_hl_90 ss_hl 1 90 #f 0)
+(kern-mk-sprite 's_hl_91 ss_hl 1 91 #f 0)
+(kern-mk-sprite 's_hl_92 ss_hl 1 92 #f 0)
+(kern-mk-sprite 's_hl_93 ss_hl 1 93 #f 0)
+(kern-mk-sprite 's_hl_94 ss_hl 1 94 #f 0)
+(kern-mk-sprite 's_hl_95 ss_hl 1 95 #f 0)
+(kern-mk-sprite 's_hl_96 ss_hl 1 96 #f 0)
+(kern-mk-sprite 's_hl_97 ss_hl 1 97 #f 0)
+(kern-mk-sprite 's_hl_98 ss_hl 1 98 #f 0)
+(kern-mk-sprite 's_hl_99 ss_hl 1 99 #f 0)
+(kern-mk-sprite 's_hl_100 ss_hl 1 100 #f 0)
+(kern-mk-sprite 's_hl_101 ss_hl 1 101 #f 0)
+(kern-mk-sprite 's_hl_102 ss_hl 1 102 #f 0)
+(kern-mk-sprite 's_hl_103 ss_hl 1 103 #f 0)
+(kern-mk-sprite 's_hl_104 ss_hl 1 104 #f 0)
+(kern-mk-sprite 's_hl_105 ss_hl 1 105 #f 0)
+(kern-mk-sprite 's_hl_106 ss_hl 1 106 #f 0)
+(kern-mk-sprite 's_hl_107 ss_hl 1 107 #f 0)
+(kern-mk-sprite 's_hl_108 ss_hl 1 108 #f 0)
+(kern-mk-sprite 's_hl_109 ss_hl 1 109 #f 0)
+(kern-mk-sprite 's_hl_110 ss_hl 1 110 #f 0)
+(kern-mk-sprite 's_hl_111 ss_hl 1 111 #f 0)
+(kern-mk-sprite 's_hl_112 ss_hl 1 112 #f 0)
+(kern-mk-sprite 's_hl_113 ss_hl 1 113 #f 0)
+(kern-mk-sprite 's_hl_114 ss_hl 1 114 #f 0)
+(kern-mk-sprite 's_hl_115 ss_hl 1 115 #f 0)
+(kern-mk-sprite 's_hl_116 ss_hl 1 116 #f 0)
+(kern-mk-sprite 's_hl_117 ss_hl 1 117 #f 0)
+(kern-mk-sprite 's_hl_118 ss_hl 1 118 #f 0)
+(kern-mk-sprite 's_hl_119 ss_hl 1 119 #f 0)
+(kern-mk-sprite 's_hl_120 ss_hl 1 120 #f 0)
+(kern-mk-sprite 's_hl_121 ss_hl 1 121 #f 0)
+(kern-mk-sprite 's_hl_122 ss_hl 1 122 #f 0)
+(kern-mk-sprite 's_hl_123 ss_hl 1 123 #f 0)
+(kern-mk-sprite 's_hl_124 ss_hl 1 124 #f 0)
+(kern-mk-sprite 's_hl_125 ss_hl 1 125 #f 0)
+(kern-mk-sprite 's_hl_126 ss_hl 1 126 #f 0)
+(kern-mk-sprite 's_hl_127 ss_hl 1 127 #f 0)
+(kern-mk-sprite 's_hl_128 ss_hl 1 128 #f 0)
+(kern-mk-sprite 's_hl_129 ss_hl 1 129 #f 0)
+(kern-mk-sprite 's_hl_130 ss_hl 1 130 #f 0)
+(kern-mk-sprite 's_hl_131 ss_hl 1 131 #f 0)
+(kern-mk-sprite 's_hl_132 ss_hl 1 132 #f 0)
+(kern-mk-sprite 's_hl_133 ss_hl 1 133 #f 0)
+(kern-mk-sprite 's_hl_134 ss_hl 1 134 #f 0)
+(kern-mk-sprite 's_hl_135 ss_hl 1 135 #f 0)
+(kern-mk-sprite 's_hl_136 ss_hl 1 136 #f 0)
+(kern-mk-sprite 's_hl_137 ss_hl 1 137 #f 0)
+(kern-mk-sprite 's_hl_138 ss_hl 1 138 #f 0)
+(kern-mk-sprite 's_hl_139 ss_hl 1 139 #f 0)
+(kern-mk-sprite 's_hl_140 ss_hl 1 140 #f 0)
+(kern-mk-sprite 's_hl_141 ss_hl 1 141 #f 0)
+(kern-mk-sprite 's_hl_142 ss_hl 1 142 #f 0)
+(kern-mk-sprite 's_hl_143 ss_hl 1 143 #f 0)
+(kern-mk-sprite 's_hl_144 ss_hl 1 144 #f 0)
+(kern-mk-sprite 's_hl_145 ss_hl 1 145 #f 0)
+(kern-mk-sprite 's_hl_146 ss_hl 1 146 #f 0)
+(kern-mk-sprite 's_hl_147 ss_hl 1 147 #f 0)
+(kern-mk-sprite 's_hl_148 ss_hl 1 148 #f 0)
+(kern-mk-sprite 's_hl_149 ss_hl 1 149 #f 0)
+(kern-mk-sprite 's_hl_150 ss_hl 1 150 #f 0)
+(kern-mk-sprite 's_hl_151 ss_hl 1 151 #f 0)
+
+(kern-mk-terrain 't_hl_0 "logo" pclass-wall s_hl_0 trn 0 nil)
+(kern-mk-terrain 't_hl_1 "logo" pclass-wall s_hl_1 trn 0 nil)
+(kern-mk-terrain 't_hl_2 "logo" pclass-wall s_hl_2 trn 0 nil)
+(kern-mk-terrain 't_hl_3 "logo" pclass-wall s_hl_3 trn 0 nil)
+(kern-mk-terrain 't_hl_4 "logo" pclass-wall s_hl_4 trn 0 nil)
+(kern-mk-terrain 't_hl_5 "logo" pclass-wall s_hl_5 trn 0 nil)
+(kern-mk-terrain 't_hl_6 "logo" pclass-wall s_hl_6 trn 0 nil)
+(kern-mk-terrain 't_hl_7 "logo" pclass-wall s_hl_7 trn 0 nil)
+(kern-mk-terrain 't_hl_8 "logo" pclass-wall s_hl_8 trn 0 nil)
+(kern-mk-terrain 't_hl_9 "logo" pclass-wall s_hl_9 trn 0 nil)
+(kern-mk-terrain 't_hl_10 "logo" pclass-wall s_hl_10 trn 0 nil)
+(kern-mk-terrain 't_hl_11 "logo" pclass-wall s_hl_11 trn 0 nil)
+(kern-mk-terrain 't_hl_12 "logo" pclass-wall s_hl_12 trn 0 nil)
+(kern-mk-terrain 't_hl_13 "logo" pclass-wall s_hl_13 trn 0 nil)
+(kern-mk-terrain 't_hl_14 "logo" pclass-wall s_hl_14 trn 0 nil)
+(kern-mk-terrain 't_hl_15 "logo" pclass-wall s_hl_15 trn 0 nil)
+(kern-mk-terrain 't_hl_16 "logo" pclass-wall s_hl_16 trn 0 nil)
+(kern-mk-terrain 't_hl_17 "logo" pclass-wall s_hl_17 trn 0 nil)
+(kern-mk-terrain 't_hl_18 "logo" pclass-wall s_hl_18 trn 0 nil)
+(kern-mk-terrain 't_hl_19 "logo" pclass-wall s_hl_19 trn 0 nil)
+(kern-mk-terrain 't_hl_20 "logo" pclass-wall s_hl_20 trn 0 nil)
+(kern-mk-terrain 't_hl_21 "logo" pclass-wall s_hl_21 trn 0 nil)
+(kern-mk-terrain 't_hl_22 "logo" pclass-wall s_hl_22 trn 0 nil)
+(kern-mk-terrain 't_hl_23 "logo" pclass-wall s_hl_23 trn 0 nil)
+(kern-mk-terrain 't_hl_24 "logo" pclass-wall s_hl_24 trn 0 nil)
+(kern-mk-terrain 't_hl_25 "logo" pclass-wall s_hl_25 trn 0 nil)
+(kern-mk-terrain 't_hl_26 "logo" pclass-wall s_hl_26 trn 0 nil)
+(kern-mk-terrain 't_hl_27 "logo" pclass-wall s_hl_27 trn 0 nil)
+(kern-mk-terrain 't_hl_28 "logo" pclass-wall s_hl_28 trn 0 nil)
+(kern-mk-terrain 't_hl_29 "logo" pclass-wall s_hl_29 trn 0 nil)
+(kern-mk-terrain 't_hl_30 "logo" pclass-wall s_hl_30 trn 0 nil)
+(kern-mk-terrain 't_hl_31 "logo" pclass-wall s_hl_31 trn 0 nil)
+(kern-mk-terrain 't_hl_32 "logo" pclass-wall s_hl_32 trn 0 nil)
+(kern-mk-terrain 't_hl_33 "logo" pclass-wall s_hl_33 trn 0 nil)
+(kern-mk-terrain 't_hl_34 "logo" pclass-wall s_hl_34 trn 0 nil)
+(kern-mk-terrain 't_hl_35 "logo" pclass-wall s_hl_35 trn 0 nil)
+(kern-mk-terrain 't_hl_36 "logo" pclass-wall s_hl_36 trn 0 nil)
+(kern-mk-terrain 't_hl_37 "logo" pclass-wall s_hl_37 trn 0 nil)
+(kern-mk-terrain 't_hl_38 "logo" pclass-wall s_hl_38 trn 0 nil)
+(kern-mk-terrain 't_hl_39 "logo" pclass-wall s_hl_39 trn 0 nil)
+(kern-mk-terrain 't_hl_40 "logo" pclass-wall s_hl_40 trn 0 nil)
+(kern-mk-terrain 't_hl_41 "logo" pclass-wall s_hl_41 trn 0 nil)
+(kern-mk-terrain 't_hl_42 "logo" pclass-wall s_hl_42 trn 0 nil)
+(kern-mk-terrain 't_hl_43 "logo" pclass-wall s_hl_43 trn 0 nil)
+(kern-mk-terrain 't_hl_44 "logo" pclass-wall s_hl_44 trn 0 nil)
+(kern-mk-terrain 't_hl_45 "logo" pclass-wall s_hl_45 trn 0 nil)
+(kern-mk-terrain 't_hl_46 "logo" pclass-wall s_hl_46 trn 0 nil)
+(kern-mk-terrain 't_hl_47 "logo" pclass-wall s_hl_47 trn 0 nil)
+(kern-mk-terrain 't_hl_48 "logo" pclass-wall s_hl_48 trn 0 nil)
+(kern-mk-terrain 't_hl_49 "logo" pclass-wall s_hl_49 trn 0 nil)
+(kern-mk-terrain 't_hl_50 "logo" pclass-wall s_hl_50 trn 0 nil)
+(kern-mk-terrain 't_hl_51 "logo" pclass-wall s_hl_51 trn 0 nil)
+(kern-mk-terrain 't_hl_52 "logo" pclass-wall s_hl_52 trn 0 nil)
+(kern-mk-terrain 't_hl_53 "logo" pclass-wall s_hl_53 trn 0 nil)
+(kern-mk-terrain 't_hl_54 "logo" pclass-wall s_hl_54 trn 0 nil)
+(kern-mk-terrain 't_hl_55 "logo" pclass-wall s_hl_55 trn 0 nil)
+(kern-mk-terrain 't_hl_56 "logo" pclass-wall s_hl_56 trn 0 nil)
+(kern-mk-terrain 't_hl_57 "logo" pclass-wall s_hl_57 trn 0 nil)
+(kern-mk-terrain 't_hl_58 "logo" pclass-wall s_hl_58 trn 0 nil)
+(kern-mk-terrain 't_hl_59 "logo" pclass-wall s_hl_59 trn 0 nil)
+(kern-mk-terrain 't_hl_60 "logo" pclass-wall s_hl_60 trn 0 nil)
+(kern-mk-terrain 't_hl_61 "logo" pclass-wall s_hl_61 trn 0 nil)
+(kern-mk-terrain 't_hl_62 "logo" pclass-wall s_hl_62 trn 0 nil)
+(kern-mk-terrain 't_hl_63 "logo" pclass-wall s_hl_63 trn 0 nil)
+(kern-mk-terrain 't_hl_64 "logo" pclass-wall s_hl_64 trn 0 nil)
+(kern-mk-terrain 't_hl_65 "logo" pclass-wall s_hl_65 trn 0 nil)
+(kern-mk-terrain 't_hl_66 "logo" pclass-wall s_hl_66 trn 0 nil)
+(kern-mk-terrain 't_hl_67 "logo" pclass-wall s_hl_67 trn 0 nil)
+(kern-mk-terrain 't_hl_68 "logo" pclass-wall s_hl_68 trn 0 nil)
+(kern-mk-terrain 't_hl_69 "logo" pclass-wall s_hl_69 trn 0 nil)
+(kern-mk-terrain 't_hl_70 "logo" pclass-wall s_hl_70 trn 0 nil)
+(kern-mk-terrain 't_hl_71 "logo" pclass-wall s_hl_71 trn 0 nil)
+(kern-mk-terrain 't_hl_72 "logo" pclass-wall s_hl_72 trn 0 nil)
+(kern-mk-terrain 't_hl_73 "logo" pclass-wall s_hl_73 trn 0 nil)
+(kern-mk-terrain 't_hl_74 "logo" pclass-wall s_hl_74 trn 0 nil)
+(kern-mk-terrain 't_hl_75 "logo" pclass-wall s_hl_75 trn 0 nil)
+(kern-mk-terrain 't_hl_76 "logo" pclass-wall s_hl_76 trn 0 nil)
+(kern-mk-terrain 't_hl_77 "logo" pclass-wall s_hl_77 trn 0 nil)
+(kern-mk-terrain 't_hl_78 "logo" pclass-wall s_hl_78 trn 0 nil)
+(kern-mk-terrain 't_hl_79 "logo" pclass-wall s_hl_79 trn 0 nil)
+(kern-mk-terrain 't_hl_80 "logo" pclass-wall s_hl_80 trn 0 nil)
+(kern-mk-terrain 't_hl_81 "logo" pclass-wall s_hl_81 trn 0 nil)
+(kern-mk-terrain 't_hl_82 "logo" pclass-wall s_hl_82 trn 0 nil)
+(kern-mk-terrain 't_hl_83 "logo" pclass-wall s_hl_83 trn 0 nil)
+(kern-mk-terrain 't_hl_84 "logo" pclass-wall s_hl_84 trn 0 nil)
+(kern-mk-terrain 't_hl_85 "logo" pclass-wall s_hl_85 trn 0 nil)
+(kern-mk-terrain 't_hl_86 "logo" pclass-wall s_hl_86 trn 0 nil)
+(kern-mk-terrain 't_hl_87 "logo" pclass-wall s_hl_87 trn 0 nil)
+(kern-mk-terrain 't_hl_88 "logo" pclass-wall s_hl_88 trn 0 nil)
+(kern-mk-terrain 't_hl_89 "logo" pclass-wall s_hl_89 trn 0 nil)
+(kern-mk-terrain 't_hl_90 "logo" pclass-wall s_hl_90 trn 0 nil)
+(kern-mk-terrain 't_hl_91 "logo" pclass-wall s_hl_91 trn 0 nil)
+(kern-mk-terrain 't_hl_92 "logo" pclass-wall s_hl_92 trn 0 nil)
+(kern-mk-terrain 't_hl_93 "logo" pclass-wall s_hl_93 trn 0 nil)
+(kern-mk-terrain 't_hl_94 "logo" pclass-wall s_hl_94 trn 0 nil)
+(kern-mk-terrain 't_hl_95 "logo" pclass-wall s_hl_95 trn 0 nil)
+(kern-mk-terrain 't_hl_96 "logo" pclass-wall s_hl_96 trn 0 nil)
+(kern-mk-terrain 't_hl_97 "logo" pclass-wall s_hl_97 trn 0 nil)
+(kern-mk-terrain 't_hl_98 "logo" pclass-wall s_hl_98 trn 0 nil)
+(kern-mk-terrain 't_hl_99 "logo" pclass-wall s_hl_99 trn 0 nil)
+(kern-mk-terrain 't_hl_100 "logo" pclass-wall s_hl_100 trn 0 nil)
+(kern-mk-terrain 't_hl_101 "logo" pclass-wall s_hl_101 trn 0 nil)
+(kern-mk-terrain 't_hl_102 "logo" pclass-wall s_hl_102 trn 0 nil)
+(kern-mk-terrain 't_hl_103 "logo" pclass-wall s_hl_103 trn 0 nil)
+(kern-mk-terrain 't_hl_104 "logo" pclass-wall s_hl_104 trn 0 nil)
+(kern-mk-terrain 't_hl_105 "logo" pclass-wall s_hl_105 trn 0 nil)
+(kern-mk-terrain 't_hl_106 "logo" pclass-wall s_hl_106 trn 0 nil)
+(kern-mk-terrain 't_hl_107 "logo" pclass-wall s_hl_107 trn 0 nil)
+(kern-mk-terrain 't_hl_108 "logo" pclass-wall s_hl_108 trn 0 nil)
+(kern-mk-terrain 't_hl_109 "logo" pclass-wall s_hl_109 trn 0 nil)
+(kern-mk-terrain 't_hl_110 "logo" pclass-wall s_hl_110 trn 0 nil)
+(kern-mk-terrain 't_hl_111 "logo" pclass-wall s_hl_111 trn 0 nil)
+(kern-mk-terrain 't_hl_112 "logo" pclass-wall s_hl_112 trn 0 nil)
+(kern-mk-terrain 't_hl_113 "logo" pclass-wall s_hl_113 trn 0 nil)
+(kern-mk-terrain 't_hl_114 "logo" pclass-wall s_hl_114 trn 0 nil)
+(kern-mk-terrain 't_hl_115 "logo" pclass-wall s_hl_115 trn 0 nil)
+(kern-mk-terrain 't_hl_116 "logo" pclass-wall s_hl_116 trn 0 nil)
+(kern-mk-terrain 't_hl_117 "logo" pclass-wall s_hl_117 trn 0 nil)
+(kern-mk-terrain 't_hl_118 "logo" pclass-wall s_hl_118 trn 0 nil)
+(kern-mk-terrain 't_hl_119 "logo" pclass-wall s_hl_119 trn 0 nil)
+(kern-mk-terrain 't_hl_120 "logo" pclass-wall s_hl_120 trn 0 nil)
+(kern-mk-terrain 't_hl_121 "logo" pclass-wall s_hl_121 trn 0 nil)
+(kern-mk-terrain 't_hl_122 "logo" pclass-wall s_hl_122 trn 0 nil)
+(kern-mk-terrain 't_hl_123 "logo" pclass-wall s_hl_123 trn 0 nil)
+(kern-mk-terrain 't_hl_124 "logo" pclass-wall s_hl_124 trn 0 nil)
+(kern-mk-terrain 't_hl_125 "logo" pclass-wall s_hl_125 trn 0 nil)
+(kern-mk-terrain 't_hl_126 "logo" pclass-wall s_hl_126 trn 0 nil)
+(kern-mk-terrain 't_hl_127 "logo" pclass-wall s_hl_127 trn 0 nil)
+(kern-mk-terrain 't_hl_128 "logo" pclass-wall s_hl_128 trn 0 nil)
+(kern-mk-terrain 't_hl_129 "logo" pclass-wall s_hl_129 trn 0 nil)
+(kern-mk-terrain 't_hl_130 "logo" pclass-wall s_hl_130 trn 0 nil)
+(kern-mk-terrain 't_hl_131 "logo" pclass-wall s_hl_131 trn 0 nil)
+(kern-mk-terrain 't_hl_132 "logo" pclass-wall s_hl_132 trn 0 nil)
+(kern-mk-terrain 't_hl_133 "logo" pclass-wall s_hl_133 trn 0 nil)
+(kern-mk-terrain 't_hl_134 "logo" pclass-wall s_hl_134 trn 0 nil)
+(kern-mk-terrain 't_hl_135 "logo" pclass-wall s_hl_135 trn 0 nil)
+(kern-mk-terrain 't_hl_136 "logo" pclass-wall s_hl_136 trn 0 nil)
+(kern-mk-terrain 't_hl_137 "logo" pclass-wall s_hl_137 trn 0 nil)
+(kern-mk-terrain 't_hl_138 "logo" pclass-wall s_hl_138 trn 0 nil)
+(kern-mk-terrain 't_hl_139 "logo" pclass-wall s_hl_139 trn 0 nil)
+(kern-mk-terrain 't_hl_140 "logo" pclass-wall s_hl_140 trn 0 nil)
+(kern-mk-terrain 't_hl_141 "logo" pclass-wall s_hl_141 trn 0 nil)
+(kern-mk-terrain 't_hl_142 "logo" pclass-wall s_hl_142 trn 0 nil)
+(kern-mk-terrain 't_hl_143 "logo" pclass-wall s_hl_143 trn 0 nil)
+(kern-mk-terrain 't_hl_144 "logo" pclass-wall s_hl_144 trn 0 nil)
+(kern-mk-terrain 't_hl_145 "logo" pclass-wall s_hl_145 trn 0 nil)
+(kern-mk-terrain 't_hl_146 "logo" pclass-wall s_hl_146 trn 0 nil)
+(kern-mk-terrain 't_hl_147 "logo" pclass-wall s_hl_147 trn 0 nil)
+(kern-mk-terrain 't_hl_148 "logo" pclass-wall s_hl_148 trn 0 nil)
+(kern-mk-terrain 't_hl_149 "logo" pclass-wall s_hl_149 trn 0 nil)
+(kern-mk-terrain 't_hl_150 "logo" pclass-wall s_hl_150 trn 0 nil)
+(kern-mk-terrain 't_hl_151 "logo" pclass-wall s_hl_151 trn 0 nil)
+
+;; define our own palette to include the logo terrain
+(kern-mk-palette 'pal_expanded
+  (list
+    ;; NOTE: "x#" is reserved for blocking mechanisms, see block-teleporting in
+    ;; naz.scm
+    (list  "xx"   t_wall)               ;; "wall"
+    (list  "__"   t_deep)               ;; "deep water"
+    (list  "_!"   t_sunlit_deep)               ;; "deep water"
+    (list  "~*"   t_blendable_shoals)            ;; "shallow water"
+    (list  "_s"   t_sludge)
+    (list  "~s"   t_shallow_sludge)
+    (list  "dd"   t_dirt)
+    (list  "gg"   t_gravel)
+	
+    (list  "%%"   t_bog)                ;; "bog"
+    (list  ".."   t_grass)              ;; "grass"
+    (list  ".!"   t_sunlit_grass)              ;; "grass"
+    (list  "tt"   t_trees)              ;; "trees"
+    (list  "t|"   t_trees_d)            ;; "trees denser"
+
+    (list  "||"   t_forest)             ;; "forest"
+    (list  "|X"   t_forest_d)           ;; "forest (denser)"
+    (list  "|t"   t_forest_l)           ;; "forest (lighter)"
+    (list  "|."   t_forest_v)           ;; "forest (non-LOS-blocking)"
+    (list  "|v"   t_forest_b)           ;; "forest (totally LOS-blocking)"
+
+    (list  "{{"   t_hills)              ;; "hills"
+
+    (list  "^^"   t_mountains)          ;; "mountains"
+    (list  "^."   t_mountains_v)        ;; "mountains" (non-LOS-blocking)
+    (list  "^v"   t_mountains_b)        ;; "mountains" (below player)
+    (list  "^~"   t_fake_mountains)
+
+    (list  ",,"   t_flagstones)         ;; "flagstones"
+    (list  "~,"   t_inv_wall)
+    (list  "d,"   t_doorway)
+    (list  "cc"   t_cobblestone)        ;; "cobblestone"
+    (list  "ee"   t_deck)               ;; "deck"
+    (list  "oo"   t_mast)               ;; "mast"
+    (list  "ff"   t_fire_terrain)       ;; "fire"
+    (list  "!!"   t_lava)               ;; "lava"
+    (list  "~!"   t_fake_lava)
+    (list  "!_"   t_deep_lava)
+    (list  "&&"   t_fireplace)          ;; "fireplace"
+
+    (list  "x."   t_wall_v)             ;; "wall"  (non-LOS-blocking)
+    (list  "~x"   t_fake_wall)
+
+    (list  "**"   t_stars)              ;; "stars"
+	(list  "*."   t_void)
+    (list  "??"   t_secret_door)        ;; "secret door"
+    (list  "pp"   t_pillar)             ;; "pillar"
+    (list  "~p"   t_false_pillar)
+    (list  "bb"   t_boulder)            ;; "boulder"
+    (list  "b~"   t_water_rocks)        ;; "boulder" in water
+	
+    (list  "rr"   t_wall_rock)          ;; "rock wall"
+    (list  "r."   t_wall_rock_v)        ;; "rock wall"  (non-LOS-blocking)
+    (list  "~r"   t_fake_wall_rock)     ;; "rock wall"  (fake)
+
+    (list  "WW"   t_ships_wheel)        ;; "ship's wheel"
+    (list  "x!"   t_wall_torch)         ;; "wall torch"
+    (list  "##"   t_ship_hull)          ;; "ship's hull"
+    (list  "#>"   t_ship_hull2)          ;; "ship's hull (LOS-blocking)"
+
+    (list  ".A"   t_a)                  ;; "an A"
+    (list  ".B"   t_b)                  ;; "a B"
+    (list  "?B"   t_fake_b)                  ;; "a B"
+    (list  ".C"   t_c)                  ;; "a C"
+    (list  ".D"   t_d)                  ;; "a D"
+    (list  ".E"   t_e)                  ;; "an E"
+    (list  ".F"   t_f)                  ;; "an F"
+    (list  ".G"   t_g)                  ;; "a G"
+    (list  ".H"   t_h)                  ;; "an H"
+    (list  ".I"   t_i)                  ;; "an I"
+    (list  ".J"   t_j)                  ;; "a J"
+    (list  ".K"   t_k)                  ;; "a K"
+    (list  ".L"   t_l)                  ;; "an L"
+    (list  ".M"   t_m)                  ;; "an M"
+    (list  ".N"   t_n)                  ;; "an N"
+    (list  ".O"   t_o)                  ;; "an O"
+    (list  "~O"   t_fake_o)
+    (list  ".P"   t_p)                  ;; "a P"
+    (list  ".Q"   t_q)                  ;; "a Q"
+    (list  ".R"   t_r)                  ;; "an R"
+    (list  ".S"   t_s)                  ;; "an S"
+    (list  ".T"   t_t)                  ;; "a T"
+    (list  ".U"   t_u)                  ;; "a U"
+    (list  ".V"   t_v)                  ;; "a V"
+    (list  ".W"   t_w)                  ;; "a W"
+    (list  ".X"   t_x)                  ;; "an X"
+    (list  ".Y"   t_y)                  ;; "a Y"
+    (list  ".Z"   t_z)                  ;; "a Z"
+
+    (list  ",A"   t_rune_a)             ;; "a rune"
+    (list  ",B"   t_rune_b)             ;; "a rune"
+    (list  ",C"   t_rune_c)             ;; "a rune"
+    (list  ",D"   t_rune_d)             ;; "a rune"
+    (list  ",E"   t_rune_e)             ;; "a rune"
+    (list  ",F"   t_rune_f)             ;; "a rune"
+    (list  ",G"   t_rune_g)             ;; "a rune"
+    (list  ",H"   t_rune_h)             ;; "a rune"
+    (list  ",I"   t_rune_i)             ;; "a rune"
+    (list  ",J"   t_rune_j)             ;; "a rune"
+    (list  ",K"   t_rune_k)             ;; "a rune"
+    (list  ",L"   t_rune_l)             ;; "a rune"
+    (list  ",M"   t_rune_m)             ;; "a rune"
+    (list  ",N"   t_rune_n)             ;; "a rune"
+    (list  ",O"   t_rune_o)             ;; "a rune"
+    (list  ",P"   t_rune_p)             ;; "a rune"
+    (list  ",Q"   t_rune_q)             ;; "a rune"
+    (list  ",R"   t_rune_r)             ;; "a rune"
+    (list  ",S"   t_rune_s)             ;; "a rune"
+    (list  ",T"   t_rune_t)             ;; "a rune"
+    (list  ",U"   t_rune_u)             ;; "a rune"
+    (list  ",V"   t_rune_v)             ;; "a rune"
+    (list  ",W"   t_rune_w)             ;; "a rune"
+    (list  ",X"   t_rune_x)             ;; "a rune"
+    (list  ",Y"   t_rune_y)             ;; "a rune"
+    (list  ",Z"   t_rune_z)             ;; "a rune"
+    (list  ";T"   t_rune_th)            ;; "a rune"
+    (list  ";E"   t_rune_ee)            ;; "a rune"
+    (list  ";N"   t_rune_ng)            ;; "a rune"
+    (list  ";A"   t_rune_ea)            ;; "a rune"
+    (list  ";S"   t_rune_st)            ;; "a rune"
+    (list  ";D"   t_rune_dot)           ;; "a rune"
+
+    (list  "@@"   t_counter_2x1_c)      ;; "counter"
+    (list  "[["   t_counter_2x1_w)      ;; "counter"
+    (list  "]]"   t_counter_2x1_e)      ;; "counter"
+
+    (list  "++"   t_ankh)               ;; "ankh"
+    (list  "+s"   t_statue)               ;; "ankh"
+    (list  "aa"   t_altar)              ;; "altar"
+    (list  "ar"   t_rune_altar)              ;; "altar"
+    (list  "a!"   t_active_altar)              ;; "altar"
+    (list  "<<"   t_leftwing)           ;; "castle wall"
+    (list  ">>"   t_rightwing)          ;; "castle wall"
+    (list  "w+"   t_arrow_slit)         ;; "arrow slit"
+    (list  "ws"   t_window_in_stone)    ;; "window"
+    (list  "wr"   t_window_in_rock)     ;; "window"
+    
+    (list  "=="   t_bridge_WE)          ;; "east-west bridge"
+    (list  "=|"   t_bridge_NS)          ;; "east-west bridge"
+    (list  "=!"   t_lava_bridge_NS)
+    (list  "vv"   t_chasm)              ;; "chasm"
+
+    (list "sE" t_equip_sign)
+    (list "sA" t_weapon_sign)
+    (list "sH" t_healer_sign)
+    (list "sT" t_tavern_sign)
+    (list "sI" t_inn_sign)
+    (list "sP" t_alchemy_sign)
+    (list "sR" t_magic_sign)
+    (list "sS" t_str_sign)
+    (list "sD" t_dex_sign)
+    (list "sW" t_wis_sign)
+	
+	;; blended terrains (mostly terrain + corner of something else)
+	
+	(list  "/0"   t_trail_0)            ;; "trail"
+    (list  "/1"   t_trail_1)            ;; "trail"
+    (list  "/2"   t_trail_2)            ;; "trail"
+    (list  "/3"   t_trail_3)            ;; "trail"
+    (list  "/4"   t_trail_4)            ;; "trail"
+    (list  "/5"   t_trail_5)            ;; "trail"
+    (list  "/6"   t_trail_6)            ;; "trail"
+    (list  "/7"   t_trail_7)            ;; "trail"
+    (list  "/8"   t_trail_8)            ;; "trail"
+    (list  "/9"   t_trail_9)            ;; "trail"
+    (list  "/a"   t_trail_a)            ;; "trail"
+    (list  "/b"   t_trail_b)            ;; "trail"
+    (list  "/c"   t_trail_c)            ;; "trail"
+    (list  "/d"   t_trail_d)            ;; "trail"
+    (list  "/e"   t_trail_e)            ;; "trail"
+    (list  "/f"   t_trail_f)            ;; "trail"
+	
+	(list  "~~" t_shoals)     ;; shallow + land
+    (list  "~1" t_shore_n)
+    (list  "~2" t_shore_w)
+    (list  "~3" t_shore_nw)
+    (list  "~4" t_shore_e)
+    (list  "~5" t_shore_ne)
+    (list  "~6" t_shore_we)
+    (list  "~7" t_shore_nwe)
+    (list  "~8" t_shore_s)
+    (list  "~9" t_shore_ns)
+    (list  "~a" t_shore_ws)
+    (list  "~b" t_shore_nws)
+    (list  "~c" t_shore_es)
+    (list  "~d" t_shore_nes)
+    (list  "~e" t_shore_wes)
+    (list  "~f" t_shore_c)
+	
+    (list  "--" t_shallow)            ;; water + land
+    (list  "-1" t_wshore_n)
+    (list  "-2" t_wshore_w)
+    (list  "-3" t_wshore_nw)
+    (list  "-4" t_wshore_e)
+    (list  "-5" t_wshore_ne)
+    (list  "-6" t_wshore_we)
+    (list  "-7" t_wshore_nwe)
+    (list  "-8" t_wshore_s)
+    (list  "-9" t_wshore_ns)
+    (list  "-a" t_wshore_ws)
+    (list  "-b" t_wshore_nws)
+    (list  "-c" t_wshore_es)
+    (list  "-d" t_wshore_nes)
+    (list  "-e" t_wshore_wes)
+    (list  "-f" t_wshore_c)
+	
+	(list  "_1" t_dshore_n)        ;; deep water + land
+    (list  "_2" t_dshore_w)
+    (list  "_3" t_dshore_nw)
+    (list  "_4" t_dshore_e)
+    (list  "_5" t_dshore_ne)
+    (list  "_6" t_dshore_we)
+    (list  "_7" t_dshore_nwe)
+    (list  "_8" t_dshore_s)
+    (list  "_9" t_dshore_ns)
+    (list  "_a" t_dshore_ws)
+    (list  "_b" t_dshore_nws)
+    (list  "_c" t_dshore_es)
+    (list  "_d" t_dshore_nes)
+    (list  "_e" t_dshore_wes)
+    (list  "_f" t_dshore_c)
+	
+	(list  "*1" t_voids_n)             ;; void + land
+    (list  "*2" t_voids_w)
+    (list  "*3" t_voids_nw)
+    (list  "*4" t_voids_e)
+    (list  "*5" t_voids_ne)
+    (list  "*6" t_voids_we)
+    (list  "*7" t_voids_nwe)
+    (list  "*8" t_voids_s)
+    (list  "*9" t_voids_ns)
+    (list  "*a" t_voids_ws)
+    (list  "*b" t_voids_nws)
+    (list  "*c" t_voids_es)
+    (list  "*d" t_voids_nes)
+    (list  "*e" t_voids_wes)
+    (list  "*f" t_voids_c)
+	
+	(list  "{1" t_hilledge_n)          ;; grass + hills
+    (list  "{2" t_hilledge_w)
+    (list  "{3" t_hilledge_nw)
+    (list  "{4" t_hilledge_e)
+    (list  "{5" t_hilledge_ne)
+    (list  "{6" t_hilledge_we)
+    (list  "{7" t_hilledge_nwe)
+    (list  "{8" t_hilledge_s)
+    (list  "{9" t_hilledge_ns)
+    (list  "{a" t_hilledge_ws)
+    (list  "{b" t_hilledge_nws)
+    (list  "{c" t_hilledge_es)
+    (list  "{d" t_hilledge_nes)
+    (list  "{e" t_hilledge_wes)
+    (list  "{f" t_hilledge_c)
+	
+    (list  "%3" t_bog_nw)              ;; bog + land
+    (list  "%5" t_bog_ne)
+    (list  "%7" t_bog_nwe)
+    (list  "%a" t_bog_ws)
+    (list  "%b" t_bog_nws)
+    (list  "%c" t_bog_es)
+    (list  "%d" t_bog_nes)
+    (list  "%e" t_bog_wes)
+    (list  "%f" t_bog_c)
+
+    (list  "t3" t_trees_nw)               ;; trees + grass
+    (list  "t5" t_trees_ne)
+    (list  "t7" t_trees_nwe)
+    (list  "ta" t_trees_ws)
+    (list  "tb" t_trees_nws)
+    (list  "tc" t_trees_es)
+    (list  "td" t_trees_nes)
+    (list  "te" t_trees_wes)
+    (list  "tf" t_trees_c)
+
+	(list  "t#" t_grasst_nw)             ;; grass + trees
+    (list  "t%" t_grasst_ne)
+    (list  "t&" t_grasst_nwe)
+    (list  "tA" t_grasst_ws)
+    (list  "tB" t_grasst_nws)
+    (list  "tC" t_grasst_es)
+    (list  "tD" t_grasst_nes)
+    (list  "tE" t_grasst_wes)
+    (list  "tF" t_grasst_c)
+	
+	(list  "~#" t_grassw_nw)           ;; grass + water
+    (list  "~%" t_grassw_ne)
+    (list  "~&" t_grassw_nwe)
+    (list  "~A" t_grassw_ws)
+    (list  "~B" t_grassw_nws)
+    (list  "~C" t_grassw_es)
+    (list  "~D" t_grassw_nes)
+    (list  "~E" t_grassw_wes)
+    (list  "~F" t_grassw_c)
+	
+	(list  "{#" t_hilli_nw)             ;; hills + grass
+    (list  "{%" t_hilli_ne)
+    (list  "{&" t_hilli_nwe)
+    (list  "{A" t_hilli_ws)
+    (list  "{B" t_hilli_nws)
+    (list  "{C" t_hilli_es)
+    (list  "{D" t_hilli_nes)
+    (list  "{E" t_hilli_wes)
+    (list  "{F" t_hilli_c)
+	
+	(list  "|#" t_forestg_nw)          ;; forest + grass
+    (list  "|%" t_forestg_ne)
+    (list  "|&" t_forestg_nwe)
+    (list  "|A" t_forestg_ws)
+    (list  "|B" t_forestg_nws)
+    (list  "|C" t_forestg_es)
+    (list  "|D" t_forestg_nes)
+    (list  "|E" t_forestg_wes)
+
+	(list  "tG" t_treew_nw)            ;; trees + water
+    (list  "tH" t_treew_ne)
+    (list  "tI" t_treew_nwe)
+    (list  "tJ" t_treew_ws)
+    (list  "tK" t_treew_nws)
+    (list  "tL" t_treew_es)
+    (list  "tM" t_treew_nes)
+    (list  "tN" t_treew_wes)
+    (list  "tO" t_treew_c)
+	
+	(list  "{G" t_hillw_nw)            ;; hills + water
+    (list  "{H" t_hillw_ne)
+    (list  "{I" t_hillw_nwe)
+    (list  "{J" t_hillw_ws)
+    (list  "{K" t_hillw_nws)
+    (list  "{L" t_hillw_es)
+    (list  "{M" t_hillw_nes)
+    (list  "{N" t_hillw_wes)
+    (list  "{O" t_hillw_c)	
+	
+	(list  "{g" t_hillv_nw)           ;; hills + void
+    (list  "{h" t_hillv_ne)
+    (list  "{i" t_hillv_nwe)
+    (list  "{j" t_hillv_ws)
+    (list  "{k" t_hillv_nws)
+    (list  "{l" t_hillv_es)
+    (list  "{m" t_hillv_nes)
+    (list  "{n" t_hillv_wes)	
+	
+	(list  ".g" t_grassv_nw)          ;; grass + void
+    (list  ".h" t_grassv_ne)
+    (list  ".i" t_grassv_nwe)
+    (list  ".j" t_grassv_ws)
+    (list  ".k" t_grassv_nws)
+    (list  ".l" t_grassv_es)
+    (list  ".m" t_grassv_nes)
+    (list  ".n" t_grassv_wes)
+	
+	(list  "^g" t_mountv_nw)        ;; mounts + void
+    (list  "^h" t_mountv_ne)
+    (list  "^i" t_mountv_nwe)
+    (list  "^j" t_mountv_ws)
+    (list  "^k" t_mountv_nws)
+    (list  "^l" t_mountv_es)
+    (list  "^m" t_mountv_nes)
+    (list  "^n" t_mountv_wes)	
+	
+	(list  "^3" t_mountg_nw)     ;; mounts + grass
+    (list  "^5" t_mountg_ne)
+    (list  "^7" t_mountg_nwe)
+    (list  "^a" t_mountg_ws)
+    (list  "^b" t_mountg_nws)
+    (list  "^c" t_mountg_es)
+    (list  "^d" t_mountg_nes)
+    (list  "^e" t_mountg_wes)
+    (list  "^f" t_mountg_c)	
+	
+	(list  "^G" t_mountw_nw)        ;; mounts + water
+    (list  "^H" t_mountw_ne) 
+    (list  "^I" t_mountw_nwe)
+    (list  "^J" t_mountw_ws)
+    (list  "^K" t_mountw_nws)
+    (list  "^L" t_mountw_es)
+    (list  "^M" t_mountw_nes)
+    (list  "^N" t_mountw_wes)
+    (list  "^O" t_mountw_c)	
+	
+    (list  "!3" t_lava_nw)        ;; lava + land
+    (list  "!5" t_lava_ne)
+    (list  "!6" t_lava_we)
+    (list  "!7" t_lava_nwe)
+    (list  "!a" t_lava_ws)
+    (list  "!b" t_lava_nws)
+    (list  "!c" t_lava_es)
+    (list  "!d" t_lava_nes)
+    (list  "!e" t_lava_wes)
+    (list  "!f" t_lava_c)
+    
+    (list	"#=" t_rail_ew)
+    (list	"#|" t_rail_ns)
+    (list	"#a" t_bulwark_n)
+    (list	"#b" t_bulwark_w)
+    (list	"#c" t_bulwark_e)
+    (list	"#d" t_bulwark_s)
+    (list	"#A" t_bulwark_v_n)
+    (list	"#B" t_bulwark_v_w)
+    (list	"#C" t_bulwark_v_e)
+    (list	"#D" t_bulwark_v_s)
+    (list	"#e" t_bulwark_w_nw)
+    (list	"#f" t_bulwark_w_ne)
+    (list	"#g" t_bulwark_w_sw)
+    (list	"#h" t_bulwark_w_se)
+    (list	"#E" t_bulwark_d_nw)
+    (list	"#F" t_bulwark_d_ne)
+    (list	"#G" t_bulwark_d_sw)
+    (list	"#H" t_bulwark_d_se)  
+    (list	"#i" t_bulwark_v_nw)
+    (list	"#j" t_bulwark_v_ne)
+    (list	"#k" t_bulwark_v_sw)
+    (list	"#l" t_bulwark_v_se)
+    (list	"#I" t_bulwark_x_nw)
+    (list	"#J" t_bulwark_x_ne)
+    (list	"#K" t_bulwark_x_sw)
+    (list	"#L" t_bulwark_x_se)
+    (list	"#s" t_bulwark_x_ns)
+    (list	"#r" t_bulwark_x_ew)    
+  
+    (list	"#m" t_tank_l)
+    (list	"#M" t_tank_d)
+    (list	"#n" t_tank_nw)
+    (list	"#o" t_tank_ne)
+    (list	"#p" t_tank_sw)
+    (list	"#q" t_tank_se)  
+    (list	"#N" t_tank_d_nw)
+    (list	"#O" t_tank_d_ne)
+    (list	"#P" t_tank_d_sw)
+    (list	"#Q" t_tank_d_se) 
+      
+    (list	"<n" t_stair_un)
+    (list	"<s" t_stair_us)
+    (list	"<w" t_stair_uw)
+    (list	"<e" t_stair_ue)
+    
+    (list	"rn" t_nat_rock)
+    (list	"r1" t_nat_rock_n)
+    (list	"r2" t_nat_rock_w)
+    (list	"r3" t_nat_rock_nw)
+    (list	"r4" t_nat_rock_e)
+    (list	"r5" t_nat_rock_ne)
+    (list	"r6" t_nat_rock_we)
+    (list	"r7" t_nat_rock_nwe)
+    (list	"r8" t_nat_rock_s)
+    (list	"r9" t_nat_rock_ns)
+    (list	"ra" t_nat_rock_ws)
+    (list	"rb" t_nat_rock_nws)
+    (list	"rc" t_nat_rock_es)
+    (list	"rd" t_nat_rock_nes)
+    (list	"re" t_nat_rock_wes)
+    (list	"rf" t_nat_rock_nwes)
+    (list	"r~" t_fake_wall_nrock)   
+
+    (list "000" t_hl_0)
+    (list "001" t_hl_1)
+    (list "002" t_hl_2)
+    (list "003" t_hl_3)
+    (list "004" t_hl_4)
+    (list "005" t_hl_5)
+    (list "006" t_hl_6)
+    (list "007" t_hl_7)
+    (list "008" t_hl_8)
+    (list "009" t_hl_9)
+    (list "010" t_hl_10)
+    (list "011" t_hl_11)
+    (list "012" t_hl_12)
+    (list "013" t_hl_13)
+    (list "014" t_hl_14)
+    (list "015" t_hl_15)
+    (list "016" t_hl_16)
+    (list "017" t_hl_17)
+    (list "018" t_hl_18)
+    (list "019" t_hl_19)
+    (list "020" t_hl_20)
+    (list "021" t_hl_21)
+    (list "022" t_hl_22)
+    (list "023" t_hl_23)
+    (list "024" t_hl_24)
+    (list "025" t_hl_25)
+    (list "026" t_hl_26)
+    (list "027" t_hl_27)
+    (list "028" t_hl_28)
+    (list "029" t_hl_29)
+    (list "030" t_hl_30)
+    (list "031" t_hl_31)
+    (list "032" t_hl_32)
+    (list "033" t_hl_33)
+    (list "034" t_hl_34)
+    (list "035" t_hl_35)
+    (list "036" t_hl_36)
+    (list "037" t_hl_37)
+    (list "038" t_hl_38)
+    (list "039" t_hl_39)
+    (list "040" t_hl_40)
+    (list "041" t_hl_41)
+    (list "042" t_hl_42)
+    (list "043" t_hl_43)
+    (list "044" t_hl_44)
+    (list "045" t_hl_45)
+    (list "046" t_hl_46)
+    (list "047" t_hl_47)
+    (list "048" t_hl_48)
+    (list "049" t_hl_49)
+    (list "050" t_hl_50)
+    (list "051" t_hl_51)
+    (list "052" t_hl_52)
+    (list "053" t_hl_53)
+    (list "054" t_hl_54)
+    (list "055" t_hl_55)
+    (list "056" t_hl_56)
+    (list "057" t_hl_57)
+    (list "058" t_hl_58)
+    (list "059" t_hl_59)
+    (list "060" t_hl_60)
+    (list "061" t_hl_61)
+    (list "062" t_hl_62)
+    (list "063" t_hl_63)
+    (list "064" t_hl_64)
+    (list "065" t_hl_65)
+    (list "066" t_hl_66)
+    (list "067" t_hl_67)
+    (list "068" t_hl_68)
+    (list "069" t_hl_69)
+    (list "070" t_hl_70)
+    (list "071" t_hl_71)
+    (list "072" t_hl_72)
+    (list "073" t_hl_73)
+    (list "074" t_hl_74)
+    (list "075" t_hl_75)
+    (list "076" t_hl_76)
+    (list "077" t_hl_77)
+    (list "078" t_hl_78)
+    (list "079" t_hl_79)
+    (list "080" t_hl_80)
+    (list "081" t_hl_81)
+    (list "082" t_hl_82)
+    (list "083" t_hl_83)
+    (list "084" t_hl_84)
+    (list "085" t_hl_85)
+    (list "086" t_hl_86)
+    (list "087" t_hl_87)
+    (list "088" t_hl_88)
+    (list "089" t_hl_89)
+    (list "090" t_hl_90)
+    (list "091" t_hl_91)
+    (list "092" t_hl_92)
+    (list "093" t_hl_93)
+    (list "094" t_hl_94)
+    (list "095" t_hl_95)
+    (list "096" t_hl_96)
+    (list "097" t_hl_97)
+    (list "098" t_hl_98)
+    (list "099" t_hl_99)
+    (list "100" t_hl_100)
+    (list "101" t_hl_101)
+    (list "102" t_hl_102)
+    (list "103" t_hl_103)
+    (list "104" t_hl_104)
+    (list "105" t_hl_105)
+    (list "106" t_hl_106)
+    (list "107" t_hl_107)
+    (list "108" t_hl_108)
+    (list "109" t_hl_109)
+    (list "110" t_hl_110)
+    (list "111" t_hl_111)
+    (list "112" t_hl_112)
+    (list "113" t_hl_113)
+    (list "114" t_hl_114)
+    (list "115" t_hl_115)
+    (list "116" t_hl_116)
+    (list "117" t_hl_117)
+    (list "118" t_hl_118)
+    (list "119" t_hl_119)
+    (list "120" t_hl_120)
+    (list "121" t_hl_121)
+    (list "122" t_hl_122)
+    (list "123" t_hl_123)
+    (list "124" t_hl_124)
+    (list "125" t_hl_125)
+    (list "126" t_hl_126)
+    (list "127" t_hl_127)
+    (list "128" t_hl_128)
+    (list "129" t_hl_129)
+    (list "130" t_hl_130)
+    (list "131" t_hl_131)
+    (list "132" t_hl_132)
+    (list "133" t_hl_133)
+    (list "134" t_hl_134)
+    (list "135" t_hl_135)
+    (list "136" t_hl_136)
+    (list "137" t_hl_137)
+    (list "138" t_hl_138)
+    (list "139" t_hl_139)
+    (list "140" t_hl_140)
+    (list "141" t_hl_141)
+    (list "142" t_hl_142)
+    (list "143" t_hl_143)
+    (list "144" t_hl_144)
+    (list "145" t_hl_145)
+    (list "146" t_hl_146)
+    (list "147" t_hl_147)
+    (list "148" t_hl_148)
+    (list "149" t_hl_149)
+    (list "150" t_hl_150)
+    (list "151" t_hl_151)
+
+  )
+) ;; palette pal_expanded
 
 ;;----------------------------------------------------------------------------
 ;; Places
@@ -742,27 +1672,47 @@
 (kern-mk-map
  'm_demo_scene 19 19 pal_expanded
  (list
-      "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx x! ,, cc cc cc ,, x! xx xx xx xx xx xx "
-      "xx xx xx xx ,, ,, ,, ,, cc cc cc ,, ,, ,, ,, xx xx xx xx "
-      "xx xx xx xx ,, cc cc cc cc ar cc cc cc cc ,, xx xx xx xx "
-      "xx xx xx x! ,, cc ar cc cc cc cc cc ar cc ,, x! xx xx xx "
-      ",, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc ,, ,, ,, ,, ,, "
-      "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
-      "cc cc cc cc cc ar cc cc cc .. cc cc cc ar cc cc cc cc cc "
-      "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
-      ",, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc ,, ,, ,, ,, ,, "
-      "xx xx xx x! ,, cc ar cc cc cc cc cc ar cc ,, x! xx xx xx "
-      "xx xx xx xx ,, cc cc cc cc ar cc cc cc cc ,, xx xx xx xx "
-      "xx xx xx xx ,, ,, ,, ,, cc cc cc ,, ,, ,, ,, xx xx xx xx "
-      "xx xx xx xx xx xx x! ,, cc cc cc ,, x! xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
+  "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
+  "019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
+  "038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
+  "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
+  "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
+  "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
+  "114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 "
+  "133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 "
+  ".. .. .. .. .. dd dd dd .. .. .. .. .. .. .. .. .. .. .."
+  ".. .. dd dd dd dd ar dd dd dd dd .. .. .. .. .. .. .. .."
+  ".. .. dd ar dd dd dd dd dd ar dd .. {f .. .. .. .. .. .."
+  ".. .. dd dd dd dd dd dd dd dd dd .. .. .. .. .. .. .. .."
+  "dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd"
+  "dd dd ar dd dd dd dd dd dd dd ar dd dd {f dd dd dd dd dd"
+  "dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd"
+  ".. .. dd dd dd dd dd dd dd dd dd .. .. .. .. .. .. .. .."
+  ".. .. dd ar dd dd dd dd dd ar dd .. .. .. .. .. .. .. .."
+  ".. .. dd dd dd dd ar dd dd dd dd .. .. .. .. .. .. .. .."
+  ".. .. .. .. .. dd dd dd .. .. .. .. .. .. .. .. .. .. .."
   )
  )
+
+;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
+;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
+;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
+;       "xx xx xx xx xx xx x! ,, cc cc cc ,, x! xx xx xx xx xx xx "
+;       "xx xx xx xx ,, ,, ,, ,, cc cc cc ,, ,, ,, ,, xx xx xx xx "
+;       "xx xx xx xx ,, cc cc cc cc ar cc cc cc cc ,, xx xx xx xx "
+;       "xx xx xx x! ,, cc ar cc cc cc cc cc ar cc ,, x! xx xx xx "
+;       ",, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc ,, ,, ,, ,, ,, "
+;       "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
+;       "cc cc cc cc cc ar cc cc cc .. cc cc cc ar cc cc cc cc cc "
+;       "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
+;       ",, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc ,, ,, ,, ,, ,, "
+;       "xx xx xx x! ,, cc ar cc cc cc cc cc ar cc ,, x! xx xx xx "
+;       "xx xx xx xx ,, cc cc cc cc ar cc cc cc cc ,, xx xx xx xx "
+;       "xx xx xx xx ,, ,, ,, ,, cc cc cc ,, ,, ,, ,, xx xx xx xx "
+;       "xx xx xx xx xx xx x! ,, cc cc cc ,, x! xx xx xx xx xx xx "
+;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
+;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
+;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
 
 (kern-mk-place
  'p_demo_scene   ; tag
@@ -770,24 +1720,24 @@
  nil             ; sprite
  m_demo_scene    ; map
  #f              ; wraps
- #t              ; underground
+ #f              ; underground
  #f              ; large-scale (wilderness)
  #f              ; tmp combat place
  nil             ; subplaces
  nil             ; neighbors
 
  (list ; objects
-  (put (guard-pt 'halberdier) 12 4)
-  (put (guard-pt 'halberdier) 4 6)
-  (put (guard-pt 'halberdier) 6 14)
-  (put (guard-pt 'halberdier) 14 12)
-   (put (guard-pt 'crossbowman) 4 12)
-   (put (guard-pt 'crossbowman) 6 4)
-   (put (guard-pt 'crossbowman) 14 6)
-   (put (guard-pt 'crossbowman) 12 14)
+  (put (guard-pt 'halberdier)   (+ xoff 12)  (+ yoff 0))
+  (put (guard-pt 'halberdier)    (+ xoff 4)  (+ yoff 2))
+  (put (guard-pt 'halberdier)    (+ xoff 6) (+ yoff 10))
+  (put (guard-pt 'halberdier)   (+ xoff 14)  (+ yoff 8))
+   (put (guard-pt 'crossbowman)  (+ xoff 4)  (+ yoff 8))
+   (put (guard-pt 'crossbowman)  (+ xoff 6)  (+ yoff 0))
+   (put (guard-pt 'crossbowman) (+ xoff 14)  (+ yoff 2))
+   (put (guard-pt 'crossbowman) (+ xoff 12) (+ yoff 10))
   (put (mk-monman) 0 0)
   (put (mk-scene-mgr) 0 0)
-  (put (kern-tag 'portal (kern-mk-obj t_portal 1)) 9 9)
+  (put (kern-tag 'portal (kern-mk-obj t_portal 1)) (+ xoff 9)  (+ yoff 5))
   )
  (list 'on-entry-to-dungeon-room) ; hooks
  nil ;; edge entrances
@@ -938,7 +1888,7 @@
 )																	
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_demo_scene 9 16))
+  (kern-obj-put-at kplayer (list p_demo_scene (+ xoff 16)  (+ yoff 5)))
 
   (kern-char-set-control-mode ch_wanderer "auto")
 
