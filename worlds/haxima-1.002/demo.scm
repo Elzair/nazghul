@@ -451,15 +451,15 @@
                                        (cons 'tinker 'normal-traveler-ai)
                                        (cons 'ranger 'normal-traveler-ai)
                                        )))
-         (path (random-select (list (list (loc-mk kplace  (+ xoff 9) (+ yoff  0)) (list  (+ xoff 9) (+ yoff  5)) #f)
-                                    (list (loc-mk kplace  (+ xoff 3) (+ yoff  5)) (list  (+ xoff 9) (+ yoff  5)) #f)
-                                    (list (loc-mk kplace (+ xoff 18) (+ yoff  5)) (list  (+ xoff 9) (+ yoff  5)) #f)
-                                    (list (loc-mk kplace  (+ xoff 9) (+ yoff 10)) (list  (+ xoff 9) (+ yoff  5)) #f)
-                                    (list (loc-mk kplace  (+ xoff 9) (+ yoff  8)) (list  (+ xoff 9) (+ yoff  0)) #t)
-                                    (list (loc-mk kplace  (+ xoff 9) (+ yoff  6)) (list  (+ xoff 9) (+ yoff 10)) #t)
-                                    (list (loc-mk kplace  (+ xoff 8) (+ yoff  5)) (list  (+ xoff 3) (+ yoff  8)) #t)
-                                    (list (loc-mk kplace (+ xoff 10) (+ yoff  5)) (list (+ xoff 18) (+ yoff  8)) #t)
-                                    )))
+         (path (random-select (list 
+                               (list (loc-mk kplace (+ xoff 20) (+ yoff  4)) (list  (+ xoff 9) (+ yoff  5)) #f)
+                               (list (loc-mk kplace (+ xoff 20) (+ yoff  5)) (list  (+ xoff 9) (+ yoff  5)) #f)
+                               (list (loc-mk kplace (+ xoff 20) (+ yoff  6)) (list  (+ xoff 9) (+ yoff  5)) #f)
+
+                               (list (loc-mk kplace (+ xoff 10) (+ yoff  4)) (list  (+ xoff 20)(+ yoff  3)) #t)
+                               (list (loc-mk kplace (+ xoff 10) (+ yoff  5)) (list  (+ xoff 20)(+ yoff  4)) #t)
+                               (list (loc-mk kplace (+ xoff 10) (+ yoff  6)) (list  (+ xoff 20)(+ yoff  5)) #t)
+                               )))
          (kchar (mk-npc (car type-ai) 9))
          )
     (npcg-set-post! (gob kchar) (cadr path))
@@ -505,14 +505,14 @@
 (define (wise-mk kplace n kmgr)
   (let* ((kchar (mk-npc 'wizard 9))
          (pos (list-ref (list 
-                         (cons (list (+ xoff 3)  (+ yoff  4)) (list (+ xoff 5)   (+ yoff  1)))
-                         (cons (list (+ xoff 9)  (+ yoff  0)) (list (+ xoff 13)  (+ yoff  1)))
-                         (cons (list (+ xoff 18) (+ yoff  4)) (list (+ xoff 13)  (+ yoff  9)))
-                         (cons (list (+ xoff 9)  (+ yoff 10)) (list (+ xoff 5)   (+ yoff  9)))
-                         (cons (list (+ xoff 3)  (+ yoff  4)) (list (+ xoff 4)   (+ yoff  5)))
-                         (cons (list (+ xoff 9)  (+ yoff  0)) (list (+ xoff 9)   (+ yoff  0)))
-                         (cons (list (+ xoff 18) (+ yoff  4)) (list (+ xoff 14)  (+ yoff  5)))
-                         (cons (list (+ xoff 9)  (+ yoff 10)) (list (+ xoff 9)   (+ yoff 10)))
+                         (cons (list (+ xoff 20) (+ yoff 4)) (list  3 11))
+                         (cons (list (+ xoff 20) (+ yoff 5)) (list  3 13))
+                         (cons (list (+ xoff 20) (+ yoff 6)) (list  5  9))
+                         (cons (list (+ xoff 20) (+ yoff 4)) (list  5 15))
+                         (cons (list (+ xoff 20) (+ yoff 5)) (list  7 15))
+                         (cons (list (+ xoff 20) (+ yoff 6)) (list  7  9))
+                         (cons (list (+ xoff 20) (+ yoff 4)) (list  9 11))
+                         (cons (list (+ xoff 20) (+ yoff 5)) (list  9 13))
                               )
                         n))
          (enter-pos (cons kplace (car pos)))
@@ -655,14 +655,14 @@
   ;;(println "scene-mgr-drop-runes")
   (kern-map-flash 100)
   (let ((kplace (loc-place (kern-obj-get-location kobj))))
-    (kern-obj-put-at (kern-tag 'rune_k (kern-mk-obj t_rune_k 1)) (loc-mk kplace (+ xoff  6)  (+ yoff  2)))
-    (kern-obj-put-at (kern-tag 'rune_p (kern-mk-obj t_rune_p 1)) (loc-mk kplace (+ xoff 12)  (+ yoff  2)))
-    (kern-obj-put-at (kern-tag 'rune_s (kern-mk-obj t_rune_s 1)) (loc-mk kplace (+ xoff 12)  (+ yoff  8)))
-    (kern-obj-put-at (kern-tag 'rune_c (kern-mk-obj t_rune_c 1)) (loc-mk kplace (+ xoff  6)  (+ yoff  8)))
-    (kern-obj-put-at (kern-tag 'rune_f (kern-mk-obj t_rune_f 1)) (loc-mk kplace (+ xoff  5)  (+ yoff  5)))
-    (kern-obj-put-at (kern-tag 'rune_w (kern-mk-obj t_rune_w 1)) (loc-mk kplace (+ xoff  9)  (+ yoff  1)))
-    (kern-obj-put-at (kern-tag 'rune_d (kern-mk-obj t_rune_d 1)) (loc-mk kplace (+ xoff 13)  (+ yoff  5)))
-    (kern-obj-put-at (kern-tag 'rune_l (kern-mk-obj t_rune_l 1)) (loc-mk kplace (+ xoff  9)  (+ yoff 10)))
+    (kern-obj-put-at (kern-tag 'rune_k (kern-mk-obj t_rune_k 1)) (loc-mk kplace  4   8))
+    (kern-obj-put-at (kern-tag 'rune_p (kern-mk-obj t_rune_p 1)) (loc-mk kplace  8   8))
+    (kern-obj-put-at (kern-tag 'rune_s (kern-mk-obj t_rune_s 1)) (loc-mk kplace 10  10))
+    (kern-obj-put-at (kern-tag 'rune_c (kern-mk-obj t_rune_c 1)) (loc-mk kplace 10  14))
+    (kern-obj-put-at (kern-tag 'rune_f (kern-mk-obj t_rune_f 1)) (loc-mk kplace  8  16))
+    (kern-obj-put-at (kern-tag 'rune_w (kern-mk-obj t_rune_w 1)) (loc-mk kplace  4  16))
+    (kern-obj-put-at (kern-tag 'rune_d (kern-mk-obj t_rune_d 1)) (loc-mk kplace  2  14))
+    (kern-obj-put-at (kern-tag 'rune_l (kern-mk-obj t_rune_l 1)) (loc-mk kplace  2  10))
     )
   (kern-map-repaint)
   (scene-mgr-advance-state! (gob kobj))
@@ -1588,47 +1588,27 @@
 (kern-mk-map
  'm_demo_scene 19 19 pal_expanded
  (list
-  "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
-  "019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
-  "038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
-  "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
-  "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
-  "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
-  "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi"
-  "fj .. .. dd dd dd dd dd dd dd .. .. .. .. .. .. .. .. fl"
-  "fj .. dd dd dd dd ar dd dd dd dd .. .. .. .. .. .. .. fl"
-  "fj .. dd ar dd dd dd dd dd ar dd .. {f .. .. .. .. .. fl"
-  "fj .. dd dd dd dd dd dd dd dd dd .. .. .. .. .. .. .. fl"
-  "fj dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd fl"
-  "fj dd ar dd dd dd dd dd dd dd ar dd dd {f dd dd dd dd fl"
-  "fj dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd fl"
-  "fj .. dd dd dd dd dd dd dd dd dd .. .. .. .. .. .. .. fl"
-  "fj .. dd ar dd dd dd dd dd ar dd .. .. .. .. .. .. .. fl"
-  "fj .. dd dd dd dd ar dd dd dd dd .. .. .. .. .. .. .. fl"
-  "fj .. .. dd dd dd dd dd dd dd .. .. .. .. .. .. .. .. fl"
-  "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo"
+      "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
+      "019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
+      "038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
+      "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
+      "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
+      "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
+      "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
+      "fj tt tt .. .. .. .. .. .. .. .. tt tt tt tt ~* tt tt fl "
+      "fj tt tt .. ar .. .. .. ar .. .. .. tt tt ~* ~* tt tt fl "
+      "fj .. .. .. .. .. .. .. .. .. .. .. {f tt ~* tt tt tt fl "
+      "fj .. ar .. .. .. .. .. .. .. ar .. .. .. ~* .. .. .. fl "
+      "fj .. .. .. .. .. dd .. .. .. .. .. dd ee ee ee dd dd fl "
+      "fj tt .. .. .. dd dd dd dd dd dd dd dd ee ee ee dd dd fl "
+      "fj .. .. .. .. .. dd .. .. .. .. .. dd ee ee ee dd dd fl "
+      "fj .. ar .. .. .. .. .. .. .. ar .. .. .. ~* .. .. .. fl "
+      "fj .. .. .. .. .. .. .. .. .. .. .. tt tt ~* tt tt tt fl "
+      "fj tt tt .. ar .. .. .. ar .. .. .. tt tt ~* ~* tt tt fl "
+      "fj tt tt .. .. .. .. .. .. .. .. tt tt tt tt ~* tt tt fl "
+      "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
   )
  )
-
-;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-;       "xx xx xx xx xx xx x! ,, cc cc cc ,, x! xx xx xx xx xx xx "
-;       "xx xx xx xx ,, ,, ,, ,, cc cc cc ,, ,, ,, ,, xx xx xx xx "
-;       "xx xx xx xx ,, cc cc cc cc ar cc cc cc cc ,, xx xx xx xx "
-;       "xx xx xx x! ,, cc ar cc cc cc cc cc ar cc ,, x! xx xx xx "
-;       ",, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc ,, ,, ,, ,, ,, "
-;       "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
-;       "cc cc cc cc cc ar cc cc cc .. cc cc cc ar cc cc cc cc cc "
-;       "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc "
-;       ",, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc ,, ,, ,, ,, ,, "
-;       "xx xx xx x! ,, cc ar cc cc cc cc cc ar cc ,, x! xx xx xx "
-;       "xx xx xx xx ,, cc cc cc cc ar cc cc cc cc ,, xx xx xx xx "
-;       "xx xx xx xx ,, ,, ,, ,, cc cc cc ,, ,, ,, ,, xx xx xx xx "
-;       "xx xx xx xx xx xx x! ,, cc cc cc ,, x! xx xx xx xx xx xx "
-;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
-;       "xx xx xx xx xx xx xx ,, cc cc cc ,, xx xx xx xx xx xx xx "
 
 (kern-mk-place
  'p_demo_scene   ; tag
@@ -1643,14 +1623,10 @@
  nil             ; neighbors
 
  (list ; objects
-  (put (guard-pt 'halberdier)   (+ xoff 12)  (+ yoff 0))
-  (put (guard-pt 'halberdier)    (+ xoff 4)  (+ yoff 2))
-  (put (guard-pt 'halberdier)    (+ xoff 6) (+ yoff 10))
-  (put (guard-pt 'halberdier)   (+ xoff 14)  (+ yoff 8))
-   (put (guard-pt 'crossbowman)  (+ xoff 4)  (+ yoff 8))
-   (put (guard-pt 'crossbowman)  (+ xoff 6)  (+ yoff 0))
-   (put (guard-pt 'crossbowman) (+ xoff 14)  (+ yoff 2))
-   (put (guard-pt 'crossbowman) (+ xoff 12) (+ yoff 10))
+  (put (guard-pt 'halberdier)   15 10)
+  (put (guard-pt 'halberdier)   15 14)
+   (put (guard-pt 'crossbowman) 13 10)
+   (put (guard-pt 'crossbowman) 13 14)
   (put (mk-monman) 0 0)
   (put (mk-scene-mgr) 0 0)
   (put (kern-tag 'portal (kern-mk-obj t_portal 1)) (+ xoff 9)  (+ yoff 5))
@@ -1673,10 +1649,10 @@
   
 (let ((kchar (kern-mk-char 
               'ch_wanderer
-              "Wanderer"       ; name
+              "John the Mute"       ; name
               sp_human              ; species
               oc_wanderer           ; occ
-              s_wanderer    ; sprite
+              s_beggar    ; sprite
               faction-player        ; starting alignment
               5 5 5                ; str/int/dex
               pc-hp-off
@@ -1804,7 +1780,7 @@
 )																	
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_demo_scene (+ xoff 16)  (+ yoff 5)))
+  (kern-obj-put-at kplayer (list p_demo_scene (+ xoff 14)  (+ yoff 3)))
 
   (kern-char-set-control-mode ch_wanderer "auto")
 
