@@ -301,6 +301,10 @@
 (load "ifc.scm")
 (load "sprite-sets.scm")
 (load "sprites.scm")
+
+(define s_altar (mk-composite-sprite (list s_grass s_altar_obj)))
+(define s_active_altar (mk-composite-sprite (list s_grass s_active_altar_obj)))
+
 (load "sounds.scm")
 (load "effects.scm")
 (load "terrains.scm")
@@ -1589,7 +1593,7 @@
  'm_demo_scene 19 19 pal_expanded
 
 	(list
-      "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
+		"000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
 		"019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
 		"038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
 		"057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
@@ -1782,7 +1786,8 @@
 
 (define (simple-start kplayer)
   (kern-obj-put-at kplayer (list p_demo_scene (+ xoff 14)  (+ yoff 3)))
-
+	(kern-map-center-camera (mk-loc p_demo_scene (+ xoff 12)  (+ yoff 5)))
+	
   (kern-char-set-control-mode ch_wanderer "auto")
 
   ;; Do this to initialize the map viewer's active view, and to replace the
