@@ -661,7 +661,8 @@ while (<FILEIN>)
 {
 	if ($inmap)
 	{
-		if ($_ !~ /"(([^"][^"] )+)"/)
+                # gmcnutt: added [^"]? for the occasional 3-wide glyph
+		if ($_ !~ /"(([^"][^"][^"]? )+)"/)
 		{
 			if (@{$mapin} > 0)
 			{
@@ -682,7 +683,6 @@ while (<FILEIN>)
 	}
 	elsif ($_ =~ /\(list/)
 	{
-
 		$mapin=[];
 		$inmap=1;
 	}
