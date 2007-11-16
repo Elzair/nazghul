@@ -396,7 +396,7 @@
 (kern-load "runes.scm")
 
 (define logo-image (kern-image-load "haximatext.png"))
-(define yoff 8)
+(define yoff 7)
 (define xoff -3)
 
 ;;----------------------------------------------------------------------------
@@ -741,9 +741,10 @@
         ))
 
 ;;----------------------------------------------------------------------------
-;; Haxima Logo Terrain
+;; Haxima Logo & Frame Terrain
 ;;----------------------------------------------------------------------------
-(kern-mk-sprite-set 'ss_hl 32 32 8 19 0 0  "haximatext.png")
+(kern-mk-sprite-set 'ss_hl 32 32 6 19 0 0  "haximatext.png")
+(kern-mk-sprite-set 'ss_gf 32 32 3  3 0 0  "gold_frame.png")
 
 (kern-mk-sprite 's_hl_0 ss_hl 1 0 #f 0)
 (kern-mk-sprite 's_hl_1 ss_hl 1 1 #f 0)
@@ -859,44 +860,16 @@
 (kern-mk-sprite 's_hl_111 ss_hl 1 111 #f 0)
 (kern-mk-sprite 's_hl_112 ss_hl 1 112 #f 0)
 (kern-mk-sprite 's_hl_113 ss_hl 1 113 #f 0)
-(kern-mk-sprite 's_hl_114 ss_hl 1 114 #f 0)
-(kern-mk-sprite 's_hl_115 ss_hl 1 115 #f 0)
-(kern-mk-sprite 's_hl_116 ss_hl 1 116 #f 0)
-(kern-mk-sprite 's_hl_117 ss_hl 1 117 #f 0)
-(kern-mk-sprite 's_hl_118 ss_hl 1 118 #f 0)
-(kern-mk-sprite 's_hl_119 ss_hl 1 119 #f 0)
-(kern-mk-sprite 's_hl_120 ss_hl 1 120 #f 0)
-(kern-mk-sprite 's_hl_121 ss_hl 1 121 #f 0)
-(kern-mk-sprite 's_hl_122 ss_hl 1 122 #f 0)
-(kern-mk-sprite 's_hl_123 ss_hl 1 123 #f 0)
-(kern-mk-sprite 's_hl_124 ss_hl 1 124 #f 0)
-(kern-mk-sprite 's_hl_125 ss_hl 1 125 #f 0)
-(kern-mk-sprite 's_hl_126 ss_hl 1 126 #f 0)
-(kern-mk-sprite 's_hl_127 ss_hl 1 127 #f 0)
-(kern-mk-sprite 's_hl_128 ss_hl 1 128 #f 0)
-(kern-mk-sprite 's_hl_129 ss_hl 1 129 #f 0)
-(kern-mk-sprite 's_hl_130 ss_hl 1 130 #f 0)
-(kern-mk-sprite 's_hl_131 ss_hl 1 131 #f 0)
-(kern-mk-sprite 's_hl_132 ss_hl 1 132 #f 0)
-(kern-mk-sprite 's_hl_133 ss_hl 1 133 #f 0)
-(kern-mk-sprite 's_hl_134 ss_hl 1 134 #f 0)
-(kern-mk-sprite 's_hl_135 ss_hl 1 135 #f 0)
-(kern-mk-sprite 's_hl_136 ss_hl 1 136 #f 0)
-(kern-mk-sprite 's_hl_137 ss_hl 1 137 #f 0)
-(kern-mk-sprite 's_hl_138 ss_hl 1 138 #f 0)
-(kern-mk-sprite 's_hl_139 ss_hl 1 139 #f 0)
-(kern-mk-sprite 's_hl_140 ss_hl 1 140 #f 0)
-(kern-mk-sprite 's_hl_141 ss_hl 1 141 #f 0)
-(kern-mk-sprite 's_hl_142 ss_hl 1 142 #f 0)
-(kern-mk-sprite 's_hl_143 ss_hl 1 143 #f 0)
-(kern-mk-sprite 's_hl_144 ss_hl 1 144 #f 0)
-(kern-mk-sprite 's_hl_145 ss_hl 1 145 #f 0)
-(kern-mk-sprite 's_hl_146 ss_hl 1 146 #f 0)
-(kern-mk-sprite 's_hl_147 ss_hl 1 147 #f 0)
-(kern-mk-sprite 's_hl_148 ss_hl 1 148 #f 0)
-(kern-mk-sprite 's_hl_149 ss_hl 1 149 #f 0)
-(kern-mk-sprite 's_hl_150 ss_hl 1 150 #f 0)
-(kern-mk-sprite 's_hl_151 ss_hl 1 151 #f 0)
+
+(kern-mk-sprite 's_gf_nw ss_gf 1 0 #f 0)
+(kern-mk-sprite 's_gf_n  ss_gf 1 1 #f 0)
+(kern-mk-sprite 's_gf_ne ss_gf 1 2 #f 0)
+(kern-mk-sprite 's_gf_w  ss_gf 1 3 #f 0)
+(kern-mk-sprite 's_gf_c  ss_gf 1 4 #f 0)
+(kern-mk-sprite 's_gf_e  ss_gf 1 5 #f 0)
+(kern-mk-sprite 's_gf_sw ss_gf 1 6 #f 0)
+(kern-mk-sprite 's_gf_s  ss_gf 1 7 #f 0)
+(kern-mk-sprite 's_gf_se ss_gf 1 8 #f 0)
 
 (kern-mk-terrain 't_hl_0 "logo" pclass-wall s_hl_0 trn 0 nil)
 (kern-mk-terrain 't_hl_1 "logo" pclass-wall s_hl_1 trn 0 nil)
@@ -1012,44 +985,16 @@
 (kern-mk-terrain 't_hl_111 "logo" pclass-wall s_hl_111 trn 0 nil)
 (kern-mk-terrain 't_hl_112 "logo" pclass-wall s_hl_112 trn 0 nil)
 (kern-mk-terrain 't_hl_113 "logo" pclass-wall s_hl_113 trn 0 nil)
-(kern-mk-terrain 't_hl_114 "logo" pclass-wall s_hl_114 trn 0 nil)
-(kern-mk-terrain 't_hl_115 "logo" pclass-wall s_hl_115 trn 0 nil)
-(kern-mk-terrain 't_hl_116 "logo" pclass-wall s_hl_116 trn 0 nil)
-(kern-mk-terrain 't_hl_117 "logo" pclass-wall s_hl_117 trn 0 nil)
-(kern-mk-terrain 't_hl_118 "logo" pclass-wall s_hl_118 trn 0 nil)
-(kern-mk-terrain 't_hl_119 "logo" pclass-wall s_hl_119 trn 0 nil)
-(kern-mk-terrain 't_hl_120 "logo" pclass-wall s_hl_120 trn 0 nil)
-(kern-mk-terrain 't_hl_121 "logo" pclass-wall s_hl_121 trn 0 nil)
-(kern-mk-terrain 't_hl_122 "logo" pclass-wall s_hl_122 trn 0 nil)
-(kern-mk-terrain 't_hl_123 "logo" pclass-wall s_hl_123 trn 0 nil)
-(kern-mk-terrain 't_hl_124 "logo" pclass-wall s_hl_124 trn 0 nil)
-(kern-mk-terrain 't_hl_125 "logo" pclass-wall s_hl_125 trn 0 nil)
-(kern-mk-terrain 't_hl_126 "logo" pclass-wall s_hl_126 trn 0 nil)
-(kern-mk-terrain 't_hl_127 "logo" pclass-wall s_hl_127 trn 0 nil)
-(kern-mk-terrain 't_hl_128 "logo" pclass-wall s_hl_128 trn 0 nil)
-(kern-mk-terrain 't_hl_129 "logo" pclass-wall s_hl_129 trn 0 nil)
-(kern-mk-terrain 't_hl_130 "logo" pclass-wall s_hl_130 trn 0 nil)
-(kern-mk-terrain 't_hl_131 "logo" pclass-wall s_hl_131 trn 0 nil)
-(kern-mk-terrain 't_hl_132 "logo" pclass-wall s_hl_132 trn 0 nil)
-(kern-mk-terrain 't_hl_133 "logo" pclass-wall s_hl_133 trn 0 nil)
-(kern-mk-terrain 't_hl_134 "logo" pclass-wall s_hl_134 trn 0 nil)
-(kern-mk-terrain 't_hl_135 "logo" pclass-wall s_hl_135 trn 0 nil)
-(kern-mk-terrain 't_hl_136 "logo" pclass-wall s_hl_136 trn 0 nil)
-(kern-mk-terrain 't_hl_137 "logo" pclass-wall s_hl_137 trn 0 nil)
-(kern-mk-terrain 't_hl_138 "logo" pclass-wall s_hl_138 trn 0 nil)
-(kern-mk-terrain 't_hl_139 "logo" pclass-wall s_hl_139 trn 0 nil)
-(kern-mk-terrain 't_hl_140 "logo" pclass-wall s_hl_140 trn 0 nil)
-(kern-mk-terrain 't_hl_141 "logo" pclass-wall s_hl_141 trn 0 nil)
-(kern-mk-terrain 't_hl_142 "logo" pclass-wall s_hl_142 trn 0 nil)
-(kern-mk-terrain 't_hl_143 "logo" pclass-wall s_hl_143 trn 0 nil)
-(kern-mk-terrain 't_hl_144 "logo" pclass-wall s_hl_144 trn 0 nil)
-(kern-mk-terrain 't_hl_145 "logo" pclass-wall s_hl_145 trn 0 nil)
-(kern-mk-terrain 't_hl_146 "logo" pclass-wall s_hl_146 trn 0 nil)
-(kern-mk-terrain 't_hl_147 "logo" pclass-wall s_hl_147 trn 0 nil)
-(kern-mk-terrain 't_hl_148 "logo" pclass-wall s_hl_148 trn 0 nil)
-(kern-mk-terrain 't_hl_149 "logo" pclass-wall s_hl_149 trn 0 nil)
-(kern-mk-terrain 't_hl_150 "logo" pclass-wall s_hl_150 trn 0 nil)
-(kern-mk-terrain 't_hl_151 "logo" pclass-wall s_hl_151 trn 0 nil)
+
+(kern-mk-terrain 't_gf_nw "frame" pclass-wall s_gf_nw trn 0 nil)
+(kern-mk-terrain 't_gf_n  "frame" pclass-wall s_gf_n  trn 0 nil)
+(kern-mk-terrain 't_gf_ne "frame" pclass-wall s_gf_ne trn 0 nil)
+(kern-mk-terrain 't_gf_w  "frame" pclass-wall s_gf_w  trn 0 nil)
+(kern-mk-terrain 't_gf_c  "frame" pclass-wall s_gf_c  trn 0 nil)
+(kern-mk-terrain 't_gf_e  "frame" pclass-wall s_gf_e  trn 0 nil)
+(kern-mk-terrain 't_gf_sw "frame" pclass-wall s_gf_sw trn 0 nil)
+(kern-mk-terrain 't_gf_s  "frame" pclass-wall s_gf_s  trn 0 nil)
+(kern-mk-terrain 't_gf_se "frame" pclass-wall s_gf_se trn 0 nil)
 
 ;; define our own palette to include the logo terrain
 (kern-mk-palette 'pal_expanded
@@ -1624,45 +1569,16 @@
     (list "111" t_hl_111)
     (list "112" t_hl_112)
     (list "113" t_hl_113)
-    (list "114" t_hl_114)
-    (list "115" t_hl_115)
-    (list "116" t_hl_116)
-    (list "117" t_hl_117)
-    (list "118" t_hl_118)
-    (list "119" t_hl_119)
-    (list "120" t_hl_120)
-    (list "121" t_hl_121)
-    (list "122" t_hl_122)
-    (list "123" t_hl_123)
-    (list "124" t_hl_124)
-    (list "125" t_hl_125)
-    (list "126" t_hl_126)
-    (list "127" t_hl_127)
-    (list "128" t_hl_128)
-    (list "129" t_hl_129)
-    (list "130" t_hl_130)
-    (list "131" t_hl_131)
-    (list "132" t_hl_132)
-    (list "133" t_hl_133)
-    (list "134" t_hl_134)
-    (list "135" t_hl_135)
-    (list "136" t_hl_136)
-    (list "137" t_hl_137)
-    (list "138" t_hl_138)
-    (list "139" t_hl_139)
-    (list "140" t_hl_140)
-    (list "141" t_hl_141)
-    (list "142" t_hl_142)
-    (list "143" t_hl_143)
-    (list "144" t_hl_144)
-    (list "145" t_hl_145)
-    (list "146" t_hl_146)
-    (list "147" t_hl_147)
-    (list "148" t_hl_148)
-    (list "149" t_hl_149)
-    (list "150" t_hl_150)
-    (list "151" t_hl_151)
 
+    (list "fg" t_gf_nw)
+    (list "fh" t_gf_n )
+    (list "fi" t_gf_ne)
+    (list "fj" t_gf_w )
+    (list "fk" t_gf_c )
+    (list "fl" t_gf_e )
+    (list "fm" t_gf_sw)
+    (list "fn" t_gf_s )
+    (list "fo" t_gf_se)
   )
 ) ;; palette pal_expanded
 
@@ -1678,19 +1594,19 @@
   "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
   "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
   "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
-  "114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 "
-  "133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 "
-  ".. .. .. .. .. dd dd dd .. .. .. .. .. .. .. .. .. .. .."
-  ".. .. dd dd dd dd ar dd dd dd dd .. .. .. .. .. .. .. .."
-  ".. .. dd ar dd dd dd dd dd ar dd .. {f .. .. .. .. .. .."
-  ".. .. dd dd dd dd dd dd dd dd dd .. .. .. .. .. .. .. .."
-  "dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd"
-  "dd dd ar dd dd dd dd dd dd dd ar dd dd {f dd dd dd dd dd"
-  "dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd"
-  ".. .. dd dd dd dd dd dd dd dd dd .. .. .. .. .. .. .. .."
-  ".. .. dd ar dd dd dd dd dd ar dd .. .. .. .. .. .. .. .."
-  ".. .. dd dd dd dd ar dd dd dd dd .. .. .. .. .. .. .. .."
-  ".. .. .. .. .. dd dd dd .. .. .. .. .. .. .. .. .. .. .."
+  "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi"
+  "fj .. .. dd dd dd dd dd dd dd .. .. .. .. .. .. .. .. fl"
+  "fj .. dd dd dd dd ar dd dd dd dd .. .. .. .. .. .. .. fl"
+  "fj .. dd ar dd dd dd dd dd ar dd .. {f .. .. .. .. .. fl"
+  "fj .. dd dd dd dd dd dd dd dd dd .. .. .. .. .. .. .. fl"
+  "fj dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd fl"
+  "fj dd ar dd dd dd dd dd dd dd ar dd dd {f dd dd dd dd fl"
+  "fj dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd fl"
+  "fj .. dd dd dd dd dd dd dd dd dd .. .. .. .. .. .. .. fl"
+  "fj .. dd ar dd dd dd dd dd ar dd .. .. .. .. .. .. .. fl"
+  "fj .. dd dd dd dd ar dd dd dd dd .. .. .. .. .. .. .. fl"
+  "fj .. .. dd dd dd dd dd dd dd .. .. .. .. .. .. .. .. fl"
+  "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo"
   )
  )
 
