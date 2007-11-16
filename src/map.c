@@ -1858,3 +1858,16 @@ void mapClearImage(void)
 {
         Map.is_image_mode = 0;
 }
+
+void mapBlitImage(SDL_Surface *image, Uint32 x, Uint32 y)
+{
+        SDL_Rect rect;
+
+        rect.x = Map.srect.x + x;
+        rect.y = Map.srect.y + y;
+        rect.w = Map.srect.w - x;
+        rect.h = Map.srect.h - y;
+
+        screenBlit(image, NULL, &rect);
+        screenUpdate(&Map.srect);
+}

@@ -6180,6 +6180,24 @@ KERN_API_CALL(kern_map_set_image)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_map_blit_image)
+{
+        SDL_Surface *image;
+        Uint32 x, y;
+
+        if (unpack(sc, &args, "pdd", &image, &x, &y)) {
+                rt_err("kern-map-blit-image: bad args");
+                return sc->NIL;
+        }
+
+        if (!image) {
+                return sc->NIL;
+        }
+
+        mapBlitImage(image, x, y);
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_map_get_width)
 {
         struct terrain_map *map;
@@ -9455,6 +9473,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-conv-get-string", kern_conv_get_string);
 
         /* kern-map api */
+        API_DECL(sc, "kern-map-blit-image", kern_map_blit_image);
         API_DECL(sc, "kern-map-center-camera", kern_map_center_camera);
         API_DECL(sc, "kern-map-flash", kern_map_flash);
         API_DECL(sc, "kern-map-repaint", kern_map_repaint);

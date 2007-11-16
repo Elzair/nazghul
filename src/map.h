@@ -110,7 +110,16 @@ extern void mapSetImage(SDL_Surface *image);
  */
 extern void mapClearImage(void);
 
-
+/**
+ * Blit an image onto the map window. This lasts until something else is
+ * painted over it. The image will be clipped to fit within the map
+ * window. This function will update the screen before returning.
+ *
+ * @param image is the image to show. It should not be NULL.
+ * @param x is the pixel offset within the map window to blit it.
+ * @param y is the pixel offset within the map window to blit it.
+ */
+extern void mapBlitImage(SDL_Surface *image, Uint32 x, Uint32 y);
 
 END_DECL
 
