@@ -6,6 +6,7 @@
 #include "session.h"
 #include "log.h"
 #include "terrain.h"
+#include "kern_intvar.h"
 
 // USE_CACHED_PATH works but it can cause some strange-seeming behavior. If a
 // new, better route opens than the cached path then the being won't find it,
@@ -260,6 +261,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         // script from generating log messages
                         log_disable();
                         mech->getObjectType()->handle(mech, this);
+                        this->decActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
                         log_enable();
                         mapSetDirty();
                         

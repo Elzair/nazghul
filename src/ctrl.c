@@ -918,6 +918,7 @@ static void ctrl_move_character(class Character *character, int dir)
 				if (mech && mech->getObjectType()->canHandle())
 				{
 					mech->getObjectType()->handle(mech, character);
+					character->decActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
 					mapSetDirty();
 					result = "handled!";
 				} 
