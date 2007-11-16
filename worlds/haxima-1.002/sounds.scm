@@ -12,6 +12,7 @@
 (kern-mk-sound 'sound-wind          "wind_1a.wav")
 (kern-mk-sound 'sound-missile          "swish.wav")
 (kern-mk-sound 'sound-explode          "boom.wav")
+(kern-mk-sound 'sound-lightning        "lightning.wav")
 
 ;; Aliases
 (define sound-ship-move sound-splashing)

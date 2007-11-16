@@ -494,9 +494,11 @@
 	(define (do-burn kobj)
 		(if (and (kern-obj-is-char? kobj)
 				(not (has-poison-immunity? kobj)))
-			(apply-poison kobj)
-			(kern-harm-relations kobj caster)
-			(kern-harm-relations kobj caster)
+			(begin
+				(apply-poison kobj)
+				(kern-harm-relations kobj caster)
+				(kern-harm-relations kobj caster)
+			)
 		))
 	(powers-field-wall start stop F_poison (+ 10 (kern-dice-roll (mkdice 1 power))) (powers-field-length power) do-burn)
 	result-ok)
@@ -505,8 +507,10 @@
 	(define (do-burn kobj)
 		(if (and (kern-obj-is-char? kobj)
 				(not (has-sleep-immunity? kobj)))
-			(kern-harm-relations kobj caster)			
-			(apply-sleep kobj)
+			(begin
+				(kern-harm-relations kobj caster)			
+				(apply-sleep kobj)
+			)
 		))
 	(powers-field-wall start stop F_sleep (+ 15 (kern-dice-roll (mkdice 1 power))) (powers-field-length power) do-burn)
 	result-ok)
@@ -710,6 +714,7 @@
 					))
 				#t	
 			))
+		(kern-sound-play sound-lightning)
 		(kern-fire-missile-to-max t_lightning_bolt (powers-lightning-range apower)
 			(kern-obj-get-location caster)
 			ktarg
