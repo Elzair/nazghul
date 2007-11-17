@@ -493,37 +493,38 @@
     )))
     
 (define (seek-loot kchar)
-	(let ((loot-list 
-		(filter (mk-ifc-query 'get)
-			(kern-place-get-objects (loc-place (kern-obj-get-location kchar))))
-		))
-		(if (not (null? loot-list))
-			(let* ((targetloot (car loot-list)))
-				;;(println "loot: " (kern-obj-get-name targetloot))
-				(if (< (kern-get-distance (kern-obj-get-location kchar) (kern-obj-get-location targetloot)) 2)
-					(begin 
-						(kern-obj-remove targetloot)
-						#t
-					)
-					(pathfind kchar (kern-obj-get-location targetloot))
-				))
-			#f
-		)
+  (let ((loot-list 
+         (filter (mk-ifc-query 'get)
+                 (kern-place-get-objects (loc-place (kern-obj-get-location kchar))))
+         ))
+    (if (not (null? loot-list))
+        (let* ((targetloot (nearest-obj kchar loot-list)))
+          (if (< (kern-get-distance (kern-obj-get-location kchar) (kern-obj-get-location targetloot)) 2)
+              (begin 
+                (kern-obj-remove targetloot)
+                (kern-map-repaint)
+                #t
+                )
+              (pathfind kchar (kern-obj-get-location targetloot))
+              ))
+        #f
+        )
     ))
     
 (define (beggar-exit kchar)
-	(or (seek-loot kchar)
-		(traveler-exit kchar))
+  (or (seek-loot kchar)
+      (traveler-exit kchar))
     )
           
 (define (traveler-mk kplace)
-  (let* ((type-ai (random-select (list (cons 'wizard 'wizard-traveler-ai) 
-                                       (cons 'wizard 'wizard-traveler-ai) 
-                                       (cons 'paladin 'normal-traveler-ai)
-                                       (cons 'tinker 'normal-traveler-ai)
-                                       (cons 'ranger 'normal-traveler-ai)
-                                       (cons 'ranger 'normal-traveler-ai)
-                                       )))
+  (let* ((wizard-sprites (list s_black_mage s_old_mage s_plain_mage s_cloaked_female s_companion_wizard s_red_wizard s_lady s_silas s_companion_druid))
+         (warrior-sprites (list s_avatar s_wanderer s_companion_fighter s_companion_paladin s_brigand))
+         (wrogue-sprites (list s_companion_bard s_companion_tinker s_companion_ranger s_ranger s_brigandess s_old_ranger))
+         (info (random-select (list (list 'wizard 'wizard-traveler-ai wizard-sprites) 
+                                    (list 'paladin 'normal-traveler-ai warrior-sprites)
+                                    (list 'tinker 'normal-traveler-ai wrogue-sprites)
+                                    (list 'ranger 'normal-traveler-ai wrogue-sprites)
+                                    )))
          (path (random-select (list 
                                (list (loc-mk kplace (+ xoff 20) (+ yoff  4)) (list  (+ xoff 9) (+ yoff  5)) #f)
                                (list (loc-mk kplace (+ xoff 20) (+ yoff  5)) (list  (+ xoff 9) (+ yoff  5)) #f)
@@ -533,10 +534,11 @@
                                (list (loc-mk kplace (+ xoff 10) (+ yoff  5)) (list  (+ xoff 20)(+ yoff  5)) #t)
                                (list (loc-mk kplace (+ xoff 10) (+ yoff  6)) (list  (+ xoff 20)(+ yoff  6)) #t)
                                )))
-         (kchar (mk-npc (car type-ai) 9))
+         (kchar (mk-npc (car info) 9))
          )
     (npcg-set-post! (gob kchar) (cadr path))
-    (kern-char-set-ai kchar (cdr type-ai) kchar)
+    (kern-char-set-ai kchar (cadr info) kchar)
+    (kern-obj-set-sprite kchar (random-select (caddr info)))
     (kern-obj-put-at kchar (car path))
     kchar))
 
@@ -585,19 +587,19 @@
 
 (define (wise-mk kplace n kmgr)
   (let* ((kchar (mk-npc 'wizard 9))
-         (pos (list-ref (list 
-                         (cons (list (+ xoff 20) (+ yoff 4)) (list  3 11))
-                         (cons (list (+ xoff 20) (+ yoff 5)) (list  3 13))
-                         (cons (list (+ xoff 20) (+ yoff 6)) (list  5  9))
-                         (cons (list (+ xoff 20) (+ yoff 4)) (list  5 15))
-                         (cons (list (+ xoff 20) (+ yoff 5)) (list  7 15))
-                         (cons (list (+ xoff 20) (+ yoff 6)) (list  7  9))
-                         (cons (list (+ xoff 20) (+ yoff 4)) (list  9 11))
-                         (cons (list (+ xoff 20) (+ yoff 5)) (list  9 13))
+         (info (list-ref (list 
+                         (list (list (+ xoff 20) (+ yoff 4)) (list  3 11) s_black_mage)
+                         (list (list (+ xoff 20) (+ yoff 5)) (list  3 13) s_old_mage)
+                         (list (list (+ xoff 20) (+ yoff 6)) (list  5  9) s_plain_mage)
+                         (list (list (+ xoff 20) (+ yoff 4)) (list  5 15) s_cloaked_female)
+                         (list (list (+ xoff 20) (+ yoff 5)) (list  7 15) s_companion_wizard)
+                         (list (list (+ xoff 20) (+ yoff 6)) (list  7  9) s_red_wizard)
+                         (list (list (+ xoff 20) (+ yoff 4)) (list  9 11) s_lady)
+                         (list (list (+ xoff 20) (+ yoff 5)) (list  9 13) s_silas)
                               )
                         n))
-         (enter-pos (cons kplace (car pos)))
-         (altar-pos (cdr pos))
+         (enter-pos (cons kplace (car info)))
+         (altar-pos (cadr info))
         )
     (kern-char-set-ai kchar 'wise-enter-ai)
     (npcg-set-post! (gob kchar) altar-pos)    
@@ -605,8 +607,8 @@
     ;; Save the kmgr object in the gob so the wise can notify it when they are
     ;; in position. Also remember the entrance position so they can pathfind
     ;; back.
-    (npcg-set-subgob! (gob kchar) (cons kmgr (car pos)))
-	 (kern-obj-set-sprite kchar (random-select (list s_black_mage s_old_mage s_old_mage s_old_mage s_plain_mage s_plain_mage s_cloaked_female s_companion_wizard s_companion_wizard s_red_wizard s_lady s_lady)))
+    (npcg-set-subgob! (gob kchar) (cons kmgr (car info)))
+    (kern-obj-set-sprite kchar (caddr info))
     (kern-obj-put-at kchar enter-pos)
     kchar))
 
@@ -662,7 +664,7 @@
       (scene-mgr-incr-num-travelers! smgr)
       )
     (cond ((< n 10) 
-           (if (> (kern-dice-roll "1d5") 4)
+           (if (> (kern-dice-roll "1d10") 9)
                (put-traveler)))
           (else
            (if (> (kern-dice-roll "1d5") 4)
@@ -834,7 +836,10 @@
   )
   
 (define (scene-mgr-exit-beggar kobj)
-  ;;(println "scene-mgr-exit-beggar")
+  ;; This is a hack to keep the camera centered on the beggar's location (and
+  ;; thus the whole scene within the vision radius) while allowing the beggar
+  ;; to go pick up the loot and then exit. The party member beggar's sprite is
+  ;; changed to nil, making him invisible, then a new npc beggar is cloned.
   (let ((kcharn (mk-npc 'ranger 9)))
     (kern-obj-set-sprite kcharn s_beggar)
     (kern-char-set-ai kcharn 'beggar-exit)
