@@ -4,7 +4,7 @@
 
 (define default-aap 50)
 
-(define (mk-ability name level mana ap proc rng)
+(define (mk-ability name level mana ap rng proc)
   (list name level mana (* ap default-aap) proc rng))
 
 (define (ability-name ability) (car ability))
@@ -190,6 +190,14 @@
          (dir (loc-to-cardinal-dir v)))
     (spew-in-dir dir)))
 
+(define (lightning-bolt-proc kchar ktarg)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " streams lightning at "
+                (kern-obj-get-name ktarg))
+  (powers-lightning kchar 
+                    (kern-obj-get-location ktarg)
+                    (occ-ability-blackmagic kchar)))
+  
 
 ;;----------------------------------------------------------------------------
 ;; summoning
@@ -317,35 +325,43 @@
 
 ;;----------------------------------------------------------------------------
 ;; Ability declarations
+;;
+;;  L = level
+;;  M = mana
+;;  A = action points
+;;  R = range
+;;
 ;;----------------------------------------------------------------------------
 
-(define vampiric-touch      (mk-ability "vampiric touch" 3 3 2 vampiric-touch-proc 1))
-(define disease-touch       (mk-ability "disease touch" 6 6 1 disease-touch-proc 1))
-(define disarm              (mk-ability "disarm" 4 2 2 disarm 1))
-(define heal-ability        (mk-ability "heal" 1 1 1 heal-proc 2))
-(define great-heal-ability  (mk-ability "great heal" 4 4 2 great-heal-proc 2))
-(define cast-fire-field     (mk-ability "cast fire field"   3 3 2 cast-fire-field-proc 1))
-(define cast-poison-field   (mk-ability "cast poison field" 3 3 2 cast-poison-field-proc 1))
-(define cast-sleep-field    (mk-ability "cast sleep field"  3 3 2 cast-sleep-field-proc 1))
-(define cast-energy-field   (mk-ability "cast energy field" 4 4 2 cast-energy-field-proc 1))
-(define cast-magic-missile  (mk-ability "cast magic missile"  1 1 1 cast-magic-missile-proc  6))
-(define cast-poison-missile (mk-ability "cast poison missile" 2 2 1 cast-poison-missile-proc 6))
-(define cast-fireball       (mk-ability "cast fireball"       3 3 1 cast-fireball-proc       6))
-(define cast-kill           (mk-ability "cast kill"           7 7 2 cast-kill-proc           4))
-(define cast-acid-missile   (mk-ability "cast acid missile"   4 4 1 cast-acid-missile-proc   4))
-(define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc 5))
-(define teleport            (mk-ability "teleport" 6 6 2 teleport-proc 0))
-(define summon-skeleton     (mk-ability "summon skeleton" 6 6 4 summon-skeleton-proc 0))
-(define summon-slimes       (mk-ability "summon slimes"   2 2 3 summon-slime-proc 0))
-(define summon-demon        (mk-ability "summon demon"    8 8 6 summon-demon-proc 0))
-(define summon-wolves       (mk-ability "summon wolves"   4 4 2 summon-wolf-proc 0))
-(define summon-ratlings     (mk-ability "summon ratlings" 1 2 4 summon-ratling-proc 0))
-(define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc 1))
-(define deck-to-sludge      (mk-ability "chomp deck"      1 1 1 deck-to-sludge-proc 1))
-(define enslave             (mk-ability "enslave"       3 4 2 enslave-proc 4))
-(define narcotize           (mk-ability "narcotize"     5 6 3 narcotize-proc 0))
-(define cast-fire-wind      (mk-ability "fire wind"     6 6 2 fire-wind-proc 4))
-(define turn-invisible      (mk-ability "turn invisible" 7 7 2 turn-invisible-proc 0))
+;;                                      name                  L M A R proc
+(define vampiric-touch      (mk-ability "vampiric touch"      3 3 2 1 vampiric-touch-proc))
+(define disease-touch       (mk-ability "disease touch"       6 6 1 1 disease-touch-proc))
+(define disarm              (mk-ability "disarm"              4 2 2 1 disarm))
+(define heal-ability        (mk-ability "heal"                1 1 1 2 heal-proc))
+(define great-heal-ability  (mk-ability "great heal"          4 4 2 2 great-heal-proc))
+(define cast-fire-field     (mk-ability "cast fire field"     3 3 2 1 cast-fire-field-proc))
+(define cast-poison-field   (mk-ability "cast poison field"   3 3 2 1 cast-poison-field-proc))
+(define cast-sleep-field    (mk-ability "cast sleep field"    3 3 2 1 cast-sleep-field-proc))
+(define cast-energy-field   (mk-ability "cast energy field"   4 4 2 1 cast-energy-field-proc))
+(define cast-magic-missile  (mk-ability "cast magic missile"  1 1 1 6 cast-magic-missile-proc))
+(define cast-poison-missile (mk-ability "cast poison missile" 2 2 1 6 cast-poison-missile-proc))
+(define cast-fireball       (mk-ability "cast fireball"       3 3 1 6 cast-fireball-proc))
+(define cast-kill           (mk-ability "cast kill"           7 7 2 4 cast-kill-proc))
+(define cast-acid-missile   (mk-ability "cast acid missile"   4 4 1 4 cast-acid-missile-proc))
+(define web-spew            (mk-ability "spew web"            4 4 2 5 web-spew-proc))
+(define teleport            (mk-ability "teleport"            6 6 2 0 teleport-proc))
+(define summon-skeleton     (mk-ability "summon skeleton"     6 6 4 0 summon-skeleton-proc))
+(define summon-slimes       (mk-ability "summon slimes"       2 2 3 0 summon-slime-proc))
+(define summon-demon        (mk-ability "summon demon"        8 8 6 0 summon-demon-proc))
+(define summon-wolves       (mk-ability "summon wolves"       4 4 2 0 summon-wolf-proc))
+(define summon-ratlings     (mk-ability "summon ratlings"     1 2 4 0 summon-ratling-proc))
+(define chomp-deck          (mk-ability "chomp deck"          2 4 3 1 chomp-deck-proc))
+(define deck-to-sludge      (mk-ability "chomp deck"          1 1 1 1 deck-to-sludge-proc))
+(define enslave             (mk-ability "enslave"             3 4 2 4 enslave-proc))
+(define narcotize           (mk-ability "narcotize"           5 6 3 0 narcotize-proc))
+(define cast-fire-wind      (mk-ability "fire wind"           6 6 2 4 fire-wind-proc))
+(define turn-invisible      (mk-ability "turn invisible"      7 7 2 0 turn-invisible-proc))
+(define cast-lightning-bolt (mk-ability "lightning bolt"      4 4 2 9 lightning-bolt-proc))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes
@@ -370,8 +386,12 @@
 (define acid-missile-spell cast-acid-missile)
 (define kill-spell cast-kill)
 (define all-ranged-spells
-  (list cast-magic-missile
-        poison-missile-spell
-        fireball-spell
-        ))
+  (list 
+   cast-magic-missile
+   poison-missile-spell
+   fireball-spell
+   cast-fire-wind
+   cast-acid-missile
+   cast-lightning-bolt
+   ))
 
