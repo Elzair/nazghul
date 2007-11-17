@@ -628,7 +628,7 @@
 ;;----------------------------------------------------------------------------
 ;; Scene Manager
 ;;----------------------------------------------------------------------------
-(define (scene-mgr-mk) (list 'scene-mgr 0 0 0 '() 0 0))
+(define (scene-mgr-mk) (list 'scene-mgr 13 0 0 '() 0 0))
 (define (scene-mgr-state gob) (list-ref gob 1))
 (define (scene-mgr-set-state! gob val) (set-car! (list-tail gob 1) val))
 (define (scene-mgr-advance-state! gob) 
@@ -851,6 +851,39 @@
   (scene-mgr-advance-state! (gob kobj))
   )
 
+(define (scene-mgr-start-days-pass kobj)
+  (kern-log-msg "Days pass...")
+  (let ((kplace (loc-place (kern-obj-get-location kobj))))
+    (define (wolf-mk from-loc to-xy)
+      (let ((kchar (mk-npc 'wolf 9)))
+        (npcg-set-post! (gob kchar) to-xy)
+        (kern-char-set-ai kchar 'normal-traveler-ai)
+        (kern-obj-put-at kchar from-loc)))
+    (wolf-mk (loc-mk kplace 1 14) (list 17 13))
+    (wolf-mk (loc-mk kplace 1 15) (list 17 12))
+    (wolf-mk (loc-mk kplace 1 16) (list 17 11))
+    )
+  (kern-map-repaint)
+  (scene-mgr-advance-state! (gob kobj))
+  )
+
+(define (scene-mgr-end-days-pass kobj)
+  (if (null? (filter (lambda (kobj)
+                       (not (is-player-party-member? kobj)))
+                     (kern-place-get-beings (loc-place (kern-obj-get-location kobj)))))
+      (scene-mgr-advance-state! (gob kobj))
+      ))
+
+(define (scene-mgr-years-pass kobj)
+  (kern-log-msg "Then years...")
+  (scene-mgr-advance-state! (gob kobj))
+  )
+
+(define (scene-mgr-ages-pass kobj)
+  (kern-log-msg "Then ages...")
+  (scene-mgr-advance-state! (gob kobj))
+  )
+
 (define (scene-mgr-exec kobj) 
   (let* ((smgr (kobj-gob-data kobj))
          (state (scene-mgr-state smgr)))
@@ -873,7 +906,14 @@
           ((= 15 state) (scene-mgr-exit-beggar kobj))
           ((= 16 state) (scene-mgr-wait-for-exits kobj))
           ((= 17 state) (scene-mgr-pause kobj))
-          ((= 18 state) 
+          ((= 18 state) (scene-mgr-start-days-pass kobj))
+          ((= 19 state) (scene-mgr-pause kobj))
+          ((= 20 state) (scene-mgr-end-days-pass kobj))
+          ((= 21 state) (scene-mgr-years-pass kobj))
+          ((= 22 state) (scene-mgr-pause kobj))
+          ((= 23 state) (scene-mgr-ages-pass kobj))
+          ((= 24 state) (scene-mgr-pause kobj))
+          (else
            ;;(println "done")
            ;; Keep repainting to show the sprite animations.
            (kern-end-game)
