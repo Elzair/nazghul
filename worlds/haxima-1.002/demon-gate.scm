@@ -76,6 +76,12 @@
   (kern-sleep 2000)
   (kern-log-msg "Find out in Haxima II: Conquerer")
   (kern-log-msg "**************************")
+
+  (kern-log-msg "*** CONGRATULATIONS ***")
+  (kern-log-msg "You have finished the game!")
+  (kern-log-msg "Press any key to exit.")
+  (kern-ui-waitkey)
+
   (kern-end-game)
   )
 

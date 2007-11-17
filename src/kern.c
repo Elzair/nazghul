@@ -8787,10 +8787,6 @@ KERN_API_CALL(kern_occ_set_gob)
 
 KERN_API_CALL(kern_end_game)
 {
-        log_msg("*** CONGRATULATIONS ***");
-        log_msg("You have finished the game!");
-        log_msg("Press any key to exit.");
-        getkey(NULL, anykey);
         Quit = true;
         return sc->NIL;
 }
