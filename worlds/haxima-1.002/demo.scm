@@ -6,6 +6,7 @@
 ;; load the file, too.
 ;;----------------------------------------------------------------------------
 (load "naz.scm")
+
 ;; clone of game.scm ---------------------------------------------------------
 ;;----------------------------------------------------------------------------
 ;; Constants
@@ -475,9 +476,9 @@
 (define (traveler-mk kplace)
   (let* ((type-ai (random-select (list (cons 'wizard 'wizard-traveler-ai) 
                                        (cons 'wizard 'wizard-traveler-ai) 
-                                       (cons 'wizard 'wizard-traveler-ai) 
                                        (cons 'paladin 'normal-traveler-ai)
                                        (cons 'tinker 'normal-traveler-ai)
+                                       (cons 'ranger 'normal-traveler-ai)
                                        (cons 'ranger 'normal-traveler-ai)
                                        )))
          (path (random-select (list 
@@ -562,7 +563,7 @@
     ;; in position. Also remember the entrance position so they can pathfind
     ;; back.
     (npcg-set-subgob! (gob kchar) (cons kmgr (car pos)))
-
+	 (kern-obj-set-sprite kchar (random-select (list s_black_mage s_old_mage s_old_mage s_old_mage s_plain_mage s_plain_mage s_cloaked_female s_companion_wizard s_companion_wizard s_red_wizard s_lady s_lady)))
     (kern-obj-put-at kchar enter-pos)
     kchar))
 
@@ -659,10 +660,10 @@
     ))
           
 (define (scene-mgr-wait-for-no-demons-phase kobj)
-  (cond ((and (null? (all-demons-near (kern-get-player)))
-  					(> (kern-dice-roll "1d7") 6))
+  (if (null? (all-demons-near (kern-get-player)))
+  			(if (> (kern-dice-roll "1d7") 6)
       		(scene-mgr-advance-state! (gob kobj)))
-			((< (length (all-allies-near (kern-get-player))) 3)
+			(if (< (length (all-allies-near (kern-get-player))) 3)
 				(let ((kplace (loc-place (kern-obj-get-location kobj))))
 					(defender-mk 'ranger 'normal-defender-ai kplace (+ xoff 20) (+ yoff  5))
 					(defender-mk 'paladin 'normal-defender-ai kplace (+ xoff 20) (+ yoff  6))
@@ -736,13 +737,27 @@
 
 (define (scene-mgr-pickup-runes kobj)
   ;;(println "scene-mgr-pickup-runes")
-  (kern-obj-remove rune_k)
-  (kern-obj-remove rune_p)
   (kern-obj-remove rune_s)
-  (kern-obj-remove rune_c)
-  (kern-obj-remove rune_f)
+  (kern-map-repaint)
+  (kern-sleep 100)
   (kern-obj-remove rune_w)
+  (kern-map-repaint)
+  (kern-sleep 100)
+  (kern-obj-remove rune_p)
+  (kern-map-repaint)
+  (kern-sleep 100)
   (kern-obj-remove rune_d)
+  (kern-map-repaint)
+  (kern-sleep 100)
+  (kern-obj-remove rune_f)
+  (kern-map-repaint)
+  (kern-sleep 100)
+  (kern-obj-remove rune_k)
+  (kern-map-repaint)
+  (kern-sleep 100)
+  (kern-obj-remove rune_c)
+  (kern-map-repaint)
+  (kern-sleep 100)
   (kern-obj-remove rune_l)
   (kern-map-repaint)
   (scene-mgr-advance-state! (gob kobj))
@@ -1659,9 +1674,9 @@
 		"fj tt t# .. ar .. .. .. ar .. .. t% tt tt _3 _c tt tt fl "
 		"fj t# .. .. .. .. .. .. .. .. .. .. ta tc _2 tG tt tt fl "
 		"fj .. ar .. .. .. .. .. .. .. ar .. .. .. __ .. .. .. fl "
-		"fj .. .. .. .. .. dd .. .. .. .. .. dd ee ee ee dd dd fl "
-		"fj .. .. .. .. dd {f dd dd dd dd dd dd ee ee ee dd dd fl "
-		"fj .. .. .. .. .. dd .. .. .. .. .. dd ee ee ee dd dd fl "
+		"fj .. .. .. .. dd dd dd .. .. .. .. dd ee ee ee dd dd fl "
+		"fj .. .. .. dd dd {f dd dd dd dd dd dd ee ee ee dd dd fl "
+		"fj .. .. .. .. dd dd dd .. .. .. .. dd ee ee ee dd dd fl "
 		"fj .. ar .. .. .. .. .. .. .. ar .. .. .. __ .. .. .. fl "
 		"fj tA .. .. .. .. .. .. .. .. .. .. t3 t5 _2 tJ tt tt fl "
 		"fj tt tA .. ar .. .. .. ar .. .. tC tt tt _a _5 tt tt fl "
@@ -1843,7 +1858,7 @@
 (define (simple-start kplayer)
   (kern-obj-put-at kplayer (list p_demo_scene (+ xoff 14)  (+ yoff 3)))
 	(kern-map-center-camera (mk-loc p_demo_scene (+ xoff 10)  (+ yoff 5)))
-	
+
   (kern-char-set-control-mode ch_wanderer "auto")
 
   ;; Do this to initialize the map viewer's active view, and to replace the
