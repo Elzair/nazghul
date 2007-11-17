@@ -463,14 +463,20 @@
              
 (define (wizard-defender-ai kchar)
   (or (spell-sword-ai kchar)
-  		(if (null? (all-demons-near kchar))
-     		(traveler-goto-dest kchar)
+  		(if (and (null? (all-demons-near kchar)) (> (kern-dice-roll "1d3") 2))
+  			(if (> (kern-dice-roll "1d3") 2)
+     			(traveler-goto-dest kchar)
+     			#t
+     		)
      		#f)))
 
 (define (normal-defender-ai kchar)
   (or (std-ai kchar)
-      (if (null? (all-demons-near kchar))
-          (traveler-goto-dest kchar)
+      (if (and (null? (all-demons-near kchar)) (> (kern-dice-roll "1d3") 2))
+      	(if (> (kern-dice-roll "1d3") 2)
+          	(traveler-goto-dest kchar)
+          	#t
+          )
           #f)))
 
 (define (traveler-exit kchar)
