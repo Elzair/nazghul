@@ -423,11 +423,16 @@
 ;;----------------------------------------------------------------------------
 ;; Gate Traveler
 ;;----------------------------------------------------------------------------
+
+(define flee-gate (list #f))
+
 (define (traveler-goto-dest kchar)
   (let* ((trvl (gob kchar))
          (loc (kern-obj-get-location kchar))
-         (dest (cons (loc-place loc) 
-                     (npcg-get-post trvl)))
+         (dest (if (car flee-gate)
+         			(loc-mk (loc-place loc) (+ xoff 20) (+ yoff  5))
+         			(cons (loc-place loc) 
+                     (npcg-get-post trvl))))
          )
     (if (equal? loc dest)
         (begin
@@ -446,6 +451,27 @@
       (if (any-visible-hostiles? kchar)
           #f
           (traveler-goto-dest kchar))))
+       
+;; these detect who kchar is friendly/hostile to, not vice-versa
+(define (all-demons-near kchar)
+  (filter (lambda (kobj) (eqv? (kern-char-get-species kobj) sp_demon))
+          (kern-place-get-beings (loc-place (kern-obj-get-location kchar)))))
+    
+(define (all-allies-near kchar)
+  (filter (lambda (kobj) (eqv? (kern-char-get-species kobj) sp_human))
+          (kern-place-get-beings (loc-place (kern-obj-get-location kchar)))))      
+             
+(define (wizard-defender-ai kchar)
+  (or (spell-sword-ai kchar)
+  		(if (null? (all-demons-near kchar))
+     		(traveler-goto-dest kchar)
+     		#f)))
+
+(define (normal-defender-ai kchar)
+  (or (std-ai kchar)
+      (if (null? (all-demons-near kchar))
+          (traveler-goto-dest kchar)
+          #f)))
 
 (define (traveler-mk kplace)
   (let* ((type-ai (random-select (list (cons 'wizard 'wizard-traveler-ai) 
@@ -460,9 +486,9 @@
                                (list (loc-mk kplace (+ xoff 20) (+ yoff  5)) (list  (+ xoff 9) (+ yoff  5)) #f)
                                (list (loc-mk kplace (+ xoff 20) (+ yoff  6)) (list  (+ xoff 9) (+ yoff  5)) #f)
 
-                               (list (loc-mk kplace (+ xoff 10) (+ yoff  4)) (list  (+ xoff 20)(+ yoff  3)) #t)
-                               (list (loc-mk kplace (+ xoff 10) (+ yoff  5)) (list  (+ xoff 20)(+ yoff  4)) #t)
-                               (list (loc-mk kplace (+ xoff 10) (+ yoff  6)) (list  (+ xoff 20)(+ yoff  5)) #t)
+                               (list (loc-mk kplace (+ xoff 10) (+ yoff  4)) (list  (+ xoff 20)(+ yoff  4)) #t)
+                               (list (loc-mk kplace (+ xoff 10) (+ yoff  5)) (list  (+ xoff 20)(+ yoff  5)) #t)
+                               (list (loc-mk kplace (+ xoff 10) (+ yoff  6)) (list  (+ xoff 20)(+ yoff  6)) #t)
                                )))
          (kchar (mk-npc (car type-ai) 9))
          )
@@ -471,6 +497,14 @@
     (kern-obj-put-at kchar (car path))
     kchar))
 
+(define (defender-mk ctype aitype kplace postx posty)
+	(let ((kchar (mk-npc ctype 9)))
+		(npcg-set-post! (gob kchar) (list postx posty))
+	   (kern-char-set-ai kchar aitype)
+   	(kern-obj-put-at kchar (loc-mk kplace postx posty))
+   	kchar		
+	))
+    
 ;;----------------------------------------------------------------------------
 ;; Wise
 ;;----------------------------------------------------------------------------
@@ -585,10 +619,11 @@
       (scene-mgr-incr-num-travelers! smgr)
       )
     (cond ((< n 10) 
-           (if (> (kern-dice-roll "1d3") 2)
+           (if (> (kern-dice-roll "1d5") 4)
                (put-traveler)))
           (else
-           (scene-mgr-advance-state! smgr)))
+           (if (> (kern-dice-roll "1d5") 4)
+           (scene-mgr-advance-state! smgr))))
     ))
 
 (define (scene-mgr-intro-demons-phase kobj)
@@ -606,18 +641,38 @@
       (scene-mgr-incr-num-demons! smgr)
       )
     (cond ((= n 0) 
+    			(set-car! flee-gate #t)
            (kern-add-reveal 1000)
            (put-demon west))
           ((= n 1) (put-demon east))
           ((= n 2) (put-demon south))
           ((= n 3) (put-demon north))
+          ((= n 4) ;; second wave
+          	(if (> (kern-dice-roll "1d7") 6)
+          		(put-demon west)
+          	)
+          )
+          ((= n 5) (put-demon east))
+          ((= n 6) (put-demon south))
+          ((= n 7) (put-demon north))
           (else
            (scene-mgr-advance-state! smgr)))
     ))
-
+          
 (define (scene-mgr-wait-for-no-demons-phase kobj)
-  (if (null? (all-hostiles (kern-get-player)))
-      (scene-mgr-advance-state! (gob kobj))))
+  (cond ((and (null? (all-demons-near (kern-get-player)))
+  					(> (kern-dice-roll "1d7") 6))
+      		(scene-mgr-advance-state! (gob kobj)))
+			((< (length (all-allies-near (kern-get-player))) 3)
+				(let ((kplace (loc-place (kern-obj-get-location kobj))))
+					(defender-mk 'ranger 'normal-defender-ai kplace (+ xoff 20) (+ yoff  5))
+					(defender-mk 'paladin 'normal-defender-ai kplace (+ xoff 20) (+ yoff  6))
+					(if (> (kern-dice-roll "1d4") 3)
+						(defender-mk 'wizard 'wizard-defender-ai kplace (+ xoff 20) (+ yoff  4))
+						(defender-mk 'paladin 'normal-defender-ai kplace (+ xoff 20) (+ yoff  4))
+					)
+				))
+      ))
 
 (define (scene-mgr-intro-wise kobj)
   ;;(println "scene-mgr-intro-wise")
@@ -625,8 +680,9 @@
          (n (scene-mgr-get-num-wise smgr))
          )
     (cond ((< n 8) 
+    			(if (or (> n 6) (> (kern-dice-roll "1d4") 3))
            (scene-mgr-add-wise! smgr (wise-mk (loc-place (kern-obj-get-location kobj)) n kobj))
-           )
+           ))
           (else
            (scene-mgr-advance-state! smgr)))
     )
@@ -1600,17 +1656,17 @@
 		"076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
 		"095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
 		"fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
-		"fj tt tt .. .. .. .. .. .. .. .. tt tt tt tt __ tt tt fl "
+		"fj tt tt t# .. .. .. .. .. .. t% ta tt tt tc __ tt tt fl "
 		"fj tt t# .. ar .. .. .. ar .. .. t% tt tt _3 _c tt tt fl "
-		"fj .. .. .. .. .. .. .. .. .. .. .. ta tc _2 tG tt tt fl "
+		"fj t# .. .. .. .. .. .. .. .. .. .. ta tc _2 tG tt tt fl "
 		"fj .. ar .. .. .. .. .. .. .. ar .. .. .. __ .. .. .. fl "
 		"fj .. .. .. .. .. dd .. .. .. .. .. dd ee ee ee dd dd fl "
 		"fj .. .. .. .. dd {f dd dd dd dd dd dd ee ee ee dd dd fl "
 		"fj .. .. .. .. .. dd .. .. .. .. .. dd ee ee ee dd dd fl "
 		"fj .. ar .. .. .. .. .. .. .. ar .. .. .. __ .. .. .. fl "
-		"fj .. .. .. .. .. .. .. .. .. .. .. t3 t5 _2 tJ tt tt fl "
+		"fj tA .. .. .. .. .. .. .. .. .. .. t3 t5 _2 tJ tt tt fl "
 		"fj tt tA .. ar .. .. .. ar .. .. tC tt tt _a _5 tt tt fl "
-		"fj tt tt .. .. .. .. .. .. .. .. tt tt tt tt __ tt tt fl "
+		"fj tt tt tA .. .. .. .. .. .. tC t3 tt tt t5 __ tt tt fl "
 		"fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
 	)
  )
@@ -1649,6 +1705,7 @@
 ;;----------------------------------------------------------------------------
 
 (define (passive-ai kchar)
+	(kern-sleep 100)
   (or (std-ai kchar)
       #t))
   
@@ -1660,7 +1717,7 @@
               s_beggar    ; sprite
               faction-player        ; starting alignment
               5 5 5                ; str/int/dex
-              pc-hp-off
+              999
               pc-hp-gain
               pc-mp-off
               pc-mp-gain
@@ -1668,7 +1725,7 @@
               #f                    ; dead
               nil                   ; conv
               nil                   ; sched
-              nil                   ; special ai
+              'passive-ai           ; special ai
               nil                   ; container
               nil                   ; readied
               )))
@@ -1770,23 +1827,23 @@
 (kern-mk-dtable																	
 	;;	non	pla	men	cgb	acc	mon	tro	spd	out	gnt	dem	fgb	prs			
 	(list	2	0	0	0	-1	-2	-2	-2	0	-2	-2	0	0	)	;;	none
-	(list	0	2	2	-2	-2	-2	-2	-2	-2	-2	-2	-2	2	)	;;	player
+	(list	0	2	2	-1	-2	-2	-2	-2	-2	2	-2	-2	2	)	;;	player
 	(list	-1	2	2	-1	-2	-2	-2	-2	-2	-2	-2	-2	2	)	;;	men
-	(list	-1	-2	-2	2	-1	-2	0	-2	-2	-1	-2	-2	0	)	;;	cave goblin
-	(list	-1	-2	-1	-1	2	-2	-1	-1	-2	-1	-2	-2	0	)	;;	accursed
-	(list	-2	-2	-2	-2	-2	2	-2	0	-2	0	-2	0	0	)	;;	monsters
-	(list	-2	-2	-2	0	-1	-2	2	-2	-2	-1	-2	-1	0	)	;;	hill trolls
-	(list	-2	-2	-2	-2	-1	0	-2	2	-2	-1	-2	0	0	)	;;	wood spiders
-	(list	0	-2	-2	-2	-2	-2	-2	-2	2	-2	-2	-1	0	)	;;	outlaws
-	(list	-2	-2	-2	-1	-1	0	-1	-1	-2	2	-2	-1	0	)	;;	gint
-	(list	-2	-2	-2	-2	-2	-2	-2	-2	-2	-2	2	-2	0	)	;;	demon
-	(list	0	-2	-2	-2	-2	0	-2	0	-1	-1	-2	2	0	)	;;	forest goblin
+	(list	-1	2	-2	2	-1	-2	0	-2	-2	-1	-2	-2	0	)	;;	cave goblin
+	(list	-1	2	-1	-1	2	-2	-1	-1	-2	-1	-2	-2	0	)	;;	accursed
+	(list	-2	2	-2	-2	-2	2	-2	0	-2	0	-2	0	0	)	;;	monsters
+	(list	-2	2	-2	0	-1	-2	2	-2	-2	-1	-2	-1	0	)	;;	hill trolls
+	(list	-2	2	-2	-2	-1	0	-2	2	-2	-1	-2	0	0	)	;;	wood spiders
+	(list	0	2	-2	-2	-2	-2	-2	-2	2	-2	-2	-1	0	)	;;	outlaws
+	(list	-2	2	-2	-1	-1	0	-1	-1	-2	2	-2	-1	0	)	;;	gint
+	(list	-2	2	-2	-2	-2	-2	-2	-2	-2	-2	2	-2	0	)	;;	demon
+	(list	0	2	-2	-2	-2	0	-2	0	-1	-1	-2	2	0	)	;;	forest goblin
 	(list	0	2	2	0	0	0	0	0	0	0	0	0	2	)	;;	prisoners
 )																	
 
 (define (simple-start kplayer)
   (kern-obj-put-at kplayer (list p_demo_scene (+ xoff 14)  (+ yoff 3)))
-	(kern-map-center-camera (mk-loc p_demo_scene (+ xoff 12)  (+ yoff 5)))
+	(kern-map-center-camera (mk-loc p_demo_scene (+ xoff 10)  (+ yoff 5)))
 	
   (kern-char-set-control-mode ch_wanderer "auto")
 
