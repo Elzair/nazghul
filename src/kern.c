@@ -4856,20 +4856,20 @@ KERN_API_CALL(kern_fire_missile_to_max)
 
         /* Unpack the missile type */
         if (unpack(sc, &args, "pd", &missile_type, &range)) {
-                rt_err("kern-fire-missile: bad missile type arg");
+                rt_err("kern-fire-missile-to-max: bad missile type arg");
                 return sc->NIL;
         }
         if (! missile_type) {
-                rt_err("kern-fire-missile: null missile type");
+                rt_err("kern-fire-missile-to-max: null missile type");
                 return sc->NIL;
         }
 
         /* Unpack the origin */
-        if (unpack_loc(sc, &args, &oplace, &ox, &oy, "kern-fire-missile"))
+        if (unpack_loc(sc, &args, &oplace, &ox, &oy, "kern-fire-missile-to-max"))
                 return sc->NIL;
 
         /* Unpack the destination */
-        if (unpack_loc(sc, &args, &dplace, &dx, &dy, "kern-fire-missile"))
+        if (unpack_loc(sc, &args, &dplace, &dx, &dy, "kern-fire-missile-to-max"))
                 return sc->NIL;
 
         /* Create the missile */
