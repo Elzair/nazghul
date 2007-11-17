@@ -265,15 +265,30 @@
 (define (powers-clone-range power)
 	(+ 1 (/ power 7)))
 
-;todo: nerf this! (does anything stop you cloning the final boss?)
-;otoh that it creates a level 1 clone makes it practically useless anyway
 (define (powers-clone caster target power)
 	(let* ((clone (kern-obj-clone target))
-		(loc (pick-loc (kern-obj-get-location target) clone)))
-			(kern-being-set-base-faction clone (kern-being-get-current-faction caster))
-			(kern-obj-put-at clone loc)
+				(loc (pick-loc (kern-obj-get-location target) clone)))
+		(kern-being-set-base-faction clone (kern-being-get-current-faction caster))
+		;; clone has equipment of original
+		(map (lambda (ktype)
+			(kern-obj-add-to-inventory clone ktype 1))
+			(kern-char-get-arms target)
 		)
-		result-ok)
+		(kern-char-arm-self clone)
+		;; clone level based on of weaker of caster or original
+		(if (> (kern-char-get-level target) (kern-char-get-level caster))
+			(kern-char-set-level clone (+ 1 (* (kern-char-get-level caster) 0.75)))
+			(kern-char-set-level clone (+ 1 (* (kern-char-get-level target) 0.75)))
+		)
+		;; clone may not have more hp/mana than original
+		(if (> (kern-char-get-hp clone) (kern-char-get-hp target))
+			(kern-char-set-hp clone (kern-char-get-hp target)))
+		(if (> (kern-char-get-mana clone) (kern-char-get-mana target))
+			(kern-char-set-mana clone (kern-char-get-mana target)))
+		;;(kern-char-set-ai clone 'spell-sword-ai)
+		(kern-obj-put-at clone loc)
+	)
+	result-ok)
 	
 (define (powers-cone-flamespray caster ktarg power)
 	(let ((damage (mkdice 2 (min (floor (+ 2 (/ power 2))) 10))))
@@ -905,7 +920,7 @@
 			)
        (cond ((null? hostiles) result-ok)
              (else
-              (map apply-sleep hostiles)
+              (map trysleep hostiles)
               result-ok))))
                        
 (define (powers-smoke-range power)
