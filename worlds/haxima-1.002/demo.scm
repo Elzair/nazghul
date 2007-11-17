@@ -786,7 +786,8 @@
   )
 
 (define (scene-mgr-pause kobj)
-  ;;(println "scene-mgr-pause")
+  ;; Keep the sprites animating during pauses.
+  (kern-map-repaint)
   (let ((smgr (gob kobj)))
     (if (= (scene-mgr-get-pause smgr) 10)
         (scene-mgr-advance-state! (gob kobj))
@@ -795,10 +796,12 @@
 (define (scene-mgr-pickup-runes kobj)
   ;;(println "scene-mgr-pickup-runes")
   (for-each (lambda (krune)
-              (kern-place-set-terrain (kern-obj-get-location krune) t_altar)
               (kern-obj-remove krune)
               (kern-map-repaint)
               (kern-sleep 100)
+              ;; Delay changing back the altar so the player can see that it is
+              ;; the altar glowing, not the rune.
+              (kern-place-set-terrain (kern-obj-get-location krune) t_altar)
               )
             (list rune_s rune_w rune_p rune_d rune_f rune_k rune_c rune_l))
   (scene-mgr-advance-state! (gob kobj))
@@ -1776,8 +1779,8 @@
  (list ; objects
   (put (guard-pt 'halberdier)   15 10)
   (put (guard-pt 'halberdier)   15 14)
-   (put (guard-pt 'crossbowman) 13 10)
-   (put (guard-pt 'crossbowman) 13 14)
+  (put (guard-pt 'crossbowman) 13 10)
+  (put (guard-pt 'crossbowman) 13 14)
   (put (mk-monman) 0 0)
   (put (mk-scene-mgr) 0 0)
   (put (kern-tag 'portal (kern-mk-obj t_portal 1)) (+ xoff 9)  (+ yoff 5))
