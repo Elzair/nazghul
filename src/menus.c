@@ -150,6 +150,11 @@ static char *MENU_NEW_GAME_STR = "N)ew Saved Game";
  */
 int main_menu_handled = 0;
 
+/**
+ * Another hack for demos! What fun. Little flag to let the main menu code know
+ * that the demo is done and doesn't need to keep running any more, thanks.
+ */
+int demo_done = 0;
 
 /**
  * Delete a saved game struct and all it's strings. Don't call this, use
@@ -1172,7 +1177,7 @@ reselect:
 static bool menus_demo_tick_handler(struct TickHandler *th)
 {
         static int in_tick = 0; /* hack: prevent recursive entry */
-        if (!in_tick) {
+        if (Session && !in_tick) {
                 in_tick = 1;
                 Tick++;
                 sprite_advance_ticks(1);
@@ -1182,8 +1187,12 @@ static bool menus_demo_tick_handler(struct TickHandler *th)
                 in_tick = 0;
         }
 
+        if (Quit) {
+                demo_done = 1;
+        }
+
         /* See the comment over main_menu_handled. */
-        return (bool)main_menu_handled;
+        return (bool)(main_menu_handled || demo_done);
 }
 
 char * main_menu(void)
@@ -1313,18 +1322,35 @@ char * main_menu(void)
         statusSetMode(StringList);
 
         data.hotkeys = hotkeys;
+        data.entry = NULL;
         kh.fx   = main_menu_scroller;
         kh.data = &data;
+        main_menu_handled = 0;
 
         /* If running a demo then start/resume it. */
         if (run_demo) {
-                main_menu_handled = 0;
                 tick_run();
         }
 
 	eventPushKeyHandler(&kh);
 	eventHandle();
 	eventPopKeyHandler();
+
+        /* Did we come back because the demo is done? */
+        if (demo_done) {
+
+                /* Yep. Setup for plain old splash and show the demo as a menu
+                 * option. */
+                run_demo = 0;
+                show_demo_option = 1;
+                demo_done = 0;
+                Quit = false;
+                session_del(Session); /* wish me luck! */
+                Session = 0;
+                tick_pause();
+                eventPopTickHandler();
+        }
+
 
         /* Pause the demo while running the submenus. This is really only
          * necessary for the load_game_menu(). */
@@ -1333,7 +1359,6 @@ char * main_menu(void)
         }
 
         selection = data.entry;
-
         if (! selection) {
                 goto start_main_menu;
         }

@@ -727,7 +727,7 @@
           ((= 15 state) 
            ;;(println "done")
            ;; Keep repainting to show the sprite animations.
-           (kern-map-repaint)
+           (kern-end-game)
            )
           (else
            ))
