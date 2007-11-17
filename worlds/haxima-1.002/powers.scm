@@ -715,36 +715,36 @@
 (define (powers-lightning-range power)
 	(+ 3 (/ power 2.5)))
 		
-(define (powers-lightning caster ktarg apower)
-	(let ((targets (list nil))
-			(dam (mkdice (floor (+ 1 (/ apower 3))) 4))
-			)
-		(temp-ifc-set 
-			(lambda (kmissile kuser ktarget kplace x y unused)
-				(let (
-							(targchar (get-being-at (mk-loc kplace x y)))
-						)
-					(if (not (null? targchar))
-						(set-car! targets (cons targchar (car targets)))
-					))
-				#t	
-			))
-		(kern-sound-play sound-lightning)
-		(kern-fire-missile-to-max t_lightning_bolt (powers-lightning-range apower)
-			(kern-obj-get-location caster)
-			ktarg
-		)
-		(if (not (null? (car targets)))
-			(map
-				(lambda (zappee)
-					(println zappee)
-					(kern-log-msg (kern-obj-get-name zappee) " shocked!")
-					(kern-obj-inflict-damage zappee "shocked" (kern-dice-roll dam) caster)						
-				)
-				(car targets)
-			))
-	)
-	result-ok)
+(define (powers-lightning caster targloc apower)
+  (let ((targets (list nil))
+        (dam (mkdice (floor (+ 1 (/ apower 3))) 4))
+        )
+    (temp-ifc-set 
+     (lambda (kmissile kuser ktarget kplace x y unused)
+       (let (
+             (targchar (get-being-at (mk-loc kplace x y)))
+             )
+         (if (not (null? targchar))
+             (set-car! targets (cons targchar (car targets)))
+             ))
+       #t	
+       ))
+    (kern-sound-play sound-lightning)
+    (kern-fire-missile-to-max t_lightning_bolt (powers-lightning-range apower)
+                              (kern-obj-get-location caster)
+                              targloc
+                              )    
+    (if (not (null? (car targets)))
+        (map
+         (lambda (zappee)
+           (println zappee)
+           (kern-log-msg (kern-obj-get-name zappee) " shocked!")
+           (kern-obj-inflict-damage zappee "shocked" (kern-dice-roll dam) caster)						
+           )
+         (car targets)
+         ))
+    )
+  result-ok)
 		
 (define (powers-lock caster ktarg power)
 	((kobj-ifc ktarg) 'lock ktarg caster)
