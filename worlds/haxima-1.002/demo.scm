@@ -785,11 +785,11 @@
   (scene-mgr-advance-state! (gob kobj))
   )
 
-(define (scene-mgr-pause kobj)
+(define (scene-mgr-pause kobj delay)
   ;; Keep the sprites animating during pauses.
   (kern-map-repaint)
   (let ((smgr (gob kobj)))
-    (if (= (scene-mgr-get-pause smgr) 10)
+    (if (>= (scene-mgr-get-pause smgr) delay)
         (scene-mgr-advance-state! (gob kobj))
         (scene-mgr-incr-pause! smgr))))
 
@@ -860,8 +860,6 @@
         (kern-char-set-ai kchar 'normal-traveler-ai)
         (kern-obj-put-at kchar from-loc)))
     (wolf-mk (loc-mk kplace 1 14) (list 17 13))
-    (wolf-mk (loc-mk kplace 1 15) (list 17 12))
-    (wolf-mk (loc-mk kplace 1 16) (list 17 11))
     )
   (kern-map-repaint)
   (scene-mgr-advance-state! (gob kobj))
@@ -876,11 +874,83 @@
 
 (define (scene-mgr-years-pass kobj)
   (kern-log-msg "Then years...")
+  (let ((kplace (loc-place (kern-obj-get-location kobj))))
+    (define (mk-troll loc)
+      (let ((kchar (mk-npc 'troll 9)))
+        (kern-char-set-ai kchar 'wait-ai)
+        (kern-obj-put-at kchar loc)
+        ))
+    (kern-blit-map (kern-place-map kplace) 0 0
+                   (kern-mk-map
+                    nil     19 19 pal_expanded
+                    (list
+                     "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
+                     "019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
+                     "038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
+                     "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
+                     "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
+                     "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
+                     "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
+                     "fj tt tt tt .. .. .. .. .. .. tt ta tt tt tc __ tt tt fl "
+                     "fj tt tt .. ar .. .. .. ar .. .. tt tt tt _3 _c tt tt fl "
+                     "fj tt .. .. .. .. .. .. .. .. .. tt ta tc _2 tG tt tt fl "
+                     "fj .. ar .. .. .. .. .. .. .. ar .. tt tt __ tt tt tt fl "
+                     "fj .. .. .. .. dd dd dd .. .. .. .. .. ee ee ee dd .. fl "
+                     "fj .. .. .. dd dd && dd dd .. .. dd dd ee ee ee dd dd fl "
+                     "fj .. .. .. .. dd dd dd .. .. .. .. .. ee ee ee .. dd fl "
+                     "fj .. ar .. .. .. .. .. .. .. ar .. tt tt __ tt tt tt fl "
+                     "fj tt .. .. .. .. .. .. .. .. .. tt t3 t5 _2 tJ tt tt fl "
+                     "fj tt tt .. ar .. .. .. ar .. .. tt tt tt _a _5 tt tt fl "
+                     "fj tt tt tt .. .. .. .. .. .. tt t3 tt tt t5 __ tt tt fl "
+                     "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
+                     ))
+                   0 0 19 19)
+    (mk-troll (loc-mk kplace 5 12))
+    (mk-troll (loc-mk kplace 7 12))
+    )
   (scene-mgr-advance-state! (gob kobj))
   )
 
+(define (scene-mgr-end-years-pass kobj)
+  (println "end-years-pass")
+  (let ((trolls (filter 
+                 (lambda (kobj)
+                   (not (is-player-party-member? kobj)))
+                 (kern-place-get-beings (loc-place (kern-obj-get-location kobj))))))
+    (println "removing " trolls)
+    (for-each kern-obj-remove trolls))
+  (kern-map-repaint)
+  (scene-mgr-advance-state! (gob kobj))
+  )
+
+
 (define (scene-mgr-ages-pass kobj)
   (kern-log-msg "Then ages...")
+  (kern-blit-map (kern-place-map (loc-place (kern-obj-get-location kobj))) 0 0
+                 (kern-mk-map
+                  nil     19 19 pal_expanded
+                  (list
+      "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
+      "019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
+      "038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
+      "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
+      "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
+      "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
+      "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
+      "fj |. |. |. |. |. |. |. |. |. |. |. %% tt %% gg %% |. fl "
+      "fj |. |. tt ar tt tt tt ar tt |. tt %% %% .. gg tt |. fl "
+      "fj |. |. tt tt .. .. .. .. .. tt tt ta %% gg %% tt |. fl "
+      "fj |. ar |. tt .. .. .. .. .. ar tt tt tt gg tt tt |. fl "
+      "fj |. |. tt tt tt |. tt .. .. .. .. .. tt gg tt |. |. fl "
+      "fj |. |. |. |. |. |. |. tt .. .. .. .. .. gg tt |. |. fl "
+      "fj |. |. tt tt tt |. tt .. .. .. .. .. .. gg tt |. |. fl "
+      "fj |. ar |. .. .. tt .. .. .. ar t| t| t| gg tt tt |. fl "
+      "fj |. |. t| tt .. .. .. tt tt t| t| |. t5 gg %% tt |. fl "
+      "fj |. |. t| ar t| t| t| ar t| |. |. |. tt .. gg tt |. fl "
+      "fj |. |. |. |. |. |. |. |. |. |. |. |. |. t5 gg |. |. fl "
+      "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
+                   ))
+                 0 0 19 19)
   (scene-mgr-advance-state! (gob kobj))
   )
 
@@ -891,28 +961,29 @@
     (cond ((= 0 state) (scene-mgr-intro-travelers-phase kobj))
           ((= 1 state) (scene-mgr-intro-demons-phase kobj))
           ((= 2 state) (scene-mgr-wait-for-no-demons-phase kobj)) 
-          ((= 3 state) (scene-mgr-pause kobj))
+          ((= 3 state) (scene-mgr-pause kobj 10))
           ((= 4 state) (scene-mgr-intro-wise kobj))
           ((= 5 state) (scene-mgr-wait-for-wise kobj))
-          ((= 6 state) (scene-mgr-pause kobj))
+          ((= 6 state) (scene-mgr-pause kobj 10))
           ((= 7 state) (scene-mgr-close-gate kobj))
-          ((= 8 state) (scene-mgr-pause kobj))
+          ((= 8 state) (scene-mgr-pause kobj 10))
           ((= 9 state) (scene-mgr-pickup-runes kobj))
-          ((= 10 state) (scene-mgr-pause kobj))
+          ((= 10 state) (scene-mgr-pause kobj 10))
           ((= 11 state) (scene-mgr-exit-wise kobj))
           ((= 12 state) (scene-mgr-wait-for-wise kobj))
           ((= 13 state) (scene-mgr-exit-guards kobj))
           ((= 14 state) (scene-mgr-wait-for-exits kobj))
           ((= 15 state) (scene-mgr-exit-beggar kobj))
           ((= 16 state) (scene-mgr-wait-for-exits kobj))
-          ((= 17 state) (scene-mgr-pause kobj))
+          ((= 17 state) (scene-mgr-pause kobj 10))
           ((= 18 state) (scene-mgr-start-days-pass kobj))
-          ((= 19 state) (scene-mgr-pause kobj))
+          ((= 19 state) (scene-mgr-pause kobj 10))
           ((= 20 state) (scene-mgr-end-days-pass kobj))
           ((= 21 state) (scene-mgr-years-pass kobj))
-          ((= 22 state) (scene-mgr-pause kobj))
-          ((= 23 state) (scene-mgr-ages-pass kobj))
-          ((= 24 state) (scene-mgr-pause kobj))
+          ((= 22 state) (scene-mgr-pause kobj 20))
+          ((= 23 state) (scene-mgr-end-years-pass kobj))
+          ((= 24 state) (scene-mgr-ages-pass kobj))
+          ((= 25 state) (scene-mgr-pause kobj 20))
           (else
            ;;(println "done")
            ;; Keep repainting to show the sprite animations.
@@ -1823,7 +1894,7 @@
   (put (guard-pt 'crossbowman) 13 14)
   (put (mk-monman) 0 0)
   (put (mk-scene-mgr) 0 0)
-  (put (kern-tag 'portal (kern-mk-obj t_portal 1)) (+ xoff 9)  (+ yoff 5))
+  (put (kern-tag 'portal (kern-mk-obj t_portal 1)) 6  12)
   )
  (list 'on-entry-to-dungeon-room) ; hooks
  nil ;; edge entrances
@@ -1979,7 +2050,7 @@
   (kern-obj-put-at kplayer (list p_demo_scene (+ xoff 14)  (+ yoff 3)))
 	(kern-map-center-camera (mk-loc p_demo_scene (+ xoff 10)  (+ yoff 5)))
 
-  (kern-char-set-control-mode ch_wanderer "auto")
+        (kern-char-set-control-mode ch_wanderer "auto")
 
   ;; Do this to initialize the map viewer's active view, and to replace the
   ;; splash screen with the scene.
