@@ -172,7 +172,8 @@ Character::Character(char *tag, char *name,
           rdyArms(NULL),
           fleeing(false), burden(0),
           inCombat(false),
-          container(NULL), sprite(sprite),
+          container(NULL), 
+          //sprite(sprite),
           sched_chars_node(0),
           forceContainerDrop(false)
           , fleePathFound(false)
@@ -193,7 +194,7 @@ Character::Character(char *tag, char *name,
         plnode = NULL;
 	setPlayerControlled(false);	// by default
         setBaseFaction(NIL_FACTION);
-
+	this->current_sprite = sprite;
 	this->light        = MIN_PLAYER_LIGHT;
 	this->party        = 0;
 	this->conv         = conv;
@@ -261,7 +262,8 @@ Character::Character():hm(0), xp(0), order(-1),
                        rdyArms(NULL),
                        fleeing(false), burden(0),
                        inCombat(false),
-                       container(NULL), sprite(0),
+                       container(NULL), 
+                       //sprite(0),
                        sched_chars_node(0),
                        forceContainerDrop(false)
                       , fleePathFound(false)
@@ -1537,7 +1539,7 @@ bool Character::initStock(struct species * species, struct occ * occ,
 	this->occ = occ;
         if (occ)
                 occ_ref(occ);
-	this->sprite = sprite;
+	this->current_sprite = sprite;
 
 	if (!initCommon())
 		return false;
@@ -1590,7 +1592,7 @@ struct sprite *Character::getSprite()
 {
 	if ((isAsleep() || isDead()) && species->sleep_sprite)
 		return species->sleep_sprite;
-	return sprite;
+	return current_sprite;
 }
 
 void Character::rest(int hours)
@@ -1694,7 +1696,7 @@ class Object *Character::clone()
         else
                 snprintf(buf, sizeof(buf), "%s (clone)", getName());
 
-	clone->initStock(species, occ, sprite, buf, 0);
+	clone->initStock(species, occ, current_sprite, buf, 0);
 	clone->is_clone = true;
 
         // clone the readied items
@@ -3100,7 +3102,7 @@ void Character::save(struct save *save)
         save->write(save, "\"%s\"  ; name\n", this->getName());
         save->write(save, "%s  ; species\n",  this->species->tag);
         save->write(save, "%s  ; occ\n", this->occ ? this->occ->tag : "nil");
-        sprite_save(sprite, save);
+        sprite_save(current_sprite, save);
         /*save->write(save, "%s\n", sprite_get_tag(this->sprite));*/
         save->write(save, "%d  ; BaseFaction\n", getBaseFaction());
         save->write(save, "%d %d %d  ; str, int, dex\n",    str, intl, dex);

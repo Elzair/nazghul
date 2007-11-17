@@ -276,7 +276,7 @@ class Character:public Being {
 	bool rearm;
 
 	// *** PC fields
-	struct sprite *sprite;
+	//struct sprite *sprite;
 
         bool charmed;
 
