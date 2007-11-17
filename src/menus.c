@@ -1195,8 +1195,9 @@ char * main_menu(void)
         static char *QUIT="Q)uit";
         static char *TUTORIAL="T)utorial";
         static char *SETTINGS = "S(e)ttings";
-        char *menu[7];
-        char hotkeys[7+1];
+        static char *DEMO = "Show (I)ntro";
+        char *menu[8];
+        char hotkeys[8+1];
         int n_items = 0;
         struct KeyHandler kh;
         menu_scroll_data_t data;
@@ -1212,6 +1213,9 @@ char * main_menu(void)
         char *save_game_fname = cfg_get("save-game-filename");
         struct TickHandler th;
         int run_demo = 0;
+        int show_demo_option = 0;
+        static int first_time = 1;
+        char *demo_fname = 0;
 
         /* setup main menu quit handler so player can click close window to
          * exit */
@@ -1220,21 +1224,30 @@ char * main_menu(void)
 
         /* Does the config file mention a demo? */
         if (cfg_get("demo-filename")) {
-                char *demo_fname = file_mkpath(cfg_get("include-dirname"),
-                                               cfg_get("demo-filename"));
+                demo_fname = file_mkpath(cfg_get("include-dirname"),
+                                         cfg_get("demo-filename"));
 
                 /* Can we find it? */
                 if (file_exists(demo_fname)) {
 
-                        /* Setup the demo to run in parallel with the main
-                         * menu. */
-                        run_demo = 1;
-                        session_load(demo_fname);
-                        Session->is_demo = 1;
-                        session_run_start_proc(Session);
-                        th.fx = menus_demo_tick_handler;
-                        eventPushTickHandler(&th);
-                        Quit = false;
+                        /* Is this NOT the first time in the main menu? */
+                        if (! first_time) {
+
+                                /* Show the demo as a menu option but don't
+                                 * automatically start it. */
+                                show_demo_option = 1;
+
+                        } else {
+                                /* Setup the demo to run in parallel with the
+                                 * main menu. */
+                                run_demo = 1;
+                                session_load(demo_fname);
+                                Session->is_demo = 1;
+                                session_run_start_proc(Session);
+                                th.fx = menus_demo_tick_handler;
+                                eventPushTickHandler(&th);
+                                Quit = false;
+                        }
                 }
         }
 
@@ -1270,6 +1283,13 @@ char * main_menu(void)
         if (file_exists(tutorial_fname)) {
                 menu[n_items] = TUTORIAL;
                 hotkeys[n_items] = 't';
+                n_items++;
+        }
+
+        /* check for demo */
+        if (show_demo_option) {
+                menu[n_items] = DEMO;
+                hotkeys[n_items] = 'i';
                 n_items++;
         }
 
@@ -1348,8 +1368,26 @@ char * main_menu(void)
         else if (! strcmp(selection, TUTORIAL)) {
                 load_fname = tutorial_fname;
         }
-        else if (! strcmp(selection, QUIT))
+        else if (! strcmp(selection, QUIT)) {
                 exit(0);
+        }
+        else if (! strcmp(selection, DEMO)) {
+                /* FIXME: this means that once the demo is started, it won't
+                 * appear as an option again until the user selects to leave
+                 * the main menu and then comes back. Currently there is no way
+                 * to tell when the demo is done, so we don't know when it's ok
+                 * to put the option back in. */
+                show_demo_option = 0;
+                run_demo = 1;
+
+                session_load(demo_fname);
+                Session->is_demo = 1;
+                session_run_start_proc(Session);
+                th.fx = menus_demo_tick_handler;
+                eventPushTickHandler(&th);
+                Quit = false;
+                goto start_main_menu;
+        }
         else {
                 fprintf(stderr, "Invalid selection: '%s'\n", selection);
                 exit(-1);
@@ -1368,6 +1406,7 @@ char * main_menu(void)
                 eventPopTickHandler();
         }
         
+        first_time = 0;
         return load_fname;
 }
 
