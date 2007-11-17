@@ -473,6 +473,19 @@
           (traveler-goto-dest kchar)
           #f)))
 
+(define (traveler-exit kchar)
+  (let* ((loc (kern-obj-get-location kchar))
+         (dest (loc-mk (loc-place loc) (+ xoff 20) (+ yoff  5)))
+       )
+    (if (equal? loc dest)
+        (begin
+          (kern-obj-remove kchar)
+          (kern-map-repaint)
+          #t)
+        (begin
+          (pathfind kchar dest))
+    )))
+          
 (define (traveler-mk kplace)
   (let* ((type-ai (random-select (list (cons 'wizard 'wizard-traveler-ai) 
                                        (cons 'wizard 'wizard-traveler-ai) 
@@ -775,6 +788,21 @@
   (scene-mgr-advance-state! (gob kobj))
   )
 
+(define (scene-mgr-exit-guards kobj)
+  ;;(println "scene-mgr-exit-guards") 
+  (map (lambda (kchar)
+		(if (not (is-player-party-member? kchar))
+           (kern-char-set-ai kchar 'traveler-exit)))
+       (kern-place-get-beings (loc-place (kern-obj-get-location kobj))))
+  (scene-mgr-advance-state! (gob kobj))
+  )
+
+(define (scene-mgr-wait-for-exits kobj)
+  ;;(println "scene-mgr-wait-for-guards")
+  (if (< (length (all-allies-near (kern-get-player))) 2)
+	(scene-mgr-advance-state! (gob kobj)))
+  )
+
 (define (scene-mgr-exec kobj) 
   (let* ((smgr (kobj-gob-data kobj))
          (state (scene-mgr-state smgr)))
@@ -794,7 +822,10 @@
           ((= 12 state) (scene-mgr-pause kobj))
           ((= 13 state) (scene-mgr-exit-wise kobj))
           ((= 14 state) (scene-mgr-wait-for-wise kobj))
-          ((= 15 state) 
+          ((= 15 state) (scene-mgr-exit-guards kobj))
+          ((= 16 state) (scene-mgr-wait-for-exits kobj))
+          ((= 17 state) (scene-mgr-pause kobj))
+          ((= 18 state) 
            ;;(println "done")
            ;; Keep repainting to show the sprite animations.
            (kern-end-game)
