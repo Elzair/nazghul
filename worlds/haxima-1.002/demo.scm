@@ -491,6 +491,30 @@
         (begin
           (pathfind kchar dest))
     )))
+    
+(define (seek-loot kchar)
+	(let ((loot-list 
+		(filter (mk-ifc-query 'get)
+			(kern-place-get-objects (loc-place (kern-obj-get-location kchar))))
+		))
+		(if (not (null? loot-list))
+			(let* ((targetloot (car loot-list)))
+				;;(println "loot: " (kern-obj-get-name targetloot))
+				(if (< (kern-get-distance (kern-obj-get-location kchar) (kern-obj-get-location targetloot)) 2)
+					(begin 
+						(kern-obj-remove targetloot)
+						#t
+					)
+					(pathfind kchar (kern-obj-get-location targetloot))
+				))
+			#f
+		)
+    ))
+    
+(define (beggar-exit kchar)
+	(or (seek-loot kchar)
+		(traveler-exit kchar))
+    )
           
 (define (traveler-mk kplace)
   (let* ((type-ai (random-select (list (cons 'wizard 'wizard-traveler-ai) 
@@ -808,6 +832,20 @@
   (if (< (length (all-allies-near (kern-get-player))) 2)
 	(scene-mgr-advance-state! (gob kobj)))
   )
+  
+(define (scene-mgr-exit-beggar kobj)
+  ;;(println "scene-mgr-exit-beggar")
+  (let ((kcharn (mk-npc 'ranger 9)))
+    (kern-obj-set-sprite kcharn s_beggar)
+    (kern-char-set-ai kcharn 'beggar-exit)
+    (kern-obj-put-at kcharn (kern-obj-get-location (kern-get-player)))
+   )
+  (map (lambda (kchar)
+		(if (is-player-party-member? kchar)
+           (kern-obj-set-sprite kchar nil)))
+       (kern-place-get-beings (loc-place (kern-obj-get-location kobj))))
+  (scene-mgr-advance-state! (gob kobj))
+  )
 
 (define (scene-mgr-exec kobj) 
   (let* ((smgr (kobj-gob-data kobj))
@@ -830,8 +868,10 @@
           ((= 14 state) (scene-mgr-wait-for-wise kobj))
           ((= 15 state) (scene-mgr-exit-guards kobj))
           ((= 16 state) (scene-mgr-wait-for-exits kobj))
-          ((= 17 state) (scene-mgr-pause kobj))
-          ((= 18 state) 
+          ((= 17 state) (scene-mgr-exit-beggar kobj))
+          ((= 18 state) (scene-mgr-wait-for-exits kobj))
+          ((= 19 state) (scene-mgr-pause kobj))
+          ((= 20 state) 
            ;;(println "done")
            ;; Keep repainting to show the sprite animations.
            (kern-end-game)
@@ -1756,6 +1796,7 @@
 ;;----------------------------------------------------------------------------
 
 (define (passive-ai kchar)
+	(kern-char-set-hp kchar max-health) ; functionally immortal, in case of stray fireballs
 	(kern-sleep 100)
   (or (std-ai kchar)
       #t))
@@ -1768,7 +1809,7 @@
               s_beggar    ; sprite
               faction-player        ; starting alignment
               5 5 5                ; str/int/dex
-              999
+              9999							; functionally immortal, in case of stray fireballs
               pc-hp-gain
               pc-mp-off
               pc-mp-gain
