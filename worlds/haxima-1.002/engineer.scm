@@ -52,10 +52,9 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Engineer is, well, the Engineer. He should give the player several special
-;; quests. The first quest is to find a thief who has stolen something (he's
-;; not specific about what), this is the CrOOAK quest which I was going to do
-;; as a standalone episode.
+;; The Engineer is a Wright of great knowledge, and one of the Wise.
+;; He dwells in an isolated workshop on a nearly inaccessible
+;; void-mesa (or void-island) off the edge of the Shard.
 ;;----------------------------------------------------------------------------
 (define (eng-hail knpc kpc)
   (say knpc "[You meet a thin man with wild, white hair. "

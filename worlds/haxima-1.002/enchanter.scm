@@ -7,6 +7,10 @@
 ;; Schedule
 ;;
 ;; The schedule below is for the place "Enchanter's Tower Ground Floor"
+;; 
+;; (The fact that he never visits the second floor of his own tower
+;; should serve as an incentive for us to eventually get multi-place
+;; schedules working  :-)
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_enchanter
                (list 0  0  enchtwr-ench-bed        "sleeping")
@@ -25,10 +29,10 @@
 ;;----------------------------------------------------------------------------
 (define (enchanter-mk)
   (list #f 
-        (mk-quest) ;; stolen rune
-        (mk-quest) ;; purpose of runes
-        (mk-quest) ;; all runens
-        (mk-quest) ;; demon gate
+        (mk-quest) ;; get stolen rune
+        (mk-quest) ;; learn the purpose of the runes
+        (mk-quest) ;; get all runes
+        (mk-quest) ;; open demon gate
         ))
 (define (ench-met? gob) (car gob))
 (define (ench-first-quest gob) (cadr gob))
@@ -39,10 +43,9 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Enchanter is, well, the Enchanter. He should give the player several special
-;; quests. The first quest is to find a thief who has stolen something (he's
-;; not specific about what), this is the CrOOAK quest which I was going to do
-;; as a standalone episode.
+;; The Enchanter is a powerful Mage, and one of the Wise.
+;; He lives in the Enchanter's Tower.
+;; He plays an important role in multiple stages of the main quest.
 ;;----------------------------------------------------------------------------
 (define (ench-hail knpc kpc)
   (let ((ench (gob knpc)))
