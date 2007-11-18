@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Paladin's Hold, in the Keep guarding Kurpolis.
 ;;----------------------------------------------------------------------------
 (define alex-bed ph-bed3)
 (define alex-mealplace ph-tbl3)
@@ -30,6 +32,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Alex is a Captain in the Glasdrin Militia, 
+;; serving in the second garrison which guards 
+;; the undead-filled prison level of Kurpolis.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...

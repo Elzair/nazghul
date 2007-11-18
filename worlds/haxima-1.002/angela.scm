@@ -5,7 +5,7 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;
-;; The schedule below is for the place "Trigrave"
+;; In Glasdrin.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_ange
                (list 0  0  ga-bed "sleeping")
@@ -28,7 +28,8 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Ange is the innkeeper for Trigrave. She is a gracious, mysterious woman.
+;; Angela is a female innkeeper, who runs the Palisades Inn in Glasdrin.
+;; She is a gracious, mysterious woman.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...

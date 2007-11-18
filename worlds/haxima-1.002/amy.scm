@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the Poor House (at least until such time as she joins the Wanderer).
 ;;----------------------------------------------------------------------------
 (define amy-bed poorh-bed2)
 (define amy-mealplace poorh-sup2)
@@ -30,6 +32,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Amy is a female tinker, fallen upon hard times.
+;; She currently dwells in the Poor House.
+;; Amy is a potential party member.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...

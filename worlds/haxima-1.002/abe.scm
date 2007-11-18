@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Green Tower
 ;;----------------------------------------------------------------------------
 (define abe-bed gt-abe-bed)
 (define abe-mealplace gt-ws-tbl2)
@@ -32,6 +34,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Abe is a scholar who knows much of the runes.
+;; He fled from Absalot with the Alchemist, and now lives in Green Tower.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...

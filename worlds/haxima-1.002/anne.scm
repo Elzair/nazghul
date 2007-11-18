@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Paladin's Hold, in the Keep guarding Kurpolis.
 ;;----------------------------------------------------------------------------
 (define anne-bed ph-bed2)
 (define anne-mealplace ph-tbl2)
@@ -30,6 +32,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Anne is a female White Magick mage serving as a medik 
+;; in the service of Glasdrin.  
+;; She currently serves in the Paladin's Hold of the Keep guarding Kurpolis.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...

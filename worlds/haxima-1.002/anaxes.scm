@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; No schedule (Cave Shrine within Brundegart).
 ;;----------------------------------------------------------------------------
 
 ;;----------------------------------------------------------------------------
@@ -16,6 +18,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Anaxes is the lich/shade of a long-dead wizard, who once served 
+;; Luximene and later rebelled against him.
+;; Anaxes abides in the Cave Shrine within the lost realm of Brundegart.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
