@@ -23,9 +23,8 @@
            (ability-level-required ability))))
 
 (define (use-ability ability kchar . args)
-  ;;(println "use-ability:" ability)
   (let ((result (apply (ability-proc ability) (cons kchar args))))
-  	 (if (result)
+  	 (if result
   	 	(begin
 		  (kern-char-dec-mana kchar (ability-mana-cost ability))
 		  (kern-obj-dec-ap kchar (ability-ap-cost ability))
@@ -180,7 +179,7 @@
                 " teleports")
   (kern-obj-relocate kchar loc nil))
 
-(define (fire-wind-proc kchar ktarg)
+(define (fire-wind-proc3 kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
                 " blasts fire at "
                 (kern-obj-get-name ktarg))
@@ -197,6 +196,20 @@
                       ))
          (dir (loc-to-cardinal-dir v)))
     (spew-in-dir dir)))
+    
+(define (fire-wind-proc kchar ktarg)
+	;;(println "flamewind")
+	(let ((target (kern-obj-get-location ktarg))
+			(power (occ-ability-blackmagic kchar)))
+		(and (powers-cone-fire-test kchar target power)
+			(begin 
+				;;(println "flamewind2")
+				(kern-log-msg (kern-obj-get-name kchar)
+	                " blasts fire at "
+	                (kern-obj-get-name ktarg))
+		   	(powers-cone-fire kchar target power)
+		  ))
+	))
 
 (define (lightning-bolt-proc kchar ktarg)
 	(let ((target (kern-obj-get-location ktarg))
@@ -370,7 +383,7 @@
 (define deck-to-sludge      (mk-ability "chomp deck"          1 1 1 1 deck-to-sludge-proc))
 (define enslave             (mk-ability "enslave"             3 4 2 4 enslave-proc))
 (define narcotize           (mk-ability "narcotize"           5 6 3 0 narcotize-proc))
-(define cast-fire-wind      (mk-ability "fire wind"           6 6 2 4 fire-wind-proc))
+(define cast-fire-wind      (mk-ability "fire wind"           6 6 2 9 fire-wind-proc))
 (define turn-invisible      (mk-ability "turn invisible"      7 7 2 0 turn-invisible-proc))
 (define cast-lightning-bolt (mk-ability "lightning bolt"      4 4 2 9 lightning-bolt-proc))
 
