@@ -923,18 +923,18 @@
                      "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
                      "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
                      "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
-                     "fj t. t. t. t. t. .. .. t. t. t. ta t. t. tc __ t. t. fl "
-                     "fj t. t. t. ar .. .. .. ar .. t. t. t. t. _3 _c t. t. fl "
-                     "fj t. t. .. .. .. .. .. .. .. t. t. ta tc _2 tG t. t. fl "
-                     "fj t. ar .. .. .. bb .. .. .. ar t. t. t. __ t. t. t. fl "
-                     "fj t. .. .. bb dd dd dd .. .. .. t. t. .. ee ee dd .. fl "
-                     "fj t. .. .. dd dd && dd dd .. .. dd dd ee ee dd dd dd fl "
-                     "fj t. .. .. .. dd dd dd .. .. .. t. .. ee __ ee .. dd fl "
-                     "fj t. ar .. .. .. .. bb .. .. ar t. t. t. __ t. t. t. fl "
-                     "fj t. t. .. .. .. .. .. .. .. t. t. t3 t5 _2 tJ t. t. fl "
-                     "fj t. t. t. ar .. .. .. ar .. t. t. t. t. _a _5 t. t. fl "
-                     "fj t. t. t. t. .. t. .. t. t. t. t3 t. t. t5 __ t. t. fl "
-                     "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
+							"fj t. |. t. t. tc .. .. ta t. t. |. |. |. tL __ t. |. fl "
+							"fj |. t. tc ar .. .. .. ar t% t. |. t. t. _3 _c t. t. fl "
+							"fj t. tc t# .. .. .. .. .. .. ta t. t. t. _2 tG t. t. fl "
+							"fj tc ar .. .. .. bb .. .. .. ar |. t. tc _2 ta t. t. fl "
+							"fj |. .. .. bb dd dd dd .. .. .. ta tc t# ee ee dd .. fl "
+							"fj t. .. .. dd dd && dd dd .. .. dd dd ee ee dd dd dd fl "
+							"fj t. .. .. .. dd dd dd .. .. .. t7 tA ee __ ee .. dd fl "
+							"fj t. ar .. .. .. .. bb .. .. ar t. t. t5 __ t3 t. t. fl "
+							"fj t. t5 tA .. .. .. .. .. .. t3 |. t. t5 _2 tJ |. t. fl "
+							"fj t. t. t5 ar .. .. .. ar tC t. t. t. t. _a _5 t. |. fl "
+							"fj t. t. |. t5 .. t7 .. t3 |. |. t. t. t. tH __ t. |. fl "
+                     "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo " 
                      ))
                    0 0 19 19)
     (mk-troll (loc-mk kplace 5 12))
@@ -969,17 +969,17 @@
                      "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
                      "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
                      "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
-                     "fj |. |. |. t. |. |. |. t. |. |. |. |. t. %% __ __ %% fl "
-                     "fj |. |. t. ar t. |. t. ar t. t. |. t. %% __ _c %c .. fl "
-                     "fj |. t. t. t. t. t. t. t. |. t. t. t. %% _e %c .. t. fl "
-                     "fj t. ar t. t. .. bb .. t. t. ar t. t. .. %% .. t. |. fl "
-                     "fj |. t. t. bb .. .. .. .. t. t. t. t. .. %% .. t. |. fl "
-                     "fj |. |. t. .. .. {f .. .. .. t. .. .. ta gg .. .. t. fl "
-                     "fj |. t. t. .. .. .. .. .. t. t. t. t. .. %% .. t. |. fl "
-                     "fj t. ar t. t. .. .. bb t. t. ar t. t. .. %% .. t. |. fl "
-                     "fj |. t. |. t. t. t. t. t. |. t. |. t. .. %e .. .. t. fl "
-                     "fj |. |. t. ar t. |. t. ar t. |. |. |. t. .. %7 .. |. fl "
-                     "fj |. |. |. t. |. |. |. t. |. |. |. |. t. .. %% .. |. fl "
+							"fj |. |. |. t. |. |. |. t. |. |. |. |. tc %% __ _c %% fl "
+							"fj |. t. t. ar t. |. t. at t. t. |. |. %3 _3 _c %c .. fl "
+							"fj |. t. t. t. t. t. |. t. |. t. t. t. %a _e %c tC t3 fl "
+							"fj t. at t. tc t# bb t% ta t. at t. t. .. %% .. t3 |. fl "
+							"fj |. t. t. bb .. .. .. t% ta t. |. tc tA %% .. ta |. fl "
+							"fj |. |. t. .. .. {f .. .. tD t. tB tD ta gg .. tD t. fl "
+							"fj |. t. t. tA .. .. .. tC t3 t. t. t5 t# %% .. t3 |. fl "
+							"fj t. at t. t5 tA .. bb t3 t. at t. t. .. %% .. ta |. fl "
+							"fj |. t. |. t. t. t. t. t. |. t. |. t. tA %e .. t% t. fl "
+							"fj |. |. t. at t. t. t. ar t. |. |. |. t5 .. %7 .. |. fl "
+							"fj |. |. |. t. |. |. |. t. |. |. t. |. t. .. %% .. |. fl "                     
                      "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
                      ))
                    0 0 19 19)
@@ -1023,17 +1023,17 @@
                      "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
                      "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
                      "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
-                     "fj |. |. |. t. |. |. |. t. |. t. .. %% %% %% %% %% .. fl "
-                     "fj |. |. t. ar t. |. t. ar t. t. .. %% %% %% %% .. t. fl "
-                     "fj |. t. t. t. |. |. |. t. |. t. t. .. %% %% %% .. t. fl "
-                     "fj t. ar t. |. |. bb |. |. t. ar t. t. .. %% .. t. |. fl "
-                     "fj |. t. |. bb t. .. t. |. |. t. |. t. .. %% .. t. |. fl "
-                     "fj |. |. |. t. .. {f .. t. |. |. |. ta %% gg %% .. t. fl "
-                     "fj |. t. |. |. t. .. t. |. |. t. |. t. .. %% .. t. |. fl "
-                     "fj t. ar t. |. |. t. bb |. t. ar t. t. .. gg .. t. |. fl "
-                     "fj |. t. |. t. |. |. |. t. |. t. |. t. .. gg %% .. t. fl "
-                     "fj |. |. t. ar t. |. t. ar t. |. |. |. t. .. gg .. t. fl "
-                     "fj |. |. |. t. |. |. |. t. |. |. |. |. t. .. gg .. t. fl "
+							"fj |. |. |. t. |. |. |. t. |. t. .. %% %% %% %% %c .. fl "
+							"fj |. |. t. at t. |. t. at t. t. tA %a %% %% %% .. t3 fl "
+							"fj |. t. t. t. |. |. |. t. |. t. t5 tA %a %% %c tC t. fl "
+							"fj t. at t. |. |. bb |. |. t. at t. t5 .. %% .. t3 |. fl "
+							"fj |. t. |. bb te .. ta |. |. t. |. t. .. %% .. ta |. fl "
+							"fj |. |. |. t5 tB {f tD t. |. |. |. ta %b gg %d tD t. fl "
+							"fj |. t. |. |. t5 tE tb |. |. t. |. t. .. %% .. t3 |. fl "
+							"fj t. at t. |. |. t5 bb |. t. at t. t. .. gg .. ta |. fl "
+							"fj |. t. |. t. |. |. |. t. |. t. |. t. tA gg %5 t% t. fl "
+							"fj |. |. t. at t. |. t. at t. |. |. |. t5 .. gg .. t. fl "
+							"fj |. |. |. t. |. |. |. t. |. |. |. |. t. .. gg .. t. fl "
                      "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
                      ))
                    0 0 19 19)
@@ -2013,8 +2013,8 @@
 
 (define (passive-ai kchar)
 	(kern-char-set-hp kchar max-health) ; functionally immortal, in case of stray fireballs
-	(kern-sleep 100)
-  (or (std-ai kchar)
+	(kern-map-repaint)
+	(kern-sleep 75)
       #t))
   
 (let ((kchar (kern-mk-char 
