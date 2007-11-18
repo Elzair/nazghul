@@ -335,6 +335,7 @@
 (load "species.scm")
 (load "conv.scm") ;; basic conversation
 (load "npc-types.scm")
+(load "spider.scm")
 ;;(load "mimic.scm")
 ;;(load "parties.scm")
 ;;(load "jewelry.scm")
@@ -922,17 +923,17 @@
                      "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
                      "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
                      "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
-							"fj t| tt tc t# .. .. .. .. t% ta tt tt tt tL __ tt tt fl "
-							"fj tt tc t# ar .. .. .. ar .. t% t| t| t| _3 _c tt t| fl "
-							"fj tc t# .. .. .. .. .. .. .. .. ta tt tc _2 tG tt t| fl "
-							"fj t# ar .. .. .. .. .. .. .. ar t% ta tc __ ta t| tt fl "
-							"fj .. .. .. .. dd dd dd .. .. .. .. .. ee ee dd dd .. fl "
-							"fj .. .. .. dd dd && dd dd .. .. dd dd ee ee ee dd dd fl "
-							"fj .. .. .. .. dd dd dd .. .. .. .. .. ee ee ee .. dd fl "
-							"fj tA ar .. .. .. .. .. .. .. ar tC t3 t5 __ t3 tt t| fl "
-							"fj t5 tA .. .. .. .. .. .. .. .. t3 tt t5 _2 tJ tt tt fl "
-							"fj tt t5 tA ar .. .. .. ar .. tC t| t| tt _a _5 t| tt fl "
-							"fj tt tt t5 tA .. .. .. .. tC t3 tt tt tt tH __ tt tt fl "
+                     "fj t. t. t. t. t. .. .. t. t. t. ta t. t. tc __ t. t. fl "
+                     "fj t. t. t. ar .. .. .. ar .. t. t. t. t. _3 _c t. t. fl "
+                     "fj t. t. .. .. .. .. .. .. .. t. t. ta tc _2 tG t. t. fl "
+                     "fj t. ar .. .. .. bb .. .. .. ar t. t. t. __ t. t. t. fl "
+                     "fj t. .. .. bb dd dd dd .. .. .. t. t. .. ee ee dd .. fl "
+                     "fj t. .. .. dd dd && dd dd .. .. dd dd ee ee dd dd dd fl "
+                     "fj t. .. .. .. dd dd dd .. .. .. t. .. ee __ ee .. dd fl "
+                     "fj t. ar .. .. .. .. bb .. .. ar t. t. t. __ t. t. t. fl "
+                     "fj t. t. .. .. .. .. .. .. .. t. t. t3 t5 _2 tJ t. t. fl "
+                     "fj t. t. t. ar .. .. .. ar .. t. t. t. t. _a _5 t. t. fl "
+                     "fj t. t. t. t. .. t. .. t. t. t. t3 t. t. t5 __ t. t. fl "
                      "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
                      ))
                    0 0 19 19)
@@ -948,7 +949,6 @@
                  (lambda (kobj)
                    (not (is-player-party-member? kobj)))
                  (kern-place-get-beings (loc-place (kern-obj-get-location kobj))))))
-    (println "removing " trolls)
     (for-each kern-obj-remove trolls))
   (kern-map-repaint)
   (scene-mgr-advance-state! (gob kobj))
@@ -957,36 +957,32 @@
 
 (define (scene-mgr-ages-pass kobj)
   (kern-log-msg "Then ages...")
-  (kern-blit-map (kern-place-map (loc-place (kern-obj-get-location kobj))) 0 0
-                 (kern-mk-map
-                  nil     19 19 pal_expanded
-                  (list
-      "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
-      "019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
-      "038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
-      "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
-      "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
-      "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
-      "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
-		"fj |. |. |. |. |. |. |. |. |. |. |. %% te %a gg %c |. fl "
-		"fj |. |. tt at t| tt t| at tt |. t| %a %5 .. gg t3 |. fl "
-		"fj |. |. t| tt t# .. .. .. t% ta tt t5 %a gg %c t| |. fl "
-		"fj |. at |. tt tA .. .. .. .. ar ta tt t5 gg t3 tt |. fl "
-		"fj |. |. t| tt tt |. t5 tA .. .. .. t% te gg t| |. |. fl "
-		"fj |. |. |. |. |. |. |. td .. .. .. .. .. gg tt |. |. fl "
-		"fj |. |. tt t| tt |. tc t# .. .. .. .. .. gg tt |. |. fl "
-		"fj |. at |. tB t% te t# .. .. ar t3 t| t| gg ta tt |. fl "
-		"fj |. |. t| tt tA .. tC t3 tt t| t| |. tt gg %5 tt |. fl "
-		"fj |. |. t| at t| t| t| at t| |. |. |. tt tA gg tt |. fl "
-		"fj |. |. |. |. |. |. |. |. |. |. |. |. |. t5 gg |. |. fl "
-      "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
-                   ))
-                 0 0 19 19)
-  (scene-mgr-advance-state! (gob kobj))
-  )
-  
-(define (scene-mgr-ages-passed kobj)
   (let ((kplace (loc-place (kern-obj-get-location kobj))))
+    (kern-blit-map (kern-place-map kplace) 0 0
+                   (kern-mk-map
+                    nil     19 19 pal_expanded
+                    (list
+                     "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
+                     "019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
+                     "038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
+                     "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
+                     "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
+                     "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
+                     "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
+                     "fj |. |. |. t. |. |. |. t. |. |. |. |. t. %% __ __ %% fl "
+                     "fj |. |. t. ar t. |. t. ar t. t. |. t. %% __ _c %c .. fl "
+                     "fj |. t. t. t. t. t. t. t. |. t. t. t. %% _e %c .. t. fl "
+                     "fj t. ar t. t. .. bb .. t. t. ar t. t. .. %% .. t. |. fl "
+                     "fj |. t. t. bb .. .. .. .. t. t. t. t. .. %% .. t. |. fl "
+                     "fj |. |. t. .. .. {f .. .. .. t. .. .. ta gg .. .. t. fl "
+                     "fj |. t. t. .. .. .. .. .. t. t. t. t. .. %% .. t. |. fl "
+                     "fj t. ar t. t. .. .. bb t. t. ar t. t. .. %% .. t. |. fl "
+                     "fj |. t. |. t. t. t. t. t. |. t. |. t. .. %e .. .. t. fl "
+                     "fj |. |. t. ar t. |. t. ar t. |. |. |. t. .. %7 .. |. fl "
+                     "fj |. |. |. t. |. |. |. t. |. |. |. |. t. .. %% .. |. fl "
+                     "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
+                     ))
+                   0 0 19 19)
     (define (deer-mk from-loc to-xy)
       (let ((kchar (mk-npc 'wolf 9)))
         (npcg-set-post! (gob kchar) to-xy)
@@ -994,20 +990,72 @@
         (kern-char-set-ai kchar 'erratic-traveler-ai)
         (kern-obj-put-at kchar from-loc)
         (kern-map-repaint)
-  		  (kern-sleep 20)
+        (kern-sleep 20)
       )
-    )
+      )
     (deer-mk (loc-mk kplace 5 7) (list 12 17))
     (deer-mk (loc-mk kplace 3 7) (list 13 17))
+    )
+  (kern-map-repaint)
+  (scene-mgr-advance-state! (gob kobj))
+  )
+
+(define (scene-mgr-ages-passed kobj)
+  (let ((kplace (loc-place (kern-obj-get-location kobj))))
   )
   (kern-map-repaint)
   (scene-mgr-advance-state! (gob kobj))
   )
 
+
+
+(define (scene-mgr-conclude kobj)
+  (kern-log-msg "Until what was closed and locked by magic has been forgotten.")
+  (let ((kplace (loc-place (kern-obj-get-location kobj))))
+    (kern-blit-map (kern-place-map kplace) 0 0
+                   (kern-mk-map
+                    nil     19 19 pal_expanded
+                    (list
+                     "000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 "
+                     "019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 "
+                     "038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 "
+                     "057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 "
+                     "076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
+                     "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
+                     "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
+                     "fj |. |. |. t. |. |. |. t. |. t. .. %% %% %% %% %% .. fl "
+                     "fj |. |. t. ar t. |. t. ar t. t. .. %% %% %% %% .. t. fl "
+                     "fj |. t. t. t. |. |. |. t. |. t. t. .. %% %% %% .. t. fl "
+                     "fj t. ar t. |. |. bb |. |. t. ar t. t. .. %% .. t. |. fl "
+                     "fj |. t. |. bb t. .. t. |. |. t. |. t. .. %% .. t. |. fl "
+                     "fj |. |. |. t. .. {f .. t. |. |. |. ta %% gg %% .. t. fl "
+                     "fj |. t. |. |. t. .. t. |. |. t. |. t. .. %% .. t. |. fl "
+                     "fj t. ar t. |. |. t. bb |. t. ar t. t. .. gg .. t. |. fl "
+                     "fj |. t. |. t. |. |. |. t. |. t. |. t. .. gg %% .. t. fl "
+                     "fj |. |. t. ar t. |. t. ar t. |. |. |. t. .. gg .. t. fl "
+                     "fj |. |. |. t. |. |. |. t. |. |. |. |. t. .. gg .. t. fl "
+                     "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
+                     ))
+                   0 0 19 19)
+    (let ((kchar (mk-npc 'giant-spider 9)))
+      (kern-obj-put-at  kchar (loc-mk kplace 6 12))
+      (kern-char-set-ai kchar 'wait-ai)
+      )
+    (kern-obj-put-at (kern-mk-obj F_web_perm 1) (loc-mk kplace 5 12))
+    (kern-obj-put-at (kern-mk-obj F_web_perm 1) (loc-mk kplace 6 10))
+    (kern-obj-put-at (kern-mk-obj F_web_perm 1) (loc-mk kplace 6 11))
+    (kern-obj-put-at (kern-mk-obj F_web_perm 1) (loc-mk kplace 6 12))
+    (kern-obj-put-at (kern-mk-obj F_web_perm 1) (loc-mk kplace 6 13))
+    (kern-obj-put-at (kern-mk-obj F_web_perm 1) (loc-mk kplace 7 12))
+    (kern-obj-put-at (kern-mk-obj t_corpse 1) (loc-mk kplace 7 12))
+    )
+  (kern-map-repaint)
+  (scene-mgr-advance-state! (gob kobj))
+  )
+  
 (define (scene-mgr-exec kobj) 
   (let* ((smgr (kobj-gob-data kobj))
          (state (scene-mgr-state smgr)))
-    ;;(println "scene-mgr-exec: state=" state)
     (cond ((= 0 state) (scene-mgr-intro-travelers-phase kobj))
           ((= 1 state) (scene-mgr-intro-demons-phase kobj))
           ((= 2 state) (scene-mgr-wait-for-no-demons-phase kobj)) 
@@ -1033,12 +1081,11 @@
           ((= 22 state) (scene-mgr-pause kobj 20))
           ((= 23 state) (scene-mgr-end-years-pass kobj))
           ((= 24 state) (scene-mgr-ages-pass kobj))
-          ((= 25 state) (scene-mgr-ages-passed kobj))
-          ((= 26 state) (scene-mgr-end-days-pass kobj))
-          ((= 27 state) (scene-mgr-pause kobj 20))
+          ((= 25 state) (scene-mgr-pause kobj 20))
+          ((= 26 state) (scene-mgr-end-years-pass kobj))
+          ((= 27 state) (scene-mgr-conclude kobj))
+          ((= 28 state) (scene-mgr-pause kobj 20))
           (else
-           ;;(println "done")
-           ;; Keep repainting to show the sprite animations.
            (kern-end-game)
            )
           (else
@@ -1331,6 +1378,7 @@
     (list  "%%"   t_bog)                ;; "bog"
     (list  ".."   t_grass)              ;; "grass"
     (list  ".!"   t_sunlit_grass)              ;; "grass"
+    (list  "t."   t_trees_v)            ;; "trees (transparent)"
     (list  "tt"   t_trees)              ;; "trees"
     (list  "t|"   t_trees_d)            ;; "trees denser"
 
@@ -1915,17 +1963,17 @@
 		"076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 "
 		"095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
 		"fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
-		"fj tt tt t# .. .. .. .. .. .. t% ta tt tt tc __ tt tt fl "
-		"fj tt t# .. ar .. .. .. ar .. .. t% tt tt _3 _c tt tt fl "
-		"fj t# .. .. .. .. .. .. .. .. .. .. ta tc _2 tG tt tt fl "
+		"fj t. t. t# .. .. .. .. .. .. t% ta t. t. tc __ t. t. fl "
+		"fj t. t# .. ar .. .. .. ar .. .. t% t. t. _3 _c t. t. fl "
+		"fj t# .. .. .. .. .. .. .. .. .. .. ta tc _2 tG t. t. fl "
 		"fj .. ar .. .. .. .. .. .. .. ar .. .. .. __ .. .. .. fl "
 		"fj .. .. .. .. dd dd dd .. .. .. .. dd ee ee ee dd dd fl "
 		"fj .. .. .. dd dd {f dd dd dd dd dd dd ee ee ee dd dd fl "
 		"fj .. .. .. .. dd dd dd .. .. .. .. dd ee ee ee dd dd fl "
 		"fj .. ar .. .. .. .. .. .. .. ar .. .. .. __ .. .. .. fl "
-		"fj tA .. .. .. .. .. .. .. .. .. .. t3 t5 _2 tJ tt tt fl "
-		"fj tt tA .. ar .. .. .. ar .. .. tC tt tt _a _5 tt tt fl "
-		"fj tt tt tA .. .. .. .. .. .. tC t3 tt tt t5 __ tt tt fl "
+		"fj tA .. .. .. .. .. .. .. .. .. .. t3 t5 _2 tJ t. t. fl "
+		"fj t. tA .. ar .. .. .. ar .. .. tC t. t. _a _5 t. t. fl "
+		"fj t. t. tA .. .. .. .. .. .. tC t3 t. t. t5 __ t. t. fl "
 		"fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
 	)
  )
@@ -1943,14 +1991,14 @@
  nil             ; neighbors
 
  (list ; objects
-  (put (guard-pt 'halberdier)   15 10)
-  (put (guard-pt 'halberdier)   15 14)
-  (put (guard-pt 'crossbowman) 13 10)
-  (put (guard-pt 'crossbowman) 13 14)
-  (put (mk-monman) 0 0)
-  (put (mk-scene-mgr) 0 0)
-  (put (kern-tag 'portal (kern-mk-obj t_portal 1)) 6  12)
-  )
+ (put (guard-pt 'halberdier)   15 10)
+ (put (guard-pt 'halberdier)   15 14)
+ (put (guard-pt 'crossbowman) 13 10)
+ (put (guard-pt 'crossbowman) 13 14)
+ (put (mk-monman) 0 0)
+ (put (mk-scene-mgr) 0 0)
+ (put (kern-tag 'portal (kern-mk-obj t_portal 1)) 6  12)
+ )
  (list 'on-entry-to-dungeon-room) ; hooks
  nil ;; edge entrances
 )
