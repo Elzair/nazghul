@@ -567,15 +567,16 @@
 	
 ;; returns true if the location is ok
 (define (powers-fireball-collateral-check caster targloc apower)
+	(println "fireball check")
 	(let ((place (loc-place targloc))
 			(x (loc-x targloc))
 			(y (loc-y targloc)))
-		(define (checkloc loc)
+		(define (checkloc kloc)
 			(null? 
 				(filter
 					(lambda (kobj)
 						(and (kern-obj-is-char? kobj)
-							(not (is-hostile kobj caster))
+							(not (is-hostile? kobj caster))
 							)
 					)
 					(kern-get-objects-at kloc)
@@ -584,7 +585,7 @@
 		(define (checkoff xoff yoff)
 			(let ((kloc (mk-loc place (+ x xoff) (+ y yoff))))
 				(if (kern-is-valid-location? kloc)
-					(checkloc loc)
+					(checkloc kloc)
 					#t
 				)
 			))
@@ -605,6 +606,7 @@
 	))
 	
 (define (powers-fireball caster ktarg apower)
+	(println "fireball")
 	(define (fireball-damage-dice power)
 		(if (> power 3) (string-append (number->string  (floor (/ power 2))) "d3")
 				"1d3"))
