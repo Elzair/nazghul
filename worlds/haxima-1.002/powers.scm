@@ -68,14 +68,13 @@
 		(if (and (cone-in-range x y range)
 					(cone-in-angle x y minangle maxangle)
 					(kern-is-valid-location? loc)
-					(kern-in-los? origin loc)
-					(not (kern-place-blocks-los? loc)))
+					)
 				(proc loc)
 				)))
 			
 			
 (define (cone-handle-box origin minangle maxangle range proc list)
-	(if (null? list)
+	(if (not (null? list))
 		(begin		
 			(cone-check-cell origin minangle maxangle range proc (car list))
 			(cone-handle-box origin minangle maxangle range proc (cdr list))
@@ -113,7 +112,26 @@
 			(cone-area-effect origin (xy->angle x y) range (/ pi 2) proc))
 		)))	
 
-(define (mk-basic-cone-proc objfx field-type leaveproc)
+(define (powers-field-generic loc f_type duration proc)
+	(let* ((finduration (if (< duration 1) 1 duration))
+			(afield (kern-mk-field f_type finduration)))
+		(if (can-be-dropped? afield loc cant)
+			(begin
+				(kern-obj-put-at afield loc)
+				(kern-map-repaint)
+				(if (not (null? proc))
+					(for-each proc (kern-get-objects-at loc))
+				)
+				;; remove fields on semi-bad locations
+				(if (or (< duration 1)
+						(not (can-be-dropped? afield loc no-drop)))
+					(kern-obj-remove afield)
+				)
+				(kern-map-repaint)
+			))
+	))
+		
+(define (mk-basic-cone-proc origin objfx field-type leaveproc)
 	(define (dropfield loc)
 		(if (kern-obj-put-at (kern-mk-obj field-type 1) loc)))
 	(define (is-my-field? kobj) (eqv? field-type (kern-obj-get-type kobj)))
@@ -128,14 +146,39 @@
 				(kern-obj-put-at (kern-mk-field field-type duration) loc))
 				))
 	(lambda (loc)
-			(if (not (null? objfx))
-				(map objfx (kern-get-objects-at loc)))
-			(if (not (null? field-type))
-				(begin
-					(dropfield loc)
-					(kern-map-repaint)
-					(cleanfields loc)
-				))))
+		(if (kern-in-los? origin loc)
+			(if (null? field-type)
+				(if (not (null? objfx))
+					(map objfx (kern-get-objects-at loc))
+				)
+				(powers-field-generic loc field-type (leaveproc) objfx)
+			))
+	))
+	
+(define (mk-cone-proc-sfx origin objfx sfx field-type leaveproc)
+	(define (dropfield loc)
+		(if (kern-obj-put-at (kern-mk-obj field-type 1) loc)))
+	(define (is-my-field? kobj) (eqv? field-type (kern-obj-get-type kobj)))
+	(define (cleanfields loc)
+		(let ((fields (filter is-my-field? (kern-get-objects-at loc)))
+				(duration (leaveproc)))
+			(cond ((null? fields) nil)
+				(else
+					(kern-obj-remove (car fields))))
+			(if	(and (terrain-ok-for-field? loc)
+					(> duration 0))
+				(kern-obj-put-at (kern-mk-field field-type duration) loc))
+				))
+	(lambda (loc)
+		(kern-sound-play-at sfx origin)
+		(if (kern-in-los? origin loc)
+			(if (null? field-type)
+				(if (not (null? objfx))
+					(map objfx (kern-get-objects-at loc))
+				)
+				(powers-field-generic loc field-type (leaveproc) objfx)
+			))
+	))
 				
 ;; todo- inc these in line-cell to simplify?
 (define (line-do-proc proc location)
@@ -299,7 +342,7 @@
 				(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
 				))
 		(cone-do-simple caster ktarg 3.3
-			(mk-basic-cone-proc flambe-all F_fire (lambda () 0))
+			(mk-basic-cone-proc (kern-obj-get-location caster) flambe-all F_fire (lambda () 0))
 			))
 			result-ok)
 
@@ -307,9 +350,13 @@
 	(lambda ()
 		(- (kern-dice-roll (mkdice 1 width)) balance)))
 	
+;; this may need to be limited...
 (define (powers-cone-basic-range power)
-	(+ 7 (/ power 3)))
-
+	(+ 3 (/ power 3)))
+	
+(define (powers-cone-fire-range power)
+	(+ 5 (/ power 3)))
+	
 (define (powers-cone-energy caster ktarg power)
 	(let ((damage (mkdice (floor (/ power 2)) 3)))
 		(define (energize-all kobj)
@@ -317,25 +364,53 @@
 				(kern-obj-inflict-damage kobj "shocked" (kern-dice-roll damage) caster)
 				))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
-			(mk-basic-cone-proc energize-all F_energy 
+			(mk-basic-cone-proc (kern-obj-get-location caster) energize-all F_energy 
 				(powers-cone-basic-leaveproc 40 (+ 30 (* 4 power)))
 			)))
 			result-ok)
 
-(define (powers-cone-fire caster ktarg power)
+;; check for: no unintended victims
+;;    at least 2 fire vulnerable targets
+(define (powers-cone-fire-test caster targloc power)
+	;;(println "test cone fire")
+	(let ((viable-targets (list 0))
+			(shot-ok (list #t)))
+		(define (checktarg kobj)
+			(if (is-being? kobj)
+				;; test for hostility and known (ie permanent) fire resistance
+				(if (is-hostile? kobj caster)
+					(if (not (has-effect? kobj ef_fire_immunity))
+						(set-car! viable-targets (+ (car viable-targets) 1))
+					)
+					(set-car! shot-ok #f)
+				)
+			)
+		)			
+		(cone-do-simple caster targloc (powers-cone-fire-range power)
+			(mk-basic-cone-proc (kern-obj-get-location caster) checktarg nil nil)
+			)
+		;;(println "tested cone fire " (car shot-ok) " " (car viable-targets))
+		(and (car shot-ok)
+			(> (car viable-targets )1))
+	))
+			
+(define (powers-cone-fire caster targloc power)
 	(let ((damage (mkdice (floor (/ power 2)) 3)))
 		(define (burn-all kobj)
-			(if (is-being? kobj)
+			(if (and (is-being? kobj)
+					(not (has-fire-immunity? kobj)))
 				(begin
-					(if	(has-fire-immunity? kobj)
-						(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
-						(kern-harm-relations kobj caster)
-				))))
-		(cone-do-simple caster ktarg (+ 2 (powers-cone-basic-range power))
-			(mk-basic-cone-proc burn-all F_fire 
+					(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
+					(kern-harm-relations kobj caster)
+				)
+			))
+		(cone-do-simple caster targloc (powers-cone-fire-range power)
+			(mk-cone-proc-sfx (kern-obj-get-location caster) burn-all sound-fireblast F_fire 
 				(powers-cone-basic-leaveproc 30 (+ 20 (* 5 power)))
-			)))
-			result-ok)
+			)
+		))
+	result-ok
+)
 
 (define (powers-cone-poison caster ktarg power)
 	(let ((damage (mkdice 1 (floor (/ power 4)))))
@@ -343,13 +418,15 @@
 			(if (is-being? kobj)
 				(begin
 					(apply-poison kobj)
-					(if	(is-poisoned? kobj)
-						(kern-obj-inflict-damage kobj "poison" (kern-dice-roll damage) caster)
-						(kern-harm-relations kobj caster))
-					(kern-harm-relations kobj caster)
-					(kern-harm-relations kobj caster)
-					(kern-harm-relations kobj caster)
-				)))
+					(if (is-poisoned? kobj)
+						(begin
+							(kern-harm-relations kobj caster)
+							(kern-harm-relations kobj caster)
+							(kern-harm-relations kobj caster)
+							(kern-harm-relations kobj caster)
+							(kern-obj-inflict-damage kobj "poison" (kern-dice-roll damage) caster)
+						)
+				))))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
 			(mk-basic-cone-proc poison-all F_poison 
 				(powers-cone-basic-leaveproc 60 (+ 40 (* 3 power)))
@@ -465,20 +542,6 @@
 (define (powers-field-length power)
 	(+ 1 (/ power 4)))
 	
-(define (powers-field-generic loc f_type duration proc)
-	(let ((afield (kern-mk-field f_type duration)))
-		(if (can-be-dropped? afield loc cant)
-			(begin
-				(kern-obj-put-at afield loc)
-				(kern-map-repaint)
-				(for-each proc (kern-get-objects-at loc))
-				;; remove fields on semi-bad locations
-				(if (not (can-be-dropped? afield loc no-drop))
-					(kern-obj-remove afield))
-				(kern-map-repaint)
-			))
-	))
-	
 (define (powers-field-wall start stop f_type duration leng proc)
 	(let ((lengremaining (list leng)))
 		(define (put-field location delta)
@@ -568,7 +631,7 @@
 	
 ;; returns true if the location is ok
 (define (powers-fireball-collateral-check caster targloc apower)
-	(println "fireball check")
+	;;(println "fireball check")
 	(let ((place (loc-place targloc))
 			(x (loc-x targloc))
 			(y (loc-y targloc)))
@@ -607,7 +670,7 @@
 	))
 	
 (define (powers-fireball caster ktarg apower)
-	(println "fireball")
+	;;(println "fireball")
 	(define (fireball-damage-dice power)
 		(if (> power 3) (string-append (number->string  (floor (/ power 2))) "d3")
 				"1d3"))
@@ -759,7 +822,7 @@
 	
 ;; todo will fail on looping maps
 (define (powers-lightning-collateral-check caster targloc apower)
-	(println "checkzap")
+	;;(println "checkzap")
 	(let* ((range (powers-lightning-range apower))
 			(casterloc (kern-obj-get-location caster))
 			(targrange (+ 1 (kern-get-distance targloc casterloc)))
@@ -768,9 +831,9 @@
 			(dy (* rangemult (- (loc-y targloc) (loc-y casterloc))))
 			(endx (+ (loc-x casterloc) dx))
 			(endy (+ (loc-y casterloc) dy))
-			(shotok (list #t))
+			(shot-ok (list #t))
+			(range-ok (> range targrange))
 			)
-		(println "z1")
 		(define (check-loc location delta)
 			(cond ((equal? location casterloc) #t)
 				((> (kern-get-distance location casterloc) range) #f)
@@ -784,21 +847,19 @@
 						))
 					#t
 					)
-				(else (set-car! shotok #f) #f)
+				(else (set-car! shot-ok #f) #f)
 			))
-		(println "z2")
-		(if (> rangemult 0)
+		(if (and range-ok (> rangemult 0))
 			(begin
 				(line-draw (loc-place targloc) (loc-x casterloc) (loc-y casterloc) endx endy check-loc)
-				(println "z: " (car shotok))
-				(car shotok)
+				(car shot-ok)
 			)
 			#f
 		)
 	))
 	
 (define (powers-lightning caster targloc apower)
-	(println "zap")
+	;;(println "zap")
   (let ((targets (list nil))
         (dam (mkdice (floor (+ 1 (/ apower 3))) 4))
         )
