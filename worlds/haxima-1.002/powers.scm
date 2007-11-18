@@ -172,6 +172,7 @@
 			(line-cell place (+ x dx) (+ y dy) dx dy endx endy proc))
 	))
 				
+;; todo will fail on looping maps
 (define (line-draw place startx starty stopx stopy proc)
 	(if (and (equal? startx stopx)
 				(equal? starty stopy))
@@ -628,7 +629,7 @@
                 		 (if (not (null? damdi))
                       	(kern-obj-inflict-damage kobj "impact" (kern-dice-roll damdi) caster))
                   	))
-                (kern-obj-apply-damage kobj "burning" (kern-dice-roll damdf))
+                ;;(kern-obj-apply-damage kobj "burning" (kern-dice-roll damdf))
                 ))
           (let ((kloc (mk-loc kplace x y)))
             (if (kern-is-valid-location? kloc)
@@ -755,8 +756,49 @@
 		  
 (define (powers-lightning-range power)
 	(+ 3 (/ power 2.5)))
-		
+	
+;; todo will fail on looping maps
+(define (powers-lightning-collateral-check caster targloc apower)
+	(println "checkzap")
+	(let* ((range (powers-lightning-range apower))
+			(casterloc (kern-obj-get-location caster))
+			(targrange (+ 1 (kern-get-distance targloc casterloc)))
+			(rangemult (if (> targrange 0) (ceiling (/ range targrange)) 0))
+			(dx (* rangemult (- (loc-x targloc) (loc-x casterloc))))
+			(dy (* rangemult (- (loc-y targloc) (loc-y casterloc))))
+			(endx (+ (loc-x casterloc) dx))
+			(endy (+ (loc-y casterloc) dy))
+			(shotok (list #t))
+			)
+		(println "z1")
+		(define (check-loc location delta)
+			(cond ((equal? location casterloc) #t)
+				((> (kern-get-distance location casterloc) range) #f)
+				((null? (filter
+							(lambda (kobj)
+								(and (kern-obj-is-char? kobj)
+									(not (is-hostile? kobj caster))
+									)
+							)
+							(kern-get-objects-at location)
+						))
+					#t
+					)
+				(else (set-car! shotok #f) #f)
+			))
+		(println "z2")
+		(if (> rangemult 0)
+			(begin
+				(line-draw (loc-place targloc) (loc-x casterloc) (loc-y casterloc) endx endy check-loc)
+				(println "z: " (car shotok))
+				(car shotok)
+			)
+			#f
+		)
+	))
+	
 (define (powers-lightning caster targloc apower)
+	(println "zap")
   (let ((targets (list nil))
         (dam (mkdice (floor (+ 1 (/ apower 3))) 4))
         )

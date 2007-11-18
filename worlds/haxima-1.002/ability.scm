@@ -199,12 +199,15 @@
     (spew-in-dir dir)))
 
 (define (lightning-bolt-proc kchar ktarg)
-  (kern-log-msg (kern-obj-get-name kchar)
-                " streams lightning at "
-                (kern-obj-get-name ktarg))
-  (powers-lightning kchar 
-                    (kern-obj-get-location ktarg)
-                    (occ-ability-blackmagic kchar)))
+	(let ((target (kern-obj-get-location ktarg))
+			(power (occ-ability-blackmagic kchar)))
+		(and (powers-lightning-collateral-check kchar target power)
+			(begin (kern-log-msg (kern-obj-get-name kchar)
+	                " streams lightning at "
+	                (kern-obj-get-name ktarg))
+		   	(powers-lightning kchar target power)
+		   ))
+	))
   
 
 ;;----------------------------------------------------------------------------
