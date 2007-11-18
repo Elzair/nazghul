@@ -2015,7 +2015,7 @@
 	(kern-char-set-hp kchar max-health) ; functionally immortal, in case of stray fireballs
 	(kern-map-repaint)
 	(kern-sleep 75)
-      #t))
+      #t)
   
 (let ((kchar (kern-mk-char 
               'ch_wanderer
