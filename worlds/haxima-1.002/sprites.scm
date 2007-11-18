@@ -503,6 +503,8 @@
 (kern-mk-sprite 's_gazer_asleep   ss_monsters 1 16 #f 0 )
 (kern-mk-sprite 's_dragon_party   ss_monsters 4 20 #f 0 )
 
+(kern-mk-sprite 's_deer ss_creatures 4 0 #f 0)
+
 (kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
 
 (kern-mk-sprite 's_trees         ss_overlays 1  20 #f 0 )
