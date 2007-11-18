@@ -5,6 +5,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Bole.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_bill
                (list 0  0  bole-bed-bill "sleeping")
@@ -28,7 +30,8 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Bill is a woodcutter who lives in Bole. Not the sharpest tool in the shed.
+;; Bill is a woodcutter who lives in Bole.
+;; Not the sharpest tool in the shed.
 ;;----------------------------------------------------------------------------
 (define bill-catalog
   (list

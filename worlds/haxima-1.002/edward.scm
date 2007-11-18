@@ -6,7 +6,7 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;
-;; The schedule below is for the place "Enchanter's Tower Ground Floor"
+;; In the dungeons below Green Tower.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_edward
                (list 0  0  gtl-jailor-bed "sleeping")
@@ -28,7 +28,8 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Edward is a ranger of the Fens. He camps at the Enchanter's Tower.
+;; Edward is a old blind man, serving as the jailor 
+;; in the dungeons below Green Tower.
 ;;----------------------------------------------------------------------------
 (define (edward-hail knpc kpc)
   (meet "You meet a pale old man whose eyes are milky white.")

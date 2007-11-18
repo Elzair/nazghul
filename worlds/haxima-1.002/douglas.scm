@@ -4,6 +4,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the Entrance to Kurpolis.
 ;;----------------------------------------------------------------------------
 (define doug-bed ke-bed1)
 (define doug-mealplace ke-tbl1)
@@ -25,6 +27,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Douglas is the Commander of the First Kurpolis Garrison,
+;; stationed at the Entrance to Kurpolis, guarding the Goblin Kingdoms level.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...

@@ -1,5 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Green Tower.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_doris
                (list 0  0  doris-bed "sleeping")
@@ -12,6 +14,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Doris is the female innkeeper of the White Stag Lodge in Green Tower.
 ;;----------------------------------------------------------------------------
 (define (doris-name kdoris kplayer)
   (say kdoris "Hi, I'm Doris, innkeeper of the White Stag Lodge."))

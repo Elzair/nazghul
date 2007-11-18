@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Old Absalot.
 ;;----------------------------------------------------------------------------
 (define dennis-bed oa-bed2)
 (define dennis-mealplace oa-tbl1)
@@ -30,6 +32,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Dennis is an acolyte of the Accursed, who lives in Old Absalot.
+;; He is somewhat naive, but not yet wholly corrupt.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
