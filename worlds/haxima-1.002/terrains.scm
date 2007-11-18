@@ -84,6 +84,7 @@
    (list 't_sunlit_grass    "grass"         pclass-grass     s_grass             trn 64 nil)
    (list 't_dirt            "dirt"          pclass-grass     s_dirt              trn 0 nil)
    (list 't_gravel          "gravel"        pclass-grass     s_gravel            trn 0 nil)
+   (list 't_trees_v         "trees"         pclass-trees     s_trees             trn 0 nil)
    (list 't_trees           "trees"         pclass-trees     s_trees             lgt 0 nil)
    (list 't_trees_d         "trees"         pclass-trees     s_trees             dns 0 nil)
 

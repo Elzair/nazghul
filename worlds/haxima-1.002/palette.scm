@@ -25,6 +25,7 @@
     (list  "%%"   t_bog)                ;; "bog"
     (list  ".."   t_grass)              ;; "grass"
     (list  ".!"   t_sunlit_grass)              ;; "grass"
+    (list  "t."   t_trees_v)            ;; "trees (transparent)"
     (list  "tt"   t_trees)              ;; "trees"
     (list  "t|"   t_trees_d)            ;; "trees denser"
 
