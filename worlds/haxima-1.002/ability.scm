@@ -24,9 +24,13 @@
 
 (define (use-ability ability kchar . args)
   ;;(println "use-ability:" ability)
-  (kern-char-dec-mana kchar (ability-mana-cost ability))
-  (kern-obj-dec-ap kchar (ability-ap-cost ability))
   (let ((result (apply (ability-proc ability) (cons kchar args))))
+  	 (if (result)
+  	 	(begin
+		  (kern-char-dec-mana kchar (ability-mana-cost ability))
+		  (kern-obj-dec-ap kchar (ability-ap-cost ability))
+  	 	)
+  	 )
     (if (<= (kern-char-get-mana kchar) 0)
         (kern-log-msg (kern-obj-get-name kchar) " is exhausted!"))
     result))
@@ -135,7 +139,11 @@
    	(powers-poison kchar ktarg (occ-ability-blackmagic kchar)))
 
 (define (cast-fireball-proc kchar ktarg)
-	(powers-fireball kchar (kern-obj-get-location ktarg) (occ-ability-blackmagic kchar)))
+	(let ((target (kern-obj-get-location ktarg))
+			(power (occ-ability-blackmagic kchar)))
+		(and (powers-fireball-collateral-check kchar target power)
+			(powers-fireball kchar target power))
+	))
 
 (define (cast-kill-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
