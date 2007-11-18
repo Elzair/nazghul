@@ -1,8 +1,8 @@
 (kern-load "nossifer.scm")
 
 ;; constants
-(define demon-gate-x 16)
-(define demon-gate-y 6)
+(define demon-gate-x 6)
+(define demon-gate-y 9)
 
 ;; demon gate gob
 (define (mk-demon-gate-gob) (list 8 #f #f))

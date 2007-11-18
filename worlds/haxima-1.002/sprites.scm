@@ -551,8 +551,13 @@
 (kern-mk-sprite 's_shipswheel      ss_ship 1  18 #f 170 )
 (kern-mk-sprite 's_cannon          ss_ship 1  26 #f 170 )
 
-(define s_altar (mk-composite-sprite (list s_cobblestone s_altar_obj)))
-(define s_active_altar (mk-composite-sprite (list s_cobblestone s_active_altar_obj)))
+;(define s_altar (mk-composite-sprite (list s_cobblestone s_altar_obj)))
+;(define s_active_altar (mk-composite-sprite (list s_cobblestone s_active_altar_obj)))
+
+(define s_altar (mk-composite-sprite (list s_grass s_altar_obj)))
+(define s_active_altar (mk-composite-sprite (list s_grass s_active_altar_obj)))
+(define s_overgrown_altar (mk-composite-sprite (list s_trees s_altar_obj)))
+
 
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces
