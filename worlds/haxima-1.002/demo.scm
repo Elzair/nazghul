@@ -304,6 +304,7 @@
 
 (define s_altar (mk-composite-sprite (list s_grass s_altar_obj)))
 (define s_active_altar (mk-composite-sprite (list s_grass s_active_altar_obj)))
+(define s_overgrown_altar (mk-composite-sprite (list s_trees s_altar_obj)))
 
 (load "sounds.scm")
 (load "effects.scm")
@@ -426,13 +427,9 @@
 
 (define flee-gate (list #f))
 
-(define (traveler-goto-dest kchar)
-  (let* ((trvl (gob kchar))
+(define (traveler-goto-dest kchar dest)
+  (let (
          (loc (kern-obj-get-location kchar))
-         (dest (if (car flee-gate)
-         			(loc-mk (loc-place loc) (+ xoff 20) (+ yoff  5))
-         			(cons (loc-place loc) 
-                     (npcg-get-post trvl))))
          )
     (if (equal? loc dest)
         (begin
@@ -441,16 +438,26 @@
           #t)
         (begin
           (pathfind kchar dest)))))
+          
+(define (traveler-dest kchar)
+	(let ((loc (kern-obj-get-location kchar)))
+		(if (car flee-gate)
+			(loc-mk (loc-place loc) (+ xoff 20) (+ yoff  5))
+			(cons 
+				(loc-place loc) 
+				(npcg-get-post (gob kchar))
+			))
+	))
 
 (define (wizard-traveler-ai kchar)
   (or (spell-sword-ai kchar)
-      (traveler-goto-dest kchar)))
+      (traveler-goto-dest kchar (traveler-dest kchar))))
 
 (define (normal-traveler-ai kchar)
   (or (std-ai kchar)
       (if (any-visible-hostiles? kchar)
           #f
-          (traveler-goto-dest kchar))))
+          (traveler-goto-dest kchar (traveler-dest kchar)))))
        
 ;; these detect who kchar is friendly/hostile to, not vice-versa
 (define (all-demons-near kchar)
@@ -465,7 +472,7 @@
   (or (spell-sword-ai kchar)
   		(if (and (null? (all-demons-near kchar)) (> (kern-dice-roll "1d3") 2))
   			(if (> (kern-dice-roll "1d3") 2)
-     			(traveler-goto-dest kchar)
+     			(traveler-goto-dest kchar (traveler-dest kchar))
      			#t
      		)
      		#f)))
@@ -474,8 +481,11 @@
   (or (std-ai kchar)
       (if (and (null? (all-demons-near kchar)) (> (kern-dice-roll "1d3") 2))
       	(if (> (kern-dice-roll "1d3") 2)
-          	(traveler-goto-dest kchar)
-          	#t
+          	(traveler-goto-dest kchar (traveler-dest kchar))
+          	(begin 
+          		(kern-obj-dec-ap kchar base-move-ap)
+          		#t
+          	)
           )
           #f)))
 
@@ -483,15 +493,9 @@
   (let* ((loc (kern-obj-get-location kchar))
          (dest (loc-mk (loc-place loc) (+ xoff 20) (+ yoff  5)))
        )
-    (if (equal? loc dest)
-        (begin
-          (kern-obj-remove kchar)
-          (kern-map-repaint)
-          #t)
-        (begin
-          (pathfind kchar dest))
-    )))
-    
+    (traveler-goto-dest kchar dest)
+  ))
+
 (define (seek-loot kchar)
   (let ((loot-list 
          (filter (mk-ifc-query 'get)
@@ -514,7 +518,19 @@
 (define (beggar-exit kchar)
   (or (seek-loot kchar)
       (traveler-exit kchar))
-    )
+    ) 
+    
+(define (erratic-traveler-ai kchar)
+  (or (std-ai kchar)
+     (if (> (kern-dice-roll "1d5") 1)
+	   	(if (> (kern-dice-roll "1d3") 1)
+	       	(traveler-goto-dest kchar (traveler-dest kchar))
+	       	(begin
+          		(kern-obj-dec-ap kchar base-move-ap)
+		       	#t
+	       	)
+       )
+       #f)))
           
 (define (traveler-mk kplace)
   (let* ((wizard-sprites (list s_black_mage s_old_mage s_plain_mage s_cloaked_female s_companion_wizard s_red_wizard s_lady s_silas s_companion_druid))
@@ -540,6 +556,8 @@
     (kern-char-set-ai kchar (cadr info) kchar)
     (kern-obj-set-sprite kchar (random-select (caddr info)))
     (kern-obj-put-at kchar (car path))
+    (kern-map-repaint)
+    (kern-sleep 20)
     kchar))
 
 (define (defender-mk ctype aitype kplace postx posty)
@@ -547,6 +565,8 @@
 		(npcg-set-post! (gob kchar) (list postx posty))
 	   (kern-char-set-ai kchar aitype)
    	(kern-obj-put-at kchar (loc-mk kplace postx posty))
+   	(kern-map-repaint)
+      (kern-sleep 20)
    	kchar		
 	))
     
@@ -610,6 +630,8 @@
     (npcg-set-subgob! (gob kchar) (cons kmgr (car info)))
     (kern-obj-set-sprite kchar (caddr info))
     (kern-obj-put-at kchar enter-pos)
+    (kern-map-repaint)
+    (kern-sleep 20)
     kchar))
 
 ;;----------------------------------------------------------------------------
@@ -628,7 +650,7 @@
 ;;----------------------------------------------------------------------------
 ;; Scene Manager
 ;;----------------------------------------------------------------------------
-(define (scene-mgr-mk) (list 'scene-mgr 13 0 0 '() 0 0))
+(define (scene-mgr-mk) (list 'scene-mgr 0 0 0 '() 0 0))
 (define (scene-mgr-state gob) (list-ref gob 1))
 (define (scene-mgr-set-state! gob val) (set-car! (list-tail gob 1) val))
 (define (scene-mgr-advance-state! gob) 
@@ -683,7 +705,10 @@
         (kern-obj-put-at kdemon 
                          (loc-offset (mk-loc (loc-place (kern-obj-get-location kobj)) (+ xoff 9)  (+ yoff 5))
                                      dir)))
+    
       (scene-mgr-incr-num-demons! smgr)
+              (kern-map-repaint)
+  		  (kern-sleep 20)
       )
     (cond ((= n 0) 
     			(set-car! flee-gate #t)
@@ -777,6 +802,8 @@
     )
   
   (kern-log-msg "VAS AN EX REL POR!")
+  ;; we need a better rumbling thunder/ earthquake type noise
+  (kern-sound-play sound-lightning)
   (shake-map 15)
   (kern-map-flash 1000)
   (drop-all-runes)
@@ -853,13 +880,17 @@
 
 (define (scene-mgr-start-days-pass kobj)
   (kern-log-msg "Days pass...")
+  (set-car! flee-gate #f)
   (let ((kplace (loc-place (kern-obj-get-location kobj))))
     (define (wolf-mk from-loc to-xy)
       (let ((kchar (mk-npc 'wolf 9)))
         (npcg-set-post! (gob kchar) to-xy)
-        (kern-char-set-ai kchar 'normal-traveler-ai)
-        (kern-obj-put-at kchar from-loc)))
-    (wolf-mk (loc-mk kplace 1 14) (list 17 13))
+        (kern-char-set-ai kchar 'erratic-traveler-ai)
+        (kern-obj-put-at kchar from-loc)
+        (kern-map-repaint)
+  		  (kern-sleep 20)        
+        ))
+    (wolf-mk (loc-mk kplace 1 14) (list 17 7))
     )
   (kern-map-repaint)
   (scene-mgr-advance-state! (gob kobj))
@@ -938,19 +969,38 @@
       "095 096 097 098 099 100 101 102 103 104 105 106 107 108 109 110 111 112 113 "
       "fg fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fh fi "
       "fj |. |. |. |. |. |. |. |. |. |. |. %% tt %% gg %% |. fl "
-      "fj |. |. tt ar tt tt tt ar tt |. tt %% %% .. gg tt |. fl "
+      "fj |. |. tt at tt tt tt at tt |. tt %% %% .. gg tt |. fl "
       "fj |. |. tt tt .. .. .. .. .. tt tt ta %% gg %% tt |. fl "
-      "fj |. ar |. tt .. .. .. .. .. ar tt tt tt gg tt tt |. fl "
+      "fj |. at |. tt .. .. .. .. .. at tt tt tt gg tt tt |. fl "
       "fj |. |. tt tt tt |. tt .. .. .. .. .. tt gg tt |. |. fl "
       "fj |. |. |. |. |. |. |. tt .. .. .. .. .. gg tt |. |. fl "
       "fj |. |. tt tt tt |. tt .. .. .. .. .. .. gg tt |. |. fl "
-      "fj |. ar |. .. .. tt .. .. .. ar t| t| t| gg tt tt |. fl "
+      "fj |. at |. .. .. tt .. .. .. at t| t| t| gg tt tt |. fl "
       "fj |. |. t| tt .. .. .. tt tt t| t| |. t5 gg %% tt |. fl "
-      "fj |. |. t| ar t| t| t| ar t| |. |. |. tt .. gg tt |. fl "
+      "fj |. |. t| at t| t| t| at t| |. |. |. tt .. gg tt |. fl "
       "fj |. |. |. |. |. |. |. |. |. |. |. |. |. t5 gg |. |. fl "
       "fm fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fn fo "
                    ))
                  0 0 19 19)
+  (scene-mgr-advance-state! (gob kobj))
+  )
+  
+(define (scene-mgr-ages-passed kobj)
+  (let ((kplace (loc-place (kern-obj-get-location kobj))))
+    (define (deer-mk from-loc to-xy)
+      (let ((kchar (mk-npc 'wolf 9)))
+        (npcg-set-post! (gob kchar) to-xy)
+        (kern-obj-set-sprite kchar s_deer)
+        (kern-char-set-ai kchar 'erratic-traveler-ai)
+        (kern-obj-put-at kchar from-loc)
+        (kern-map-repaint)
+  		  (kern-sleep 20)
+      )
+    )
+    (deer-mk (loc-mk kplace 5 7) (list 12 17))
+    (deer-mk (loc-mk kplace 3 7) (list 13 17))
+  )
+  (kern-map-repaint)
   (scene-mgr-advance-state! (gob kobj))
   )
 
@@ -983,7 +1033,9 @@
           ((= 22 state) (scene-mgr-pause kobj 20))
           ((= 23 state) (scene-mgr-end-years-pass kobj))
           ((= 24 state) (scene-mgr-ages-pass kobj))
-          ((= 25 state) (scene-mgr-pause kobj 20))
+          ((= 25 state) (scene-mgr-ages-passed kobj))
+          ((= 26 state) (scene-mgr-end-days-pass kobj))
+          ((= 27 state) (scene-mgr-pause kobj 20))
           (else
            ;;(println "done")
            ;; Keep repainting to show the sprite animations.
@@ -1260,6 +1312,8 @@
 (kern-mk-terrain 't_gf_s  "frame" pclass-wall s_gf_s  trn 0 nil)
 (kern-mk-terrain 't_gf_se "frame" pclass-wall s_gf_se trn 0 nil)
 
+(kern-mk-terrain 't_overgrown_altar "altar" pclass-boulder s_overgrown_altar trn 0 nil)
+
 ;; define our own palette to include the logo terrain
 (kern-mk-palette 'pal_expanded
   (list
@@ -1396,6 +1450,7 @@
     (list  "aa"   t_altar)              ;; "altar"
     (list  "ar"   t_rune_altar)              ;; "altar"
     (list  "a!"   t_active_altar)              ;; "altar"
+    (list  "at"   t_overgrown_altar)              ;; "altar"
     (list  "<<"   t_leftwing)           ;; "castle wall"
     (list  ">>"   t_rightwing)          ;; "castle wall"
     (list  "w+"   t_arrow_slit)         ;; "arrow slit"
