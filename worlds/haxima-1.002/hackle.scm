@@ -1,7 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;
-;; The schedule below is for the place "Trigrave"
+;; In Bole.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_hackle
                (list 0  0  bole-hackles-hut "idle")
@@ -20,7 +20,9 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Hackle is the tavern-keeper.
+;; Hackle is a female hedge-witch dwelling in Bole.
+;; Her mind was shattered by some misadventure with Gazer(s),
+;; though she is still capable of serving as a healer.
 ;;----------------------------------------------------------------------------
 (define (hackle-trade knpc kpc)
   (say knpc "She can heal it, or one of its friends. She requires a piece of "
@@ -165,8 +167,8 @@
        ;; on the other hand, is a feature of the ifc mechanism (see ifc.scm).
        (method 'default hackle-default)
        (method 'hail hackle-hail)
-       (method 'bye hackle-bye)
-       (method 'job hackle-job)       
+       (method 'bye  hackle-bye)
+       (method 'job  hackle-job)       
        (method 'name hackle-name)
        (method 'join hackle-join)
 

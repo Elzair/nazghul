@@ -4,6 +4,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Oparine.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_henry
                (list 0  0  bilge-water-bed     "sleeping")
@@ -18,6 +20,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Henry is a one-handed tavern-keeper, doing trade in Oparine.
+;; He was once a mighty mariner.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -114,14 +119,14 @@
        ;; basics
        (method 'default henry-default)
        (method 'hail henry-hail)
-       (method 'bye henry-bye)
-       (method 'job henry-job)
+       (method 'bye  henry-bye)
+       (method 'job  henry-job)
        (method 'name henry-name)
        (method 'join henry-join)
        
        ;; trade
        (method 'trad henry-buy)
-       (method 'buy henry-buy)
+       (method 'buy  henry-buy)
        (method 'sell henry-sell)
        (method 'sacr henry-buy)
 

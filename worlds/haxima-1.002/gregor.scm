@@ -3,6 +3,10 @@
 ;;----------------------------------------------------------------------------
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; At the shrine gate (moongate-clearing.scm)
+;; His home is Gregor's Hut (gregors-hut.scm).
+;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_gregor
                (list 0  0  gh-gregors-bed   "sleeping")
                (list 6  0  gh-graveyard     "idle")
@@ -22,6 +26,14 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Gregor is an elderly charcoal burner, living near the Shrine Gate.
+;; He tends the grounds of the shrine, and takes care of his grandaughter Ilya.
+;; 
+;; Gregor is the first NPC which the player is likely to encounter,
+;; and has a variety of helpful responses for the starting character
+;; and the first-time player.
+;;----------------------------------------------------------------------------
 
 (define (gregor-hail knpc kpc)
   (if (in-inventory? kpc t_letter_from_enchanter)
@@ -35,6 +47,9 @@
 	   " It's all for you.")))
 
 ;; Some prompting with initial commands:
+;; 
+;; Hmmm...perhaps it would be desirable to have game-UI promts
+;; spoken out-of-character, so that the NPCs don't break the game fiction...
 (define (gregor-open knpc kpc)
   (say knpc "Use the 'o' key to ^c+gOPEN^c- chests."))
 

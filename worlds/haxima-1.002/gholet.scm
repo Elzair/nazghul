@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the Prison level under Glasdrin
 ;;----------------------------------------------------------------------------
 
 ;;----------------------------------------------------------------------------
@@ -16,6 +18,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Gholet is a former pirate, now imprisoned in the Prison below Glasdrin.
+;; He is one of the surviving crew of the Merciful Death, 
+;; and is sought for vengeance by the ghost Ghertie.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -124,8 +130,8 @@
        ;; basics
        (method 'default gholet-default)
        (method 'hail gholet-hail)
-       (method 'bye gholet-bye)
-       (method 'job gholet-job)
+       (method 'bye  gholet-bye)
+       (method 'job  gholet-job)
        (method 'name gholet-name)
        (method 'join gholet-join)
        
@@ -138,7 +144,7 @@
 
        (method 'mean gholet-mean)
        (method 'jorn gholet-jorn)
-       (method 'dog gholet-dog)
+       (method 'dog  gholet-dog)
        ))
 
 (define (mk-gholet)
