@@ -1,5 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Green Tower.
 ;;----------------------------------------------------------------------------
 (define (mk-zone x y w h) (list 'p_green_tower x y w h))
 (kern-mk-sched 'sch_gen
@@ -62,6 +64,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Gen is a Ranger who dwells in Green Tower.
+;; He has much knowledge of Goblin kind, and is a friend of Kama.
+;; Gen is a potential party member.
 ;;----------------------------------------------------------------------------
 (define (gen-hail gen player) (say gen "Hail, Wanderer"))
 (define (gen-bye gen player) (say gen "Farewell"))
@@ -90,9 +96,6 @@
 (define (gen-cave gen player) (say gen "The cave goblins, who are larger and stronger than their forest cousins, prefer to live in the deeps of the world. "
                                  "Their dark god demands living sacrifices. Beware them if you explore the caves, they burn with hatred for humankind." ))
 
-(define (gen-nuki knpc kpc)
-  (say knpc "That's goblinese for 'food'."))
-
 (define (gen-language kgen player)
   (let ((gen (kobj-gob-data kgen)))
     (say kgen "Yes, I can speak a few words of goblin. Would you like to learn?")
@@ -118,25 +121,42 @@
              (join-player gen))
       (say gen "No, for the woods call my name.")))
 
-(define (gen-da gen player) (say gen "Ha! Da-Ma-To means forest goblin." ))
-(define (gen-gu gen player) (say gen "Ha! Da-Gu means world." ))
-(define (gen-ru gen player) (say gen "Ha! Da-Ru-To means cave goblin." ))
-(define (gen-no gen player) (say gen "Bo-No-Gen. But the goblins call me Ma-Zu-To." ))
-(define (gen-me gen player) (say gen "Bo-Ma-Zu. I watch the forest, or I seek the hidden ways." ))
-(define (gen-ki gen player) (say gen "Bo-Ha-Ki! I am healthy." ))
-(define (gen-hi gen player) (say gen "Ha! Hi-Ma-To is the word for 'shaman'." ))
-(define (gen-jo gen player) (say gen "Very good! If you befriend a goblin he may join you in your adventures."))
+;; SAM: Added a few words from the Lexicon which were not defined as responses.
+;;      These were (Iki, Lu, Nin)
+;;      Also enhanced a few responses such as for (Eh).
+;; Added responses having to do with the concepts of Wanderer, Warrior, Wizard, Rogue, Wright.
+;; A bit of organization/tidying may still be wanted, to make sure there are no loose ends .
+
+(define (gen-da  gen player) (say gen "Ha! Da-Ma-To means forest goblin." ))
+(define (gen-gu  gen player) (say gen "Ha! Da-Gu means world." ))
+(define (gen-ru  gen player) (say gen "Ha! Da-Ru-To means cave goblin." ))
+(define (gen-no  gen player) (say gen "Bo-No-Gen. But the goblins call me Ma-Zu-To." ))
+(define (gen-ki  gen player) (say gen "Bo-Ha-Ki! I am healthy." ))
+(define (gen-jo  gen player) (say gen "Very good! If you befriend a goblin he may join you in your adventures."))
 (define (gen-cho gen player) (say gen "Ha! Cho-To means 'a man'." ))
-(define (gen-nu gen player) (say gen "Ha! Nu-Ki is the goblin word for 'food'" ))
-(define (gen-ka gen player) (say gen "Ha! Ka-Ha-To means warrior." ))
-(define (gen-ha gen player) (say gen "Yes, Ha is a general affirmative term." ))
-(define (gen-tu gen player) (say gen "Right, Tu is a general negative term." ))
-(define (gen-bo gen player) (say gen "Yes, Bo-Gu means your spirit self, which is your altar ego in the spirit world." ))
-(define (gen-na gen player) (say gen "Yes, Bo-Na means 'us', or 'tribe'. Bo-Na-Ma refers to forest goblins in general." ))
-(define (gen-to gen player) (say gen "Right, To is a general suffix meaning person." ))
-(define (gen-ma gen player) (say gen "Yes, and Ka-Ma-To is their term for lumberjack." ))
-(define (gen-zu gen player) (say gen "Good! And Zu-To means seeker." ))
-(define (gen-eh gen player) (say gen "Eh?" ))
+(define (gen-nu  gen player) (say gen "Ha! Nu-Ki is the goblin word for 'food'" ))
+(define (gen-ha  gen player) (say gen "Yes, Ha is a general affirmative term." ))
+(define (gen-tu  gen player) (say gen "Right, Tu is a general negative term." ))
+(define (gen-bo  gen player) (say gen "Yes, Bo-Gu means your spirit self, which is your altar ego in the spirit world." ))
+(define (gen-na  gen player) (say gen "Yes, Bo-Na means 'us', or 'tribe'. Bo-Na-Ma refers to forest goblins in general." ))
+(define (gen-to  gen player) (say gen "Right, To is a general suffix meaning person." ))
+(define (gen-ma  gen player) (say gen "Yes, and Ka-Ma-To is their term for lumberjack." ))
+(define (gen-eh  gen player) (say gen "Eh?  Ah yes, Eh-Na-Me means what is your job, or duty." ))
+(define (gen-iki gen player) (say gen "Ha! Bo-Iki-Da means 'I go home'."))
+
+(define (gen-me  gen player) (say gen "Bo-Ma-Zu. I watch the forest, or I seek the hidden ways.  Me-Lu-Ki is to grow, change, learn, explore.  Such the the path of the Wanderer!"))
+(define (gen-ka  gen player) (say gen "Ha! Ka-Ha-To means warrior.  And Me-Ka-Ha is the path of the Warrior!"))
+(define (gen-hi  gen player) (say gen "Ha! Hi-Ma-To is the word for 'shaman'.  And Me-Ha-Zu-Ru is the path of the Wizard!"))
+(define (gen-nin gen player) (say gen "Ha! Nin-Ma-To is a Forest Stalker.  And Me-Ha-Nin-Zu is the path of the Rogue!"))
+(define (gen-lu  gen player) (say gen "Ha! Lu-Da-To is one who makes.  And Me-Ha-Lu-Da is the path of the Wright!"))
+
+(define (gen-zu       gen player) (say gen "Good! And Zu-To means seeker, or Wanderer.  [He looks at you percingly.]  Iki Meluki?"))
+(define (gen-meluki   gen player) (say gen "So, you are a seeker indeed.  I would join you, if you can master Gunodama"))
+(define (gen-gunodama gen player) (say gen "The names given by the ancestor spirits, to those who abide in the forest.  In other words, the language of the Forest Goblins."))
+
+(define (gen-nuki knpc kpc)
+  (say knpc "That's goblinese for 'food'."))
+
 (define (gen-bonaha gen player) 
   (say gen "Excellent! That is the goblin word for friend. You have come far in mastering their language.")
   (gen-set-will-join! (kobj-gob-data gen) #t))
@@ -185,43 +205,61 @@
 
 (define gen-conv
   (ifc basic-conv
-       (method 'bo gen-bo)
-       (method 'cho gen-cho)
-       (method 'da gen-da)
-       (method 'eh gen-eh)
-       (method 'gu gen-gu)
-       (method 'ha gen-ha)
-       (method 'hi gen-hi)
-       (method 'jo gen-jo)
-       (method 'ka gen-ka)
-       (method 'ki gen-ki)
-       (method 'me gen-me)
-       (method 'ma gen-ma)
-       (method 'na gen-na)
-       (method 'no gen-no)
-       (method 'nu gen-nu)
-       (method 'ru gen-ru)
-       (method 'to gen-to)
-       (method 'tu gen-tu)
-       (method 'zu gen-zu)
+       ;;;; Goblin root words:
+       (method 'bo  gen-bo)  ; My, Myself
+       (method 'cho gen-cho) ; Mankind
+       (method 'da  gen-da)  ; Abode, World
+       (method 'eh  gen-eh)  ; What?
+       (method 'gu  gen-gu)  ; Spirit, Ancestor
+       (method 'ha  gen-ha)  ; Good, yes, skillful
+       (method 'hi  gen-hi)  ; Magic
+       (method 'iki gen-iki) ; Go
+       (method 'jo  gen-jo)  ; Join
+       (method 'ka  gen-ka)  ; Kill
+       (method 'ki  gen-ki)  ; Health
+       (method 'lu  gen-lu)  ; Change
+       (method 'me  gen-me)  ; Forest
+       (method 'ma  gen-ma)  ; Duty, Job, Destiny
+       (method 'na  gen-na)  ; Your, yourself
+       (method 'nin gen-nin) ; Stealth
+       (method 'no  gen-no)  ; Name
+       (method 'nu  gen-nu)  ; Give birth, Create, Begin
+       (method 'ru  gen-ru)  ; Ancient, Primordial, Deep, Cave
+       (method 'to  gen-to)  ; Individual
+       (method 'tu  gen-tu)  ; No, Bad
+       (method 'zu  gen-zu)  ; Watch, Seek
+
+       ;;;; Goblin composite words / phrases:
+       (method 'bona gen-bonaha)   ; Friend
+       (method 'kama gen-kama)     ; Kama, the goblin friend of Gen
+       (method 'nuki gen-nuki)     ; Food
+       (method 'ruka gen-ruka)     ; Angriss, the Spider Queen
+       (method 'melu gen-meluki)   ; Seeker, Wanderer
+       (method 'guno gen-gunodama) ; the language of the Forest Goblins
+
+       ;;;; Responses in human speech:
+       ;; Standard responses:
+       (method 'default gen-default)
+       (method 'hail gen-hail)
+       (method 'name gen-name)
+       (method 'job  gen-job)
+       (method 'join gen-join)
+       (method 'bye  gen-bye)
+
+       ;; Having to do with the goblin language:
+       (method 'gobl gen-goblin)
+       (method 'lang gen-language)
+       (method 'prac gen-practice)
+
+       ;; Other responses:
        (method 'admi gen-primal)
        (method 'ambi gen-ambitious)
        (method 'band gen-band)
-       (method 'bona gen-bonaha)
-       (method 'bye  gen-bye)
        (method 'capt gen-captain)
-       (method 'default gen-default)
        (method 'cave gen-cave)
        (method 'fore gen-job)
-       (method 'gobl gen-goblin)
-       (method 'hail gen-hail)
-       (method 'job gen-job)
-       (method 'join gen-join)
-       (method 'lang gen-language)
        (method 'maid gen-maiden)
-       (method 'name gen-name)
        (method 'prim gen-primal)
-       (method 'prac gen-practice)
        (method 'rang gen-ranger)
        (method 'reas gen-reasons)
        (method 'sava gen-primal)
@@ -230,10 +268,7 @@
        (method 'thie gen-thie)
        (method 'wars gen-wars)
        (method 'wood gen-woodsman)
-       (method 'kama gen-kama)
-       (method 'ruka gen-ruka)
        (method 'clov gen-clov)
-       (method 'nuki gen-nuki)
        ))
 
 ;;----------------------------------------------------------------------------
