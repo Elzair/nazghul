@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Green Tower.
 ;;----------------------------------------------------------------------------
 (define jorn-bed gt-jorn-bed)
 (define jorn-mealplace gt-ws-tbl1)
@@ -28,6 +30,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Jorn is a bravo and former pirate, currently living in Green Tower.
+;; He was once a member of the crew of the Merciful Death, 
+;; and is sought for vengeance by the ghost Ghertie.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -85,8 +91,8 @@
        ;; basics
        (method 'default jorn-default)
        (method 'hail jorn-hail)
-       (method 'bye jorn-bye)
-       (method 'job jorn-job)
+       (method 'bye  jorn-bye)
+       (method 'job  jorn-job)
        (method 'name jorn-name)
        (method 'join jorn-join)
        

@@ -4,6 +4,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Glasdrin.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_jeff
                (list 0  0  gcj-bed      "sleeping")
@@ -24,6 +26,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Jeffreys is the Commander of the Paladins of Glasdrin.
+;; He lives in Glasdrin, and reports directly to the ruler there,
+;; currently the Stewardess, Victoria.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -127,8 +133,8 @@
        ;; basics
        (method 'default jeff-default)
        (method 'hail jeff-hail)
-       (method 'bye jeff-bye)
-       (method 'job jeff-job)
+       (method 'bye  jeff-bye)
+       (method 'job  jeff-job)
        (method 'name jeff-name)
        (method 'join jeff-join)
 
@@ -142,7 +148,8 @@
        (method 'lost jeff-lost)
        (method 'patc jeff-patc)
        (method 'stew jeff-stew)
-       (method 'ini jeff-ini)
+       (method 'vict jeff-stew)  ;; A synonym
+       (method 'ini  jeff-ini)
        (method 'inag jeff-ini)
        (method 'jess jeff-jess)
        (method 'ches jeff-ches)

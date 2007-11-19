@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the Keep guarding Kurpolis.
 ;;----------------------------------------------------------------------------
 (define jones-bed ph-bed1)
 (define jones-mealplace ph-tbl1)
@@ -30,6 +32,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Jones runs the supply depot for the Glasdrin militia.
+;; He is stationed in the Keep guarding Kurpolis.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...

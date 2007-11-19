@@ -4,6 +4,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Glasdrin.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_jess
                (list 0  0  gj-bed      "sleeping")
@@ -21,6 +23,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Jess is the female proprietress of the Holy Grail tavern in Glasdrin.
+;; Her face is scarred, the result of an encounter with goblins 
+;; when serving as a crossbowman in the Glasdrin militia.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -115,8 +121,8 @@
        ;; basics
        (method 'default jess-default)
        (method 'hail jess-hail)
-       (method 'bye jess-bye)
-       (method 'job jess-job)
+       (method 'bye  jess-bye)
+       (method 'job  jess-job)
        (method 'name jess-name)
        (method 'join jess-join)
        
@@ -125,16 +131,16 @@
        (method 'holy jess-grai)
        (method 'trad jess-buy)
        (method 'room jess-buy)
-       (method 'buy jess-buy)
+       (method 'buy  jess-buy)
        (method 'drin jess-buy)
        (method 'ware jess-buy)
        (method 'food jess-buy)
 
        ;; scar
        (method 'trade jess-buy)
-       (method 'scar jess-scar)
-       (method 'serv jess-serv)
-       (method 'wood jess-wood)
+       (method 'scar  jess-scar)
+       (method 'serv  jess-serv)
+       (method 'wood  jess-wood)
 
        ;; town & people
        (method 'glas jess-glas)

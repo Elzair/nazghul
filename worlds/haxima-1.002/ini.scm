@@ -4,6 +4,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Glasdrin.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_ini
                (list 0  0  gi-bed      "sleeping")
@@ -25,6 +27,12 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Ini is a dispirited paladin, dwelling in Glasdrin.
+;; He is loyal to the ideals lived by the Warritrix,
+;; and offended by the corruption which produced her
+;; assassination.
+;; Ini is a potential party member.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -156,8 +164,8 @@
        ;; basics
        (method 'default ini-default)
        (method 'hail ini-hail)
-       (method 'bye ini-bye)
-       (method 'job ini-job)
+       (method 'bye  ini-bye)
+       (method 'job  ini-job)
        (method 'name ini-name)
        (method 'join ini-join)
 

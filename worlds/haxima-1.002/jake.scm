@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Kun.
 ;;----------------------------------------------------------------------------
 (define jake-bed )
 (kern-mk-sched 'sch_jake
@@ -23,6 +25,15 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Jake / Percy is a gint (two-headed giant) 
+;; who lives in the monster village of Kun.
+;; 
+;; Jake is the brutish left head,
+;; who acts as the bouncer for the tavern there.
+;; 
+;; Percy is the refined right head,
+;; who is the barkeep and proprietor of the tavern there.
 ;;----------------------------------------------------------------------------
 
 (define (left-head? knpc)
@@ -135,15 +146,15 @@
        ;; basics
        (method 'default jake-default)
        (method 'hail jake-hail)
-       (method 'bye jake-bye)
-       (method 'job jake-job)
+       (method 'bye  jake-bye)
+       (method 'job  jake-job)
        (method 'name jake-name)
        (method 'join jake-join)
        
        ;; trade
        (method 'drin jake-drin)
        (method 'trad jake-trade)
-       (method 'buy jake-trade)
+       (method 'buy  jake-trade)
 
        ;; town & people
        (method 'jake jake-jake)

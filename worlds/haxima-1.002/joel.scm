@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In front of the Gate to Absalot.
 ;;----------------------------------------------------------------------------
 (define joel-bed (list 'p_gate_to_absalot 8 9 1 1))
 (define joel-mealplace joel-bed)
@@ -30,6 +32,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Joel is a simple cowherd, whose stock is grazing in front of
+;; the gates to the destroyed city of Absalot.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
