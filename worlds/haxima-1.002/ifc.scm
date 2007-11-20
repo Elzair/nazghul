@@ -63,7 +63,7 @@
            (if (ifc 'can (car calls)) 1 0))))
   (if (null? ifc) 0
       (cap ifc (list 'get 'use 'exec 'open 'handle 'step 'attack 'mix 
-                     'enter 'cast 'bump 'hit-loc 'buy 'search 'sense 'xamine 
+                     'enter 'cast 'bump 'hit-loc 'buy 'search 'sense 'xamine 'describe 'on-attack
                      'describe))))
 
 ;; The gob internal api:
