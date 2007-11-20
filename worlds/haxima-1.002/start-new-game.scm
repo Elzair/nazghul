@@ -7,6 +7,20 @@
 ;;----------------------------------------------------------------------------
 (load "naz.scm")
 
+
+;; Setup progress bar for loading. I arrived at the number by printing the
+;; current number of steps in src/foogod.c:foogod_progress_bar_finish().
+(kern-progress-bar-start "Loading" 205)
+
+;; Wrap the original definition of (load ...) with one that advances the
+;; progress bar.
+(define original-load load)  
+(define (load file)
+  (kern-progress-bar-advance 1)
+  (original-load file)
+  )
+
+
 ;;----------------------------------------------------------------------------
 ;; Load the read-only game data. See the note on 'kern-load' vs 'load' above.
 ;;----------------------------------------------------------------------------
@@ -314,3 +328,5 @@
 ;;(kern-set-start-proc start-scene)
 ;;(kern-set-start-proc simple-start)
 (kern-set-start-proc create-char)
+
+(kern-progress-bar-finish)
