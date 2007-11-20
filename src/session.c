@@ -588,6 +588,15 @@ int session_save(char *fname)
         save->write(save, "(load \"naz.scm\")\n");
         save->write(save, "\n");
 
+        /* Generate the first part of the progress bar code. */
+        save->write(save, ";; Progress bar\n");
+        save->write(save, "(kern-progress-bar-start \"Loading\" %d)\n", 
+                    Session->num_kern_includes);
+        save->write(save, "(define original-load load)\n"
+                    "(define (load file) "
+                    "(kern-progress-bar-advance 1) "
+                    "(original-load file))\n");
+
         /* Save all the saveable objects. */
         list_for_each(&Session->data_objects, elem) {
                 struct data_obj_entry *entry;
@@ -638,6 +647,9 @@ int session_save(char *fname)
          * so I don't know what the save callback can do to help. */
         /*         session_save_wq(&session->turnq); */
         /*         session_save_wq(&session->tickq); */
+
+        /* Finish progress bar code */
+        save->write(save, "(kern-progress-bar-finish)\n");
 
         save_del(save);
         fclose(file);                

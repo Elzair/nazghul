@@ -240,6 +240,10 @@ struct session {
 	char is_demo : 1; /* demo mode session */
 	
         struct tree *freezer;
+
+        int num_kern_includes; /* Number of times kern-include was used when
+                                * loading the session. Needed for generating
+                                * progress bar code in the save file. */
 };
 
 // Callback table for saving objects

@@ -125,6 +125,7 @@ static void play_reload()
                 log_end("error!");
         else
                 log_end("ok!");
+        foogodSetMode(FOOGOD_DEFAULT);
         place_synchronize(Place);
         tick_run();
         vmask_flush_all();
@@ -305,6 +306,8 @@ int playRun(char *fname)
 	}
         log_end("ok!");
         log_msg("'?' for help.");
+
+        foogodSetMode(FOOGOD_DEFAULT);
 
         // Run the optional startup script.
         session_run_start_proc(Session);

@@ -2412,6 +2412,7 @@ static pointer kern_include(scheme *sc, pointer args)
         }
 
         session_add(Session, strdup(fname), incfile_dtor, incfile_save, NULL);
+        Session->num_kern_includes++;
         return sc->NIL;
 }
 
@@ -9139,7 +9140,6 @@ KERN_API_CALL(kern_progress_bar_advance)
 KERN_API_CALL(kern_progress_bar_finish)
 {
         foogod_progress_bar_finish();
-        foogodSetMode(FOOGOD_DEFAULT);
         foogodRepaint();
 
         return sc->NIL;
