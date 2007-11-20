@@ -9104,6 +9104,47 @@ KERN_API_CALL(kern_obj_set_mmode)
         
 }
 
+KERN_API_CALL(kern_progress_bar_start)
+{
+        char *title = 0;
+        unsigned int max_steps = 0;
+
+        if (unpack(sc, &args, "sd", &title, &max_steps)) {
+                load_err("kern-progress-bar-start: bad args");
+                return sc->NIL;
+        }
+
+        foogod_progress_bar_set_title(title);
+        foogod_progress_bar_set_max_steps(max_steps);
+        foogodSetMode(FOOGOD_PROGRESS_BAR);
+
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_progress_bar_advance)
+{
+        unsigned int steps = 0;
+
+        if (unpack(sc, &args, "d", &steps)) {
+                load_err("kern-progress-bar-advance: bad args");
+                return sc->NIL;
+        }
+
+        foogod_progress_bar_advance(steps);
+        foogodRepaint();
+
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_progress_bar_finish)
+{
+        foogod_progress_bar_finish();
+        foogodSetMode(FOOGOD_DEFAULT);
+        foogodRepaint();
+
+        return sc->NIL;
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -9529,6 +9570,11 @@ scheme *kern_init(void)
         /* kern-image api */
         API_DECL(sc, "kern-image-load", kern_image_load);
         API_DECL(sc, "kern-image-free", kern_image_free);
+
+        /* kern-progress-bar api */
+        API_DECL(sc, "kern-progress-bar-start", kern_progress_bar_start);
+        API_DECL(sc, "kern-progress-bar-advance", kern_progress_bar_advance);
+        API_DECL(sc, "kern-progress-bar-finish", kern_progress_bar_finish);
 
         /* obsolete (keep these until old save games are unlikely to use
          * them) */

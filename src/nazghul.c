@@ -200,8 +200,8 @@ static void nazghul_init_internal_libs(void)
                 { "mapInit",        mapInit        },
                 { "vmask_init",     vmask_init     },
                 { "combatInit",     combatInit     },
-                { "foogodInit",     foogodInit     },
                 { "statusInit",     statusInit     },
+                { "foogodInit",     foogodInit     },
                 { "menu_init",      menu_init      }
         };
 

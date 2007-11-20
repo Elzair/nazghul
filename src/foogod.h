@@ -30,6 +30,7 @@ BEGIN_DECL
 typedef enum {
         FOOGOD_DEFAULT = 0
         , FOOGOD_HINT
+        , FOOGOD_PROGRESS_BAR
 } foogod_mode_t;
 
 typedef enum {
@@ -50,6 +51,11 @@ extern int foogod_get_h(void);
 
 extern void foogodSetMode(foogod_mode_t mode);
 extern void foogodSetHintText(char *text);
+
+extern void foogod_progress_bar_set_title(char *title);
+extern void foogod_progress_bar_set_max_steps(unsigned int val);
+extern void foogod_progress_bar_advance(unsigned int steps);
+extern void foogod_progress_bar_finish(void);
 
 END_DECL
 

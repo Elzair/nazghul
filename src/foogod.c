@@ -41,6 +41,9 @@ struct foogod {
         foogod_mode_t mode;
         int hintLen;
         char *hintText;
+        unsigned int progress_bar_max_steps;
+        unsigned int progress_bar_steps;
+        char *progress_bar_title;
 } Foogod;
 
 void foogodAdvanceTurns(void)
@@ -152,18 +155,55 @@ static void foogodPaintSessionInfo()
         }
 }
 
+static void foogod_progress_bar_paint()
+{
+        int i;
+        int ticks;
+        int max_ticks;
+        SDL_Rect rect = Foogod.screenRect;
+
+        /* title */
+        rect.h = ASCII_H;
+        screenPrint(&rect, SP_CENTERED, Foogod.progress_bar_title);
+        
+        /* bar */
+        rect.y += ASCII_H;
+        rect.w = ASCII_W;
+
+        /* (ticks : maxTicks) = (steps : totalSteps) */
+        max_ticks = Foogod.screenRect.w / ASCII_W;
+        ticks = (Foogod.progress_bar_steps * max_ticks) 
+                / Foogod.progress_bar_max_steps;
+
+        for (i = 0; i < ticks; i++) {
+                screenPrint(&rect, 0, ".");
+                rect.x += ASCII_W;
+        }
+
+}
+
 void foogodRepaint(void)
 {
 	screenErase(&Foogod.screenRect);
 
-        if (FOOGOD_DEFAULT == Foogod.mode) {
+        switch (Foogod.mode) {
+
+        default:
+        case FOOGOD_DEFAULT:
                 if (Session) {
                         foogodPaintSessionInfo();
                 }
                 screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, 
                             "Combat: %c", combatGetState());
-        } else {
+                break;
+
+        case FOOGOD_HINT:
                 screenPrint(&Foogod.screenRect, 0, Foogod.hintText);
+                break;
+
+        case FOOGOD_PROGRESS_BAR:
+                foogod_progress_bar_paint();
+                break;
         }
 
 	screenUpdate(&Foogod.screenRect);
@@ -199,4 +239,32 @@ void foogodSetMode(foogod_mode_t mode)
 void foogodSetHintText(char *text)
 {
         strncpy(Foogod.hintText, text, Foogod.hintLen);
+}
+
+void foogod_progress_bar_set_title(char *title)
+{
+        if (Foogod.progress_bar_title) {
+                free(Foogod.progress_bar_title);
+                Foogod.progress_bar_title = 0;
+        }
+
+        if (title) {
+                Foogod.progress_bar_title = strdup(title);
+        }
+}
+
+void foogod_progress_bar_set_max_steps(unsigned int val)
+{
+        Foogod.progress_bar_max_steps = val;
+        Foogod.progress_bar_steps = 0;
+}
+
+void foogod_progress_bar_advance(unsigned int steps)
+{
+        Foogod.progress_bar_steps += steps;
+}
+
+void foogod_progress_bar_finish()
+{
+        Foogod.progress_bar_steps = Foogod.progress_bar_max_steps;
 }

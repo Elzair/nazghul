@@ -335,6 +335,8 @@ int statusInit()
 
 	Status.numLines = Status.screenRect.h / LINE_H;
 
+	foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
+
 	return 0;
 }
 
