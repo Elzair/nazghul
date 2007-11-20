@@ -8,6 +8,19 @@
 (load "naz.scm")
 
 ;; clone of game.scm ---------------------------------------------------------
+
+;; Setup progress bar stuff. The number 44 should be the total number of files
+;; we're going to load.
+(kern-progress-bar-start "Loading" 44)
+
+;; Wrap the original definition of (load ...) with one that advances the
+;; progress bar.
+(define original-load load)  
+(define (load file)
+  (kern-progress-bar-advance 1)
+  (original-load file)
+  )
+
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
@@ -394,6 +407,8 @@
 (kern-set-xray-vision-sprite s_xray_vision)
 
 (kern-init-random)
+
+(kern-progress-bar-finish)
 
 ;; end clone of game.scm------------------------------------------------------
 
