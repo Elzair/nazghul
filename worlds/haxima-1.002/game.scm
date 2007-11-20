@@ -2,17 +2,8 @@
 ;; Constants
 ;;----------------------------------------------------------------------------
 
-;; Setup progress bar for loading. The number 44 should be the total number of
-;; files we're going to load.
-(kern-progress-bar-start "Loading" 44)
+;; This file loads 58 files
 
-;; Wrap the original definition of (load ...) with one that advances the
-;; progress bar.
-(define original-load load)  
-(define (load file)
-  (kern-progress-bar-advance 1)
-  (original-load file)
-  )
 
 ;; Slots
 (define slot-nil              0)
@@ -394,5 +385,3 @@
 (kern-set-xray-vision-sprite s_xray_vision)
 
 (kern-init-random)
-
-(kern-progress-bar-finish)
