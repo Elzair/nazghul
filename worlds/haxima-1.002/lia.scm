@@ -2,10 +2,11 @@
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
-(define trigrave-inn-room-price 20)
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Oparine.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_lia
                (list 0  0  sea-witch-bed        "sleeping")
@@ -21,6 +22,14 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Lia is a female wizard and reagent-seller who dwells in Oparine,
+;; so that she may remain in the proximity to her true love,
+;; the Nixie prince Fing.
+;; 
+;; She is said to be under a curse, of obscure nature.
+;; One likely interpretation is that she is only in human form through 
+;; having been transformed, being born a Nixie or some other water-folk.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -133,8 +142,8 @@
        ;; basics
        (method 'default lia-default)
        (method 'hail lia-hail)
-       (method 'bye lia-bye)
-       (method 'job lia-job)
+       (method 'bye  lia-bye)
+       (method 'job  lia-job)
        (method 'name lia-name)
        (method 'join lia-join)
        
@@ -148,7 +157,7 @@
        ;; trade
        (method 'trad lia-trade)
        (method 'reag lia-buy)
-       (method 'buy lia-buy)
+       (method 'buy  lia-buy)
        (method 'sell lia-sell)
        (method 'blac lia-buy)
        (method 'pear lia-buy)

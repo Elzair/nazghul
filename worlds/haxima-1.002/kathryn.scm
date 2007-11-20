@@ -5,6 +5,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Bole.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_kathryn
                (list 0  0  bole-bed-kathryn "sleeping")
@@ -26,6 +28,14 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Kathryn is a female mercenary wizard, currently in Bole on a mission
+;; to retrieve the Rune of Knowledge from the thief (Mouse) contracted to 
+;; purloin it from the Enchanter...and ensure he tells no tales.
+;; She is manipulative and ruthless.
+;; 
+;; Kathryn is a potential party member (and an eventual betrayer).
+;; She is accompanied by the brute Thud, who will join the party if she does.
 ;;----------------------------------------------------------------------------
 (define (kathryn-hail knpc kpc)
   (say knpc "[You meet a lovely woman who regards you with contempt]. Yes?"))
@@ -156,8 +166,8 @@
   (ifc nil
        (method 'default kathryn-default)
        (method 'hail kathryn-hail)
-       (method 'bye (lambda (knpc kpc) (say knpc "Good riddance.")))
-       (method 'job kathryn-job)
+       (method 'bye  (lambda (knpc kpc) (say knpc "Good riddance.")))
+       (method 'job  kathryn-job)
        (method 'name kathryn-name)
        (method 'join kathryn-join)
 

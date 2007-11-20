@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the Treasury of Luximene, in Kurpolis.
 ;;----------------------------------------------------------------------------
 
 ;;----------------------------------------------------------------------------
@@ -16,6 +18,12 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Luximene is a lich (or later, a shade conjured up from his skull),
+;; sitting in rulership over the small realm of his treasury in 
+;; ruined Kurpolis.  In life, he was a great king who conquered and united 
+;; the Shard, and was ultimately overthrown by a coalition of those who 
+;; became known as the Wise.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
