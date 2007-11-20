@@ -66,6 +66,7 @@
 #define GIFC_CAN_SENSE        (1<<14)
 #define GIFC_CAN_XAMINE       (1<<15)
 #define GIFC_CAN_DESCRIBE     (1<<16)
+#define GIFC_CAN_ON_ATTACK     (1<<17)
 
 ObjectType::ObjectType()
 {
@@ -1980,6 +1981,16 @@ int ObjectType::attack(Object *obj, Object *stepper)
         return closure_exec(gifc, "ypp", "attack", obj, stepper);
 }
 
+bool ObjectType::canOnAttack()
+{
+        return (gifc_cap & GIFC_CAN_ON_ATTACK);
+}
+
+int ObjectType::onAttack(Object *obj, Object *stepper)
+{
+        return closure_exec(gifc, "yp", "on-attack", stepper);
+}
+
 int ObjectType::enter(Object *obj, Object *stepper)
 {
         return closure_exec(gifc, "ypp", "enter", obj, stepper);
@@ -2144,10 +2155,19 @@ void Object::sense(Object *stepper)
 void Object::attack(Object *stepper)
 {        
         if (! getObjectType() ||
-            ! getObjectType()->canStep())
+            ! getObjectType()->canAttack())
                 return;
 
         getObjectType()->attack(this, stepper);
+}
+
+void Object::onAttack(Object *user)
+{        
+        if (! getObjectType() ||
+            ! getObjectType()->canOnAttack())
+                return;
+
+        getObjectType()->onAttack(this, user);
 }
 
 struct closure *Object::getConversation()

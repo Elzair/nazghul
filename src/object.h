@@ -190,6 +190,7 @@ class ObjectType {
         bool canSense();
         bool canXamine();
         bool canAttack();
+        bool canOnAttack();
         bool canEnter();
         bool canBump(); // attempted entry onto same tile
         bool canHitLocation(); // weapon hitting a target location
@@ -207,6 +208,7 @@ class ObjectType {
         int xamine(Object *obj, Object *xaminer);		
         int handle(Object *obj, Object *handler);
         int attack(Object *obj, Object *attacker);
+        int onAttack(Object *obj, Object *attacker);
         int enter(Object *obj, Object *enterer);
         int cast(Object *caster);
         int bump(Object *obj, Object *bumper);
@@ -387,6 +389,7 @@ class Object {
         void step(Object *stepper);
 		void sense(Object *stepper);
         void attack(Object *attacker);
+        void onAttack(Object *user);
         void enter(Object *enterer);
 
         // Conversation interface

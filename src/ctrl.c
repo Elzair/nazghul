@@ -449,6 +449,11 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                   , weapon->getName()
                 );
 
+        if (weapon->canOnAttack())
+        {
+	      	weapon->onAttack(NULL,character);  
+     		}
+                
         miss = ! weapon->fire(target, character->getX(), character->getY(), &misx, &misy);
         ctrl_attack_done(character, weapon, target);
 
@@ -771,7 +776,13 @@ static void ctrl_attack_ui(class Character *character)
 			int misx = x;
 			int misy = y;
 			
-			this_is_nth_attack++;					
+			this_is_nth_attack++;				
+			
+			        if (weapon->canOnAttack())
+			        {
+				      	weapon->onAttack(NULL,character);  
+			     		}
+     			
                         bool miss = ! weapon->fire(character->getPlace(), 
                                      character->getX(), 
                                      character->getY(), 
