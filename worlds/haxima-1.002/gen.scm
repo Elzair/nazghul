@@ -69,13 +69,13 @@
 ;; He has much knowledge of Goblin kind, and is a friend of Kama.
 ;; Gen is a potential party member.
 ;;----------------------------------------------------------------------------
-(define (gen-hail gen player) (say gen "Hail, Wanderer"))
-(define (gen-bye gen player) (say gen "Farewell"))
-(define (gen-default gen player) (say gen "I can't help you with that"))
-(define (gen-name gen player) (say gen "I am Gen." ))
+(define (gen-hail     gen player) (say gen "Hail, Wanderer"))
+(define (gen-bye      gen player) (say gen "Farewell"))
+(define (gen-default  gen player) (say gen "I can't help you with that"))
+(define (gen-name     gen player) (say gen "I am Gen." ))
 (define (gen-woodsman gen player) (say gen "Yes, some call me the Woodsman." ))
-(define (gen-job gen player) (say gen "Once I was a Ranger, but my duty now is done. I wander 'midst the woods for my own reasons." ))
-(define (gen-reasons gen player) (say gen "My reasons are my own." ))
+(define (gen-job      gen player) (say gen "Once I was a Ranger, but my duty now is done. I wander 'midst the woods for my own reasons." ))
+(define (gen-reasons  gen player) (say gen "My reasons are my own." ))
 
 (define (gen-captain gen player) 
   (say gen "Captain Deric commands the Rangers of Green Tower. Have you met him?")
@@ -83,18 +83,26 @@
       (say gen "A decent man, if somewhat ambitious.")
       (say gen "You can find him in the Tower. His office is on the second floor.")))
 
-(define (gen-ambitious gen player) (say gen "In peace there's nothing so becomes a man as modest stillness and humility." ))
-(define (gen-shakespeare gen player) (say gen "Very good! Some interesting conversation at last."))
+(define (gen-ambitious   gen player) (say gen "In peace there's nothing so becomes a man as modest stillness and humility." ))
+(define (gen-culture     gen player) 
+  (say gen "Though a culture their own, truly a culture they have, (unlike the trolls and headless)."
+       "The truths of culture can be seen in Shakespeare, truths which hold across the gulfs between different folk."))
+(define (gen-shakespeare gen player)
+  (say gen "You know of him! Very good! Some interesting conversation at last.")
+  (if (in-player-party? 'ch_kama)
+      (say gen player "[He points at Kama] Another who knows of the Bard!  You should hear his telling of Hamlet!")
+      ))
+
 (define (gen-ranger gen player) (say gen "Rangers fought in these woods during the Goblin Wars. Now they maintain a token presence."))
-(define (gen-wars gen player) (say gen "Yes, I fought as a Ranger in the goblin wars. That was a generation ago, and people forget. "
-                                 "They see the goblins as lesser beings, defeated and worthy of slow extinction."))
-(define (gen-goblin gen player) (say gen "An interesting species. They have their own LANGUAGE, but no writing. "
-                                   "They are much like men, but more savage, more primal. "
-                                   "Their warriors are beserkers, their shamans are ecstatic mystics."))
+(define (gen-wars   gen player) (say gen "Yes, I fought as a Ranger in the goblin wars. That was a generation ago, and people forget. "
+				     "They see the goblins as lesser beings, defeated and worthy of slow extinction."))
+(define (gen-goblin gen player) (say gen "An interesting species. Beyond CULTURE, they have their own LANGUAGE, though they have no writing. "
+				     "They are much like men, but more savage, more primal. "
+				     "Their warriors are beserkers, their shamans are ecstatic mystics."))
 (define (gen-primal gen player) (say gen "You can tell I admire them? But in the wars I fought them, not understanding what they were. "
-                                   "I have friends among the wild forest goblins, now. The cave goblins, though, they are another story..." ))
-(define (gen-cave gen player) (say gen "The cave goblins, who are larger and stronger than their forest cousins, prefer to live in the deeps of the world. "
-                                 "Their dark god demands living sacrifices. Beware them if you explore the caves, they burn with hatred for humankind." ))
+				     "I have friends among the wild forest goblins, now. The cave goblins, though, they are another story..." ))
+(define (gen-cave   gen player) (say gen "The cave goblins, who are larger and stronger than their forest cousins, prefer to live in the deeps of the world. "
+				     "Their dark god demands living sacrifices. Beware them if you explore the caves, they burn with hatred for humankind." ))
 
 (define (gen-language kgen player)
   (let ((gen (kobj-gob-data kgen)))
@@ -263,7 +271,12 @@
        (method 'rang gen-ranger)
        (method 'reas gen-reasons)
        (method 'sava gen-primal)
+
+       (method 'cult gen-culture)
        (method 'shak gen-shakespeare)
+       (method 'bard gen-shakespeare)  ;; synonyn
+       (method 'haml gen-shakespeare)  ;; synonyn
+
        (method 'shro gen-shroom)
        (method 'thie gen-thie)
        (method 'wars gen-wars)
@@ -291,7 +304,9 @@
                  'gen-conv           ; conv
                  sch_gen             ; sched
                  'townsman-ai        ; special ai
-                 (mk-inventory (list (list 1 t_dagger)))  ; container
+                 (mk-inventory (list (list 1 t_dagger) 
+				     (list 1 t_playbook_hamlet)
+				     ))  ; container
                  (list t_armor_leather)                ; readied
                  )
    (gen-mk #f #f)))
