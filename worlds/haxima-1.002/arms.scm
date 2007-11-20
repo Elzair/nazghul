@@ -86,9 +86,9 @@
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect AP_cost AP_mod
                                  slots num-hands range projectile ammo ubiq weight
-								 stratt_mod dexatt_mod damage_mod avoid_mod)
+								 stratt_mod dexatt_mod damage_mod avoid_mod ifc)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range AP_cost AP_mod projectile ammo #f ubiq weight nil obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
+                     num-hands range AP_cost AP_mod projectile ammo #f ubiq weight nil (ifc-cap ifc) ifc stratt_mod dexatt_mod damage_mod avoid_mod mmode-smallobj))
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect AP_cost AP_mod slots 
@@ -464,29 +464,39 @@
 (kern-mk-sprite 's_doom_staff ss_arms 1 27 #f 0)
 (kern-mk-sprite 's_stun_wand  ss_arms 1 28 #f 0)
 
+(define proj-ifc
+	(ifc obj-ifc
+		(method 'on-attack
+			(lambda (kuser)
+				(println "oa")
+				(kern-sound-play-at sound-missile (kern-obj-get-location kuser))
+			)
+ 	))
+)
+
 (define projectile-arms-types
   (list
    ;;     =========================================================================================================================================================================================
-   ;;     tag            | name           |  sprite     | to-hit | damage | to-def | AP_cost | AP_mod       | slots       | hnds | rng | missile        | ammo  | ubiq | weight | stratt | dexatt | dammod | avoid
+   ;;     tag            | name           |  sprite     | to-hit | damage | to-def | AP_cost | AP_mod       | slots       | hnds | rng | missile        | ammo  | ubiq | weight | stratt | dexatt | dammod | avoid | ifc
    ;;     =========================================================================================================================================================================================
-   (list 't_sling          "sling"           s_sling      "1d2-2"  "1d4"    "-1"      (weap-ap 1) 0   slot-weapon   1      4     t_slingstone     nil     #t     0        10       60       30       0.9  )
-   (list 't_sling_4        "+4 sling"        s_sling      "+3"     "1d4+4"  "+0"      (weap-ap 1) 0   slot-weapon   1      6     t_slingstone     nil     #t     0        10       60       30       0.9  )
+   (list 't_sling          "sling"           s_sling      "1d2-2"  "1d4"    "-1"      (weap-ap 1) 0   slot-weapon   1      4     t_slingstone     nil     #t     0        10       60       30       0.9	proj-ifc)
+   (list 't_sling_4        "+4 sling"        s_sling      "+3"     "1d4+4"  "+0"      (weap-ap 1) 0   slot-weapon   1      6     t_slingstone     nil     #t     0        10       60       30       0.9	proj-ifc)
 
-   (list 't_self_bow       "self bow"        s_bow        "+1"     "1d6"    "-2"      (weap-ap 0.8) 0   slot-weapon   2      4     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
-   (list 't_bow            "bow"             s_bow        "1d3-2"  "2d4"    "-2"     (weap-ap 1) 0   slot-weapon   2      5     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
-   (list 't_long_bow       "longbow"         s_bow        "1d3-2"  "2d6+1"  "-2"     (weap-ap 1.2) 0   slot-weapon   2      6     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
-   (list 't_great_bow      "great bow"       s_bow        "1d3-2"  "2d6+3"  "-2"     (weap-ap 1.34) 0   slot-weapon   2      7     t_arrow_p        t_arrow #f     2        10       70       20       0.9  )
+   (list 't_self_bow       "self bow"        s_bow        "+1"     "1d6"    "-2"      (weap-ap 0.8) 0   slot-weapon   2      4     t_arrow_p        t_arrow #f     2        10       70       20       0.9  proj-ifc)
+   (list 't_bow            "bow"             s_bow        "1d3-2"  "2d4"    "-2"     (weap-ap 1) 0   slot-weapon   2      5     t_arrow_p        t_arrow #f     2        10       70       20       0.9  proj-ifc)
+   (list 't_long_bow       "longbow"         s_bow        "1d3-2"  "2d6+1"  "-2"     (weap-ap 1.2) 0   slot-weapon   2      6     t_arrow_p        t_arrow #f     2        10       70       20       0.9  proj-ifc)
+   (list 't_great_bow      "great bow"       s_bow        "1d3-2"  "2d6+3"  "-2"     (weap-ap 1.34) 0   slot-weapon   2      7     t_arrow_p        t_arrow #f     2        10       70       20       0.9  proj-ifc)
 
-   (list 't_lt_crossbow    "light crossbow"  s_crossbow   "1d4-2"  "2d5"    "-1"     (weap-ap 1) 0   slot-weapon   2      5     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
-   (list 't_crossbow       "crossbow"        s_crossbow   "1d4-2"  "4d4"    "-1"     (weap-ap 1) 0   slot-weapon   2      6     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
-   (list 't_hvy_crossbow   "heavy crossbow"  s_crossbow   "1d4-2"  "4d6+2"  "-1"     (weap-ap 2) 0   slot-weapon   2      7     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
-   (list 't_trpl_crossbow  "triple crossbow" s_crossbow   "1d4-2"  "2d5"    "-1"      (weap-ap 0.67) 0   slot-weapon   2      5     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 )
+   (list 't_lt_crossbow    "light crossbow"  s_crossbow   "1d4-2"  "2d5"    "-1"     (weap-ap 1) 0   slot-weapon   2      5     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 proj-ifc)
+   (list 't_crossbow       "crossbow"        s_crossbow   "1d4-2"  "4d4"    "-1"     (weap-ap 1) 0   slot-weapon   2      6     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 proj-ifc)
+   (list 't_hvy_crossbow   "heavy crossbow"  s_crossbow   "1d4-2"  "4d6+2"  "-1"     (weap-ap 2) 0   slot-weapon   2      7     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 proj-ifc)
+   (list 't_trpl_crossbow  "triple crossbow" s_crossbow   "1d4-2"  "2d5"    "-1"      (weap-ap 0.67) 0   slot-weapon   2      5     t_bolt_p         t_bolt  #f     3         0       80        0       0.95 proj-ifc)
 
-   (list 't_doom_staff     "doom staff"      s_doom_staff "1d4"    "1d2"    "+2"     (weap-ap 1) 0    slot-weapon   2      5     t_fireball       nil     #t     2         0       50        0       1.0  )
-   (list 't_acid_spray     "acid spray"      nil          "-7"     "1d6"    "+0"     (weap-ap 1) 0    slot-nil      2      2     t_slimeglob      nil     #t     0        10       50       20       1.0  )
-   (list 't_fire_glob      "fire glob"       nil          "-8"     "1d6"    "+0"     (weap-ap 1) 0    slot-nil      2      2     t_fireball       nil     #t     0        10       50       20       1.0  )
-   (list 't_stun_wand      "stun wand"       s_stun_wand  "-2"     "1d4"    "-1"     (weap-ap 1) 0    slot-weapon   1      6     t_stunball       nil     #t     2         0       80        0       1.0  )
-   (list 't_prismatic_gaze "prismatic gaze"  nil          "1d4"    "0"      "+0"     (weap-ap 1) 0    slot-nil      1      3     t_prismatic_bolt nil     #t     0         0        0        0       0.85 )
+   (list 't_doom_staff     "doom staff"      s_doom_staff "1d4"    "1d2"    "+2"     (weap-ap 1) 0    slot-weapon   2      5     t_fireball       nil     #t     2         0       50        0       1.0  proj-ifc)
+   (list 't_acid_spray     "acid spray"      nil          "-7"     "1d6"    "+0"     (weap-ap 1) 0    slot-nil      2      2     t_slimeglob      nil     #t     0        10       50       20       1.0  proj-ifc)
+   (list 't_fire_glob      "fire glob"       nil          "-8"     "1d6"    "+0"     (weap-ap 1) 0    slot-nil      2      2     t_fireball       nil     #t     0        10       50       20       1.0  proj-ifc)
+   (list 't_stun_wand      "stun wand"       s_stun_wand  "-2"     "1d4"    "-1"     (weap-ap 1) 0    slot-weapon   1      6     t_stunball       nil     #t     2         0       80        0       1.0  proj-ifc)
+   (list 't_prismatic_gaze "prismatic gaze"  nil          "1d4"    "0"      "+0"     (weap-ap 1) 0    slot-nil      1      3     t_prismatic_bolt nil     #t     0         0        0        0       0.85 proj-ifc)
    ))
 
 ;; ============================================================================
