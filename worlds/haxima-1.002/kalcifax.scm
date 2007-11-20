@@ -7,6 +7,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; Kalcifax travels (notionally by the moon gates) 
+;; to many places, carrying messages and such.
 ;;----------------------------------------------------------------------------
 (define kalc-bed cheerful-bed-2)
 (define kalc-mealplace )
@@ -16,7 +19,7 @@
                (list 0  0 kalc-bed          "sleeping")
                (list 7  0 bilge-water-seat-5 "eating")
                (list 8  0 enchtwr-hall       "idle")
-               (list 11  0 g-fountain         "idle")
+               (list 11 0 g-fountain         "idle")
                (list 12 0 ghg-s6             "eating")
                (list 13 0 eng-workshop       "idle")
                (list 16 0 trigrave-tavern-hall "idle")
@@ -32,6 +35,11 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Kalcifax is a female wizard with considerable knowledge of the moon gates.
+;; She travels to many places (notionally by use of the gates),
+;; carrying messages and such.
+;; Kalcifax is a potential party member.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -94,8 +102,8 @@
 
        ;; basics
        (method 'hail kalc-hail)
-       (method 'bye kalc-bye)
-       (method 'job kalc-job)
+       (method 'bye  kalc-bye)
+       (method 'job  kalc-job)
        (method 'name kalc-name)
        (method 'join kalc-join)
        
@@ -105,7 +113,7 @@
        (method 'engi kalc-engi)
        (method 'peop kalc-peop)
        (method 'erra kalc-peop)
-       (method 'pay kalc-pay)
+       (method 'pay  kalc-pay)
        ))
 
 (define (mk-kalcifax)
