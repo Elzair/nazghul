@@ -266,6 +266,6 @@ void foogod_progress_bar_advance(unsigned int steps)
 
 void foogod_progress_bar_finish()
 {
-        /*dbg("Foogod.progress_bar_steps=%d\n", Foogod.progress_bar_steps);*/
+        dbg("Foogod.progress_bar_steps=%d\n", Foogod.progress_bar_steps);
         Foogod.progress_bar_steps = Foogod.progress_bar_max_steps;
 }

@@ -562,6 +562,7 @@ int session_save(char *fname)
         FILE *file = 0;
         struct list *elem;
         save_t *save;
+        int object_saves = 0;
 
         file = file_open_in_save_dir(fname, "w");
         if (! file) {
@@ -588,11 +589,23 @@ int session_save(char *fname)
         save->write(save, "(load \"naz.scm\")\n");
         save->write(save, "\n");
 
-        /* Generate the first part of the progress bar code. */
+        /* Generate the first part of the progress bar code. Use the number of
+         * data objects which will save themselves, plus the number of load
+         * files, as the limit. */
+        list_for_each(&Session->data_objects, elem) {
+                struct data_obj_entry *entry;
+                entry = list_entry(elem, struct data_obj_entry, list);
+                if (entry->save) {
+                        object_saves++;
+                }
+        }
+
         save->write(save, ";; Progress bar\n");
         save->write(save, "(kern-progress-bar-start \"Loading\" %d)\n", 
-                    Session->num_kern_includes);
-        save->write(save, "(define original-load load)\n"
+                    Session->num_kern_includes + object_saves);
+        
+        /* Generate code to advance the progress bar as each file is loaded. */
+        save->write(save, "(define original-load load)  "
                     "(define (load file) "
                     "(kern-progress-bar-advance 1) "
                     "(original-load file))\n");
@@ -608,7 +621,12 @@ int session_save(char *fname)
                                      fname);
                                 break;
                         }
+
+                        /* Generate code to advance the progress bar as each
+                         * object finishes loading. */
+                        save->write(save, "(kern-progress-bar-advance 1)\n");
                 }
+
         }
 		/* Object freezer */
         save->write(save, ";;--------------\n");
