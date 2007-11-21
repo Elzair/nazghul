@@ -29,6 +29,9 @@
 #include "session.h"
 #include "vehicle.h"
 #include "sprite.h"
+#include "images.h"
+
+#include <SDL_image.h>
 
 struct foogod {
 	SDL_Rect screenRect;
@@ -44,7 +47,82 @@ struct foogod {
         unsigned int progress_bar_max_steps;
         unsigned int progress_bar_steps;
         char *progress_bar_title;
+        struct images *image;
+        struct sprite *progress_bar_sprites[3];
 } Foogod;
+
+/* XPM */
+static char * foogod_progress_bar_xpm[] = {
+        "24 16 8 1",
+        " 	c #000000",
+        ".	c #5F005F",
+        "+	c #FF49FF",
+        "@	c #3F003F",
+        "#	c #7F007F",
+        "$	c #FF92FF",
+        "%	c #C880C8",
+        "&	c #FFC8FF",
+        "                        ",
+        "                        ",
+        "  ....++++++++++++....  ",
+        "  ....++++++++++++....  ",
+        "@@..##$$%%%%%%%%$$##..@@",
+        "@@..##$$%%%%%%%%$$##..@@",
+        "..####$$&&&&&&&&$$####..",
+        "..####$$&&&&&&&&$$####..",
+        "..##++++++++++++++++##..",
+        "..##++++++++++++++++##..",
+        "@@....................@@",
+        "@@....................@@",
+        "  @@................@@  ",
+        "  @@................@@  ",
+        "                        ",
+        "                        "};
+
+static int foogod_load_progress_bar_sprites(void)
+{
+        int i;
+
+	Foogod.image = (struct images *)calloc(1, sizeof(*Foogod.image));
+        assert(Foogod.image);
+
+        Foogod.image->w       = 8;
+        Foogod.image->h       = 16;
+        Foogod.image->offx    = 0;
+        Foogod.image->offy    = 0;
+        Foogod.image->rows    = 1;
+        Foogod.image->cols    = 3;
+
+        Foogod.image->images = IMG_ReadXPMFromArray(foogod_progress_bar_xpm);
+	if (!Foogod.image->images) {
+                err("IMG_ReadXPMFromArray() failed: '%s'\n", SDL_GetError() );
+                goto fail;
+	}
+
+        for (i = 0; i < 3; i++) {
+                if (!(Foogod.progress_bar_sprites[i] = sprite_new(0, 1, i, 0, 0, Foogod.image))) {
+                        err("sprite_new() failed\n");
+                        goto fail;
+                }
+        }
+
+        return 0;
+
+ fail:
+        for (i = 0; i < 3; i++) {
+                if ((Foogod.progress_bar_sprites[i])) {
+                        sprite_del(Foogod.progress_bar_sprites[i]);
+                        Foogod.progress_bar_sprites[i] = 0;
+                }
+        }
+
+        if (Foogod.image) {
+                free(Foogod.image);
+                Foogod.image = 0;
+        }
+
+        return -1;
+}
 
 void foogodAdvanceTurns(void)
 {
@@ -104,7 +182,7 @@ int foogodInit(void)
 	Foogod.combatRect.y = foogod_get_y() + ASCII_H;
 	Foogod.combatRect.h = ASCII_H;
 
-        return 0;
+        return foogod_load_progress_bar_sprites();
 }
 
 static void foogodPaintEffect(SDL_Rect *rect, struct sprite *sprite)
@@ -171,15 +249,27 @@ static void foogod_progress_bar_paint()
         rect.w = ASCII_W;
 
         /* (ticks : maxTicks) = (steps : totalSteps) */
-        max_ticks = Foogod.screenRect.w / ASCII_W;
+        max_ticks = (Foogod.screenRect.w / ASCII_W);
+
+        /* Subtract two for the edges pieces of the progress bar. */
+        max_ticks -= 2;
+
         ticks = (Foogod.progress_bar_steps * max_ticks) 
                 / Foogod.progress_bar_max_steps;
 
+        /* Paint the left edge. */
+        sprite_paint(Foogod.progress_bar_sprites[0], 0, rect.x, rect.y);
+        rect.x += ASCII_W;
+
+        /* Paint the center. */
         for (i = 0; i < ticks; i++) {
-                screenPrint(&rect, 0, ".");
+                sprite_paint(Foogod.progress_bar_sprites[1], 0, rect.x, rect.y);
+                //screenPrint(&rect, 0, ".");
                 rect.x += ASCII_W;
         }
 
+        /* Paint the right edge. */
+        sprite_paint(Foogod.progress_bar_sprites[2], 0, rect.x, rect.y);
 }
 
 void foogodRepaint(void)
@@ -262,6 +352,9 @@ void foogod_progress_bar_set_max_steps(unsigned int val)
 void foogod_progress_bar_advance(unsigned int steps)
 {
         Foogod.progress_bar_steps += steps;
+        if (Foogod.progress_bar_steps > Foogod.progress_bar_max_steps) {
+                Foogod.progress_bar_steps = Foogod.progress_bar_max_steps;
+        }
 }
 
 void foogod_progress_bar_finish()
