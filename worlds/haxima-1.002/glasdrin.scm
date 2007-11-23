@@ -133,6 +133,12 @@
   ;; ladder down to prison
   (put (mk-ladder-down 'p_prison 6 4) 2 2)
 
+  ;; Stewardess's chest
+  (put (mk-chest 'burn-trap
+                 '((1 t_stewardess_journal)
+                   ))
+       10 14)
+
   )
 
  ;; on-entry hook

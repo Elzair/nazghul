@@ -995,3 +995,49 @@
     "those who knew of them were slain.           "
     )
    result-ok))
+
+;;----------------------------------------------------------------------------
+;; Stewardess's Journal
+(mk-reusable-item 
+ 't_stewardess_journal "Victoria's Journal" s_lexicon norm
+ (lambda (klexicon kuser)
+   (kern-ui-page-text
+    "Victoria's Journal"
+    ""
+    "1.3.1610"
+    "I fear that if the Warritrix grows more      "
+    "popular, then the next time she defies me it "
+    "will lead to open revolt. Extreme measures   "
+    "must be taken, I fear. I must be most        "
+    "careful. Perhaps 'our friends' can help us.  "
+    "They owe us a large debt. Not that they can  "
+    "be trusted. "
+    ""
+    "4.1.1611"
+    "S. has warned me that rumours of a Wanderer  "
+    "are afoot. He is such a useful tool. I do    "
+    "wonder where he gets his information. I don't"
+    "know why he is worked up about a Wanderer,   "
+    "anyway. I'm sure the legends about them are  "
+    "greatly exagerrated. The last time a Wanderer"
+    "appeared, the Old Gods still walked the      "
+    "Shard, if the myths are true.                "
+    ""
+    "6.12.1611"
+    "I have received word from S. All is prepared."
+    "I will suggest to Jeffries that the rumours  "
+    "of feral gints occupying the Lost Halls must "
+    "be investigated, and will insist on the      "
+    "Warritrix leading the expedition. They will  "
+    "expect gint riff-raff, not sorcery, and S.   "
+    "will ensure the way is shut behind them.     "
+    "There will be no escape, and if there is, I  "
+    "am not culpable. If anything, not fool       "
+    "Jeffries will go down for incompetence.      "
+    ""
+    "The only thing that could condemn me is this "
+    "journal. But no one will ever find it, and   "
+    "when I am queen of all the Shard the scribes "
+    "will need it for their histories.            "
+   )
+   result-ok))
