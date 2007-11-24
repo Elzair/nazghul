@@ -46,6 +46,7 @@
     (list  "~,"   t_inv_wall)
     (list  "d,"   t_doorway)
     (list  "cc"   t_cobblestone)        ;; "cobblestone"
+    (list  "cx"   t_impassable_cobblestone)        ;; "cobblestone"
     (list  "ee"   t_deck)               ;; "deck"
     (list  "oo"   t_mast)               ;; "mast"
     (list  "ff"   t_fire_terrain)       ;; "fire"

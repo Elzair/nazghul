@@ -106,6 +106,7 @@
    (list 't_fire_terrain    "fire"          pclass-grass     s_field_fire        trn  512 'burn)
    (list 't_fireplace       "fireplace"     pclass-grass     s_fireplace         trn 2048 'burn)
    (list 't_cobblestone     "cobblestone"   pclass-grass     s_cobblestone       trn 0 nil)
+   (list 't_impassable_cobblestone    "cobblestone"   pclass-wall     s_cobblestone       trn 0 nil)
    (list 't_flagstones      "flagstones"    pclass-grass     s_flagstone         trn 0 nil)
    (list 't_inv_wall        "flagstones"    pclass-repel     s_flagstone         trn 0 'burn)
    (list 't_doorway         "doorway"       pclass-grass     s_stone_arch        trn 0 nil) ;;dont use this if poss

@@ -25,7 +25,7 @@
 		".. xx ,, xx .H .O .T .E .L xx .. .. .. .. cc cc cc tt ~3 ~5 tt xx .H .O .L .Y ]] xx ,, xx .. "
 		".. xx ,, xx ,, ,, ,, ,, ,, ,, .. .. .. .. cc cc cc tt ~a ~c tt xx .G .R .A .I .L xx ,, xx .. "
 		".. xx ,, xx @@ @@ @@ @@ @@ sI .. .. .. .. cc cc cc ta tt tt tc ws ,, ,, ,, ,, ,, xx ,, xx .. "
-		".. xx ,, xx ,, ,, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc cc cc ,, ,, ,, ,, ,, ,, xx ,, xx .. "
+		".. xx ,, xx ,, ,, ,, ,, ,, ,, cc cc cc cc cc cx cc cc cc cc cc ,, ,, ,, ,, ,, ,, xx ,, xx .. "
 		".. xx ,, xx x! ,, ,, ,, ,, ws bb .. .. bb cc cc cc bb bb bb bb ws ,, ,, 00 ,, && xx ,, xx .. "
 		".. xx ,, xx xx ,, xx ,, xx xx .. .. .. .. cc cc cc bb .. .. .. sT ,, ,, 00 ,, ,, xx ,, xx .. "
 		".. xx ,, xx ,, ,, xx ,, ,, xx .. .. .. .. cc cc cc bb .. tC t7 xx ,, ,, ,, ,, ,, xx ,, xx .. "
@@ -49,6 +49,7 @@
 (kern-load "steward.scm")
 (kern-load "ini.scm")
 (kern-load "jeffreys.scm")
+(kern-load "statue-of-justice.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -139,7 +140,11 @@
                    ))
        10 14)
 
+  ;; Statue of justice
+  (put (kern-mk-obj t_statue_of_justice 1) 15 21)
+ 
   )
+
 
  ;; on-entry hook
  (list 'on-entry-to-dungeon-room 
