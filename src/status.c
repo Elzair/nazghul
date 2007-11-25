@@ -171,7 +171,7 @@ static bool stat_filter_arms(struct inv_entry *ie, void *fdata);
 static bool stat_filter_ready_arms(struct inv_entry *ie, void *fdata);
 static bool stat_filter_reagents(struct inv_entry *ie, void *fdata);
 static bool stat_filter_spells(struct inv_entry *ie, void *fdata);
-static bool stat_filter_items(struct inv_entry *ie, void *fdata);
+static bool stat_filter_usable(struct inv_entry *ie, void *fdata);
 static bool stat_filter_misc(struct inv_entry *ie, void *fdata);
 static bool stat_filter_drop(struct inv_entry *ie, void *fdata);
 
@@ -202,7 +202,7 @@ static struct ztats_entry ztats_entries[] = {
 	{ "Armaments",    { stat_filter_arms,     0 }, status_show_ztat_arms },
 	{ "Reagents",     { stat_filter_reagents, 0 }, status_show_generic_object_type },
 	{ "Spells",       { stat_filter_spells,   0 }, status_show_ztat_spells },
-	{ "Usable Items", { stat_filter_items,    0 }, status_show_generic_object_type },
+	{ "Usable Items", { stat_filter_usable,    0 }, status_show_generic_object_type },
 	{ "Misc",         { stat_filter_misc,     0 }, status_show_generic_object_type },
 };
 
@@ -243,7 +243,7 @@ static bool stat_filter_spells(struct inv_entry *ie, void *fdata)
 	return ie->type->isCastable();
 }
 
-static bool stat_filter_items(struct inv_entry *ie, void *fdata)
+static bool stat_filter_usable(struct inv_entry *ie, void *fdata)
 {
 	return ie->type->isUsable();
 }
