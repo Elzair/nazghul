@@ -182,7 +182,7 @@
                  'ange-conv          ; conv
                  sch_ange            ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
+                 (mk-inventory (list (list 1 t_dagger)))                 ; container
                  (list t_dagger
 					         )                  ; readied
                  )

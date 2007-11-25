@@ -43,23 +43,9 @@
            ))
     ))
 
-(define (log-dots n delay)
-  (define (dots n)
-    (cond ((> n 0)
-           (kern-log-continue ".")
-           (kern-log-flush)
-           (kern-sleep delay)
-           (dots (- n 1)))))
-  (kern-log-begin)
-  (dots n)
-  (kern-log-end)
-  )
-
 (define (soj-get-evidence knpc kpc kchar)
-  (println "kchar=" kchar " ch_steward=" ch_steward)
   (say knpc (kern-obj-get-name kpc) ", produce your evidence.")
   (let ((ktype (kern-ui-select-item)))
-    (println "ktype=" ktype " t_stewardess_journal=" t_stewardess_journal)
     (cond ((null? ktype)
            (say knpc "Do you have any other evidence?")
            (cond ((no? kpc)
@@ -82,7 +68,8 @@
            (say knpc "Justice will weigh the evidence.")
            (log-dots 10 1000)
            (say knpc (kern-obj-get-name kchar) ", you are guilty of betrayal. Your punishment is death, and may your name be a curse forevermore.")
-           ;; todo: implement punishment of stewardess
+           (kern-being-set-current-faction kchar faction-monster)
+           (kern-conv-end)
            ))
     ))
            

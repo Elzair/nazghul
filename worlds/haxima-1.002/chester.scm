@@ -177,9 +177,8 @@
                  'ches-conv          ; conv
                  sch_ches            ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
-                 (list t_mace   ; we need a 'hammer'
-                 			t_armor_chain)
-                                 ; readied
+                 (mk-inventory (list (list 1 t_mace)
+                                     (list 1 t_armor_chain))) ; container
+                 nil ;;  readied
                  )
    (ches-mk)))

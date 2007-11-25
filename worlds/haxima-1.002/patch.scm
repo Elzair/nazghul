@@ -161,7 +161,7 @@
                  'patch-conv         ; conv
                  sch_patch           ; sched
                  'townsman-ai                 ; special ai
-                 nil                 ; container
+                 (mk-inventory (list (list 1 t_staff)))                 ; container
                  (list t_dagger)                 ; readied
                  )
    (patch-mk)))
