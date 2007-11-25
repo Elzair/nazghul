@@ -21,9 +21,9 @@
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (ini-mk) (list #f))
-(define (ini-will-join? ini) (car ini))
-(define (ini-will-join! ini) (set-car! ini #t))
+(define (ini-mk) (list 'townsman #f))
+(define (ini-will-join? ini) (cadr ini))
+(define (ini-will-join! ini) (set-car! (cdr ini) #t))
 
 ;;----------------------------------------------------------------------------
 ;; Conv

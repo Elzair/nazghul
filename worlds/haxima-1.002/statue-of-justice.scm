@@ -6,7 +6,6 @@
 ;;----------------------------------------------------------------------------
 
 (define (soj-strike kobj kpc)
-  (println "soj-strike")
   (let ((kchar (mk-talking-statue)))
     (kern-obj-put-at kchar (kern-obj-get-location kobj))
     (kern-conv-begin kchar)
@@ -22,8 +21,115 @@
                   (method 'attack soj-strike)
                   ))
 
+(define (soj-accuse knpc kpc)
+  (say knpc "Whom do you accuse?")
+  (let ((kchar (ui-target (kern-obj-get-location kpc) 19 obj-is-char?)))
+    (cond ((null? kchar)
+           (say knpc "Do you wish to withdraw your charge?")
+           (cond ((yes? kpc)
+                  (say knpc "Cursed are you for trifling with serious matters. Be gone, and do not strike me again in vain.")
+                  (kern-conv-end))
+                 (else
+                  (soj-accuse knpc kpc))
+                 ))
+          (else
+           (say knpc "Are you certain that you wish to accuse " (kern-obj-get-name kchar) "?")
+           (cond ((no? kpc)
+                  (soj-accuse knpc kpc))
+                 (else
+                  (say knpc (kern-obj-get-name kchar) ", you stand accused by " (kern-obj-get-name kpc) ". ")
+                  (soj-get-evidence knpc kpc kchar)
+                  ))
+           ))
+    ))
+
+(define (log-dots n delay)
+  (define (dots n)
+    (cond ((> n 0)
+           (kern-log-continue ".")
+           (kern-log-flush)
+           (kern-sleep delay)
+           (dots (- n 1)))))
+  (kern-log-begin)
+  (dots n)
+  (kern-log-end)
+  )
+
+(define (soj-get-evidence knpc kpc kchar)
+  (println "kchar=" kchar " ch_steward=" ch_steward)
+  (say knpc (kern-obj-get-name kpc) ", produce your evidence.")
+  (let ((ktype (kern-ui-select-item)))
+    (println "ktype=" ktype " t_stewardess_journal=" t_stewardess_journal)
+    (cond ((null? ktype)
+           (say knpc "Do you have any other evidence?")
+           (cond ((no? kpc)
+                  (shake-map 15)
+                  (say knpc "For accusing another with insufficient evidence, you are guilty of bearing false witness. Your punishment is exile.")
+                  ;; todo: implement exile
+                  )
+                 (else (soj-get-evidence knpc kpc kchar))
+                 ))
+          ((or (not (equal? ktype t_stewardess_journal))
+              (not (defined? 'ch_steward))
+              (not (equal? kchar ch_steward)))
+           (say knpc "Justice will weigh the evidence.")
+           (log-dots 10 1000)
+           (say knpc "The evidence is insufficient.")
+           (prompt-for-key)
+           (soj-get-evidence knpc kpc kchar)
+           )
+          (else
+           (say knpc "Justice will weigh the evidence.")
+           (log-dots 10 1000)
+           (say knpc (kern-obj-get-name kchar) ", you are guilty of betrayal. Your punishment is death, and may your name be a curse forevermore.")
+           ;; todo: implement punishment of stewardess
+           ))
+    ))
+           
+                  
+
 (define (soj-hail knpc kpc)
   (say knpc "Do you seek justice?")
+  (cond ((no? kpc)
+         (say knpc "Then may injustice befall you.")
+         (kern-conv-end))
+        (else
+         (say knpc "Speak truly, or be cursed. Do you accuse another of theft, false witness, oath-breaking, or betrayal?")
+         (cond ((no? kpc) 
+                (say knpc "Then go in peace, and do not strike me again in vain.")
+                (kern-conv-end))
+               (else
+                (say knpc "Be warned! If you accuse with insufficient evidence, you shall be guilty of bearing false witness, and shall be punished. "
+                     "Are you certain you want to accuse another at this time?")
+                (cond ((no? kpc)
+                       (say knpc "If you accuse truly, then go in peace and gather more evidence. But if you accuse falsely, do not strike me again.")
+                       (kern-conv-end))
+                      (else
+                       (say knpc "JUSTICE SUMMONS THE ASSEMBLY!")
+                       (shake-map 5)
+                       (soj-assemble-everyone (kern-obj-get-location knpc))
+                       (soj-accuse knpc kpc))
+                      ))
+               ))
+        ))
+
+(define (soj-assemble-everyone loc)
+  (define (assemble townsfolk)
+    (kern-map-repaint)
+    (if (not (null? townsfolk))
+        (assemble (filter notnull? 
+                          (map (lambda (kchar)
+                                 (cond ((in-range? loc 2 kchar) nil)
+                                       (else
+                                        (pathfind kchar loc)
+                                        kchar)))
+                               townsfolk)))))
+  (assemble (filter (lambda (kchar)
+                      (let ((gob (gob kchar)))
+                        (and (not (null? gob))
+                             (pair? gob)
+                             (eq? 'townsman (car gob)))))
+                    (kern-place-get-beings (loc-place loc))))
   )
 
 (define soj-conv

@@ -19,9 +19,9 @@
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (stew-mk) (list #f))
-(define (stew-met? stew) (car stew))
-(define (stew-met! stew) (set-car! stew #t))
+(define (stew-mk) (list 'townsman #f))
+(define (stew-met? stew) (cadr stew))
+(define (stew-met! stew) (set-car! (cdr stew) #t))
 
 ;;----------------------------------------------------------------------------
 ;; Conv

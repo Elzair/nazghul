@@ -29,9 +29,9 @@
 		".. xx ,, xx x! ,, ,, ,, ,, ws bb .. .. bb cc cc cc bb bb bb bb ws ,, ,, 00 ,, && xx ,, xx .. "
 		".. xx ,, xx xx ,, xx ,, xx xx .. .. .. .. cc cc cc bb .. .. .. sT ,, ,, 00 ,, ,, xx ,, xx .. "
 		".. xx ,, xx ,, ,, xx ,, ,, xx .. .. .. .. cc cc cc bb .. tC t7 xx ,, ,, ,, ,, ,, xx ,, xx .. "
-		".. xx ,, xx ,, ,, xx ,, ,, xx .. .. .. bb cc cc cc bb .. tb tc xx xx [[ @@ ]] xx xx ,, xx .. "
-		"xx xx ,, xx xx xx xx xx xx xx xx xx xx x! cc w+ cc x! xx xx xx xx xx ,, ,, ,, xx xx ,, xx xx "
-		"xx ,, ,, ,, xx xx xx xx xx xx ,, ,, ,, w+ cc cc cc w+ ,, ,, ,, xx xx xx ,, xx xx ,, ,, ,, xx "
+		".. xx ,, xx ,, ,, xx ,, ,, xx .. .. .. bb cc cc cc bb .. tb tc xx ,, [[ @@ ]] xx xx ,, xx .. "
+		"xx xx ,, xx xx xx xx xx xx xx xx xx xx x! cc w+ cc x! xx xx xx xx ,, ,, ,, ,, xx xx ,, xx xx "
+		"xx ,, ,, ,, xx xx xx xx xx xx ,, ,, ,, w+ cc cc cc w+ ,, ,, ,, xx xx xx xx xx xx ,, ,, ,, xx "
 		"xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ cc cc cc w+ ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
 		"xx ,, ,, ,, xx xx xx xx xx xx ,, ,, ,, w+ cc cc cc w+ ,, ,, ,, xx xx xx xx xx xx ,, ,, ,, xx "
 		"xx xx xx xx xx .. .. .. .. xx xx xx xx xx cc cc cc xx xx xx xx xx .. .. .. .. xx xx xx xx xx "
@@ -96,10 +96,9 @@
   (put (mk-locked-door) 11 11)
   (put (mk-locked-door) 19 11)
   (put (mk-windowed-door) 8 9)
-  (put (mk-locked-door) 5 5)
-  (put (mk-locked-door) 5 7)
+  (put (mk-door) 5 5)
+  (put (mk-door) 5 7)
   (put (mk-windowed-door) 15 13)
-  (put (mk-locked-door) 24 27)
 
   ;; hospital
   (put (mk-windowed-door) 22 9)
@@ -115,7 +114,7 @@
 
   ;; inn
   (put (mk-windowed-door) 9 21)
-  (put (mk-locked-door) 9 19)
+  (put (mk-door) 9 19)
   (put (kern-tag 'glasdrin-inn-room-1-door (mk-locked-door)) 5 23)
   (put (kern-tag 'glasdrin-inn-room-2-door (mk-locked-door)) 7 23)
   (put (mk-bed) 4 25)
