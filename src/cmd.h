@@ -197,6 +197,12 @@ extern int ui_select_target_generic(ui_select_target_req_t *req);
  */
 extern void ui_select_target_req_init(ui_select_target_req_t *req);
 
+/**
+ * Prompt the player to select something from inventory. This assumes that the
+ * status mode has already been set by the caller.
+ */
+extern struct inv_entry *ui_select_item(void);
+
 END_DECL;
 
 #endif

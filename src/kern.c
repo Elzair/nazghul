@@ -6738,6 +6738,23 @@ KERN_API_CALL(kern_ui_select_from_list)
 
 }
 
+KERN_API_CALL(kern_ui_select_item)
+{
+        enum StatusMode omode;
+        struct inv_entry *ie;
+
+        omode = statusGetMode();
+        statusSetMode(Drop);
+        ie = ui_select_item();
+        statusSetMode(omode);
+
+        if (!ie) {
+                return sc->NIL;
+        }
+
+        return scm_mk_ptr(sc, ie->type);
+}
+
 KERN_API_CALL(kern_ui_page_text)
 {
         struct KeyHandler kh;
@@ -9492,12 +9509,13 @@ scheme *kern_init(void)
         
         /* ui api */
         API_DECL(sc, "kern-ui-direction", kern_ui_direction);
+        API_DECL(sc, "kern-ui-page-text", kern_ui_page_text);
+        API_DECL(sc, "kern-ui-select-from-list", kern_ui_select_from_list);
+        API_DECL(sc, "kern-ui-select-item", kern_ui_select_item);
         API_DECL(sc, "kern-ui-select-party-member", kern_ui_select_party_member);
         API_DECL(sc, "kern-ui-target", kern_ui_target);
         API_DECL(sc, "kern-ui-target-generic", kern_ui_target_generic);
         API_DECL(sc, "kern-ui-waitkey", kern_ui_waitkey);
-        API_DECL(sc, "kern-ui-page-text", kern_ui_page_text);
-        API_DECL(sc, "kern-ui-select-from-list", kern_ui_select_from_list);
 
         /* conv api */
         API_DECL(sc, "kern-conv-begin", kern_conv_begin);

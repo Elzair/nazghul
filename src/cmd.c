@@ -838,7 +838,7 @@ static void *cmd_select_generic()
         return sc.selection;
 }
 
-static struct inv_entry *select_item(void)
+struct inv_entry *ui_select_item(void)
 {
 	struct inv_entry *ie;
 	struct KeyHandler kh;
@@ -1828,7 +1828,7 @@ bool cmdUse(class Character * member, int flags)
 
         // select item to use
 	statusSetMode(Use);
-	ie = select_item();
+	ie = ui_select_item();
 	statusSetMode(ShowParty);
 	if (ie == NULL) {
 		return false;
@@ -3927,7 +3927,7 @@ void cmdDrop(class Character *actor)
 
         omode = statusGetMode();
         statusSetMode(Drop);
-        ie = select_item();
+        ie = ui_select_item();
         statusSetMode(omode);
 
         if (!ie) {
