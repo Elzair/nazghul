@@ -214,33 +214,48 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         result = move(pathPtr->x - getX(), 
                       pathPtr->y - getY());
 
-        //if we are marked as IGNOREBEINGS, then try to swap with and current occupants
-        if (result == WasOccupied && isOnMap() && (flags & PFLAG_IGNOREBEINGS))
-        {
-                class Character *occupant;
-                if ((occupant = (class Character *) place_get_object(getPlace(), 
-                                                                     pathPtr->x, pathPtr->y, 
-                                                                     being_layer)))
-                {
-                        if (!are_hostile(this, occupant)
-                            && occupant->isIncapacitated())
-                        {
-                                if (!place_is_passable(getPlace(), getX(), getY(), 
-                                                       occupant, 0))
+        // Was the move blocked by an occupant?
+        if (result == WasOccupied) {
+                
+                // Yes - are we supposed to ignore beings?
+                if (flags & PFLAG_IGNOREBEINGS) {
+
+                        // Yes - try to switch. I don't know why I need to
+                        // check for isOnMap() (when would we not be on a map?
+                        // multi-place scehdules maybe?), but it looks like
+                        // something we probably added to fix a corner case, so
+                        // I'm leaving it in.
+                        class Character *occupant;
+                        if (isOnMap() 
+                            && (occupant = (class Character *) place_get_object(getPlace(), 
+                                                                                pathPtr->x, pathPtr->y, 
+                                                                                being_layer))) {
+                                if (!are_hostile(this, occupant)
+                                    && occupant->isIncapacitated())
                                 {
-                                        relocate(getPlace(), pathPtr->x, pathPtr->y);
-                                        runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(),
-                                                pathPtr->x, pathPtr->y);
-                                        decActionPoints(place_get_diagonal_movement_cost
-                                                        (
-                                                                getPlace(), 
-                                                                getX(), getY(),
-                                                                pathPtr->x, pathPtr->y, 
-                                                                this, PFLAG_IGNOREMECHS
-								));
-                                }					
-                                switchPlaces(occupant);
+                                        if (!place_is_passable(getPlace(), getX(), getY(), 
+                                                               occupant, 0))
+                                        {
+                                                relocate(getPlace(), pathPtr->x, pathPtr->y);
+                                                runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(),
+                                                        pathPtr->x, pathPtr->y);
+                                                decActionPoints(place_get_diagonal_movement_cost
+                                                                (
+                                                                        getPlace(), 
+                                                                        getX(), getY(),
+                                                                        pathPtr->x, pathPtr->y, 
+                                                                        this, PFLAG_IGNOREMECHS
+                                                                        ));
+                                        }					
+                                        switchPlaces(occupant);
+                                }
                         }
+                } else {
+                        // No, we are not ignoring beings. We're probably using
+                        // a cached path that was built when the tile was
+                        // unoccupied. Let's just null out the cachedPath now
+                        // and let the being try again on the next turn.
+                        cachedPath = NULL;
                 }
         }
                       
