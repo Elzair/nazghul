@@ -156,7 +156,7 @@
                  sp_human            ; species
                  nil                 ; occ
                  s_townswoman        ; sprite
-                 faction-men         ; starting alignment
+                 faction-glasdrin         ; starting alignment
                  0 0 1               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult

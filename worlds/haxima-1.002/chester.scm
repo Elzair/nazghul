@@ -168,7 +168,7 @@
                  sp_human            ; species
                  oc_warrior          ; occ
                  s_townsman          ; sprite
-                 faction-men         ; starting alignment
+                 faction-glasdrin         ; starting alignment
                  5 0 2               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult

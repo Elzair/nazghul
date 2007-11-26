@@ -152,7 +152,7 @@
                  sp_human            ; species
                  oc_wizard           ; occ
                  s_companion_wizard  ; sprite
-                 faction-men         ; starting alignment
+                 faction-glasdrin         ; starting alignment
                  1 3 0               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult

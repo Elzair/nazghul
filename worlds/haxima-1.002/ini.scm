@@ -200,7 +200,7 @@
                  sp_human            ; species
                  oc_warrior          ; occ
                  s_companion_paladin ; sprite
-                 faction-men         ; starting alignment
+                 faction-glasdrin         ; starting alignment
                  5 0 5               ; str/int/dex
                   pc-hp-off  ; hp bonus
                   pc-hp-gain ; hp per-level bonus

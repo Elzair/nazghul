@@ -262,20 +262,21 @@
 ;; Formatted for spreadsheet
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable																	
-	;;	non	pla	men	cgb	acc	mon	tro	spd	out	gnt	dem	fgb	prs			
-	(list	2	0	0	0	-1	-2	-2	-2	0	-2	-2	0	0	)	;;	none
-	(list	0	2	2	-2	-2	-2	-2	-2	-2	-2	-2	-2	2	)	;;	player
-	(list	-1	2	2	-1	-2	-2	-2	-2	-2	-2	-2	-2	2	)	;;	men
-	(list	-1	-2	-2	2	-1	-2	0	-2	-2	-1	-2	-2	0	)	;;	cave goblin
-	(list	-1	-2	-1	-1	2	-2	-1	-1	-2	-1	-2	-2	0	)	;;	accursed
-	(list	-2	-2	-2	-2	-2	2	-2	0	-2	0	-2	0	0	)	;;	monsters
-	(list	-2	-2	-2	0	-1	-2	2	-2	-2	-1	-2	-1	0	)	;;	hill trolls
-	(list	-2	-2	-2	-2	-1	0	-2	2	-2	-1	-2	0	0	)	;;	wood spiders
-	(list	0	-2	-2	-2	-2	-2	-2	-2	2	-2	-2	-1	0	)	;;	outlaws
-	(list	-2	-2	-2	-1	-1	0	-1	-1	-2	2	-2	-1	0	)	;;	gint
-	(list	-2	-2	-2	-2	-2	-2	-2	-2	-2	-2	2	-2	0	)	;;	demon
-	(list	0	-2	-2	-2	-2	0	-2	0	-1	-1	-2	2	0	)	;;	forest goblin
-	(list	0	2	2	0	0	0	0	0	0	0	0	0	2	)	;;	prisoners
+        ;;      non pla men cgb acc mon tro spd out gnt dem fgb prs gla                
+        (list   2   0   0   0   -1  -2  -2  -2  0   -2  -2  0   0   0    ) ;; none
+        (list   0   2   2   -2  -2  -2  -2  -2  -2  -2  -2  -2  2   2    ) ;; player
+        (list   -1  2   2   -1  -2  -2  -2  -2  -2  -2  -2  -2  2   2    ) ;; men
+        (list   -1  -2  -2  2   -1  -2  0   -2  -2  -1  -2  -2  0   -2   ) ;; cave goblin
+        (list   -1  -2  -1  -1  2   -2  -1  -1  -2  -1  -2  -2  0   -2   ) ;; accursed
+        (list   -2  -2  -2  -2  -2  2   -2  0   -2  0   -2  0   0   -2   ) ;; monsters
+        (list   -2  -2  -2  0   -1  -2  2   -2  -2  -1  -2  -1  0   -2   ) ;; hill trolls
+        (list   -2  -2  -2  -2  -1  0   -2  2   -2  -1  -2  0   0   -2   ) ;; wood spiders
+        (list   0   -2  -2  -2  -2  -2  -2  -2  2   -2  -2  -1  0   -2   ) ;; outlaws
+        (list   -2  -2  -2  -1  -1  0   -1  -1  -2  2   -2  -1  0   -2   ) ;; gint
+        (list   -2  -2  -2  -2  -2  -2  -2  -2  -2  -2  2   -2  0   -2   ) ;; demon
+        (list   0   -2  -2  -2  -2  0   -2  0   -1  -1  -2  2   0   -2   ) ;; forest goblin
+        (list   0   2   2   0   0   0   0   0   0   0   0   0   2   2    ) ;; prisoners
+        (list   -1  2   2   -1  -2  -2  -2  -2  -2  -2  -2  -2  2   2    ) ;; glasdrin
 )																	
 
 

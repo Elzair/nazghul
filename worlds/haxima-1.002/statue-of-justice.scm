@@ -52,6 +52,11 @@
                   (shake-map 15)
                   (say knpc "For accusing another with insufficient evidence, you are guilty of bearing false witness. Your punishment is exile.")
                   ;; todo: implement exile
+                  (make-enemies knpc kpc)
+                  (kern-obj-relocate kpc
+                                     (kern-place-get-location (loc-place (kern-obj-get-location knpc)))
+                                     nil)
+                  (kern-conv-end)
                   )
                  (else (soj-get-evidence knpc kpc kchar))
                  ))
@@ -134,7 +139,7 @@
    sp_statue         ; species
    nil              ; occ
    s_statue     ; sprite
-   faction-men      ; starting alignment
+   faction-glasdrin      ; starting alignment
    0 0 0            ; str/int/dex
    0 0              ; hp mod/mult
    0 0              ; mp mod/mult
