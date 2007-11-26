@@ -109,8 +109,9 @@
 ;; Given a starting location, search outward for a passable, unoccupied place
 ;; to put a character.
 (define (pick-loc origin char)
-  (search (lambda (loc) (and (passable? loc char)
-                             (not (occupied? loc))))
+  (search (lambda (loc) (and (kern-is-valid-location? loc)
+									(passable? loc char)
+									(not (occupied? loc))))
           neighbors 
           origin
           10))
