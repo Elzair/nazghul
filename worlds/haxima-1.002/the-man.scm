@@ -36,7 +36,7 @@
   (say knpc "You've got me there, hotshot."))
 
 (define (man-name knpc kpc)
-  (say knpc "I'm Clarissa. But everybody calls me The MAN."))
+  (say knpc "I'm Yvonne. But everybody calls me The MAN."))
 
 (define (man-join knpc kpc)
   (say knpc "Can't say I'm not tempted, handsome, but when it comes to "

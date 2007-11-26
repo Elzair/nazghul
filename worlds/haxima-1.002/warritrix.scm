@@ -23,7 +23,7 @@
   )
 
 (define (warr-name knpc kpc)
-  (say knpc "I was Yvonne, known to many as the Warritrix.")
+  (say knpc "I was Clarissa, known to many as the Warritrix.")
   )
 
 (define (warr-join knpc kpc)
