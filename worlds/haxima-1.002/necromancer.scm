@@ -38,7 +38,9 @@
 (define (necr-hail knpc kpc)
   (let ((quest (necr-quest (kobj-gob-data knpc))))
     (if (and (quest-offered? quest)
-             (not (quest-done? quest)))
+             (not (quest-done? quest))
+             (in-inventory? kpc t_lich_skull)
+             )
         (necr-meet-lich knpc kpc)
         (say knpc "[You meet a thin, pale wizard dressed all in black] "
              "(COUGH) Hello, Wanderer."))))
