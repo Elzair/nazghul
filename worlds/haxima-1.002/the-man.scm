@@ -94,20 +94,14 @@
        "better. She hates the Warritrix for defying her at Absalot."))
 
 (define (man-hate knpc kpc)
-  (say knpc "The Warritrix refused to take part in the massacre of Absalot. "
-       "She was quite the raw recruit at the time. She was sentenced to serve "
-       "as a scout in the deeps of Kurpolis, which is the usual sentence of "
-       "exile in Glasdrin.")
-  (prompt-for-key)
-  (say knpc "She survived, and even thrived in the darkness below, where her "
-       "exploits grew into legend. By the time she won the mantle of Warrior "
-       "in disguise and became the Warritrix she was too powerful and beloved "
-       "for the Stewardess to do anything about it, and her sentence was "
-       "repealed.")
-  (prompt-for-key)
-  (say knpc "The Stewardess burns with hatred. She is plotting to send her "
-       "into the Lost Halls on some pretext, where she will be ambushed far "
-       "from help."))
+  (say knpc "You can read the Stewardess's diary for yourself. "
+       "Would you like to know how?")
+  (if (yes? kpc)
+      (say knpc "Just remember two little words: Wis Quas. "
+           "I'm sure a sharp guy like you can figure out the rest.")
+      (say knpc "Oh, but you're missing out! "
+           "It's simply dripping with political intrigue.")))
+
 
 ;; Wise Queries
 (define (man-wiza knpc kpc)
@@ -186,6 +180,8 @@
        (method 'secr man-secr)
        (method 'enem man-enem)
        (method 'stew man-stew)
+       (method 'diar man-hate)
+       (method 'evid man-hate)
        (method 'hate man-hate)
        (method 'wiza man-wiza)
        (method 'wrig man-wrig)

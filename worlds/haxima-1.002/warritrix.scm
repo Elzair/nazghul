@@ -50,14 +50,15 @@
   )
 
 (define (warr-trut knpc kpc)
-  (say knpc "To find the truth, you must find Silas."))
+  (say knpc "To find the truth, you must find evidence."))
 
 (define (warr-warr knpc kpc)
   (say knpc "It was a title I bore to gratify others. "
        "In truth, I was just another paladin."))
 
-(define (warr-sila knpc kpc)
-  (say knpc "Search beneath Absalot. Do not go alone."))
+(define (warr-evid knpc kpc)
+  (say knpc "The wrogues are masters of finding what others try to hide, "
+       "and the MAN is master of all wrogues."))
 
 (define (warr-wise knpc kpc)
   (say knpc "The Wise are deceived and divided in their opinions. "
@@ -140,7 +141,7 @@
        (method 'absa warr-absa)
        (method 'stew warr-absa)
        (method 'warr warr-warr)
-       (method 'sila warr-sila)
+       (method 'evid warr-evid)
        (method 'wise warr-wise)
        (method 'void warr-void)
        (method 'trut warr-trut)
