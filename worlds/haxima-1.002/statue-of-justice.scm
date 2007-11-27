@@ -13,7 +13,7 @@
     ))
 
 
-(mk-obj-type 't_statue_of_justice "ancient statue" s_statue layer-mechanism
+(mk-obj-type 't_statue_of_justice "ancient statue" s_headless_w_sword_statue layer-mechanism
              (ifc nil
                   (method 'xamine (lambda (knpc kpc)
                                     (kern-log-msg "A worn engraving on the status reads "
@@ -138,7 +138,7 @@
    "ancient statue"     ; name
    sp_statue         ; species
    nil              ; occ
-   s_statue     ; sprite
+   s_headless_w_sword_statue     ; sprite
    faction-glasdrin      ; starting alignment
    0 0 0            ; str/int/dex
    0 0              ; hp mod/mult

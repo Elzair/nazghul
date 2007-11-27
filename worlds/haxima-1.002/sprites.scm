@@ -526,7 +526,7 @@
 (kern-mk-sprite 's_nat_rock_w         ss_overlays 1  78 #f 0 )
 (kern-mk-sprite 's_nat_rock_e         ss_overlays 1  79 #f 0 )
 (kern-mk-sprite 's_secret_nrock       ss_overlays 1  83 #f 0 )
-
+(kern-mk-sprite 's_headless_w_sword_statue ss_overlays 1 104 #f 0)
 
 (kern-mk-sprite 's_bulwark_ew     ss_ship 1  0 #f 0 )
 (kern-mk-sprite 's_bulwark_ns     ss_ship 1  1 #f 0 )
