@@ -16,8 +16,7 @@
 (mk-obj-type 't_statue_of_justice "ancient statue" s_headless_w_sword_statue layer-mechanism
              (ifc nil
                   (method 'xamine (lambda (knpc kpc)
-                                    (kern-log-msg "A worn engraving on the status reads "
-                                                  "'STRIKE FOR JUSTICE'")))
+                                    (kern-log-msg "A worn engraving reads 'STRIKE FOR JUSTICE'")))
                   (method 'attack soj-strike)
                   ))
 
