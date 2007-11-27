@@ -215,11 +215,11 @@
 (define faction-forest-goblin 11)
 (define faction-num           12)
 (define faction-green-tower   faction-men)
-(define faction-glasdrin      faction-men)
 (define faction-oparine       faction-men)
 (define faction-trigrave      faction-men)
 (define faction-nixie         faction-monster)
 (define faction-prisoner      13)
+(define faction-glasdrin      14)
 
 ;; Layers (must match object.h)
 (define layer-none       0)
