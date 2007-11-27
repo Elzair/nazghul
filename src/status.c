@@ -1049,6 +1049,11 @@ static bool status_show_party_view_character(class Character * pm, void *data)
 
 static void myShowParty(void)
 {
+        /* This can happen on reload. */
+        if (! player_party) {
+                return;
+        }
+
 	/* Setup the text rectangle */
 	Status.lineRect.y = Status.screenRect.y;
 	Status.lineRect.w = Status.screenRect.w - (2 * BORDER_W);

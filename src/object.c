@@ -1720,7 +1720,14 @@ bool Object::addEffect(struct effect *effect, struct gob *gob)
 
         hook_list_add(&hooks[hook_id], &entry->list);
 
-        statusRepaint();
+        // gmcnutt: I saw a crash on reload because we ran through this code
+        // before the player party was created in the new session, and the
+        // status window tried to access it because of this next call. I don't
+        // think we need to be updating status for every object, anyway, only
+        // party members.
+        if (isPlayerControlled()) {
+                statusRepaint();
+        }
 
         return true;
 }
