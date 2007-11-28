@@ -44,6 +44,7 @@
 #include "session.h"
 #include "log.h"
 #include "factions.h"
+#include "gob.h"
 
 #include <unistd.h>
 #include <math.h>
@@ -482,10 +483,9 @@ MoveResult PlayerParty::move(int newdx, int newdy)
 	case move_ok:
         {
                 int mv_cost = 0;
-                char *progress = "";
 
-					// No complications. Update the turn counter based on player
-					// speed and terrain difficulties then move the player.
+                // No complications. Update the turn counter based on player
+                // speed and terrain difficulties then move the player.
                 mv_cost = place_get_diagonal_movement_cost(info.place, x, y, info.x, info.y, this,0);
 					relocate(info.place, info.x, info.y);          
                 if (vehicle)
@@ -1691,6 +1691,8 @@ void player_save(save_t *save, void *val)
 
 void PlayerParty::save(save_t *save)
 {
+        save->enter(save, "(let ((kplayer ");
+
         save->enter(save, "(kern-mk-player\n");
         if (tag)
                 save->write(save, "'%s\n", tag);
@@ -1733,7 +1735,15 @@ void PlayerParty::save(save_t *save)
                 save->exit(save, ")  ; list of party members\n");
         }
 
-        save->exit(save, ")\n");
+        save->exit(save, ")))\n"); // end ((kplayer (kern-mk-player ...)))
+
+        if (getGob()) {
+                save->enter(save, "(bind kplayer ");
+                gob_save(getGob(), save);
+                save->exit(save, ")\n");
+        }
+
+        save->exit(save, ")\n"); // end (let ...) block
 }
 
 bool PlayerParty::addFood(int amount)
