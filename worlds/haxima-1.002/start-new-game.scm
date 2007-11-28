@@ -35,6 +35,7 @@
 (kern-load "endless-deeps-mech.scm")
 (kern-load "lost-halls-mech.scm")
 (kern-load "voidgap-mech.scm")
+(kern-load "player.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms
@@ -162,22 +163,29 @@
 ;;----------------------------------------------------------------------------
 ;; Player Party
 ;;----------------------------------------------------------------------------
-(kern-mk-player
- 'player                     ; tag
- s_wanderer         ; sprite
- "Walk"                      ; movement description
- sound-walking               ; movement sound
- 1                           ; food
- 0                           ; gold
- (* 60 60 5)                 ; turns to next meal (5 hours)
- nil                         ; formation
- m_campsite                  ; campsite map
- nil                         ; campsite formation
- nil                         ; vehicle
- ;; inventory
- (kern-mk-inventory nil)
- nil ;; party members (should be nil for initial load file)
- )
+(define (mk-player-gob) (list #f))
+(define (player-gob-found-warritrix? gob) (car gob))
+(define (player-gob-found-warritrix! gob) (set-car! gob #t))
+(define (player-gob) (gob (kern-get-player)))
+
+(bind 
+ (kern-mk-player
+  'player                     ; tag
+  s_wanderer         ; sprite
+  "Walk"                      ; movement description
+  sound-walking               ; movement sound
+  1                           ; food
+  0                           ; gold
+  (* 60 60 5)                 ; turns to next meal (5 hours)
+  nil                         ; formation
+  m_campsite                  ; campsite map
+  nil                         ; campsite formation
+  nil                         ; vehicle
+  ;; inventory
+  (kern-mk-inventory nil)
+  nil ;; party members (should be nil for initial load file)
+  )
+ (mk-player-gob))
 
 ;;----------------------------------------------------------------------------
 ;; Party members
