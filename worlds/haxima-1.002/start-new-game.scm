@@ -163,11 +163,6 @@
 ;;----------------------------------------------------------------------------
 ;; Player Party
 ;;----------------------------------------------------------------------------
-(define (mk-player-gob) (list #f))
-(define (player-gob-found-warritrix? gob) (car gob))
-(define (player-gob-found-warritrix! gob) (set-car! gob #t))
-(define (player-gob) (gob (kern-get-player)))
-
 (bind 
  (kern-mk-player
   'player                     ; tag
