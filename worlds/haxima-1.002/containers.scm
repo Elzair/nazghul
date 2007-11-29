@@ -254,3 +254,24 @@
             (mk-quoted-treasure-list (+ 1
                                         (modulo (random-next) 
                                                 9)))))
+
+;;----------------------------------------------------------------------------
+;; Animal corpse
+;;
+;; This does not really belong here, since it is not a container, but rather an
+;; object that implements the 'butcher interface.
+
+;; This procedure must take two args and return a boolean in order to fit into
+;; the skills yusage framework.
+(define (animal-corpse-butcher kobj kactor)
+  (kern-obj-put-at (kern-mk-obj t_food 1) (kern-obj-get-location kobj))
+  (kern-obj-remove kobj)
+  #t
+  )
+
+(define animal-corpse-ifc
+  (ifc nil
+       (method 'butcher animal-corpse-butcher)
+       ))
+
+(mk-obj-type 't_animal_corpse "animal corpse" s_corpse layer-item animal-corpse-ifc)

@@ -74,6 +74,11 @@
   (kern-obj-add-effect kactor ef_stealth nil)
   result-ok)
 
+(define (skill-butcher kactor)
+  (cast-ui-ranged-any powers-butcher
+                      kactor 1 (occ-ability-crafting kactor)
+                      (mk-ifc-query 'butcher)))
+
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
 ;;
@@ -180,8 +185,23 @@
                  nil            ;; material
                  ))
 
+(define sk_butcher
+  (mk-skill "Butcher" "Turn an animal corpse into food or materials"
+                 1              ;; ap
+                 1              ;; mp
+                 #f             ;; wilderness?
+                 #f             ;; passive?
+                 'skill-butcher ;; yusage 
+                 nil            ;; yusage check
+                 nil            ;; tools (fixme: add knife)
+                 nil            ;; material
+                 ))
+
 ;;----------------------------------------------------------------------------
 ;; Skill Set declarations
+;;
+;; The number preceeding the skill name is the minimum level needed to use the
+;; skill.
 
 (define sks_wrogue
   (kern-mk-skill-set "Wrogue" (list (list 1 sk_unlock)
@@ -195,4 +215,21 @@
                                     (list 1 sk_reach)
                                     )))
 
-(define sks_wanderer sks_wrogue)
+(define sks_wright
+  (kern-mk-skill-set "Wright" (list (list 1 sk_butcher)
+                                    )))
+
+(define sks_wanderer 
+  (kern-mk-skill-set "Wanderer" (list 
+                                 (list 1 sk_unlock)
+                                 (list 1 sk_jump)
+                                 (list 1 sk_detect_trap)
+                                 (list 1 sk_arm_trap)
+                                 (list 1 sk_sprint)
+                                 (list 1 sk_wriggle)
+                                 (list 1 sk_disarm_trap)
+                                 (list 1 sk_stealth)
+                                 (list 1 sk_reach)
+                                 
+                                 (list 1 sk_butcher)
+                                 )))

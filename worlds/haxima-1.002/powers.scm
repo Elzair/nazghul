@@ -1432,3 +1432,8 @@
          (kern-log-msg (kern-obj-get-name caster) " wriggles through!")
          (kern-obj-set-mmode caster nil)
          result-ok)))
+
+(define (powers-butcher caster ktarg power)
+  (if ((kobj-ifc ktarg) 'butcher ktarg caster)
+      result-ok
+      result-no-effect))

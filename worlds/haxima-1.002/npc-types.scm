@@ -380,6 +380,11 @@
 (define animal-loot
   (list (list 25 "1" 't_food)
         ))
+
+(define deer-loot
+  (list (list 100 "1" 't_animal_corpse)
+        ))
+
 (define bull-loot
   (list (list 100 "5" 't_food)
         ))
@@ -790,6 +795,7 @@
 (define ratling-swarmer (mk-npct2 "ratling swarmer" sp_ratling nil s_mouse no-traps nil nil 'ratling-ai faction-monster nil 'drop-generic animal-loot))
 (define ratling-sorcerer (mk-npct2 "ratling sorcerer"  sp_ratling oc_wizard s_ratling_sorcerer wizard-traps wizard-equip  nil 'ratling-sorcerer-ai faction-monster nil 'drop-generic animal-loot))
 (define carabid (mk-npct2 "carabid" sp_carabid nil s_carabid nil nil nil 'carabid-ai faction-monster nil 'drop-generic animal-loot))
+(define deer (mk-npct2 "deer" sp_deer nil s_deer nil nil nil nil faction-none nil 'drop-generic deer-loot))
 
 ;; NPC's with no drops
 
