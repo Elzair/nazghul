@@ -161,8 +161,8 @@
 (define ghg-s1 (mk-zone 24 21 1 1))
 (define ghg-s2 (mk-zone 25 22 1 1))
 (define ghg-s3 (mk-zone 25 23 1 1))
-(define ghg-s4 (mk-zone 24 25 1 1))
-(define ghg-s5 (mk-zone 23 24 1 1))
+(define ghg-s4 (mk-zone 24 24 1 1))
+(define ghg-s5 (mk-zone 23 23 1 1))
 (define ghg-s6 (mk-zone 23 22 1 1))
 (define ghg-hall (mk-zone 22 20 5 5))
 
