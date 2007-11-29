@@ -1,5 +1,17 @@
 ;;----------------------------------------------------------------------------
 ;; occupations
+
+;; Occupation gob fields (these are all procedures for evaluating a kchar's
+;; ability at something):
+;;
+;; 0 thief
+;; 1 white magic
+;; 2 black magic
+;; 3 magic defense
+;; 4 strength-based attack
+;; 5 dexterity-based attack
+;; 6 dexterity-based defense
+
 (define (mk-occ tag name hit def dam arm xp skset)
   (kern-mk-occ tag name 1.0 0 0 0 0 hit def dam arm xp skset)
   (kern-occ-set-gob (eval tag) (list nil nil nil nil nil nil nil)))
@@ -236,7 +248,7 @@
   (floor (* 2 (-  (log (+ 2 (occ-ability-strattack kchar)))))))
 
 (define (occ-ability-dexdefend kchar)
-  (let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 4)))
+  (let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 6)))
     (if (null? occ-abil)
         (floor (+ (/ (kern-char-get-level kchar) 2)
                   (/ (kern-char-get-dexterity kchar) 3)))
