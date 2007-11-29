@@ -41,6 +41,10 @@
 #define CONFIG_DIAGONAL_MOVEMENT 1
 #endif
 
+#ifndef CONFIG_YUSE
+#define CONFIG_YUSE 1
+#endif
+
 int G_latency_start = 0;
 int G_turnaround_start = 0;
 int G_turnaround  = 0;
@@ -164,7 +168,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         case 'u':
                 cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                 break;
-#ifdef ENABLE_YUSE
+#if CONFIG_YUSE
         case 'y':
                 cmdYuse(NULL);
                 break;
@@ -1207,7 +1211,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         case 'x':
                 cmdXamine(character);
                 break;
-#ifdef ENABLE_YUSE
+#if CONFIG_YUSE
         case 'y':
                 cmdYuse(character);
                 break;
