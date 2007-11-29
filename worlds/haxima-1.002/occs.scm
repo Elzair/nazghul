@@ -11,10 +11,11 @@
 ;; 4 strength-based attack
 ;; 5 dexterity-based attack
 ;; 6 dexterity-based defense
+;; 7 crafting
 
 (define (mk-occ tag name hit def dam arm xp skset)
   (kern-mk-occ tag name 1.0 0 0 0 0 hit def dam arm xp skset)
-  (kern-occ-set-gob (eval tag) (list nil nil nil nil nil nil nil)))
+  (kern-occ-set-gob (eval tag) (list nil nil nil nil nil nil nil nil)))
 
 ;;            /           /         / t  / f / e /   /
 ;;           /           /         / i  / e / g / r /
@@ -290,3 +291,62 @@
 
 (define (proc-dexdef kchar)
 	(* 1000 (occ-ability-dexdefend kchar)))
+
+;----------------------------
+; Crafting
+
+;; Note: I'm not sure this is really how we want to handle wright skills, but
+;; it serves as a starting point. For one thing, we probably need to break the
+;; skills up into different abilities. Eg, a wizard might not be able to skin a
+;; deer as well as a ranger, but he can do a better job of whittling a magic
+;; wand. Also, I just used all the core attributes and divided them
+;; evenly. Different types of wright skills might emphasize dexterity over
+;; intelligence, or vice versa, and etc.
+
+(define (occ-ability-crafting kchar)
+  (let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 7)))
+    (if (null? occ-abil)
+        (floor (/ (* (kern-char-get-level kchar)
+                     (+ (/ (kern-char-get-dexterity kchar) 3)
+                        (/ (kern-char-get-strength kchar) 3)
+                        (/ (kern-char-get-intelligence kchar) 3)
+                        15))
+                  30))
+        (occ-abil kchar)
+        )))
+
+(let (
+      (highskill
+       (lambda (kchar)
+         (floor (/ (* (kern-char-get-level kchar)
+                      (+ (/ (kern-char-get-dexterity kchar) 3)
+                         (/ (kern-char-get-strength kchar) 3)
+                         (/ (kern-char-get-intelligence kchar) 3)
+                         10))
+                   20))
+         ))
+      (modskill
+       (lambda (kchar)
+         (floor (/ (* (kern-char-get-level kchar)
+                      (+ (/ (kern-char-get-dexterity kchar) 3)
+                         (/ (kern-char-get-strength kchar) 3)
+                         (/ (kern-char-get-intelligence kchar) 3)
+                         12))
+                   24))
+         ))
+      (lowskill
+       (lambda (kchar) 
+           (floor (/ (* (kern-char-get-level kchar)
+                        (+ (/ (kern-char-get-dexterity kchar) 3)
+                           (/ (kern-char-get-strength kchar) 3)
+                           (/ (kern-char-get-intelligence kchar) 3)
+                           10))
+                     30))
+           ))
+      )
+  (occ-set-abil oc_wizard 7 lowskill)
+  (occ-set-abil oc_wrogue 7 highskill)
+  (occ-set-abil oc_wanderer 7 modskill)
+  (occ-set-abil oc_warrior 7 lowskill)
+  (occ-set-abil oc_ranger 7 modskill)
+)
