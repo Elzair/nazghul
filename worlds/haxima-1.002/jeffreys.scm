@@ -72,10 +72,28 @@
        "nigh unbeatable."))
 
 (define (jeff-warr knpc kpc)
-  (say knpc "The Warritrix is a living treasure; the most cunning, versatile "
-       "warrior of the age. I've seen her beat men twice her size and "
-       "slay fearsome beasts. At the moment she has been called away on an "
-       "errand."))
+  (cond ((player-found-warritrix? (player-gob))
+         (if (ask? knpc kpc "[Cough] Yes. Most unfortunate. We all mourn her loss. "
+                   "But to lose her whole squad like that she must have made some error in judgment. "
+                   "Don't you think so?")
+             (say knpc "Yes. It happens to the best of us. Every military leader makes mistakes, "
+                  "and it costs lives. Now I'm afraid I'm very busy. Good day, sir.")
+             (if (ask? knpc kpc "Are you implying that she was led into some kind of trap?")
+                 (say knpc "Ridiculous. I do not have to answer to you. "
+                      "Speak to the Stewardess if you have a complaint. "
+                      "And if you try to make trouble, the guards will expel you from the city. "
+                      "In fact, it might be best if you left now.")
+                 (say knpc "Good. Mistakes happen in war. Sometimes even friends are slain, "
+                      "when they are mistaken for foes. I hope you take care, friend. Good day.")
+                 ))
+         (kern-conv-end)
+         )
+        (else
+         (say knpc "The Warritrix is a living treasure; the most cunning, versatile "
+              "warrior of the age. I've seen her beat men twice her size and "
+              "slay fearsome beasts. At the moment she has been called away on an "
+              "errand.")
+         )))
 
 (define (jeff-erra knpc kpc)
   (say knpc "[He looks a bit uneasy] Yes, she took a squad to the Lost Halls. "
@@ -158,7 +176,7 @@
 (define (mk-jeffreys)
   (bind 
    (kern-mk-char 'ch_jeffreys       ; tag
-                 "Jeff"             ; name
+                 "Jeffreys"          ; name
                  sp_human            ; species
                  oc_warrior          ; occ
                  s_companion_paladin ; sprite

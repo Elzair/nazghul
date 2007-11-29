@@ -54,8 +54,15 @@
 
 ;; Warritrix...
 (define (stew-warr knpc kpc)
-  (say knpc "I have not seen her in some time. I believe she has been "
-       "called away on some errand."))
+  (if (player-found-warritrix? (player-gob))
+      (if (ask? knpc kpc "I heard of her passing. Surely you do not think I had anything to do with it?")
+          (say knpc "If you dare to accuse me, strike the statue in the courtyard. "
+               "But I warn you: you are a homeless vagrant, and I am ruler of the most powerful city in the land. "
+               "It will be my word against yours, and we deal harshly with false accusers.")
+          (say knpc "Of course not. Ignore the rumours. They are spread by jealous political rivals.")
+          )
+      (say knpc "I have not seen her in some time. I believe she has been called away on some errand.")
+      ))
 
 (define (stew-erra knpc kpc)
   (say knpc "Speak with Commander Jeffries, he may know the details."))
