@@ -32,5 +32,6 @@
  ;; <width>x<height>-splash-image-filename.
  "1280x960-splash-image-filename" "splash.png"
  "640x480-splash-image-filename" "640x480_splash.png"
+ "800x480-splash-image-filename" "640x480_splash.png"
 
  )
