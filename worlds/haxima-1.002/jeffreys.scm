@@ -93,7 +93,7 @@
               "warrior of the age. I've seen her beat men twice her size and "
               "slay fearsome beasts. At the moment she has been called away on an "
               "errand.")
-         )))
+         ))
 
 (define (jeff-erra knpc kpc)
   (say knpc "[He looks a bit uneasy] Yes, she took a squad to the Lost Halls. "

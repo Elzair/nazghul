@@ -413,9 +413,14 @@
 
 ;; Glasdrin
 (define (glasdrin-warr knpc kpc)
-  (say knpc "The Warritrix is the most cunning warrior of the age. I'm not sure where she is right now, ask the Steward or Commander Jeffries."))
+  (if (player-found-warritrix?)
+      (say knpc "We all mourn her loss.")
+      (say knpc "The Warritrix is the most cunning warrior of the age. I'm not sure where she is right now, ask the Steward or Commander Jeffries.")))
+
 (define (glasdrin-stew knpc kpc)
-  (say knpc "The Steward is the keeper of the city and realms of Glasdrin. You can usually find her in the Citadel."))
+  (if (player-stewardess-trial-done?)
+      (say knpc "Her name is a curse among us now.")
+      (say knpc "The Steward is the keeper of the city and realms of Glasdrin. You can usually find her in the Citadel.")))
 (define (glasdrin-jeff knpc kpc)
   (say knpc "Jeffries is the commander of the Glasdrin militia. He's usually at work in the Citadel."))
 (define (glasdrin-kurp knpc kpc)
@@ -432,7 +437,7 @@
   (say knpc "Glasdrin is the city of the Paladins."))
 
 (define (glasdrin-pala knpc kpc)
-  (say knpc "The Paladins of Glasdrin are the greatest military force on the peninsula."))
+  (say knpc "The Paladins of Glasdrin are the greatest military force in the realm."))
 
 (define glasdrin-conv
   (ifc basic-conv

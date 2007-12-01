@@ -62,7 +62,7 @@
           (say knpc "Of course not. Ignore the rumours. They are spread by jealous political rivals.")
           )
       (say knpc "I have not seen her in some time. I believe she has been called away on some errand.")
-      ))
+      )
 
 (define (stew-erra knpc kpc)
   (say knpc "Speak with Commander Jeffries, he may know the details."))
