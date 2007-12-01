@@ -19,10 +19,21 @@
                (list 21 0  gcj-bed      "sleeping")
                )
 
+;; Make another schedule which will be assigned when Jeffreys resigns after the
+;; trial.
+(kern-mk-sched 'sch_jeff_resigned
+               (list 0 0 kun-road "sleeping")
+               (list 6 0 campfire-4 "sleeping")
+               (list 13 0 cantina-5 "idle")
+               (list 20 0 kun-road "idle")
+               )
+
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (jeff-mk) (list 'townsman))
+(define (jeff-mk) (list 'townsman #f))
+(define (jeff-resigned? gob) (cadr gob))
+(define (jeff-resigned! gob) (set-car! (cdr gob) #t))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -34,7 +45,33 @@
 
 ;; Basics...
 (define (jeff-hail knpc kpc)
-  (say knpc "[You meet a splendid paladin] Well-met, sir."))
+  (let ((jeff (gob knpc))
+        (kplace (loc-place (kern-obj-get-location knpc)))
+        )
+    (cond ((jeff-resigned? jeff)
+           (cond ((equal? kplace p_kun)
+                  (ask? knpc kpc "[You barely recognize the former Commander of Glasdrin] "
+                        "Whoo zere? Zwhat? You! "
+                        "[He spits, but it just dribbles down his chin] ZEE! You zee?")
+                  (say knpc "Itzmee! You... I... I'm bizzhy. Go away. "
+                       "[He staggers off with a haunted look]")
+                  )
+                 (else
+                  (say knpc "Leave me be.")
+                  (kern-conv-end)
+                  )))
+          ((player-stewardess-trial-done?)
+           (say knpc "I want you to know Wanderer, I did not betray the Warritrix. I did not know about the ambush. "
+                "But I knew something was amiss, I should have acted on my suspicions. "
+                "The Commander of Glasdrin must never fail in diligence. "
+                "For that reason, I will resign.")
+           (kern-char-set-sched knpc sch_jeff_resigned)
+           (jeff-resigned! jeff)
+           (kern-conv-end)
+           )
+          (else
+           (say knpc "[You meet a splendid paladin] Well-met, sir.")
+           ))))
 
 (define (jeff-default knpc kpc)
   (say knpc "I cannot help you with that."))
