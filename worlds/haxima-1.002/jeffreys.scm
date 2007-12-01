@@ -72,7 +72,7 @@
        "nigh unbeatable."))
 
 (define (jeff-warr knpc kpc)
-  (cond ((player-found-warritrix? (player-gob))
+  (cond ((player-found-warritrix?))
          (if (ask? knpc kpc "[Cough] Yes. Most unfortunate. We all mourn her loss. "
                    "But to lose her whole squad like that she must have made some error in judgment. "
                    "Don't you think so?")

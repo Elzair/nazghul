@@ -54,7 +54,7 @@
 
 ;; Warritrix...
 (define (stew-warr knpc kpc)
-  (if (player-found-warritrix? (player-gob))
+  (if (player-found-warritrix?))
       (if (ask? knpc kpc "I heard of her passing. Surely you do not think I had anything to do with it?")
           (say knpc "If you dare to accuse me, strike the statue in the courtyard. "
                "But I warn you: you are a homeless vagrant, and I am ruler of the most powerful city in the land. "

@@ -73,6 +73,7 @@
            (log-dots 10 1000)
            (say knpc (kern-obj-get-name kchar) ", you are guilty of betrayal. Your punishment is death, and may your name be a curse forevermore.")
            (kern-being-set-current-faction kchar faction-monster)
+           (player-stewardess-trial-done!)
            (kern-conv-end)
            ))
     ))

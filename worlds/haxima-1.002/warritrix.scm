@@ -20,7 +20,7 @@
 (define (warr-hail knpc kpc)
   (meet "The spectre of a calm, stately woman confronts you.")
   (say knpc "Hail, Wanderer.")
-  (player-found-warritrix! (player-gob))
+  (player-found-warritrix!)
   )
 
 (define (warr-name knpc kpc)
