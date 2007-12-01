@@ -194,6 +194,7 @@
        (method 'join jeff-join)
 
        (method 'comm jeff-comm)
+       (method 'jani (lambda (knpc kpc) (say knpc "My assistant Janice is invaluable as a tactician.")))
        (method 'mili jeff-mili)
        (method 'pala jeff-pala)
        (method 'warr jeff-warr)

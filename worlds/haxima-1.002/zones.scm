@@ -180,6 +180,7 @@
 (define gv-bed (mk-zone 11 14 1 1))
 (define gi-bed (mk-zone 29 28 1 1))
 (define gcj-bed (mk-zone 19 14 1 1))
+(define gjan-bed (mk-zone 1 29 1 1))
 
 ;; fountain
 (define g-fountain (mk-zone 14 16 3 3))

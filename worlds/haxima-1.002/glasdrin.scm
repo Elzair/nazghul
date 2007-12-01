@@ -50,6 +50,7 @@
 (kern-load "ini.scm")
 (kern-load "jeffreys.scm")
 (kern-load "statue-of-justice.scm")
+(kern-load "janice.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -78,6 +79,7 @@
   (put (mk-steward) 0 0)
   (put (mk-ini) 0 0)
   (put (mk-jeffreys) 0 0)
+  (put (mk-janice) 0 0)
   (put (mk-bull) 19 24)
 
   ;; guards
@@ -129,6 +131,7 @@
   (put (mk-bed) 11 14)
   (put (mk-bed) 29 28)
   (put (mk-bed) 19 14)
+  (put (mk-bed)  1 29)
 
   ;; ladder down to prison
   (put (mk-ladder-down 'p_prison 6 4) 2 2)

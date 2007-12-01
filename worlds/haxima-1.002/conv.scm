@@ -421,10 +421,12 @@
   (if (player-stewardess-trial-done?)
       (say knpc "Her name is a curse among us now.")
       (say knpc "The Steward is the keeper of the city and realms of Glasdrin. You can usually find her in the Citadel.")))
+
 (define (glasdrin-jeff knpc kpc)
   (if (player-stewardess-trial-done?)
       (say knpc "At best Jeffries failed in his duties as commander to protect those under his command. "
-           "At worst, he was an accomplice in the betrayal of the Warritrix.")
+           "At worst, he was an accomplice in the betrayal of the Warritrix. "
+           "Our new commander is Janice.")
       (say knpc "Jeffries is the commander of the Glasdrin militia. He's usually at work in the Citadel.")
       ))
 
@@ -455,6 +457,11 @@
        (method 'kurp glasdrin-kurp)
        (method 'glas glasdrin-glas)
        (method 'pala glasdrin-pala)
+       (method 'jani 
+               (lambda (knpc kpc) 
+                 (if (player-stewardess-trial-done?)
+                      (say knpc "The military council has elected Janice to replace Jeffries as commander of the militia.")
+                      (say knpc "Jeffries is an able leader, but everyone knows that his assistant Janice has the brains."))))
        ))
 
 ;; Kurpolis
