@@ -422,7 +422,12 @@
       (say knpc "Her name is a curse among us now.")
       (say knpc "The Steward is the keeper of the city and realms of Glasdrin. You can usually find her in the Citadel.")))
 (define (glasdrin-jeff knpc kpc)
-  (say knpc "Jeffries is the commander of the Glasdrin militia. He's usually at work in the Citadel."))
+  (if (player-stewardess-trial-done?)
+      (say knpc "At best Jeffries failed in his duties as commander to protect those under his command. "
+           "At worst, he was an accomplice in the betrayal of the Warritrix.")
+      (say knpc "Jeffries is the commander of the Glasdrin militia. He's usually at work in the Citadel.")
+      ))
+
 (define (glasdrin-kurp knpc kpc)
          (say knpc "Take the bridge north across the river then follow the "
               "mountains east and north into a canyon."))
