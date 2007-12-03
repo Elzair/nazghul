@@ -71,16 +71,16 @@
 ;; Scroll List
 ;;-----------------------------------------------------------------------------------------
 
-(mk-scroll 't_an_tym_scroll "An Tym scroll" s_an_tym_scroll an-tym) ;; context-any
-(mk-scroll 't_in_mani_corp_scroll "In Mani Corp scroll" s_in_mani_corp_scroll in-mani-corp)  ;; context-any
-(mk-scroll 't_vas_rel_por_scroll "Vas Rel Por scroll" s_vas_rel_por_scroll vas-rel-por)  ;; context-any
-(mk-scroll 't_xen_corp_scroll "Xen Corp scroll" s_xen_corp_scroll scroll-xen-corp) 
-(mk-scroll 't_sanct_lor_scroll "Sanct Lor scroll" s_sanct_lor_scroll sanct-lor) ;; context-any
-(mk-scroll 't_in_quas_xen_scroll "In Quas Xen scroll" s_in_quas_xen_scroll scroll-in-quas-xen)
-(mk-scroll 't_in_vas_por_ylem_scroll "In Vas Por Ylem scroll" s_in_vas_por_ylem_scroll scroll-in-vas-por-ylem) 
-(mk-scroll 't_an_xen_ex_scroll "An Xen Ex scroll" s_an_xen_ex_scroll scroll-an-xen-ex)
-(mk-scroll 't_in_an_scroll "In An scroll" s_in_an_scroll in-an) ;; context-any
-(mk-scroll 't_in_ex_por_scroll "In Ex Por scroll" s_in_ex_por_scroll in-ex-por)  ;; context-any??
-(mk-scroll 't_vas_mani_scroll "Vas Mani scroll" s_vas_mani_scroll vas-mani) ;; context-any
-(mk-scroll 't_wis_quas_scroll "Wis Quas scroll" s_wis_quas_scroll wis-quas) ;; context-any
-(mk-scroll 't_wis_an_ylem_scroll "Wis An Ylem scroll" s_wis_an_ylem_scroll wis-an-ylem) ;; context-any
+(mk-scroll 't_an_tym_scroll "An Tym (Time Stop) scroll" s_an_tym_scroll an-tym) ;; context-any
+(mk-scroll 't_in_mani_corp_scroll "In Mani Corp (Resurrection) scroll" s_in_mani_corp_scroll in-mani-corp)  ;; context-any
+(mk-scroll 't_vas_rel_por_scroll "Vas Rel Por (Gate) scroll" s_vas_rel_por_scroll vas-rel-por)  ;; context-any
+(mk-scroll 't_xen_corp_scroll "Xen Corp (Death Bolt) scroll" s_xen_corp_scroll scroll-xen-corp) 
+(mk-scroll 't_sanct_lor_scroll "Sanct Lor (Invisibility) scroll" s_sanct_lor_scroll sanct-lor) ;; context-any
+(mk-scroll 't_in_quas_xen_scroll "In Quas Xen (Clone) scroll" s_in_quas_xen_scroll scroll-in-quas-xen)
+(mk-scroll 't_in_vas_por_ylem_scroll "In Vas Por Ylem (Tremor) scroll" s_in_vas_por_ylem_scroll scroll-in-vas-por-ylem) 
+(mk-scroll 't_an_xen_ex_scroll "An Xen Ex (Charm) scroll" s_an_xen_ex_scroll scroll-an-xen-ex)
+(mk-scroll 't_in_an_scroll "In An (Negate Magic) scroll" s_in_an_scroll in-an) ;; context-any
+(mk-scroll 't_in_ex_por_scroll "In Ex Por (Magic Unlock) scroll" s_in_ex_por_scroll in-ex-por)  ;; context-any??
+(mk-scroll 't_vas_mani_scroll "Vas Mani (Great Heal) scroll" s_vas_mani_scroll vas-mani) ;; context-any
+(mk-scroll 't_wis_quas_scroll "Wis Quas (Reveal) scroll" s_wis_quas_scroll wis-quas) ;; context-any
+(mk-scroll 't_wis_an_ylem_scroll "Wis An Ylem (X-Ray Vision) scroll" s_wis_an_ylem_scroll wis-an-ylem) ;; context-any
