@@ -26,22 +26,25 @@
                   (lambda (kscrolltype kuser)
                     (apply spell (list kuser)))))
 
-(define (player-in-wilderness?)
-	(kern-place-is-wilderness? (loc-place (kern-obj-get-location (kern-get-player))))
-	)
+(define (in-wilderness? caster)
+	(let ((place (loc-place (kern-obj-get-location caster))))
+	(and 
+		(kern-place-is-wilderness? place)
+		(not (kern-place-is-combat-map? place))
+	)))
 
 ;;-----------------------------------------------------------------------------------------
 ;; Scroll Functions
 ;;-----------------------------------------------------------------------------------------
 
 (define (scroll-xen-corp caster)
-	(if (player-in-wilderness?)
+	(if (in-wilderness? caster)
 		result-not-here
 		(user-cast-ranged-targeted-spell caster 4 cast-kill-proc)
 	))
 		
 (define (scroll-in-quas-xen caster)
-	(if (player-in-wilderness?)
+	(if (in-wilderness? caster)
 		result-not-here
 		(cast-ui-basic-ranged-spell powers-clone
 			caster 
@@ -50,13 +53,13 @@
 	))
 
 (define (scroll-in-vas-por-ylem caster)
-	(if (player-in-wilderness?)
+	(if (in-wilderness? caster)
 		result-not-here
 		(powers-tremor caster caster 12)
 	))
 
 (define (scroll-an-xen-ex caster)
-	(if (player-in-wilderness?)
+	(if (in-wilderness? caster)
 		result-not-here
 		(cast-ui-basic-ranged-spell powers-charm
 			caster 
