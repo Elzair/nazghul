@@ -20,6 +20,7 @@
 ;; NPC's
 ;;----------------------------------------------------------------------------
 (kern-load "gholet.scm")
+(kern-load "valus.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -112,6 +113,7 @@
   (put (mk-gholet) 24 1)
   (put (mk-npc 'zorn 8) 29 4)
   (put (mk-npc 'footpad 8) 16 7)
+  (put (mk-valus) 24 6)
 
   ;; guards
   (put (guard-pt 'halberdier) 9 1)

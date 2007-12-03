@@ -70,10 +70,20 @@
            )
           (else
            (say knpc "Justice will weigh the evidence.")
-           (log-dots 10 1000)
+           ;(log-dots 10 1000)
            (say knpc (kern-obj-get-name kchar) ", you are guilty of betrayal. Your punishment is death, and may your name be a curse forevermore.")
            (kern-being-set-current-faction kchar faction-monster)
            (player-stewardess-trial-done!)
+
+           (if (defined? 'ch_jeffreys)
+               (kern-char-set-sched ch_jeffreys sch_jeff_resigned)
+               (jeff-resigned! (gob ch_jeffreys))
+               )
+
+           (if (defined? 'ch_valus)
+               (kern-char-set-sched ch_valus sch_jeff)
+               )
+
            (kern-conv-end)
            ))
     ))

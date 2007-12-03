@@ -419,7 +419,7 @@
 
 (define (glasdrin-stew knpc kpc)
   (if (player-stewardess-trial-done?)
-      (say knpc "Her name is a curse among us now.")
+      (say knpc "Her name of the Stewardess is a curse among us now. The new Steward is Valus, a former commander.")
       (say knpc "The Steward is the keeper of the city and realms of Glasdrin. You can usually find her in the Citadel.")))
 
 (define (glasdrin-jeff knpc kpc)
@@ -462,6 +462,14 @@
                  (if (player-stewardess-trial-done?)
                       (say knpc "The military council has elected Janice to replace Jeffries as commander of the militia.")
                       (say knpc "Jeffries is an able leader, but everyone knows that his assistant Janice has the brains."))))
+       (method 'valu
+               (lambda (knpc kpc)
+                 (if (player-stewardess-trial-done?)
+                     (say knpc "Valus was exonerated by the Stewardess's journal. "
+                          "It is a shame we ever believed such lies about him. "
+                          "We have elected him to be the new Steward.")
+                     (say knpc "Valus has been imprisoned for shameful indecency. "
+                          "It's a pity, really. He was a well-respected general."))))
        ))
 
 ;; Kurpolis

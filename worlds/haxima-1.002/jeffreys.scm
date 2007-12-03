@@ -45,33 +45,16 @@
 
 ;; Basics...
 (define (jeff-hail knpc kpc)
-  (let ((jeff (gob knpc))
-        (kplace (loc-place (kern-obj-get-location knpc)))
-        )
-    (cond ((jeff-resigned? jeff)
-           (cond ((equal? kplace p_kun)
-                  (ask? knpc kpc "[You barely recognize the former Commander of Glasdrin] "
-                        "Whoo zere? Zwhat? You! "
-                        "[He spits, but it just dribbles down his chin] ZEE! You zee?")
-                  (say knpc "Itzmee! You... I... I'm bizzhy. Go away. "
-                       "[He staggers off with a haunted look]")
-                  )
-                 (else
-                  (say knpc "Leave me be.")
-                  (kern-conv-end)
-                  )))
-          ((player-stewardess-trial-done?)
-           (say knpc "I want you to know Wanderer, I did not betray the Warritrix. I did not know about the ambush. "
-                "But I knew something was amiss, I should have acted on my suspicions. "
-                "The Commander of Glasdrin must never fail in diligence. "
-                "For that reason, I will resign.")
-           (kern-char-set-sched knpc sch_jeff_resigned)
-           (jeff-resigned! jeff)
-           (kern-conv-end)
-           )
-          (else
-           (say knpc "[You meet a splendid paladin] Well-met, sir.")
-           ))))
+  (cond ((player-stewardess-trial-done?)
+         (say knpc "I want you to know Wanderer, I did not betray the Warritrix. I did not know about the ambush. "
+              "But I knew something was amiss, I should have acted on my suspicions. "
+              "The Commander of Glasdrin must never fail in diligence. "
+              "For that reason, I have resigned my post.")
+         (kern-conv-end)
+         )
+        (else
+         (say knpc "[You meet a splendid paladin] Well-met, sir.")
+         )))
 
 (define (jeff-default knpc kpc)
   (say knpc "I cannot help you with that."))
