@@ -75,7 +75,7 @@
             ;; quest NOT yet done
             (begin
               (say knpc "Bring me the mushrooms and I will teach ye the ward "
-                   "of panic. "
+                   "of fire. "
                    "Do ye remember where they are?")
               (if (kern-conv-get-yes-no? kpc)
                   (say knpc "Well...")
@@ -87,9 +87,8 @@
                "Be wanting me to teach ye, now, won't ye?")
           (if (kern-conv-get-yes-no? kpc)
               (begin
-                (say knpc "I know a battle ward that will throw your enemies "
-                     "into a panic. But perhaps ye can do me a favor first, "
-                     "yes?")
+                (say knpc "I know a battle ward that will render fire harmless. "
+                     "But perhaps ye can do me a favor first, yes?")
                 (if (kern-conv-get-yes-no? kpc)
                     (begin
                       (say knpc "In a cave to the south grows "
