@@ -113,7 +113,7 @@
                19)
             (begin
               (kern-obj-remove-effect kchar ef_sleep)
-              (kern-char-set-sleep kchar #t)
+              (kern-char-set-sleep kchar #t) ;; shouldn't this be #f?
               )))))
     
 (define (sleep-reset fgob kobj)
@@ -656,6 +656,8 @@
 (mk-effect 'ef_temporary_fire_immunity         "Fire immunity"       s_im_fire  nil nil nil nil nil-hook "F" 0 #f  15)
 (mk-effect 'ef_magical_kill_immunity           "Magic kill immunity" s_im_death nil nil nil nil nil-hook "K" 0 #f  -1)
 (mk-effect 'ef_temporary_magical_kill_immunity "Magic kill immunity" s_im_death nil nil nil nil nil-hook "K" 0 #f  15)
+(mk-effect 'ef_plague_of_flies                 "Plague of Flies"     s_quicken  nil nil nil nil nil-hook "P" 0 #f  15)
+(mk-effect 'ef_plague_of_beasts                "Plague of Beasts"    s_reveal   nil nil nil nil nil-hook "P" 0 #f  15)
 
 ;; Keystroke hooks
 (mk-effect 'ef_drunk    "Drunk"     s_drunk    'drunk-exec    'drunk-apply    'drunk-rm nil             keystroke-hook "A" 0 #t 60)

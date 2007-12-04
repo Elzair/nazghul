@@ -94,6 +94,7 @@
   (say knpc "Do you seek justice?")
   (cond ((no? kpc)
          (say knpc "Then may injustice befall you.")
+         (kern-obj-add-effect (kern-char-get-party kpc) ef_plague_of_flies nil)
          (kern-conv-end))
         (else
          (say knpc "Speak truly, or be cursed. Do you accuse another of theft, false witness, oath-breaking, or betrayal?")
