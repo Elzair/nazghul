@@ -30,6 +30,7 @@
 #include "vehicle.h"
 #include "sprite.h"
 #include "images.h"
+#include "effect.h"
 
 #include <SDL_image.h>
 
@@ -199,10 +200,21 @@ static void foogodPaintEffect(SDL_Rect *rect, struct sprite *sprite)
         rect->x += ASCII_W;
 }
 
+static int foogod_paint_effect_wrapper(struct hook_entry *entry, void *data)
+{
+	SDL_Rect *rect = (SDL_Rect*)data;
+	struct effect *effect = entry->effect;
+        if (effect->sprite) {
+                foogodPaintEffect(rect, effect->sprite);
+        }
+        return 0;
+}
+
 static void foogodPaintEffects()
 {
         SDL_Rect rect = Foogod.effectsRect;
 
+        /* Effects well-known to the engine */
         if (TimeStop) {
                 foogodPaintEffect(&rect, time_stop_effect_sprite());
         }
@@ -222,6 +234,13 @@ static void foogodPaintEffects()
         if (XrayVision) {
                 foogodPaintEffect(&rect, xray_vision_effect_sprite());
         }
+
+        /* Custom effects added by the game */
+	for (int i = 0; i < OBJ_NUM_HOOKS; i++) {
+                player_party->hookForEach(i, foogod_paint_effect_wrapper, 0);
+	}
+
+
 }
 
 static void foogodPaintSessionInfo()
