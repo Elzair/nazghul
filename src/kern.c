@@ -4474,6 +4474,26 @@ KERN_API_CALL(kern_char_set_ai)
         return sc->T;
 }
 
+KERN_API_CALL(kern_char_set_sched)
+{
+        class Character *ch;
+        struct sched *sched = 0;
+
+        if (unpack(sc, &args, "pp", &ch, &sched)) {
+                rt_err("kern-char-set-sched: bad args");
+                return sc->NIL;
+        }
+
+        if (!ch) {
+                rt_err("kern-char-set-sched: null object");
+                return sc->NIL;
+        }
+
+        ch->setSchedule(sched);
+
+        return sc->T;
+}
+
 KERN_API_CALL(kern_char_set_control_mode)
 {
         static struct { char *str; enum control_mode mode; } tbl[] = {
@@ -9245,6 +9265,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-base-strength", kern_char_get_base_strength);
         API_DECL(sc, "kern-char-get-base-dexterity", kern_char_get_base_dexterity);
         API_DECL(sc, "kern-char-get-base-intelligence", kern_char_get_base_intelligence);
+        API_DECL(sc, "kern-char-set-sched", kern_char_set_sched);
         API_DECL(sc, "kern-char-set-speed", kern_char_set_speed);
         API_DECL(sc, "kern-char-get-speed", kern_char_get_speed);
         API_DECL(sc, "kern-char-set-strength", kern_char_set_strength);
