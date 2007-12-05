@@ -5,7 +5,7 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;
-;; The schedule below is for the place "Trigrave"
+;; In Oparine
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_oscar
                (list 0  0  oparine-innkeepers-bed "sleeping")
@@ -28,7 +28,7 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Oscar is the innkeeper for Trigrave. She is a gracious, mysterious woman.
+;; Oscar is the innkeeper in Oparine.  He is a glum fellow, with a wooden leg.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -149,15 +149,15 @@
        ;; basics
        (method 'default oscar-default)
        (method 'hail oscar-hail)
-       (method 'bye oscar-bye)
-       (method 'job oscar-job)
+       (method 'bye  oscar-bye)
+       (method 'job  oscar-job)
        (method 'name oscar-name)
        (method 'join oscar-join)
        
        ;; trade
        (method 'trad oscar-trade)
        (method 'room oscar-trade)
-       (method 'buy oscar-trade)
+       (method 'buy  oscar-trade)
        (method 'sell oscar-trade)
 
        ;; inn
