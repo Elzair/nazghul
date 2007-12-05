@@ -508,7 +508,7 @@ int status_show_effect(hook_entry_t *entry, void *data)
 
 	/* Blit the effect icon, if it has one */
 	if (effect->sprite) {
-				sprite_paint(effect->sprite, 0, rect->x, rect->y);
+                sprite_paint(effect->sprite, 0, rect->x, rect->y);
 	}
 
 	rect->x += ASCII_W;
@@ -525,25 +525,6 @@ int status_show_effect(hook_entry_t *entry, void *data)
 	rect->y += ASCII_H;
 
 	return 0;
-}
-
-static void status_show_character_var_stats_full(SDL_Rect *rect, 
-																class Character *pm)
-{
-	/* Show the xp, hp and mp */
-	screenPrint(rect, 0, 
-			"^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cXP:^cw%d/%d^c-"
-			, STAT_LABEL_CLR
-			, status_range_color(pm->getHp(), pm->getMaxHp())
-			, pm->getHp(), pm->getMaxHp()
-			, STAT_LABEL_CLR
-			, status_range_color(pm->getMana(), pm->getMaxMana())
-			, pm->getMana(), pm->getMaxMana()
-			, STAT_LABEL_CLR
-			, pm->getExperience()
-			, pm->getXpForLevel(pm->getLevel()+1)
-		);
-	rect->y += ASCII_H;
 }
 
 static void status_show_character_var_stats(SDL_Rect *rect, 
@@ -1029,12 +1010,13 @@ static bool status_show_party_view_character(class Character * pm, void *data)
 
 	/* Show character stats on line 2, left-justified. */
 	status_show_character_var_stats(&Status.lineRect, pm);
-	Status.lineRect.y -= ASCII_H; /* the above auto-advances; backup to
-													* show the condition codes on the same
-													* line */
+
+        /* the above auto-advances; backup to show the condition codes on the
+         * same line */
+	Status.lineRect.y -= ASCII_H;
 
 	/* Show the character effects as mini-icons right-justified on line
-		* 2 */
+         * 2 */
 	status_show_party_view_character_effects(pm, &Status.lineRect);
 	Status.lineRect.y += ASCII_H;
 
@@ -1058,6 +1040,7 @@ static void myShowParty(void)
 	Status.lineRect.y = Status.screenRect.y;
 	Status.lineRect.w = Status.screenRect.w - (2 * BORDER_W);
 
+        /* Show members */
 	player_party->forEachMember(status_show_party_view_character, 0);
 
 }
