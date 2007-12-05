@@ -4,6 +4,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Glasdrin
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_patch
                (list 0  0  gdp-bed "sleeping")
@@ -24,6 +26,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; An old wizard living in Glasdrin, who works as a healer.
+;; He wears an eyepatch, and is known as "Doc Patch".
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -117,8 +122,8 @@
        ;; basics
        (method 'default patch-default)
        (method 'hail patch-hail)
-       (method 'bye patch-bye)
-       (method 'job patch-job)
+       (method 'bye  patch-bye)
+       (method 'job  patch-job)
        (method 'name patch-name)
        (method 'join patch-join)
        

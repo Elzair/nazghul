@@ -3,6 +3,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Green Tower.
 ;;----------------------------------------------------------------------------
 (define (mk-zone x y w h) (list 'p_green_tower x y w h))
 (kern-mk-sched 'sch_shroom
@@ -27,6 +29,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Shroom is a female hedge-witch, who sells reagents and potions 
+;; in Green Tower.  She was once a battle-maiden fighting for 
+;; the forces of King Clovis in the Goblin Wars.
 ;;----------------------------------------------------------------------------
 
 (define shroom-merch-msgs

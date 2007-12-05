@@ -66,8 +66,9 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Roland is an agent of Lord Froederick, imprisoned in a cell in the slimy
-;; cave.
+;; Roland is a knight errant, serving Lord Froederick.
+;; He is currently imprisoned by bandits in a cell in the slimy cave.
+;; Roland is a potential party member.
 ;;----------------------------------------------------------------------------
 (define (roland-join knpc kpc)
   (if (is-player-party-member? knpc)

@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Old Absalot.
 ;;----------------------------------------------------------------------------
 (define selene-bed oa-bed3)
 (define selene-mealplace oa-tbl2)
@@ -30,6 +32,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Selene is a female cult member of the Accursed.
+;; She is unstable, wicked, and depraved.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -85,8 +90,8 @@
        ;; basics
        (method 'default selene-default)
        (method 'hail selene-hail)
-       (method 'bye selene-bye)
-       (method 'job selene-job)
+       (method 'bye  selene-bye)
+       (method 'job  selene-job)
        (method 'name selene-name)
        (method 'join selene-join)
 
@@ -94,7 +99,7 @@
        (method 'peop selene-peop)
        (method 'want selene-want)
        (method 'accu selene-accu)
-       (method 'fun selene-fun)
+       (method 'fun  selene-fun)
        (method 'sacr selene-sacr)
        (method 'denn selene-denn)
        (method 'sila selene-sila)
