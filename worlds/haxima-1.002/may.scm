@@ -6,6 +6,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Bole.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_may
                (list 0  0  bole-bed-may "sleeping")
@@ -21,6 +23,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; May is a female innkeeper, who lives in Bole.
+;; Melvin is her (seventh) husband.
 ;;----------------------------------------------------------------------------
 (define (may-trade knpc kpc)
   (say knpc "Talk to my husband Melvin in the kitchen."))
@@ -141,33 +146,33 @@
   (ifc nil
        (method 'default (lambda (knpc kpc) (say knpc "I can't help thee.")))
        (method 'hail may-hail)
-       (method 'bye (lambda (knpc kpc) (say knpc "Begone then for now.")))
-       (method 'job may-job)
+       (method 'bye  (lambda (knpc kpc) (say knpc "Begone then for now.")))
+       (method 'job  may-job)
        (method 'name (lambda (knpc kpc) (say knpc "I am called May.")))
        (method 'join (lambda (knpc kpc)
                        (say knpc "Don't flatter me with your foolishness.")))
 
-       (method 'buy may-trade)
-       (method 'food may-trade)
-       (method 'drin may-trade)
-       (method 'supp may-trade)
+       (method 'buy   may-trade)
+       (method 'food  may-trade)
+       (method 'drin  may-trade)
+       (method 'supp  may-trade)
        (method 'trade may-trade)
 
-       (method 'bill may-bill)
-       (method 'comp may-companion)
-       (method 'gues may-guests)
-       (method 'hack may-hackle)
-       (method 'husb may-husband)
-       (method 'inn may-tavern)
-       (method 'melv may-husband)
+       (method 'bill  may-bill)
+       (method 'comp  may-companion)
+       (method 'gues  may-guests)
+       (method 'hack  may-hackle)
+       (method 'husb  may-husband)
+       (method 'inn   may-tavern)
+       (method 'melv  may-husband)
        (method 'other may-other-husbands)
-       (method 'run may-tavern)
-       (method 'room may-room)
-       (method 'six may-other-husbands)
-       (method 'tave may-tavern)
-       (method 'thie may-thief)
-       (method 'trou may-trouble)
-       (method 'woma may-woman)
+       (method 'run   may-tavern)
+       (method 'room  may-room)
+       (method 'six   may-other-husbands)
+       (method 'tave  may-tavern)
+       (method 'thie  may-thief)
+       (method 'trou  may-trouble)
+       (method 'woma  may-woman)
 
        ))
 

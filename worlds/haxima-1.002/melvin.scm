@@ -1,7 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;
-;; The schedule below is for the place "Trigrave"
+;; In Bole.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_melvin
                (list 0  0  bole-bed-melvin      "sleeping")
@@ -20,7 +20,8 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Melvin is the tavern-keeper.
+;; Melvin is the cook at the Inn in Bole.
+;; He is the (seventh) husband to May.
 ;;----------------------------------------------------------------------------
 (define melv-merch-msgs
   (list "Come by the tavern when I'm open. I open at 7:00AM and close at midnight."
@@ -125,7 +126,7 @@
        (method 'name melvin-name)
        (method 'join melvin-join)
 
-       (method 'buy melvin-buy)
+       (method 'buy  melvin-buy)
        (method 'food melvin-buy)
        (method 'drin melvin-buy)
        (method 'supp melvin-buy)

@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the Poorhouse, near Oparine.
 ;;----------------------------------------------------------------------------
 (define meaney-bed poorh-bed1)
 (define meaney-mealplace poorh-sup1)
@@ -34,6 +36,11 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Meaney is a monk of the Order of the Crossroad, 
+;; living in the Poorhouse near Oparine.
+;; He was once a pirate, in the crew of the Merciful Death,
+;; and is sought for vengeance by the ghost captain Ghertie.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -185,14 +192,14 @@
        ;; basics
        (method 'default meaney-default)
        (method 'hail meaney-hail)
-       (method 'bye meaney-bye)
-       (method 'job meaney-job)
+       (method 'bye  meaney-bye)
+       (method 'job  meaney-job)
        (method 'name meaney-name)
        (method 'join meaney-join)
        
        ;; trade
        (method 'trad meaney-trade)
-       (method 'buy meaney-trade)
+       (method 'buy  meaney-trade)
        (method 'sell meaney-trade)
 
        ;; town & people
