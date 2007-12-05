@@ -113,7 +113,6 @@ enum combat_state combat_get_state(void)
 
 void combat_set_state(enum combat_state new_state)
 {
-	fprintf(stderr,"cstate %d -> %d\n",Combat.state,new_state);
         // --------------------------------------------------------------------
         // Interesting state transitions:
         //
