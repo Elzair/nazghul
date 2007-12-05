@@ -62,7 +62,7 @@
 #include "skill_set_entry.h"
 #include "templ.h"
 #include "occ.h"
-
+#include "nazghul.h"  // for DeveloperMode
 
 #define DEBUG
 #include "debug.h"
@@ -81,8 +81,6 @@
 #ifndef ENABLE_TOWN_ZOOM_IN
 #define ENABLE_TOWN_ZOOM_IN 0
 #endif
-
-extern int DeveloperMode;
 
 /* SAM: Using this typedef below */
 typedef void (*v_fncptr_iiv_t) (struct place *, int x, int y, void * v);

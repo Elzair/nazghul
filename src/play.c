@@ -56,6 +56,7 @@
 #include "vmask.h"
 #include "menus.h"
 #include "kern_intvar.h"  // SAM
+#include "nazghul.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -85,7 +86,6 @@ static bool tickHandler(struct TickHandler *th)
 
 static bool quitHandler(struct QuitHandler *kh)
 {
-        extern int ExitProgram; /* see nazghul.c */
 	cmdQuit();
         if (Quit) {
                 ExitProgram = 1;

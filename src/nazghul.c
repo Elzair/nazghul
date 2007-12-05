@@ -45,6 +45,7 @@
 #include "kern.h"
 #include "cfg.h"
 #include "menus.h"
+#include "nazghul.h"
 
 #include <errno.h>
 #include <signal.h>
@@ -54,11 +55,13 @@
 #include <SDL_image.h>
 #include <SDL_thread.h>
 #include <unistd.h>
+#include <getopt.h>
 
 /* Name of the file to load the game from. */
 static char *nazghul_load_fname = 0;
 
-int DeveloperMode    = 0;
+int FullScreenMode = 0;
+int DeveloperMode = 0;
 int ExitProgram = 0;
 
 static char program_name[] = "nazghul";
@@ -84,6 +87,7 @@ static void print_usage(void)
                "    -h:	help\n"
                "    -v: version\n"
                "    -d: developer mode\n"
+               "    -f: fullscreen mode\n"
 	       "    -t: tick <period in msec> \n"
 	       "    -a: animation <period in ticks> \n"
 	       "    -s: sound <0 to disable> \n"
@@ -101,13 +105,11 @@ static void print_usage(void)
 static void parse_args(int argc, char **argv)
 {
 	int c = 0;
-        extern char *optarg;
-        extern int optind;
 
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
 
-	while ((c = getopt(argc, argv, "t:a:s:TdR:S:P:I:G:vhr:")) != -1) {
+	while ((c = getopt(argc, argv, "t:a:s:TdfR:S:P:I:G:vhr:")) != -1) {
 		switch (c) {
 		case 't':
 			TickMilliseconds = atoi(optarg);
@@ -124,6 +126,9 @@ static void parse_args(int argc, char **argv)
 			break;
                 case 'd':
                         DeveloperMode = 1;
+                        break;
+                case 'f':
+                        FullScreenMode = 1;
                         break;
 		case 'R':
                         /* Set the filename for recording keystrokes. */
@@ -190,7 +195,7 @@ static void nazghul_init_internal_libs(void)
                 { "commonInit",     commonInit     },
                 { "screenInit",     screenInit     },
                 { "asciiInit",      asciiInit      },
-                { "sprite_init",     sprite_init     },
+                { "sprite_init",    sprite_init    },
                 { "eventInit",      eventInit      },
                 { "windInit",       windInit       },
                 { "formation_init", formation_init },

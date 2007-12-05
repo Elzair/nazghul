@@ -32,6 +32,7 @@
 #include "screen.h"
 #include "status.h"
 #include "file.h"
+#include "nazghul.h"
 
 #include "session.h" /* added for demo */
 #include "place.h" /* added for demo */
@@ -89,12 +90,6 @@ typedef struct {
         char abort : 1;     /**< The player aborted the selection */
 } menu_scroll_data_t;
 
-
-/**
- * The main menu uses this to rest the splash image if the user enters the load
- * menu but then changes his mind and backs out to the main menu.
- */
-extern void nazghul_splash(void);
 
 /**
  * The list of saved games, built when we evaluate the saved-game script for

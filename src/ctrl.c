@@ -36,6 +36,7 @@
 #include "log.h"
 #include "factions.h"
 #include "kern_intvar.h"
+#include "nazghul.h"  // for DeveloperMode
 
 #ifndef CONFIG_DIAGONAL_MOVEMENT
 #define CONFIG_DIAGONAL_MOVEMENT 1
@@ -48,7 +49,6 @@
 int G_latency_start = 0;
 int G_turnaround_start = 0;
 int G_turnaround  = 0;
-extern int DeveloperMode;
 
 static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 {

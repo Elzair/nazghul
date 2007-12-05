@@ -32,6 +32,7 @@
 #include "vmask.h"
 #include "session.h"
 #include "sprite.h"
+#include "nazghul.h"  // for DeveloperMode
 
 #include <SDL.h>
 #include <math.h>
@@ -64,8 +65,6 @@
     (Map.srect.x+((x)-(Map.aview->vrect.x+Map.aview->subrect.x))*TILE_W)
 #define MY_TO_SY(y) \
     (Map.srect.y+((y)-(Map.aview->vrect.y+Map.aview->subrect.y))*TILE_H)
-
-extern int DeveloperMode;
 
 struct light_source {
 	int x, y, light;
