@@ -67,6 +67,7 @@ extern void screenBlit(SDL_Surface * source, SDL_Rect * from,
                        SDL_Rect * to);
 extern int screenWidth(void);
 extern int screenHeight(void);
+extern SDL_PixelFormat *screenFormat(void);
 extern void screenFlash(SDL_Rect * rect, int mdelay, Uint32 color);
 extern void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...);
 
@@ -79,8 +80,8 @@ extern void screenHighlight(SDL_Rect * area);
 extern void screenHighlightColored(SDL_Rect * area, Uint32 color);
 
 // Added for peer effect
-extern int screenLock();
-extern void screenUnlock();
+extern int screenLock(void);
+extern void screenUnlock(void);
 extern void screenSetPixel(int x, int y, Uint32 color);
 extern Uint32 screenMapRGB(Uint8 red, Uint8 grn, Uint8 blu);
 extern void screenZoomOut(int factor);

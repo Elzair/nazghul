@@ -30,6 +30,35 @@
 
 #include <assert.h>
 
+
+#define DEBUG 0
+#if DEBUG
+/* To see the function names in backtraces, you need to ask gcc to
+ * add them to the binary with the -rdynamic linker (LDFLAGS) option
+ * and disable the static keyword for objects which static functions
+ * you'd like to see, either with -Dstatic= compiler option or just
+ * using in those sources following: */
+#define static
+
+#include <execinfo.h>
+#define MAX_STACK_DEPTH 16
+static void backtrace2stderr(void)
+{
+	int depth;
+	void *bt[MAX_STACK_DEPTH];
+	depth = backtrace(bt, MAX_STACK_DEPTH);
+	if (depth > 1) {
+		/* skip this fuction and C++ main, show rest */
+		backtrace_symbols_fd(bt+1, depth-2, 2);
+	}
+}
+#else
+static void backtrace2stderr(void) {
+	fprintf(stderr, "no backtrace functionality available...\n");
+}
+#endif
+
+
 #define ASCII_DEF_CLR White /* default printing color is white */
 #define ASCII_CLR_STK_SZ 32
 
@@ -306,8 +335,8 @@ static void asciiSetColor(char clr)
         }
 }
 
-static void asciiBlitColored16(SDL_Surface *dst, SDL_Rect *dstrect, 
-                               SDL_Surface *src, SDL_Rect *srcrect,
+static void asciiBlitColored16(SDL_Surface *src, SDL_Rect *srcrect,
+                               SDL_Surface *dst, SDL_Rect *dstrect,
                                Uint32 color)
 {
         Uint16 mask = color;
@@ -333,8 +362,8 @@ static void asciiBlitColored16(SDL_Surface *dst, SDL_Rect *dstrect,
         }
 }
 
-static void asciiBlitColored32(SDL_Surface *dst, SDL_Rect *dstrect, 
-                               SDL_Surface *src, SDL_Rect *srcrect,
+static void asciiBlitColored32(SDL_Surface *src, SDL_Rect *srcrect,
+                               SDL_Surface *dst, SDL_Rect *dstrect,
                                Uint32 color)
 {
         Uint32 mask = color;
@@ -360,20 +389,30 @@ static void asciiBlitColored32(SDL_Surface *dst, SDL_Rect *dstrect,
         }
 }
 
-static void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect, 
-                             SDL_Surface *src, SDL_Rect *srcrect,
+static void asciiBlitColored(SDL_Surface *src, SDL_Rect *srcrect,
+                             SDL_Surface *dst, SDL_Rect *dstrect,
                              Uint32 color)
 {
-        assert(dst->format->BitsPerPixel==src->format->BitsPerPixel);
+#if DEBUG
+        if (src->format->BitsPerPixel!=dst->format->BitsPerPixel) {
+		fprintf(stderr,
+			"ERROR: %dx%d@%d surface not in destination format!\n",
+			src->w, src->h, src->format->BytesPerPixel);
+		backtrace2stderr();
+		exit(-1);
+	}
+#else
+	assert(src->format->BitsPerPixel==dst->format->BitsPerPixel);
+#endif
         assert(dstrect->w==srcrect->w);
         assert(dstrect->h==srcrect->h);
 
         switch (dst->format->BitsPerPixel) {
         case 16:
-                asciiBlitColored16(dst, dstrect, src, srcrect, color);
+                asciiBlitColored16(src, srcrect, dst, dstrect, color);
                 break;
         case 32:
-                asciiBlitColored32(dst, dstrect, src, srcrect, color);
+                asciiBlitColored32(src, srcrect, dst, dstrect, color);
                 break;
         default:
                 err("asciiBlitColored: unsupported BitsPerPixel: %d\n",
@@ -417,8 +456,8 @@ static void asciiPaintColored(unsigned char c, int x, int y,
 	dest.w = ASCII_W;
 	dest.h = ASCII_H;
 
-        asciiBlitColored(surf, &dest, 
-                         Ascii.images->images, &src, 
+        asciiBlitColored(Ascii.images->images, &src, 
+                         surf, &dest, 
                          color);
 }
 
@@ -459,10 +498,9 @@ static void asciiPaintDefault(unsigned char c, int x, int y,
  * @returns The images struct ready for use, our 0 if there was some kind of
  * error in loading it.
  */
-static struct images *ascii_load_fixed_charset()
+static struct images *ascii_load_fixed_charset(void)
 {
 	struct images *images;
-	SDL_Surface *tmp;
 
 	images = new struct images;
         assert(images);
@@ -475,48 +513,17 @@ static struct images *ascii_load_fixed_charset()
         images->rows    = 9;
         images->cols    = 16;
 
-
         images->images = IMG_ReadXPMFromArray(charset_xpm);
 	if (!images->images) {
-                err("IMG_ReadXPMFromArray() failed: '%s'\n", SDL_GetError() );
-                goto fail;
+		err("IMG_ReadXPMFromArray() failed: '%s'\n", SDL_GetError() );
+		images_del(images);
+		return NULL;
 	}
-
-        /* Images which are saved with a transparency layer will have the
-         * SDL_SRCALPHA flag set. Their alpha layer will be managed
-         * automatically by SDL_BlitSurface(). For images without an alpha
-         * layer, assume that magenta (RGB 0xff00ff) is the special color for
-         * transparency. To correctly support transparent blitting we have to
-         * set their color key to magenta and we have to convert them to match
-         * the display format. */
-        if (! (images->images->flags & SDL_SRCALPHA)) {
-
-                /* Convert to video format for faster blitting */
-                if ((tmp = SDL_DisplayFormat(images->images)) == NULL) {
-                        err("SDL_DisplayFormat: %s", SDL_GetError());
-                        goto fail;
-                }
-
-                SDL_FreeSurface(images->images);
-                images->images = tmp;
-
-                /* Make magenta the transparent color */
-                if (SDL_SetColorKey(images->images, SDL_SRCCOLORKEY,
-                                    SDL_MapRGB(images->images->format,
-                                               0xff, 0x00, 0xff)) < 0) {
-                        err("SDL_SetColorKey: %s", SDL_GetError());
-                        goto fail;
-                }
-
-        }
-
-        /*images_dump_surface(fname, images->images);*/
-
-        return images;
-
- fail:
-	images_del(images);
-	return 0;
+	if (!images_convert2display(images)) {
+		images_del(images);
+		return NULL;
+	}
+	return images;
 }
 
 int asciiInit(void)

@@ -46,6 +46,7 @@ struct images {
 
 extern struct images *images_new(char *tag, int w, int h, int rows, int cols, 
                                  int offx, int offy, char *fname);
+extern int images_convert2display(struct images *images);
 extern void images_del(struct images *images);
 extern int images_fade(struct images *images);
 

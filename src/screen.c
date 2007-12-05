@@ -27,6 +27,7 @@
 #include "foogod.h"
 #include "cfg.h"
 #include "images.h"
+#include "nazghul.h"	// for FullScreenMode
 
 #include <png.h>
 #include <unistd.h>
@@ -106,7 +107,7 @@ void screenInitColors(void)
 	TextGreen = SDL_MapRGB(Screen->format, 0x99, 0xff, 0x99);
 	Blue    = SDL_MapRGB(Screen->format, 0x00, 0x00, 0xff);
 	TextBlue = SDL_MapRGB(Screen->format, 0x99, 0x99, 0xff);
-    Yellow  = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
+	Yellow  = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
 	TextYellow = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x99);
 	Cyan    = SDL_MapRGB(Screen->format, 0x00, 0xff, 0xff);
 	TextCyan = SDL_MapRGB(Screen->format, 0x99, 0xff, 0xff);
@@ -202,10 +203,10 @@ void dump_SDL_Surface(SDL_Surface *surf)
 
 void screenInitScreen(void)
 {
-	Uint32 flags = 0;
+	Uint32 flags = SDL_ANYFORMAT;
 	const SDL_VideoInfo *fmt;
 
-        const int SCREEN_BPP = 32;
+        const int SCREEN_BPP = 0;	/* use display BPP */
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		perror_sdl("SDL_Init");
@@ -223,12 +224,12 @@ void screenInitScreen(void)
                 dump_SDL_VideoInfo(fmt);
         }
 
-	if (fmt->blit_hw_CC &&
-	    fmt->blit_fill &&
-	    ((fmt->video_mem * 1024) >
-	     (Uint32) (SCREEN_W * SCREEN_H * SCREEN_BPP / 8))) {
+	if (fmt->blit_hw_CC && fmt->blit_fill) {
 		flags |= SDL_HWSURFACE;
 		flags |= SDL_DOUBLEBUF;
+	}
+	if (FullScreenMode) {
+		flags |= SDL_FULLSCREEN;
 	}
 
 	Screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, SCREEN_BPP, flags);
@@ -326,7 +327,7 @@ void screenInitHighlight(void)
 	}
 }
 
-static void screenInitFrame()
+static void screenInitFrame(void)
 {
         int i;
         char *fname = cfg_get("frame-image-filename");
@@ -590,6 +591,11 @@ int screenWidth(void)
 int screenHeight(void)
 {
 	return Screen->h;
+}
+
+SDL_PixelFormat *screenFormat(void)
+{
+	return Screen->format;
 }
 
 void screenFlash(SDL_Rect * rect, int mdelay, Uint32 color)
@@ -891,46 +897,28 @@ void screenHighlight(SDL_Rect *area)
         screenHighlightColored(area, White);
 }
 
-int screenLock()
+int screenLock(void)
 {
 	return SDL_LockSurface(Screen);
 }
 
-void screenUnlock()
+void screenUnlock(void)
 {
 	SDL_UnlockSurface(Screen);
 }
 
+/* assumes the pixel value is gotten from screenMapRGB() i.e. safe! */
 void screenSetPixel(int x, int y, Uint32 color)
 {
-	Uint32 *pix;
+	Uint8 *pix = (Uint8*)(Screen->pixels);
+	pix += y * Screen->pitch + x * Screen->format->BytesPerPixel;
 
-	assert(Screen->format->BitsPerPixel == 32);
-	pix = (Uint32 *) (Screen->pixels);
-	pix += (y * Screen->pitch) / Screen->format->BytesPerPixel + x;
-
-#if 0
-	red = (color >> 16) & 0xFF;
-	grn = (color >> 8) & 0xFF;
-	blu = color & 0xFF;
-
-	red >>= Screen->format->Rloss;
-	grn >>= Screen->format->Gloss;
-	blu >>= Screen->format->Bloss;
-
-	red &= (Screen->format->Rmask >> Screen->format->Rshift);
-	grn &= (Screen->format->Gmask >> Screen->format->Gshift);
-	blu &= (Screen->format->Bmask >> Screen->format->Bshift);
-
-	red <<= Screen->format->Rshift;
-	grn <<= Screen->format->Gshift;
-	blu <<= Screen->format->Bshift;
-
-	*pix = red | grn | blu;
-#else
-	*pix = color;
-#endif				// 0
-
+	switch (Screen->format->BytesPerPixel) {
+	case 4: *(Uint32*)pix = (Uint32)color; break;
+	case 2: *(Uint16*)pix = (Uint16)color; break;
+	case 1: *(Uint8 *)pix = (Uint8)color;  break;
+	default: assert(0); break;
+	}
 }
 
 Uint32 screenMapRGB(Uint8 red, Uint8 grn, Uint8 blu)
@@ -999,8 +987,11 @@ void screenCapture(char *fname, SDL_Rect *rect)
         /* Write the header. */
         png_write_info(png_ptr, info_ptr);
 
-        /* Grab the screen pixels. */
+	/* TODO: if Screen is not in correct format, convert it to
+	 *       a suitable temp surface (maybe a row at the time?).
+	 */
         assert(Screen->format->BytesPerPixel==4);
+        /* Grab the screen pixels. */
         spix = (Uint32*)Screen->pixels;
         spitch = Screen->pitch / Screen->format->BytesPerPixel;
 

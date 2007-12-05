@@ -24,6 +24,7 @@
 #include "file.h"
 #include "cfg.h"
 #include "debug.h"
+#include "screen.h" // for screenFormat()
 
 #include <assert.h>
 #include <SDL_image.h>
@@ -122,11 +123,62 @@ int images_fade(struct images *images)
 	return 0;
 }
 
+int images_convert2display(struct images *images)
+{
+	SDL_Surface *tmp;
+	int imagesbits, screenbits;
+	imagesbits = images->images->format->BitsPerPixel;
+	screenbits = screenFormat()->BitsPerPixel;
+
+	/* Convert to video format for faster blitting
+	 * (*much* faster on certain display bit depths).
+	 * 8-bit surfaces are a special case in Nazghul though.
+	 */
+	if (imagesbits != screenbits && imagesbits != 8) {
+
+		if ((tmp = SDL_DisplayFormat(images->images)) == NULL) {
+			err("SDL_DisplayFormat: %s", SDL_GetError());
+			return 0;
+		}
+		imagesbits = screenbits;
+		SDL_FreeSurface(images->images);
+		images->images = tmp;
+	}
+
+        /* Images which are saved with a transparency layer will have the
+         * SDL_SRCALPHA flag set. Their alpha layer will be managed
+         * automatically by SDL_BlitSurface(). For images without an alpha
+         * layer, assume that magenta (RGB 0xff00ff) is the special color for
+         * transparency. To correctly support transparent blitting we have to
+         * set their color key to magenta and we have to convert them to match
+         * the display format. */
+        if (! (images->images->flags & SDL_SRCALPHA)) {
+
+		if (imagesbits != screenbits) {
+			/* Convert to video format for faster blitting */
+			if ((tmp = SDL_DisplayFormat(images->images)) == NULL) {
+				err("SDL_DisplayFormat: %s", SDL_GetError());
+				return 0;
+			}
+			SDL_FreeSurface(images->images);
+			images->images = tmp;
+		}
+
+                /* Make magenta the transparent color */
+                if (SDL_SetColorKey(images->images, SDL_SRCCOLORKEY,
+                                    SDL_MapRGB(images->images->format,
+                                               0xff, 0x00, 0xff)) < 0) {
+                        err("SDL_SetColorKey: %s", SDL_GetError());
+                        return 0;
+                }
+        }
+	return 1;
+}
+
 struct images *images_new(char *tag, int w, int h, int rows, int cols, 
                           int offx, int offy, char *fname)
 {
 	struct images *images;
-	SDL_Surface *tmp;
 	char *filename;
 
 	images = new struct images;
@@ -148,7 +200,6 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
         images->rows    = rows;
         images->cols    = cols;
 
-
 	filename = file_mkpath(cfg_get("include-dirname"),fname);
 	if (filename) {
 		images->images = IMG_Load(filename);
@@ -169,39 +220,10 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
                 // differ from the nazghul-0.2.0 release and recent CVS?
 	}
 
-        /* Images which are saved with a transparency layer will have the
-         * SDL_SRCALPHA flag set. Their alpha layer will be managed
-         * automatically by SDL_BlitSurface(). For images without an alpha
-         * layer, assume that magenta (RGB 0xff00ff) is the special color for
-         * transparency. To correctly support transparent blitting we have to
-         * set their color key to magenta and we have to convert them to match
-         * the display format. */
-        if (! (images->images->flags & SDL_SRCALPHA)) {
-
-                /* Convert to video format for faster blitting */
-                if ((tmp = SDL_DisplayFormat(images->images)) == NULL) {
-                        err("SDL_DisplayFormat: %s", SDL_GetError());
-                        goto fail;
-                }
-
-                SDL_FreeSurface(images->images);
-                images->images = tmp;
-
-                /* Make magenta the transparent color */
-                if (SDL_SetColorKey(images->images, SDL_SRCCOLORKEY,
-                                    SDL_MapRGB(images->images->format,
-                                               0xff, 0x00, 0xff)) < 0) {
-                        err("SDL_SetColorKey: %s", SDL_GetError());
-                        goto fail;
-                }
-
-        }
-
-        /*images_dump_surface(fname, images->images);*/
-
-	return images;
-
-      fail:
+	if (images_convert2display(images)) {
+		//images_dump_surface(fname, images->images);
+		return images;
+	}
 	images_del(images);
 	return NULL;
 }

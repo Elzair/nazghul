@@ -100,27 +100,34 @@ static void rsurf_unref(struct rsurf *rsurf)
 static void sprite_custom_blit(SDL_Surface *source, SDL_Rect *from,
                                SDL_Surface *dest, SDL_Rect *to)
 {
-        Uint32 *dpix, *spix;
-        int dx, dy, di, sx,  sy, si, spitch,  dpitch;
+        Uint8 *dpix, *spix, pix = 0;
+        int dx, dy, di, sx,  sy, si, spitch,  dpitch, pix_bytes;
         Uint8 in_alpha;
 
-        assert(source->format->BytesPerPixel==4);
+        spix = (Uint8*)(source->pixels);
+        dpix = (Uint8*)(dest->pixels);
 
-        spix = (Uint32*)source->pixels;
-        dpix = (Uint32*)dest->pixels;
+        dpitch = dest->pitch;
+        spitch = source->pitch;
 
-        dpitch = dest->pitch / dest->format->BytesPerPixel;
-        spitch = source->pitch / source->format->BytesPerPixel;
-
+	pix_bytes = source->format->BytesPerPixel;
+	assert(pix_bytes == 1 || pix_bytes == 2 || pix_bytes == 4);
+	assert(dest->format->BytesPerPixel == pix_bytes);
+	
         for (dy = 0; dy < from->h; dy++) {
                 sy = dy;
                 for (dx = 0; dx < from->w; dx++) {
                         sx = dx;
-                        di = (dy + to->y) * dpitch + (dx + to->x);
-                        si = (sy + from->y) * spitch + (sx + from->x);
+                        di = (dy + to->y) * dpitch + (dx + to->x) * pix_bytes;
+                        si = (sy + from->y) * spitch + (sx + from->x) * pix_bytes;
 
+			switch(pix_bytes) {
+			case 4:	pix = *(Uint32*)spix; break;
+			case 2: pix = *(Uint16*)spix; break;
+			case 1:	pix = *(Uint8 *)spix; break;
+			}
                         /* Extract the alpha component of the source pixel. */
-                        in_alpha = ((spix[si] & source->format->Amask) 
+                        in_alpha = ((pix & source->format->Amask) 
                                      >> source->format->Ashift);
 
                         /* Skip transparent source pixels, leaving destination
@@ -133,9 +140,13 @@ static void sprite_custom_blit(SDL_Surface *source, SDL_Rect *from,
                          * is only correct if the source alpha is opaque. We
                          * really should blend semi-transparent source
                          * pixels. */
-                        dpix[di] = spix[si];
+			switch(pix_bytes) {
+			case 4:	*(Uint32*)dpix = pix; break;
+			case 2: *(Uint16*)dpix = pix; break;
+			case 1:	*(Uint8 *)dpix = pix; break;
+			}
                 }
-        }        
+        }
 }
 
 
@@ -664,21 +675,24 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
                                          SDL_Surface *dest,  SDL_Rect *to,
                                          float matrix[4][3])
 {
-        Uint32 *dpix, *spix;
-        int dx, dy, di, sx,  sy, si, spitch,  dpitch;
+        Uint8 *dpix, *spix, out_pix, in_pix = 0;
+        int dx, dy, di, sx,  sy, si, spitch,  dpitch, sbytes, dbytes;
         Uint8 in_red, in_grn, in_blu, in_alpha, out_red, out_grn, out_blu, 
                 out_alpha;
         int ired, igrn, iblu;
         Uint32 transparent;
 
-        assert(source->format->BytesPerPixel==4);
+        spix = (Uint8*)(source->pixels);
+        dpix = (Uint8*)(dest->pixels);
 
-        spix = (Uint32*)source->pixels;
-        dpix = (Uint32*)dest->pixels;
+        dpitch = dest->pitch;
+        spitch = source->pitch;
 
-        dpitch = dest->pitch / dest->format->BytesPerPixel;
-        spitch = source->pitch / source->format->BytesPerPixel;
-
+	sbytes = source->format->BytesPerPixel;
+	assert(sbytes == 1 || sbytes == 2 || sbytes == 4);
+	dbytes = dest->format->BytesPerPixel;
+	assert(dbytes == 1 || dbytes == 2 || dbytes == 4);
+	
         /* Make a transparent pixel. If SDL_ALPHA_TRANSPARENT is non-zero that
          * means transparency is high, so use the mask value. Otherwise zero
          * means transparent. */
@@ -692,25 +706,34 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
                 sy = dy;
                 for (dx = 0; dx < from->w; dx++) {
                         sx = dx;
-                        di = (dy + to->y) * dpitch + (dx + to->x);
-                        si = (sy + from->y) * spitch + (sx + from->x);
+                        di = (dy + to->y) * dpitch + (dx + to->x) * dbytes;
+                        si = (sy + from->y) * spitch + (sx + from->x) * sbytes;
 
+			switch(sbytes) {
+			case 4:	in_pix = *(Uint32*)spix; break;
+			case 2: in_pix = *(Uint16*)spix; break;
+			case 1:	in_pix = *(Uint8 *)spix; break;
+			}
                         /* Extract the alpha component of the source pixel. */
-                        in_alpha = ((spix[si] & source->format->Amask) 
+                        in_alpha = ((in_pix & source->format->Amask) 
                                      >> source->format->Ashift);
 
                         /* For speed, skip transparent pixels. */
                         if (SDL_ALPHA_TRANSPARENT == in_alpha) {
-                                dpix[di] = transparent;
+				switch(sbytes) {
+				case 4:	*(Uint32*)dpix = transparent; break;
+				case 2: *(Uint16*)dpix = transparent; break;
+				case 1:	*(Uint8 *)dpix = transparent; break;
+				}
                                 continue;
                         }
 
                         /* Extract the color components of the source pixel. */
-                        in_red = ((spix[si] & source->format->Rmask) 
+                        in_red = ((in_pix & source->format->Rmask) 
                                    >> source->format->Rshift);
-                        in_grn = ((spix[si] & source->format->Gmask) 
+                        in_grn = ((in_pix & source->format->Gmask) 
                                    >> source->format->Gshift);
-                        in_blu = ((spix[si] & source->format->Bmask) 
+                        in_blu = ((in_pix & source->format->Bmask) 
                                    >> source->format->Bshift);
 
                         /* Run the matrix conversion. */
@@ -744,10 +767,15 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
 
                         /* Recombine them, along with the original alpha
                          * component, into the destination pixel. */
-                        dpix[di] = (out_red << dest->format->Rshift
+                        out_pix = (out_red << dest->format->Rshift
                                     | out_grn << dest->format->Gshift
                                     | out_blu << dest->format->Bshift
                                     | out_alpha << dest->format->Ashift);
+			switch(sbytes) {
+			case 4:	*(Uint32*)dpix = out_pix; break;
+			case 2: *(Uint16*)dpix = out_pix; break;
+			case 1:	*(Uint8 *)dpix = out_pix; break;
+			}
                 }
         }
 }
