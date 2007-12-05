@@ -21,4 +21,5 @@
  * width (in tiles). Note that the usual #ifndef include guards are not
  * desirable for this file, nor are C++-style '//' comments. */
 ADD_SCREEN_DIM("640x480", 11)
+ADD_SCREEN_DIM("800x480", 12)
 ADD_SCREEN_DIM("1280x960", MAX_MAP_SIZE)
