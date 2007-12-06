@@ -352,7 +352,7 @@ static int combat_find_safe_position(struct position_info *info)
 
     	  // store data on a fallback not-so-safe position
     	  int currentsafety = 0;
-    	  int cur_x, cur_y;
+    	  int cur_x = 0, cur_y = 0;
     	  int newsafety = -1;
     	  
         // Clear the search queue.
@@ -381,15 +381,15 @@ static int combat_find_safe_position(struct position_info *info)
 	                currentsafety = newsafety;
 	                cur_x = info->px;
 	                cur_y = info->py;
-             	 }
+                }
         }
 
         if (currentsafety != 0)
         {
-	       info->px = cur_x;
-	       info->py = cur_y;  
-	       return currentsafety;
-     		}
+                info->px = cur_x;
+                info->py = cur_y;  
+                return currentsafety;
+        }
         
         return -1;
 }
@@ -808,7 +808,10 @@ static int combat_position_enemy(class Party * foe, int dx, int dy,
         Combat.enemy_vehicle = foe->getVehicle();
 
         /* Bugfix SF1412060 "NPC attacks while on (but not aboard) ship" */
-        if (! Combat.enemy_vehicle) {
+        /* Addendum: the foe may not have a place if it is being introduced
+         * into combat "from scratch" (ie, it did not exist on the wilderness
+         * as a party before being imported into combat). */
+        if (! Combat.enemy_vehicle && foe->getPlace()) {
                 Combat.enemy_vehicle = place_get_vehicle(foe->getPlace(),
                                                          foe->getX(),
                                                          foe->getY());
