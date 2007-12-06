@@ -166,7 +166,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
 				// we'll have to get a new one.
 				if (! pathPtr)
 				{
-					dbg("won't reach\n");
+					//dbg("won't reach\n");
 					astar_path_destroy(cachedPath);
 					cachedPath = NULL;
 					cachedPathPlace = NULL;
