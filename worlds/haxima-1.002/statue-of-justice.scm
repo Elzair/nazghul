@@ -26,7 +26,9 @@
     (cond ((null? kchar)
            (say knpc "Do you wish to withdraw your charge?")
            (cond ((yes? kpc)
-                  (say knpc "Cursed are you for trifling with serious matters. Be gone, and do not strike me again in vain.")
+                  (say knpc "Cursed are you: for trifling with serious matters, "
+                       "a trifling nuisance will haunt your sleep.")
+                  (unrest-curse-apply-new kpc 'insect-party-l1)
                   (kern-conv-end))
                  (else
                   (soj-accuse knpc kpc))
@@ -93,8 +95,9 @@
 (define (soj-hail knpc kpc)
   (say knpc "Do you seek justice?")
   (cond ((no? kpc)
-         (say knpc "Then may injustice befall you.")
-         (kern-obj-add-effect (kern-char-get-party kpc) ef_plague_of_flies nil)
+         (say knpc "Then cursed are you: an unjust man would live among beasts, "
+              "so beats will give you no rest.")
+         (unrest-curse-apply-new kpc 'wolf-party-l2)
          (kern-conv-end))
         (else
          (say knpc "Speak truly, or be cursed. Do you accuse another of theft, false witness, oath-breaking, or betrayal?")

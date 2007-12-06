@@ -354,3 +354,8 @@
   (ptype-mk "pride of griffins" s_griffin faction-monster 3 5
             (pgroup-mk 'griffin "1d2")
             ))
+
+(define insect-party-l1
+  (ptype-mk "cloud of insects" s_insects faction-monster 1 5
+            (pgroup-mk 'insect "1d3")
+            ))
