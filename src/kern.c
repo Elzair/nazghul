@@ -8577,9 +8577,13 @@ KERN_API_CALL(kern_ambush_while_camping)
          * generate a random one. */
         dx = party->getDx();
         dy = party->getDy();
-        if ((! dx && ! dy) || (dx && dy)) {
-                dx = - player_party->getDx();
-                dy = - player_party->getDy();
+        while (! dx && ! dy) {
+                /* gmcnutt: the following is not random. Was there a reason for
+                 * it? */
+                //dx = - player_party->getDx();
+                //dy = - player_party->getDy();
+                dx = (rand() % 3) - 1;
+                dy = (rand() % 3) - 1;
         }
 
         /* Partial bugfix for 1612006: If the player is on impassable terrain,
