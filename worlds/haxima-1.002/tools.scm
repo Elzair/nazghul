@@ -2,32 +2,6 @@
 ;; tools.scm -- "usable" stuff that isn't a book, scroll or potion
 ;; ----------------------------------------------------------------------------
 
-(kern-mk-sprite-set 'ss_tools 32 32 8 8 0 0 "tools.png")
-
-(kern-mk-sprite 's_torch    ss_tools 1 0 #f 0)
-(kern-mk-sprite 's_picklock ss_tools 1 1 #f 0)
-(kern-mk-sprite 's_gem      ss_tools 1 2 #f 0)
-(kern-mk-sprite 's_shovel   ss_tools 1 3 #f 0)
-(kern-mk-sprite 's_pick     ss_tools 1 4 #f 0)
-(kern-mk-sprite 's_sextant  ss_tools 1 5 #f 0)
-(kern-mk-sprite 's_chrono   ss_tools 1 6 #f 0)
-(kern-mk-sprite 's_clock_stopped    ss_tools 1 7 #f 0)
-(kern-mk-sprite 's_clock_body    ss_tools 2 8 #f 0)
-(kern-mk-sprite 's_clock_hand_n    ss_tools 1 10 #f 0)
-(kern-mk-sprite 's_clock_hand_ne    ss_tools 1 11 #f 0)
-(kern-mk-sprite 's_clock_hand_se    ss_tools 1 12 #f 0)
-(kern-mk-sprite 's_clock_hand_s    ss_tools 1 13 #f 0)
-(kern-mk-sprite 's_clock_hand_sw    ss_tools 1 14 #f 0)
-(kern-mk-sprite 's_clock_hand_nw    ss_tools 1 15 #f 0)
-(kern-mk-sprite 's_clock_spin            ss_tools 6 10 #f 0)
-(kern-mk-sprite 's_mirror_fg             ss_tools 1 16 #f 0)
-(kern-mk-sprite 's_mirror_bg_flagstones   ss_tools 1 17 #f 0)
-(kern-mk-sprite 's_mirror_bg   ss_tools 1 18 #f 0)
-(kern-mk-sprite 's_bookshelf   ss_tools 1 23 #f 0)
-(kern-mk-sprite 's_grease      ss_tools 1 24 #f 0)
-(kern-mk-sprite 's_rope_hook   ss_tools 1 25 #f 0)
-
-
 ;; torch -- use two in-lor spells
 (mk-usable-item 't_torch "torch" s_torch norm
                 (lambda (kobj kuser) 

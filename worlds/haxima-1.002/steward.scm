@@ -178,21 +178,25 @@
 
 (define (mk-steward)
   (bind 
-   (kern-mk-char 'ch_steward         ; tag
-                 "Victoria"          ; name
-                 sp_human            ; species
-                 nil                 ; occ
-                 s_lady              ; sprite
-                 faction-glasdrin         ; starting alignment
-                 1 3 0               ; str/int/dex
-                 0 0                 ; hp mod/mult
-                 0 0                 ; mp mod/mult
-                 max-health -1 max-health 0 6  ; hp/xp/mp/AP_per_turn/lvl
-                 #f                  ; dead
-                 'stew-conv          ; conv
-                 sch_stew            ; sched
-                 'townsman-ai                 ; special ai
-                 (mk-inventory (list (list 1 t_sword_4)))    ; container
-                 nil                 ; readied
-                 )
+   (kern-char-force-drop
+    (kern-mk-char 'ch_steward         ; tag
+                  "Victoria"          ; name
+                  sp_human            ; species
+                  nil                 ; occ
+                  s_lady              ; sprite
+                  faction-glasdrin         ; starting alignment
+                  1 3 0               ; str/int/dex
+                  0 0                 ; hp mod/mult
+                  0 0                 ; mp mod/mult
+                  max-health -1 max-health 0 6  ; hp/xp/mp/AP_per_turn/lvl
+                  #f                  ; dead
+                  'stew-conv          ; conv
+                  sch_stew            ; sched
+                  'townsman-ai                 ; special ai
+                  (mk-inventory (list (list 1 t_sword_4)
+                                      (list 1 t_stewardess_chest_key)
+                                      ))    ; container
+                  nil                 ; readied
+                  )
+    #t)
    (stew-mk)))
