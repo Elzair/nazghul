@@ -785,5 +785,5 @@
 
 (kern-mk-sprite 's_chest              ss_tools 1 32 #f 0)
 (kern-mk-sprite 's_locked_chest       ss_tools 1 33 #f 0)
-(kern-mk-sprite 's_magic_chest        ss_tools 3 34 #f 0)
-(kern-mk-sprite 's_magic_locked_chest ss_tools 3 37 #f 0)
+(kern-mk-sprite 's_magic_chest        ss_tools 4 34 #f 0)
+(kern-mk-sprite 's_magic_locked_chest ss_tools 4 38 #f 0)
