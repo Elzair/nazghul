@@ -79,6 +79,31 @@
                       kactor 1 (occ-ability-crafting kactor)
                       (mk-ifc-query 'butcher)))
 
+;; Todo:
+;; -Show sprites in selection UI
+;; -Select by type, not name, in case types have the same name
+;; -Roll to fail, which should have consequences
+(define (skill-pickpocket kactor)
+  (let ((ktarg (get-target-kchar kactor 1)))
+    (if (or (null? ktarg) 
+            (equal? ktarg kactor))
+        result-no-target
+        (let* ((inv (kern-char-get-inventory ktarg))
+               (item-names (map (lambda (ie) (kern-type-get-name (car ie))) inv))
+               )
+          (let ((item-name (apply kern-ui-select-from-list item-names)))
+            (cond ((null? item-name) result-no-target)
+                  (else
+                   (define (name-to-type inv)
+                     (if (equal? item-name (kern-type-get-name (caar inv)))
+                         (caar inv)
+                         (name-to-type (cdr inv))))
+                   (let ((ktype (name-to-type inv)))
+                     (kern-obj-remove-from-inventory ktarg ktype 1)
+                     (kern-obj-add-to-inventory kactor ktype 1)
+                     result-ok
+                     ))))))))
+
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
 ;;
@@ -102,7 +127,7 @@
 
 (define sk_unlock 
   (mk-skill "Unlock" "Unlock a door with a picklock"
-            base-skill-ap
+            1
             2 
             #f 
             #f
@@ -114,7 +139,7 @@
 
 (define sk_jump
   (mk-skill "Jump" "Jump over impassable terrain"
-            (* base-skill-ap 2)
+            2
             1 
             #f
             #f
@@ -126,7 +151,7 @@
 
 (define sk_detect_trap
   (mk-skill "Detect Trap" "Check if a door or chest is trapped"
-            (* base-skill-ap 2)
+            2
             2
             #f
             #f
@@ -138,7 +163,7 @@
 
 (define sk_arm_trap
   (mk-skill "Arm Trap" "Allows character to use beartraps and caltrops"
-            (* base-skill-ap 2)
+            2
             2
             #f
             #t
@@ -150,7 +175,7 @@
 
 (define sk_sprint
   (mk-skill "Sprint" "Move quickly, in a straight line, for a short distance"
-            base-skill-ap
+            1
             1
             #f
             #f
@@ -163,7 +188,7 @@
 
 (define sk_wriggle
   (mk-skill "Wriggle" "Squeeze through tight spots"
-            base-skill-ap  ;; ap
+            1              ;; ap
             1              ;; mp
             #f             ;; wilderness?
             #f             ;; passive?
@@ -176,7 +201,7 @@
 (define sk_disarm_trap
   ;; fixme: should some special tools be required?
   (mk-skill "Disarm Trap" "Disarm a trap on a door or chest"
-            base-skill-ap  ;; ap
+            1              ;; ap
             1              ;; mp
             #f             ;; wilderness?
             #f             ;; passive?
@@ -188,7 +213,7 @@
 
 (define sk_stealth
   (mk-skill "Stealth" "Avoid detection"
-            base-skill-ap  ;; ap
+            1              ;; ap
             1              ;; mp
             #f             ;; wilderness?
             #f             ;; passive?
@@ -200,7 +225,7 @@
 
 (define sk_reach
   (mk-skill "Reach" "Handle objects more than one tile away"
-            base-skill-ap  ;; ap
+            1              ;; ap
             1              ;; mp
             #f             ;; wilderness?
             #t             ;; passive?
@@ -212,7 +237,7 @@
 
 (define sk_reach
   (mk-skill "Reach" "Handle objects more than one tile away"
-            base-skill-ap  ;; ap
+            1              ;; ap
             1              ;; mp
             #f             ;; wilderness?
             #t             ;; passive?
@@ -224,11 +249,23 @@
 
 (define sk_butcher
   (mk-skill "Butcher" "Turn an animal corpse into food or materials"
-            base-skill-ap  ;; ap
+            1              ;; ap
             1              ;; mp
             #f             ;; wilderness?
             #f             ;; passive?
             'skill-butcher ;; yusage 
+            nil            ;; yusage check
+            nil            ;; tools (fixme: add knife)
+            nil            ;; material
+            ))
+
+(define sk_pickpocket
+  (mk-skill "Pickpocket" "Take something from an NPC"
+            1              ;; ap
+            1              ;; mp
+            #f             ;; wilderness?
+            #f             ;; passive?
+            'skill-pickpocket ;; yusage 
             nil            ;; yusage check
             nil            ;; tools (fixme: add knife)
             nil            ;; material
@@ -250,6 +287,7 @@
                                     (list 1 sk_disarm_trap)
                                     (list 1 sk_stealth)
                                     (list 1 sk_reach)
+                                    (list 1 sk_pickpocket)
                                     )))
 
 (define sks_wright
@@ -267,6 +305,7 @@
                                  (list 1 sk_disarm_trap)
                                  (list 1 sk_stealth)
                                  (list 1 sk_reach)
+                                 (list 1 sk_pickpocket)
                                  
                                  (list 1 sk_butcher)
                                  )))
