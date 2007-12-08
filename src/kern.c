@@ -6765,7 +6765,7 @@ KERN_API_CALL(kern_ui_select_item)
         class Character *ch;
 
         ch = (class Character*)unpack_obj(sc, &args, "kern-ui-select-item");
-        if (!ch)
+        if (!ch || !ch->getInventoryContainer())
                 return sc->NIL;
 
         omode = statusGetMode();
