@@ -44,14 +44,6 @@
         nil
         (get-being-at loc))))
 
-(define (user-cast-ranged-targeted-spell kchar range proc)
-  (let ((ktarg (get-target-kchar kchar range)))
-    (if (null? ktarg)
-        result-no-target
-        (begin
-          (proc kchar ktarg)
-          result-ok))))
-
 ;;--------------------------------------------------------------
 ;; Need to sort this stuff out
 ;;--------------------------------------------------------------

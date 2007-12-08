@@ -1437,3 +1437,17 @@
   (if ((kobj-ifc ktarg) 'butcher ktarg caster)
       result-ok
       result-no-effect))
+
+(define (powers-pickpocket kactor ktarg power)
+  (let ((ktype (kern-ui-select-item ktarg)))
+    (cond ((null? ktype) result-no-effect)
+          ((contest-of-skill power (occ-ability-thief ktarg))
+           (kern-obj-remove-from-inventory ktarg ktype 1)
+           (kern-obj-add-to-inventory kactor ktype 1)
+           result-ok
+           )
+          (else
+           (harm-relations kactor ktarg)
+           result-failed
+           ))))
+  
