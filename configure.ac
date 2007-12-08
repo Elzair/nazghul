@@ -177,6 +177,14 @@ AC_CHECK_HEADER([SDL_image.h],
                [AC_MSG_ERROR([*** SDL_image include files not found!
 You should install development package.])])
 
+dnl Check specifically for SDL_mixer library, i.e. -lSDL_mixer switch
+AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio)
+
+AC_CHECK_HEADER([SDL_mixer.h],
+               [],
+               [AC_MSG_ERROR([*** SDL_mixer include files not found!
+You should install development package.])])
+
 dnl ---------------------------------------------------------------------------
 dnl 8. Output
 dnl      This is done by invoking AC_OUTPUT.
