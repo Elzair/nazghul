@@ -6762,9 +6762,14 @@ KERN_API_CALL(kern_ui_select_item)
 {
         enum StatusMode omode;
         struct inv_entry *ie;
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-ui-select-item");
+        if (!ch)
+                return sc->NIL;
 
         omode = statusGetMode();
-        statusSetMode(Drop);
+        statusBrowseContainer(ch->getInventoryContainer(), "Select");
         ie = ui_select_item();
         statusSetMode(omode);
 

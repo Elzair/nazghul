@@ -1746,21 +1746,6 @@ void statusSetMode(enum StatusMode mode)
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 		
-	case Drop:
-		switch_to_tall_mode();
-		status_set_title("Drop");
-		Status.topLine = 0;
-		Status.curLine = 0;
-		Status.container = player_party->inventory;
-		Status.filter = &stat_drop_filter;
-		Status.maxLine = Status.container->
-				filter_count(Status.filter) - Status.numLines;
-		Status.paint = stat_show_container;
-		Status.scroll = stat_scroll_container;
-		Status.show_thing = status_show_generic_object_type;
-		Status.selectedEntry = Status.container->first(Status.filter);
-		break;
-		
 	case Page:
 		switch_to_tall_mode();
 		mySetPageMode();
@@ -2111,19 +2096,18 @@ void statusSetSuperGenericData(struct stat_super_generic_data *data)
 	data->refcount++;
 }
 
-void statusBrowseContainer(class Container *container,
-									struct filter *filter,
-									char *title)
+void statusBrowseContainer(class Container *container, char *title)
 {
 	switch_to_tall_mode();
 	status_set_title(title);
 	Status.topLine = 0;
 	Status.curLine = 0;
 	Status.container = container;
-	Status.filter = filter;
-	Status.maxLine = container->filter_count(filter) - Status.numLines;
+	Status.filter = &stat_drop_filter;
+	Status.maxLine = container->filter_count(Status.filter) - Status.numLines;
 	Status.paint = stat_show_container;
 	Status.scroll = stat_scroll_container;
 	Status.show_thing = status_show_generic_object_type;
-	Status.selectedEntry = container->first(filter);
+	Status.selectedEntry = container->first(Status.filter);
+        statusRepaint();
 }

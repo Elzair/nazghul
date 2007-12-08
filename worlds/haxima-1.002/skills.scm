@@ -83,26 +83,20 @@
 ;; -Show sprites in selection UI
 ;; -Select by type, not name, in case types have the same name
 ;; -Roll to fail, which should have consequences
+;; -We should have a separate skill (or maybe just x)amine) to show an NPC
+;;  inventory. For now I'm charging mana points just to peek.
 (define (skill-pickpocket kactor)
   (let ((ktarg (get-target-kchar kactor 1)))
     (if (or (null? ktarg) 
             (equal? ktarg kactor))
         result-no-target
-        (let* ((inv (kern-char-get-inventory ktarg))
-               (item-names (map (lambda (ie) (kern-type-get-name (car ie))) inv))
-               )
-          (let ((item-name (apply kern-ui-select-from-list item-names)))
-            (cond ((null? item-name) result-no-target)
-                  (else
-                   (define (name-to-type inv)
-                     (if (equal? item-name (kern-type-get-name (caar inv)))
-                         (caar inv)
-                         (name-to-type (cdr inv))))
-                   (let ((ktype (name-to-type inv)))
-                     (kern-obj-remove-from-inventory ktarg ktype 1)
-                     (kern-obj-add-to-inventory kactor ktype 1)
-                     result-ok
-                     ))))))))
+        (let ((ktype (kern-ui-select-item ktarg)))
+          (cond ((null? ktype) result-no-effect)
+                (else
+                 (kern-obj-remove-from-inventory ktarg ktype 1)
+                 (kern-obj-add-to-inventory kactor ktype 1)
+                 result-ok
+                 ))))))
 
 ;;----------------------------------------------------------------------------
 ;; Skill declarations
@@ -267,7 +261,7 @@
             #f             ;; passive?
             'skill-pickpocket ;; yusage 
             nil            ;; yusage check
-            nil            ;; tools (fixme: add knife)
+            nil            ;; tools
             nil            ;; material
             ))
 

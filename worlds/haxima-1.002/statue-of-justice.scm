@@ -46,7 +46,7 @@
 
 (define (soj-get-evidence knpc kpc kchar)
   (say knpc (kern-obj-get-name kpc) ", produce your evidence.")
-  (let ((ktype (kern-ui-select-item)))
+  (let ((ktype (kern-ui-select-item kpc)))
     (cond ((null? ktype)
            (say knpc "Do you have any other evidence?")
            (cond ((no? kpc)
@@ -72,7 +72,7 @@
            )
           (else
            (say knpc "Justice will weigh the evidence.")
-           ;(log-dots 10 1000)
+           (log-dots 10 1000)
            (say knpc (kern-obj-get-name kchar) ", you are guilty of betrayal. Your punishment is death, and may your name be a curse forevermore.")
            (kern-being-set-current-faction kchar faction-monster)
            (player-stewardess-trial-done!)

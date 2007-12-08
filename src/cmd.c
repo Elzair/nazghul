@@ -3924,7 +3924,7 @@ void cmdDrop(class Character *actor)
         cmdwin_spush("Drop");
 
         omode = statusGetMode();
-        statusSetMode(Drop);
+        statusBrowseContainer(actor->getInventoryContainer(), "Drop");
         ie = ui_select_item();
         statusSetMode(omode);
 
@@ -3943,10 +3943,14 @@ void cmdDrop(class Character *actor)
                 return;
         }
 
-        /* prompt for a count */
-        quantity = ui_get_quantity(maxq);
-        if (!quantity) {
-                return;
+        /* prompt for a count (unless there is only one) */
+        if (ie->count == 1) {
+                quantity = 1;
+        } else {
+                quantity = ui_get_quantity(maxq);
+                if (!quantity) {
+                        return;
+                }
         }
 
         /* prompt for location */

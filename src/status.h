@@ -84,8 +84,7 @@ enum StatusMode {
         GenericList,
         StringList,
         DisableStatus,
-        SuperGeneric,
-        Drop
+        SuperGeneric
 };
 					
 enum StatusSelection {
@@ -201,12 +200,9 @@ extern void statusSetSuperGenericData(struct stat_super_generic_data *data);
  * for the current highlighteed item, call statusGetSelected(InventoryItem).
  *
  * @param container is the container object to browse
- * @param filter selects which objects to show
  * @param title is shown at the top of the status window
  */
-extern void statusBrowseContainer(class Container *container,
-                                  struct filter *filter,
-                                  char *title);
+extern void statusBrowseContainer(class Container *container, char *title);
 
 END_DECL
 
