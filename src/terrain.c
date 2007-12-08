@@ -228,8 +228,19 @@ struct terrain *palette_terrain_for_glyph(struct terrain_palette *palette,
 
         list_for_each(&palette->set, elem) {
                 entry = outcast(elem, struct terrain_palette_entry, list);
-                if (! strcmp(glyph, entry->glyph))
+                if (! strcmp(glyph, entry->glyph)) {
+
+                        /* Odds are good that we'll want this same terrain in
+                         * the near future, so move it to the front of the list
+                         * (if not already there) to improve performance during
+                         * startup. */
+                        if (elem != palette->set.next) {
+                                list_remove(elem);
+                                list_add(&palette->set, elem);
+                        }
+
                         return entry->terrain;
+                }
         }
 
         return 0;  // Did not find the terrain
