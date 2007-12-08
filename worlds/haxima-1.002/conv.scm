@@ -335,25 +335,25 @@
 ;; do the interjection. If mem-tag is nil then a party member (other than the
 ;; speaker) will be chosen at random. msg is the text of the comment. If kpc is
 ;; the only member of the party then the aside will not do anything.
-(define (aside kpc kchar-tag msg)
-	;;(println msg)
-	(if (null? kchar-tag)
-		(let ((members (filter (lambda (kchar)
-					(not (eqv? kchar kpc)))
-					(kern-party-get-members (kern-get-player)))
-				))
-			(if (not (null? members))
-				(let ((kchar (random-select members)))
-					(say kchar msg)
-					#t)
-				#f)
-			)
-		(if (in-player-party? kchar-tag)
-			(begin
-				(say (eval kchar-tag) msg)
-				#t)
-			#f)
-	))
+(define (aside kpc kchar-tag . msg)
+  ;;(println msg)
+  (if (null? kchar-tag)
+      (let ((members (filter (lambda (kchar)
+                               (not (eqv? kchar kpc)))
+                             (kern-party-get-members (kern-get-player)))
+                     ))
+        (if (not (null? members))
+            (let ((kchar (random-select members)))
+              (say kchar msg)
+              #t)
+            #f)
+        )
+      (if (in-player-party? kchar-tag)
+          (begin
+            (kern-conv-say (eval kchar-tag) msg)
+            #t)
+          #f)
+      ))
          
 ;;----------------------------------------------------------------------------
 ;; Quests

@@ -51,7 +51,9 @@
            (say knpc "Do you have any other evidence?")
            (cond ((no? kpc)
                   (shake-map 15)
-                  (say knpc "For accusing another with insufficient evidence, you are guilty of bearing false witness. Your punishment is exile.")
+                  (say knpc "For accusing another with insufficient evidence, "
+                       "you are guilty of bearing false witness. "
+                       "Your punishment is exile.")
                   ;; todo: implement exile
                   (make-enemies knpc kpc)
                   (kern-obj-relocate kpc
@@ -73,7 +75,9 @@
           (else
            (say knpc "Justice will weigh the evidence.")
            (log-dots 10 1000)
-           (say knpc (kern-obj-get-name kchar) ", you are guilty of betrayal. Your punishment is death, and may your name be a curse forevermore.")
+           (say knpc (kern-obj-get-name kchar) ", you are guilty of betrayal. Your punishment is death, "
+                "and may your name be a curse forevermore.")
+           (aside kpc 'ch_ini "Justice at last!")
            (kern-being-set-current-faction kchar faction-monster)
            (player-stewardess-trial-done!)
 

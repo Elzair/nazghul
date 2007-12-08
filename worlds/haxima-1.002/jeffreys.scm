@@ -50,6 +50,8 @@
               "But I knew something was amiss, I should have acted on my suspicions. "
               "The Commander of Glasdrin must never fail in diligence. "
               "For that reason, I have resigned my post.")
+         (aside kpc 'ch_ini "Don't pretend innocence, you corrupt old toad. "
+                "Should we ever meet on the field it will be the end of one of us.")
          (kern-conv-end)
          )
         (else

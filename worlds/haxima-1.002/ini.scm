@@ -106,7 +106,7 @@
                 (say knpc "Justice has been served, and now I can grieve her loss." ))
                (else
                 (if (ask? knpc kpc "The Stewardess is powerful, but there is a way to see that justice is done. An ancient way. A dangerous way. Will you hear me?")
-                    (say knpc "There is a status in the center of Glasdrin. "
+                    (say knpc "There is a statue in the center of Glasdrin. "
                          "If you strike it with your sword, you will invoke the oldest law of the city, and a trial will be held. "
                          "But we dare not strike it until we have convincing evidence against the Stewardess, because if our evidence is lacking then judgment will be passed on us instead!")
                     (say knpc "We can't let the Stewardess get away with this. Someone must call her to account!")))))

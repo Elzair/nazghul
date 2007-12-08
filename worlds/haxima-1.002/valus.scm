@@ -43,8 +43,9 @@
          )))
 
 (define (valus-join kpc kpc)
-  (say knpc "On the contrary, why don't you open the door and join me?")
-  )
+  (cond ((player-stewardess-trial-done?) (say knpc "My duties keep me here."))
+        (else (say knpc "On the contrary, why don't you open the door and join me?"))
+        ))
 
 ;; Special
 (define (valus-comm knpc kpc)
@@ -56,6 +57,7 @@
 (define (valus-pet knpc kpc)
   (say knpc "After Absalot, she blamed me for the deaths of civilians, "
        "and accused me of drunkenness and unnatural acts with trolls.")
+  (aside 'ch_ini "I thought the part about the trolls was true.")
   )
 
 (define (valus-trol knpc kpc)
