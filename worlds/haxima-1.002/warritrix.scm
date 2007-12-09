@@ -14,6 +14,12 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Clarissa (known as the Warritrix) was in life a powerful female Warrior
+;; of superlative might and warcraft.  Now slain, she may be encountered
+;; as a shade, summoned by the use of the Rune of Leadership,
+;; found among her effects where her corpse lies (in the Broken Sanctuary
+;; in the Lost Halls).
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -131,8 +137,8 @@
 
        ;; basics
        (method 'hail warr-hail)
-       (method 'bye warr-bye)
-       (method 'job warr-job)
+       (method 'bye  warr-bye)
+       (method 'job  warr-job)
        (method 'name warr-name)
        (method 'join warr-join)
        

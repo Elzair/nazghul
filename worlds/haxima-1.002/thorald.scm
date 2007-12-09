@@ -1,3 +1,6 @@
+;; Thorald is a character in the Tutorial game.
+
+
 (define (thorald-mixi knpc kpc)
   (say knpc "To M)ix spells first press the 'M' key. "
        "Then type the first letter of each spell syllable followed by ENTER. "

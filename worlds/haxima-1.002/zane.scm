@@ -31,7 +31,9 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Zane is a ranger of the Fens. He camps at the Enchanter's Tower.
+;; Zane is a ranger of the Fens. He camps at the Enchanter's Tower,
+;; where he sells various outdoorsman gear needful for questing among 
+;; the poisonous swamps of the region.
 ;;----------------------------------------------------------------------------
 (define zane-merch-msgs
   (list nil ;; closed

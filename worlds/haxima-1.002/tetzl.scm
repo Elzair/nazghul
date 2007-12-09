@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the monster village of Kun.
 ;;----------------------------------------------------------------------------
 (define tetzl-bed campfire-3)
 (define tetzl-mealplace cantina-1)
@@ -30,6 +32,11 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Tetzl is a sentient spider of giant size, 
+;; living in the monster village of Kun.
+;; 
+;; Currently, no dialog or quests, but this seems a missed opportunity...
 ;;----------------------------------------------------------------------------
 
 

@@ -5,7 +5,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
-;;
+;; 
+;; In the Tower of Brundegart (p_brundegardt_tower_4), locked outside.
 ;;----------------------------------------------------------------------------
 
 ;;----------------------------------------------------------------------------
@@ -22,7 +23,14 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Tim is a ranger of the Fens. He camps at the Enchanter's Tower.
+;; Tim is a maimed, drooling madman, currently trapped outside 
+;; the Tower of Brundegart.
+;; 
+;; Once a seeker of knowledge (and power), 
+;; his body was ravaged by griffins (and their hungry chicks), 
+;; and his mind broken by contact with the EYE of Brundegart.
+;; (One rather assumes the maiming did not help his mental state, 
+;; for that matter...)
 ;;----------------------------------------------------------------------------
 (define (tim-hail knpc kpc)
   (meet "You meet a drooling madman with only one arm.")
@@ -57,7 +65,7 @@
 
 (define (tim-lion knpc kpc)
   (say knpc "[He shrieks and cowers] Do you see them?! "
-       "Have they come for my other arm? The chicks are so hungry! So cruel!"))
+       "Have they come for my other arm?  The chicks are so hungry! So cruel!"))
 
 (define tim-conv
   (ifc basic-conv

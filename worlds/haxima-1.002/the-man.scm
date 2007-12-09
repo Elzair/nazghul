@@ -5,6 +5,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In The MAN's hideout, a secure undisclosed location.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_man
                (list 0  0 mans-bed    "sleeping")
@@ -25,6 +27,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Yvonne, known as "The MAN", is a female rogue of pre-eminent skill,
+;; living in a secure undisclosed location (The MAN's hideout).
+;; 
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -167,8 +173,8 @@
        ;; basics
        (method 'default man-default)
        (method 'hail man-hail)
-       (method 'bye man-bye)
-       (method 'job man-job)
+       (method 'bye  man-bye)
+       (method 'job  man-job)
        (method 'name man-name)
        (method 'join man-join)
        

@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the monster village of Kun.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_tooth
                (list 0 0 campfire-4 "sleeping")
@@ -21,6 +23,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Tooth is a nervous ratling, running a black market and pawn shop 
+;; in the monster village of Kun.  It appears that he is suffering from 
+;; the surplus (or lack) of some stimulant.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -108,8 +114,8 @@
    ))
 
 (define (tooth-trade knpc kpc) (conv-trade knpc kpc "trade" tooth-merch-msgs tooth-catalog))
-(define (tooth-buy knpc kpc) (conv-trade knpc kpc "buy" tooth-merch-msgs tooth-catalog))
-(define (tooth-sell knpc kpc) (conv-trade knpc kpc "sell" tooth-merch-msgs tooth-catalog))
+(define (tooth-buy   knpc kpc) (conv-trade knpc kpc "buy"   tooth-merch-msgs tooth-catalog))
+(define (tooth-sell  knpc kpc) (conv-trade knpc kpc "sell"  tooth-merch-msgs tooth-catalog))
 
 (define tooth-conv
   (ifc nil
@@ -117,13 +123,13 @@
        ;; basics
        (method 'default tooth-default)
        (method 'hail tooth-hail)
-       (method 'bye tooth-bye)
-       (method 'job tooth-job)
+       (method 'bye  tooth-bye)
+       (method 'job  tooth-job)
        (method 'name tooth-name)
        (method 'join tooth-join)
 
        (method 'trad tooth-trade)
-       (method 'buy tooth-buy)
+       (method 'buy  tooth-buy)
        (method 'sell tooth-sell)
        (method 'deal tooth-trade)
        ))

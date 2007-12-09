@@ -7,7 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
-;;
+;; 
+;; Initially, in a prison cell in the dungeons below Glasdrin.
 ;; After the trial of the Stewardess, Valus is assigned Jeffries schedule.
 ;;----------------------------------------------------------------------------
 
@@ -18,6 +19,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Valus is an imprisoned nobleman, once in the service of the late 
+;; Steward of Glasdrin, now languishing in the dungeons below Glasdrin.
+;; 
 ;;----------------------------------------------------------------------------
 
 ;; Basics...

@@ -5,6 +5,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Bole
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_thud
                (list 0  0  bole-bedroom-thud "idle")
@@ -23,6 +25,14 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Thud is the bodyguard of Kathryn, and currently abides in Bole,
+;; where they seek a certain thief.  Various other NPCs suggest
+;; that Thud is at best half human, perhaps having ogre blood,
+;; or a sorcerous (summoned or vat-born) origin...
+;; 
+;; Thud is a potential party member (and an eventual betrayer).
+;; He accompanies Kathrun, and joins the party when and if she does.
 ;;----------------------------------------------------------------------------
 (define (thud-hail knpc kpc)
   (say knpc "[You are certain that the figure before you is part ogre. "
@@ -68,7 +78,7 @@
        (method 'bye 
                (lambda (knpc kpc) 
                  (say knpc "[His eyes bore into your back as you walk away]")))
-       (method 'job thud-job)
+       (method 'job  thud-job)
        (method 'name thud-name)
        (method 'join thud-join)
 
