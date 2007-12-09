@@ -9,6 +9,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Old Absalot
 ;;----------------------------------------------------------------------------
 (define silas-bed oa-bed1)
 (define silas-mealplace oa-tbl3)
@@ -38,6 +40,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Silas is the leader of the evil cult of the Accursed.
+;; He is a wizard of considerable power.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -335,8 +340,8 @@
        ;; basics
        (method 'default silas-default)
        (method 'hail silas-hail)
-       (method 'bye silas-bye)
-       (method 'job silas-job)
+       (method 'bye  silas-bye)
+       (method 'job  silas-job)
        (method 'name silas-name)
        (method 'join silas-join)
 
@@ -353,7 +358,7 @@
        (method 'good silas-good)
        (method 'help silas-help)
        (method 'hist silas-hist)
-       (method 'key silas-key)
+       (method 'key  silas-key)
        (method 'keys silas-key)
        (method 'noss silas-noss)
        (method 'ques silas-ques)

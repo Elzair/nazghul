@@ -7,6 +7,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In the monster town of Kun.
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_slywan
                (list 0 0 kun-road "working")
@@ -24,6 +26,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Slywan is a thief (an accomplished pickpocket) 
+;; living in the monster village of Kun.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -86,8 +91,8 @@
        ;; basics
        (method 'default slywan-default)
        (method 'hail slywan-hail)
-       (method 'bye slywan-bye)
-       (method 'job slywan-job)
+       (method 'bye  slywan-bye)
+       (method 'job  slywan-job)
        (method 'name slywan-name)
        (method 'join slywan-join)
 

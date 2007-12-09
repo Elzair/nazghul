@@ -4,6 +4,8 @@
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
+;; 
+;; In Glasdrin
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_stew
                (list 0  0  gv-bed       "sleeping")
@@ -25,6 +27,9 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
+;; 
+;; Victoria is the temporal ruler of Glasdrin, 
+;; bearing the title of Stewardess.
 ;;----------------------------------------------------------------------------
 
 ;; Basics...
@@ -158,8 +163,8 @@
        ;; basics
        (method 'default stew-default)
        (method 'hail stew-hail)
-       (method 'bye stew-bye)
-       (method 'job stew-job)
+       (method 'bye  stew-bye)
+       (method 'job  stew-job)
        (method 'name stew-name)
        (method 'join stew-join)
 
