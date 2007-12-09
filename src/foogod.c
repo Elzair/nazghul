@@ -31,6 +31,7 @@
 #include "sprite.h"
 #include "images.h"
 #include "effect.h"
+#include "cfg.h"
 
 #include <SDL_image.h>
 
@@ -53,60 +54,67 @@ struct foogod {
 } Foogod;
 
 /* XPM */
-static char * foogod_progress_bar_xpm[] = {
-        "24 16 16 1",
-        " 	c None",
-        ".	c #000000",
-        "+	c #3E033E",
-        "@	c #260226",
-        "#	c #C880C8",
-        "$	c #CE8FCE",
-        "%	c #D59ED5",
-        "&	c #D298D2",
-        "*	c #7F007F",
-        "=	c #FFC8FF",
-        "-	c #FFDFFF",
-        ";	c #FFFEFF",
-        ">	c #D9A8D9",
-        ",	c #9D3C9D",
-        "'	c #5F005F",
-        ")	c #620462",
-        "..++++++++++++++++++++..",
-        ".@++++++++++++++++++++@.",
-        "++################$$%%++",
-        "++################$%%%&+",
-        "**##==============--;;&&",
-        "**##==============--;;&&",
-        "**################$->>>,",
-        "**################$$>>,,",
-        "''********************''",
-        "''********************''",
-        "'''''''''''''''''''''')'",
-        "''''''''''''''''''''''''",
-        "@@''''''''''''''''''''@@",
-        "@@''''''''''''''''''''@@",
-        ".@@@@@@@@@@@@@@@@@@@@@@.",
-        "..@@@@@@@@@@@@@@@@@@@@.."};
+//static char * foogod_progress_bar_xpm[] = {
+//        "24 16 16 1",
+//        " 	c None",
+//        ".	c #000000",
+//        "+	c #3E033E",
+//        "@	c #260226",
+//        "#	c #C880C8",
+//        "$	c #CE8FCE",
+//        "%	c #D59ED5",
+//        "&	c #D298D2",
+//        "*	c #7F007F",
+//        "=	c #FFC8FF",
+//        "-	c #FFDFFF",
+//        ";	c #FFFEFF",
+//        ">	c #D9A8D9",
+//        ",	c #9D3C9D",
+//        "'	c #5F005F",
+//        ")	c #620462",
+//        "..++++++++++++++++++++..",
+//        ".@++++++++++++++++++++@.",
+//        "++################$$%%++",
+//        "++################$%%%&+",
+//        "**##==============--;;&&",
+//        "**##==============--;;&&",
+//        "**################$->>>,",
+//        "**################$$>>,,",
+//        "''********************''",
+//        "''********************''",
+//        "'''''''''''''''''''''')'",
+//        "''''''''''''''''''''''''",
+//        "@@''''''''''''''''''''@@",
+//        "@@''''''''''''''''''''@@",
+//        ".@@@@@@@@@@@@@@@@@@@@@@.",
+//        "..@@@@@@@@@@@@@@@@@@@@.."};
 
 static int foogod_load_progress_bar_sprites(void)
 {
         int i;
+        char *fname = cfg_get("progress-bar-image-filename");
 
 	Foogod.image = (struct images *)calloc(1, sizeof(*Foogod.image));
         assert(Foogod.image);
 
-        Foogod.image->w       = 8;
-        Foogod.image->h       = 16;
-        Foogod.image->offx    = 0;
-        Foogod.image->offy    = 0;
-        Foogod.image->rows    = 1;
-        Foogod.image->cols    = 3;
-
-        Foogod.image->images = IMG_ReadXPMFromArray(foogod_progress_bar_xpm);
-	if (!Foogod.image->images) {
-                err("IMG_ReadXPMFromArray() failed: '%s'\n", SDL_GetError() );
-                goto fail;
+	Foogod.image = images_new(0, 8, 16, 1, 3, 0, 0, fname);
+	if (!Foogod.image) {
+	    err("images_new() failed for file '%s': '%s'\n", fname, SDL_GetError() );
+	    goto fail;
 	}
+
+        //Foogod.image->w       = 8;
+        //Foogod.image->h       = 16;
+        //Foogod.image->rows    = 1;
+        //Foogod.image->cols    = 3;
+        //Foogod.image->offx    = 0;
+        //Foogod.image->offy    = 0;
+	// 
+        //Foogod.image->images = IMG_ReadXPMFromArray(foogod_progress_bar_xpm);
+	//if (!Foogod.image->images) {
+        //        err("IMG_ReadXPMFromArray() failed: '%s'\n", SDL_GetError() );
+        //        goto fail;
+	//}
 
         for (i = 0; i < 3; i++) {
                 if (!(Foogod.progress_bar_sprites[i] = sprite_new(0, 1, i, 0, 0, Foogod.image))) {
