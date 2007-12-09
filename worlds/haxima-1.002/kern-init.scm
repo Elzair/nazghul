@@ -34,4 +34,7 @@
  "640x480-splash-image-filename" "640x480_splash.png"
  "800x480-splash-image-filename" "640x480_splash.png"
 
+;; This is the image for the sprite pieces of the progress bar.
+"progress-bar-image-filename" "progress_bar_image.png"
+
  )
