@@ -54,8 +54,11 @@ struct stat_super_generic_data {
         struct node list;
         struct node *selected;
         struct node *first_shown;
-        void (*paint)(struct stat_super_generic_data *self, struct node *node, 
-                      SDL_Rect *rect);
+        struct node *last_shown;
+        int first_to_selected;
+        int first_to_last;
+        int (*paint)(struct stat_super_generic_data *self, struct node *node, 
+                     SDL_Rect *rect);
         void (*unref)(struct stat_super_generic_data *self);
         int refcount;
         void *data;

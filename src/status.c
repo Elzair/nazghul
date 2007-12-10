@@ -1809,12 +1809,12 @@ void statusSetMode(enum StatusMode mode)
 				- Status.numLines;
 		Status.paint = stat_super_generic_paint;
 		Status.scroll = stat_super_generic_scroll;
-		if (node_list_empty(&Status.super_generic->list))
-		{
+                Status.super_generic->last_shown = 0; /* unknown */
+                Status.super_generic->first_to_selected = 0;
+                Status.super_generic->first_to_last = 0; /* unknown */
+		if (node_list_empty(&Status.super_generic->list)) {
 			Status.super_generic->first_shown = 0;
-		} 
-		else 
-		{
+		} else {
 			Status.super_generic->first_shown = Status.super_generic->list.next;
 		}
 		Status.super_generic->selected = Status.super_generic->first_shown;
@@ -2004,6 +2004,7 @@ static void stat_super_generic_paint()
 	struct node *node = Status.super_generic->first_shown;
 	struct node *end = &Status.super_generic->list;
 	int window_bottom = Status.screenRect.y + Status.screenRect.h;
+        Status.super_generic->first_to_last = 0;
 
 	/* check for empty list */
 	if (!node)
@@ -2016,25 +2017,34 @@ static void stat_super_generic_paint()
 	{
 		/* check for end-of-list */
 		if (node == end) {
-					break;
+                        break;
 		}
 		
 		/* check for bottom of window */
 		if (rect.y >= window_bottom) {
-					break;
+                        break;
 		}
 
 		/* Clip the rect to fit */
 		rect.h = window_bottom - rect.y;
 
-		/* Paint the entry */
-		Status.super_generic->paint(Status.super_generic,
-											node,
-											&rect);
+		/* Paint the entry. If it won't fit it will return non-zero,
+                 * and we won't advance any further. */
+		if (Status.super_generic->paint(Status.super_generic,
+                                                  node,
+                                                  &rect)) {
+                        break;
+                }
 
-		/* Advance the list */
-		node = node->next;
+                /* Remember the last one painted */
+                Status.super_generic->last_shown = node;
+                Status.super_generic->first_to_last++;
+                
+                /* Advance the list */
+                node = node->next;
 	}
+
+        Status.super_generic->first_to_last--; /* overcounted by 1 */
 }
 
 static void stat_super_generic_scroll(enum StatusScrollDir dir)
@@ -2052,28 +2062,46 @@ static void stat_super_generic_scroll(enum StatusScrollDir dir)
 	{
 	case ScrollPageUp:
 	case ScrollUp:
-		if (gen->first_shown != first)
-		{
-			gen->first_shown = gen->first_shown->prev;
-			gen->selected = gen->first_shown;
+		if (gen->selected != first) {
+			gen->selected = gen->selected->prev;
+                        
+                        /* If the selected item has reached the middle of the
+                         * window, and there is more stuff to see above the
+                         * window, then move the window up the list. */
+                        int selected_to_last = gen->first_to_last - gen->first_to_selected;
+                        if ((gen->first_shown != first)
+                            && (selected_to_last > gen->first_to_selected)) {
+                                gen->first_shown = gen->first_shown->prev;
+                        } else {
+                                gen->first_to_selected--;
+                        }
 		}
 		break;
 		
 	case ScrollPageDown:
 	case ScrollDown:
-		if (gen->first_shown != last)
-		{
-			gen->first_shown = gen->first_shown->next;
-			gen->selected = gen->first_shown;
+		if (gen->selected != last) {
+			gen->selected = gen->selected->next;
+                        
+                        /* If the selected item has reached the middle of the
+                         * window, and there is more stuff to see below the
+                         * window, then move the window down the list. */
+                        int selected_to_last = gen->first_to_last - gen->first_to_selected;
+                        if ((gen->last_shown != last)
+                            && (selected_to_last <= gen->first_to_selected)) {
+                                gen->first_shown = gen->first_shown->next;
+                        } else {
+                                gen->first_to_selected++;
+                        }
 		}
 		break;
 		
 	case ScrollTop:
-		gen->first_shown = first;
+		gen->selected = first;
 		break;
 		
 	case ScrollBottom:
-		gen->first_shown = last;
+		gen->selected = last;
 		break;
 		
 	default:

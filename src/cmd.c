@@ -4091,7 +4091,7 @@ static void cmd_build_skill_list(struct node *head, class Character *pc)
         /* add bonus skills? */
 }
 
-static void cmd_paint_skill(struct stat_super_generic_data *self, 
+static int cmd_paint_skill(struct stat_super_generic_data *self, 
                             struct node *node, 
                             SDL_Rect *rect)
 {
@@ -4101,13 +4101,14 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
         struct node *tnode;
         struct list *elem;
         SDL_Rect orect;
+        int complete = 0;
 
         /* remember original rect */
         orect = *rect;
 
         /* name */
         if (rect->h < ASCII_H) {
-                return;
+                return -1;
         }
         screenPrint(rect, 0, "^c+m%s^c-", skill->name);
 
@@ -4118,49 +4119,71 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
                     skill->mp, 
                     skill->ap);
         rect->y += ASCII_H;
+        rect->h -= ASCII_H;
 
         /* check for required items */
         if (! node_list_empty(&skill->tools)
             || ! list_empty(&skill->materials)) {
 
-                /* print "requires:" */
-                screenPrint(rect, 0, " ^c+G%s^c-", requires);
+                if (rect->h < ASCII_H) {
+                        complete = -1;
+                } else {
 
-                /* temporarily change x to print to right of "requires" */
-                rect->x += (strlen(requires) + 1) * ASCII_W;
+                        /* print "requires:" */
+                        screenPrint(rect, 0, " ^c+G%s^c-", requires);
+                        
+                        /* temporarily change x to print to right of "requires" */
+                        rect->x += (strlen(requires) + 1) * ASCII_W;
+                        
+                        /* list tools */
+                        node_for_each(&skill->tools, tnode) {
 
-                /* list tools */
-                node_for_each(&skill->tools, tnode) {
-                        class ObjectType *tool = (class ObjectType*)tnode->ptr;
-                        struct inv_entry *ie=player_party->inventory->
-                                search(tool);
-                        char tool_clr=(ie&&ie->count)?'g':'r';
-                        screenPrint(rect, 0, "^c+%c%s^c-", tool_clr, 
-                                    tool->getName());
-                        rect->y += ASCII_H;
+                                if (rect->h < ASCII_H) {
+                                        complete = -1;
+                                        break;
+                                }
+
+                                class ObjectType *tool = (class ObjectType*)tnode->ptr;
+                                struct inv_entry *ie=player_party->inventory->
+                                        search(tool);
+                                char tool_clr=(ie&&ie->count)?'g':'r';
+                                screenPrint(rect, 0, "^c+%c%s^c-", tool_clr, 
+                                            tool->getName());
+
+                                rect->y += ASCII_H;
+                                rect->h -= ASCII_H;
+                        }
+
+                        /* list materials */
+                        list_for_each(&skill->materials, elem) {
+
+                                if (rect->h < ASCII_H) {
+                                        complete = -1;
+                                        break;
+                                }
+
+                                struct skill_material *mat =
+                                        list_entry(elem, struct skill_material, list);
+                                class ObjectType *objtype = 
+                                        (class ObjectType*)mat->objtype;
+                                struct inv_entry *ie=player_party->inventory->
+                                        search(objtype);
+                                char mat_clr=ie?'g':'r';
+                                char q_clr=(ie&&(ie->count>=mat->quantity))?'g':'r';
+                                screenPrint(rect, 0, "^c+%c%s^c+%c (%d/%d)^c-^c-", 
+                                            mat_clr,
+                                            objtype->getName(), 
+                                            q_clr,
+                                            mat->quantity,
+                                            ie?ie->count:0);
+
+                                rect->y += ASCII_H;
+                                rect->h -= ASCII_H;
+                        }
+
+                        /* restore rect x */
+                        rect->x = orect.x;
                 }
-
-                /* list materials */
-                list_for_each(&skill->materials, elem) {
-                        struct skill_material *mat =
-                                list_entry(elem, struct skill_material, list);
-                        class ObjectType *objtype = 
-                                (class ObjectType*)mat->objtype;
-                        struct inv_entry *ie=player_party->inventory->
-                                search(objtype);
-                        char mat_clr=ie?'g':'r';
-                        char q_clr=(ie&&(ie->count>=mat->quantity))?'g':'r';
-                        screenPrint(rect, 0, "^c+%c%s^c+%c (%d/%d)^c-^c-", 
-                                    mat_clr,
-                                    objtype->getName(), 
-                                    q_clr,
-                                    mat->quantity,
-                                    ie?ie->count:0);
-                        rect->y += ASCII_H;
-                }
-
-                /* restore rect x */
-                rect->x = orect.x;
         }
         
         /* figure out how much area we used */
@@ -4171,7 +4194,7 @@ static void cmd_paint_skill(struct stat_super_generic_data *self,
                 screenShade(&orect, 128);
         }
 
-        return;
+        return complete;
 }
 
 static void cmd_skill_list_unref(struct stat_super_generic_data *self)
