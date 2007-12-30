@@ -78,6 +78,8 @@ static void sound_unref(sound_t *sound)
 		// make sure it isnt being played
 		if (sound->channel >= 0)
 		{
+			// it *shouldnt* be being played, so lets die if it is.
+			assert(false);
 			Mix_HaltChannel(sound->channel);
 		}
 		free(sound->tag);
@@ -148,8 +150,9 @@ void sound_played(int channel)
 {
 	sound_t *sound = sound_reverse_lookup[channel];
 	sound->channel=-1;
+	sound_reverse_lookup[channel] = NULL;
 	sound->volume=0;
-	sound->refcount--;
+	sound_unref(sound);
 }
 
 void sound_flush_ambient()
@@ -295,19 +298,21 @@ Mix_Music *music_track;
 
 void music_load_track(char *file)
 {
+	/*
 	Mix_Music *prev_track = NULL;
 	if (Mix_PlayingMusic())
 	{
-		Mix_HaltMusic();
-		Mix_FadeOutMusic(3000);
+		//Mix_HaltMusic();
+		//Mix_FadeOutMusic(3000);
 		prev_track = music_track;
 	}
 	char *fn;
 	fn = file_mkpath(cfg_get("include-dirname"), file);
-	music_track=Mix_LoadMUS(fn?fn:file);
-	if (music_track)
+	Mix_Music *tmusic_track=Mix_LoadMUS(fn?fn:file);
+	if (tmusic_track)
 	{
-		Mix_PlayMusic(music_track,-1);
+		Mix_PlayMusic(tmusic_track,-1);
+		Mix_PlayMusic(tmusic_track,-1);
 	}
 	else
 	{
@@ -316,8 +321,9 @@ void music_load_track(char *file)
 	free(fn);
 	if (prev_track)
 	{
-		Mix_FreeMusic(prev_track);
+		//Mix_FreeMusic(prev_track);
 	}
+	*/
 }
 
 
