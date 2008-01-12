@@ -126,6 +126,7 @@ static void play_reload()
         else
                 log_end("ok!");
         foogodSetMode(FOOGOD_DEFAULT);
+        session_run_start_proc(Session);
         place_synchronize(Place);
         tick_run();
         vmask_flush_all();
