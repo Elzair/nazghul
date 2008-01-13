@@ -326,6 +326,7 @@ void session_del(struct session *session)
         /* cleanup the interpreter */
         if (session->interp) {
                 scheme_deinit((scheme*)session->interp);
+                free(session->interp);
         }
 
         /* Check for memory leaks. Character dtors should have removed
