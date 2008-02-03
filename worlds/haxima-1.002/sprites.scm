@@ -445,6 +445,9 @@
 (kern-mk-sprite 's_gint ss_bigobjects 4 0 #f 0 )
 (kern-mk-sprite 's_gint_mage ss_bigobjects 4 4 #f 0 )
 (kern-mk-sprite 's_balron   ss_bigobjects 4 8 #f 0 )
+(kern-mk-sprite 's_dex_statue   ss_bigobjects 1 12 #f 0 )
+(kern-mk-sprite 's_str_statue   ss_bigobjects 1 13 #f 0 )
+(kern-mk-sprite 's_int_statue   ss_bigobjects 1 14 #f 0 )
 (kern-mk-sprite 's_dragon   ss_bigobjects 4 16 #f 0 )
 (kern-mk-sprite 's_dragon_asleep   ss_bigobjects 1 20 #f 0 )
 
@@ -757,6 +760,7 @@
 (kern-mk-sprite 's_field_fire   ss_sfx   1  28 #t 0 )
 (kern-mk-sprite 's_field_poison ss_sfx   1  29 #t 0 )
 (kern-mk-sprite 's_field_sleep  ss_sfx   1  30 #t 0 )
+(kern-mk-sprite 's_field_acid   ss_sfx   1  31 #t 0 )
 
 ;;----------------------------------------------------------------------------
 ;; Tools
