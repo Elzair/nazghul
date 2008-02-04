@@ -123,7 +123,7 @@
   oc_wanderer           ; occ
   s_wanderer    ; sprite
   faction-player        ; starting alignment
-  5 5 5                ; str/int/dex
+  6 6 6                ; str/int/dex
   pc-hp-off
   pc-hp-gain
   pc-mp-off
