@@ -66,11 +66,6 @@
 				(show (not (< (* toshow 8) (* tocheck count))))
 				(fields (filter is-my-field? (kern-get-objects-at (mk-loc loc xf yf))))
 				)
-			(println "xy " xp " " yp)
-			(println toshow " 8 : " tocheck " " count)
-			(println (* toshow 8) " : " (* tocheck count))
-			(println show)
-			(println "?")
 			(cond ((null? fields) nil)
 				(else
 					(kern-obj-remove (car fields))))
@@ -92,11 +87,38 @@
 			(xp (if (> xy 1) sa sb))
 			(yp (if (> xy 1) sb sa))
 			)
-			(println sa " " sb " " xy " " xp " " yp)
 			(gamestart-field-circle-elem xp yp count 8)
 	)
 )
     	
+(define (gamestart-reset-lamps kbeing)
+		(let ((str (floor (+ (/ (* (- (kern-char-get-strength kbeing) 10) 7) 12) 1)))
+				(dex (floor (+ (/ (* (- (kern-char-get-dexterity kbeing) 10) 7) 12) 1)))
+				(int (floor (+ (/ (* (- (kern-char-get-intelligence kbeing) 10) 7) 12) 1)))
+				(place (eval 'p_char_setup)))
+			(gamestart-field-circle F_fire_perm place 4 10 str)
+			(gamestart-field-circle F_acid_perm place 9 8 dex)
+			(gamestart-field-circle F_energy_perm place 14 10 int)
+		(kern-map-repaint)
+	))
+	
+(define (gamestart-light-lamps kbeing unused messageid)
+	(if (is-player-party-member? kbeing)
+		(begin
+				(gamestart-reset-lamps kbeing)
+	(map (lambda (trigobj)
+
+		(if (equal? (length (gob trigobj)) 3)
+			(if (equal? (caddr (gob trigobj)) messageid)
+				(kern-obj-remove trigobj)
+			))
+		)
+	(kplace-get-objects-of-type (car (kern-obj-get-location kbeing)) t_step_trig))
+	)
+	
+	)
+	#f)
+
 (define (set-gamestart-data kbeing key value)
 	(println (get-roomdata (car (kern-obj-get-location kbeing))))
 	(let* ((rdata (get-roomdata (car (kern-obj-get-location kbeing))))
@@ -144,7 +166,6 @@
 	(lambda () (start-cutscene kplayer startgate)))
 	
 (define (start-actual-game kplayer)
-  (initstats kplayer)
     
   (kern-log-enable #f)
 

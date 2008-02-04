@@ -10,13 +10,13 @@
 	  "xx @@ @@ @@ @@ @@ @@ .P .A .T .H @@ @@ @@ @@ @@ @@ @@ xx "
 	  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
 	  "xx ,, ,, ,, ,, ++ ,, ,, ,, ,, ,, ,, ,, ++ ,, ,, ,, ,, xx "
-	  "x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! "
+	  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
 	  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
 	  "xx ,, ,, ,, ,, ,, ,, ,, cx cx cx ,, ,, ,, ,, ,, ,, ,, xx "
 	  "xx ,, ,, ,, ,, ,, ,, ,, cx cx cx ,, ,, ,, ,, ,, ,, ,, xx "
 	  "xx ,, ,, cx cx cx ,, ,, cx cx cx ,, ,, cx cx cx ,, ,, xx "
 	  "xx ,, ,, cx cx cx ,, ,, ,, ,, ,, ,, ,, cx cx cx ,, ,, xx "
-	  "x! ,, ,, cx cx cx ,, ,, ,, ,, ,, ,, ,, cx cx cx ,, ,, x! "
+	  "xx ,, ,, cx cx cx ,, ,, ,, ,, ,, ,, ,, cx cx cx ,, ,, xx "
 	  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
 	  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
 	  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
@@ -40,6 +40,8 @@
    (put (kern-mk-obj F_illum_perm 1) 3 1)
    (put (kern-mk-obj F_illum_perm 1) 15 1)
    (put (kern-mk-obj F_illum_perm 1) 9 1)
+   (put (kern-mk-obj F_illum_perm 1) 10 4)
+   (put (kern-mk-obj F_illum_perm 1) 8 4)
    )
 
   nil ;; hooks
@@ -59,6 +61,15 @@
 (obj-line (lambda (unused)
 	(mk-step-trig 'one-off-message "A portal beckons on the far side of the room" "intromes"))
 	15 8 10)
+	
+(obj-line (lambda (unused)
+	(mk-step-trig 'gamestart-light-lamps nil "lamps"))
+	14 7 11)
+	
+(kern-obj-put-at (mk-step-trig 'gamestart-light-lamps nil "lamps") (list p_char_setup 7 15))
+(kern-obj-put-at (mk-step-trig 'gamestart-light-lamps nil "lamps") (list p_char_setup 11 15))
+(kern-obj-put-at (mk-step-trig 'gamestart-light-lamps nil "lamps") (list p_char_setup 7 16))
+(kern-obj-put-at (mk-step-trig 'gamestart-light-lamps nil "lamps") (list p_char_setup 11 16))
 
 (define (mk-start-statue tag name sprite conv)
   (bind 
@@ -101,9 +112,9 @@
 	10 12 17)
 
 	
-(gamestart-field-circle F_fire_perm p_char_setup 4 10 4)
-(gamestart-field-circle F_acid_perm p_char_setup 9 8 4)
-(gamestart-field-circle F_energy_perm p_char_setup 14 10 4)
+;;(gamestart-field-circle F_fire_perm p_char_setup 4 10 4)
+;;(gamestart-field-circle F_acid_perm p_char_setup 9 8 4)
+;;(gamestart-field-circle F_energy_perm p_char_setup 14 10 4)
 
 ;;quickstart stuff for playtesting
 

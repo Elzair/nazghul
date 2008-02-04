@@ -18,7 +18,55 @@
     	 (method 'hail gsstatue-hail)
        )
        )
-       
+
+(define (gsstatue-dostat knpc kpc iname iset iget dname dset dget initial)
+	(define (gs-check-upper value)
+		(if (> value 11)
+			(begin
+				(say knpc "I cannot raise your " iname " further")
+				#t
+				)
+			#f))
+	(define (gs-check-lower value)
+		(if (< value 1)
+			(begin
+				(say knpc "You must not abuse your " dname " further")
+				#t
+				)
+			#f))
+	(define (gs-initialcheck)
+		(say knpc "Do you wish to convert " dname " into " iname "?")
+		(if (kern-conv-get-yes-no? kpc)
+			#f #t)
+		)
+	(define (gs-repeatcheck)
+		(say knpc "Continue?")
+		(if (kern-conv-get-yes-no? kpc)
+			#f #t)
+		)
+	(let ((ival (iget kpc))
+			(dval (dget kpc))
+			)
+		(cond ((gs-check-upper ival))
+			((gs-check-lower dval))
+			((and initial (gs-initialcheck)) (say knpc "As you wish"))
+			((and (not initial) (gs-repeatcheck)) (say knpc "As you wish"))
+			(#t
+				(iset kpc (+ ival 1))
+				(dset kpc (- dval 1))
+				(say knpc "[Your " iname " increases]")
+				(say knpc "[Your " dname
+					(cond ((< dval 3) " withers!]")
+						((< dval 9) " diminishes]")
+						(#t " wanes]")
+					)
+				)
+				(gamestart-reset-lamps kpc)
+				(gsstatue-dostat knpc kpc iname iset iget dname dset dget #f)
+			)
+		)	
+	))
+		       
 ;; Statue of intelligence
 
 (define (gs-int-hail knpc kpc)
@@ -45,11 +93,13 @@
 	)
 	
 (define (gs-int-stre knpc kpc)
-	(say knpc "Do you wish to convert strength into intellect?")
+	(gsstatue-dostat knpc kpc "intelligence" kern-char-set-intelligence kern-char-get-base-intelligence 
+		"strength" kern-char-set-strength kern-char-get-base-strength #t)
 	)
 	
 (define (gs-int-dext knpc kpc)
-	(say knpc "Do you wish to convert dexterity into intellect?")
+	(gsstatue-dostat knpc kpc "intelligence" kern-char-set-intelligence kern-char-get-base-intelligence 
+		"dexterity" kern-char-set-dexterity kern-char-get-base-dexterity #t)
 	)
 
 (define gs-int-conv
@@ -105,11 +155,13 @@
 	)
 	
 (define (gs-str-inte knpc kpc)
-	(say knpc "Do you wish to convert intellect into strength?")
+	(gsstatue-dostat knpc kpc "strength" kern-char-set-strength kern-char-get-base-strength 
+		"intelligence" kern-char-set-intelligence kern-char-get-base-intelligence #t)
 	)
 	
 (define (gs-str-dext knpc kpc)
-	(say knpc "Do you wish to convert dexterity into strength?")
+	(gsstatue-dostat knpc kpc "strength" kern-char-set-strength kern-char-get-base-strength 
+		"dexterity" kern-char-set-dexterity kern-char-get-base-dexterity #t)
 	)
 
 (define gs-str-conv
@@ -165,11 +217,13 @@
 	)
 	
 (define (gs-dex-inte knpc kpc)
-	(say knpc "Do you wish to convert intellect into dexterity?")
+	(gsstatue-dostat knpc kpc "dexterity" kern-char-set-dexterity kern-char-get-base-dexterity 
+		"intelligence" kern-char-set-intelligence kern-char-get-base-intelligence #t)
 	)
 	
 (define (gs-dex-stre knpc kpc)
-	(say knpc "Do you wish to convert strength into dexterity?")
+	(gsstatue-dostat knpc kpc "dexterity" kern-char-set-dexterity kern-char-get-base-dexterity 
+		"strength" kern-char-set-strength kern-char-get-base-strength #t)
 	)
 
 (define gs-dex-conv
