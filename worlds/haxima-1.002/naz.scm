@@ -88,6 +88,11 @@
   (foldr (lambda (a b) (or a (eqv? b elem))) 
          #f 
          lst))
+         
+(define (in-text-list? elem lst)
+  (foldr (lambda (a b) (or a (equal? b elem))) 
+         #f 
+         lst))
 
 ;; Check if a location is passable to a character
 (define (passable? loc kobj)

@@ -301,18 +301,18 @@ int *memtest;
 
 void music_load_track(char *file)
 {
+	// nasty hack:
+	// SDL mixer seems to have some rather odd timing requirements.
+	// For example, I cant stop a track and immediately dispose of it
+	// so instead I will stop this track, and dispose of one I stopped earlier
+	if (prev_track)
+	{
+		Mix_FreeMusic(prev_track);
+		prev_track = NULL;
+	}
 	if (Mix_PlayingMusic())
 	{
 		Mix_HaltMusic();
-		// nasty hack:
-		// SDL mixer seems to have some rather odd timing requirements.
-		// For example, I cant stop a track and immediately dispose of it
-		// so instead I will stop this track, and dispose of one I stopped earlier
-		if (prev_track)
-		{
-			Mix_FreeMusic(prev_track);
-			prev_track = NULL;
-		}
 		prev_track = music_track;
 	}
 	char *fn;
@@ -320,13 +320,18 @@ void music_load_track(char *file)
 	music_track=Mix_LoadMUS(fn?fn:file);
 	if (music_track)
 	{
-		// For now, loop until stopped
-		Mix_PlayMusic(music_track,-1);
+		Mix_PlayMusic(music_track,1);
 	}
 	else
 	{
       warn("Mix_LoadMusic:%s:%s\n", fn?fn:file, SDL_GetError());
 	}	
 	free(fn);
+}
+
+// keep refs to SDL_Mixer to one file.
+bool music_playing()
+{
+	return Mix_PlayingMusic();	
 }
 

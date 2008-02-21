@@ -219,6 +219,7 @@ struct session *session_new(void *interp)
         list_init(&session->skills);
         list_init(&session->skill_sets);
         session->time_accel = 1;
+        session->music_change_handler = NULL;
         return session;
 }
 
@@ -292,6 +293,7 @@ void session_del(struct session *session)
         closure_unref_safe(session->dex_based_attack);
         closure_unref_safe(session->damage_bonus);
         closure_unref_safe(session->defense_bonus);
+        closure_unref_safe(session->music_change_handler);
 
         /* Ensure that nothing is referencing the player party (except perhaps
          * its vehicle, which will be cleaned up with the party). */
@@ -747,10 +749,33 @@ void session_set_combat_procs(struct session *session,
 
 }
 
+void session_set_music_handler(struct session *session,
+		struct closure *mush)
+{
+        /* out with the old */
+        if (session->music_change_handler) {
+                closure_unref(session->music_change_handler);
+                session->music_change_handler = NULL;
+        }
+        /* in with the new */
+        if (mush) {
+                closure_ref(mush);
+                session->music_change_handler = mush;
+        }
+
+}
+
 void session_run_start_proc(struct session *session)
 {
         if (session->start_proc) {
                 closure_exec(session->start_proc, "p", session->player);
+        }
+}
+
+void session_run_music_handler(struct session *session)
+{
+        if (session->music_change_handler) {
+                closure_exec(session->music_change_handler, "p", session->player);
         }
 }
 

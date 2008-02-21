@@ -43,26 +43,43 @@
 
 (println "esounds")
 
-(define music (list 0))
+(define music (list 0 nil nil))
 
-(define (music-handler code file)
+(define (music-play-track file)
+	(println "music-play: " file)
+	(set-car! (cdr music) file)
+	(kern-music-play file)
+)
+
+(define (music-handler code filelist)
 	(if (not (equal? (car music) code))
 		(begin
-			(println "music: " file)
-			(kern-music-play file)
 			(set-car! music code)
+			(set-car! (cddr music) filelist)
+			(if (or (null? (cadr music))
+						(not (in-text-list? (cadr music) filelist)))
+				(music-play-track (random-select (caddr music)))
+			)
 		)))
 
 (define (music-battle)
-	(music-handler 1 "battle.mid")
+	(music-handler 1 (list "dragon-slayer.mid" "dragon-quest.mid" "into-battle.mid"))
 	)
 	
 (define (music-shard)
-	(music-handler 2 "overworld.mid")
+	(music-handler 2 (list "fair-camelot.mid" "game-music2.mid" "medieval-quest.mid"))
 	)
 	
 (define (music-places)
-	(music-handler 3 "places.mid")
+	(music-handler 3 (list "fair-camelot.mid" "game-music2.mid" "medieval-quest.mid"))
 	)
 
 (music-shard)
+
+(define (music-change-handler player)
+	(if (not (null? (caddr music)))
+			(music-play-track (random-select (caddr music)))
+		)
+	)
+	
+(kern-set-music-handler music-change-handler)
