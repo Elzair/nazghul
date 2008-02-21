@@ -295,35 +295,38 @@ int sound_is_activated(void)
 // Music API
 
 Mix_Music *music_track;
+Mix_Music *prev_track = NULL;
+	
+int *memtest;
 
 void music_load_track(char *file)
 {
-	/*
-	Mix_Music *prev_track = NULL;
 	if (Mix_PlayingMusic())
 	{
-		//Mix_HaltMusic();
-		//Mix_FadeOutMusic(3000);
+		Mix_HaltMusic();
+		// nasty hack:
+		// SDL mixer seems to have some rather odd timing requirements.
+		// For example, I cant stop a track and immediately dispose of it
+		// so instead I will stop this track, and dispose of one I stopped earlier
+		if (prev_track)
+		{
+			Mix_FreeMusic(prev_track);
+			prev_track = NULL;
+		}
 		prev_track = music_track;
 	}
 	char *fn;
 	fn = file_mkpath(cfg_get("include-dirname"), file);
-	Mix_Music *tmusic_track=Mix_LoadMUS(fn?fn:file);
-	if (tmusic_track)
+	music_track=Mix_LoadMUS(fn?fn:file);
+	if (music_track)
 	{
-		Mix_PlayMusic(tmusic_track,-1);
-		Mix_PlayMusic(tmusic_track,-1);
+		// For now, loop until stopped
+		Mix_PlayMusic(music_track,-1);
 	}
 	else
 	{
       warn("Mix_LoadMusic:%s:%s\n", fn?fn:file, SDL_GetError());
 	}	
 	free(fn);
-	if (prev_track)
-	{
-		//Mix_FreeMusic(prev_track);
-	}
-	*/
 }
-
 
