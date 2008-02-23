@@ -578,9 +578,9 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
         // everybody.
         // --------------------------------------------------------------------
 
-        if (combat_get_state() != COMBAT_STATE_DONE) {
+        //if (combat_get_state() != COMBAT_STATE_DONE) {
                 combat_analyze_results_of_last_turn();
-        }
+        //}
 
         place_exit(oldPlace);
 

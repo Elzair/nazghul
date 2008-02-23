@@ -1036,7 +1036,10 @@ void combat_analyze_results_of_last_turn()
                         // -----------------------------------------------------
                         // No hostiles around. Loot at will.
                         // -----------------------------------------------------
-                        combat_set_state(COMBAT_STATE_LOOTING);
+                        if (Combat.state != COMBAT_STATE_DONE)
+                        {
+                        	combat_set_state(COMBAT_STATE_LOOTING);
+                     	}
                         break;
 
                 default:

@@ -1897,9 +1897,9 @@ void place_exec(struct place *place)
                 }
 
                 /* check for end of combat */
-                if (combat_get_state() != COMBAT_STATE_DONE) {
+                //if (combat_get_state() != COMBAT_STATE_DONE) {
                         combat_analyze_results_of_last_turn();
-                }
+                //}
 
                 obj_dec_ref(obj);
 
