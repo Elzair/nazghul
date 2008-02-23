@@ -315,8 +315,11 @@ void music_load_track(char *file)
 		Mix_HaltMusic();
 		prev_track = music_track;
 	}
-	char *fn;
-	fn = file_mkpath(cfg_get("include-dirname"), file);
+	char *fn = NULL;
+	if (!file_exists(file))
+	{
+		fn = file_mkpath(cfg_get("include-dirname"), file);
+	}
 	music_track=Mix_LoadMUS(fn?fn:file);
 	if (music_track)
 	{
