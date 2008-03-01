@@ -218,6 +218,12 @@ struct session {
 		/* Script that determines bgm to play */
 		struct closure *music_change_handler;
 		
+		/* Script that allows scripted actions on combat state change */
+		struct closure *combat_change_handler;
+
+		/* Script that runs once the game is loaded and running */
+		struct closure *gamestart_hook;
+		
         struct node sched_chars;   /* characters with multi-place schedules */
 
         /* This is a flat-out hack. I decided to add some things like
@@ -320,6 +326,12 @@ extern void session_set_combat_procs(struct session *session,
 extern void session_set_music_handler(struct session *session, 
                                      struct closure *mush);
 extern void session_run_music_handler(struct session *session);
+extern void session_set_combat_listener(struct session *session, 
+                                     struct closure *mush);
+extern void session_run_combat_listener(struct session *session);
+extern void session_set_gamestart_hook(struct session *session, 
+                                     struct closure *mush);
+extern void session_run_gamestart_hook(struct session *session);
 extern void save_err(char *fmt, ...);
 extern struct node *session_add_sched_char(struct session *session,
                                            class Character *npc);

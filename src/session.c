@@ -220,6 +220,8 @@ struct session *session_new(void *interp)
         list_init(&session->skill_sets);
         session->time_accel = 1;
         session->music_change_handler = NULL;
+        session->gamestart_hook = NULL;
+        session->combat_change_handler = NULL;
         return session;
 }
 
@@ -294,6 +296,8 @@ void session_del(struct session *session)
         closure_unref_safe(session->damage_bonus);
         closure_unref_safe(session->defense_bonus);
         closure_unref_safe(session->music_change_handler);
+        closure_unref_safe(session->combat_change_handler);
+        closure_unref_safe(session->gamestart_hook);
 
         /* Ensure that nothing is referencing the player party (except perhaps
          * its vehicle, which will be cleaned up with the party). */
@@ -487,6 +491,8 @@ int session_load(char *filename)
 
         windRepaint();
 
+        session_run_gamestart_hook(Session);
+        
         return 0;
 }
 
@@ -762,6 +768,36 @@ void session_set_music_handler(struct session *session,
                 closure_ref(mush);
                 session->music_change_handler = mush;
         }
+}
+
+void session_set_gamestart_hook(struct session *session,
+		struct closure *mush)
+{
+        /* out with the old */
+        if (session->gamestart_hook) {
+                closure_unref(session->gamestart_hook);
+                session->gamestart_hook = NULL;
+        }
+        /* in with the new */
+        if (mush) {
+                closure_ref(mush);
+                session->gamestart_hook = mush;
+        }
+}
+
+void session_set_combat_listener(struct session *session,
+		struct closure *mush)
+{
+        /* out with the old */
+        if (session->combat_change_handler) {
+                closure_unref(session->combat_change_handler);
+                session->combat_change_handler = NULL;
+        }
+        /* in with the new */
+        if (mush) {
+                closure_ref(mush);
+                session->combat_change_handler = mush;
+        }
 
 }
 
@@ -776,6 +812,21 @@ void session_run_music_handler(struct session *session)
 {
         if (session->music_change_handler) {
                 closure_exec(session->music_change_handler, "p", session->player);
+        }
+}
+
+void session_run_gamestart_hook(struct session *session)
+{
+        if (session->gamestart_hook) {
+                closure_exec(session->gamestart_hook, "p", session->player);
+        }
+}
+
+
+void session_run_combat_listener(struct session *session)
+{
+        if (session->combat_change_handler) {
+                closure_exec(session->combat_change_handler, "p", session->player);
         }
 }
 

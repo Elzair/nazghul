@@ -7418,6 +7418,34 @@ KERN_API_CALL(kern_set_music_handler)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_set_combat_listener)
+{
+        pointer mush;
+
+        if (unpack(sc, &args, "o", &mush)) {
+                rt_err("kern_set_combat_listener");
+                return sc->NIL;
+        }
+
+        session_set_combat_listener(Session, closure_new(sc, mush));
+
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_set_gamestart_hook)
+{
+        pointer mush;
+
+        if (unpack(sc, &args, "o", &mush)) {
+                rt_err("kern_set_gamestart_hook");
+                return sc->NIL;
+        }
+
+        session_set_gamestart_hook(Session, closure_new(sc, mush));
+
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_player_set_follow_mode)
 {
         player_party->enableFollowMode();
@@ -9530,6 +9558,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
         API_DECL(sc, "kern-set-combat-procs", kern_set_combat_procs);
         API_DECL(sc, "kern-set-music-handler", kern_set_music_handler);
+        API_DECL(sc, "kern-set-combat-state-listener", kern_set_combat_listener);
+        API_DECL(sc, "kern-set-gamestart-hook", kern_set_gamestart_hook);
         API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
         API_DECL(sc, "kern-set-quicken-sprite", kern_set_quicken_sprite);
         API_DECL(sc, "kern-set-time-stop-sprite", kern_set_time_stop_sprite);
