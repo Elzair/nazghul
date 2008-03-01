@@ -1,0 +1,22 @@
+Music Credits
+-------------
+
+ballad.mid
+bassoons-and-harpsichord.mid
+double-trios.mid
+dragon-slayer.mid
+dragon-quest.mid
+fair-camelot.mid
+game-music2.mid
+harpsichord-piece.mid
+into-battle.mid
+Lute-and-recorder-ballad.mid
+plainchant-recorder-trio.mid
+medieval-quest.mid
+minstrel-dance.mid
+Minuet-like-Mozart.mid
+wind-trio.mid
+
+Copyright Jim Paterson,
+www.mfiles.co.uk.
+Used for Haxima with his permission.
