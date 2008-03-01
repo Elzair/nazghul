@@ -71,12 +71,12 @@
 
 (define (gs-int-hail knpc kpc)
   (say knpc "Hail Seeker")
-  (say knpc "I represent the force of reason, and can assist you in endevours of magic or wit.")
+  (say knpc "I represent the force of reason, and can assist you in endeavors of magic or wit.")
   (gamestart-statue-clean knpc "statspeak")
   )
   
 (define (gs-int-job knpc kpc)
-	(say knpc "I represent the force of reason, and can assist you in endevours of magic or wit.")
+	(say knpc "I represent the force of reason, and can assist you in endeavors of magic or wit.")
 	)
   
 (define (gs-int-assi knpc kpc)
@@ -117,6 +117,7 @@
     	 (method 'magi gs-int-inte)
     	 (method 'reas gs-int-inte)
     	 (method 'inte gs-int-inte)
+    	 (method 'int gs-int-inte)
     	 (method 'wit gs-int-inte)
     	 (method 'ende gs-int-inte)
     	 
@@ -124,7 +125,9 @@
     	 (method 'cost gs-int-rais)
     	 
     	 (method 'stre gs-int-stre)
+    	 (method 'str gs-int-stre)
     	 (method 'dext gs-int-dext)
+    	 (method 'dex gs-int-dext)
        )
        )
        
@@ -178,6 +181,7 @@
     	 
     	 (method 'phys gs-str-stre)
     	 (method 'stre gs-str-stre)
+   	 (method 'str gs-str-stre)
     	 (method 'trem gs-str-stre)
     	 (method 'foes gs-str-stre)
     	 
@@ -185,7 +189,9 @@
     	 (method 'lost gs-str-rais)
     	 
     	 (method 'inte gs-str-inte)
+    	 (method 'int gs-str-inte)
     	 (method 'dext gs-str-dext)
+    	 (method 'dex gs-str-dext)
        )
        )
        
@@ -240,6 +246,7 @@
     	 (method 'attr gs-dex-help)
     	 
     	 (method 'dext gs-dex-dext)
+    	 (method 'dex gs-dex-dext)
     	 (method 'skil gs-dex-dext)
     	 (method 'swif gs-dex-dext)
     	 (method 'accu gs-dex-dext)
@@ -248,6 +255,8 @@
     	 (method 'sacr gs-dex-rais)
     	 
     	 (method 'stre gs-dex-stre)
+    	 (method 'str gs-dex-stre)
     	 (method 'inte gs-dex-inte)
+    	 (method 'int gs-dex-inte)
        )
        )
