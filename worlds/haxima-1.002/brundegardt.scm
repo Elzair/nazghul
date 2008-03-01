@@ -56,6 +56,8 @@
   )
  )
 
+(mk-place-music p_brundegardt 'ml-dungeon-adventure)
+
 ;;----------------------------------------------------------------------------
 ;; Brundegardt Keep
 (kern-mk-place 
@@ -202,6 +204,8 @@
   )
  )
 
+(mk-place-music p_brundegardt_keep 'ml-dungeon-adventure)
+
 ;;----------------------------------------------------------------------------
 ;; Cave Shrine
 (mk-dungeon-room
@@ -229,6 +233,8 @@
   )
  (put (mk-anaxes) 9 8)
  )
+
+(mk-place-music p_cave_shrine 'ml-dungeon-adventure)
  
 ;;----------------------------------------------------------------------------
 ;; Ratling Warren
@@ -339,6 +345,8 @@
   (list 'on-entry-to-dungeon-room) ; hooks
  nil ;; edge entrances
  )
+
+(mk-place-music p_ratling_warren 'ml-dungeon-adventure)
  
 ;;----------------------------------------------------------------------------
 ;; Tunnel Turn
@@ -386,6 +394,8 @@
   (list east 0 16)
   )
  )
+
+(mk-place-music p_tunnel_turn 'ml-dungeon-adventure)
  
 ;; randomly scatter gems through the rocks
 (put-random-stuff p_tunnel_turn
@@ -425,6 +435,8 @@
   ) 
  (put (spawn-pt 'sludge-kraken) 9 4)
  )
+
+(mk-place-music p_black_canal 'ml-dungeon-adventure)
 
 ;; random loot corpses
 (put-random-stuff p_black_canal
@@ -471,6 +483,8 @@
  (put (spawn-pt 'carabid) 9 7)
  (put (spawn-pt 'carabid) 9 11)
  )
+
+(mk-place-music p_tunnels 'ml-dungeon-adventure)
 
 ;; randomly scatter gems through the rocks
 (put-random-stuff p_tunnels
@@ -520,6 +534,8 @@
        '((3 sulphorous_ash)
          (3 blood_moss))) 14 7)
  )
+
+(mk-place-music p_wide_chasm 'ml-dungeon-adventure)
 
 (kern-place-add-on-entry-hook p_wide_chasm 'set-wind-north)
 
@@ -635,6 +651,8 @@
       17 8)
  )
 
+(mk-place-music p_brundegardt_tower_1 'ml-dungeon-adventure)
+
 ;; random loot corpses
 (put-random-stuff p_brundegardt_tower_1
                   (mk-rect 0 0 19 19)
@@ -679,6 +697,8 @@
  (put (spawn-pt 'troll) 3 5)
  )
 
+(mk-place-music p_brundegardt_tower_2 'ml-dungeon-adventure)
+
 ;;----------------------------------------------------------------------------
 ;; Tower L3
 (mk-dungeon-room
@@ -709,6 +729,8 @@
  (put (spawn-pt 'queen-spider) 12 9)
  (put (spawn-pt 'queen-spider) 9 12)
  )
+
+(mk-place-music p_brundegardt_tower_3 'ml-dungeon-adventure)
 
 ;;----------------------------------------------------------------------------
 ;; Tower L4
@@ -748,6 +770,8 @@
    (put kdoor 8 9))
  )
 
+(mk-place-music p_brundegardt_tower_4 'ml-outdoor-adventure)
+
 ;;----------------------------------------------------------------------------
 ;; Tower L5
 (kern-load "eye-of-brune.scm")
@@ -783,6 +807,8 @@
  (put (kern-mk-obj t_spell_book_divination 1) 9 10)
  (put (mk-ambient-sound 'sound-wind) 18 18)
  )
+
+(mk-place-music p_brundegardt_tower_5 'ml-outdoor-adventure)
 
 (block-teleporting 
  p_brundegardt_tower_5
@@ -840,6 +866,8 @@
  (put (spawn-pt 'griffin) 9 17)
  (put (mk-ambient-sound 'sound-wind) 10 10)
  )
+
+(mk-place-music p_griffin_peak_s 'ml-outdoor-adventure)
 
 ;; random loot corpses
 (put-random-stuff p_griffin_peak_s
@@ -912,6 +940,8 @@
  (put (mk-ambient-sound 'sound-wind) 13 13)
  )
 
+(mk-place-music p_griffin_peak_se 'ml-outdoor-adventure)
+
 ;; random loot corpses
 (put-random-stuff p_griffin_peak_se
                   (mk-rect 0 0 19 19)
@@ -955,6 +985,8 @@
     (put (mk-ambient-sound 'sound-wind) 13 9)
  )
 
+(mk-place-music p_griffin_peak_ne 'ml-outdoor-adventure)
+
 (mk-19x19-town
  'p_griffin_peak_n "North Face of Griffin Peak" nil
  (list
@@ -982,6 +1014,8 @@
    (put (spawn-pt 'sea-serpent) 8 7)
    (put (mk-ambient-sound 'sound-wind) 9 9)
  )
+
+(mk-place-music p_griffin_peak_n 'ml-outdoor-adventure)
 
 ;; Note: Griffin Peak is a copy of the South Face, but with different mountain
 ;; visibility to give the player the illusion that he has climbed up to the top
@@ -1021,6 +1055,8 @@
  (put (spawn-pt 'griffin) 9 6)
  (put (mk-ambient-sound 'sound-wind) 9 9)
  )
+
+(mk-place-music p_griffin_peak 'ml-outdoor-adventure)
 
 ;; random loot corpses
 (put-random-stuff p_griffin_peak

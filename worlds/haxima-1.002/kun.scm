@@ -66,3 +66,5 @@
   (list northeast 3 18)
   )
  )
+
+(mk-place-music p_kun 'ml-small-town)

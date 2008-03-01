@@ -136,3 +136,5 @@
  nil ; hooks
  nil ; edge entrances
  )
+
+(mk-place-music p_mans_hideout 'ml-dungeon-adventure)

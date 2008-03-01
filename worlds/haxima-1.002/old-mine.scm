@@ -61,3 +61,5 @@
 
 ;; fill upper left corner with cobwebs
 (webify p_old_mine 0 0 6 7)
+
+(mk-place-music p_old_mine 'ml-dungeon-adventure)

@@ -35,3 +35,5 @@
  (put (spawn-pt 'forest-goblin-hunter)  11 9)
  (put (spawn-pt 'forest-goblin-stalker) 11 10)
  )
+
+(mk-place-music p_westpass 'ml-castle)

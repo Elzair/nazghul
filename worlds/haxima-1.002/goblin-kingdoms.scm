@@ -57,6 +57,8 @@
  (put (mk-douglas) 9 9)
  )
 
+(mk-place-music p_kurpolis_entrance 'ml-castle)
+
 (mk-dungeon-room
  'p_goblin_crossroads "Goblin Crossroads"
 	(list
@@ -88,6 +90,8 @@
  (put (spawn-pt 'forest-goblin-shaman) 13 5)
  (put (spawn-pt 'forest-goblin-stalker) 16 8)
  )
+
+(mk-place-music p_goblin_crossroads 'ml-dungeon-adventure)
 
 (mk-dungeon-room
  'p_cave_goblin_village "Cave Goblin Village"
@@ -130,6 +134,8 @@
  (put (mk-treasure-chest) 15 3)
  )
 
+(mk-place-music p_cave_goblin_village 'ml-dungeon-adventure)
+
 (mk-dungeon-room
  'p_trolls_den "Troll's Den"
 	(list
@@ -165,6 +171,8 @@
  (put (mk-corpse-with-loot) 14 14)
  (put (mk-corpse-with-loot) 14 6)
  )
+
+(mk-place-music p_trolls_den 'ml-dungeon-adventure)
 
 (mk-dungeon-room
  'p_shamans_grove "Shaman's Grove"
@@ -213,6 +221,8 @@
       10 1)
  )
 
+(mk-place-music p_shamans_grove 'ml-dungeon-adventure)
+
 (mk-dungeon-room
  'p_watchpoint  "Watchpoint"
 	(list
@@ -240,6 +250,8 @@
  (put (guard-pt 'halberdier) 8 12)
  (put (guard-pt 'crossbowman) 10 12)
  )
+
+(mk-place-music p_watchpoint 'ml-dungeon-town)
 
 ;;
 ;; assemble the rooms into a dungeon level

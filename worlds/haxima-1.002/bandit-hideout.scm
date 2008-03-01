@@ -59,6 +59,8 @@
 
  )
 
+(mk-place-music p_bandit_hideout_l1 'ml-outdoor-adventure)
+
 (mk-dungeon-room
  'p_bandit_hideout_l2a "Stockade Barracks"
  (list
@@ -159,6 +161,8 @@
  ;; Nate
  (put (mk-nate) 16 3)
 )
+
+(mk-place-music p_bandit_hideout_l2a 'ml-dungeon-adventure)
 
 ;  (put (spawn-pt 'cave-goblin-slinger) 18 7)
 ;  (put (spawn-pt 'cave-goblin-slinger) 18 11)

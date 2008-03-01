@@ -325,3 +325,5 @@
   (list north  12 31)
   )
  )
+
+(mk-place-music p_trigrave 'ml-small-town)

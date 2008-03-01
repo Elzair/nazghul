@@ -121,3 +121,5 @@
 ;; The entry hooks must be kern-loaded from a separate file, since they are
 ;; read-only and not saved with the session.
 ;; ----------------------------------------------------------------------------
+
+(mk-place-music p_abandoned_cellar 'ml-dungeon-adventure)

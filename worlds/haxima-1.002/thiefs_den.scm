@@ -107,3 +107,4 @@
  nil ; edge entrances
  )
 
+(mk-place-music p_thiefs_den 'ml-dungeon-adventure)

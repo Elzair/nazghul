@@ -195,6 +195,8 @@
 			(list south 9 0)
 		)
  )
+
+(mk-place-music p_lost_garrison 'ml-dungeon-adventure)
  
 
 
@@ -418,6 +420,12 @@
 	nil
  )
  
+
+(mk-place-music p_deeps_1 'ml-dungeon-adventure)
+(mk-place-music p_deeps_2 'ml-dungeon-adventure)
+(mk-place-music p_deeps_3 'ml-dungeon-adventure)
+(mk-place-music p_deeps_4 'ml-dungeon-adventure)
+(mk-place-music p_deeps_5 'ml-dungeon-adventure)
 
  (kern-mk-place 
 	'deeps_data

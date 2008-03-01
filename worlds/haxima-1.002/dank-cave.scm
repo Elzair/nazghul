@@ -39,3 +39,5 @@
  (put (spawn-pt 'rat) 4 2)
  (put (spawn-pt 'snake) 17 12)
  )
+
+(mk-place-music p_dank_cave 'ml-dungeon-adventure)

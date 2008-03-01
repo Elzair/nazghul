@@ -94,3 +94,5 @@
                nil ; hooks
                nil ; edge entrances
                )
+
+(mk-place-music p_gregors_hut 'ml-small-town)

@@ -25,6 +25,8 @@
  (put (spawn-pt 'hydra) 9 9)
  )
 
+(mk-place-music p_hydra_fen 'ml-dungeon-adventure)
+
 (mk-dungeon-room
  'p_pools "Pools"
  (list
@@ -56,6 +58,8 @@
  
  )
 
+(mk-place-music p_pools 'ml-dungeon-adventure)
+ 
 (kern-mk-place 
  'p_deepness
  "The Deepness"
@@ -140,6 +144,8 @@
   (list south 29 0)
   )
  )
+
+(mk-place-music p_deepness 'ml-dungeon-adventure)
 
 ;; tie rooms together
 (kern-place-set-neighbor south p_deepness p_pools)

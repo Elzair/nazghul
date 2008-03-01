@@ -63,6 +63,8 @@
  nil ; edge entrances
  )
 
+(mk-place-music p_angriss_lair 'ml-outdoor-adventure)
+
 (kern-load "angriss.scm")
 
 (mk-dungeon-room
@@ -131,6 +133,8 @@
  (put (kern-mk-obj F_web_perm 1) 5 6)
  
  )
+
+(mk-place-music p_angriss_throne_room 'ml-dungeon-adventure)
 
 ;; corpse & treasure heaps
 (put-random-stuff p_angriss_throne_room
@@ -214,6 +218,8 @@
  (put (kern-mk-obj t_mana_potion 5) 16 6)
  (put (kern-mk-obj t_spell_book_force_magick_battle 1) 17 6)
 )
+
+(mk-place-music p_spider_cave 'ml-dungeon-adventure)
 
 (mk-dungeon-level 
  (list p_angriss_throne_room)

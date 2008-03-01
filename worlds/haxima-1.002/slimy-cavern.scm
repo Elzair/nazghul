@@ -126,3 +126,5 @@
                (list 'on-entry-to-dungeon-room) ; hooks
                nil ; edge entrances
                )
+
+(mk-place-music p_slimy_cavern 'ml-dungeon-adventure)

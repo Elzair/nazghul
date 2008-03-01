@@ -80,3 +80,5 @@
                (list 'on-entry-to-dungeon-room) ; hooks
                nil ; edge entrances
                )
+
+(mk-place-music p_abandoned_farm 'ml-outdoor-adventure)

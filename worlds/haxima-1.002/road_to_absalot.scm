@@ -32,6 +32,8 @@
  (put (spawn-pt 'headless) 5 4)
  (put (spawn-pt 'gazer) 3 17)
  )
+ 
+(mk-place-music p_road_to_absalot_1 'ml-dungeon-adventure)
 
 (mk-dungeon-room
  'p_fire_bridge "Fire Bridge"
@@ -80,6 +82,7 @@
   (put (kern-mk-obj t_spell_book_force_magick_matter 1) 17 9)
  )
 
+(mk-place-music p_fire_bridge 'ml-dungeon-adventure)
 
 (mk-dungeon-room
  'p_road_to_absalot_3 "Passage to Absalot"
@@ -114,6 +117,8 @@
  (put (spawn-pt 'zorn) 7 6)
  (put (spawn-pt 'zorn) 9 6)
  )
+
+(mk-place-music p_road_to_absalot_3 'ml-dungeon-adventure)
 
 (define (mk-r2a-statue)
   (bind 
@@ -213,6 +218,8 @@
 	) ;; hooks
  	nil
  )
+
+(mk-place-music p_absalot_passage 'ml-dungeon-adventure)
  
 (mk-dungeon-level 
  (list p_road_to_absalot_3)
@@ -253,6 +260,8 @@
  (put (mk-npc 'bull 4) 10 15)
  )
 
+(mk-place-music p_gate_to_absalot 'ml-small-town)
+
 (mk-tower
  'p_tower_of_absalot "Tower of Absalot"
 	(list
@@ -284,4 +293,6 @@
  (put (spawn-pt 'death-knight) 6 7)
  (put (spawn-pt 'ghast) 12 11)
  )
+
+(mk-place-music p_tower_of_absalot 'ml-outdoor-adventure)
  

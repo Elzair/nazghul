@@ -59,6 +59,8 @@
   (put (spawn-pt 'skeletal-spear-thrower) 10 14)
   )
 
+(mk-place-music p_great_hall 'ml-dungeon-adventure)
+
 (mk-dungeon-room
  'p_paladins_hold "Paladin's Hold"
  (list
@@ -112,6 +114,8 @@
  (put (spawn-pt 'skeletal-spear-thrower) 18 11)
 
  )
+
+(mk-place-music p_paladins_hold 'ml-castle)
 
 (mk-dungeon-room
  'p_treasury "Treasury"
@@ -212,7 +216,7 @@
             (lambda (x loc) (kern-obj-put-at (spawn-pt 'giant-spider) loc)) 
             #f)
 
-
+(mk-place-music p_treasury 'ml-dungeon-adventure)
 
 
 (mk-dungeon-room
@@ -258,6 +262,8 @@
  (put (guard-pt 'warlock)       14  9)
 
 )
+
+(mk-place-music p_death_knights_hold 'ml-dungeon-adventure)
 
 (mk-dungeon-level 
  (list nil              p_treasury   nil)

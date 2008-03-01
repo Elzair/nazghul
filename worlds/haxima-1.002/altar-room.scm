@@ -31,3 +31,5 @@
  (put (spawn-pt 'warlock) 6 9)
  (put (spawn-pt 'warlock) 12 9)
  )
+
+(mk-place-music p_altar_room 'ml-dungeon-adventure)

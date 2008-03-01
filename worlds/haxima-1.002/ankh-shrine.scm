@@ -56,6 +56,8 @@
   )
  )
 
+(mk-place-music p_ankh_shrine 'ml-outdoor-adventure)
+
 ;; Make the actual get location to the west
 (kern-mk-map
  'm_demon_gate 19 19 pal_expanded
@@ -108,3 +110,5 @@
 (mk-dungeon-level 
  (list p_demon_gate p_ankh_shrine)
  )
+
+(mk-place-music p_demon_gate 'ml-battle-music)

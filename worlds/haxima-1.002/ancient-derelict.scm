@@ -61,3 +61,5 @@
  	(list northeast 0 14)
  )
  )
+
+(mk-place-music p_ancient_derelict 'ml-outdoor-adventure)

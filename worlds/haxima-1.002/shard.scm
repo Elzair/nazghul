@@ -563,6 +563,9 @@
 
   ) ;; end of objects
 
- (list 'music-shard) ; hooks
+ nil ; hooks
  nil ; edge entrances
  )
+
+(kern-obj-put-at (mk-world-musicdata 'ml-travelling) (list p_shard 0 0))
+(kern-place-add-on-entry-hook p_shard 'music-on-combat-entry)

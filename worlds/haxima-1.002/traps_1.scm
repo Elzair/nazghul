@@ -52,3 +52,5 @@
  (put (mk-ladder-down 'p_traps_2 9 15) 14 2)
  (put (mk-ladder-up 'p_bole 43 6) 4 16)
  )
+
+(mk-place-music p_traps_1 'ml-dungeon-town)

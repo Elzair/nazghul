@@ -27,3 +27,5 @@
  (put (mk-lich-king) 9 2)
 
  )
+
+(mk-place-music p_lich_tomb 'ml-creepy-area)

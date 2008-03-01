@@ -118,3 +118,5 @@
  )
 
 
+(mk-place-music p_necromancers_lair 'ml-creepy-area)
+

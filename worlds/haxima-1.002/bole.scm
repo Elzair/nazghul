@@ -135,6 +135,8 @@
 
  )
 
+(mk-place-music p_bole 'ml-small-town)
+
 ;;-----------------------------------------------------------------------------
 ;; Make a special cave for the dryad so it doen't kill the town with its wolves
 ;;-----------------------------------------------------------------------------
@@ -190,3 +192,5 @@
 (mk-dungeon-level 
  (list p_dryad_grove p_bole)
  )
+
+(mk-place-music p_dryad_grove 'ml-small-town)

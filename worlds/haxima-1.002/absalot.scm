@@ -94,3 +94,5 @@
                   (lambda (loc)
                     (kern-obj-put-at (mk-corpse) loc))
                   20)
+
+(mk-place-music p_absalot 'ml-dungeon-adventure)

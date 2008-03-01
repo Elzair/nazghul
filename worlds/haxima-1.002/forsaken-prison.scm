@@ -49,3 +49,5 @@
  (put (mk-corpse-with-loot) 5 6)
 
  )
+
+(mk-place-music p_forsaken_prison 'ml-dungeon-adventure)

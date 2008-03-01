@@ -134,8 +134,8 @@
 ;;
 ;; Call the place constructor here.
 ;;----------------------------------------------------------------------------
-(kern-mk-place '
- p_enchanters_tower ; tag
+(kern-mk-place 
+ 'p_enchanters_tower ; tag
  "Enchanters Tower" ; name
  s_keep             ; sprite
  m_enchanters_tower ; map
@@ -226,8 +226,10 @@
  
  )
  
-(kern-mk-place '
- p_enchanters_tower_l2 ; tag
+(mk-place-music p_enchanters_tower 'ml-castle)
+
+(kern-mk-place 
+ 'p_enchanters_tower_l2 ; tag
  "Enchanters Tower" ; name
  s_keep             ; sprite
  m_enchanters_tower_l2 ; map
@@ -314,6 +316,8 @@
  nil ; edge entrances
  )
  
+(mk-place-music p_enchanters_tower_l2 'ml-castle)
+
 ;;plain old mirror mirror
 (let* ((kmir (kern-tag 'ench-guest-mirror (mk-mirror 's_mirror_bg_flagstones)))
          (ksen (mk-char-sensor 'ench-guest-mirror)))
@@ -391,8 +395,8 @@
 (kern-obj-put-at (mk-mag-clock) (list p_enchanters_tower_l2 18 18))
  
  
-(kern-mk-place '
- p_enchanters_tower_l3 ; tag
+(kern-mk-place 
+ 'p_enchanters_tower_l3 ; tag
  "Enchanters Tower Roof" ; name
  s_keep             ; sprite
  m_enchanters_tower_l3 ; map
@@ -430,9 +434,11 @@
 	(if (not (equal? (cadr loclist) '()))
 		(obj-list objfactory place (cdr loclist))
 	))
-	
+
+(mk-place-music p_enchanters_tower_l3 'ml-castle)
 	
 ;;no teleporting out of the tower!
+;; TODO use same mechanism as gryphon peak
 
 (let ((blockers
 		(lambda (xloc yloc) (mk-blocker))))

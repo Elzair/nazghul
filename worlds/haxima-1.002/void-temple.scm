@@ -48,3 +48,6 @@
  (put (spawn-pt 'wisp) 11 9)
  (put (spawn-pt 'wisp) 9 11)
  )
+
+ 
+(mk-place-music p_void_temple 'ml-outdoor-adventure)

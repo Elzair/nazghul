@@ -34,3 +34,5 @@
  (put (spawn-pt 'bandit) 3 8)
  (put (spawn-pt 'bandit) 4 9)
  )
+
+(mk-place-music p_eastpass 'ml-castle)

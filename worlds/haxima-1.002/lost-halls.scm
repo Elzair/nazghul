@@ -636,6 +636,21 @@
 	nil
 )
 
+
+(mk-place-music p_lost_halls_entrance 'ml-outdoor-adventure)
+(mk-place-music p_lost_halls_r1 'ml-dungeon-adventure)
+(mk-place-music p_lost_halls_r2 'ml-dungeon-adventure)
+(mk-place-music p_lost_halls_r3 'ml-dungeon-adventure)
+(mk-place-music p_lost_halls_r4 'ml-dungeon-adventure)
+(mk-place-music p_lost_halls_r5 'ml-dungeon-adventure)
+(mk-place-music p_lost_halls_staird 'ml-dungeon-adventure)
+(mk-place-music p_lost_halls_stairu 'ml-dungeon-adventure)
+(mk-place-music p_lost_halls_graves 'ml-creepy-area)
+(mk-place-music p_lost_halls_rshrine 'ml-creepy-area)
+(mk-place-music p_lost_halls_fountains 'ml-dungeon-adventure)
+(mk-place-music p_lost_halls_storage 'ml-dungeon-adventure)
+
+
 (drop-random-corpses p_lost_halls_storage 2)
 
 ;; map linkage

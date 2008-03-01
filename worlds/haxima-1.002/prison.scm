@@ -125,3 +125,4 @@
  nil ; edge entrances
  )
 
+(mk-place-music p_prison 'ml-dungeon-town)

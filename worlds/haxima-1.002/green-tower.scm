@@ -214,3 +214,5 @@
        )
  nil   ; edge entrances
 )
+
+(mk-place-music p_green_tower 'ml-large-town)

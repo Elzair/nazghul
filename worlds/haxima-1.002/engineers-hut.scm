@@ -79,3 +79,4 @@
   )
  )
 
+(mk-place-music p_engineers_hut 'ml-small-town)

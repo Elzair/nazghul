@@ -117,3 +117,4 @@
  (put (mk-corpse) 17 17)
  )
 
+(mk-place-music p_crypt 'ml-creepy-area)

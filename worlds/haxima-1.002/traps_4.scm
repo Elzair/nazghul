@@ -27,3 +27,5 @@
  (put (mk-ladder-up 'p_traps_3 9 3) 9 9)
  (put (mk-ladder-down 'p_thiefs_den 9 9) 9 7)
  )
+
+(mk-place-music p_traps_4 'ml-dungeon-adventure)

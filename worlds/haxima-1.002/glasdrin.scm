@@ -158,3 +158,5 @@
  	(list northeast 14 30)
  )
 )
+
+(mk-place-music p_glasdrin 'ml-large-town)

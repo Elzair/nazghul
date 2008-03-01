@@ -57,3 +57,4 @@
  (put (mk-ladder-up 'p_traps_1 14 2) 9 15)
  )
  
+(mk-place-music p_traps_2 'ml-dungeon-adventure)

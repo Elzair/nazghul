@@ -28,3 +28,5 @@
  (put (mk-ladder-up 'p_shard 78 74) 7 12)
  (put (kern-mk-obj t_royal_cape 1) 4 15)
  )
+
+(mk-place-music p_mushroom_cave 'ml-dungeon-adventure)

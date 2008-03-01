@@ -44,6 +44,8 @@
  (put (spawn-pt 'dragon) 11 10)
  )
 
+(mk-place-music p_fire_sea 'ml-dungeon-adventure)
+
 (mk-dungeon-room
  'p_smoldering_cave "Smoldering Cave"
 	(list
@@ -80,3 +82,5 @@
  (list p_fire_sea)
  (list p_smoldering_cave)
  )
+
+(mk-place-music p_smoldering_cave 'ml-dungeon-adventure)

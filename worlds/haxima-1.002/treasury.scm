@@ -37,6 +37,8 @@
       9 5)
  )
 
+(mk-place-music p_treasury2 'ml-dungeon-adventure)
+ 
 (define (can-drop? loc)
   (and (is-floor? loc)
        (loc-is-empty? loc)))

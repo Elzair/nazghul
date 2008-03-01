@@ -118,3 +118,5 @@
  (list 'on-entry-to-dungeon-room)
  nil ;; edge entrances
  )
+
+(mk-place-music p_green_tower_lower 'ml-dungeon-town)

@@ -60,6 +60,7 @@
  nil ; edge entrances
  )
 
+(mk-place-music p_merciful_death 'ml-dungeon-adventure)
 
 ;; ----------------------------------------------------------------------------
 ;; Map
@@ -133,3 +134,5 @@
  (list 'on-entry-to-dungeon-room) ; hooks
  nil ; edge entrances
  )
+
+(mk-place-music p_merciful_death 'ml-dungeon-adventure)

@@ -161,6 +161,6 @@
 	(kern-obj-put-at kmir (list p_oparine 5 45))
 	(kern-obj-put-at ksen (list p_oparine 5 46)))
 
-
+(mk-place-music p_oparine 'ml-large-town)
 
 

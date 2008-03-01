@@ -141,3 +141,4 @@
  nil ; edge entrances
  )
 
+(mk-place-music p_old_absalot 'ml-dungeon-town)

@@ -62,6 +62,8 @@
   (list southwest 18 6)
   )
  )
+
+(mk-place-music p_voidgap_entrance 'ml-castle)
  
  
 (kern-mk-place 
@@ -110,6 +112,8 @@
   (list southeast 0 5)
   )
  )
+
+(mk-place-music p_voidgap_exit 'ml-dungeon-adventure)
 
 
 (kern-mk-place 
@@ -190,8 +194,7 @@
 	 nil ; subplaces
 	 nil ; neighbors
  
-	 (list (put (mk-monman) 0 0) ; objects
-	 )
+	 nil
  
 	 (list
 		;'on-entry-to-dungeon-room
@@ -234,8 +237,7 @@
 	 nil ; subplaces
 	 nil ; neighbors
  
-	 (list (put (mk-monman) 0 0) ; objects
-	 )
+	 nil
 	 
 	 (list
 		;'on-entry-to-dungeon-room
@@ -278,8 +280,7 @@
 	 nil ; subplaces
 	 nil ; neighbors
  
-	 (list (put (mk-monman) 0 0) ; objects
-	 )
+	 nil
 	 
 	 (list
 		;'on-entry-to-dungeon-room
@@ -322,8 +323,7 @@
 	 nil ; subplaces
 	 nil ; neighbors
  
-	 (list (put (mk-monman) 0 0) ; objects
-	 )
+	 nil
 	 
 	 (list
 		;'on-entry-to-dungeon-room
@@ -332,6 +332,12 @@
 	nil
  )
 
+
+(mk-place-music p_voidgap_1 'ml-dungeon-adventure)
+(mk-place-music p_voidgap_2 'ml-dungeon-adventure)
+(mk-place-music p_voidgap_3 'ml-dungeon-adventure)
+(mk-place-music p_voidgap_4 'ml-dungeon-adventure)
+(mk-place-music p_voidgap_5 'ml-dungeon-adventure)
 
 (prmap-linkrooms-2d 'p_voidgap_1 'p_voidgap_2 'p_voidgap_3 'p_voidgap_4 'p_voidgap_5)
 (prmap-mk-roomdata 'p_lost_garrison 0 0 0 (list 'p_voidgap_1 'p_voidgap_2 'p_voidgap_5 'p_voidgap_3))

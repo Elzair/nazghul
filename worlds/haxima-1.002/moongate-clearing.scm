@@ -104,7 +104,7 @@
    (list supplies_chest   1 24)
    )
 
-  (list 'music-places) ;; hooks
+  nil ;; hooks
   (list  ;; edge entrances
    (list north 16 27)
    (list east   0 11)
@@ -115,3 +115,4 @@
    )
 ) ;; end of place p_moongate_clearing
 
+(mk-place-music p_moongate_clearing 'ml-small-town)
