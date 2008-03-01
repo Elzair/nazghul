@@ -617,14 +617,21 @@
 			(number->string z))
 	))
 
+;; TODO this should be done by layer, not type! (add kern method?)
+
+(define (prmap-room-freezable-type obj)
+	(let ((objtype (kern-obj-get-type obj)))
+	(not (in-text-list? objtype (list t_roomdata t_mapdata t_sounddata))
+	))
+	)
+
 (define (prmap-room-freeze-current mapdata)
 	(let ((current (prmap-params-current mapdata)))
 		(if (not (null? current))
 			(let* ((roomkey (prmap-room-roomkey current (prmap-params-mapname mapdata))))
                           ;;(println "freeze: " roomkey)
 				(map (lambda (obj)
-					(if (or (equal? (kern-obj-get-type obj) t_roomdata) (equal? (kern-obj-get-type obj) t_mapdata))
-						nil
+					(if (prmap-room-freezable-type obj)
 						(let*
 							((loc (kern-obj-get-location obj))
 								(x (car (cdr loc)))
@@ -632,6 +639,7 @@
 							(kern-obj-freeze obj roomkey x y)
 							(kern-obj-remove obj)
 						)
+						nil
 					))
 					(kern-place-get-objects current))
 				(prmap-params-set-current mapdata nil)
@@ -652,14 +660,14 @@
 
 (define (prmap-room-cleanout kplace)
 	(map (lambda (obj)
-		(if (or (equal? (kern-obj-get-type obj) t_roomdata) (equal? (kern-obj-get-type obj) t_mapdata))
-			nil
+		(if (prmap-room-freezable-type obj)
 			(begin 
 				(kern-obj-remove obj))
+			nil
 		))
 		(kern-place-get-objects kplace))
 	)
-	
+		
 (define (prmap-room-addmonster kplace kchar)
 	(kern-obj-put-at kchar 
 		(random-loc-place-iter kplace 
