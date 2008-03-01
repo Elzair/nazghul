@@ -172,6 +172,12 @@
   (can-see-any? knpc 
                 (kern-party-get-members (kern-get-player))))
 
+;; gets location of player character (not party- ie 'works' in temporary map)
+(define (player-member-loc)
+	    (loc-place (kern-obj-get-location
+	       		(car (kern-party-get-members (kern-get-player))))
+	    ))
+                
 (define (num-player-party-members)
   ;;(display "num-player-party-members")(newline)
   (length (kern-party-get-members (kern-get-player))))
