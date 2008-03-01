@@ -100,7 +100,7 @@
   (say knpc "Do you seek justice?")
   (cond ((no? kpc)
          (say knpc "Then cursed are you: an unjust man would live among beasts, "
-              "so beats will give you no rest.")
+              "so beasts will give you no rest.")
          (unrest-curse-apply-new kpc 'wolf-party-l2)
          (kern-conv-end))
         (else
