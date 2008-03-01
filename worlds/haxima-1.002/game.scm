@@ -164,7 +164,7 @@
    (list 'mmode-largeobj  "largeobj"   17) ;; for determining dropability of big objects- basically, stuff that wont fit through bars/windows
    (list 'mmode-field     "field"      18) ;; for determining dropability of fields
    (list 'mmode-return    "return"     19) ;; return path for magic axe (for now assume it always returns)
-   (list 'mmode-cannon    "crawling"   20) ;; enhanced missile passibility for cannon shells
+   (list 'mmode-cannon    "cannon"     20) ;; enhanced missile passibility for cannon shells
    (list 'mmode-large     "striding"   21) ;; big critters
 ))
 (map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
@@ -376,6 +376,8 @@
 (kern-set-damage-sprite s_hit)
 (kern-set-combat-procs proc-stratt proc-dexatt
 	proc-stratt proc-dexdef)
+(kern-set-combat-state-listener music-on-combat-change)
+(kern-set-gamestart-hook music-on-combat-change)
 
 ;; Setup the global effect sprites
 (kern-set-quicken-sprite s_quicken)
