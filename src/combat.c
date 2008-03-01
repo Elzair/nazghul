@@ -207,6 +207,7 @@ void combat_set_state(enum combat_state new_state)
         }
 
         Combat.state = new_state;
+        session_run_combat_listener(Session);
 }
 
 // returns 0 for ok position, -1 for no position, or a PFLAG type for fallback positions with problems
@@ -1651,7 +1652,7 @@ bool combat_enter(struct combat_info * info)
         // *** Position the Enemy Party Members ***
 
         if (info->move->npc_party) {
-                combat_set_state(COMBAT_STATE_FIGHTING);
+                
 
                 /* combat_position_enemy() will decrement most of the refcounts
                  * ont he party, keep it alive until we're done */
@@ -1665,6 +1666,10 @@ bool combat_enter(struct combat_info * info)
                         log_end(NULL);
                         combat_set_state(COMBAT_STATE_LOOTING);
                 }
+                else
+                {
+	             	combat_set_state(COMBAT_STATE_FIGHTING);   
+             	 }
 
                 /* done with it now */
                 obj_dec_ref(info->move->npc_party);
@@ -1681,7 +1686,7 @@ bool combat_enter(struct combat_info * info)
                 v2.dx = info->move->dx;
                 v2.dy = info->move->dy;
                 v2.place = Place;
-                combat_set_state(COMBAT_STATE_LOOTING);
+                combat_set_state(COMBAT_STATE_DONE);
                 place_for_each_object(Place, combat_find_and_position_enemy,
                                       &v2);
         }
