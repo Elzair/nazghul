@@ -41,45 +41,140 @@
     (bind ksound soundtag)
     ksound))
 
-(println "esounds")
+;;==========================================================================
+;; music
 
-(define music (list 0 nil nil))
+(define default-music "ballad.mid")
+
+(define (music-list . entries)
+	(if (null? entries)
+		(list default-music)
+		entries
+	)
+)
+
+(load "music/music.scm")
+
+(println ml-battle-music)
+
+(define music (list nil nil))
 
 (define (music-play-track file)
-	(println "music-play: " file)
-	(set-car! (cdr music) file)
+	(set-car! music file)
 	(kern-music-play file)
 )
 
-(define (music-handler code filelist)
-	(if (not (equal? (car music) code))
-		(begin
-			(set-car! music code)
-			(set-car! (cddr music) filelist)
-			(if (or (null? (cadr music))
-						(not (in-text-list? (cadr music) filelist)))
-				(music-play-track (random-select (caddr music)))
-			)
-		)))
-
-(define (music-battle)
-	(music-handler 1 (list "dragon-slayer.mid" "dragon-quest.mid" "into-battle.mid"))
+(define (music-handler filelist)
+	(set-car! (cdr music) filelist)
+	(if (or (null? (car music))
+				(not (in-text-list? (car music) filelist)))
+		(music-play-track (random-select (cadr music)))
+	))
+		
+(define (music-cue filelist)
+	(set-car! (cdr music) filelist)
 	)
 	
-(define (music-shard)
-	(music-handler 2 (list "fair-camelot.mid" "game-music2.mid" "medieval-quest.mid"))
-	)
+(define (music-cue-ref listref)
+	(let ((cuelist (safe-eval listref)))
+		(if (not (null? cuelist))
+			(music-cue cuelist))
+	))
 	
-(define (music-places)
-	(music-handler 3 (list "fair-camelot.mid" "game-music2.mid" "medieval-quest.mid"))
-	)
-
-(music-shard)
+(define (music-fake-current)
+	(if (not (null? (cadr music)))
+			(set-car! music (car (cadr music)))
+		))
+		
+(music-handler (list default-music))
 
 (define (music-change-handler player)
-	(if (not (null? (caddr music)))
-			(music-play-track (random-select (caddr music)))
+	(if (not (null? (cadr music)))
+			(music-play-track (random-select (cadr music)))
 		)
 	)
 	
 (kern-set-music-handler music-change-handler)
+	
+;;combo play + cue, with sensible eval and null behaviour
+(define (music-set-pair immediate therafter)
+	(let* ((imm (safe-eval immediate))
+			(ther (safe-eval therafter))
+			(cuelist (if (null? imm)
+								nil
+								ther))
+			(playlist (if (null? imm)
+								ther
+								imm))
+			)
+		(if (not (null? playlist))
+			(music-handler playlist))
+		(if (not (null? cuelist))
+			(music-cue cuelist))
+	))
+
+
+;;==================================================================================
+;; interactive music handler
+
+(mk-obj-type 't_sounddata nil nil layer-none nil)
+
+;; use kern-set-combat-state-listener to call this
+;; do it on system startup too (kern-set-gamestart-hook)
+(define (music-on-combat-change player)
+	(let* ((playerloc (player-member-loc))
+			(dataslist (kplace-get-objects-of-type playerloc t_sounddata)))
+		(if (not (null? dataslist))
+			(let* ((sounddata (gob (car dataslist)))
+						(oldstate (car sounddata))
+						(newstate (null? (all-hostiles (car (kern-party-get-members player)))))
+						)
+				(set-car! sounddata newstate)
+				(if newstate
+					(if oldstate
+						(music-set-pair nil (list-ref sounddata 1))
+						(music-set-pair (list-ref sounddata 4) (list-ref sounddata 1))
+					)
+					(if oldstate
+						(music-set-pair (list-ref sounddata 2) (list-ref sounddata 3))
+						(music-set-pair nil (list-ref sounddata 3))
+					)
+				)
+			))
+	))			
+	
+;; use place entry hooks to call this
+(define (music-on-combat-entry playerloc player)
+	(let ((dataslist (kplace-get-objects-of-type playerloc t_sounddata)))
+		(if (not (null? dataslist))
+			(let ((sounddata (gob (car dataslist)))
+					(newstate (null? (all-hostiles (car (kern-party-get-members player)))))
+					)
+				(set-car! sounddata newstate)
+				(if newstate
+					(music-set-pair nil (list-ref sounddata 1))
+					(music-set-pair (list-ref sounddata 2) (list-ref sounddata 3))
+				)		
+				(music-fake-current)		
+			))
+	))		
+
+;; use this to make data object
+(define (mk-sounddata normal engagement combat victory)
+	(bind (kern-obj-set-visible (kern-mk-obj t_sounddata 1) #f)
+		(list #t normal engagement combat victory)
+	))
+	
+;;normal combat music entries
+(define (mk-basic-musicdata noncombatml)
+	(mk-sounddata noncombatml 'ml-battle-intro 'ml-battle-music 'ml-battle-over))
+	
+;;world music entries dont use combat stuff
+(define (mk-world-musicdata noncombatml)
+	(mk-sounddata noncombatml nil noncombatml nil))
+	
+;; do-it-all method- adds an object and the hook to a place
+(define (mk-place-music place noncombatml)
+	(kern-obj-put-at (mk-basic-musicdata noncombatml) (list place 0 0))
+	(kern-place-add-on-entry-hook place 'music-on-combat-entry))
+	
