@@ -302,6 +302,8 @@ static void show_credits(void)
                 "...Gordon McNutt\n"\
                 "...Sam Glasby\n"\
                 "...Steve Riberdy\n"\
+                "Music Provided by\n"\
+                "...Jim Paterson\n"\
                 ;
 
         statusSetPageText(title, text);
