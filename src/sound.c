@@ -68,6 +68,25 @@ static int sound_activated = 0;
 
 static SDL_mutex *sound_mutex = NULL;
 
+static int config_to_soundvolume(char* config)
+{
+	//our input percentages have nicely unique initial characters
+	char* comp="O2571";
+	int i;
+	for (i=0;i<5;i++)
+	{
+		if (config[0] == comp[i])
+		{
+			break;	
+		}
+	}
+	if (i>4)
+	{
+		i=0;	
+	}
+	return i;
+}
+
 static void sound_unref(sound_t *sound)
 {
 	assert(sound->refcount > 0);
@@ -296,8 +315,21 @@ int sound_is_activated(void)
 
 Mix_Music *music_track;
 Mix_Music *prev_track = NULL;
-	
-int *memtest;
+
+int music_volume=0;
+bool music_needtrack=false;
+
+//setting must be one of Off 25% 50% 75% 100%
+void set_music_volume(char *setting)
+{
+	music_volume = config_to_soundvolume(setting);
+	fprintf(stderr, "vol: %s\n", setting);
+	fprintf(stderr, "vol: %d\n", music_volume);
+	int mvm = MIX_MAX_VOLUME * music_volume / 4;
+	fprintf(stderr, "vol: %d\n", mvm);
+	Mix_VolumeMusic(mvm);
+	fprintf(stderr, "vol?: %d\n", Mix_VolumeMusic(-1));
+}
 
 void music_load_track(char *file)
 {
@@ -309,6 +341,11 @@ void music_load_track(char *file)
 	{
 		Mix_FreeMusic(prev_track);
 		prev_track = NULL;
+	}
+	if (music_volume=0)
+	{
+		music_needtrack=false;
+		return;	
 	}
 	if (Mix_PlayingMusic())
 	{
@@ -329,12 +366,23 @@ void music_load_track(char *file)
 	{
       warn("Mix_LoadMusic:%s:%s\n", fn?fn:file, SDL_GetError());
 	}	
+	music_needtrack=false;
 	free(fn);
 }
 
-// keep refs to SDL_Mixer to one file.
-bool music_playing()
+void music_finished()
 {
-	return Mix_PlayingMusic();	
+	music_needtrack=true;
 }
 
+// SDL_Mixer has a music-has-finished hook, but  you arent allowed to do anything
+// involving SDL_Mixer in that thread, so I am reduced to polling...
+bool music_need_track()
+{
+	return music_needtrack;	
+}
+
+void music_init()
+{
+	Mix_HookMusicFinished(music_finished);
+}

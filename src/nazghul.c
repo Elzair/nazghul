@@ -223,6 +223,8 @@ static void nazghul_init_internal_libs(void)
 
         if (!strcmp("yes", cfg_get("sound-enabled"))) {
                 sound_init();
+                music_init();
+                set_music_volume(cfg_get("music-volume"));
         }
 
 }
@@ -297,6 +299,7 @@ static void init_default_cfg()
         cfg_set("splash-image-filename", "splash.png");
         cfg_set("screen-dims", "1280x960" /*"640x480"*/);
         cfg_set("sound-enabled", "yes");
+        cfg_set("music-volume", "100%");
 }
 
 int main(int argc, char **argv)

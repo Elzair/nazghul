@@ -81,7 +81,7 @@ static bool tickHandler(struct TickHandler *th)
 	Tick++;
         wqRunToTick(&TickWorkQueue, Tick);
         sprite_advance_ticks(1);
-        if (!music_playing())
+        if (music_need_track())
         {
 	      	session_run_music_handler(Session);
      		}

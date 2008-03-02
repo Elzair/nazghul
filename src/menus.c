@@ -1457,6 +1457,7 @@ int menu_init(void)
 enum {
         OPTION_SCREEN_DIMS = 0,
         OPTION_SOUND_ENABLE,
+        OPTION_MUSIC_VOLUME,
         OPTION_NUMOPTIONS /* keep last */
 };
 
@@ -1474,6 +1475,7 @@ struct option {
 
 static void option_screen_dims(struct option *opt);
 static void option_sound(struct option *opt);
+static void option_music(struct option *opt);
 
 static struct option options[OPTION_NUMOPTIONS] = {
         { "Screen Size", 
@@ -1487,6 +1489,13 @@ static struct option options[OPTION_NUMOPTIONS] = {
           "Turn sound on or off.",
           "sound-enabled", 0, 0, 0,
           option_sound,
+          0,
+          0
+        },
+        { "Music Volume", 
+          "Adjust volume of builtin music.",
+          "music-volume", 0, 0, 0,
+          option_music,
           0,
           0
         }
@@ -1546,6 +1555,41 @@ static void option_sound(struct option *opt)
                         opt->restart = 0;
                 }
         }
+}
+
+/* option_sound -- prompt player to enable music at given level */
+static void option_music(struct option *opt)
+{
+	char *menu[] = {
+		"Off","25%","50%","75%","100%"
+	};
+	struct KeyHandler kh;
+	struct ScrollerContext data;
+	
+	log_msg("Choose music volume");
+	cmdwin_clear();
+	cmdwin_spush("Volume");
+	cmdwin_spush("<select>");
+	
+	
+	statusSetStringList("Music Volume", array_sz(menu), menu);
+	statusSetMode(StringList);
+	data.selection = NULL;
+	data.selector  = String;
+	kh.fx   = scroller;
+	kh.data = &data;
+	eventPushKeyHandler(&kh);
+	eventHandle();
+	eventPopKeyHandler();
+	
+	if (!data.selection)
+	{
+		return;
+	}
+	
+	opt->val = (char*)data.selection;
+	set_music_volume((char*)data.selection);
+
 }
 
 static int options_save(void)
