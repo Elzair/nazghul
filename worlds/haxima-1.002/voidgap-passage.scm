@@ -340,7 +340,6 @@
 (mk-place-music p_voidgap_5 'ml-dungeon-adventure)
 
 (prmap-linkrooms-2d 'p_voidgap_1 'p_voidgap_2 'p_voidgap_3 'p_voidgap_4 'p_voidgap_5)
-(prmap-mk-roomdata 'p_lost_garrison 0 0 0 (list 'p_voidgap_1 'p_voidgap_2 'p_voidgap_5 'p_voidgap_3))
 
 (prmap-set-mapdata p_voidgap_1 (prmap-mk-mapdata "voidgap" voidgap-random-type-ns voidgap-random-type-ew voidgap-random-type-area 'deep-terrain-edges 'deep-terrain-area 'deep-room-blitstats 'voidgap-room-custom-hardlinks))
 
