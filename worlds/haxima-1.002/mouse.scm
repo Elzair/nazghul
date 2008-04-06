@@ -36,10 +36,12 @@
 
   (define (kathryn-speech)
     (say ch_kathryn "Fool, you have led me right to the thief!")
+    (kern-obj-set-conv ch_kathryn nil)
     (kern-being-set-base-faction ch_kathryn faction-monster))
 
   (define (thud-speech)
     (say ch_thud "Thief here! Kill! Kill! Kill!")
+    (kern-obj-set-conv ch_thud nil)
     (kern-being-set-base-faction ch_thud faction-monster))
 
   (define (open-gate)
