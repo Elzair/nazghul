@@ -1,6 +1,7 @@
 haximadir   = $(datadir)/nazghul/haxima
 bin_SCRIPTS = haxima.sh
 CLEANFILES = haxima.sh
+SUBDIRS = music
 
 haxima.sh: Makefile
 	echo '#!/bin/sh' > $@ 

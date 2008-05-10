@@ -206,7 +206,8 @@ AC_CONFIG_FILES([Makefile \
 	m4/Makefile       \
 	src/Makefile      \
 	worlds/Makefile   \
-	worlds/haxima-1.002/Makefile])
+	worlds/haxima-1.002/Makefile \
+        worlds/haxima-1.002/music/Makefile])
 
 AC_OUTPUT
 
