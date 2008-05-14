@@ -66,8 +66,6 @@ static int sound_enabled = 1;
 /* This is 1 iff SDL_Audio() is initialized and ready for use. */
 static int sound_activated = 0;
 
-static SDL_mutex *sound_mutex = NULL;
-
 static int config_to_soundvolume(char* config)
 {
 	//our input percentages have nicely unique initial characters
@@ -342,7 +340,7 @@ void music_load_track(char *file)
 		Mix_FreeMusic(prev_track);
 		prev_track = NULL;
 	}
-	if (music_volume=0)
+	if (music_volume==0)
 	{
 		music_needtrack=false;
 		return;	
