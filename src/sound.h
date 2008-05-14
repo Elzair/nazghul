@@ -22,6 +22,10 @@
 #ifndef sound_h
 #define sound_h
 
+#include "macros.h"
+
+BEGIN_DECL
+
 #define NULL_SOUND NULL
 
 struct sound;
@@ -52,4 +56,7 @@ extern void music_load_track(char *file);
 extern bool music_need_track();
 extern void music_init(void);
 
+END_DECL
+
 #endif
+
