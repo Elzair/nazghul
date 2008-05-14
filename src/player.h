@@ -142,6 +142,7 @@ class PlayerParty : public Party {
         int getContext(void);
         virtual void setOnMap(bool val);        
         virtual void save(struct save *save);
+        virtual class Container *getInventory();
 
         void chooseNewLeader();
         void advanceTurns(int turns);

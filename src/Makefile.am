@@ -161,7 +161,17 @@ nazghul_SOURCES =		\
 	templ.h templ.c \
 	bitfield.h \
 	objectfreezer.h objectfreezer.c \
-        kern_intvar.c kern_intvar.h
+        kern_intvar.c kern_intvar.h \
+	quest.c quest.h \
+	ztats.h ztats.c \
+	ztats_pane.h ztats_pane.c \
+	ztats_pm.h ztats_pm.c \
+	ztats_container_pane.h ztats_container_pane.c \
+	ztats_arms.h ztats_arms.c \
+	ztats_reagents.h ztats_reagents.c \
+	ztats_spells.h ztats_spells.c \
+	ztats_items.h ztats_items.c \
+	ztats_misc.h ztats_misc.c 
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \

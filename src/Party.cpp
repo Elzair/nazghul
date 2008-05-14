@@ -1146,3 +1146,8 @@ void Party::absorbMemberAPDebt()
 	forEachMember(party_absorb_member_apdebt, &maxapdebt);
 	decActionPoints(0-maxapdebt/10); // 0-... because AP debt is negative
 }
+
+class Container *Party::getInventory()
+{
+        return NULL; // subclass(es) may override
+}

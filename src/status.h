@@ -22,6 +22,7 @@
 #ifndef status_h
 #define status_h
 
+#include "Arms.h"
 #include "macros.h"
 #include "common.h"
 #include "dimensions.h"
@@ -30,6 +31,21 @@
 BEGIN_DECL
 
 #define STAT_LIST_CHARS_PER_LINE (STAT_CHARS_PER_LINE - (TILE_W / ASCII_W))
+
+/* Standard color scheme for status visual elements */
+#define STAT_LABEL_CLR          'G'
+#define STAT_BONUS_CLR          'g'
+#define STAT_PENALTY_CLR        'r'
+#define STAT_NULL_CLR           'w'
+#define STAT_OK_CLR             'g'
+#define STAT_WARNING_CLR        'y'
+#define STAT_CRITICAL_CLR       'r'
+#define STAT_FRIENDLY_CLR       'g'
+#define STAT_NEUTRAL_CLR        'y'
+#define STAT_HOSTILE_CLR        'r'
+#define STAT_PARTY_MEMBER_CLR   'c'
+#define STAT_INUSE_CLR          'g'
+#define STAT_UNAVAIL_CLR        'G'
 
 struct trade_info {
         struct sprite *sprite;
@@ -206,6 +222,23 @@ extern void statusSetSuperGenericData(struct stat_super_generic_data *data);
  * @param title is shown at the top of the status window
  */
 extern void statusBrowseContainer(class Container *container, char *title);
+
+/**
+ * Set the text of the title at the top of the status window.
+ */
+extern void status_set_title(char *title);
+
+/**
+ * Given a range of values [0, max] and a current value, map the value to a
+ * color in the domain [OK, WARNING, CRITICAL] (this is specifically for hit
+ * points, as you might expect, but might be useful for other stuff).
+ */
+extern char status_range_color(int cur, int max);
+
+/**
+ * Paint armament statistics in a standard way.
+ */
+extern void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms);
 
 END_DECL
 

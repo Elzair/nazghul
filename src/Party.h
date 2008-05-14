@@ -80,6 +80,7 @@ class Party:public Being {
 
         // NOTE: dup of getMemberAtIndex in player.cpp
         virtual class Character *getMemberByOrder(int order);
+        virtual class Container *getInventory();
 
         void removeMembers();
 

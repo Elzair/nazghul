@@ -1862,3 +1862,9 @@ void PlayerParty::sortReadiedItems(class Character * member)
 		inventory->moveToFront(ie);
 	}
 }
+
+class Container *PlayerParty::getInventory()
+{
+        // yes, I know it's public, but this is polymorphic with the Party base class
+        return inventory;
+}

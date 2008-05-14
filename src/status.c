@@ -40,6 +40,14 @@
 #include "magic.h"
 #include "clock.h"
 
+#include "ztats.h"
+#include "ztats_arms.h"
+#include "ztats_items.h"
+#include "ztats_misc.h"
+#include "ztats_pm.h"
+#include "ztats_reagents.h"
+#include "ztats_spells.h"
+
 #include <stdio.h>
 #include <assert.h>
 #include <ctype.h>
@@ -52,48 +60,8 @@
 #define MAX_TITLE_LEN (STAT_CHARS_PER_LINE-2)
 #define STAT_MAX_H TALL_H
 
-/* Standard color scheme */
-#define STAT_LABEL_CLR		'G'
-#define STAT_BONUS_CLR		'g'
-#define STAT_PENALTY_CLR		'r'
-#define STAT_NULL_CLR			'w'
-#define STAT_OK_CLR			'g'
-#define STAT_WARNING_CLR		'y'
-#define STAT_CRITICAL_CLR	'r'
-#define STAT_FRIENDLY_CLR	'g'
-#define STAT_NEUTRAL_CLR		'y'
-#define STAT_HOSTILE_CLR		'r'
-#define STAT_PARTY_MEMBER_CLR 'c'
-#define STAT_INUSE_CLR		'g'
-#define STAT_UNAVAIL_CLR		'G'
 
 #define STAT_MODE_STACK_DEPTH 10
-
-enum ZtatsView {
-	ViewMember = 0,
-	ViewArmaments,
-	ViewReagents,
-	ViewSpells,
-	ViewItems,
-	ViewMisc,
-	NumViews
-};
-
-/* Entry types for the Z)tats "sub-viewer" windows. */
-struct ztats_entry {
-	
-	/* The title of the window. */
-	char *title;
-	
-	/* This filters player inventory for the objects that are of interest
-	* to this viewer. For example, the Spells viewer will filter through
-	* only Spell inventory entries. */
-	struct filter filter;
-	
-	/* This shows whatever the specific type of thing is. Different types of
-	* inventory elements are shown differently. */
-	void (*show_thing)(SDL_Rect * rect, void *thing);
-};
 
 static struct status {
 	SDL_Rect titleRect;
@@ -103,7 +71,6 @@ static struct status {
 	void (*scroll) (enum StatusScrollDir);
 	int pcIndex;
 	struct inv_entry *selectedEntry;
-	enum ZtatsView ztatsView;
 	enum StatusMode mode;
 
 	/**
@@ -167,20 +134,12 @@ static struct status {
 } Status;
 
 /* filtering functions used with status_show_container() */
-static bool stat_filter_arms(struct inv_entry *ie, void *fdata);
 static bool stat_filter_ready_arms(struct inv_entry *ie, void *fdata);
-static bool stat_filter_reagents(struct inv_entry *ie, void *fdata);
-static bool stat_filter_spells(struct inv_entry *ie, void *fdata);
-static bool stat_filter_usable(struct inv_entry *ie, void *fdata);
-static bool stat_filter_misc(struct inv_entry *ie, void *fdata);
 static bool stat_filter_drop(struct inv_entry *ie, void *fdata);
 
 /* functions to show specific types of things from status_show_containe() */
-static void status_show_ztat_character(SDL_Rect *rect, void *thing);
-static void status_show_ztat_arms(SDL_Rect *rect, void *thing);
 static void status_show_generic_object_type(SDL_Rect *rect, void *thing);
 static void status_show_mix_reagent(SDL_Rect *rect, void *thing);
-static void status_show_ztat_spells(SDL_Rect *rect, void *thing);
 
 /* super-generic functions */
 static void stat_super_generic_paint();
@@ -195,22 +154,24 @@ static struct filter stat_drop_filter = {
 	stat_filter_drop, 0
 };
 
-/* Table for the different Z)tats UI windows. */
-static struct ztats_entry ztats_entries[] = {
-	{ "Party Member", { 0, 0 }, 0 /* different because it doesn't use the
-				       * generic stat_show_container() */ },
-	{ "Armaments",    { stat_filter_arms,     0 }, status_show_ztat_arms },
-	{ "Reagents",     { stat_filter_reagents, 0 }, status_show_generic_object_type },
-	{ "Spells",       { stat_filter_spells,   0 }, status_show_ztat_spells },
-	{ "Usable Items", { stat_filter_usable,    0 }, status_show_generic_object_type },
-	{ "Misc",         { stat_filter_misc,     0 }, status_show_generic_object_type },
+static bool stat_filter_usable(struct inv_entry *ie, void *fdata)
+{
+	return (ie->type->isUsable());
+}
+
+static struct filter stat_use_filter = {
+	stat_filter_usable, 0
 };
 
-
-static bool stat_filter_arms(struct inv_entry *ie, void *fdata)
+static bool stat_filter_mixable(struct inv_entry *ie, void *fdata)
 {
-	return (ie->type->isReadyable());
+	return (ie->type->isMixable());
 }
+
+
+static struct filter stat_mix_filter = {
+	stat_filter_mixable, 0
+};
 
 static bool stat_filter_ready_arms(struct inv_entry *ie, void *fdata)
 {
@@ -231,30 +192,6 @@ static bool stat_filter_ready_arms(struct inv_entry *ie, void *fdata)
 	}
 
 	return false;
-}
-
-static bool stat_filter_reagents(struct inv_entry *ie, void *fdata)
-{
-	return ie->type->isMixable();
-}
-
-static bool stat_filter_spells(struct inv_entry *ie, void *fdata)
-{
-	return ie->type->isCastable();
-}
-
-static bool stat_filter_usable(struct inv_entry *ie, void *fdata)
-{
-	return ie->type->isUsable();
-}
-
-static bool stat_filter_misc(struct inv_entry *ie, void *fdata)
-{
-	/* Things that don't fall into any of the other categories */
-	return (! ie->type->isReadyable()
-		&& ! ie->type->isMixable()
-		&& ! ie->type->isCastable()
-		&& ! ie->type->isUsable());
 }
 
 static bool stat_filter_drop(struct inv_entry *ie, void *fdata)
@@ -337,10 +274,32 @@ int statusInit()
 
 	foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
 
+#ifdef ztats_h
+        ztats_init();
+#endif
+#ifdef ztats_pm_h
+        ztats_pm_init();
+#endif
+#ifdef ztats_arms_h
+        ztats_arms_init();
+#endif
+#ifdef ztats_reagents_h
+        ztats_reagents_init();
+#endif
+#ifdef ztats_spells_h
+        ztats_spells_init();
+#endif
+#ifdef ztats_items_h
+        ztats_items_init();
+#endif
+#ifdef ztats_misc_h
+        ztats_misc_init();
+#endif
+
 	return 0;
 }
 
-static void status_set_title(char *title)
+void status_set_title(char *title)
 {
 	strncpy(Status.title, title, MAX_TITLE_LEN);
 	Status.title[MAX_TITLE_LEN]=0;
@@ -366,7 +325,7 @@ static char status_arms_stat_color(char *dice)
 
 /* status_show_arms_stats -- helper function to print the arms stats the same
  * way for all viewers. */
-static void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
+void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
 {
 	char *hit   = arms->getToHitDice();
 	char *dmg   = arms->getDamageDice();
@@ -387,52 +346,6 @@ static void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
 		    status_arms_stat_color(armor), armor
 		);
 	rect->y += (TILE_H - ASCII_H);
-}
-
-/* status_show_member_arms -- called during Ztats when showing Party Members,
- * this shows individual arms held by the member */
-static void status_show_member_arms(SDL_Rect * rect, ArmsType *arms)
-{
-	sprite_paint(arms->getSprite(), 0, rect->x, rect->y);
-	rect->x += TILE_W;
-
-	/* name */
-	// SAM: I don't like cluttering the name line, but the range and AP 
-	//      are essential information, and previous attempts at multi-line 
-	//      status entries foundered.  So, until the thing can be re-written...
-	screenPrint(rect, 0, "%s  (Rng:%d, AP:%d, Spd:%d)", 
-		    arms->getName(), arms->getRange(), arms->getRequiredActionPoints(), arms->get_AP_mod() );
-	rect->y += ASCII_H;
-
-	/* stats */
-	status_show_arms_stats(rect, arms);
-	rect->x -= TILE_W;
-}
-
-/* status_show_ztat_arms -- called during Ztats to show individual Armaments */
-static void status_show_ztat_arms(SDL_Rect * rect, void *thing)
-{
-	struct inv_entry *ie = (struct inv_entry*)thing;
-	ArmsType *arms = (ArmsType*)ie->type;
-	
-	assert(ie->count);
-	
-	/* sprite */
-	sprite_paint(arms->getSprite(), 0, rect->x, rect->y);
-	rect->x += TILE_W;
-	
-	/* quantity and name */
-	if (ie->ref) {
-		screenPrint(rect, 0, "%2d %s ^c+%c[%d in use]^c-", ie->count,
-			arms->getName(), STAT_INUSE_CLR, ie->ref);
-	} else {
-		screenPrint(rect, 0, "%2d %s", ie->count, arms->getName());
-	}
-	rect->y += ASCII_H;
-	
-	/* stats */
-	status_show_arms_stats(rect, arms);
-	rect->x -= TILE_W;
 }
 
 /* status_show_ready_arms -- called during the R)eady command, this shows
@@ -480,7 +393,7 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
 
 /* status_range_color -- return red, green or yellow to reflect the relative
  * level of a statistic */
-static char status_range_color(int cur, int max)
+char status_range_color(int cur, int max)
 {
 	if (cur > max/2)
 	{
@@ -496,39 +409,8 @@ static char status_range_color(int cur, int max)
 	}
 }
 
-int status_show_effect(hook_entry_t *entry, void *data)
-{
-	SDL_Rect *rect = (SDL_Rect*)data;
-	struct effect *effect = entry->effect;
-
-	/* No name implies invisible to UI. */
-	if (!effect->name) {
-		return 0;
-	}
-
-	/* Blit the effect icon, if it has one */
-	if (effect->sprite) {
-                sprite_paint(effect->sprite, 0, rect->x, rect->y);
-	}
-
-	rect->x += ASCII_W;
-
-	if (EFFECT_NONDETERMINISTIC == entry->effect->duration) {
-		screenPrint(rect, 0, " %s", entry->effect->name);
-	} else if (EFFECT_PERMANENT == entry->effect->duration) {
-		screenPrint(rect, 0, " %s (permanent)", entry->effect->name);
-	} else {
-		screenPrint(rect, 0, " %s [%d min]", entry->effect->name, 
-			clock_alarm_remaining(&entry->expiration));
-	}
-	rect->x -= ASCII_W; /* back up to start next effect at column 0 */
-	rect->y += ASCII_H;
-
-	return 0;
-}
-
 static void status_show_character_var_stats(SDL_Rect *rect, 
-														class Character *pm)
+                                            class Character *pm)
 {
 	/* Show the xp, hp and mp */
 	/* Note that getXpForLevel(2) - getXpForLevel(1) != getXpForLevel(1)*/
@@ -557,127 +439,6 @@ static void status_show_character_var_stats(SDL_Rect *rect,
 			, (100 * (pm->getExperience()-pm->getXpForLevel(pm->getLevel()))/(pm->getXpForLevel(pm->getLevel()+1)-pm->getXpForLevel(pm->getLevel())))
 		);
 	rect->y += ASCII_H;
-}
-
-
-/* status_show_ztat_character -- show character stats in Ztat mode */
-static void status_show_ztat_character(SDL_Rect *rect, void *thing)
-{
-	struct mmode *mmode;
-	class Character *pm = (class Character*)thing;
-	int i;
-	
-	/* Push the current color. */
-	screenPrint(rect, 0, "^c+=");
-
-	// Show experience level and XP information:
-	screenPrint(rect, 0, 
-		    "^c%cLevel:^cw%d "
-		    "^c%cXP:^cw%d "
-		    "^c%cNext Level:^cw%d ",
-
-		    STAT_LABEL_CLR,pm->getLevel(),
-		    STAT_LABEL_CLR,pm->getExperience(),
-		    STAT_LABEL_CLR,pm->getXpForLevel(pm->getLevel()+1)
-	    );
-	rect->y += ASCII_H;
-
-	// Show the basic character attributes:
-	screenPrint(rect, 0, 
-		    "^c%cStr:^cw%d "
-		    "^c%cInt:^cw%d "
-		    "^c%cDex:^cw%d ",
-
-		    STAT_LABEL_CLR, pm->getStrength(),
-		    STAT_LABEL_CLR, pm->getIntelligence(),
-		    STAT_LABEL_CLR, pm->getDexterity()
-		);
-	rect->y += ASCII_H;
-
-	// Show highly variable information such as HP/max, MP/max, and AP/max
-	screenPrint(rect, 0, 
-		    "^c%cHP:^c%c%d^cw/%d "
-		    "^c%cMP:^c%c%d^cw/%d "
-		    "^c%cAP:^c%c%d^cw/%d ",
-
-		    STAT_LABEL_CLR, 
-		    status_range_color(pm->getHp(), pm->getMaxHp()),
-		    pm->getHp(), pm->getMaxHp(),
-
-		    STAT_LABEL_CLR, 
-		    status_range_color(pm->getMana(), pm->getMaxMana()),
-		    pm->getMana(), pm->getMaxMana(),
-
-		    STAT_LABEL_CLR, 
-		    status_range_color(pm->getActionPoints(), pm->getActionPointsPerTurn()), 
-		    pm->getActionPoints(), pm->getActionPointsPerTurn()
-		);
-	rect->y += ASCII_H;
-
-	// Show species, class, and movement mode:
-	mmode = pm->getMovementMode();
-	assert(mmode);
-	screenPrint(rect, 0, 
-		    "^c%cSpecies:    ^cw%s", 
-		    STAT_LABEL_CLR, pm->species ? pm->species->name:"Unknown");
-	rect->y += ASCII_H;
-
-	screenPrint(rect, 0, 
-		    "^c%cOccupation: ^cw%s", 
-		    STAT_LABEL_CLR, pm->occ ? pm->occ->name : "None");
-	rect->y += ASCII_H;
-
-	screenPrint(rect, 0, 
-		    "^c%cMovement:   ^cw%s", 
-		    STAT_LABEL_CLR, mmode->name);
-	rect->y += ASCII_H;
-	rect->y += ASCII_H;
-
-	/* Show effects */
-	screenPrint(rect, 0 /*SP_CENTERED*/ , "^c%c*** Effects ***^cw", 
-						STAT_LABEL_CLR);
-	rect->y += ASCII_H;
-	for (i = 0; i < OBJ_NUM_HOOKS; i++)
-	{
-				pm->hookForEach(i, status_show_effect, rect);
-	}
-	rect->y += ASCII_H;
-
-	/* Show arms */
-	screenPrint(rect, 0 /*SP_CENTERED*/ , "^c%c*** Arms ***^cw", STAT_LABEL_CLR);
-	rect->y += ASCII_H;
-
-#if 1
-	int armsIndex=0;
-	class ArmsType *arms = pm->enumerateArms(&armsIndex);
-	while (arms != NULL) {
-		status_show_member_arms(rect, arms);
-		arms = pm->getNextArms(&armsIndex);
-	}
-#else
-	/* This was an experiment with enumerating the slots instead of the
-		* readied arms. I couldn't get the formatting to look very good, so I
-		* punted. */
-	for (i = 0; i < pm->species->n_slots; i++) {
-		class ArmsType *arms = pm->getArmsInSlot(i);
-		if (arms) {
-			status_show_member_arms(rect, i, arms);
-		} else {
-			rect->x += TILE_W;
-			screenPrint(rect, 0, "^c+y%d:^cG(empty)^c-", i);
-			rect->x -= TILE_W;
-			rect->y += ASCII_H;
-		}
-	}
-#endif
-
-	/* Pop the saved current color. */
-	screenPrint(rect, 0, "^c-");
-
-
-	// fixme: currently this will overprint and it doesn't support
-	// scrolling. These may be necessary if the status window is not large
-	// enough.
 }
 
 static void myShadeLines(int line, int n)
@@ -723,47 +484,6 @@ static void status_show_generic_object_type(SDL_Rect *rect, void *thing)
 	rect->y += (LINE_H * 3) / 4;
 	rect->x -= TILE_W;
 }
-
-/* status_show_generic_object_type -- show a generic object type (just name and
- * quantity) */
-static void status_show_ztat_spells(SDL_Rect *rect, void *thing)
-{
-	struct inv_entry *ie = (struct inv_entry*)thing;
-	char code[MAX_SYLLABLES_PER_SPELL+1] = { 0 };
-	struct spell *spell = 0;
-
-	/* This assumes the type name matches the spelled-out code name, and
-		* doesn't include extra stuff like " spell" at the end. Eg, "Vas Flam"
-		* is great but "Vas Flam spell" will come back as "Vas Flam Sanct" or
-		* possibly an error. */
-	if (! magic_spell_name_to_code(&Session->magic, code, sizeof(code), 
-												ie->type->getName())) {
-		spell = magic_lookup_spell(&Session->magic, code);
-	}
-
-	/* Blit the sprite on the left */
-	if (spell && spell->sprite) {
-		sprite_paint(spell->sprite, 0, rect->x, rect->y);
-	}
-	rect->x += TILE_W;
-
-	/* Print basic info available in the type. */
-	screenPrint(rect, 0, "%2d %s", ie->count, ie->type->getName());
-	rect->y += ASCII_H;
-
-	/* Print info only available in the spell struct. */
-	if (spell) {
-		screenPrint(rect, 0, 
-			"^c+GLvl:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
-			spell->level, 
-			spell->cost, spell->action_points);
-	}
-
-	/* Carriage-return line-feed */
-	rect->y += ASCII_H;
-	rect->x -= TILE_W;
-}
-
 
 /* status_show_mix_reagent -- show a reagent during the M)ix UI. Marks reagents
  * which have been selected for mixing. */
@@ -1060,108 +780,6 @@ static void myScrollParty(enum StatusScrollDir dir)
 			(Status.pcIndex + player_party->getSize() - 1) % player_party->getSize();
 		break;
 	default:
-		break;
-	}
-}
-
-static int myScrollMemberZtatsHorz(int d)
-{
-
-	if (d > 0 && Status.pcIndex < (player_party->getSize() - 1)) {
-		Status.pcIndex++;
-		return 0;
-	}
-
-	else if (d < 0 && Status.pcIndex > 0) {
-		Status.pcIndex--;
-		return 0;
-	}
-
-	return 1;
-}
-
-static void myScrollZtatsHorz(int d)
-{
-	if (Status.ztatsView != ViewMember || myScrollMemberZtatsHorz(d))
-	{
-		Status.ztatsView = (enum ZtatsView) ((NumViews + Status.ztatsView + d)
-				% NumViews);
-		Status.topLine = 0;
-
-		/* init new view */
-		switch (Status.ztatsView)
-		{
-
-		case ViewMember:
-			Status.pcIndex = (d > 0 ? 0 : player_party->getSize() - 1);
-			break;
-
-		default:
-			Status.container = player_party->inventory;
-			Status.show_thing = ztats_entries[Status.ztatsView].show_thing;
-			Status.filter = &ztats_entries[Status.ztatsView].filter;
-			Status.maxLine = Status.container->filter_count(Status.filter) -
-					Status.numLines;
-			break;
-		}
-	}
-
-	Status.maxLine = max(Status.maxLine, 0);
-
-	if (Status.ztatsView == ViewMember)
-	{
-		status_set_title(player_party->
-				getMemberAtIndex(Status.pcIndex)->getName());
-	}
-	else
-	{
-		status_set_title(ztats_entries[Status.ztatsView].title);
-	}
-}
-
-static void myScrollZtats(enum StatusScrollDir dir)
-{
-	switch (dir) {
-	case ScrollLeft:
-		myScrollZtatsHorz(-1);
-		break;
-	case ScrollRight:
-		myScrollZtatsHorz(1);
-		break;
-	case ScrollUp:
-		if (Status.topLine)
-			Status.topLine--;
-		break;
-	case ScrollDown:
-		if (Status.topLine < Status.maxLine)
-			Status.topLine++;
-		break;
-	case ScrollPageUp:
-		Status.topLine -= Status.numLines;
-		if (Status.topLine < 0)
-			Status.topLine = 0;
-		break;
-	case ScrollPageDown:
-		Status.topLine = min(Status.maxLine,
-					Status.topLine + Status.numLines);
-		break;
-		default:
-					break;
-	}
-}
-
-static void myShowZtats(void)
-{
-	switch (Status.ztatsView) {
-	case ViewMember:
-		{
-			SDL_Rect rect = Status.screenRect;
-			status_show_ztat_character(&rect,
-				player_party->getMemberAtIndex(Status.pcIndex));
-		}
-		break;
-	default:
-		stat_show_container();
 		break;
 	}
 }
@@ -1706,13 +1324,11 @@ void statusSetMode(enum StatusMode mode)
 		
 	case Ztats:
 		switch_to_tall_mode();
-		status_set_title(player_party->
-				getMemberAtIndex(Status.pcIndex)->getName());
-		Status.ztatsView = ViewMember;
+                ztats_enter(player_party, &Status.screenRect);
 		Status.selectedEntry = 0;
 		Status.topLine = 0;
-		Status.paint = myShowZtats;
-		Status.scroll = myScrollZtats;
+		Status.paint = ztats_paint;
+		Status.scroll = ztats_scroll;
 		break;
 		
 	case Ready:
@@ -1737,7 +1353,7 @@ void statusSetMode(enum StatusMode mode)
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
-		Status.filter = &ztats_entries[ViewItems].filter;
+		Status.filter = &stat_use_filter;
 		Status.maxLine = Status.container->
 				filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;
@@ -1764,11 +1380,11 @@ void statusSetMode(enum StatusMode mode)
 		
 	case MixReagents:
 		switch_to_tall_mode();
-		status_set_title(ztats_entries[ViewReagents].title);
+		status_set_title("Select Reagents");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
-		Status.filter = &ztats_entries[ViewReagents].filter;
+		Status.filter = &stat_mix_filter;
 		Status.maxLine = Status.container->
 				filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;

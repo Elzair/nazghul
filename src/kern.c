@@ -9669,6 +9669,13 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-progress-bar-advance", kern_progress_bar_advance);
         API_DECL(sc, "kern-progress-bar-finish", kern_progress_bar_finish);
 
+#if 0
+        /* kern-quest api */
+        API_DECL(sc, "kern-quest-mk", );
+        API_DECL(sc, "kern-quest-assign", );
+        API_DECL(sc, "", );
+#endif
+
         /* obsolete (keep these until old save games are unlikely to use
          * them) */
         API_DECL(sc, "kern-set-frame", kern_set_frame);
