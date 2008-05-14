@@ -1268,26 +1268,6 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
 }
 
 
-static struct terrain_map *create_camping_map(struct place *place, int x, 
-                                              int y)
-{
-        struct terrain_map *map;
-        struct terrain *terrain;
-
-        map = place_get_combat_terrain_map(place, x, y);
-        if (map) {
-                // terrain_map_print(stdout, INITIAL_INDENTATION, map);
-                return terrain_map_clone(map, "combat_camping_map");
-        }
-
-        map = terrain_map_new("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H, 
-                              Session->palette);
-        terrain = place_get_terrain(place, x, y);
-        terrain_map_fill(map, 0, 0, COMBAT_MAP_W, COMBAT_MAP_H, terrain);
-
-        return map;
-}
-
 static void setup_combat_place_part(struct place *place, 
 		struct terrain* our_terrain, struct terrain* other_terrain,
 		int dx, int dy, int mapx, int mapy)
@@ -1391,15 +1371,7 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
         int player_dx, player_dy, npc_dx, npc_dy,pcmap_x,pcmap_y,npcmap_x,npcmap_y;
         struct list *elem;
 
-        // If there is no enemy then create a map derived entirely from the
-        // player party's tile. This is the case for camping and zoom-in.
-
-        /*if (!info->move->npc_party) {
-                return create_camping_map(info->move->place, info->move->x,
-                                          info->move->y);
-        }*/
-
-        // Otherwise create a map derived partially from the enemy's tile and
+        // Create a map derived partially from the enemy's tile and
         // partially from the player's tile.
 
         map = terrain_map_new("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H,
