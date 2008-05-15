@@ -1715,3 +1715,12 @@
   (cond ((null? lst) nil)
         ((null? (cdr lst)) (set-cdr! lst val))
         (else (append! (cdr lst) val))))
+
+(define (repeat fn n)
+  (if (> n 0)
+      (begin
+        (fn)
+        (repeat fn (- n 1)))))
+
+(define (string-lower str)
+  (list->string (map char-downcase (string->list str))))
