@@ -355,6 +355,8 @@
 ;; Astronomy
 (load "moon.scm")
 
+(load "ztats-quest-ui.scm")
+
 ;; Miscellaneous crap
 (mk-obj-type 't_crosshair "crosshair" s_crosshair layer-crosshair nil)
 (kern-set-crosshair t_crosshair)
