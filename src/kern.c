@@ -9361,8 +9361,21 @@ KERN_API_CALL(kern_screen_print)
         SDL_Rect rect;
         int flags = 0;
 
-        if (unpack(sc, &args, "ddddd", &rect.x, &rect.y, &rect.w, &rect.h, &flags)) {
-                load_err("kern_screen_print: bad args");
+        if (! scm_is_pair(sc, args)) {
+                load_err("%s: args not a list", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        pointer prect = scm_car(sc, args);
+        args = scm_cdr(sc, args);
+
+        if (unpack(sc, &prect, "dddd",  &rect.x, &rect.y, &rect.w, &rect.h)) {
+                load_err("%s: error unpacking rect", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        if (unpack(sc, &args, "d", &flags)) {
+                load_err("%s: error unpacking flags", __FUNCTION__);
                 return sc->NIL;
         }
         
@@ -9379,7 +9392,7 @@ KERN_API_CALL(kern_screen_print)
                 } else if (scm_is_real(sc, val)) {
                         n = snprintf(ptr, room, "%f", scm_real_val(sc, val));
                 } else {
-                        rt_err("kern-print: bad args");
+                        rt_err("%s: unknown type", __FUNCTION__);
                 }
 
                 ptr += n;
@@ -9389,7 +9402,6 @@ KERN_API_CALL(kern_screen_print)
         screenPrint(&rect, flags, buf);
 
         return sc->NIL;
-
 }
 
 KERN_OBSOLETE_CALL(kern_set_ascii);

@@ -1,5 +1,6 @@
 (define (qst-talk-to-mk kchar-tag)
   (let ((kchar (safe-eval kchar-tag)))
+    ;(println "kchar: " kchar)
     (if (notnull? kchar)
         (qst-mk (string-append "Talk to " (kern-obj-get-name kchar))
                 (string-append "Find and talk to " (kern-obj-get-name kchar))

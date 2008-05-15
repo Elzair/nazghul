@@ -14,20 +14,25 @@
    )
  (lambda (zqug dir)
    #f)
+
  (lambda (zqug)
-   (let ((dims (zqug-get-rect zqug))
-         (pgob (gob (zqug-get-party zqug))))
-     (define (scrnprn arg)
-       (kern-screen-print (car dims) (cadr dims) (caddr dims) (cadddr dims)
-                          0
-                          arg))
-     (println "party gob: " pgob)
+   (let* ((dims (zqug-get-rect zqug))
+          (pgob (gob (zqug-get-party zqug))))
+
+     (define (scrnprn qlst line)
+       (if (notnull? qlst)
+           (begin
+             (kern-screen-print (list (car dims) line (caddr dims) (cadddr dims))
+                                0
+                                (qst-title (car qlst)))
+             (scrnprn (cdr qlst) (+ 16 line))
+             )))
+
      (if (null? pgob)
          (scrnprn "No Quests!")
          (let ((qlst (find-field 'quests pgob)))
            (if (null? qlst)
                (scrnprn "No Quests Yet! (But keep trying!)")
-               (for-each (lambda (qst) (scrnprn (qst-title qst)))
-                         (cdr qlst))
+               (scrnprn (cdr qlst) (cadr dims))
                )))))
  (zqug-mk))
