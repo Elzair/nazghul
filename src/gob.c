@@ -7,6 +7,7 @@
 #define scm_car(sc, arg) ((sc)->vptr->pair_car(arg))
 #define scm_cdr(sc, arg) ((sc)->vptr->pair_cdr(arg))
 
+/* Fixme: gob_new should start with refcount 1 */
 struct gob *gob_new(scheme *sc, pointer p)
 {
         struct gob *gob = (struct gob *)calloc(1, sizeof(*gob));
@@ -17,6 +18,7 @@ struct gob *gob_new(scheme *sc, pointer p)
         return gob;
 }
 
+/* Fixme: this should not be public; clients should be required to use gob_unref */
 void gob_del(struct gob *gob)
 {
         gob->sc->vptr->unprotect(gob->sc, gob->p);
