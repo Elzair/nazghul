@@ -174,9 +174,10 @@
 
 ;; gets location of player character (not party- ie 'works' in temporary map)
 (define (player-member-loc)
-	    (loc-place (kern-obj-get-location
-	       		(car (kern-party-get-members (kern-get-player))))
-	    ))
+  (let ((loc (kern-obj-get-location (car (kern-party-get-members (kern-get-player))))))
+    (if (null? loc)
+        nil
+        (loc-place loc))))
                 
 (define (num-player-party-members)
   ;;(display "num-player-party-members")(newline)
@@ -1694,3 +1695,23 @@
   (dots n)
   (kern-log-end)
   )
+
+(define (find-first fn? lst)
+  (if (null? lst)
+      nil
+      (if (fn? (car lst))
+          (car lst)
+          (find-first fn? (cdr lst)))))
+
+(define (find-field sym lst)
+  (find-first (lambda (x) (and (pair? x) 
+                               (eq? sym (car x))))
+              lst))
+
+(define (append-field! lst sym val)
+  (append! lst (list (list sym val))))
+
+(define (append! lst val)
+  (cond ((null? lst) nil)
+        ((null? (cdr lst)) (set-cdr! lst val))
+        (else (append! (cdr lst) val))))
