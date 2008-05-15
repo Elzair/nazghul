@@ -1,0 +1,8 @@
+(define (qst-talk-to-mk kchar-tag)
+  (let ((kchar (safe-eval kchar-tag)))
+    (if (notnull? kchar)
+        (qst-mk (string-append "Talk to " (kern-obj-get-name kchar))
+                (string-append "Find and talk to " (kern-obj-get-name kchar))
+                (lambda (qst target) #t)
+                (lambda (qst) "Incomplete")
+                kchar-tag))))
