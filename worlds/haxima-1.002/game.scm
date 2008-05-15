@@ -355,7 +355,10 @@
 ;; Astronomy
 (load "moon.scm")
 
+;; Quest system
 (load "ztats-quest-ui.scm")
+(load "quest-sys.scm")
+(load "quest-talk-to.scm")
 
 ;; Miscellaneous crap
 (mk-obj-type 't_crosshair "crosshair" s_crosshair layer-crosshair nil)
