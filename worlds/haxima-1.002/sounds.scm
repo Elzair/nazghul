@@ -122,27 +122,28 @@
 ;; use kern-set-combat-state-listener to call this
 ;; do it on system startup too (kern-set-gamestart-hook)
 (define (music-on-combat-change player)
-	(let* ((playerloc (player-member-loc))
-			(dataslist (kplace-get-objects-of-type playerloc t_sounddata)))
-		(if (not (null? dataslist))
-			(let* ((sounddata (gob (car dataslist)))
-						(oldstate (car sounddata))
-						(newstate (null? (all-hostiles (car (kern-party-get-members player)))))
-						)
-				(set-car! sounddata newstate)
-				(if newstate
-					(if oldstate
-						(music-set-pair nil (list-ref sounddata 1))
-						(music-set-pair (list-ref sounddata 4) (list-ref sounddata 1))
-					)
-					(if oldstate
-						(music-set-pair (list-ref sounddata 2) (list-ref sounddata 3))
-						(music-set-pair nil (list-ref sounddata 3))
-					)
-				)
-			))
-	))			
-	
+  (let ((playerloc (player-member-loc)))
+    (if (notnull? playerloc)
+        (let ((dataslist (kplace-get-objects-of-type playerloc t_sounddata)))
+          (if (notnull? dataslist)
+              (let* ((sounddata (gob (car dataslist)))
+                     (oldstate (car sounddata))
+                     (newstate (null? (all-hostiles (car (kern-party-get-members player)))))
+                     )
+                (set-car! sounddata newstate)
+                (if newstate
+                    (if oldstate
+                        (music-set-pair nil (list-ref sounddata 1))
+                        (music-set-pair (list-ref sounddata 4) (list-ref sounddata 1))
+                        )
+                    (if oldstate
+                        (music-set-pair (list-ref sounddata 2) (list-ref sounddata 3))
+                        (music-set-pair nil (list-ref sounddata 3))
+                        )
+                    )
+                ))
+          ))))
+    
 ;; use place entry hooks to call this
 (define (music-on-combat-entry playerloc player)
 	(let ((dataslist (kplace-get-objects-of-type playerloc t_sounddata)))
