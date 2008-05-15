@@ -76,6 +76,8 @@
 #include "skill_set_entry.h"
 #include "templ.h"
 #include "macros.h"
+#include "ztats.h"
+#include "ztats_pane.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -431,7 +433,7 @@ static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
                                 load_err("arg %d not a symbol", count);
                         }
                         break;
-                case 'l':
+                case 'l': /* plain old cell, (eg a gob) */
                         cval = va_arg(args, pointer*);
                         *cval = car;
                         break;
@@ -9233,6 +9235,161 @@ KERN_API_CALL(kern_progress_bar_finish)
         return sc->NIL;
 }
 
+/**
+ * (kern-ztats-add-pane <enter> <scroll> <paint> <gob>)
+ *
+ * <enter> is (enter <gob> <kparty> <dir> <x> <y> <w> <h>)
+ * <scroll> is (scroll <gob> <dir>), returning #t iff the scroll was handled
+ * <paint> is (paint <gob>)
+ * <gob> is script info
+ */
+struct kern_ztats_pane {
+        struct ztats_pane base;
+        struct closure *enter, *scroll, *paint;
+        struct gob *gob;
+};
+
+void kern_ztats_pane_enter(struct ztats_pane *pane, class Party *party, enum StatusScrollDir via, 
+                           SDL_Rect *dims)
+{
+        struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
+        closure_exec(kzp->enter, "lpddddd", kzp->gob->p, party, via, dims->x, dims->y, dims->w, dims->h);
+}
+
+int kern_ztats_pane_scroll(struct ztats_pane *pane, enum StatusScrollDir dir)
+{
+        struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
+        return closure_exec(kzp->scroll, "ld", kzp->gob->p, dir);
+}
+
+void kern_ztats_pane_paint(struct ztats_pane *pane)
+{
+        struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
+        closure_exec(kzp->paint, "l", kzp->gob->p);
+}
+
+static void kern_ztats_pane_dtor(void *val)
+{
+        struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)val;
+        if (kzp->gob) {
+                gob_unref(kzp->gob);
+        }
+        if (kzp->paint) {
+                closure_unref(kzp->paint);
+        }
+        if (kzp->scroll) {
+                closure_unref(kzp->scroll);
+        }
+        if (kzp->enter) {
+                closure_unref(kzp->enter);
+        }
+        free(kzp);
+}
+
+static struct ztats_pane_ops kern_ztats_pane_ops = {
+        kern_ztats_pane_enter,
+        kern_ztats_pane_scroll,
+        kern_ztats_pane_paint
+};
+
+KERN_API_CALL(kern_ztats_add_pane)
+{
+        pointer penter, pscroll, ppaint, pgob;
+        struct kern_ztats_pane *kzp;
+
+        if (unpack(sc, &args, "oool", &penter, &pscroll, &ppaint, &pgob)) {
+                load_err("kern-ztats-add-pane: bad args");
+                return sc->NIL;
+        }
+
+        if (!(kzp = (struct kern_ztats_pane*)calloc(1, sizeof(*kzp)))) {
+                load_err("alloc failed");
+                return sc->NIL;
+        }
+
+        kzp->base.ops = &kern_ztats_pane_ops;
+        if (! (kzp->enter = closure_new_ref(sc, penter))) {
+                goto fail;
+        }
+        if (! (kzp->scroll = closure_new_ref(sc, pscroll))) {
+                goto fail;
+        }
+        if (! (kzp->paint = closure_new_ref(sc, ppaint))) {
+                goto fail;
+        }
+        if (! (kzp->gob = gob_new(sc, pgob))) {
+                goto fail;
+        }
+        gob_ref(kzp->gob);
+
+        ztats_add_pane(&kzp->base);
+        session_add(Session, kzp, kern_ztats_pane_dtor, NULL, NULL);
+        return sc->T;
+
+ fail:
+        kern_ztats_pane_dtor(kzp);
+        return sc->F;
+}
+
+KERN_API_CALL(kern_ztats_set_title)
+{
+        char *title;
+        if (unpack(sc, &args, "s", &title)) {
+                load_err("kern_ztats_set_title: bad args");
+                return sc->NIL;
+        }
+
+        status_set_title(title);
+        return sc->T;
+}
+
+/**
+ * (kern-screen-print (<x> <y> <w> <h>) <flags> <...>)
+ *
+ * <x> <y> <w> <h> are the rect (absolute screen coords) to print to
+ * <flags> are the SP_* #defines in screen.h
+ * <fmt> is std printf format plus the color tag extensions of ascii.h
+ * <...> are the varargs
+ */
+KERN_API_CALL(kern_screen_print)
+{
+        static char buf[256];
+        int room = sizeof(buf);
+        char *ptr = buf;
+        SDL_Rect rect;
+        int flags = 0;
+
+        if (unpack(sc, &args, "ddddd", &rect.x, &rect.y, &rect.w, &rect.h, &flags)) {
+                load_err("kern_screen_print: bad args");
+                return sc->NIL;
+        }
+        
+        while (scm_is_pair(sc, args) && (room > 1)) {
+
+                pointer val = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+                int n = 0;
+
+                if (scm_is_str(sc, val)) {
+                        n = snprintf(ptr, room, scm_str_val(sc, val));
+                } else if (scm_is_int(sc, val)) {
+                        n = snprintf(ptr, room, "%ld", scm_int_val(sc, val));
+                } else if (scm_is_real(sc, val)) {
+                        n = snprintf(ptr, room, "%f", scm_real_val(sc, val));
+                } else {
+                        rt_err("kern-print: bad args");
+                }
+
+                ptr += n;
+                room -= n;
+        }
+
+        screenPrint(&rect, flags, buf);
+
+        return sc->NIL;
+
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -9487,6 +9644,9 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-player-set-food", kern_player_set_food);
         API_DECL(sc, "kern-player-set-gold", kern_player_set_gold);
 
+        /* screen api */
+        API_DECL(sc, "kern-screen-print", kern_screen_print);
+
         /* kern-set api */
         API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);
         API_DECL(sc, "kern-set-damage-sprite", kern_set_damage_sprite);
@@ -9675,6 +9835,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-quest-assign", );
         API_DECL(sc, "", );
 #endif
+
+        /* kern-ztats api */
+        API_DECL(sc, "kern-ztats-add-pane", kern_ztats_add_pane);
+        API_DECL(sc, "kern-ztats-set-title", kern_ztats_set_title);
 
         /* obsolete (keep these until old save games are unlikely to use
          * them) */
