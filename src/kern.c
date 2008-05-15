@@ -497,6 +497,25 @@ static int unpack_loc(scheme *sc, pointer *args, struct place **place, int *x,
         return 0;
 }
 
+static int unpack_rect(scheme *sc, pointer *args, SDL_Rect *rect)
+{
+        pointer prect = scm_car(sc, *args);
+        *args = scm_cdr(sc, *args);
+
+        if (! scm_is_pair(sc, *args)) {
+                load_err("%s: args not a list", __FUNCTION__);
+                return -1;
+        }
+
+
+        if (unpack(sc, &prect, "dddd",  &rect->x, &rect->y, &rect->w, &rect->h)) {
+                load_err("%s: error unpacking rect elements", __FUNCTION__);
+                return -1;
+        }
+        
+        return 0;
+}
+
 pointer vpack(scheme *sc, char *fmt, va_list ap)
 {
         pointer head=sc->NIL;
@@ -9249,13 +9268,17 @@ struct kern_ztats_pane {
         struct ztats_pane base;
         struct closure *enter, *scroll, *paint;
         struct gob *gob;
+        scheme *sc;
 };
 
 void kern_ztats_pane_enter(struct ztats_pane *pane, class Party *party, enum StatusScrollDir via, 
                            SDL_Rect *dims)
 {
         struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
-        closure_exec(kzp->enter, "lpddddd", kzp->gob->p, party, via, dims->x, dims->y, dims->w, dims->h);
+        pointer prect = pack(kzp->sc, "dddd", dims->x, dims->y, dims->w, dims->h);
+        scm_protect(kzp->sc, prect);
+        closure_exec(kzp->enter, "lpdl", kzp->gob->p, party, via, prect);
+        scm_unprotect(kzp->sc, prect);
 }
 
 int kern_ztats_pane_scroll(struct ztats_pane *pane, enum StatusScrollDir dir)
@@ -9310,6 +9333,7 @@ KERN_API_CALL(kern_ztats_add_pane)
         }
 
         kzp->base.ops = &kern_ztats_pane_ops;
+        kzp->sc = sc;
         if (! (kzp->enter = closure_new_ref(sc, penter))) {
                 goto fail;
         }
@@ -9361,15 +9385,7 @@ KERN_API_CALL(kern_screen_print)
         SDL_Rect rect;
         int flags = 0;
 
-        if (! scm_is_pair(sc, args)) {
-                load_err("%s: args not a list", __FUNCTION__);
-                return sc->NIL;
-        }
-
-        pointer prect = scm_car(sc, args);
-        args = scm_cdr(sc, args);
-
-        if (unpack(sc, &prect, "dddd",  &rect.x, &rect.y, &rect.w, &rect.h)) {
+        if (unpack_rect(sc, &args, &rect)) {
                 load_err("%s: error unpacking rect", __FUNCTION__);
                 return sc->NIL;
         }
@@ -9401,6 +9417,31 @@ KERN_API_CALL(kern_screen_print)
 
         screenPrint(&rect, flags, buf);
 
+        return sc->NIL;
+}
+
+/**
+ * (kern-screen-shade <rect> <amount>)
+ *
+ * <rect> specifies the area of the screen to shade
+ * <amount> is a value from 0 (transparent) to 255 (opaque black)
+ */
+KERN_API_CALL(kern_screen_shade)
+{
+        SDL_Rect rect;
+        int amount;
+
+        if (unpack_rect(sc, &args, &rect)) {
+                load_err("%s: error unpacking 'screenrect' arg", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        if (unpack(sc, &args, "d", &amount)) {
+                load_err("%s: error unpacking 'amount' arg", __FUNCTION__);
+                return sc->NIL;
+        }
+        
+        screenShade(&rect, amount);
         return sc->NIL;
 }
 
@@ -9660,6 +9701,7 @@ scheme *kern_init(void)
 
         /* screen api */
         API_DECL(sc, "kern-screen-print", kern_screen_print);
+        API_DECL(sc, "kern-screen-shade", kern_screen_shade);
 
         /* kern-set api */
         API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);

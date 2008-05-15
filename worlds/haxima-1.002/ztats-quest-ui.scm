@@ -1,22 +1,22 @@
 ;; Implements the Quest Log pane of the Ztats UI
 
 (define (zqug-mk) (list nil nil))
-(define (zqug-set-rect! gob x y w h) (set-car! gob (list x y w h)))
-(define (zqug-get-rect gob) (car gob))
+(define (zqug-set-dims! gob dims) (set-car! gob dims))
+(define (zqug-get-dims gob) (car gob))
 (define (zqug-set-party! gob kparty) (set-car! (cdr gob) kparty))
 (define (zqug-get-party gob) (cadr gob))
 
 (kern-ztats-add-pane
- (lambda (zqug kparty dir x y w h)
+ (lambda (zqug kparty dir dims)
    (kern-ztats-set-title "Quest Log")
-   (zqug-set-rect! zqug x y w h)
+   (zqug-set-dims! zqug dims)
    (zqug-set-party! zqug kparty)
    )
  (lambda (zqug dir)
    #f)
 
  (lambda (zqug)
-   (let* ((dims (zqug-get-rect zqug))
+   (let* ((dims (zqug-get-dims zqug))
           (pgob (gob (zqug-get-party zqug))))
 
      (define (scrnprn qlst line)
@@ -25,6 +25,8 @@
              (kern-screen-print (list (car dims) line (caddr dims) (cadddr dims))
                                 0
                                 (qst-title (car qlst)))
+             (if (!= line (cadr dims))
+                 (kern-screen-shade (list (car dims) line (caddr dims) (cadddr dims)) 128))
              (scrnprn (cdr qlst) (+ 16 line))
              )))
 
