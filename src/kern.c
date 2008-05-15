@@ -1934,11 +1934,13 @@ static pointer kern_obj_get_location(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        place = obj->getPlace();
-        x = obj->getX();
-        y = obj->getY();
+        if ((place = obj->getPlace())) {
+                x = obj->getX();
+                y = obj->getY();
+                return pack(sc, "pdd", place, x, y);
+        }
 
-        return pack(sc, "pdd", place, x, y);
+        return sc->NIL;
 }
 
 static pointer kern_obj_get_dir(scheme *sc, pointer args)
