@@ -81,7 +81,7 @@ struct stat_super_generic_data {
 };
 
 enum StatusScrollDir {
-        ScrollUp,
+        ScrollUp = 0,
         ScrollDown,
         ScrollRight,
         ScrollLeft,
