@@ -1724,3 +1724,17 @@
 
 (define (string-lower str)
   (list->string (map char-downcase (string->list str))))
+
+(define (!= a b) 
+  (not (= a b)))
+
+(define (rect-x r) (car r))
+(define (rect-y r) (cadr r))
+(define (rect-w r) (caddr r))
+(define (rect-h r) (cadddr r))
+
+(define (rect-down r v)
+  (list (rect-x r) (+ v (rect-y r)) (rect-w r) (rect-h r)))
+
+(define (1- x) (- x 1))
+(define (1+ x) (+ x 1))
