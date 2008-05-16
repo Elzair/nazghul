@@ -262,6 +262,16 @@
 (define up        9)
 (define down      10)
 
+;; Scroll directions (for UI keyhandling, must match kernel's StatusScrollDir)
+(define scroll-up       0)
+(define scroll-down     1)
+(define scroll-right    2)
+(define scroll-left     3)
+(define scroll-pageup   4)
+(define scroll-pagedown 5)
+(define scroll-top      6)
+(define scroll-bottom   7)
+
 (define opposite-dir (vector southeast south southwest
                              east here west
                              northeast north northwest
