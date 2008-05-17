@@ -109,7 +109,7 @@ extern void eventExit(void);
 extern void eventHandle(void);
 extern void eventHandlePending(void); /* non-blocking version of eventHandle */
 extern void eventPushKeyHandler(struct KeyHandler *keyh);
-extern void eventPopKeyHandler(void);
+extern struct KeyHandler * eventPopKeyHandler(void);
 extern void eventPushTickHandler(struct TickHandler *keyh);
 extern void eventPopTickHandler(void);
 extern void eventPushQuitHandler(struct QuitHandler *keyh);

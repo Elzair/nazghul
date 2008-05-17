@@ -41,7 +41,6 @@
 #define getHandler(stack,type) \
   (list_empty((stack)) ? NULL : (type*)(stack)->next)
 #define pushHandler(stack,handler) (list_add((stack), &(handler)->list))
-#define popHandler(stack) if (!list_empty((stack))) list_remove((stack)->next)
 
 typedef struct {
         struct list list;
@@ -64,6 +63,17 @@ static int event_playback_speed = 0;
 static void (*eventHook) (void);
 static int (*wait_event) (SDL_Event * event, int flags);
 static int qcount = 0;
+
+static struct list *popHandler(struct list *stack) 
+{
+        if (list_empty(stack)) {
+                return NULL;
+        }
+
+        struct list *lptr = stack->next;
+        list_remove(lptr);
+        return lptr;
+}
 
 static void backlog_enqueue(SDL_Event *event)
 {
@@ -361,9 +371,9 @@ void eventPushKeyHandler(struct KeyHandler *keyh)
 	pushHandler(&KeyHandlers, keyh);
 }
 
-void eventPopKeyHandler(void)
+struct KeyHandler * eventPopKeyHandler(void)
 {
-	popHandler(&KeyHandlers);
+        return (struct KeyHandler*)popHandler(&KeyHandlers);
 }
 
 void eventPushTickHandler(struct TickHandler *keyh)

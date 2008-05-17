@@ -157,6 +157,10 @@ static pointer name(scheme *sc, pointer args) {  \
         return sc->NIL;                          \
 }
 
+#define KERN_ALLOC(type) (type *)calloc(1, sizeof(type))
+#define KERN_FREE(ptr) (free(ptr))
+#define DECL_CAST(type,var,ptr) type * var = (type *)(ptr)
+
 #define TAG_UNK "<tag?>"
 
 
@@ -9445,6 +9449,94 @@ KERN_API_CALL(kern_screen_shade)
         return sc->NIL;
 }
 
+/**
+ * (kern-event-push-keyhandler <keyh>)
+ *
+ * <keyh> is a proc of the form (keyh key keymod)
+ */
+struct kern_keyh_data {
+        const char *magic;
+        closure_t *proc;
+};
+
+static const char *KERN_KEYH_MAGIC = "KERN_KEYH_MAGIC";
+
+static int kern_keyh_fx(struct KeyHandler *keyh, int key, int keymod)
+{
+        DECL_CAST(struct kern_keyh_data, data, keyh->data);
+        return closure_exec(data->proc, "dd", key, keymod);
+}
+
+static void kern_keyh_dtor(void *ptr)
+{
+        DECL_CAST(struct KeyHandler, keyh, ptr);
+        DECL_CAST(struct kern_keyh_data, data, keyh->data);
+        if (data) {
+                if (data->proc) {
+                        closure_unref(data->proc);
+                }
+                KERN_FREE(data);
+        }
+        KERN_FREE(ptr);
+}
+
+KERN_API_CALL(kern_event_push_keyhandler)
+{
+        struct KeyHandler *keyh;
+        struct kern_keyh_data *data;
+        pointer pclos;
+
+        if (unpack(sc, &args, "o", &pclos)) {
+                load_err("%s: error in arg", __FUNCTION__);
+                return sc->F;
+        }
+
+        if (sc->NIL == pclos) {
+                load_err("%s: NIL closure arg", __FUNCTION__);
+                return sc->F;
+        }
+
+        if (!(keyh = KERN_ALLOC(struct KeyHandler))) {
+                load_err("%s: alloc failed", __FUNCTION__);
+                return sc->F;
+        }
+
+        if (! (data = KERN_ALLOC(struct kern_keyh_data))) {
+                load_err("%s: alloc failed", __FUNCTION__);
+                kern_keyh_dtor(keyh);
+                return sc->F;
+        }
+        
+        if (! (data->proc =closure_new_ref(sc, pclos))) {
+                load_err("%s: closure_new failed", __FUNCTION__);
+                kern_keyh_dtor(keyh);
+                return sc->F;
+        }
+
+        keyh->fx = kern_keyh_fx;
+        keyh->data = data;
+        data->magic = KERN_KEYH_MAGIC;
+
+        /* Note: I'm not going to bother with session_add(), although I should
+         * in the event that the new keyhandler may evoke a quit. If that
+         * happens we'll leak the key-handler and the closure. Corner case that
+         * I don't think is worth the extra code to fix. */
+
+        eventPushKeyHandler(keyh);
+        return sc->T;
+}
+
+
+KERN_API_CALL(kern_event_pop_keyhandler)
+{
+        struct KeyHandler *keyh = eventPopKeyHandler();
+        DECL_CAST(struct kern_keyh_data, data, keyh->data);
+        if (data && KERN_KEYH_MAGIC == data->magic) {
+                kern_keyh_dtor(keyh);
+        }
+        return sc->T;
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -9552,6 +9644,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
         API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
         API_DECL(sc, "kern-char-unready", kern_char_unready);
+
+        /* kern-event api */
+        API_DECL(sc, "kern-event-push-keyhandler", kern_event_push_keyhandler);
+        API_DECL(sc, "kern-event-pop-keyhandler", kern_event_pop_keyhandler);
 
         /* kern-map api */
         API_DECL(sc, "kern-map-rotate", kern_map_rotate);
@@ -9906,9 +10002,8 @@ scheme *kern_init(void)
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);
 
-        /* Implemented but untested:
-           API_DECL(sc, "kern-ui-handle-events", kern_ui_handle_events);
-        */
+        /* Shared constants */
+        scm_define_int(sc, "kern-key-esc", SDLK_ESCAPE);
 
         return sc;
 }
