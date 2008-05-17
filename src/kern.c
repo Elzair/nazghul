@@ -9270,7 +9270,7 @@ KERN_API_CALL(kern_progress_bar_finish)
  */
 struct kern_ztats_pane {
         struct ztats_pane base;
-        struct closure *enter, *scroll, *paint;
+        struct closure *enter, *scroll, *paint, *select;
         struct gob *gob;
         scheme *sc;
 };
@@ -9297,6 +9297,12 @@ void kern_ztats_pane_paint(struct ztats_pane *pane)
         closure_exec(kzp->paint, "l", kzp->gob->p);
 }
 
+void kern_ztats_pane_select(struct ztats_pane *pane)
+{
+        struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
+        closure_exec(kzp->select, "l", kzp->gob->p);
+}
+
 static void kern_ztats_pane_dtor(void *val)
 {
         struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)val;
@@ -9312,21 +9318,25 @@ static void kern_ztats_pane_dtor(void *val)
         if (kzp->enter) {
                 closure_unref(kzp->enter);
         }
+        if (kzp->select) {
+                closure_unref(kzp->select);
+        }
         free(kzp);
 }
 
 static struct ztats_pane_ops kern_ztats_pane_ops = {
         kern_ztats_pane_enter,
         kern_ztats_pane_scroll,
-        kern_ztats_pane_paint
+        kern_ztats_pane_paint,
+        kern_ztats_pane_select
 };
 
 KERN_API_CALL(kern_ztats_add_pane)
 {
-        pointer penter, pscroll, ppaint, pgob;
+        pointer penter, pscroll, ppaint, pselect, pgob;
         struct kern_ztats_pane *kzp;
 
-        if (unpack(sc, &args, "oool", &penter, &pscroll, &ppaint, &pgob)) {
+        if (unpack(sc, &args, "ooool", &penter, &pscroll, &ppaint, &pselect, &pgob)) {
                 load_err("kern-ztats-add-pane: bad args");
                 return sc->NIL;
         }
@@ -9345,6 +9355,9 @@ KERN_API_CALL(kern_ztats_add_pane)
                 goto fail;
         }
         if (! (kzp->paint = closure_new_ref(sc, ppaint))) {
+                goto fail;
+        }
+        if (! (kzp->select = closure_new_ref(sc, pselect))) {
                 goto fail;
         }
         if (! (kzp->gob = gob_new(sc, pgob))) {

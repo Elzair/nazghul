@@ -420,3 +420,13 @@ void eventAddHook(void (*fx) (void))
 {
 	eventHook = fx;
 }
+
+void eventRunKeyHandler(key_handler_fx_t fx, void *data)
+{
+	struct KeyHandler kh;
+	kh.fx = fx;
+	kh.data = data;
+	eventPushKeyHandler(&kh);
+	eventHandle();
+	eventPopKeyHandler();
+}

@@ -22,6 +22,8 @@
 
 #include "ztats.h"
 
+#include "event.h"
+
 #include <string.h>
 
 struct ztats {
@@ -32,6 +34,46 @@ struct ztats {
 };
 
 static struct ztats ztats;
+
+
+static int ztats_key_handler(struct KeyHandler * handler, int key, int keymod)
+{
+	switch (key) {
+	case KEY_NORTH:
+		ztats_scroll(ScrollUp);
+		break;
+	case KEY_SOUTH:
+		ztats_scroll(ScrollDown);
+		break;
+	case KEY_EAST:
+		ztats_scroll(ScrollRight);
+		break;
+	case KEY_WEST:
+		ztats_scroll(ScrollLeft);
+		break;
+	case SDLK_PAGEUP:
+		ztats_scroll(ScrollPageUp);
+		break;
+	case SDLK_PAGEDOWN:
+		ztats_scroll(ScrollPageDown);
+		break;
+	case SDLK_RETURN:
+	case SDLK_SPACE:
+        case KEY_HERE:
+	case '\n':
+                if (ztats.current->ops->select) {
+                        ztats.current->ops->select(ztats.current);
+                }
+		return 0;
+	case SDLK_ESCAPE:
+	case 'q':
+		return 1;
+	default:
+		break;
+	}
+
+	return 0;
+}
 
 void ztats_init(void)
 {
@@ -52,6 +94,8 @@ void ztats_enter(class Party *party, SDL_Rect *dims)
         if (ztats.current->ops->enter) {
                 ztats.current->ops->enter(ztats.current, party, ScrollRight, dims);
         }
+
+        eventRunKeyHandler(ztats_key_handler, NULL);
 }
 
 void ztats_scroll(enum StatusScrollDir dir)
@@ -65,6 +109,7 @@ void ztats_scroll(enum StatusScrollDir dir)
         /* let the pane have first crack at handling it */
         if (ztats.current->ops->scroll 
             && ztats.current->ops->scroll(ztats.current, dir)) {
+                statusRepaint();
                 return;
         }
 
@@ -92,6 +137,9 @@ void ztats_scroll(enum StatusScrollDir dir)
         if (ztats.current->ops->enter) {
                 ztats.current->ops->enter(ztats.current, ztats.party, dir, &ztats.dims);
         }
+
+        statusRepaint();
+
 }
 
 void ztats_paint(void)

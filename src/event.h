@@ -69,6 +69,8 @@ BEGIN_DECL
 #define KEY_CTRL_T      0x14
 #define KEY_CTRL_Z      0x1A
 
+typedef int (*key_handler_fx_t)(struct KeyHandler * handler, int key, int keymod);
+
 struct TickHandler {
         struct list list;
         bool(*fx) (struct TickHandler * handler);
@@ -78,7 +80,7 @@ struct TickHandler {
 
 struct KeyHandler {
         struct list list;
-        int(*fx) (struct KeyHandler * handler, int key, int keymod);
+        key_handler_fx_t fx;
         void *data;  
         // The data field should always be filled with a struct, 
         // rather than a scalar such as bool or int,
@@ -119,6 +121,7 @@ extern void eventPopMouseButtonHandler(void);
 extern void eventPushMouseMotionHandler(struct MouseMotionHandler *keyh);
 extern void eventPopMouseMotionHandler(void);
 extern void eventAddHook(void (*fx) (void));
+extern void eventRunKeyHandler(key_handler_fx_t fx, void *data);
 
 END_DECL
 

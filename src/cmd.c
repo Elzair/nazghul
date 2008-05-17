@@ -2172,15 +2172,15 @@ bool cmdZtats(class Character * pc)
 
         foogodSetHintText("\200\201=scroll ESC=exit");
         foogodSetMode(FOOGOD_HINT);        
-	statusSelectCharacter(pc->getOrder());
+/* 	statusSelectCharacter(pc->getOrder()); */
 	statusSetMode(Ztats);
 
-	struct KeyHandler kh;
-	kh.fx = scroller;
-	kh.data = NULL;
-	eventPushKeyHandler(&kh);
-	eventHandle();
-	eventPopKeyHandler();
+/* 	struct KeyHandler kh; */
+/* 	kh.fx = scroller; */
+/* 	kh.data = NULL; */
+/* 	eventPushKeyHandler(&kh); */
+/* 	eventHandle(); */
+/* 	eventPopKeyHandler(); */
 
 	cmdwin_pop();
 	cmdwin_spush("ok");

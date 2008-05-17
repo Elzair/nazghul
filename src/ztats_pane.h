@@ -34,6 +34,7 @@ struct ztats_pane_ops {
         /* Scroll returns non-zero iff it handled the scroll request */
         int (*scroll)(struct ztats_pane *pane, enum StatusScrollDir dir);
         void (*paint)(struct ztats_pane *pane);
+        void (*select)(struct ztats_pane *pane);
 };
 
 struct ztats_pane {

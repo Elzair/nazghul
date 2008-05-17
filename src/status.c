@@ -1324,11 +1324,11 @@ void statusSetMode(enum StatusMode mode)
 		
 	case Ztats:
 		switch_to_tall_mode();
-                ztats_enter(player_party, &Status.screenRect);
 		Status.selectedEntry = 0;
 		Status.topLine = 0;
 		Status.paint = ztats_paint;
 		Status.scroll = ztats_scroll;
+                ztats_enter(player_party, &Status.screenRect);
 		break;
 		
 	case Ready:
