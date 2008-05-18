@@ -162,7 +162,6 @@ nazghul_SOURCES =		\
 	bitfield.h \
 	objectfreezer.h objectfreezer.c \
         kern_intvar.c kern_intvar.h \
-	quest.c quest.h \
 	ztats.h ztats.c \
 	ztats_pane.h ztats_pane.c \
 	ztats_pm.h ztats_pm.c \
