@@ -20,19 +20,24 @@
  * gmcnutt@users.sourceforge.net
  */
 
-#ifndef ztats_h
-#define ztats_h
+#ifndef applet_h
+#define applet_h
 
-#include "ztats_pane.h"
-#include "Party.h"
-#include "status.h"
+#include "list.h"
 
 #include <SDL.h>
 
-extern void ztats_init();
-extern void ztats_add_pane(struct ztats_pane *pane);
-extern void ztats_rm_pane(struct ztats_pane *pane);
+struct applet_ops {
+        void (*run)(struct applet *applet, SDL_Rect *dims, struct session *session);
+        void (*paint)(struct applet *applet);
+        void (*stop)(struct applet *applet);
+};
 
-extern struct applet *ztats_get_applet(void);
+struct applet {
+        struct list list;
+        SDL_Rect dims;
+        struct session *session;
+        struct applet_ops *ops;
+};
 
 #endif

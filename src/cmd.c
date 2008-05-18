@@ -63,6 +63,7 @@
 #include "templ.h"
 #include "occ.h"
 #include "nazghul.h"  // for DeveloperMode
+#include "ztats.h"
 
 #define DEBUG
 #include "debug.h"
@@ -2157,37 +2158,8 @@ void cmdTalk(Object *member)
 
 bool cmdZtats(class Character * pc)
 {
-	cmdwin_clear();
-	cmdwin_spush("Stats");
-
-	if (pc != NULL) {
-		cmdwin_spush("%s", pc->getName());
-	} else {
-		pc = select_party_member();
-		if (pc == NULL)
-			return false;
-	}
-
-	cmdwin_spush("<ESC to exit>");
-
-        foogodSetHintText("\200\201=scroll ESC=exit");
-        foogodSetMode(FOOGOD_HINT);        
-/* 	statusSelectCharacter(pc->getOrder()); */
-	statusSetMode(Ztats);
-
-/* 	struct KeyHandler kh; */
-/* 	kh.fx = scroller; */
-/* 	kh.data = NULL; */
-/* 	eventPushKeyHandler(&kh); */
-/* 	eventHandle(); */
-/* 	eventPopKeyHandler(); */
-
-	cmdwin_pop();
-	cmdwin_spush("ok");
-
-	statusSetMode(ShowParty);
-        foogodSetMode(FOOGOD_DEFAULT);
-
+	statusRunApplet(ztats_get_applet()); /* runs until user ESC */
+	statusSetMode(ShowParty); /* restore default status mode */
 	return false;
 }
 

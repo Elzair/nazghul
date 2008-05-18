@@ -113,5 +113,10 @@
                (scrnprn "No Quests Yet! (But keep trying!)")
                (scrnprn (cdr qlst) 0 0)
                )))))
+
+ ;; select
+ (lambda (zqug)
+   (println "Selected!"))
+
  ;; gob
  (zqug-mk))

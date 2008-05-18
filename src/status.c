@@ -20,6 +20,8 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "status.h"
+
+#include "applet.h"
 #include "screen.h"
 #include "sprite.h"
 #include "common.h"
@@ -74,31 +76,31 @@ static struct status {
 	enum StatusMode mode;
 
 	/**
-		* The index of the list entry that appears at the top of the status
-		* window.
-		*/
+         * The index of the list entry that appears at the top of the status
+         * window.
+         */
 	int topLine;
 
 	/**
-		* Not sure what this is.
-		*/
+         * Not sure what this is.
+         */
 	int maxLine;
 
 	/**
-		* The number of lines in the status window.
-		*/
+         * The number of lines in the status window.
+         */
 	int numLines;
 
 	/**
-		* The index of the list entry that is currently highlighted in the
-		* status window.
-		*/
+         * The index of the list entry that is currently highlighted in the
+         * status window.
+         */
 	int curLine;
 
 	/**
-		* The text that appears in the title bar at the top of the status
-		* window.
-		*/
+         * The text that appears in the title bar at the top of the status
+         * window.
+         */
 	char title[MAX_TITLE_LEN+1];
 
 	char *pg_title, *pg_text;
@@ -117,19 +119,20 @@ static struct status {
 	void (*show_thing)(SDL_Rect * rect, void *thing);
 
 	/**
-		* Sometimes I just don't want to repaint until I'm done doing more
-		* stuff. Repaints will be suppressed unless this counter is
-		* zero. Limited to internal use only for now.
-		*/
+         * Sometimes I just don't want to repaint until I'm done doing more
+         * stuff. Repaints will be suppressed unless this counter is
+         * zero. Limited to internal use only for now.
+         */
 	int suppressRepaint;
 
 	/**
-		* New experimental super-generic stuff
-		*/
+         * New experimental super-generic stuff
+         */
 	struct stat_super_generic_data *super_generic;
 
 	enum StatusMode stack[STAT_MODE_STACK_DEPTH];
 	int top;
+        struct list applet_stack;
 
 } Status;
 
@@ -274,6 +277,8 @@ int statusInit()
 
 	foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
 
+        list_init(&Status.applet_stack);
+
 #ifdef ztats_h
         ztats_init();
 #endif
@@ -305,7 +310,7 @@ void status_set_title(char *title)
 	Status.title[MAX_TITLE_LEN]=0;
 }
 
-static void status_repaint_title(void)
+void status_repaint_title(void)
 {
 	screenErase(&Status.titleRect);
 	screenPrint(&Status.titleRect, SP_CENTERED | SP_ONBORDER, "%s", 
@@ -1234,6 +1239,7 @@ static void myScrollGeneric(enum StatusScrollDir dir)
 void statusRepaint(void)
 {
 	static int repainting = 0;
+        struct applet *applet;
 
 	if (Status.suppressRepaint)
 		return;
@@ -1250,7 +1256,14 @@ void statusRepaint(void)
 	repainting = 1;
 
 	screenErase(&Status.screenRect);
-	Status.paint();
+
+        if (Status.paint) {
+                Status.paint();
+        } else if ((applet = statusGetCurrentApplet())) {
+                applet->ops->paint(applet);
+        }
+
+
 	status_repaint_title();
 	screenUpdate(&Status.screenRect);
 
@@ -1320,15 +1333,6 @@ void statusSetMode(enum StatusMode mode)
 		Status.scroll = myScrollParty;
 		Status.paint = myShowParty;
 		Status.pcIndex = 0;
-		break;
-		
-	case Ztats:
-		switch_to_tall_mode();
-		Status.selectedEntry = 0;
-		Status.topLine = 0;
-		Status.paint = ztats_paint;
-		Status.scroll = ztats_scroll;
-                ztats_enter(player_party, &Status.screenRect);
 		break;
 		
 	case Ready:
@@ -1754,4 +1758,35 @@ void statusBrowseContainer(class Container *container, char *title)
 	Status.show_thing = status_show_generic_object_type;
 	Status.selectedEntry = container->first(Status.filter);
         statusRepaint();
+}
+
+void statusRunApplet(struct applet *applet)
+{
+        switch_to_tall_mode();
+        list_add(&Status.applet_stack, &applet->list); /* push */
+        Status.paint = NULL; /* so statusRepaint will use applet->ops->paint */
+        applet->ops->run(applet, &Status.screenRect, Session); /* returns when applet done */
+        list_remove(&applet->list); /* pop */
+}
+
+#if 0
+struct applet *statusPopApplet(void)
+{
+        struct applet *applet = statusGetCurrentApplet();
+        if (applet) {
+                list_remove(&applet->list);
+                if (applet->ops->stop) {
+                        applet->ops->stop(applet);
+                }
+        }
+        return applet;
+}
+#endif
+
+struct applet *statusGetCurrentApplet(void)
+{
+        if (! list_empty(&Status.applet_stack)) {
+                return list_entry(Status.applet_stack.next, struct applet, list);
+        }
+        return NULL;
 }

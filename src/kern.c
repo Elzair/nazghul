@@ -159,7 +159,6 @@ static pointer name(scheme *sc, pointer args) {  \
 
 #define KERN_ALLOC(type) (type *)calloc(1, sizeof(type))
 #define KERN_FREE(ptr) (free(ptr))
-#define DECL_CAST(type,var,ptr) type * var = (type *)(ptr)
 
 #define TAG_UNK "<tag?>"
 

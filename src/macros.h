@@ -45,4 +45,6 @@
 #define normalize(dv) ((dv)>1?1:((dv)<-1?-1:0))
 #endif
 
+#define DECL_CAST(type,var,ptr) type * var = (type *)(ptr)
+
 #endif

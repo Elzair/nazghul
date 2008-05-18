@@ -94,7 +94,6 @@ enum StatusScrollDir {
 enum StatusMode {
         ShowParty,
         SelectCharacter,
-        Ztats,
         Ready,
         Use,
         Page,
@@ -227,6 +226,7 @@ extern void statusBrowseContainer(class Container *container, char *title);
  * Set the text of the title at the top of the status window.
  */
 extern void status_set_title(char *title);
+extern void status_repaint_title(void);
 
 /**
  * Given a range of values [0, max] and a current value, map the value to a
@@ -239,6 +239,9 @@ extern char status_range_color(int cur, int max);
  * Paint armament statistics in a standard way.
  */
 extern void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms);
+
+extern void statusRunApplet(struct applet *applet);
+extern struct applet *statusGetCurrentApplet(void);
 
 END_DECL
 
