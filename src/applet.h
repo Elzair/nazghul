@@ -30,7 +30,6 @@
 struct applet_ops {
         void (*run)(struct applet *applet, SDL_Rect *dims, struct session *session);
         void (*paint)(struct applet *applet);
-        void (*stop)(struct applet *applet);
 };
 
 struct applet {

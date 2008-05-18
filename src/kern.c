@@ -22,6 +22,7 @@
 
 #include "session.h"
 
+#include "applet.h"
 #include "blender.h"
 #include "character.h"
 #include "cmd.h"
@@ -504,12 +505,6 @@ static int unpack_rect(scheme *sc, pointer *args, SDL_Rect *rect)
 {
         pointer prect = scm_car(sc, *args);
         *args = scm_cdr(sc, *args);
-
-        if (! scm_is_pair(sc, *args)) {
-                load_err("%s: args not a list", __FUNCTION__);
-                return -1;
-        }
-
 
         if (unpack(sc, &prect, "dddd",  &rect->x, &rect->y, &rect->w, &rect->h)) {
                 load_err("%s: error unpacking rect elements", __FUNCTION__);
@@ -9274,29 +9269,34 @@ struct kern_ztats_pane {
         scheme *sc;
 };
 
-void kern_ztats_pane_enter(struct ztats_pane *pane, class Party *party, enum StatusScrollDir via, 
+static pointer pack_rect(scheme *sc, SDL_Rect *rect)
+{
+        return pack(sc, "dddd", rect->x, rect->y, rect->w, rect->h);
+}
+
+static void kern_ztats_pane_enter(struct ztats_pane *pane, class Party *party, enum StatusScrollDir via, 
                            SDL_Rect *dims)
 {
         struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
-        pointer prect = pack(kzp->sc, "dddd", dims->x, dims->y, dims->w, dims->h);
+        pointer prect = pack_rect(kzp->sc, dims);
         scm_protect(kzp->sc, prect);
         closure_exec(kzp->enter, "lpdl", kzp->gob->p, party, via, prect);
         scm_unprotect(kzp->sc, prect);
 }
 
-int kern_ztats_pane_scroll(struct ztats_pane *pane, enum StatusScrollDir dir)
+static int kern_ztats_pane_scroll(struct ztats_pane *pane, enum StatusScrollDir dir)
 {
         struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
         return closure_exec(kzp->scroll, "ld", kzp->gob->p, dir);
 }
 
-void kern_ztats_pane_paint(struct ztats_pane *pane)
+static void kern_ztats_pane_paint(struct ztats_pane *pane)
 {
         struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
         closure_exec(kzp->paint, "l", kzp->gob->p);
 }
 
-void kern_ztats_pane_select(struct ztats_pane *pane)
+static void kern_ztats_pane_select(struct ztats_pane *pane)
 {
         struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)pane;
         closure_exec(kzp->select, "l", kzp->gob->p);
@@ -9461,42 +9461,49 @@ KERN_API_CALL(kern_screen_shade)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_screen_erase)
+{
+        SDL_Rect rect;
+
+        if (unpack_rect(sc, &args, &rect)) {
+                load_err("%s: error unpacking 'screenrect' arg", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        screenErase(&rect);
+        return sc->T;
+}
+
+KERN_API_CALL(kern_screen_update)
+{
+        SDL_Rect rect;
+
+        if (unpack_rect(sc, &args, &rect)) {
+                load_err("%s: error unpacking 'screenrect' arg", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        screenUpdate(&rect);
+        return sc->T;
+}
+
+
+
 /**
  * (kern-event-push-keyhandler <keyh>)
  *
  * <keyh> is a proc of the form (keyh key keymod)
  */
-struct kern_keyh_data {
-        const char *magic;
-        closure_t *proc;
-};
-
-static const char *KERN_KEYH_MAGIC = "KERN_KEYH_MAGIC";
-
 static int kern_keyh_fx(struct KeyHandler *keyh, int key, int keymod)
 {
-        DECL_CAST(struct kern_keyh_data, data, keyh->data);
-        return closure_exec(data->proc, "dd", key, keymod);
+        DECL_CAST(struct closure, proc, keyh->data);
+        return closure_exec(proc, "dd", key, keymod) ? 1 : 0;
 }
 
-static void kern_keyh_dtor(void *ptr)
+KERN_API_CALL(kern_event_run_keyhandler)
 {
-        DECL_CAST(struct KeyHandler, keyh, ptr);
-        DECL_CAST(struct kern_keyh_data, data, keyh->data);
-        if (data) {
-                if (data->proc) {
-                        closure_unref(data->proc);
-                }
-                KERN_FREE(data);
-        }
-        KERN_FREE(ptr);
-}
-
-KERN_API_CALL(kern_event_push_keyhandler)
-{
-        struct KeyHandler *keyh;
-        struct kern_keyh_data *data;
         pointer pclos;
+        struct closure *proc;
 
         if (unpack(sc, &args, "o", &pclos)) {
                 load_err("%s: error in arg", __FUNCTION__);
@@ -9508,45 +9515,100 @@ KERN_API_CALL(kern_event_push_keyhandler)
                 return sc->F;
         }
 
-        if (!(keyh = KERN_ALLOC(struct KeyHandler))) {
-                load_err("%s: alloc failed", __FUNCTION__);
-                return sc->F;
-        }
-
-        if (! (data = KERN_ALLOC(struct kern_keyh_data))) {
-                load_err("%s: alloc failed", __FUNCTION__);
-                kern_keyh_dtor(keyh);
-                return sc->F;
-        }
-        
-        if (! (data->proc =closure_new_ref(sc, pclos))) {
+        if (! (proc =closure_new_ref(sc, pclos))) {
                 load_err("%s: closure_new failed", __FUNCTION__);
-                kern_keyh_dtor(keyh);
                 return sc->F;
         }
 
-        keyh->fx = kern_keyh_fx;
-        keyh->data = data;
-        data->magic = KERN_KEYH_MAGIC;
-
-        /* Note: I'm not going to bother with session_add(), although I should
-         * in the event that the new keyhandler may evoke a quit. If that
-         * happens we'll leak the key-handler and the closure. Corner case that
-         * I don't think is worth the extra code to fix. */
-
-        eventPushKeyHandler(keyh);
+        eventRunKeyHandler(kern_keyh_fx, proc);
+        closure_unref(proc);
         return sc->T;
 }
 
+/**
+ * (kern-applet-run <run> <paint>)
+ *
+ * <run> is a proc of form (run <dims>), dims being the screen rect.
+ * <paint> is a proc of form (paint)
+ */
+struct kern_applet {
+        struct applet base;
+        struct closure *run, *paint;
+        struct gob *gob;
+        scheme *sc;
+};
 
-KERN_API_CALL(kern_event_pop_keyhandler)
+static void kern_applet_run(struct applet *applet, SDL_Rect *dims, struct session *session)
 {
-        struct KeyHandler *keyh = eventPopKeyHandler();
-        DECL_CAST(struct kern_keyh_data, data, keyh->data);
-        if (data && KERN_KEYH_MAGIC == data->magic) {
-                kern_keyh_dtor(keyh);
+        DECL_CAST(struct kern_applet, ka, applet);
+        pointer prect = pack_rect(ka->sc, dims);
+        closure_exec(ka->run, "ll", ka->gob->p, prect);
+}
+
+static void kern_applet_paint(struct applet *applet)
+{
+        DECL_CAST(struct kern_applet, ka, applet);
+        closure_exec(ka->paint, "l", ka->gob->p);
+}
+
+static void kern_applet_dtor(void *val)
+{
+        struct kern_applet *ka = (struct kern_applet*)val;
+        if (ka->gob) {
+                gob_unref(ka->gob);
         }
+        if (ka->paint) {
+                closure_unref(ka->paint);
+        }
+        if (ka->run) {
+                closure_unref(ka->run);
+        }
+        KERN_FREE(ka);
+}
+
+static struct applet_ops kern_applet_ops = {
+        kern_applet_run,
+        kern_applet_paint
+};
+
+KERN_API_CALL(kern_applet_run)
+{
+        pointer prun, ppaint, pgob;
+        struct kern_applet *ka;
+
+        if (unpack(sc, &args, "ool", &prun, &ppaint, &pgob)) {
+                load_err("%s: bad args", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        if (!(ka = KERN_ALLOC(struct kern_applet))) {
+                load_err("%s: alloc failed", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        ka->base.ops = &kern_applet_ops;
+        ka->sc = sc;
+        if (! (ka->run = closure_new_ref(sc, prun))) {
+                goto fail;
+        }
+        if (! (ka->paint = closure_new_ref(sc, ppaint))) {
+                goto fail;
+        }
+        if (! (ka->gob = gob_new(sc, pgob))) {
+                goto fail;
+        }
+        gob_ref(ka->gob);
+
+        statusRunApplet(&ka->base);
+        kern_applet_dtor(ka);
+
         return sc->T;
+
+ fail:
+        kern_applet_dtor(ka);
+        return sc->F;
+
+        
 }
 
 KERN_OBSOLETE_CALL(kern_set_ascii);
@@ -9658,8 +9720,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-unready", kern_char_unready);
 
         /* kern-event api */
-        API_DECL(sc, "kern-event-push-keyhandler", kern_event_push_keyhandler);
-        API_DECL(sc, "kern-event-pop-keyhandler", kern_event_pop_keyhandler);
+        API_DECL(sc, "kern-event-run-keyhandler", kern_event_run_keyhandler);
 
         /* kern-map api */
         API_DECL(sc, "kern-map-rotate", kern_map_rotate);
@@ -9808,8 +9869,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-player-set-gold", kern_player_set_gold);
 
         /* screen api */
+        API_DECL(sc, "kern-screen-erase", kern_screen_erase);
         API_DECL(sc, "kern-screen-print", kern_screen_print);
         API_DECL(sc, "kern-screen-shade", kern_screen_shade);
+        API_DECL(sc, "kern-screen-update", kern_screen_update);
 
         /* kern-set api */
         API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);
@@ -9915,6 +9978,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-ui-target", kern_ui_target);
         API_DECL(sc, "kern-ui-target-generic", kern_ui_target_generic);
         API_DECL(sc, "kern-ui-waitkey", kern_ui_waitkey);
+        API_DECL(sc, "kern-applet-run", kern_applet_run);
 
         /* conv api */
         API_DECL(sc, "kern-conv-begin", kern_conv_begin);
@@ -10016,6 +10080,6 @@ scheme *kern_init(void)
 
         /* Shared constants */
         scm_define_int(sc, "kern-key-esc", SDLK_ESCAPE);
-
+        scm_define_int(sc, "kern-sp-centered", SP_CENTERED);
         return sc;
 }

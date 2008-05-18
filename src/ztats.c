@@ -129,6 +129,7 @@ static int ztats_key_handler(struct KeyHandler * handler, int key, int keymod)
 	case '\n':
                 if (ztats->current->ops->select) {
                         ztats->current->ops->select(ztats->current);
+                        ztats_op_paint(&ztats->base); /* in case applet ran */
                 }
 		return 0;
 	case SDLK_ESCAPE:
@@ -170,17 +171,11 @@ static void ztats_op_run(struct applet *applet, SDL_Rect *dims, struct session *
 
 }
 
-static void ztats_op_stop(struct applet *applet)
-{
-        /* nop */
-}
-
 void ztats_init(void)
 {
         static struct applet_ops ztats_ops = {
                 ztats_op_run,
-                ztats_op_paint,
-                ztats_op_stop
+                ztats_op_paint
         };
 
         memset(&ztats, 0, sizeof(&ztats));

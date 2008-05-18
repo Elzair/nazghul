@@ -114,9 +114,58 @@
                (scrnprn (cdr qlst) 0 0)
                )))))
 
- ;; select
+ ;; select proc - run the ztats quest applet
  (lambda (zqug)
-   (println "Selected!"))
 
- ;; gob
+   ;; ztats quest applet gob
+   (define (zqag-mk) (list nil))
+   (define (zqag-dims! zqag val) (set-car! zqag val))
+   (define (zqag-dims zqag) (car zqag))
+
+   (let* ((pgob (gob (zqug-party zqug)))
+          (qlst (find-field 'quests pgob))
+          (qst (list-ref qlst (1+ (zqug-cur-entry zqug))))
+          )
+
+     ;; paint proc - render the quest details pane
+     (define (paint zqag)
+       (let ((rect (zqag-dims zqag)))
+         (kern-screen-erase rect)
+         (kern-screen-print rect kern-sp-centered "^c+c" (qst-title qst) "^c-")
+         (kern-screen-print (rect-down rect zqug-line-h) 0 (qst-descr qst))
+         (kern-screen-print (rect-down rect (* 2 zqug-line-h)) 0 
+                            "^c+GCompleted: "
+                            (if (qst-done? qst)
+                                "^cgYes^c-"
+                                "^cyNo^c-"))
+         (kern-screen-update rect)
+       ))
+
+     (kern-applet-run
+
+      ;; run proc - paint & push a keyhandler that exits when player hits ESC
+      (lambda (zqag dims)
+        (kern-ztats-set-title "Quest")
+        (zqag-dims! zqag dims)
+        (paint zqag)
+        (kern-event-run-keyhandler
+         (lambda (key mod)
+           (cond ((= key kern-key-esc)
+                  #t)
+                 (else
+                  #f)))
+         )
+        )
+      
+     
+      
+      ;; paint
+      paint
+
+      ;; zqa gob
+      (zqag-mk)
+      )
+     ))
+
+ ;; zqu gob
  (zqug-mk))
