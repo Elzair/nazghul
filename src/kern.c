@@ -10081,5 +10081,6 @@ scheme *kern_init(void)
         /* Shared constants */
         scm_define_int(sc, "kern-key-esc", SDLK_ESCAPE);
         scm_define_int(sc, "kern-sp-centered", SP_CENTERED);
+        scm_define_int(sc, "kern-ascii-h", ASCII_H);
         return sc;
 }

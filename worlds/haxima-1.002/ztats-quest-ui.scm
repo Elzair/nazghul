@@ -1,9 +1,5 @@
 ;; Implements the Quest Log pane of the Ztats UI
 
-;; Note that this corresponds to ASCII_H in the kernel. Need a good way to keep 
-;; them in synch...
-(define zqug-line-h 16)
-
 (define (zqug-mk) (list nil nil 0 0 0))
 (define (zqug-dims! gob dims) (set-car! gob dims))
 (define (zqug-dims gob) (list-ref gob 0))
@@ -41,7 +37,7 @@
    (let* ((top (zqug-top-entry zqug))
           (cur (zqug-cur-entry zqug))
           (max (zqug-max-entry zqug))
-          (winh (/ (rect-h (zqug-dims zqug)) zqug-line-h))
+          (winh (/ (rect-h (zqug-dims zqug)) kern-ascii-h))
           (midwin (/ winh 2))
           (maxtop (- (1+ max) winh))
          )
@@ -89,7 +85,7 @@
  (lambda (zqug)
    (let* ((dims (zqug-dims zqug))
           (pgob (gob (zqug-party zqug)))
-          (winh (/ (rect-h dims) zqug-line-h))
+          (winh (/ (rect-h dims) kern-ascii-h))
           (top (zqug-top-entry zqug))
           (cur (zqug-cur-entry zqug))
           )
@@ -99,7 +95,7 @@
                 (< line winh))
            (if (< entry top)
                (scrnprn (cdr qlst) (1+ entry) line)
-               (let ((rect (rect-down dims (* line zqug-line-h))))
+               (let ((rect (rect-down dims (* line kern-ascii-h))))
                  (kern-screen-print rect 0 (qst-title (car qlst)))
                  (if (!= entry cur)
                      (kern-screen-shade rect 128))
@@ -132,8 +128,8 @@
        (let ((rect (zqag-dims zqag)))
          (kern-screen-erase rect)
          (kern-screen-print rect kern-sp-centered "^c+c" (qst-title qst) "^c-")
-         (kern-screen-print (rect-down rect zqug-line-h) 0 (qst-descr qst))
-         (kern-screen-print (rect-down rect (* 2 zqug-line-h)) 0 
+         (kern-screen-print (rect-down rect kern-ascii-h) 0 (qst-descr qst))
+         (kern-screen-print (rect-down rect (* 2 kern-ascii-h)) 0 
                             "^c+GCompleted: "
                             (if (qst-done? qst)
                                 "^cgYes^c-"
