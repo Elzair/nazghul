@@ -83,8 +83,8 @@ static bool tickHandler(struct TickHandler *th)
         sprite_advance_ticks(1);
         if (music_need_track())
         {
-	      	session_run_music_handler(Session);
-     		}
+	      	session_run_hook(Session, music_change_hook, "p", Session->player);
+        }
 	return Quit;
 }
 
@@ -130,7 +130,7 @@ static void play_reload()
         else
                 log_end("ok!");
         foogodSetMode(FOOGOD_DEFAULT);
-        session_run_start_proc(Session);
+        session_run_hook(Session, new_game_start_hook, "p", Session->player);
         place_synchronize(Place);
         tick_run();
         vmask_flush_all();
@@ -158,9 +158,9 @@ static void play_loop(void)
                 // death and the Quit condition when it comes back.
                 // ------------------------------------------------------------
 
-                if (player_party->isCamping() && Session->camping_proc) {
-                        closure_exec(Session->camping_proc, "pp", 
-                                     player_party, Place);
+                if (player_party->isCamping()) {
+                        session_run_hook(Session, camping_turn_start_hook, "pp",
+                                         player_party, Place);
                         if (player_party->allDead()) {
                                 play_print_end_of_game_prompt();
                                 break;
@@ -315,7 +315,7 @@ int playRun(char *fname)
         foogodSetMode(FOOGOD_DEFAULT);
 
         // Run the optional startup script.
-        session_run_start_proc(Session);
+        session_run_hook(Session, new_game_start_hook, "p", Session->player);
 
         /* bugfix: Place may not be set until after the startup script runs, so
          * now is the first time we can be sure that the following will repaint

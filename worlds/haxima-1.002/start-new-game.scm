@@ -331,6 +331,6 @@
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
 ;;(kern-set-start-proc simple-start)
-(kern-set-start-proc create-char)
+(kern-add-hook 'new_game_start_hook create-char)
 
 (kern-progress-bar-finish)

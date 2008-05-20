@@ -26,7 +26,7 @@
 
  ;; enter
  (lambda (zqug kparty dir dims)
-   (kern-ztats-set-title "Quest Log")
+   (kern-status-set-title "Quest Log")
    (zqug-dims! zqug dims)
    (zqug-party! zqug kparty)
    (zqug-store-max-entry! zqug)
@@ -141,7 +141,7 @@
 
       ;; run proc - paint & push a keyhandler that exits when player hits ESC
       (lambda (zqag dims)
-        (kern-ztats-set-title "Quest")
+        (kern-status-set-title "Quest")
         (zqag-dims! zqag dims)
         (paint zqag)
         (kern-event-run-keyhandler

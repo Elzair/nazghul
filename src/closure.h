@@ -43,6 +43,8 @@ extern closure_t *closure_new(scheme *interp, pointer code);
 extern closure_t *closure_new_ref(scheme *interp, pointer code);
 extern void closure_init(closure_t *closure, scheme *interp, pointer code);
 extern int closure_exec(closure_t *closure, char *fmt, ...);
+extern pointer closure_execv(closure_t *closure, char *fmt, va_list args);
+extern int closure_translate_result(scheme *sc, pointer result);
 extern  void closure_save(closure_t *closure, struct save *save);
 extern void closure_ref(closure_t *closure);
 extern void closure_unref(closure_t *closure);

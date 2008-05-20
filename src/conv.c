@@ -27,6 +27,7 @@
 #include "object.h"
 #include "closure.h"
 #include "log.h"
+#include "session.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -91,6 +92,8 @@ void conv_enter(Object *npc, Object *pc, struct closure *conv)
 	struct KeyHandler kh;
 
         assert(conv);
+
+        session_run_hook(Session, conv_start_hook, "pp", pc, npc);
 
         conv_done = 0;
 	kh.fx = get_player_query;

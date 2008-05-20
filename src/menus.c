@@ -1250,7 +1250,7 @@ char * main_menu(void)
                                 session_load(demo_fname);
                                 foogodSetMode(FOOGOD_DEFAULT);
                                 Session->is_demo = 1;
-                                session_run_start_proc(Session);
+                                session_run_hook(Session, new_game_start_hook, "p", Session->player);
                                 th.fx = menus_demo_tick_handler;
                                 eventPushTickHandler(&th);
                                 Quit = false;
@@ -1406,7 +1406,7 @@ char * main_menu(void)
                 session_load(demo_fname);
                 Session->is_demo = 1;
                 foogodSetMode(FOOGOD_DEFAULT);
-                session_run_start_proc(Session);
+                session_run_hook(Session, new_game_start_hook, "p", Session->player);
                 th.fx = menus_demo_tick_handler;
                 eventPushTickHandler(&th);
                 Quit = false;

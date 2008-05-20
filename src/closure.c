@@ -113,7 +113,7 @@ static pointer closure_exec_with_scheme_args(closure_t *closure, pointer args)
  * are different. See kern.c's vpack() function.
  * @returns The Scheme result of evaluation.
  */
-static pointer closure_execv(closure_t *closure, char *fmt, va_list args)
+pointer closure_execv(closure_t *closure, char *fmt, va_list args)
 {
         pointer head;
 
@@ -128,7 +128,7 @@ static pointer closure_execv(closure_t *closure, char *fmt, va_list args)
 }
 
 /* Do our best to translate a Scheme evaluation result into a C integer. */
-static int closure_translate_result(scheme *sc, pointer result)
+int closure_translate_result(scheme *sc, pointer result)
 {
         if (result == sc->NIL ||
             result == sc->F) {

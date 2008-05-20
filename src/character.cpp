@@ -2013,8 +2013,8 @@ int Character::getToHitPenalty()
 
 int Character::getBaseAttackBonus(class ArmsType * weapon)
 {
-	int strbonus = weapon->modifyStrAttack(closure_exec(Session->str_based_attack, "p", this));
-	int dexbonus = weapon->modifyDexAttack(closure_exec(Session->dex_based_attack, "p", this));
+	int strbonus = weapon->modifyStrAttack(session_run_hook(Session, str_based_attack_query, "p", this));
+	int dexbonus = weapon->modifyDexAttack(session_run_hook(Session, dex_based_attack_query, "p", this));
 	int totalbonus = (strbonus + dexbonus) / (100 * 1000);
 	return (1+ totalbonus);
 }
@@ -2026,7 +2026,7 @@ int Character::getAttackBonus(class ArmsType * weapon)
 
 int Character::getDamageBonus(class ArmsType * weapon)
 {
-	int dambonus = weapon->modifyDamageBonus(closure_exec(Session->damage_bonus, "p", this))/(100 * 1000);
+	int dambonus = weapon->modifyDamageBonus(session_run_hook(Session, damage_bonus_query, "p", this))/(100 * 1000);
 	return (rand() % (1+ dambonus));
 }
 
@@ -2036,7 +2036,7 @@ int Character::getAvoidBonus()
 	if (isAsleep())
 		return 0;
 		
-	int avoidBonus = closure_exec(Session->defense_bonus, "p", this);
+	int avoidBonus = session_run_hook(Session, defense_bonus_query, "p", this);
 	float avoidMod = 1;
 	
 	//roundabout way of getting data in order to preserve info for stderr

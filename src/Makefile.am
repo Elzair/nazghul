@@ -171,7 +171,8 @@ nazghul_SOURCES =		\
 	ztats_spells.h ztats_spells.c \
 	ztats_items.h ztats_items.c \
 	ztats_misc.h ztats_misc.c \
-	applet.h
+	applet.h \
+	session_hooks.h
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \

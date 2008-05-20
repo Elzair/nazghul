@@ -207,7 +207,7 @@ void combat_set_state(enum combat_state new_state)
         }
 
         Combat.state = new_state;
-        session_run_combat_listener(Session);
+        session_run_hook(Session, combat_change_hook, "p", Session->player);
 }
 
 // returns 0 for ok position, -1 for no position, or a PFLAG type for fallback positions with problems

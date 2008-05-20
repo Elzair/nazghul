@@ -184,6 +184,16 @@ struct kern_ui_target_info {
         struct list suggest;
 };
 
+#if USE_HOOK_AND_QUERY_TABLE
+/* Redefine the session hook macro to turn its arg into a string, then #include
+ * the list of hooks directly into an array of string pointers. */
+#undef SESSION_DECL_HOOK
+#define SESSION_DECL_HOOK(id) #id
+static char * hook_to_id[] = {
+#       include "session_hooks.h"
+};
+#endif
+
 /*****************************************************************************
  *
  * kjob - wrapper for work queue jobs
@@ -7383,6 +7393,30 @@ KERN_API_CALL(kern_being_get_base_faction)
         return scm_mk_integer(sc, faction);
 }
 
+#if USE_HOOK_AND_QUERY_TABLE
+
+KERN_API_CALL(kern_add_hook)
+{
+        pointer pproc;
+        char *str;
+        int id = 0;
+
+        if(unpack(sc, &args, "yo", &str, &pproc)) {
+                load_err("%s: bad args", __FUNCTION__);
+                return sc->F;
+        }
+        
+        for (id = 0; id < NUM_HOOKS; id++) {
+                if (! strcmp(hook_to_id[id], str)) {
+                        session_add_hook(Session, (session_hook_id_t)id, closure_new(sc, pproc));
+                        return pproc;
+                }
+        }
+
+        return sc->F;
+}
+
+#else
 KERN_API_CALL(kern_set_start_proc)
 {
         pointer proc;
@@ -7406,7 +7440,7 @@ KERN_API_CALL(kern_set_camping_proc)
                 return sc->NIL;
         }
 
-        session_set_camping_proc(Session, closure_new(sc, proc));
+        session_add_hook(Session, camping_start_turn_hook, closure_new(sc, proc));
 
         return proc;
 }
@@ -7420,7 +7454,10 @@ KERN_API_CALL(kern_set_combat_procs)
                 return sc->NIL;
         }
 
-        session_set_combat_procs(Session, closure_new(sc, stra),closure_new(sc, dexa),closure_new(sc, dam),closure_new(sc, def));
+        session_add_hook(Session, str_based_attack_query, closure_new(sc, stra));
+        session_add_hook(Session, dex_based_attack_query, closure_new(sc, dexa));
+        session_add_hook(Session, damage_bonus_query, closure_new(sc, dam));
+        session_add_hook(Session, defense_bonus_query, closure_new(sc, def));
 
         return sc->NIL;
 }
@@ -7466,6 +7503,7 @@ KERN_API_CALL(kern_set_gamestart_hook)
 
         return sc->NIL;
 }
+#endif
 
 KERN_API_CALL(kern_player_set_follow_mode)
 {
@@ -9373,11 +9411,11 @@ KERN_API_CALL(kern_ztats_add_pane)
         return sc->F;
 }
 
-KERN_API_CALL(kern_ztats_set_title)
+KERN_API_CALL(kern_status_set_title)
 {
         char *title;
         if (unpack(sc, &args, "s", &title)) {
-                load_err("kern_ztats_set_title: bad args");
+                load_err("%s: bad args", __FUNCTION__);
                 return sc->NIL;
         }
 
@@ -9942,19 +9980,23 @@ scheme *kern_init(void)
                  kern_search_rect_for_terrain);
         API_DECL(sc, "kern-search-rect-for-obj-type", 
                  kern_search_rect_for_obj_type);
+#if USE_HOOK_AND_QUERY_TABLE
+        API_DECL(sc, "kern-add-hook", kern_add_hook);
+#else
         API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
         API_DECL(sc, "kern-set-combat-procs", kern_set_combat_procs);
         API_DECL(sc, "kern-set-music-handler", kern_set_music_handler);
         API_DECL(sc, "kern-set-combat-state-listener", kern_set_combat_listener);
         API_DECL(sc, "kern-set-gamestart-hook", kern_set_gamestart_hook);
         API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
+        API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
+#endif
         API_DECL(sc, "kern-set-quicken-sprite", kern_set_quicken_sprite);
         API_DECL(sc, "kern-set-time-stop-sprite", kern_set_time_stop_sprite);
         API_DECL(sc, "kern-set-magic-negated-sprite", kern_set_magic_negated_sprite);
         API_DECL(sc, "kern-set-reveal-sprite", kern_set_reveal_sprite);
         API_DECL(sc, "kern-set-xray-vision-sprite", kern_set_xray_vision_sprite);
         API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
-        API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
         API_DECL(sc, "kern-set-wind", kern_set_wind);
         API_DECL(sc, "kern-get-wind", kern_get_wind);
         API_DECL(sc, "kern-set-time-accel", kern_set_time_accel);
@@ -10066,7 +10108,7 @@ scheme *kern_init(void)
 
         /* kern-ztats api */
         API_DECL(sc, "kern-ztats-add-pane", kern_ztats_add_pane);
-        API_DECL(sc, "kern-ztats-set-title", kern_ztats_set_title);
+        API_DECL(sc, "kern-status-set-title", kern_status_set_title);
 
         /* obsolete (keep these until old save games are unlikely to use
          * them) */

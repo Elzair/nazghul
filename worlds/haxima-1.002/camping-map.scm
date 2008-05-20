@@ -47,4 +47,4 @@
                     ;; be in the proper location on the wilderness map.
                     (pathfind kparty (kern-obj-get-location kplayer)))))))))
 
-(kern-set-camping-proc camping-proc)
+(kern-add-hook 'camping_start_turn_hook camping-proc)

@@ -94,7 +94,7 @@
 		)
 	)
 	
-(kern-set-music-handler music-change-handler)
+(kern-add-hook 'music_change_hook music-change-handler)
 	
 ;;combo play + cue, with sensible eval and null behaviour
 (define (music-set-pair immediate therafter)

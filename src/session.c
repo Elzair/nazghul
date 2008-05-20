@@ -87,6 +87,10 @@ struct session *Session = 0;
 int load_errs = 0;
 int save_errs = 0;
 
+#if USE_HOOK_AND_QUERY_TABLE
+static void session_cleanup_hooks(struct session *session);
+#endif
+
 void load_err(char *fmt, ...)
 {
         load_err_inc();
@@ -219,9 +223,11 @@ struct session *session_new(void *interp)
         list_init(&session->skills);
         list_init(&session->skill_sets);
         session->time_accel = 1;
+#if ! USE_HOOK_AND_QUERY_TABLE
         session->music_change_handler = NULL;
         session->gamestart_hook = NULL;
         session->combat_change_handler = NULL;
+#endif
         return session;
 }
 
@@ -288,6 +294,9 @@ void session_del(struct session *session)
                 wq_job_del(job);
         }
 
+#if USE_HOOK_AND_QUERY_TABLE
+        session_cleanup_hooks(session);
+#else
         /* Clean up the closures */
         closure_unref_safe(session->start_proc);
         closure_unref_safe(session->camping_proc);
@@ -298,6 +307,8 @@ void session_del(struct session *session)
         closure_unref_safe(session->music_change_handler);
         closure_unref_safe(session->combat_change_handler);
         closure_unref_safe(session->gamestart_hook);
+        closure_unref_safe(session->talk_start_hook);
+#endif
 
         /* Ensure that nothing is referencing the player party (except perhaps
          * its vehicle, which will be cleaned up with the party). */
@@ -491,7 +502,7 @@ int session_load(char *filename)
 
         windRepaint();
 
-        session_run_gamestart_hook(Session);
+        session_run_hook(Session, session_start_hook, "p", Session->player);
         
         return 0;
 }
@@ -683,6 +694,7 @@ int session_save(char *fname)
         return 0;
 }
 
+#if ! USE_HOOK_AND_QUERY_TABLE
 void session_set_start_proc(struct session *session, struct closure *proc)
 {
         /* out with the old */
@@ -829,6 +841,7 @@ void session_run_combat_listener(struct session *session)
                 closure_exec(session->combat_change_handler, "p", session->player);
         }
 }
+#endif
 
 struct node *session_add_sched_char(struct session *session,
                                     class Character *npc)
@@ -866,3 +879,50 @@ void session_intro_sched_chars(struct session *session)
                 node = node->next;
         }        
 }
+
+#if USE_HOOK_AND_QUERY_TABLE
+int session_run_hook(struct session *session, session_hook_id_t id, char *fmt, ...)
+{
+        assert(id < NUM_HOOKS);
+        struct closure *proc = session->hook_table[id];
+        va_list args;
+
+        if (proc) {
+                pointer result;
+                va_start(args, fmt);
+                result = closure_execv(proc, fmt, args);
+                va_end(args);
+                return closure_translate_result(proc->sc, result);
+        }
+        
+        return 0;
+}
+
+void session_add_hook(struct session *session, session_hook_id_t id, struct closure *proc)
+{
+        assert(id < NUM_HOOKS);
+
+        /* out with the old */
+        if (session->hook_table[id]) {
+                closure_unref(session->hook_table[id]);
+                session->hook_table[id] = NULL;
+        }
+        
+        /* in with the new */
+        if (proc) {
+                closure_ref(proc);
+                session->hook_table[id] = proc;
+        }
+}
+
+static void session_cleanup_hooks(struct session *session)
+{
+        int i;
+        for (i = 0; i < NUM_HOOKS; i++) {
+                if (session->hook_table[i]) {
+                        closure_unref(session->hook_table[i]);
+                        session->hook_table[i] = NULL;
+                }
+        }
+}
+#endif

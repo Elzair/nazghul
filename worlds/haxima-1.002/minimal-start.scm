@@ -272,6 +272,6 @@
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.
 ;;----------------------------------------------------------------------------
-(kern-set-start-proc simple-start)
+(kern-add-hook 'new_game_start_hook simple-start)
 
 (kern-progress-bar-finish)
