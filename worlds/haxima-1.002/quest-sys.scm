@@ -54,8 +54,13 @@
   (apply (eval (list-ref qst 4))
          (list qst)))
 
-(define (qst-done? qst) (list-ref qst 5))
-(define (qst-done! qst) (list-set-ref! qst 5 #t))
+(define (qst-done? qst) 
+  (println "qst-done? qst=" qst)
+  (list-ref qst 5))
+(define (qst-done! qst) 
+  (kern-log-msg "^c+gYou have completed the quest ^c+w" (qst-title qst) "^c-!^c-")
+  (list-set-ref! qst 5 #t))
+
 (define (qst-payload qst) (list-ref qst 6))
 
 (define (quest-assign qst target)

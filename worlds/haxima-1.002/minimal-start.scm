@@ -266,10 +266,7 @@
 (define (simple-start kplayer)
   (kern-obj-put-at kplayer (list p_minimal 0 0))
   (kern-obj-put-at ch_gregor (list p_minimal 1 1))
-  (quest-assign (qst-talk-to-mk 'ch_andrea) (gob kplayer))
-  (repeat (lambda () (quest-assign (qst-talk-to-mk 'ch_gregor) (gob kplayer)))
-          2)
-  (quest-assign (qst-talk-to-mk 'ch_charlie) (gob kplayer))
+  (quest-assign (quest-talk-to-for-xp-mk 'ch_gregor 10) (gob kplayer))
   )
       
 ;;----------------------------------------------------------------------------

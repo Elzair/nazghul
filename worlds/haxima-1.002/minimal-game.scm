@@ -711,6 +711,7 @@
 (kern-init-random)
 
 ;; this needs to be in a kern-loaded file so it's redefined on reload
+(define (say knpc . msg) (kern-conv-say knpc msg))
 (define gregors-conv
  (ifc nil
       (method 'default (lambda (knpc kpc) (say knpc "Can't help you there.")))
