@@ -247,8 +247,11 @@
    ))
  
 (mk-npc "Andrea")
-(mk-npc "Gregor")
 (mk-npc "Charlie")
+(mk-npc "Gregor")
+
+
+(kern-obj-set-conv ch_gregor 'gregors-conv)
 
 ;;----------------------------------------------------------------------------
 ;; Startup - this is a one-time only script that runs when the player starts
@@ -262,6 +265,7 @@
 
 (define (simple-start kplayer)
   (kern-obj-put-at kplayer (list p_minimal 0 0))
+  (kern-obj-put-at ch_gregor (list p_minimal 1 1))
   (quest-assign (qst-talk-to-mk 'ch_andrea) (gob kplayer))
   (repeat (lambda () (quest-assign (qst-talk-to-mk 'ch_gregor) (gob kplayer)))
           2)

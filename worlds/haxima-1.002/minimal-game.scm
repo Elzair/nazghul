@@ -709,3 +709,15 @@
 ; (kern-set-xray-vision-sprite s_xray_vision)
 
 (kern-init-random)
+
+;; this needs to be in a kern-loaded file so it's redefined on reload
+(define gregors-conv
+ (ifc nil
+      (method 'default (lambda (knpc kpc) (say knpc "Can't help you there.")))
+      (method 'hail (lambda (knpc kpc) (say knpc "Hullo.")))
+      (method 'heal (lambda (knpc kpc) (say knpc "[cough] Well enough, my granddaughter helps take care of me.")))
+      (method 'bye (lambda (knpc kpc) (say knpc "So long.")))
+      (method 'job (lambda (knpc kpc) (say knpc "I'm a charcoal burner. I also care for this ^c+rshrine^c-.")))
+      (method 'join (lambda (knpc kpc) (say knpc "Nope. Already got a job.")))
+      (method 'name (lambda (knpc kpc) (say knpc "Gregor's my name.")))
+      ))
