@@ -148,6 +148,8 @@ void conv_enter(Object *npc, Object *pc, struct closure *conv)
 
 	cmdwin_clear();
 	cmdwin_repaint();
+
+        session_run_hook(Session, conv_end_hook, "pp", pc, npc);
         
 }
 int isprintable(int c)

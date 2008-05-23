@@ -37,6 +37,7 @@ SESSION_DECL_HOOK(session_start_hook), /* player party */
 SESSION_DECL_HOOK(new_game_start_hook), /* player party */
 SESSION_DECL_HOOK(camping_turn_start_hook), /* player party */
 SESSION_DECL_HOOK(conv_start_hook), /* pc, npc */
+SESSION_DECL_HOOK(conv_end_hook), /* pc, npc */
 SESSION_DECL_HOOK(music_change_hook), /* player party */
 SESSION_DECL_HOOK(combat_change_hook), /* player party */
 SESSION_DECL_HOOK(str_based_attack_query), /* character */

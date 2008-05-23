@@ -1703,14 +1703,6 @@
           (car lst)
           (find-first fn? (cdr lst)))))
 
-(define (find-field sym lst)
-  (find-first (lambda (x) (and (pair? x) 
-                               (eq? sym (car x))))
-              lst))
-
-(define (append-field! lst sym val)
-  (append! lst (list (list sym val))))
-
 (define (append! lst val)
   (cond ((null? lst) nil)
         ((null? (cdr lst)) (set-cdr! lst val))

@@ -674,6 +674,7 @@
 ;(load "moon.scm")
 
 ;; Quest system
+(load "tbl.scm")
 (load "ztats-quest-ui.scm")
 (load "quest-sys.scm")
 (load "quest-talk-to.scm")

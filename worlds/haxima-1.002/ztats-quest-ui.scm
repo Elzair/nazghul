@@ -14,13 +14,13 @@
 
 (define (zqug-store-max-entry! zqug)
   (let ((pgob (gob (zqug-party zqug))))
-        (if (null? pgob)
-            0
-            (let ((qlst (find-field 'quests pgob)))
-              (if (null? qlst)
-                  0
-                  (zqug-max-entry! zqug (1- (length (cdr qlst))))
-                  )))))
+    (if (null? pgob)
+        0
+        (let ((qlst (tbl-get pgob 'quests)))
+          (if (null? qlst)
+              0
+              (zqug-max-entry! zqug (1- (length qlst)))
+              )))))
  
 (kern-ztats-add-pane
 
@@ -89,7 +89,7 @@
           (top (zqug-top-entry zqug))
           (cur (zqug-cur-entry zqug))
           )
-     
+
      (define (scrnprn qlst entry line)
        (if (and (notnull? qlst)
                 (< line winh))
@@ -104,10 +104,10 @@
      
      (if (null? pgob)
          (scrnprn "No Quests!")
-         (let ((qlst (find-field 'quests pgob)))
+         (let ((qlst (tbl-get pgob 'quests)))
            (if (null? qlst)
                (scrnprn "No Quests Yet! (But keep trying!)")
-               (scrnprn (cdr qlst) 0 0)
+               (scrnprn qlst 0 0)
                )))))
 
  ;; select proc - run the ztats quest applet
@@ -119,8 +119,8 @@
    (define (zqag-dims zqag) (car zqag))
 
    (let* ((pgob (gob (zqug-party zqug)))
-          (qlst (find-field 'quests pgob))
-          (qst (list-ref qlst (1+ (zqug-cur-entry zqug))))
+          (qlst (tbl-get pgob 'quests))
+          (qst (list-ref qlst (zqug-cur-entry zqug)))
           )
 
      ;; paint proc - render the quest details pane

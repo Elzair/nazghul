@@ -77,17 +77,20 @@
 ;; script). If it was, run the on-finish proc and mark the quest as done.
 (kern-add-hook 'conv_start_hook
                (lambda (kpc knpc)
-                 (let ((qlst (find-field 'quests (gob (kern-get-player)))))
-                   (for-each (lambda (qst)
-                               (if (and (not (qst-done? qst))
-                                        (qst-is-talk-to? qst))
-                                   (let ((qtt (qst-payload qst)))
-                                     (if (qtt-is-npc? qtt knpc)
-                                         (begin
-                                           (qtt-finish qtt kpc)
-                                           (qst-done! qst)
-                                           )))))
-                             (cdr qlst)))))
+                 (let ((qlst (tbl-get (gob (kern-get-player))
+                                      'quests)))
+                   (if (notnull? qlst)
+                       (for-each (lambda (qst)
+                                   (if (and (not (qst-done? qst))
+                                            (qst-is-talk-to? qst))
+                                       (let ((qtt (qst-payload qst)))
+                                         (if (qtt-is-npc? qtt knpc)
+                                             (begin
+                                               (qtt-finish qtt kpc)
+                                               (qst-done! qst)
+                                               )))))
+                                 qlst))
+                   )))
 
 ;;----------------------------------------------------------------------------
 ;; generic talk-to-quest constructor (a helpful subclass)

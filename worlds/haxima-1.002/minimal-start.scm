@@ -89,7 +89,7 @@
   (kern-mk-inventory nil)
   nil ;; party members (should be nil for initial load file)
   )
- (list nil) ; gob
+ (tbl-mk) ; gob
  )
 
 ;;----------------------------------------------------------------------------
@@ -253,14 +253,59 @@
 
 (kern-obj-set-conv ch_gregor 'gregors-conv)
 
+;;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+;; Setup a quest-offer test
+
+;;;; (define (attach kobj sticker)
+;;;;   (if (sticker 'can-attach kobj)
+;;;;       (tbl-append! (gob kobj)
+;;;;                    (sticker 'key))
+;;;;       (sticker 'on-attach kobj)
+;;;;       ))
+;;;; 
+;;;; (define quest-offer-ifc
+;;;;   (ifc nil
+;;;;        (method 'can-attach (lambda (knpc) #t))
+;;;;        (method 'key (lambda () 'quest-offer))
+;;;;        (method 'on-attach (lambda (knpc) ))
+;;;;        (method 'is-avail (lambda (knpc kpc) #t))
+;;;;        (method 'offer (lambda (knpc kpc) ))
+;;;;        ))
+;;;; 
+;;;; (define (gregors-quest-make-offer kpc knpc)
+;;;;   (say knpc "Wait! Before you go, I have a favor to ask. "
+;;;;        "There are bandits who make me pay them money. "
+;;;;        "I'm not afraid for myself, but I can't protect my grand-daughter. "
+;;;;        "Will you help me?")
+;;;;   (cond ((yes? kpc)
+;;;;          (say knpc "Thank you. You should first seek help from the rangers at Green Tower.")
+;;;;          (quest-assign gregors-quest
+;;;;                        (gob (kern-get-player)))
+;;;;          )
+;;;;         (else
+;;;;          (say knpc "I see. [He turns away sadly]")
+;;;;          (kern-conv-end))
+;;;;         ))
+;;;; 
+;;;; (define gregors-quest-offer
+;;;;   (ifc quest-offer-ifc
+;;;;        (method 'on-attach 
+;;;;                (lambda (knpc)
+;;;;                  (println "gregors-quest-offer: on-attach")
+;;;;                  (kern-obj-add-hook knpc 
+;;;;                                     'conv_end_hook
+;;;;                                     gregors-quest-offer)))
+;;;;        ))
+;;;; 
+;;;; 
+;;;; (attach ch_gregor gregors-quest-offer)
+
+;;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 ;;----------------------------------------------------------------------------
 ;; Startup - this is a one-time only script that runs when the player starts
 ;; the game for the first time (or whenever he starts over from scratch,
 ;; loading the game from this file). It sets up the story a bit.
-;;
-;; The camera should center on the moongate clearing. Then, a gate should rise
-;; from the ground, pause, then sink back down, leaving the player's sleep
-;; sprite on the ground. Another pause, and then the player should wake up.
 ;;----------------------------------------------------------------------------
 
 (define (simple-start kplayer)
@@ -269,10 +314,6 @@
   (quest-assign (quest-talk-to-for-xp-mk 'ch_gregor 10) (gob kplayer))
   )
       
-;;----------------------------------------------------------------------------
-;; To skip the extended start scene comment out this next line and uncomment
-;; the line after it.
-;;----------------------------------------------------------------------------
 (kern-add-hook 'new_game_start_hook simple-start)
 
 (kern-progress-bar-finish)
