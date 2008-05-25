@@ -23,8 +23,6 @@
 #ifndef session_h
 #define session_h
 
-#define USE_HOOK_AND_QUERY_TABLE 1
-
 #include "ascii.h"
 #include "clock.h"
 #include "list.h"
@@ -63,14 +61,19 @@ typedef struct {
         struct sprite *sprite;
 } global_effect_t;
 
-#if USE_HOOK_AND_QUERY_TABLE
 /* Indices into the hook table */
 #define SESSION_DECL_HOOK(id) id
 typedef enum {
 #       include "session_hooks.h"
         NUM_HOOKS
 } session_hook_id_t;
-#endif
+
+/* Indices into the query table */
+#define SESSION_DECL_QUERY(id) id
+typedef enum {
+#       include "session_queries.h"
+        NUM_QUERIES
+} session_query_id_t;
 
 /* Backwards-compatible replacements for the old global flags: */
 #define Reload (Session->reload)
@@ -216,29 +219,9 @@ struct session {
          * is camping or resting) */
         float time_accel;
 
-#if USE_HOOK_AND_QUERY_TABLE
-        struct closure *hook_table[NUM_HOOKS];
-#else
-        /* Optional script to run every turn the player is camping in the
-         * wilderness */
-        struct closure *camping_proc;
-        struct closure *conv_start_hook;
-		
-		/* Scripts that retrieve combat abilities */
-		struct closure *str_based_attack;
-		struct closure *dex_based_attack;
-		struct closure *damage_bonus;
-		struct closure *defense_bonus;
-		
-		/* Script that determines bgm to play */
-		struct closure *music_change_handler;
-		
-		/* Script that allows scripted actions on combat state change */
-		struct closure *combat_change_handler;
+        struct list hook_table[NUM_HOOKS];
+        struct closure *query_table[NUM_QUERIES];
 
-		/* Script that runs once the game is loaded and running */
-		struct closure *gamestart_hook;
-#endif		
         struct node sched_chars;   /* characters with multi-place schedules */
 
         /* This is a flat-out hack. I decided to add some things like
@@ -329,30 +312,10 @@ extern void * session_add_connection(struct session *session, void *obj,
         );
 extern void session_rm(struct session *session, void *handle);
 
-#if ! USE_HOOK_AND_QUERY_TABLE
-extern void session_set_start_proc(struct session *session, 
-                                   struct closure *proc);
-extern void session_run_start_proc(struct session *session);
-extern void session_set_camping_proc(struct session *session, 
-                                     struct closure *proc);
-extern void session_set_combat_procs(struct session *session, 
-                                     struct closure *stra,
-                                     struct closure *dexa,
-                                     struct closure *dam,
-                                    struct closure *def);
-extern void session_set_music_handler(struct session *session, 
-                                     struct closure *mush);
-extern void session_run_music_handler(struct session *session);
-extern void session_set_combat_listener(struct session *session, 
-                                     struct closure *mush);
-extern void session_run_combat_listener(struct session *session);
-extern void session_set_gamestart_hook(struct session *session, 
-                                     struct closure *mush);
-extern void session_run_gamestart_hook(struct session *session);
-#else
-extern int session_run_hook(struct session *session, session_hook_id_t id, char *fmt, ...);
-extern void session_add_hook(struct session *session, session_hook_id_t id, struct closure *proc);
-#endif
+extern void session_run_hook(struct session *session, session_hook_id_t id, char *fmt, ...);
+extern void *session_add_hook(struct session *session, session_hook_id_t id, struct closure *proc, pointer args);
+extern int session_run_query(struct session *session, session_query_id_t id, char *fmt, ...);
+extern void session_add_query(struct session *session, session_query_id_t id, struct closure *proc);
 
 extern void save_err(char *fmt, ...);
 extern struct node *session_add_sched_char(struct session *session,

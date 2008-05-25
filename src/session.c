@@ -82,14 +82,19 @@ struct data_obj_entry {
         void (*start)(void *obj);
 };
 
+struct session_hook_entry {
+        struct list list;
+        struct closure *proc;
+        pointer args;
+};
 
 struct session *Session = 0;
 int load_errs = 0;
 int save_errs = 0;
 
-#if USE_HOOK_AND_QUERY_TABLE
+static void session_init_hooks(struct session *session);
 static void session_cleanup_hooks(struct session *session);
-#endif
+static void session_cleanup_queries(struct session *session);
 
 void load_err(char *fmt, ...)
 {
@@ -223,11 +228,7 @@ struct session *session_new(void *interp)
         list_init(&session->skills);
         list_init(&session->skill_sets);
         session->time_accel = 1;
-#if ! USE_HOOK_AND_QUERY_TABLE
-        session->music_change_handler = NULL;
-        session->gamestart_hook = NULL;
-        session->combat_change_handler = NULL;
-#endif
+        session_init_hooks(session);
         return session;
 }
 
@@ -294,21 +295,8 @@ void session_del(struct session *session)
                 wq_job_del(job);
         }
 
-#if USE_HOOK_AND_QUERY_TABLE
         session_cleanup_hooks(session);
-#else
-        /* Clean up the closures */
-        closure_unref_safe(session->start_proc);
-        closure_unref_safe(session->camping_proc);
-        closure_unref_safe(session->str_based_attack);
-        closure_unref_safe(session->dex_based_attack);
-        closure_unref_safe(session->damage_bonus);
-        closure_unref_safe(session->defense_bonus);
-        closure_unref_safe(session->music_change_handler);
-        closure_unref_safe(session->combat_change_handler);
-        closure_unref_safe(session->gamestart_hook);
-        closure_unref_safe(session->talk_start_hook);
-#endif
+        session_cleanup_queries(session);
 
         /* Ensure that nothing is referencing the player party (except perhaps
          * its vehicle, which will be cleaned up with the party). */
@@ -694,155 +682,6 @@ int session_save(char *fname)
         return 0;
 }
 
-#if ! USE_HOOK_AND_QUERY_TABLE
-void session_set_start_proc(struct session *session, struct closure *proc)
-{
-        /* out with the old */
-        if (session->start_proc) {
-                closure_unref(session->start_proc);
-                session->start_proc = NULL;
-        }
-        
-        /* in with the new */
-        if (proc) {
-                closure_ref(proc);
-                session->start_proc = proc;
-        }
-}
-
-void session_set_camping_proc(struct session *session, struct closure *proc)
-{
-        /* out with the old */
-        if (session->camping_proc) {
-                closure_unref(session->camping_proc);
-                session->camping_proc = NULL;
-        }
-        
-        /* in with the new */
-        if (proc) {
-                closure_ref(proc);
-                session->camping_proc = proc;
-        }
-}
-
-void session_set_combat_procs(struct session *session,
-		struct closure *stra, struct closure *dexa,
-		struct closure *dam, struct closure *def)
-{
-        /* out with the old */
-        if (session->str_based_attack) {
-                closure_unref(session->str_based_attack);
-                session->str_based_attack = NULL;
-        }
-        if (session->dex_based_attack) {
-                closure_unref(session->dex_based_attack);
-                session->dex_based_attack = NULL;
-        }
-        if (session->damage_bonus) {
-                closure_unref(session->damage_bonus);
-                session->damage_bonus = NULL;
-        }
-        if (session->defense_bonus) {
-                closure_unref(session->defense_bonus);
-                session->defense_bonus = NULL;
-        }
-        
-        /* in with the new */
-        if (stra) {
-                closure_ref(stra);
-                session->str_based_attack = stra;
-        }
-        if (dexa) {
-                closure_ref(dexa);
-                session->dex_based_attack = dexa;
-        }
-        if (dam) {
-                closure_ref(dam);
-                session->damage_bonus = dam;
-        }
-        if (def) {
-                closure_ref(def);
-                session->defense_bonus = def;
-        }
-
-}
-
-void session_set_music_handler(struct session *session,
-		struct closure *mush)
-{
-        /* out with the old */
-        if (session->music_change_handler) {
-                closure_unref(session->music_change_handler);
-                session->music_change_handler = NULL;
-        }
-        /* in with the new */
-        if (mush) {
-                closure_ref(mush);
-                session->music_change_handler = mush;
-        }
-}
-
-void session_set_gamestart_hook(struct session *session,
-		struct closure *mush)
-{
-        /* out with the old */
-        if (session->gamestart_hook) {
-                closure_unref(session->gamestart_hook);
-                session->gamestart_hook = NULL;
-        }
-        /* in with the new */
-        if (mush) {
-                closure_ref(mush);
-                session->gamestart_hook = mush;
-        }
-}
-
-void session_set_combat_listener(struct session *session,
-		struct closure *mush)
-{
-        /* out with the old */
-        if (session->combat_change_handler) {
-                closure_unref(session->combat_change_handler);
-                session->combat_change_handler = NULL;
-        }
-        /* in with the new */
-        if (mush) {
-                closure_ref(mush);
-                session->combat_change_handler = mush;
-        }
-
-}
-
-void session_run_start_proc(struct session *session)
-{
-        if (session->start_proc) {
-                closure_exec(session->start_proc, "p", session->player);
-        }
-}
-
-void session_run_music_handler(struct session *session)
-{
-        if (session->music_change_handler) {
-                closure_exec(session->music_change_handler, "p", session->player);
-        }
-}
-
-void session_run_gamestart_hook(struct session *session)
-{
-        if (session->gamestart_hook) {
-                closure_exec(session->gamestart_hook, "p", session->player);
-        }
-}
-
-
-void session_run_combat_listener(struct session *session)
-{
-        if (session->combat_change_handler) {
-                closure_exec(session->combat_change_handler, "p", session->player);
-        }
-}
-#endif
-
 struct node *session_add_sched_char(struct session *session,
                                     class Character *npc)
 {
@@ -880,11 +719,76 @@ void session_intro_sched_chars(struct session *session)
         }        
 }
 
-#if USE_HOOK_AND_QUERY_TABLE
-int session_run_hook(struct session *session, session_hook_id_t id, char *fmt, ...)
+static void session_init_hooks(struct session *session)
 {
+        int id;
+
+        for (id = 0; id < NUM_HOOKS; id++) {
+                list_init(&session->hook_table[id]);
+        }
+}
+
+void session_run_hook(struct session *session, session_hook_id_t id, char *fmt, ...)
+{
+        va_list args;
+        struct list *lptr, *head;
+
         assert(id < NUM_HOOKS);
-        struct closure *proc = session->hook_table[id];
+        head = &session->hook_table[id];
+
+        va_start(args, fmt);
+
+        list_for_each(head, lptr) {
+                struct session_hook_entry *entry = list_entry(lptr, struct session_hook_entry, list);
+                closure_execvl(entry->proc, fmt, args, entry->args);
+        }
+        
+        va_end(args);
+        
+}
+
+void *session_add_hook(struct session *session, session_hook_id_t id, struct closure *proc, pointer args)
+{
+        struct list *head;
+        struct session_hook_entry *entry;
+
+        assert(id < NUM_HOOKS);
+        head = &session->hook_table[id];
+
+        if (!(entry = (struct session_hook_entry*)calloc(1, sizeof(*entry)))) {
+                return 0;
+        }
+
+        entry->proc = proc;
+        closure_ref(proc);
+        entry->args = args;
+        proc->sc->vptr->protect(proc->sc, args);
+
+        list_add_tail(&session->hook_table[id], &entry->list);
+        return entry;
+}
+
+static void session_cleanup_hooks(struct session *session)
+{
+        int i;
+        for (i = 0; i < NUM_HOOKS; i++) {
+                struct list *head = &session->hook_table[i];
+                struct list *lptr = head->next;
+                while (lptr != head) {
+                        struct session_hook_entry *entry = list_entry(lptr, struct session_hook_entry, list);
+                        lptr = lptr->next;
+                        list_remove(&entry->list);
+                        entry->proc->sc->vptr->unprotect(entry->proc->sc, entry->args);
+                        closure_unref(entry->proc);
+                        free(entry);
+                }
+        }
+}
+
+int session_run_query(struct session *session, session_query_id_t id, char *fmt, ...)
+{
+        assert(id < NUM_QUERIES);
+        struct closure *proc = session->query_table[id];
         va_list args;
 
         if (proc) {
@@ -898,31 +802,30 @@ int session_run_hook(struct session *session, session_hook_id_t id, char *fmt, .
         return 0;
 }
 
-void session_add_hook(struct session *session, session_hook_id_t id, struct closure *proc)
+void session_add_query(struct session *session, session_query_id_t id, struct closure *proc)
 {
-        assert(id < NUM_HOOKS);
+        assert(id < NUM_QUERIES);
 
         /* out with the old */
-        if (session->hook_table[id]) {
-                closure_unref(session->hook_table[id]);
-                session->hook_table[id] = NULL;
+        if (session->query_table[id]) {
+                closure_unref(session->query_table[id]);
+                session->query_table[id] = NULL;
         }
         
         /* in with the new */
         if (proc) {
                 closure_ref(proc);
-                session->hook_table[id] = proc;
+                session->query_table[id] = proc;
         }
 }
 
-static void session_cleanup_hooks(struct session *session)
+static void session_cleanup_queries(struct session *session)
 {
         int i;
-        for (i = 0; i < NUM_HOOKS; i++) {
-                if (session->hook_table[i]) {
-                        closure_unref(session->hook_table[i]);
-                        session->hook_table[i] = NULL;
+        for (i = 0; i < NUM_QUERIES; i++) {
+                if (session->query_table[i]) {
+                        closure_unref(session->query_table[i]);
+                        session->query_table[i] = NULL;
                 }
         }
 }
-#endif

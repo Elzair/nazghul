@@ -21,22 +21,19 @@
  */
 
 /**
- * This is where you add a new hook to the kernel. session.h #includes this to
- * create the id's for its hook array. kern.c uses this to map scheme strings
- * to hook id's via a table. The only other thing you need to do for a hook is
+ * This is where you add a new query to the kernel. session.h #includes this to
+ * create the id's for its query array. kern.c uses this to map scheme strings
+ * to query id's via a table. The only other thing you need to do for a query is
  * add a call to run it from the appropriate place in the kernel source.
  *
- * Note: by convention the comments following each line show the args the hook
+ * Note: by convention the comments following each line show the args the query
  * proc expects.
  *
  * Note: do NOT use #define guards for this header, since kern.c includes it
  * twice via session.h.
  */
 
-SESSION_DECL_HOOK(session_start_hook), /* player party */
-SESSION_DECL_HOOK(new_game_start_hook), /* player party */
-SESSION_DECL_HOOK(camping_turn_start_hook), /* player party */
-SESSION_DECL_HOOK(conv_start_hook), /* pc, npc */
-SESSION_DECL_HOOK(conv_end_hook), /* pc, npc */
-SESSION_DECL_HOOK(music_change_hook), /* player party */
-SESSION_DECL_HOOK(combat_change_hook), /* player party */
+SESSION_DECL_QUERY(str_based_attack_query), /* character */
+SESSION_DECL_QUERY(dex_based_attack_query), /* character */
+SESSION_DECL_QUERY(damage_bonus_query), /* character */
+SESSION_DECL_QUERY(defense_bonus_query), /* character */

@@ -29,7 +29,7 @@ void gob_save(struct gob *gob, struct save *save)
 {
         pointer cell;
 
-        /* The car of the gob pointer is often non-date (kobj, etc). So only
+        /* The car of the gob pointer is often non-data (kobj, etc). So only
          * serialize the car of the cdr unless the creator specifically wants
          * to. */
         cell = (gob->flags & GOB_SAVECAR) ? gob->p : 

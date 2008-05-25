@@ -301,3 +301,44 @@ int closure_execlpiv(closure_t *closure, pointer cell, void *ptr, int id,
         /* Translate the result to an int. */
         return closure_translate_result(closure->sc, result);
 }
+
+int closure_execvl(closure_t *closure, char *fmt, va_list args, pointer cell)
+{
+        pointer head, result;
+        scheme *sc = closure->sc;
+
+        /* Convert the C args to Scheme. */
+        if (fmt) {
+                head = vpack(sc, fmt, args);
+        } else {
+                head = sc->NIL;
+        }
+
+        /* Append args to the list */
+        if (head == sc->NIL) {
+                /* args is the only thing on the list */
+                head = _cons(sc, cell, sc->NIL, 0);
+        } else {
+
+                /* Protect the list while allocating for _cons */
+                sc->vptr->protect(sc, head);
+
+                /* Find the end of the list */
+                pointer tail = head;
+                while (scm_cdr(tail) != sc->NIL) {
+                        tail = scm_cdr(tail);
+                }
+
+                /* Append the args to the tail of the list */
+                tail->_object._cons._cdr = _cons(sc, cell, sc->NIL, 0);
+                
+                /* Unprotect the list now that we're done allocating. */
+                sc->vptr->unprotect(sc, head);
+        }
+
+        /* Evaluate the closure. */
+        result = closure_exec_with_scheme_args(closure, head);
+
+        /* Translate the result to an int. */
+        return closure_translate_result(closure->sc, result);
+}

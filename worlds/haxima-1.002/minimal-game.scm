@@ -640,7 +640,7 @@
 (mk-species 'sp_human "human" 10 10 10 100 10 2 13 mmode-walk t_hands humanoid  2 s_asleep nil sound-walking)
 
 
-;(load "conv.scm") ;; basic conversation
+(load "conv.scm") ;; basic conversation
 ;(load "yellow-slime.scm")
 ;(load "troll.scm")
 ;(load "spider.scm")
@@ -712,7 +712,6 @@
 (kern-init-random)
 
 ;; this needs to be in a kern-loaded file so it's redefined on reload
-(define (say knpc . msg) (kern-conv-say knpc msg))
 (define gregors-conv
  (ifc nil
       (method 'default (lambda (knpc kpc) (say knpc "Can't help you there.")))

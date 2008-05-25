@@ -184,7 +184,6 @@ struct kern_ui_target_info {
         struct list suggest;
 };
 
-#if USE_HOOK_AND_QUERY_TABLE
 /* Redefine the session hook macro to turn its arg into a string, then #include
  * the list of hooks directly into an array of string pointers. */
 #undef SESSION_DECL_HOOK
@@ -192,7 +191,14 @@ struct kern_ui_target_info {
 static char * hook_to_id[] = {
 #       include "session_hooks.h"
 };
-#endif
+
+/* Redefine the session query macro to turn its arg into a string, then #include
+ * the list of querys directly into an array of string pointers. */
+#undef SESSION_DECL_QUERY
+#define SESSION_DECL_QUERY(id) #id
+static char * query_to_id[] = {
+#       include "session_queries.h"
+};
 
 /*****************************************************************************
  *
@@ -7393,9 +7399,35 @@ KERN_API_CALL(kern_being_get_base_faction)
         return scm_mk_integer(sc, faction);
 }
 
-#if USE_HOOK_AND_QUERY_TABLE
-
 KERN_API_CALL(kern_add_hook)
+{
+        pointer pproc, pargs = sc->NIL;
+        char *str;
+        int id = 0;
+
+        /* hook id and handler */
+        if(unpack(sc, &args, "yo", &str, &pproc)) {
+                load_err("%s: bad args", __FUNCTION__);
+                return sc->NIL;
+        }
+        
+        /* optional args */
+        if (scm_is_pair(sc, args)) {
+                pargs = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+        }
+
+        for (id = 0; id < NUM_HOOKS; id++) {
+                if (! strcmp(hook_to_id[id], str)) {
+                        void *ret = session_add_hook(Session, (session_hook_id_t)id, closure_new(sc, pproc), pargs);
+                        return ret ? scm_mk_ptr(sc, ret) : sc->NIL;
+                }
+        }
+
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_add_query)
 {
         pointer pproc;
         char *str;
@@ -7407,103 +7439,14 @@ KERN_API_CALL(kern_add_hook)
         }
         
         for (id = 0; id < NUM_HOOKS; id++) {
-                if (! strcmp(hook_to_id[id], str)) {
-                        session_add_hook(Session, (session_hook_id_t)id, closure_new(sc, pproc));
+                if (! strcmp(query_to_id[id], str)) {
+                        session_add_query(Session, (session_query_id_t)id, closure_new(sc, pproc));
                         return pproc;
                 }
         }
 
         return sc->F;
 }
-
-#else
-KERN_API_CALL(kern_set_start_proc)
-{
-        pointer proc;
-
-        if (unpack(sc, &args, "o", &proc)) {
-                rt_err("kern-set-start-proc");
-                return sc->NIL;
-        }
-
-        session_set_start_proc(Session, closure_new(sc, proc));
-
-        return proc;
-}
-
-KERN_API_CALL(kern_set_camping_proc)
-{
-        pointer proc;
-
-        if (unpack(sc, &args, "o", &proc)) {
-                rt_err("kern-set-camping-proc");
-                return sc->NIL;
-        }
-
-        session_add_hook(Session, camping_start_turn_hook, closure_new(sc, proc));
-
-        return proc;
-}
-
-KERN_API_CALL(kern_set_combat_procs)
-{
-        pointer stra,dexa,dam,def;
-
-        if (unpack(sc, &args, "oooo", &stra,&dexa,&dam,&def)) {
-                rt_err("kern-set-combat-procs");
-                return sc->NIL;
-        }
-
-        session_add_hook(Session, str_based_attack_query, closure_new(sc, stra));
-        session_add_hook(Session, dex_based_attack_query, closure_new(sc, dexa));
-        session_add_hook(Session, damage_bonus_query, closure_new(sc, dam));
-        session_add_hook(Session, defense_bonus_query, closure_new(sc, def));
-
-        return sc->NIL;
-}
-
-KERN_API_CALL(kern_set_music_handler)
-{
-        pointer mush;
-
-        if (unpack(sc, &args, "o", &mush)) {
-                rt_err("kern_set_music_handler");
-                return sc->NIL;
-        }
-
-        session_set_music_handler(Session, closure_new(sc, mush));
-
-        return sc->NIL;
-}
-
-KERN_API_CALL(kern_set_combat_listener)
-{
-        pointer mush;
-
-        if (unpack(sc, &args, "o", &mush)) {
-                rt_err("kern_set_combat_listener");
-                return sc->NIL;
-        }
-
-        session_set_combat_listener(Session, closure_new(sc, mush));
-
-        return sc->NIL;
-}
-
-KERN_API_CALL(kern_set_gamestart_hook)
-{
-        pointer mush;
-
-        if (unpack(sc, &args, "o", &mush)) {
-                rt_err("kern_set_gamestart_hook");
-                return sc->NIL;
-        }
-
-        session_set_gamestart_hook(Session, closure_new(sc, mush));
-
-        return sc->NIL;
-}
-#endif
 
 KERN_API_CALL(kern_player_set_follow_mode)
 {
@@ -9980,17 +9923,8 @@ scheme *kern_init(void)
                  kern_search_rect_for_terrain);
         API_DECL(sc, "kern-search-rect-for-obj-type", 
                  kern_search_rect_for_obj_type);
-#if USE_HOOK_AND_QUERY_TABLE
         API_DECL(sc, "kern-add-hook", kern_add_hook);
-#else
-        API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
-        API_DECL(sc, "kern-set-combat-procs", kern_set_combat_procs);
-        API_DECL(sc, "kern-set-music-handler", kern_set_music_handler);
-        API_DECL(sc, "kern-set-combat-state-listener", kern_set_combat_listener);
-        API_DECL(sc, "kern-set-gamestart-hook", kern_set_gamestart_hook);
-        API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
-        API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
-#endif
+        API_DECL(sc, "kern-add-query", kern_add_query);
         API_DECL(sc, "kern-set-quicken-sprite", kern_set_quicken_sprite);
         API_DECL(sc, "kern-set-time-stop-sprite", kern_set_time_stop_sprite);
         API_DECL(sc, "kern-set-magic-negated-sprite", kern_set_magic_negated_sprite);

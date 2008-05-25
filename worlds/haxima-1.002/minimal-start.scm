@@ -256,49 +256,106 @@
 ;;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ;; Setup a quest-offer test
 
-;;;; (define (attach kobj sticker)
-;;;;   (if (sticker 'can-attach kobj)
-;;;;       (tbl-append! (gob kobj)
-;;;;                    (sticker 'key))
-;;;;       (sticker 'on-attach kobj)
-;;;;       ))
+;;;; (define (attach kobj val-tag)
+;;;;   (let ((val (eval val-tag))
+;;;;         (obj (gob kobj)))
+;;;;     (if (null? val) (error "attach: no val for " val-tag))
+;;;;     (if (null? obj) (error "attach: no gob for " (kern-obj-get-name kobj)))
+;;;;     (if (val 'can-attach? kobj)
+;;;;         (tbl-append! obj val-tag)
+;;;;         (val 'on-attach kobj)
+;;;;         )))
+;;;; 
+;;;; (define (attached? kobj val-tag)
+;;;;   (let ((obj (gob kobj)))
+;;;;     (if (null? obj)
+;;;;         #f
+;;;;         (tbl-get obj (val-tag 'key)))
+;;;;         ))
 ;;;; 
 ;;;; (define quest-offer-ifc
 ;;;;   (ifc nil
-;;;;        (method 'can-attach (lambda (knpc) #t))
+;;;;        (method 'can-attach? (lambda (knpc) (println "can-attach") #t))
 ;;;;        (method 'key (lambda () 'quest-offer))
 ;;;;        (method 'on-attach (lambda (knpc) ))
-;;;;        (method 'is-avail (lambda (knpc kpc) #t))
+;;;;        (method 'is-avail? (lambda (knpc kpc) #t))
 ;;;;        (method 'offer (lambda (knpc kpc) ))
 ;;;;        ))
 ;;;; 
 ;;;; (define (gregors-quest-make-offer kpc knpc)
-;;;;   (say knpc "Wait! Before you go, I have a favor to ask. "
-;;;;        "There are bandits who make me pay them money. "
-;;;;        "I'm not afraid for myself, but I can't protect my grand-daughter. "
-;;;;        "Will you help me?")
+;;;;   (say knpc "Want a quest?")
 ;;;;   (cond ((yes? kpc)
-;;;;          (say knpc "Thank you. You should first seek help from the rangers at Green Tower.")
-;;;;          (quest-assign gregors-quest
-;;;;                        (gob (kern-get-player)))
-;;;;          )
+;;;;          (say knpc "You got it.")
+;;;;          (quest-assign gregors-quest (gob (kern-get-player))))
 ;;;;         (else
-;;;;          (say knpc "I see. [He turns away sadly]")
+;;;;          (say knpc "Fine. Loser.")
 ;;;;          (kern-conv-end))
 ;;;;         ))
 ;;;; 
 ;;;; (define gregors-quest-offer
 ;;;;   (ifc quest-offer-ifc
-;;;;        (method 'on-attach 
-;;;;                (lambda (knpc)
-;;;;                  (println "gregors-quest-offer: on-attach")
-;;;;                  (kern-obj-add-hook knpc 
-;;;;                                     'conv_end_hook
-;;;;                                     gregors-quest-offer)))
+;;;;        (method 'on-attach (lambda (knpc) (kern-add-hook 'conv_end_hook gregors-quest-make-offer)))
+;;;;        (method 'key (lambda () 'gregors-quest))
 ;;;;        ))
 ;;;; 
+;;;; (bind ch_gregor (tbl-mk))
+;;;; (attach ch_gregor 'gregors-quest-offer)
+;;;; (println "ch_gregor:" ch_gregor)
+
+;;;; ;;----------------------------------------------------------------------------
+;;;; ;; End-of-conv hook
+;;;; (kern-mk-effect ef_conv_end ; tag
+;;;;                 nil ; name
+;;;;                 nil ; sprite
+;;;;                 conv-end-exec ; exec
+;;;;                 nil ; apply
+;;;;                 nil ; conv-end-rm
+;;;;                 nil ; restart
+;;;;                 'conv-end-hook
+;;;;                 nil ; ddc
+;;;;                 #t ; cum 
+;;;;                 0 ; dur
+;;;;                 )
+
+;;;; (kern-add-hook  
+;;;;  'conv_end_hook
+;;;;  (lambda (kpc knpc)
+;;;;    (println "knpc:" knpc)
+;;;;    (println "ch_gregor:" knpc)
+;;;;    (cond ((equal? knpc ch_gregor)
+;;;;           (say knpc "Want a quest?")
+;;;;           (cond ((yes? kpc)
+;;;;                  (say knpc "You got it.")
+;;;;                  (quest-assign gregors-quest 
+;;;;                                (gob (kern-get-player))))
+;;;;                 (else
+;;;;                  (say knpc "Fine. Loser.")
+;;;;                  (kern-conv-end))
+;;;;                 )))))
+
+;;;; (define gregors-quest
+;;;;   (quest-talk-to-for-xp-mk ch_gregor 10))
 ;;;; 
-;;;; (attach ch_gregor gregors-quest-offer)
+;;;; 
+;;;; (define (simple-quest-offer knpc offer on-accept on-reject quest)
+;;;;   (hook-end-of-conv knpc 'offer-quest offer on-accept on-reject quest))
+;;;; 
+;;;; (simple-quest-offer "Want a quest?" "You got it." "Fine. Loser." gregors-quest)
+
+(kern-add-hook  
+ 'conv_end_hook
+ (lambda (kpc knpc)
+   (cond ((equal? knpc ch_gregor)
+          (say knpc "Want a quest?")
+          (cond ((yes? kpc)
+                 (say knpc "You got it.")
+                 (quest-assign gregors-quest 
+                               (gob (kern-get-player))))
+                (else
+                 (say knpc "Fine. Loser.")
+                 (kern-conv-end))
+                )))))
+
 
 ;;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -309,6 +366,7 @@
 ;;----------------------------------------------------------------------------
 
 (define (simple-start kplayer)
+  (println "simple-start")
   (kern-obj-put-at kplayer (list p_minimal 0 0))
   (kern-obj-put-at ch_gregor (list p_minimal 1 1))
   (quest-assign (quest-talk-to-for-xp-mk 'ch_gregor 10) (gob kplayer))

@@ -396,10 +396,10 @@
 (kern-set-ascii ss_u4_charset 32)
 (kern-set-cursor ls_whirlpool)
 (kern-set-damage-sprite s_hit)
-(kern-add-hook 'str_based_attack_query proc-stratt)
-(kern-add-hook 'dex_based_attack_query proc-dexatt)
-(kern-add-hook 'damage_bonus_query proc-stratt)
-(kern-add-hook 'defense_bonus_query proc-dexdef)
+(kern-add-query 'str_based_attack_query proc-stratt)
+(kern-add-query 'dex_based_attack_query proc-dexatt)
+(kern-add-query 'damage_bonus_query proc-stratt)
+(kern-add-query 'defense_bonus_query proc-dexdef)
 
 ;; Setup the global effect sprites
 (kern-set-quicken-sprite s_quicken)
