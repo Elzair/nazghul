@@ -521,11 +521,18 @@ static int unpack_rect(scheme *sc, pointer *args, SDL_Rect *rect)
 {
         pointer prect = scm_car(sc, *args);
         *args = scm_cdr(sc, *args);
+        long x, y, w, h;
 
-        if (unpack(sc, &prect, "dddd",  &rect->x, &rect->y, &rect->w, &rect->h)) {
+        /* Can't use the rect fields directly because they're only Uint16 */
+        if (unpack(sc, &prect, "dddd",  &x, &y, &w, &h)) {
                 load_err("%s: error unpacking rect elements", __FUNCTION__);
                 return -1;
         }
+
+        rect->x = x;
+        rect->y = y;
+        rect->w = w;
+        rect->h = h;
         
         return 0;
 }
@@ -7401,7 +7408,7 @@ KERN_API_CALL(kern_being_get_base_faction)
 
 KERN_API_CALL(kern_add_hook)
 {
-        pointer pproc, pargs = sc->NIL;
+        pointer pproc;
         char *str;
         int id = 0;
 
@@ -7411,15 +7418,10 @@ KERN_API_CALL(kern_add_hook)
                 return sc->NIL;
         }
         
-        /* optional args */
-        if (scm_is_pair(sc, args)) {
-                pargs = scm_car(sc, args);
-                args = scm_cdr(sc, args);
-        }
-
         for (id = 0; id < NUM_HOOKS; id++) {
                 if (! strcmp(hook_to_id[id], str)) {
-                        void *ret = session_add_hook(Session, (session_hook_id_t)id, closure_new(sc, pproc), pargs);
+                        /* the rest of the args list is registered with the handler */
+                        void *ret = session_add_hook(Session, (session_hook_id_t)id, closure_new(sc, pproc), args);
                         return ret ? scm_mk_ptr(sc, ret) : sc->NIL;
                 }
         }
