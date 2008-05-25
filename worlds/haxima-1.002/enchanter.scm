@@ -313,7 +313,7 @@
 (define (ench-wrog knpc kpc)
   (say knpc "The Wisest of Wrogues is The MAN, who comes and goes as if on "
        "the wind. If the MAN has a home, it is well-hidden. Ask around, "
-       "perhaps your enquiries will prompt a meeting."))
+       "perhaps your inquiries will prompt a meeting."))
 
 (define (ench-wrig knpc kpc)
   (say knpc "The Wisest Wright prefers to work in isolation. You may find him "
