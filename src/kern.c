@@ -5875,7 +5875,7 @@ KERN_API_CALL(kern_obj_freeze)
                 return sc->NIL;
         }
 
-		obj_inc_ref(obj);
+        obj_inc_ref(obj);
         freezer_freezeObject(key, x, y, obj);
 
         return sc->NIL;
@@ -9594,6 +9594,66 @@ KERN_API_CALL(kern_applet_run)
         
 }
 
+/**
+ * (kern-define <symbol> <value>)
+ *
+ * This is a way to define mutable scheme variables that persist across
+ * sessions. In other words, you can declare a variable in scheme, change
+ * something about it during the game, and rest assured that when the game
+ * reloads the value will be the same. By way of contrast, normal statements
+ * like (define foo (list 'a 6)) define variables for the current session only.
+ */
+
+struct kern_define_data {
+        scheme *sc;
+        char *sym;
+        pointer cell;
+};
+
+static void kern_define_dtor(void *val)
+{
+        DECL_CAST(struct kern_define_data, data, val);
+        free(data->sym);
+        KERN_FREE(val);
+}
+
+static void kern_define_save(save_t *save, void *val)
+{
+        DECL_CAST(struct kern_define_data, data, val);
+        save->write(save, "(kern-define '%s ", data->sym);
+        scheme_serialize(data->sc, data->cell, save);
+        save->write(save, ")\n");
+}
+
+KERN_API_CALL(kern_define)
+{
+        char *str;
+        pointer pcell;
+        struct kern_define_data *data;
+        
+        if (unpack(sc, &args, "yl", &str, &pcell)) {
+                load_err("%s: bad args", __FUNCTION__);
+                return sc->NIL;
+        }
+        
+        if (!(data = KERN_ALLOC(struct kern_define_data))) {
+                load_err("%s: alloc failed", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        if (!(data->sym = strdup(str))) {
+                KERN_FREE(data);
+                load_err("%s: strdup failed", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        data->sc = sc;
+        data->cell = pcell;
+        session_add(Session, data, kern_define_dtor, kern_define_save, NULL);
+        scm_define(sc, str, pcell);
+        return sc->NIL;
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -9900,6 +9960,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-begin-combat", kern_begin_combat);
         API_DECL(sc, "kern-blit-map", kern_blit_map);
         API_DECL(sc, "kern-init-random", kern_init_random);
+        API_DECL(sc, "kern-define", kern_define);
         API_DECL(sc, "kern-dice-roll", kern_dice_roll);
         API_DECL(sc, "kern-end-game" , kern_end_game);
         API_DECL(sc, "kern-fire-missile", kern_fire_missile);
