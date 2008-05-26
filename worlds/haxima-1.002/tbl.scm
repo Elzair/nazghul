@@ -1,3 +1,5 @@
+;; (*tbl* (k1 v1) (k2 v2) ...)
+
 (define (tbl-mk)
   (list '*tbl*))
 
@@ -25,3 +27,18 @@
             (not (pair? (cdr entry))))
         (tbl-set! tbl key (list val))
         (set-cdr! entry (cons val (cdr entry))))))
+
+;; run a procedure on each value in the table
+(define (tbl-for-each-val fx tbl)
+  (for-each (lambda (entry)
+              (println "tbl-for-each-val:entry=" entry)
+              (println "cdr=" (cdr entry))
+              (apply fx (cdr entry)))
+            (cdr tbl)))
+
+;; remove the entry that matches key
+(define (tbl-rm! tbl key)
+  (if (pair? (cdr tbl))
+      (if (equal? key (caadr tbl))
+          (set-cdr! tbl (cddr tbl))
+          (tbl-rm! (cdr tbl) key))))
