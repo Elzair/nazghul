@@ -316,6 +316,8 @@ extern void session_run_hook(struct session *session, session_hook_id_t id, char
 extern void *session_add_hook(struct session *session, session_hook_id_t id, struct closure *proc, pointer args);
 extern int session_run_query(struct session *session, session_query_id_t id, char *fmt, ...);
 extern void session_add_query(struct session *session, session_query_id_t id, struct closure *proc);
+extern char *session_hook_id_to_str(session_hook_id_t id);
+extern session_hook_id_t session_str_to_hook_id(char *str);
 
 extern void save_err(char *fmt, ...);
 extern struct node *session_add_sched_char(struct session *session,

@@ -355,30 +355,13 @@
 ;;;;                 )))))
 ;;;; 
 
-(define (basic-quest-offer kpc knpc args)
-  (println "basic-quest-offer: args=" args)
-  (println "knpc=" knpc)
-  (define (offer t1 t2 t3 quest)
-    (println "offer")
-    (say knpc t1)
-    (cond ((yes? kpc)
-           (say knpc t2)
-           (quest-assign (eval quest)
-                         (gob (kern-get-player)))
-           (tbl-rm! end-of-conv-handlers quest)
-           )
-          (else
-           (say knpc t3)
-           )))    
-  (if (equal? knpc (safe-eval (car args)))
-      (apply offer (cdr args))))
-
-;; create the quest (for now)
-(define gregors-quest
-  (quest-talk-to-for-xp-mk 'ch_gregor 10))
 
 ;; create the table for end-of-conv handlers
 (kern-define 'end-of-conv-handlers (tbl-mk))
+
+;; create the quest (for now)
+(kern-define 'gregors-quest
+             (quest-talk-to-for-xp-mk 'ch_gregor 10))
 
 ;; add an end-of-conv handler to offer gregor's quest 
 ;;
@@ -391,18 +374,10 @@
           'gregors-quest
           '((basic-quest-offer (ch_gregor "Want a quest?" "You got it." "Fine. Loser" gregors-quest))))
 
-;; run all the end-of-conv handlers
-(define (run-end-of-conv-handlers kpc knpc args)
-  (println "run-end-of-conv-handlers")
-  (tbl-for-each-val (lambda (val)
-                      (println "val:" val)
-                      (apply (eval (car val)) (cons kpc (cons knpc (cdr val)))))
-                    (eval (car args))))
-
 ;; setup the end-of-conv hook
 (kern-add-hook 'conv_end_hook
-               run-end-of-conv-handlers
-               'end-of-conv-handlers)
+               'run-end-of-conv-handlers
+               '(end-of-conv-handlers))
 
 ;;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -418,6 +393,6 @@
   (quest-assign (quest-talk-to-for-xp-mk 'ch_gregor 10) (gob kplayer))
   )
       
-(kern-add-hook 'new_game_start_hook simple-start)
+(kern-add-hook 'new_game_start_hook 'simple-start)
 
 (kern-progress-bar-finish)

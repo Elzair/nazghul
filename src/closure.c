@@ -30,16 +30,6 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#define scm_is_pair(sc,arg) ((sc)->vptr->is_pair(arg))
-#define scm_mk_ptr(sc,ptr) mk_foreign_func((sc), (foreign_func)(ptr))
-#define scm_mk_integer(sc, val) \
-        (sc)->vptr->mk_integer((sc), (val))
-#define scm_cdr(p) ((p)->_object._cons._cdr)
-#define scm_car(p) ((p)->_object._cons._car)
-#define scm_is_symbol(sc, arg) ((sc)->vptr->is_symbol(arg))
-#define scm_is_closure(sc, arg) ((sc)->vptr->is_closure(arg))
-#define scm_is_ptr(sc, arg) ((sc)->vptr->is_foreign(arg))
-
 /* Defined in kern.c: */
 extern pointer vpack(scheme *sc, char *fmt, va_list ap);
 
@@ -77,7 +67,7 @@ static pointer closure_exec_with_scheme_args(closure_t *closure, pointer args)
         }
 
         /* Need to lookup it up first? */
-        else if (scm_is_symbol(closure->sc, closure->code)) {
+        else if (scm_is_sym(closure->sc, closure->code)) {
 
                 pointer pair;
                 pointer proc;
@@ -143,7 +133,7 @@ int closure_translate_result(scheme *sc, pointer result)
                 return (int)sc->vptr->rvalue(result);
         }
         
-        if (scm_is_symbol(sc, result)) {
+        if (scm_is_sym(sc, result)) {
                 pointer pair;
                 pair = sc->vptr->find_slot_in_env(sc, 
                                                   sc->envir, 
@@ -209,7 +199,7 @@ void closure_save(closure_t *closure, struct save *save)
 {
         char *proc_name;
 
-        assert(scm_is_symbol(closure->sc, closure->code));
+        assert(scm_is_sym(closure->sc, closure->code));
 
         /* The 'code' pointer is a pointer to a scheme symbol. To save the
          * closure we only need to write this symbol out with a leading
@@ -325,8 +315,8 @@ int closure_execvl(closure_t *closure, char *fmt, va_list args, pointer cell)
 
                 /* Find the end of the list */
                 pointer tail = head;
-                while (scm_cdr(tail) != sc->NIL) {
-                        tail = scm_cdr(tail);
+                while (scm_cdr(sc, tail) != sc->NIL) {
+                        tail = scm_cdr(sc, tail);
                 }
 
                 /* Append the args to the tail of the list */

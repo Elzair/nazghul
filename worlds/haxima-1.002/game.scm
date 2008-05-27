@@ -404,3 +404,4 @@
 (kern-set-xray-vision-sprite s_xray_vision)
 
 (kern-init-random)
+

@@ -75,22 +75,22 @@
 ;; Whenever a conversation starts, check if a talk-to quest was just finished
 ;; (note that this hook only runs if the object actually has a conversation
 ;; script). If it was, run the on-finish proc and mark the quest as done.
-(kern-add-hook 'conv_start_hook
-               (lambda (kpc knpc)
-                 (let ((qlst (tbl-get (gob (kern-get-player))
-                                      'quests)))
-                   (if (notnull? qlst)
-                       (for-each (lambda (qst)
-                                   (if (and (not (qst-done? qst))
-                                            (qst-is-talk-to? qst))
-                                       (let ((qtt (qst-payload qst)))
-                                         (if (qtt-is-npc? qtt knpc)
-                                             (begin
-                                               (qtt-finish qtt kpc)
-                                               (qst-done! qst)
-                                               )))))
-                                 qlst))
-                   )))
+(define (check-talk-to-quest-on-conv-start kpc knpc args)
+  (let ((qlst (tbl-get (gob (kern-get-player))
+                       'quests)))
+    (if (notnull? qlst)
+        (for-each (lambda (qst)
+                    (if (and (not (qst-done? qst))
+                             (qst-is-talk-to? qst))
+                        (let ((qtt (qst-payload qst)))
+                          (if (qtt-is-npc? qtt knpc)
+                              (begin
+                                (qtt-finish qtt kpc)
+                                (qst-done! qst)
+                                )))))
+                  qlst))))
+
+(kern-add-hook 'conv_start_hook 'check-talk-to-quest-on-conv-start)
 
 ;;----------------------------------------------------------------------------
 ;; generic talk-to-quest constructor (a helpful subclass)

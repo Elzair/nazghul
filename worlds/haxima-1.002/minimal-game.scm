@@ -698,9 +698,8 @@
 (kern-set-ascii ss_u4_charset 32)
 (kern-set-cursor ls_whirlpool)
 (kern-set-damage-sprite s_hit)
-; (kern-set-combat-procs proc-stratt proc-dexattproc-stratt proc-dexdef)
-(kern-add-hook 'combat_change_hook music-on-combat-change)
-(kern-add-hook 'session_start_hook music-on-combat-change)
+(kern-add-hook 'combat_change_hook 'music-on-combat-change)
+(kern-add-hook 'session_start_hook 'music-on-combat-change)
 
 ;; Setup the global effect sprites
 ; (kern-set-quicken-sprite s_quicken)
@@ -722,3 +721,30 @@
       (method 'join (lambda (knpc kpc) (say knpc "Nope. Already got a job.")))
       (method 'name (lambda (knpc kpc) (say knpc "Gregor's my name.")))
       ))
+
+;; run all the end-of-conv handlers
+(define (run-end-of-conv-handlers kpc knpc args)
+  (println "run-end-of-conv-handlers")
+  (tbl-for-each-val (lambda (val)
+                      (println "val:" val)
+                      (apply (eval (car val)) (cons kpc (cons knpc (cdr val)))))
+                    (eval (car args))))
+
+(define (basic-quest-offer kpc knpc args)
+  (println "basic-quest-offer: args=" args)
+  (println "knpc=" knpc)
+  (define (offer t1 t2 t3 quest)
+    (println "offer")
+    (say knpc t1)
+    (cond ((yes? kpc)
+           (say knpc t2)
+           (quest-assign (eval quest)
+                         (gob (kern-get-player)))
+           (tbl-rm! end-of-conv-handlers quest)
+           )
+          (else
+           (say knpc t3)
+           )))    
+  (if (equal? knpc (safe-eval (car args)))
+      (apply offer (cdr args))))
+

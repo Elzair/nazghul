@@ -95,6 +95,15 @@ int save_errs = 0;
 static void session_init_hooks(struct session *session);
 static void session_cleanup_hooks(struct session *session);
 static void session_cleanup_queries(struct session *session);
+static void session_save_hooks(save_t *save, struct session *session);
+
+/* Redefine the session hook macro to turn its arg into a string, then #include
+ * the list of hooks directly into an array of string pointers. */
+#undef SESSION_DECL_HOOK
+#define SESSION_DECL_HOOK(id) #id
+static char * session_hook_str[] = {
+#       include "session_hooks.h"
+};
 
 void load_err(char *fmt, ...)
 {
@@ -636,11 +645,17 @@ int session_save(char *fname)
                 }
 
         }
-		/* Object freezer */
+        /* Object freezer */
         save->write(save, ";;--------------\n");
         save->write(save, ";; ObjectFreezer\n");
         save->write(save, ";;--------------\n");
-		freezer_save(save);
+        freezer_save(save);
+
+        /* Hooks */
+        save->write(save, ";;--------------\n");
+        save->write(save, ";; Hooks\n");
+        save->write(save, ";;--------------\n");
+        session_save_hooks(save, Session);
 
         /* Save all the special-case stuff... */
         save->write(save, ";;--------------\n");
@@ -768,6 +783,25 @@ void *session_add_hook(struct session *session, session_hook_id_t id, struct clo
         return entry;
 }
 
+static void session_save_hooks(save_t *save, struct session *session)
+{
+        int i;
+        for (i = 0; i < NUM_HOOKS; i++) {
+                if (i == new_game_start_hook) {
+                        continue; /* special case */
+                }
+                struct list *lptr;
+                list_for_each(&session->hook_table[i], lptr) {
+                        struct session_hook_entry *entry = list_entry(lptr, struct session_hook_entry, list);
+                        scheme *sc = entry->proc->sc;
+                        save->write(save, "(kern-add-hook '%s '%s ", session_hook_str[i], 
+                                    scm_sym_val(sc, entry->proc->code));
+                        scheme_serialize(sc, entry->args, save);
+                        save->write(save, ")\n");
+                }
+        }        
+}
+
 static void session_cleanup_hooks(struct session *session)
 {
         int i;
@@ -828,4 +862,21 @@ static void session_cleanup_queries(struct session *session)
                         session->query_table[i] = NULL;
                 }
         }
+}
+
+char *session_hook_id_to_str(session_hook_id_t id)
+{
+        assert(id < NUM_HOOKS);
+        return session_hook_str[id];
+}
+
+session_hook_id_t session_str_to_hook_id(char *str)
+{
+        int id;
+        for (id = 0; id < NUM_HOOKS; id++) {
+                if (! strcmp(session_hook_str[id], str)) {
+                        break;
+                }
+        }
+        return (session_hook_id_t)id;
 }
