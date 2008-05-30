@@ -710,6 +710,7 @@
 
 (kern-init-random)
 
+;;----------------------------------------------------------------------------
 ;; this needs to be in a kern-loaded file so it's redefined on reload
 (define gregors-conv
  (ifc nil
@@ -721,30 +722,4 @@
       (method 'join (lambda (knpc kpc) (say knpc "Nope. Already got a job.")))
       (method 'name (lambda (knpc kpc) (say knpc "Gregor's my name.")))
       ))
-
-;; run all the end-of-conv handlers
-(define (run-end-of-conv-handlers kpc knpc args)
-  (println "run-end-of-conv-handlers")
-  (tbl-for-each-val (lambda (val)
-                      (println "val:" val)
-                      (apply (eval (car val)) (cons kpc (cons knpc (cdr val)))))
-                    (eval (car args))))
-
-(define (basic-quest-offer kpc knpc args)
-  (println "basic-quest-offer: args=" args)
-  (println "knpc=" knpc)
-  (define (offer t1 t2 t3 quest)
-    (println "offer")
-    (say knpc t1)
-    (cond ((yes? kpc)
-           (say knpc t2)
-           (quest-assign (eval quest)
-                         (gob (kern-get-player)))
-           (tbl-rm! end-of-conv-handlers quest)
-           )
-          (else
-           (say knpc t3)
-           )))    
-  (if (equal? knpc (safe-eval (car args)))
-      (apply offer (cdr args))))
 

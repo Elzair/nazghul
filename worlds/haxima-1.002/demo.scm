@@ -2177,4 +2177,4 @@
   (kern-map-repaint)
   )
 
-(kern-add-hook 'new_game_start_hook simple-start)
+(kern-add-hook 'new_game_start_hook 'simple-start)

@@ -297,73 +297,61 @@
 ;;;;        (method 'on-attach (lambda (knpc) (kern-add-hook 'conv_end_hook gregors-quest-make-offer)))
 ;;;;        (method 'key (lambda () 'gregors-quest))
 ;;;;        ))
-;;;; 
-;;;; (bind ch_gregor (tbl-mk))
-;;;; (attach ch_gregor 'gregors-quest-offer)
-;;;; (println "ch_gregor:" ch_gregor)
 
-;;;; ;;----------------------------------------------------------------------------
-;;;; ;; End-of-conv hook
-;;;; (kern-mk-effect ef_conv_end ; tag
-;;;;                 nil ; name
-;;;;                 nil ; sprite
-;;;;                 conv-end-exec ; exec
-;;;;                 nil ; apply
-;;;;                 nil ; conv-end-rm
-;;;;                 nil ; restart
-;;;;                 'conv-end-hook
-;;;;                 nil ; ddc
-;;;;                 #t ; cum 
-;;;;                 0 ; dur
-;;;;                 )
-
-;;;; (kern-add-hook  
-;;;;  'conv_end_hook
-;;;;  (lambda (kpc knpc)
-;;;;    (println "knpc:" knpc)
-;;;;    (println "ch_gregor:" knpc)
-;;;;    (cond ((equal? knpc ch_gregor)
-;;;;           (say knpc "Want a quest?")
-;;;;           (cond ((yes? kpc)
-;;;;                  (say knpc "You got it.")
-;;;;                  (quest-assign gregors-quest 
-;;;;                                (gob (kern-get-player))))
-;;;;                 (else
-;;;;                  (say knpc "Fine. Loser.")
-;;;;                  (kern-conv-end))
-;;;;                 )))))
-
-;;;; 
-;;;; 
-;;;; (define (simple-quest-offer knpc offer on-accept on-reject quest)
-;;;;   (hook-end-of-conv knpc 'offer-quest offer on-accept on-reject quest))
-;;;; 
-;;;; (simple-quest-offer "Want a quest?" "You got it." "Fine. Loser." gregors-quest)
-
-;;;; (kern-add-hook  
-;;;;  'conv_end_hook
-;;;;  (lambda (kpc knpc)
-;;;;    (cond ((equal? knpc ch_gregor)
-;;;;           (say knpc "Want a quest?")
-;;;;           (cond ((yes? kpc)
-;;;;                  (say knpc "You got it.")
-;;;;                  (quest-assign gregors-quest 
-;;;;                                (gob (kern-get-player))))
-;;;;                 (else
-;;;;                  (say knpc "Fine. Loser.")
-;;;;                  (kern-conv-end))
-;;;;                 )))))
-;;;; 
-
+;;----------------------------------------------------------------------------
+;; end-of-conv hook handling
 
 ;; create the table for end-of-conv handlers
 (kern-define 'end-of-conv-handlers (tbl-mk))
+
+;; a procedure to run all the end-of-conv handlers
+(define (run-end-of-conv-handlers kpc knpc args)
+  (println "run-end-of-conv-handlers:args=" args)
+  (tbl-for-each-val (lambda (val)
+                      (println "val:" val)
+                      (apply (eval (car val)) (cons kpc (cons knpc (cdr val)))))
+                    (eval (car args))))
+
+;; setup the end-of-conv hook to run the handlers (this must be done only once
+;; per game, so keep it in the start-game file)
+(kern-add-hook 'conv_end_hook
+               'run-end-of-conv-handlers
+               '(end-of-conv-handlers))
+
+;;----------------------------------------------------------------------------
+;; Offer a predefined quest in a piece of dialogue. 'args' should be a list
+;; like this:
+;;
+;; (offer-string accept-string reject-string quest)
+;;
+;; Where 'quest' is an instance of a quest.
+(define (basic-quest-offer kpc knpc args)
+  (println "basic-quest-offer: args=" args)
+  (println "knpc=" knpc)
+  (define (offer t1 t2 t3 quest)
+    (println "offer")
+    (say knpc t1)
+    (cond ((yes? kpc)
+           (say knpc t2)
+           (quest-assign (eval quest)
+                         (gob (kern-get-player)))
+           (tbl-rm! end-of-conv-handlers quest)
+           )
+          (else
+           (say knpc t3)
+           )))    
+  (if (equal? knpc (safe-eval (car args)))
+      (apply offer (cdr args))))
+
+
+;;----------------------------------------------------------------------------
+;; gregor's quest (test)
 
 ;; create the quest (for now)
 (kern-define 'gregors-quest
              (quest-talk-to-for-xp-mk 'ch_gregor 10))
 
-;; add an end-of-conv handler to offer gregor's quest 
+;; Add an end-of-conv handler to offer gregor's quest 
 ;;
 ;; (note 1: that the entry must be a list in a list because of the way
 ;; tbl-for-each and the apply within it work)
@@ -374,10 +362,40 @@
           'gregors-quest
           '((basic-quest-offer (ch_gregor "Want a quest?" "You got it." "Fine. Loser" gregors-quest))))
 
-;; setup the end-of-conv hook
-(kern-add-hook 'conv_end_hook
-               'run-end-of-conv-handlers
-               '(end-of-conv-handlers))
+
+;;----------------------------------------------------------------------------
+;; random quest assignment (prototype)
+
+(define (random-mailman-quest-offer kpc knpc)
+  (say knpc 
+       "I need someone to deliver THIS PACKAGE"
+       " to SOMBEODY"
+       " by SOMETIME"
+       ". Will you do it?")
+  (cond ((yes? kpc)
+         (say knpc "GREAT")
+         ;; (quest-assign ...)
+         )
+        (else
+         (say knpc "WHAT? YOU SUCK!")
+         ))
+  (println "leaving")
+  )
+
+(define (select-random-quest-offer knpc)
+  (println "select-random-quest-offer")
+  (random-select (list random-mailman-quest-offer
+                   )))
+
+(define (offer-random-quest kpc knpc args)
+  (println "offer-random-quest")
+  (let ((offer (select-random-quest-offer knpc)))
+    (if (notnull? offer)
+        (offer kpc knpc))))
+    
+(tbl-set! end-of-conv-handlers 
+          'random-quest
+          '((offer-random-quest nil)))
 
 ;;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

@@ -366,6 +366,7 @@
 (load "moon.scm")
 
 ;; Quest system
+(load "tbl.scm")
 (load "ztats-quest-ui.scm")
 (load "quest-sys.scm")
 (load "quest-talk-to.scm")
@@ -393,8 +394,8 @@
 (kern-add-query 'dex_based_attack_query proc-dexatt)
 (kern-add-query 'damage_bonus_query proc-stratt)
 (kern-add-query 'defense_bonus_query proc-dexdef)
-(kern-add-hook 'combat_change_hook music-on-combat-change)
-(kern-add-hook 'session_start_hook music-on-combat-change)
+(kern-add-hook 'combat_change_hook 'music-on-combat-change)
+(kern-add-hook 'session_start_hook 'music-on-combat-change)
 
 ;; Setup the global effect sprites
 (kern-set-quicken-sprite s_quicken)
