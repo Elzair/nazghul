@@ -138,8 +138,6 @@ nazghul_SOURCES =		\
 	log.c \
 	dtable.h \
 	dtable.c \
-	hstack.h \
-	hstack.c \
 	Being.h \
 	Being.cpp \
 	factions.h \
@@ -173,7 +171,8 @@ nazghul_SOURCES =		\
 	ztats_misc.h ztats_misc.c \
 	applet.h \
 	session_hooks.h \
-	session_queries.h
+	session_queries.h \
+	bitset.h
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \

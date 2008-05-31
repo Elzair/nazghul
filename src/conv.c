@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 
+#include "bitset.h"
 #include "conv.h"
 #include "event.h"
 #include "cmdwin.h"
@@ -34,6 +35,18 @@
 #include <stdlib.h>
 
 #define MAX_KEYWORD_SZ 16
+
+/**
+ * Conversation structure.
+ */
+struct conv {
+        struct closure *proc; /* Closure which responds to keywords. */
+        int ref; /* Reference count. */
+        int n_keywords; /* Size of the keywords array. */
+        int key_index; /* Index of next empty keyword slot. */
+        char **keywords; /* Keyword array. */
+        bitset_t *marked; /* Used keywords */
+};
 
 static int conv_room, conv_len;
 static char conv_query[64], *conv_ptr;
@@ -120,6 +133,10 @@ static void conv_del(struct conv *conv)
                 free(conv->keywords);
         }
 
+        if (conv->marked) {
+                bitset_free(conv->marked);
+        }
+
         free(conv);
 }
 
@@ -169,6 +186,62 @@ static int conv_prefix_cmp(char *wptr, char *cptr)
         return 0;
 }
 
+/**
+ * Check if a word is a keyword.
+ *
+ * @conv is the conversation to check.
+ * @word is the word to look for in the keywords.
+ * @returns the index of the matching keyword, else -1 if not found.
+ */
+static int conv_lookup_keyword(struct conv *conv, char *word)
+{
+        int min = 0, max = conv->key_index, pivot;
+
+        while (max > min) {
+
+                /**
+                 * apricot
+                 *
+                 * aardvark
+                 * abacus
+                 *
+                 * zoo
+                 * zebra
+                 */
+
+                pivot = ((max-min)/2) + min;
+                
+                int d = conv_prefix_cmp(word, conv->keywords[pivot]);
+                
+                if (d > 0) {
+                        /* word > pivot => search higher */
+                        min = pivot + 1;
+                } else if (d < 0) {
+                        /* word < pivot => search lower */
+                        max = pivot;
+                } else {
+                        return pivot;
+                }
+        }
+
+        return -1;
+}
+
+/**
+ * Check if a word is a keyword and, if so, to mark it (marking is used to show
+ * the player which keywords have already been used in a conversation).
+ *
+ * @conv is the conversation to check.
+ * @word is the word to look for in the keywords.
+ */
+static void conv_mark_if_keyword(struct conv *conv, char *word)
+{
+        int index = conv_lookup_keyword(conv, word);
+        if (index != -1) {
+                bitset_set(conv->marked, index);
+        }
+}
+
 struct conv *conv_new(struct closure *proc, int n_keywords)
 {
         struct conv *conv;
@@ -178,6 +251,11 @@ struct conv *conv_new(struct closure *proc, int n_keywords)
         }
 
         if (!(conv->keywords = (char**)calloc(n_keywords, sizeof(char*)))) {
+                conv_del(conv);
+                return NULL;
+        }
+
+        if (!(conv->marked = bitset_alloc(n_keywords))) {
                 conv_del(conv);
                 return NULL;
         }
@@ -219,6 +297,11 @@ void conv_unref(struct conv *conv)
         }
 }
 
+void conv_ref(struct conv *conv)
+{
+        conv->ref++;
+}
+
 char *conv_highlight_keywords(struct conv *conv, char *orig)
 {
         return NULL;
@@ -246,6 +329,8 @@ void conv_enter(Object *npc, Object *pc, struct conv *conv)
 
                 /* Truncate the query to 4 characters */
                 conv_query[4] = 0;
+
+                conv_mark_if_keyword(conv, conv_query);
 
                 /* Query the NPC */
                 closure_exec(conv->proc, "ypp", conv_query, npc, pc);
@@ -333,34 +418,10 @@ int conv_get_word(char *instr, char **beg, char **end)
 
 int conv_is_keyword(struct conv *conv, char *word)
 {
-        int min = 0, max = conv->key_index, pivot;
-
-        while (max > min) {
-
-                /**
-                 * apricot
-                 *
-                 * aardvark
-                 * abacus
-                 *
-                 * zoo
-                 * zebra
-                 */
-
-                pivot = ((max-min)/2) + min;
-                
-                int d = conv_prefix_cmp(word, conv->keywords[pivot]);
-                
-                if (d > 0) {
-                        /* word > pivot => search higher */
-                        min = pivot + 1;
-                } else if (d < 0) {
-                        /* word < pivot => search lower */
-                        max = pivot;
-                } else {
-                        return 1;
-                }
+        int index = conv_lookup_keyword(conv, word);
+        if (index == -1) {
+                return 0;
         }
-
-        return 0;
+        return CONV_IS_KEYWORD | (bitset_tst(conv->marked, index) ? CONV_IS_MARKED : 0);
 }
+

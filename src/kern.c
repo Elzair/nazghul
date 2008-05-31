@@ -2805,7 +2805,8 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                                                 } while (text<beg);
                                         }
                                         if (keyword) {
-                                                log_continue("^c+m");
+                                                char color = (keyword & CONV_IS_MARKED) ? 'G' : 'm';
+                                                log_continue("^c+%c", color);
                                         }
                                         while (beg<end) {
                                                 log_continue("%c", *beg);

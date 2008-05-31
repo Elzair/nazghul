@@ -25,18 +25,13 @@
 #define CONV_PC_COLOR  'g'
 #define CONV_NPC_COLOR 'b'
 
-#define conv_ref(conv) ((conv)->ref++)
-
 /**
- * Conversation structure.
+ * Flags for the return value of conv_is_keyword().
  */
-struct conv {
-        struct closure *proc; /* Closure which responds to keywords. */
-        int ref; /* Reference count. */
-        int n_keywords; /* Size of the keywords array. */
-        int key_index; /* Index of next empty keyword slot. */
-        char **keywords; /* Keyword array. */
-};
+#define CONV_IS_KEYWORD (1<<0) /* word is a keyword */
+#define CONV_IS_MARKED  (1<<1) /* keyword has been used */
+
+struct conv;
 
 /**
  * Allocate a conversation struct and a fixed number of keywords slots.
@@ -82,6 +77,13 @@ void conv_sort_keywords(struct conv *conv);
 void conv_unref(struct conv *conv);
 
 /**
+ * Add a reference to a conversation. This prevents it from being destroyed.
+ *
+ * @param is the conversation.
+ */
+void conv_ref(struct conv *conv);
+
+/**
  * Start a conversation. This will start the conversation session in the
  * console, and return when and only when the conversation is over.
  *
@@ -121,14 +123,16 @@ int isprintable(int c);
 int conv_get_word(char *instr, char **beg, char **end);
 
 /**
- * Check if a word is a keyword in a conversation. This works by testing if any
- * of the keywords are a prefix of the word.
+ * Check if a word is a keyword in a conversation (and, if so, if it has
+ * already been used in a conversation since the last session reload). This
+ * works by testing if any of the keywords are a prefix of the word.
  *
  * @param conv is the conversation with the keywords to check.
  * @param word if the word to test for.
- * @returns non-zero iff the word is prefixed by a keyword.
+ * @returns zero if the word is not a keyword, else a non-zero union of the
+ * flags CONV_IS_KEYWORD and CONV_IS_MARKED.
+ *
  */
 int conv_is_keyword(struct conv *conv, char *word);
-
 
 #endif
