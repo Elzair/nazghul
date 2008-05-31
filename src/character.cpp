@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "character.h"
+#include "conv.h"
 #include "dice.h"
 #include "effect.h"
 #include "gob.h"
@@ -3115,9 +3116,10 @@ void Character::save(struct save *save)
         save->write(save, "#%c  ; dead?\n", isDead() ? 't' : 'f');
 
         if (conv != NULL) {
-                closure_save(conv, save);
-        } else
+                conv_save(conv, save);
+        } else {
                 save->write(save, "nil  ; conv\n");
+        }
 
         save->write(save, "%s  ; sched\n", sched? sched->tag : "nil");
 

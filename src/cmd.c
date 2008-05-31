@@ -20,6 +20,7 @@
 //
 
 #include "cmd.h"
+#include "conv.h"
 #include "place.h"
 #include "constants.h"
 #include "file.h"
@@ -2070,7 +2071,7 @@ static void cmd_cleanup_talk_info(struct talk_info *info)
 
 void cmdTalk(Object *member)
 {
-	struct closure *conv = NULL;
+	struct conv *conv = NULL;
         class Object *obj, *conversant = NULL;
         int x, y;
         struct talk_info info;

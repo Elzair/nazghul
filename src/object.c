@@ -19,6 +19,7 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
+#include "conv.h"
 #include "gob.h"
 #include "object.h"
 #include "session.h"
@@ -771,7 +772,9 @@ Object::~Object()
                 setView(NULL);                
         }                
 
-        closure_unref_safe(conv);
+        if (conv) {
+                conv_unref(conv);
+        }
 
         // For each type of hook...
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
@@ -2177,22 +2180,22 @@ void Object::onAttack(Object *user)
         getObjectType()->onAttack(this, user);
 }
 
-struct closure *Object::getConversation()
+struct conv *Object::getConversation()
 {
         return conv;
 }
 
-void Object::setConversation(closure_t *val)
+void Object::setConversation(struct conv *val)
 {
         // out with the old
         if (conv) {
-                closure_unref(conv);
+                conv_unref(conv);
                 conv = NULL;
         }
 
         // in with the new
         if (val) {
-                closure_ref(val);
+                conv_ref(val);
                 conv = val;
         }
 }

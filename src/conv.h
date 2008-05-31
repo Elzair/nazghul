@@ -1,34 +1,134 @@
-//
-// nazghul - an old-school RPG engine
-// Copyright (C) 2002, 2003 Gordon McNutt
-//
-// This program is free software; you can redistribute it and/or modify it
-// under the terms of the GNU General Public License as published by the Free
-// Software Foundation; either version 2 of the License, or (at your option)
-// any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT
-// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-// more details.
-//
-// You should have received a copy of the GNU General Public License along with
-// this program; if not, write to the Free Foundation, Inc., 59 Temple Place,
-// Suite 330, Boston, MA 02111-1307 USA
-//
-// Gordon McNutt
-// gmcnutt@users.sourceforge.net
-//
+/*
+ * nazghul - an old-school RPG engine
+ * Copyright (C) 2002, 2003, 2008 Gordon McNutt
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Foundation, Inc., 59 Temple Place,
+ * Suite 330, Boston, MA 02111-1307 USA
+ *
+ * Gordon McNutt
+ * gmcnutt@users.sourceforge.net
+ */
 #ifndef conv_h
 #define conv_h
 
 #define CONV_PC_COLOR  'g'
 #define CONV_NPC_COLOR 'b'
 
-extern void conv_enter(class Object *npc, class Object *pc, 
-                       struct closure *conv);
-extern void conv_end(void);
+#define conv_ref(conv) ((conv)->ref++)
 
-extern int isprintable(int c);
+/**
+ * Conversation structure.
+ */
+struct conv {
+        struct closure *proc; /* Closure which responds to keywords. */
+        int ref; /* Reference count. */
+        int n_keywords; /* Size of the keywords array. */
+        int key_index; /* Index of next empty keyword slot. */
+        char **keywords; /* Keyword array. */
+};
+
+/**
+ * Allocate a conversation struct and a fixed number of keywords slots.
+ *
+ * @param proc becomes the proc field with an added refcount.
+ * @param n_keywords becomes the n_keywords field and is used to allocate the
+ * keywords array.
+ * @returns a new converstation struct on success, else NULL if allocaition
+ * failed.
+ */
+struct conv *conv_new(struct closure *proc, int n_keywords);
+
+/**
+ * Save a conversation to the session file.
+ *
+ * @param conv is the conversation to save. Only the closure is saved.
+ * @param save is the save object.
+ */
+void conv_save(struct conv *conv, struct save *save);
+
+/**
+ * Add another keyword to the array. A copy of the keyword will be created.
+ *
+ * @param conv is the conversation.
+ * @param keyword is the keyword to add.
+ * @returns 0 on success, non-zero if a copy could not be allocated.
+ */
+int conv_add_keyword(struct conv *conv, char *keyword);
+
+/**
+ * Sort the conversation keywords. You must call this before calling
+ * conv_has_prefix(), or that will not work properly.
+ *
+ * @param is the conversation.
+ */
+void conv_sort_keywords(struct conv *conv);
+
+/**
+ * Release a reference to a conversation. This may delete it.
+ *
+ * @param is the conversation.
+ */
+void conv_unref(struct conv *conv);
+
+/**
+ * Start a conversation. This will start the conversation session in the
+ * console, and return when and only when the conversation is over.
+ *
+ * @param npc is the NPC being spoken to.
+ * @param pc is the player party member doing the talking.
+ * @param conv is the conversation.
+ */
+void conv_enter(class Object *npc, class Object *pc, struct conv *conv);
+
+/**
+ * End a conversation. This is provided so that NPC scripts can end the
+ * conversation prematurely (before the player says 'bye').
+ */
+void conv_end(void);
+
+/**
+ * Substitute for ctype.h's isprint(), which does not work properly on all
+ * systems.
+ *
+ * @param c is the character to test.
+ * @returns non-zero if c is a printable character, else zero.
+ */
+int isprintable(int c);
+
+/**
+ * Given an input string get pointers to the beginning and end of the next
+ * word. The beginning of a word is any alphabetical character which either
+ * starts the string or follows whitespace or punctuation. 
+ *
+ * @param instr is the input string.  
+ *
+ * @param beg will point to the beginning of the next work on exit, iff one was
+ * found. If not its value is undefined.
+ * @param end likewise will point to the end of the next work in the string.
+ * @returns non-zero iff a word was found in the string.
+ */
+int conv_get_word(char *instr, char **beg, char **end);
+
+/**
+ * Check if a word is a keyword in a conversation. This works by testing if any
+ * of the keywords are a prefix of the word.
+ *
+ * @param conv is the conversation with the keywords to check.
+ * @param word if the word to test for.
+ * @returns non-zero iff the word is prefixed by a keyword.
+ */
+int conv_is_keyword(struct conv *conv, char *word);
+
 
 #endif

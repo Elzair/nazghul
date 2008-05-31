@@ -26,6 +26,7 @@
 #include "blender.h"
 #include "character.h"
 #include "cmd.h"
+#include "conv.h"
 #include "ctrl.h"
 #include "dice.h"
 #include "effect.h"
@@ -297,7 +298,8 @@ static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
                                 load_err("arg %d not a bool", count);
                         }
                         break;
-                case 'c': /* closure */
+                case 'c': /* closure (actually, a symbol, possibly for a
+                           * closure; this is misleading) */
                         cval = va_arg(args, pointer*);
                         if (car == sc->NIL) {
                                 *cval = sc->NIL;
@@ -1646,6 +1648,61 @@ static int kern_load_hooks(scheme *sc, pointer hook_tbl, Object *obj)
         return 0;
 }
 
+static void kern_load_conv(scheme *sc, pointer sym, Object *obj)
+{
+        int len;
+        struct conv *conv;
+        struct closure *proc;
+
+        if (sym == sc->NIL) {
+                return;
+        }
+
+        pointer ifc = sc->vptr->find_slot_in_env(sc, sc->envir, sym, 1);
+        if (! scm_is_pair(sc, ifc)) {
+                load_err("%s symbol '%s' not found in top-level environment", __FUNCTION__, scm_sym_val(sc, sym));
+                return;
+        }
+
+        pointer clos = scm_cdr(sc, ifc);
+        if (! scm_is_closure(sc, clos)) {
+                load_err("%s() '%s' not a closure", __FUNCTION__, scm_sym_val(sc, sym));
+                return;
+        }
+
+        if (! (proc = closure_new_ref(sc, sym))) {
+                load_err("%s() closure_new failed", __FUNCTION__);
+                return;
+        }
+
+        pointer env = scm_cdr(sc, clos);
+        pointer vtable = scm_cdr(sc, scm_car(sc, scm_car(sc, env)));
+
+        len = scm_len(sc, vtable);
+
+        if (!(conv = conv_new(proc, len))) {
+                load_err("%s() conv_new failed", __FUNCTION__);
+                goto done2;
+        }
+
+        while (scm_is_pair(sc, vtable)) {
+                pointer binding = scm_car(sc, vtable);
+                vtable = scm_cdr(sc, vtable);
+                pointer var = scm_car(sc, binding);
+                if (conv_add_keyword(conv, scm_sym_val(sc, var))) {
+                        load_err("%s() conv_add_keyword failed", __FUNCTION__);
+                        goto done;
+                }
+        }
+
+        conv_sort_keywords(conv);
+        obj->setConversation(conv);
+
+ done:
+        conv_unref(conv);
+ done2:
+        closure_unref(proc);
+}
 
 static pointer kern_mk_char(scheme *sc, pointer args)
 {
@@ -1693,8 +1750,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         character->setInventoryContainer(inventory);
         character->setDead(dead);
 
-        if (conv != sc->NIL)
-                character->setConversation(closure_new(sc, conv));
+        kern_load_conv(sc, conv, character);
 
         if (ai != sc->NIL) {
                 character->setAI(closure_new(sc, ai));
@@ -2709,6 +2765,7 @@ KERN_API_CALL(kern_log_enable)
 static pointer kern_conv_say(scheme *sc,  pointer args)
 {
         Object *speaker;
+        struct conv *conv;
 
         if (unpack(sc, &args, "p", &speaker)) {
                 rt_err("kern-conv-say: bad args");
@@ -2720,6 +2777,11 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                 return sc->NIL;
         }
 
+        if (!(conv = speaker->getConversation())) {
+                rt_err("%s() no conv for %s", __FUNCTION__, speaker->getName());
+                return sc->NIL;
+        }
+
         log_begin("^c+%c%s:^c- ", CONV_NPC_COLOR, speaker->getName());
 
         args = scm_car(sc, args);
@@ -2728,9 +2790,33 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
 
                 pointer val = scm_car(sc, args);
                 args = scm_cdr(sc, args);
-
                 if (scm_is_str(sc, val)) {
-                        log_continue(scm_str_val(sc, val));
+                        char *beg, *end, *text = scm_str_val(sc, val);
+                        while (text) {
+                                if (! conv_get_word(text, &beg, &end)) {
+                                        log_continue(text);
+                                        text = NULL;
+                                } else {
+                                        int keyword = conv_is_keyword(conv, beg);
+                                        if (text<beg) {
+                                                do {
+                                                        log_continue("%c", *text);
+                                                        text++;
+                                                } while (text<beg);
+                                        }
+                                        if (keyword) {
+                                                log_continue("^c+m");
+                                        }
+                                        while (beg<end) {
+                                                log_continue("%c", *beg);
+                                                beg++;
+                                        }
+                                        if (keyword) {
+                                                log_continue("^c-");
+                                        }
+                                        text = end;
+                                }
+                        }
                 } else if (scm_is_int(sc, val)) {
                         log_continue("%d", scm_int_val(sc, val));
                 } else if (scm_is_real(sc, val)) {
@@ -2995,7 +3081,7 @@ static pointer kern_obj_set_conv(scheme *sc, pointer args)
         if (conv == sc->NIL) {
                 obj->setConversation(NULL);
         } else {
-                obj->setConversation(closure_new(sc, conv));
+                kern_load_conv(sc, conv, obj);
         }
 
         return scm_mk_ptr(sc, obj);
@@ -3503,7 +3589,7 @@ static pointer kern_conv_end(scheme *sc, pointer args)
 static pointer kern_conv_begin(scheme *sc, pointer args)
 {
         class Character *npc, *member;
-        struct closure *conv;
+        struct conv *conv;
 
         if (unpack(sc, &args, "p", &npc)) {
                 rt_err("kern-conv-begin: bad args");

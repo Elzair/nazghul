@@ -393,8 +393,8 @@ class Object {
         void enter(Object *enterer);
 
         // Conversation interface
-        void setConversation(closure_t *conv);
-        virtual struct closure *getConversation();
+        void setConversation(struct conv *conv);
+        virtual struct conv *getConversation();
         virtual Object *getSpeaker();
 
         virtual bool isTemporary();
@@ -454,7 +454,7 @@ class Object {
         bool camera_attached;
 	int hp;
         bool is_on_map;
-	closure_t *conv;
+	struct conv *conv;
         struct mview *view;
         int light;
         bool temporary;
