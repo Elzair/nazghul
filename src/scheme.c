@@ -1677,7 +1677,9 @@ static int token(scheme *sc) {
      case '\'':
           return (TOK_QUOTE);
      case ';':
-          return (TOK_COMMENT);
+           while ((c=inchar(sc)) != '\n' && c!=EOF)
+             ;
+           return (token(sc));
      case '"':
           return (TOK_DQUOTE);
      case BACKQUOTE:
@@ -1694,7 +1696,9 @@ static int token(scheme *sc) {
           if (c == '(') {
                return (TOK_VEC);
           } else if(c == '!') {
-               return TOK_COMMENT;
+               while ((c=inchar(sc)) != '\n' && c!=EOF)
+                   ;
+               return (token(sc));
           } else {
                backchar(sc,c);
                if(is_one_of(" tfodxb\\",c)) {
@@ -3695,13 +3699,19 @@ static pointer opexe_5(scheme *sc, enum scheme_opcodes op) {
                } else {
                     s_return(sc,sc->EOF_OBJ);
                }
+/*
+ * Commented out because we now skip comments in the scanner
+ * 
           case TOK_COMMENT: {
                int c;
                while ((c=inchar(sc)) != '\n' && c!=EOF)
                     ;
-               sc->tok = token(sc);
+               if (c!= EOF) {
+                       sc->tok = token(sc);
+               }
                s_goto(sc,OP_RDSEXPR);
           }
+*/
           case TOK_VEC:
                s_save(sc,OP_RDVEC,sc->NIL,sc->NIL);
                /* fall through */
