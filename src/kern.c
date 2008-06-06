@@ -9678,6 +9678,27 @@ KERN_API_CALL(kern_define)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_obj_set_portrait)
+{
+        class Object *obj;
+        struct sprite *sprite;
+
+        if (unpack(sc, &args, "pp", &obj, &sprite)) {
+                rt_err("%s: bad args", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("%s: null object", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        obj->setPortrait(sprite);
+
+        return scm_mk_ptr(sc, obj);
+
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -9881,6 +9902,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-opacity", kern_obj_set_opacity);
         API_DECL(sc, "kern-obj-set-pclass", kern_obj_set_pclass);
         API_DECL(sc, "kern-obj-set-mmode", kern_obj_set_mmode);
+        API_DECL(sc, "kern-obj-set-portrait", kern_obj_set_portrait);
         API_DECL(sc, "kern-obj-set-sprite", kern_obj_set_sprite);
         API_DECL(sc, "kern-obj-set-submerged", kern_obj_set_submerged);
         API_DECL(sc, "kern-obj-set-temporary", kern_obj_set_temporary);

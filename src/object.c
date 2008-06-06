@@ -731,6 +731,7 @@ void Object::setup()
         facing          = SPRITE_DEF_FACING;
         ignoreTimeStop  = false;
         submerged       = false;
+        portrait        = NULL;
 
         if (getObjectType() && ! getObjectType()->isVisible())
                 visible = 0;
@@ -2372,4 +2373,14 @@ bool Object::ignoresTimeStop()
 void Object::setIgnoreTimeStop(bool val)
 {
         ignoreTimeStop = val;
+}
+
+struct sprite *Object::getPortrait()
+{ 
+        return portrait; 
+}
+
+void Object::setPortrait(struct sprite *sprite) 
+{ 
+        portrait = sprite; 
 }

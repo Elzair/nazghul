@@ -436,6 +436,8 @@ class Object {
 
         bool setFacing(int facing);
         int getFacing();
+        struct sprite *getPortrait();
+        void setPortrait(struct sprite *sprite);
 
       protected:
         virtual void setup();
@@ -508,6 +510,8 @@ class Object {
 
         // Used for critters that can go underwater.
         bool submerged;
+
+        struct sprite *portrait;
 };
 
 #include "macros.h"
