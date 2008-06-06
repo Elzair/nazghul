@@ -328,6 +328,9 @@ static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
 	dest.w = sprite->w_pix;
 	dest.h = sprite->h_pix;
 
+#ifndef TEST_PORTRAITS 
+        /* dbg hack -- the following code won't work with portraits as sprites;
+         * need a real fix for oversize sprites... */
         /* If the sprite is larger than a tile, ASSUME (watch out!) we're
          * blitting a giant character to the map. In this case the bottom of
          * the sprite will still line up with the bottom of the tile and it
@@ -337,7 +340,7 @@ static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
                 dest.x -= (sprite->w_pix - TILE_W) / 2;
                 dest.y -= (sprite->h_pix - TILE_H);
         }
-			
+#endif			
         frame = (frame + sprite_ticks) % sprite->n_frames;
 	frame += sprite->sequence * sprite->n_frames;
 
