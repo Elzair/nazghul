@@ -1762,7 +1762,16 @@ void statusBrowseContainer(class Container *container, char *title)
 
 void statusRunApplet(struct applet *applet)
 {
-        switch_to_tall_mode();
+        /* set the window height */
+        if (! applet->ops->get_desired_height) {
+                switch_to_tall_mode();
+        } else {
+                int hpix = applet->ops->get_desired_height(applet);
+                hpix = min(hpix, TALL_H);
+                hpix = max(hpix, LINE_H);
+                status_set_line_height(hpix/ASCII_H);
+        }
+
         list_add(&Status.applet_stack, &applet->list); /* push */
         Status.paint = NULL; /* so statusRepaint will use applet->ops->paint */
         applet->ops->run(applet, &Status.screenRect, Session); /* returns when applet done */

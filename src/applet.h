@@ -23,20 +23,67 @@
 #ifndef applet_h
 #define applet_h
 
+/**
+ * An applet is a little mini-program that runs in the status window. It is
+ * invoked via statusRunApplet. Applets can start and run other applets in a
+ * strictly nested fashion.
+ */
+
 #include "list.h"
 
 #include <SDL.h>
 
+/**
+ * The applet's call table. These functions are called by the status code when
+ * it runs the applet.
+ */
 struct applet_ops {
+
+        /**
+         * Run an applet. This is called to start the applet. It should not
+         * return until the applet is done. This function is required.
+         *
+         * @param applet is the applet instance.
+         * @param dims gives the screen coordinates (in pixels) of the window
+         * the applet occupies. The applet will paint to this window in its
+         * paint operation.
+         * @param session is the current session (identical to the global
+         * variable Session, but using this parameter is preferred for all new
+         * code).
+         */
         void (*run)(struct applet *applet, SDL_Rect *dims, struct session *session);
+
+        /**
+         * Paint the applet. This function is required. The status code calls
+         * this function for animation repaints. If the applet wants to repaint
+         * itself it should typically call statusRepaint(), which will invoke
+         * this function in a standard way.
+         *
+         * @param applet is the applet instance.
+         */
         void (*paint)(struct applet *applet);
+
+        /**
+         * Get the desired height (in lines) that the applet wants to use for
+         * its window. This is called prior to run, so the status code can
+         * resize the window before starting the applet. This function is
+         * optional: if the pointer is NULL then the status code will assume
+         * the window should be the standard tall mode size.
+         *
+         * @param applet is the applet instance.
+         */
+        int (*get_desired_height)(struct applet *applet);
 };
 
+/**
+ * The applet instance structure. Most applet implementations will extend this
+ * structure with their own fields.
+ */
 struct applet {
-        struct list list;
-        SDL_Rect dims;
-        struct session *session;
-        struct applet_ops *ops;
+        struct list list; /* used to stack applets in the status code */
+        SDL_Rect dims; /* window dimensions passed into run may be kept here */
+        struct session *session; /* the session pointer passed to run may be kept here */
+        struct applet_ops *ops; /* the applet's call table */
 };
 
 #endif
