@@ -47,6 +47,7 @@
 (define (qst-descr qst) (list-ref qst 2))
 
 (define (qst-assign qst target) 
+  (println "qst-assign")
   (apply (eval (list-ref qst 3)) 
          (list qst target)))
 
@@ -63,12 +64,16 @@
 
 (define (qst-payload qst) (list-ref qst 6))
 
-(define (quest-assign qst target)
-  (if (and (notnull? qst)
-           (notnull? target)
-           (qst-assign qst target))
-      (tbl-append! target 'quests qst)
-      (println "quest-assign: " target)
-      (kern-log-msg "^c+gYou have a new quest: " (qst-title qst) "^c-")
-      ))
+(define (quest-assign qst)
+  (println "quest-assign")
+  (let ((target (gob (kern-get-player))))
+    (if (and (notnull? qst)
+             (notnull? target)
+             (qst-assign qst target))
+        (begin
+          (println "assigning...")
+          (tbl-append! target 'quests qst)
+          (println "quest-assign: " target)
+          (kern-log-msg "^c+gYou have a new quest: " (qst-title qst) "^c-")
+          ))))
       

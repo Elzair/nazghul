@@ -78,7 +78,7 @@
 (define (check-talk-to-quest-on-conv-start kpc knpc args)
   (let ((qlst (tbl-get (gob (kern-get-player))
                        'quests)))
-    (if (notnull? qlst)
+    (if qlst
         (for-each (lambda (qst)
                     (if (and (not (qst-done? qst))
                              (qst-is-talk-to? qst))
@@ -88,7 +88,9 @@
                                 (qtt-finish qtt kpc)
                                 (qst-done! qst)
                                 )))))
-                  qlst))))
+                  qlst))
+    ))
+
 
 (kern-add-hook 'conv_start_hook 'check-talk-to-quest-on-conv-start)
 
