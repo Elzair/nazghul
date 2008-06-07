@@ -214,8 +214,8 @@ static void nazghul_init_internal_libs(void)
 
         for (i = 0; i < array_sz(libs); i++) {
                 if (libs[i].init() < 0) {
-                        err("Error in %s\n", libs[i].name);
-                        exit(-1);
+                        /* this will not return: */
+                        menu_startup_error("Error in %s", libs[i].name);
                 }
         }
 
