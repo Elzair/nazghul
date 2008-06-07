@@ -94,6 +94,10 @@ static int foogod_load_progress_bar_sprites(void)
         int i;
         char *fname = cfg_get("progress-bar-image-filename");
 
+        if (!fname) {
+                return -1;
+        }
+
 	Foogod.image = (struct images *)calloc(1, sizeof(*Foogod.image));
         assert(Foogod.image);
 
