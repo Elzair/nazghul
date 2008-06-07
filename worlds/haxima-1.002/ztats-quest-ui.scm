@@ -121,46 +121,43 @@
    (let* ((pgob (gob (zqug-party zqug)))
           (qlst (tbl-get pgob 'quests)))
      (if qlst
-         (let ((qst (list-ref qlst (zqug-cur-entry zqug)))))
+         (let ((qst (list-ref qlst (zqug-cur-entry zqug))))
+           (println "qst" qst)
 
-         ;; paint proc - render the quest details pane
-         (define (paint zqag)
-           (let ((rect (zqag-dims zqag)))
-             (kern-screen-erase rect)
-             (kern-screen-print rect kern-sp-centered "^c+c" (qst-title qst) "^c-")
-             (kern-screen-print (rect-down rect kern-ascii-h) 0 (qst-descr qst))
-             (kern-screen-print (rect-down rect (* 2 kern-ascii-h)) 0 
-                                "^c+GCompleted: "
-                                (if (qst-done? qst)
+           ;; paint proc - render the quest details pane
+           (define (paint zqag)
+             (let ((rect (zqag-dims zqag)))
+               (kern-screen-erase rect)
+               (kern-screen-print rect kern-sp-centered "^c+c" (qst-title qst) "^c-")
+               (kern-screen-print (rect-down rect kern-ascii-h) 0 (qst-descr qst))
+               (kern-screen-print (rect-down rect (* 2 kern-ascii-h)) 0 
+                                  "^c+GCompleted: "
+                                  (if (qst-done? qst)
                                       "^cgYes^c-"
                                       "^cyNo^c-"))
-             (kern-screen-update rect)
-             ))
-         
-         (kern-applet-run
+               (kern-screen-update rect)
+               ))
+           
+           (kern-applet-run
+            
+            ;; run proc - paint & push a keyhandler that exits when player hits ESC
+            (lambda (zqag dims)
+              (kern-status-set-title "Quest")
+              (zqag-dims! zqag dims)
+              (paint zqag)
+              (kern-event-run-keyhandler
+               (lambda (key mod)
+                 (cond ((= key kern-key-esc)
+                        #t)
+                       (else
+                        #f)))))
+      
+            ;; paint
+            paint
           
-          ;; run proc - paint & push a keyhandler that exits when player hits ESC
-          (lambda (zqag dims)
-            (kern-status-set-title "Quest")
-            (zqag-dims! zqag dims)
-            (paint zqag)
-            (kern-event-run-keyhandler
-             (lambda (key mod)
-               (cond ((= key kern-key-esc)
-                      #t)
-                     (else
-                      #f)))
-             )
-            )
-      
-     
-      
-          ;; paint
-          paint
-
-          ;; zqa gob
-          (zqag-mk)
-          ))))
+            ;; zqa gob
+            (zqag-mk)
+            )))))
 
  ;; zqu gob
  (zqug-mk))
