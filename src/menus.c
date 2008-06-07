@@ -1794,6 +1794,8 @@ void menu_startup_error(char *fmt, ...)
                 rect.y += ASCII_H;
         }
 
+        screenUpdate(0);
+
         /* Wait for the user to close the window. */
 	qh.fx = main_menu_quit_handler;
 	eventPushQuitHandler(&qh);
