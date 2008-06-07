@@ -194,7 +194,6 @@ Character::Character(char *tag, char *name,
 
         plnode = NULL;
 	setPlayerControlled(false);	// by default
-        setBaseFaction(NIL_FACTION);
 	this->current_sprite = sprite;
 	this->light        = MIN_PLAYER_LIGHT;
 	this->party        = 0;
@@ -330,8 +329,9 @@ Character::~Character()
 {
         obj_dec_ref_safe(container);
 
-	if (rdyArms != NULL)
-		delete [] rdyArms;
+	if (rdyArms != NULL) {
+		free(rdyArms);
+        }
 
 
         if (party)
@@ -961,7 +961,7 @@ class ArmsType *Character::getNextArms(int *armsIndex)
 
 		// Is this just another slot for the same weapon (happens in
 		// the case of multi-slotted weapons like 2h swords)?
-		if (armsIndex > 0 && rdyArms[*armsIndex-1] == rdyArms[*armsIndex] &&
+		if (*armsIndex > 0 && rdyArms[*armsIndex-1] == rdyArms[*armsIndex] &&
 		    rdyArms[*armsIndex]->getNumHands() == 2)
 			continue;
 
@@ -1521,9 +1521,8 @@ bool Character::needToRearm()
 bool Character::initCommon(void)
 {
         if (species && species->n_slots > 0) {
-                rdyArms = new class ArmsType *[species->n_slots];
+                rdyArms = (class ArmsType**)calloc(species->n_slots, sizeof(class ArmsType*));
                 assert(rdyArms);
-                memset(rdyArms, 0, species->n_slots * sizeof(class ArmsType *));
         }
 
         ai = NULL;
@@ -2757,7 +2756,7 @@ bool Character::isPlayerPartyMember()
 {
         // If player party has not been created yet it's safe to assume that
         // for now this is not a party member.
-        if (! player_party) {
+        if (!Session || ! player_party) {
                 return false;
         }
         return (class Object*)party == (class Object*)player_party;
@@ -3331,8 +3330,9 @@ void Character::setInventoryContainer(class Container *val)
         }
 
         container = val;
-        if (container)
+        if (container) {
                 obj_inc_ref(container);
+        }
 }
 
 void Character::setAI(struct closure *val)

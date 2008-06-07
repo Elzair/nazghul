@@ -37,16 +37,17 @@ void Being::setDefaults()
         name = NULL;
         cachedPath = NULL;
         cachedPathPlace = NULL;
-        baseFaction = INVALID_FACTION;
-        currentFaction = baseFaction;
+        setBaseFaction(INVALID_FACTION);
 }
 
 Being::~Being()
 {
-        if (cachedPath)
+        if (cachedPath) {
                 astar_path_destroy(cachedPath);
-        if (name)
+        }
+        if (name) {
                 free(name);
+        }
 }
 
 void Being::setBaseFaction(int faction)
@@ -121,9 +122,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
 		if (getPlace() != cachedPathPlace)
 		{
 			//dbg("old place\n");
-			astar_path_destroy(cachedPath);
-			cachedPath = NULL;
-			cachedPathPlace = NULL;
+                        clearCachedPath();
 		} 
 		else 
 		{
@@ -135,9 +134,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
 			if (pathPtr->x != getX() || pathPtr->y != getY())
 			{
 				//dbg("old start\n");
-				astar_path_destroy(cachedPath);
-				cachedPath = NULL;
-				cachedPathPlace = NULL;
+                                clearCachedPath();
 			}
 			else if (pathPtr->x != destx || pathPtr->y != desty)
 			{
@@ -167,9 +164,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
 				if (! pathPtr)
 				{
 					//dbg("won't reach\n");
-					astar_path_destroy(cachedPath);
-					cachedPath = NULL;
-					cachedPathPlace = NULL;
+                                        clearCachedPath();
 				}
 			}
 		}
@@ -199,9 +194,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         pathPtr = cachedPath->next;
         if (! pathPtr) {
                 //dbg("already there\n");
-                astar_path_destroy(cachedPath);
-                cachedPath = NULL;
-                cachedPathPlace = NULL;
+                clearCachedPath();
                 return true;
         }
 
@@ -255,7 +248,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         // a cached path that was built when the tile was
                         // unoccupied. Let's just null out the cachedPath now
                         // and let the being try again on the next turn.
-                        cachedPath = NULL;
+                        clearCachedPath();
                 }
         }
                       
@@ -292,9 +285,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         // If the move was still impassable then try and find a
                         // path that avoids mechanisms. Destroy this path
                         // first.
-                        astar_path_destroy(cachedPath);
-                        cachedPath = NULL;
-                        cachedPathPlace = NULL;
+                        clearCachedPath();
                         
                         // Redo the search
                         memset(&as_info, 0, sizeof (as_info));
@@ -322,9 +313,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         // Check if already there (can happen if the target changes)
                         if (! pathPtr) {
                                 //dbg("already there\n");
-                                astar_path_destroy(cachedPath);
-                                cachedPath = NULL;
-                                cachedPathPlace = NULL;
+                                clearCachedPath();
                                 return true;
                         }
 
@@ -345,9 +334,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         astar_node_destroy(cachedPath);
                         cachedPath = pathPtr;
                 } else {
-                        astar_path_destroy(cachedPath);
-                        cachedPath = NULL;
-                        cachedPathPlace = NULL;
+                        clearCachedPath();
                 }
                 return true;
         }
@@ -375,4 +362,13 @@ void Being::setName(char *val)
 void Being::setCurrentFaction(int faction)
 {
         currentFaction = faction;
+}
+
+void Being::clearCachedPath()
+{
+        if (cachedPath) {
+                astar_path_destroy(cachedPath);
+                cachedPath = NULL;
+                cachedPathPlace = NULL;
+        }
 }

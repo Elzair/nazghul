@@ -67,8 +67,9 @@ static struct rsurf *rsurf_new(SDL_Surface *surf)
         struct  rsurf *rsurf;
 
         rsurf = (struct rsurf*)calloc(1, sizeof(*rsurf));
-        if (!rsurf)
+        if (!rsurf) {
                 return 0;
+        }
         rsurf->ref = 1;
         rsurf->surf = surf;
         return rsurf;

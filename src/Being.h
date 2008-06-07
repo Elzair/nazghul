@@ -57,6 +57,7 @@ class Being:public Object {
         char *name;
         int baseFaction;
         int currentFaction;
+        void clearCachedPath();
 };
 
 #endif

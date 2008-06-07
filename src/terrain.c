@@ -41,9 +41,8 @@ extern struct terrain *terrain_new(char *tag,
 {
 	struct terrain *terrain;
 
-        terrain = new struct terrain;
+        terrain = (struct terrain*)calloc(1, sizeof(*terrain));
         assert(terrain);
-        memset(terrain, 0, sizeof(*terrain));
 
         terrain->magic         = TERRAIN_MAGIC;
         terrain->tag           = strdup(tag);
@@ -57,13 +56,16 @@ extern struct terrain *terrain_new(char *tag,
 
 void terrain_del(struct terrain *terrain)
 {
-        if (terrain->tag)
+        if (terrain->tag) {
                 free(terrain->tag);
-	if (terrain->name)
+        }
+	if (terrain->name) {
 		free(terrain->name);
-        if (terrain->effect)
+        }
+        if (terrain->effect) {
                 closure_unref(terrain->effect);
-        delete terrain;
+        }
+        free(terrain);
 }
 
 #define BOGUS_MAX_SIZE 255	// Hack, should get a constant from somewhere

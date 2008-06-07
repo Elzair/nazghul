@@ -658,8 +658,7 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
                               alpha, light);
 
         if (proc != sc->NIL) {
-                terrain->effect = closure_new(sc, proc);
-                closure_ref(terrain->effect);
+                terrain->effect = closure_new_ref(sc, proc);
         }
         terrain->renderCombat = NULL;
 
