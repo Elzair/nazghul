@@ -1345,11 +1345,6 @@ static void file_pop(scheme *sc) {
  sc->nesting=sc->nesting_stack[sc->file_i];
  if(sc->file_i!=0) {
    port_close(sc,sc->loadport,port_input);
-#if USE_FILE_AND_LINE
-   if (sc->load_stack[sc->file_i].rep.stdio.name) {
-           free(sc->load_stack[sc->file_i].rep.stdio.name);
-   }
-#endif
    sc->file_i--;
    sc->loadport->_object._port=sc->load_stack+sc->file_i;
    if(file_interactive(sc)) {
@@ -1450,8 +1445,9 @@ static void port_close(scheme *sc, pointer p, int flag) {
     if(pt->kind&port_file) {
       fclose(pt->rep.stdio.file);
 #if USE_FILE_AND_LINE
-      if (pt->rep.stdio.name)
+      if (pt->rep.stdio.name) {
               free(pt->rep.stdio.name);
+      }
 #endif
     }
     pt->kind=port_free;
@@ -4520,12 +4516,6 @@ void scheme_deinit(scheme *sc) {
   for(i=0; i<=sc->last_cell_seg; i++) {
     sc->free(sc->alloc_seg[i]);
   }
-
-#if USE_FILE_AND_LINE
-   if (sc->load_stack[sc->file_i].rep.stdio.name) {
-           free(sc->load_stack[sc->file_i].rep.stdio.name);
-   }
-#endif
 
 }
 
