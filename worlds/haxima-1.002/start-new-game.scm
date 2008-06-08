@@ -6,7 +6,7 @@
 ;; load the file, too.
 ;;----------------------------------------------------------------------------
 (load "naz.scm")
-
+(kern-script-version "0.6.1")
 
 ;; Setup progress bar for loading. I arrived at the number by printing the
 ;; current number of steps in src/foogod.c:foogod_progress_bar_finish().
