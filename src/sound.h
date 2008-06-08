@@ -47,6 +47,14 @@ extern void sound_haltall();
 extern void sound_on();
 extern void sound_off();
 
+/**
+ * Turn sound on or off (duplicates sound_on/sound_off with a single
+ * parameter).
+ *
+ * @param enable is non-zero to turn sound on, else it turns it off.
+ */
+extern void sound_enable(int enable);
+
 /* Returns non-zero iff sounds are ready to play (ie sound_init() has been
  * called) */
 extern int sound_is_activated();

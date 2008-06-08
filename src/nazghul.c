@@ -46,6 +46,7 @@
 #include "cfg.h"
 #include "menus.h"
 #include "nazghul.h"
+#include "conv.h"
 
 #include <errno.h>
 #include <signal.h>
@@ -207,7 +208,8 @@ static void nazghul_init_internal_libs(void)
                 { "combatInit",     combatInit     },
                 { "statusInit",     statusInit     },
                 { "foogodInit",     foogodInit     },
-                { "menu_init",      menu_init      }
+                { "menu_init",      menu_init      },
+                { "conv_init",      conv_init      }
         };
 
         int i;
@@ -300,6 +302,7 @@ static void init_default_cfg()
         cfg_set("screen-dims", "1280x960" /*"640x480"*/);
         cfg_set("sound-enabled", "yes");
         cfg_set("music-volume", "100%");
+        cfg_set("keyword-highlighting", "yes");
 }
 
 int main(int argc, char **argv)

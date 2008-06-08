@@ -384,3 +384,12 @@ void music_init()
 {
 	Mix_HookMusicFinished(music_finished);
 }
+
+void sound_enable(int enable)
+{
+        if (enable) {
+                sound_on();
+        } else {
+                sound_off();
+        }
+}

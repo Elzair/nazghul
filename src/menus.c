@@ -21,6 +21,7 @@
 
 #include "ascii.h"
 #include "cfg.h"
+#include "conv.h"
 #include "cmd.h"
 #include "cmdwin.h"
 #include "console.h"
@@ -1450,7 +1451,7 @@ int menu_init(void)
 #include "cmd.h" /* for yesnokey() */
 #include "sound.h" 
 
-#define OPTION_MAXNAMESTRLEN 16
+#define OPTION_MAXNAMESTRLEN 32
 #define OPTION_MAXVALSTRLEN  16
 #define OPTION_MAXMENUSTRLEN (OPTION_MAXNAMESTRLEN + OPTION_MAXVALSTRLEN + 4)
 
@@ -1458,6 +1459,7 @@ enum {
         OPTION_SCREEN_DIMS = 0,
         OPTION_SOUND_ENABLE,
         OPTION_MUSIC_VOLUME,
+        OPTION_KEYWORD_HIGHLIGHTING,
         OPTION_NUMOPTIONS /* keep last */
 };
 
@@ -1469,36 +1471,33 @@ struct option {
         char *entry_val;
         char *startup_val;
         void (*handler)(struct option *);
+        void (*enable)(int val);
         char restart : 1;
         char changed : 1;
+        char restart_on_enable : 1;
 };
 
 static void option_screen_dims(struct option *opt);
-static void option_sound(struct option *opt);
+static void option_yes_no(struct option *opt);
 static void option_music(struct option *opt);
 
+#define DECL_OPTION(name,comment,key,handler) \
+    { name, comment, key, 0, 0, 0, handler, NULL, 0, 0 }
+
+#define DECL_YESNO_OPTION(name,comment,key,handler,ctrl,roo) \
+    { name, comment, key, 0, 0, 0, handler, ctrl, 0, 0, roo }
+
 static struct option options[OPTION_NUMOPTIONS] = {
-        { "Screen Size", 
-          "Set the dimensions of the game screen.",
-          "screen-dims", 0, 0, 0,
-          option_screen_dims,
-          0, 
-          0
-        },
-        { "Sound", 
-          "Turn sound on or off.",
-          "sound-enabled", 0, 0, 0,
-          option_sound,
-          0,
-          0
-        },
-        { "Music Volume", 
-          "Adjust volume of builtin music.",
-          "music-volume", 0, 0, 0,
-          option_music,
-          0,
-          0
-        }
+        DECL_OPTION("Screen Size", "Set the dimensions of the game screen.", 
+                    "screen-dims", option_screen_dims),
+        DECL_YESNO_OPTION("Sound", "Turn sound on or off.",
+                          "sound-enabled", option_yes_no, sound_enable, 1),
+        DECL_OPTION("Music Volume", "Adjust volume of builtin music.", 
+                    "music-volume", option_music),
+        DECL_YESNO_OPTION("Keyword Highlighting", 
+                          "Highlight keywords in conversations with NPC's.",
+                          "keyword-highlighting", option_yes_no,
+                          conv_enable_keyword_highlighting, 0)
 };
 
 /* option_screen_dims -- let player select desired screen size from a list */
@@ -1539,18 +1538,22 @@ static void option_screen_dims(struct option *opt)
         opt->val = (char*)data.selection;
 }
 
-/* option_sound -- prompt player to enable or disable sound */
-static void option_sound(struct option *opt)
+/**
+ * Handler for simple yes-or-no options.
+ *
+ * @param opt is the option to modify.
+ */
+static void option_yes_no(struct option *opt)
 {
         if (!strcmp(opt->val, "yes")) {
                 opt->val = "no";
-                sound_off();
+                opt->enable(0);
                 opt->restart = 0;
         } else {
                 opt->val = "yes";
-                sound_on();
+                opt->enable(1);
                 if (strcmp(opt->startup_val, "yes")) {
-                        opt->restart = 1;
+                        opt->restart = opt->restart_on_enable;
                 } else {
                         opt->restart = 0;
                 }

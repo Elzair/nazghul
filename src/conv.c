@@ -25,6 +25,7 @@
 
 #include "bitset.h"
 #include "conv.h"
+#include "cfg.h"
 #include "event.h"
 #include "cmdwin.h"
 #include "common.h"
@@ -36,6 +37,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_KEYWORD_SZ 16
 
@@ -54,6 +56,7 @@ struct conv {
 static int conv_room, conv_len;
 static char conv_query[64], *conv_ptr;
 static int conv_done;
+static int conv_keyword_highlighting = 1;
 
 /**
  * Keyhandler callback for processing player keystrokes while collecting the
@@ -421,12 +424,33 @@ int conv_get_word(char *instr, char **beg, char **end)
 
 int conv_is_keyword(struct conv *conv, char *word)
 {
-        int index = conv_lookup_keyword(conv, word);
+        int index;
+
+        if (! conv_keyword_highlighting) {
+                return 0;
+        }
+
+        index = conv_lookup_keyword(conv, word);
         if (index == -1) {
                 return 0;
         }
         return CONV_IS_KEYWORD | (bitset_tst(conv->marked, index) ? CONV_IS_MARKED : 0);
 }
+
+int conv_init(void)
+{
+        char *val = cfg_get("keyword-highlighting");
+        if (!val || strcasecmp(val, "yes")) {
+                conv_keyword_highlighting = 0;
+        }
+        return 0;
+}
+
+void conv_enable_keyword_highlighting(int enable)
+{
+        conv_keyword_highlighting = !!enable;
+}
+
 
 #else /* TEST_PORTRAITS */
 

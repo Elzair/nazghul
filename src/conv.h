@@ -135,4 +135,19 @@ int conv_get_word(char *instr, char **beg, char **end);
  */
 int conv_is_keyword(struct conv *conv, char *word);
 
+/**
+ * Initialize module before using.
+ *
+ * @returns non-zero on error.
+ */
+int conv_init(void);
+
+/**
+ * Turn keyword highlighting on or off.
+ *
+ * @param enable is non-zero to turn it on.
+ */
+void conv_enable_keyword_highlighting(int enable);
+
+
 #endif
