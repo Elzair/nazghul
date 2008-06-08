@@ -306,7 +306,7 @@ int playRun(char *fname)
 
         log_enable();
         if (! Session) {
-                log_end("error!");
+                log_end("^c+rerror!^c-");
 		return -1;
 	}
         log_end("ok!");
