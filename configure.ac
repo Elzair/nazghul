@@ -15,7 +15,7 @@ dnl   This macro performs essential initialization for the
 dnl   generated `configure' script. An optional argument may provide the name of a
 dnl   file from the source directory to ensure that the directory has been 
 dnl   specified correctly.
-AC_INIT(nazghul, 0.6.0, [nazghul-devel@lists.sourceforge.net])
+AC_INIT(nazghul, 0.6.1, [nazghul-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR([src/nazghul.c])
 AM_CONFIG_HEADER([config.h])
 
@@ -200,6 +200,15 @@ AC_DEFINE(NAZGHUL_USER_DIR_WIN, "/_nazghul",
 
 AC_DEFINE(HOME_ENV, "HOME",
            [Most likely your home directory is stored in $HOME.])
+
+AC_DEFINE(MIN_SCRIPT_MAJOR, 0,
+          [Minimum supported script version])
+
+AC_DEFINE(MIN_SCRIPT_MINOR, 6,
+          [Minimum supported script version])
+
+AC_DEFINE(MIN_SCRIPT_RELEASE, 0,
+          [Minimum supported script version])
 
 # Finally create all the generated files
 AC_CONFIG_FILES([Makefile \
