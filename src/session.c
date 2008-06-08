@@ -308,15 +308,17 @@ void session_del(struct session *session)
         session_cleanup_queries(session);
 
         /* Ensure that nothing is referencing the player party (except perhaps
-         * its vehicle, which will be cleaned up with the party). */
-        assert(session->player
-               && ((1==session->player->refcount)
-                   || ((2==session->player->refcount)
-                       && session->player->getVehicle())));
+         * its vehicle, which will be cleaned up with the party). Note: if
+         * we're aborting a failed load then the player may not exist. */
+        if (session->player) {
+                assert((1==session->player->refcount)
+                       || ((2==session->player->refcount)
+                           && session->player->getVehicle()));
 
-        /* Now zilch the global player party */
-        obj_dec_ref(session->player);
-        session->player = 0;
+                /* Now zilch the global player party */
+                obj_dec_ref(session->player);
+                session->player = 0;
+        }
 
         /* clean up the list of skills */
         elem = session->skills.next;
@@ -404,8 +406,6 @@ int session_load(char *filename)
                  * away the old player party.
                  */
                 session_del(Session);
-                scheme_deinit(sc);
-                free(sc);
                 Session = old_session;
                 return -1;
         }
