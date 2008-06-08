@@ -9698,6 +9698,24 @@ KERN_API_CALL(kern_obj_set_portrait)
 
 }
 
+KERN_API_CALL(kern_script_version)
+{
+        char *verstr = NULL;
+
+        if (unpack(sc, &args, "s", &verstr)) {
+                load_err("%s: bad args", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        if (sscanf(verstr, "%u.%u.%u", &Session->major, &Session->minor, 
+                   &Session->release) != 3) {
+                load_err("%s: bad version string '%s'", __FUNCTION__, verstr);
+                return sc->NIL;
+        }
+
+        return sc->NIL;
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -10052,6 +10070,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-ticks-per-turn", kern_ticks_per_turn);
         API_DECL(sc, "kern-set-turn-count", kern_set_turn_count);
         API_DECL(sc, "kern-map-flash-sprite", kern_map_flash_sprite); 
+        API_DECL(sc, "kern-script-version", kern_script_version);
         
         /* ui api */
         API_DECL(sc, "kern-ui-direction", kern_ui_direction);
@@ -10140,13 +10159,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-progress-bar-start", kern_progress_bar_start);
         API_DECL(sc, "kern-progress-bar-advance", kern_progress_bar_advance);
         API_DECL(sc, "kern-progress-bar-finish", kern_progress_bar_finish);
-
-#if 0
-        /* kern-quest api */
-        API_DECL(sc, "kern-quest-mk", );
-        API_DECL(sc, "kern-quest-assign", );
-        API_DECL(sc, "", );
-#endif
 
         /* kern-ztats api */
         API_DECL(sc, "kern-ztats-add-pane", kern_ztats_add_pane);

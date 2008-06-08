@@ -22,6 +22,7 @@
 
 #include "session.h"
 
+#include "../config.h"
 #include "character.h"
 #include "object.h"
 #include "sprite.h"
@@ -105,6 +106,8 @@ static char * session_hook_str[] = {
 #       include "session_hooks.h"
 };
 
+static char session_last_error[128] = { 0 };
+
 void load_err(char *fmt, ...)
 {
         load_err_inc();
@@ -114,6 +117,13 @@ void load_err(char *fmt, ...)
         vwarn(fmt, args);
         va_end(args);
         warn("\n");
+
+        /* duplicate it to the global string error */
+        va_start(args, fmt);
+        vsnprintf(session_last_error, sizeof(session_last_error),
+                  fmt, args);
+        va_end(args);
+        
 }
 
 void rt_err(char *fmt, ...)
@@ -397,14 +407,25 @@ int session_load(char *filename)
 
         fclose(file);
 
-        /* Check for any errors. If there are any then destroy the new session
-         * and return the old one. Otherwise destroy the old session and return
-         * the new one. */
+        /* Check for any errors during loading. */
         if (load_err_any()) {
-                /* 
-                 * FIXME! We're screwed here because we probably already blew
-                 * away the old player party.
-                 */
+
+                /* Check if the problem is version obsolescence. */
+                if (Session->major < MIN_SCRIPT_MAJOR
+                    || Session->minor < MIN_SCRIPT_MINOR
+                    || Session->release < MIN_SCRIPT_RELEASE) {
+                        snprintf(session_last_error,
+                                 sizeof(session_last_error),
+                                 "The save file format is version %u.%u.%u, "
+                                 "but this release of the engine requires "
+                                 "version %u.%u.%u or better. You might try "
+                                 "an older version of the engine with this "
+                                 "file.",
+                                 Session->major, Session->minor, 
+                                 Session->release, MIN_SCRIPT_MAJOR, 
+                                 MIN_SCRIPT_MINOR, MIN_SCRIPT_RELEASE);
+                }
+
                 session_del(Session);
                 Session = old_session;
                 return -1;
@@ -605,6 +626,9 @@ int session_save(char *fname)
         save->write(save, ";; Load the standard definitions file\n");
         save->write(save, "(load \"naz.scm\")\n");
         save->write(save, "\n");
+
+        /* Write the (new) version */
+        save->write(save, "(kern-script-version \"%s\")\n", PACKAGE_VERSION);
 
         /* Generate the first part of the progress bar code. Use the number of
          * data objects which will save themselves, plus the number of load
@@ -879,4 +903,9 @@ session_hook_id_t session_str_to_hook_id(char *str)
                 }
         }
         return (session_hook_id_t)id;
+}
+
+char *session_get_last_error(void)
+{
+        return session_last_error;
 }

@@ -76,6 +76,8 @@
 
 bool Quit;
 
+static int play_load_session(char *fname);
+
 static bool tickHandler(struct TickHandler *th)
 {
 	Tick++;
@@ -108,7 +110,6 @@ int G_exec_loops = 0;
 
 static void play_reload()
 {
-        int result = 0;
         char *fname = 0;
 
         Reload = 0;
@@ -118,17 +119,8 @@ static void play_reload()
                 return;
 
         tick_pause();
-        log_begin("Loading from %s...", fname);
-        log_flush();
-        log_disable();
-	kern_intvar_init();  // SAM: Clear the kern_invar hash for the new session
-        result = session_load(fname);
+        play_load_session(fname);
         free(fname);
-        log_enable();
-        if (result)
-                log_end("error!");
-        else
-                log_end("ok!");
         foogodSetMode(FOOGOD_DEFAULT);
         session_run_hook(Session, new_game_start_hook, "p", Session->player);
         place_synchronize(Place);
@@ -296,20 +288,10 @@ int playRun(char *fname)
         // Load a new session from a saved file.
         // -------------------------------------------------------------------
 
-        log_begin("Loading from %s...", fname);
-        log_flush();
-        log_disable();
-
-	kern_intvar_init();  // SAM: Clear the kern_invar hash for the new session
-
-	session_load(fname);
-
-        log_enable();
-        if (! Session) {
-                log_end("^c+rerror!^c-");
+        if (play_load_session(fname)) {
 		return -1;
-	}
-        log_end("ok!");
+        }
+
         log_msg("'?' for help.");
 
         foogodSetMode(FOOGOD_DEFAULT);
@@ -357,4 +339,28 @@ int playRun(char *fname)
         Session = 0;
 
 	return 1;
+}
+
+static int play_load_session(char *fname)
+{
+        int error = 0;
+        log_begin("Loading from %s...", fname);
+        log_flush();
+        log_disable();
+	kern_intvar_init();  // SAM: Clear the kern_invar hash for the new session
+        error = session_load(fname);
+        log_enable();
+        if (error) {
+                log_end("^c+rerror^c-!");
+                if (session_get_last_error()) {
+                        log_msg(session_get_last_error());
+                }
+                return -1;
+        }
+        log_end("^c+gok^c-!");
+        assert(Session);
+        log_msg("Save file version is %u.%u.%u", Session->major, Session->minor, Session->release);
+        foogodSetMode(FOOGOD_DEFAULT);
+        session_run_hook(Session, new_game_start_hook, "p", Session->player);
+        return 0;
 }

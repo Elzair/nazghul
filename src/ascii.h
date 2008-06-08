@@ -43,6 +43,18 @@ extern int asciiInit(void);
  * The '+' CMD pushes the current color before setting the new color. The '-'
  * CMD pops the last pushed color and makes it the new color.
  *
+ * The color codes:
+ *
+ *   w White
+ *   B Black
+ *   r Red
+ *   g Green
+ *   b Blue
+ *   y Yellow
+ *   c Cyan
+ *   m Magenta
+ *   G Gray
+ *
  * @param c is either a character to print or part of a control sequence.
  * @param x is the pixel x-coord of the upper left corner to paint to.
  * @param y is the pixel y-coord of the upper left corner to paint to.

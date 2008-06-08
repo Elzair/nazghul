@@ -252,6 +252,7 @@ struct session {
                                 * loading the session. Needed for generating
                                 * progress bar code in the save file. */
 
+        unsigned int major, minor, release; /* script version */
 };
 
 // Callback table for saving objects
@@ -325,6 +326,7 @@ extern struct node *session_add_sched_char(struct session *session,
 extern void session_rm_sched_char(struct node *node);
 extern void session_synch_sched_chars(struct session *session);
 extern void session_intro_sched_chars(struct session *session);
+extern char *session_get_last_error(void);
 
 // Global session object.
 extern struct session *Session;
