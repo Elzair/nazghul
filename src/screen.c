@@ -71,6 +71,7 @@ static SDL_Surface *Shaders[N_SHADERS];
 static SDL_Surface *Highlight;
 static struct sprite *FrameSprites[FRAME_NUM_SPRITES];
 static int Zoom;
+static char screen_buf[128];
 
 Uint32 Black;
 Uint32 Blue;
@@ -609,7 +610,6 @@ void screenFlash(SDL_Rect * rect, int mdelay, Uint32 color)
 void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 {
 	va_list args;
-	char buf[128];
 	int i;
 	int x = rect->x;
 	int y = rect->y;
@@ -617,11 +617,11 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 
         /* Print the string to a buffer. */
 	va_start(args, fmt);
-	vsnprintf(buf, sizeof(buf), fmt, args);
+	vsnprintf(screen_buf, sizeof(screen_buf), fmt, args);
 	va_end(args);
 
-	slen = strlen(buf);
-        alen = asciiStrlen(buf);
+	slen = strlen(screen_buf);
+        alen = asciiStrlen(screen_buf);
         stop = rect->x + (rect->w * ASCII_W);
 
 	/* If painting on the border then first fill the line with the border
@@ -656,7 +656,7 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
          * region. */
 	for (i = 0; i < slen && x < stop; i++) {
 
-                if (asciiPaint(buf[i], x, y, Screen)) {
+                if (asciiPaint(screen_buf[i], x, y, Screen)) {
 
                         /* Move right. */
                         x += ASCII_W;
