@@ -104,6 +104,8 @@ extern void sprite_blit_over(struct sprite *dest,
 extern int sprite_num_frames(struct sprite *sprite);
 extern int sprite_facings_list(struct sprite *sprite);
 
+extern void sprite_paint_direct(struct sprite *sprite, int frame, SDL_Rect *dest);
+
 END_DECL
 
 #endif

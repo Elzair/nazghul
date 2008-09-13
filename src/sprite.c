@@ -882,3 +882,8 @@ int sprite_facings_list(struct sprite *sprite)
 {
 	return sprite->facings;	
 }
+
+void sprite_paint_direct(struct sprite *sprite, int frame, SDL_Rect *dest)
+{
+	screenBlit(sprite->rsurf->surf, &sprite->frames[frame], dest);
+}

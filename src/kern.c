@@ -9443,6 +9443,42 @@ KERN_API_CALL(kern_screen_print)
 }
 
 /**
+ * (kern-screen-draw-sprite (<x> <y> <w> <h>) <flags> <sprite>)
+ *
+ * <x> <y> <w> <h> are the rect (absolute screen coords) to print to
+ * <flags> are the SP_* #defines in screen.h
+ * <fmt> is std printf format plus the color tag extensions of ascii.h
+ * <sprite> is the sprite to draw
+ */
+KERN_API_CALL(kern_screen_draw_sprite)
+{
+        SDL_Rect rect;
+        int flags = 0;
+		struct sprite *toblit;
+
+        if (unpack_rect(sc, &args, &rect)) {
+                load_err("%s: error unpacking rect", __FUNCTION__);
+                return sc->NIL;
+        }
+
+        if (unpack(sc, &args, "d", &flags)) {
+                load_err("%s: error unpacking flags", __FUNCTION__);
+                return sc->NIL;
+        }
+        
+        if (unpack(sc, &args, "p", &toblit)) {
+                rt_err("kern-sprite-clone: bad args");
+                return sc->NIL;
+        }
+        
+        sprite_paint_direct(toblit, 0, &rect);
+        
+        //screenBlit(toblit->rsurf->surf, &toblit->frames[0], &rect);
+
+        return sc->NIL;
+}
+
+/**
  * (kern-screen-shade <rect> <amount>)
  *
  * <rect> specifies the area of the screen to shade
@@ -9979,6 +10015,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-screen-print", kern_screen_print);
         API_DECL(sc, "kern-screen-shade", kern_screen_shade);
         API_DECL(sc, "kern-screen-update", kern_screen_update);
+        API_DECL(sc, "kern-screen-draw-sprite", kern_screen_draw_sprite);
 
         /* kern-set api */
         API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);
