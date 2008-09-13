@@ -129,12 +129,15 @@
              (let ((rect (zqag-dims zqag)))
                (kern-screen-erase rect)
                (kern-screen-print rect kern-sp-centered "^c+c" (qst-title qst) "^c-")
-               (kern-screen-print (rect-down rect kern-ascii-h) 0 (qst-descr qst))
-               (kern-screen-print (rect-down rect (* 2 kern-ascii-h)) 0 
-                                  "^c+GCompleted: "
-                                  (if (qst-done? qst)
-                                      "^cgYes^c-"
-                                      "^cyNo^c-"))
+				(let ((line-number 1))
+					(map (lambda (line) 
+						(set! line-number (+ line-number 1))
+						(kern-screen-print (rect-down rect (* line-number kern-ascii-h)) 0 line )
+						)
+						(qst-descr qst)
+					)		
+				)              
+
                (kern-screen-update rect)
                ))
            

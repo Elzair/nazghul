@@ -5,7 +5,7 @@
 ;; title - a string that will be shown in the quest log listing and at the top
 ;; of the quest pane
 ;;
-;; descr - a string that will be shown in the quest pane
+;; descr - a list of strings (ie paragraph) that will be shown in the quest pane
 ;;
 ;; assign - the symbol[1] for a proc that will run when the quest is assigned; of the
 ;; form (assign quest target), where 'quest' is the thing being created right
@@ -24,7 +24,7 @@
 ;; Example:
 ;;
 ;;   (qst-mk "Find 6 Foozles" 
-;;           "If you find 6 Foozles, Mr. Squeejie will give you an enchanted toothpick." 
+;;           '( "If you find 6 Foozles, Mr. Squeejie will give you an enchanted toothpick." )
 ;;           'find-foozle-assign
 ;;           'find-foozle-status
 ;;           0 ; payload tracks num foozles found so far
@@ -71,9 +71,8 @@
              (notnull? target)
              (qst-assign qst target))
         (begin
-          (println "assigning...")
           (tbl-append! target 'quests qst)
           (println "quest-assign: " target)
-          (kern-log-msg "^c+gYou have a new quest: " (qst-title qst) "^c-")
+          ;;(kern-log-msg "^c+gYou have a new quest: " (qst-title qst) "^c-")
           ))))
       
