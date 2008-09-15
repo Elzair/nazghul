@@ -59,7 +59,6 @@
               )))
 
      (define (down n top cur)
-     	(println "down:: " n " " top " " cur " " max " " maxtop " " midwin)
        (cond ((and (< cur max) (> n 0))
               (if (and (< top maxtop)
                        (>= cur midwin))
@@ -72,8 +71,8 @@
               (zqug-cur-entry! zqug cur)
               )))
 
-     (cond ((= dir scroll-up) (println "up") (up 1 top cur) #t)
-           ((= dir scroll-down) (println "down")  (down 1 top cur) #t)
+     (cond ((= dir scroll-up) (up 1 top cur) #t)
+           ((= dir scroll-down) (down 1 top cur) #t)
            ((= dir scroll-pageup) (up winh top cur) #t)
            ((= dir scroll-pagedown) (down winh top cur) #t)
            ((= dir scroll-top)
