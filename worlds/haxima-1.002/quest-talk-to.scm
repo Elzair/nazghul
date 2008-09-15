@@ -78,7 +78,7 @@
 (define (check-talk-to-quest-on-conv-start kpc knpc args)
   (let ((qlst (tbl-get (gob (kern-get-player))
                        'quests)))
-    (if qlst
+    (if (not (null? qlst))
         (for-each (lambda (qst)
                     (if (and (not (qst-done? qst))
                              (qst-is-talk-to? qst))

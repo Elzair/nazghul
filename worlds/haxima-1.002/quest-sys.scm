@@ -18,15 +18,22 @@
 ;; the quest is towards completion. Once the quest is completed this proc will
 ;; no longer be called.
 ;;
+;; icon - symbol [1] for sprite to use for the quest UI
+;;
 ;; payload - whatever you want for your particular quest (this is an optional
 ;; number of parms)
 ;;
 ;; Example:
 ;;
 ;;   (qst-mk "Find 6 Foozles" 
-;;           '( "If you find 6 Foozles, Mr. Squeejie will give you an enchanted toothpick." )
+;;           '( 
+;;              "If you find 6 Foozles, Mr. Squeejie will give you an enchanted toothpick."
+;;				"" 
+;;              "Seek them out in distant Foozleburg"
+;;            )
 ;;           'find-foozle-assign
 ;;           'find-foozle-status
+;;			 's_quest_foozles
 ;;           0 ; payload tracks num foozles found so far
 ;;           )
 ;;
@@ -38,11 +45,12 @@
 ;; closures is left as an exercise for the advanced reader. BTW, this rule
 ;; applies within the payload lists as well.
 ;;
-(define (qst-mk title descr assign status . payload)
+(define (qst-mk title descr assign status icon . payload)
   (if (or (not (symbol? assign))
           (not (symbol? status)))
       (error "qst-mk: 'assign' and 'status' must be the symbols for procedures (ie, not the procedures themselves)"))
-  (list 'quest title descr assign status #f payload))
+  (list 'quest title descr assign status #f icon payload))
+  
 (define (qst-title qst) (list-ref qst 1))
 (define (qst-descr qst) (list-ref qst 2))
 
@@ -62,7 +70,9 @@
   (kern-log-msg "^c+gYou have completed the quest ^c+w" (qst-title qst) "^c-!^c-")
   (list-set-ref! qst 5 #t))
 
-(define (qst-payload qst) (list-ref qst 6))
+(define (qst-icon qst) (list-ref qst 6))
+  
+(define (qst-payload qst) (list-ref qst 7))
 
 (define (quest-assign qst)
   (println "quest-assign")
@@ -76,3 +86,54 @@
           ;;(kern-log-msg "^c+gYou have a new quest: " (qst-title qst) "^c-")
           ))))
       
+(define (head alist)
+	(cond ((null? alist)
+		nil)
+		((pair? alist)
+		(car alist))
+		(#t alist))) 
+          
+(define (quest-get title)
+	(let* (
+		(qlst (tbl-get (gob (kern-get-player)) 'quests))
+		(matchlist (if (null? qlst) nil
+			(filter (lambda (quest) (eq? (qst-title quest) title)) qlst)))
+		)
+		(head matchlist)
+	))
+
+;; (cons a nil) = a; (cons nil b) != b;
+(define (quest-remove-helper qstlist removee)
+	(if (null? qstlist) nil
+		(let ((qhead (head qstlist)))
+			(println "rem? " (eq? qhead removee) " " )
+			(if (eq? qhead removee)
+				(if (pair? qstlist) 
+					(quest-remove-helper (cdr qstlist) removee)
+					nil)
+				(cons
+					qhead
+   					(if (pair? qstlist) 
+						(quest-remove-helper (cdr qstlist) removee)
+						nil)
+					)
+				)
+			)
+	))
+
+(define (quest-remove qst)
+	(let* ((target (gob (kern-get-player)))
+			(trimmed  (quest-remove-helper (tbl-get target 'quests) qst))
+			)
+		(if (null? trimmed)
+			(tbl-rm! target 'quests)
+			(tbl-set! target 'quests trimmed)
+			)
+	))
+	
+(let ((tabletest (tbl-mk)))
+	(println (tbl-get tabletest 'yarg))
+	(println (tbl-set! tabletest 'testfalse #f))
+	(println (tbl-get tabletest 'testfalse))
+	)
+

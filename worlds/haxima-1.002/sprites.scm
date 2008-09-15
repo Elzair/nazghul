@@ -791,3 +791,8 @@
 (kern-mk-sprite 's_locked_chest       ss_tools 1 33 #f 0)
 (kern-mk-sprite 's_magic_chest        ss_tools 4 34 #f 0)
 (kern-mk-sprite 's_magic_locked_chest ss_tools 4 38 #f 0)
+
+;;------------------------------------------------
+;; Quest icons (well, many quests will use stuff already in the game, but whatever)
+
+(kern-mk-sprite 's_quest_start ss_quests 1 0 #f 0 )

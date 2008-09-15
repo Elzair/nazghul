@@ -36,6 +36,7 @@
 (kern-load "lost-halls-mech.scm")
 (kern-load "voidgap-mech.scm")
 (kern-load "player.scm")
+(kern-load "quests-mech.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms
@@ -180,7 +181,7 @@
   (kern-mk-inventory nil)
   nil ;; party members (should be nil for initial load file)
   )
- (mk-player-gob))
+ (tbl-mk))
 
 ;;----------------------------------------------------------------------------
 ;; Party members
@@ -322,7 +323,7 @@
   (kern-obj-put-at kplayer (list p_shard 80 59)))
   
 (define (create-char kplayer)
-  (kern-obj-put-at kplayer (list p_char_setup 9 17)
+ (kern-obj-put-at kplayer (list p_char_setup 9 17)
                    ))
       
 ;;----------------------------------------------------------------------------
@@ -332,5 +333,9 @@
 ;;(kern-set-start-proc start-scene)
 ;;(kern-set-start-proc simple-start)
 (kern-add-hook 'new_game_start_hook 'create-char)
+(load "quests-data.scm")
+(quest-assign (quest-data-get "Character Creation"))
 
 (kern-progress-bar-finish)
+
+

@@ -32,6 +32,8 @@
 (kern-mk-sprite-set 'ss_sfx              32 32    8  8   0 0  "sfx.png")
 (kern-mk-sprite-set 'ss_creatures        32 32   16  8   0 0  "creatures.png")
 (kern-mk-sprite-set 'ss_tools            32 32    8  8   0 0  "tools.png")
+(kern-mk-sprite-set 'ss_quests           32 32   16  8   0 0  "quests.png")
+
 
 ;; New paper-doll sprite sets
 (kern-mk-sprite-set 'ss_bodies     32 32 4 4 0 0 "bodies.png")

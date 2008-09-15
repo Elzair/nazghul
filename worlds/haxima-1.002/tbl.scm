@@ -8,7 +8,7 @@
   (let ((kvpair (assoc key (cdr tbl))))
     (if kvpair
         (cdr kvpair)
-        #f)))
+        nil)))
 
 ;; add key/val or replace the current val of key
 (define (tbl-set! tbl key val)
