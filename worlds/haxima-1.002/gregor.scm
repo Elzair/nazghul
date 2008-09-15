@@ -238,16 +238,22 @@
        (method 'offe (lambda (knpc kpc) (say knpc "There in the cave you'll find a chest. "
                                              "Take what's inside. Wanderers enter this world with little, "
                                              "and in the past some have done great good, "
-                                             "so folks leave stuff in good will for the next one.")))
+                                             "so folks leave stuff in good will for the next one.")
+                                             (quest-data-update "Where am I?" 'wanderer 2)
+       										(quest-whereami-update)))
        (method 'pare gregor-dead)
        (method 'plac gregor-hut)
 
-       (method 'shar (lambda (knpc kpc) (say knpc "The Shard?  That's what we call this land, Wanderer.")))
+       (method 'shar (lambda (knpc kpc) (say knpc "The Shard?  That's what we call this land, Wanderer.")
+       				(quest-data-update "Where am I?" 'shard 1)
+       				(quest-whereami-update)))
 
        (method 'shri (lambda (knpc kpc) (say knpc "This shrine is for those who come through the gate. "
                                              "Wanderers like yourself. "
                                              "Folks leave simple offerings here to help you on "
-                                             "your journey.")))
+                                             "your journey.")
+                                             (quest-data-update "Where am I?" 'wanderer 1)
+       											(quest-whereami-update)))
 
        (method 'spid (lambda (knpc kpc) (say knpc "Some of the spiders in the deep parts  "
 					     "of the woods are monstrous --  "
@@ -267,7 +273,9 @@
 
        (method 'wand (lambda (knpc kpc) (say knpc "We call those who come through the gate Wanderers. "
                                              "No one knows where they come from or where they go. "
-                                             "You are the first to come through in a long, long time.")))
+                                             "You are the first to come through in a long, long time.")
+                                             (quest-data-update "Where am I?" 'wanderer 1)
+       										(quest-whereami-update)))
 
        (method 'wise (lambda (knpc kpc) (say knpc "The Wise are both strong and -mostly- good. "
                                              "They help the land, as they can, "

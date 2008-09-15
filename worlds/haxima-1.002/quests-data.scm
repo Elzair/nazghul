@@ -33,10 +33,8 @@
 	'quest-status-inprogress
 	's_quest_start
 	(tbl-mk)
-	;; 'shard- pc knows about shard
-	;; 'wanderer- pc knows about wanderers
-	;; 'status- pc knows wanderers are fateful
-	;; 'doom- pc knows why *spoiler* summoned them
+	;; 'shard- pc knows about shard(1), cosmology(2)
+	;; 'wanderer- pc knows about wanderers(1), potential(2), N's summoning(3)
 ))
 
 	(tbl-set! questdata "A Call to Arms"
@@ -75,7 +73,3 @@
 
 	(tbl-set! (gob (kern-get-player)) 'questdata questdata)
 )
-
-
-
-

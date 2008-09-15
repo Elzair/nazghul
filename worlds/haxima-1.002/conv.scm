@@ -220,7 +220,10 @@
       (say knpc "There's the Enchanter, the Necromancer, the Alchemist, the MAN, the Engineer and the Warritrix.")))
 
 (define (basic-shar knpc kpc)
-  (say knpc "The Shard is what we call our world."))
+  (say knpc "The Shard is what we call our world.")
+  (quest-data-update "Where am I?" 'shard 1)
+  (quest-whereami-update)
+  )
 
 (define (basic-peni knpc kpc)
   (say knpc "The Peninsula is our little corner of the Shard."))

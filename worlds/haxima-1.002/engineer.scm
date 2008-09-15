@@ -176,7 +176,10 @@
       (say knpc "A great void surrounds the Shard. I've designed a ship "
            "which should be able to cross the void, but it isn't "
            "finished yet. I've got the plans around here someplace. "
-           "If you find them let me know."))
+           "If you find them let me know.")
+           (quest-data-update "Where am I?" 'shard 2)
+           (quest-whereami-update)
+           )
 
     (if (quest-done? quest)
         (say knpc "It's all finished.")

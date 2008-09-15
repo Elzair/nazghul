@@ -131,9 +131,7 @@
 			)
 	))
 	
-(let ((tabletest (tbl-mk)))
-	(println (tbl-get tabletest 'yarg))
-	(println (tbl-set! tabletest 'testfalse #f))
-	(println (tbl-get tabletest 'testfalse))
-	)
+(define (qst-set-title! qst title) (list-set-ref! qst 1 title))
+(define (qst-set-descr! qst descr) (list-set-ref! qst 2 descr))
+(define (qst-set-icon! qst icon) (list-set-ref! qst 6 icon))
 
