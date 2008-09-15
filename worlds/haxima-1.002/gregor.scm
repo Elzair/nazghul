@@ -145,6 +145,7 @@
                        "When you get your equipment, go to Green Tower. "
                        "Ask there about bandits. "
                        "Someone may know where to find them.")
+                  (quest-assign (quest-data-get "Bandit Troubles"))
                   (quest-accepted! quest #t)
                   )
                  (else

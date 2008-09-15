@@ -21,7 +21,7 @@
     (if (null? pgob)
         0
         (let ((qlst (tbl-get pgob 'quests)))
-          (if (not (null? qlst))
+          (if (null? qlst)
               0
               (zqug-max-entry! zqug (1- (length qlst)))
               )))))
@@ -41,7 +41,7 @@
    (let* ((top (zqug-top-entry zqug))
           (cur (zqug-cur-entry zqug))
           (max (zqug-max-entry zqug))
-          (winh (/ (rect-h (zqug-dims zqug)) kern-ascii-h))
+          (winh (/ (rect-h (zqug-dims zqug)) sprite-lineheight))
           (midwin (/ winh 2))
           (maxtop (- (1+ max) winh))
          )
@@ -59,6 +59,7 @@
               )))
 
      (define (down n top cur)
+     	(println "down:: " n " " top " " cur " " max " " maxtop " " midwin)
        (cond ((and (< cur max) (> n 0))
               (if (and (< top maxtop)
                        (>= cur midwin))
@@ -66,12 +67,13 @@
                   (down (1- n) top (1+ cur)))
               )
              (else
+             (println "down" top " " cur)
               (zqug-top-entry! zqug top)
               (zqug-cur-entry! zqug cur)
               )))
 
-     (cond ((= dir scroll-up) (up 1 top cur) #t)
-           ((= dir scroll-down) (down 1 top cur) #t)
+     (cond ((= dir scroll-up) (println "up") (up 1 top cur) #t)
+           ((= dir scroll-down) (println "down")  (down 1 top cur) #t)
            ((= dir scroll-pageup) (up winh top cur) #t)
            ((= dir scroll-pagedown) (down winh top cur) #t)
            ((= dir scroll-top)

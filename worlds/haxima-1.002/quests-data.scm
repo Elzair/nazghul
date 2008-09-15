@@ -33,25 +33,47 @@
 	'quest-status-inprogress
 	's_quest_start
 	(tbl-mk)
+	;; 'shard- pc knows about shard
+	;; 'wanderer- pc knows about wanderers
+	;; 'status- pc knows wanderers are fateful
+	;; 'doom- pc knows why *spoiler* summoned them
 ))
 
-	(tbl-set! questdata "An Urgent Summons"
-(qst-mk "An Urgent Summons"
+	(tbl-set! questdata "A Call to Arms"
+(qst-mk "A Call to Arms"
 	'(
 		"You have recieved an urgent message to contact"
-		"someone called the Enchanter as soon as possible."
+		"someone called the Enchanter as soon as"
+		"possible."
 		""
-		"The message suggests that you ask the caretaker of"
-		"the clearing that you arrived in."
+		"The message suggests that you ask the caretaker"
+		"of the clearing that you arrived in for"
+		"directions."
 	)
 	'quest-assign-always
 	'quest-status-inprogress
-	's_quest_start
-	0
+	's_enchanter
+	(tbl-mk)
 ))
 	
-	(tbl-set! (gob (kern-get-player)) 'questdata questdata)
+	(tbl-set! questdata "Bandit Troubles"
+(qst-mk "Bandit Troubles"
+	'(
+		"Gregor, an old charcoal burner, has asked for"
+		"your help in dealing with some troublesome"
+		"bandits that have been plaguing the great"
+		"forest."
+		""
+		"He suggests that the Rangers at Green Tower"
+		"will be able to assist in this task."
+	)
+	'quest-assign-always
+	'quest-status-inprogress
+	's_brigand
+	0
+))
 
+	(tbl-set! (gob (kern-get-player)) 'questdata questdata)
 )
 
 
