@@ -89,7 +89,7 @@
 		))
 	(#t (list
 			"Wanderers like yourself, who are occasionally"
-			"stumble upon this world, have in the past been"
+			"stumbled upon this world, have in the past been"
 			"responsible for great deeds."
 			""
 			"How will you make your place?"
