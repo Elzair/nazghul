@@ -1,8 +1,9 @@
 (let
 	((questdata (tbl-mk)))
 	
-	(tbl-set! questdata "Character Creation"
+	(tbl-set! questdata 'questentry-charcreate
 (qst-mk "Character Creation"
+	'questentry-charcreate
 	'(
 		"Move to the moongate at the north side of"
 		"the room to begin the game."
@@ -18,8 +19,9 @@
 	0
 ))
 
-	(tbl-set! questdata "Where am I?"
+	(tbl-set! questdata 'questentry-whereami
 (qst-mk "Where am I?"
+	'questentry-whereami
 	'(
 		"You have found yourself in a world you have no"
 		"knowledge of, with barest impressions of what"
@@ -37,8 +39,9 @@
 	;; 'wanderer- pc knows about wanderers(1), potential(2), N's summoning(3)
 ))
 
-	(tbl-set! questdata "A Call to Arms"
+	(tbl-set! questdata 'questentry-calltoarms
 (qst-mk "A Call to Arms"
+	'questentry-calltoarms
 	'(
 		"You have recieved an urgent message to contact"
 		"someone called the Enchanter as soon as"
@@ -54,8 +57,9 @@
 	(tbl-mk)
 ))
 	
-	(tbl-set! questdata "Bandit Troubles"
+	(tbl-set! questdata 'questentry-bandits
 (qst-mk "Bandit Troubles"
+	'questentry-bandits
 	'(
 		"Gregor, an old charcoal burner, has asked for"
 		"your help in dealing with some troublesome"

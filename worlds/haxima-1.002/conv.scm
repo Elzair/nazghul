@@ -221,7 +221,7 @@
 
 (define (basic-shar knpc kpc)
   (say knpc "The Shard is what we call our world.")
-  (quest-data-update "Where am I?" 'shard 1)
+  (quest-data-update 'questentry-whereami 'shard 1)
   (quest-whereami-update)
   )
 

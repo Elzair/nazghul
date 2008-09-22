@@ -190,7 +190,7 @@
   (kern-log-enable #t)  
   (kern-log-msg "...then awaken to a strange new world.")
   (kern-log-msg "To the southwest you see a cave.")
-  (quest-remove (quest-data-get "Character Creation"))
-  (quest-assign (quest-data-get "Where am I?"))
+  (quest-remove (quest-data-get 'questentry-charcreate))
+  (quest-assign (quest-data-get 'questentry-whereami))
   )
 	

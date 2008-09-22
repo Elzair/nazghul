@@ -5,6 +5,8 @@
 ;; title - a string that will be shown in the quest log listing and at the top
 ;; of the quest pane
 ;;
+;; tag - a tag (preferably unique) that can be used to retrieve the quest. (use nil to leave blank).
+;;
 ;; descr - a list of strings (ie paragraph) that will be shown in the quest pane
 ;;
 ;; assign - the symbol[1] for a proc that will run when the quest is assigned; of the
@@ -45,34 +47,37 @@
 ;; closures is left as an exercise for the advanced reader. BTW, this rule
 ;; applies within the payload lists as well.
 ;;
-(define (qst-mk title descr assign status icon . payload)
+(define (qst-mk title tag descr assign status icon . payload)
   (if (or (not (symbol? assign))
           (not (symbol? status)))
       (error "qst-mk: 'assign' and 'status' must be the symbols for procedures (ie, not the procedures themselves)"))
-  (list 'quest title descr assign status #f icon payload))
+  (list 'quest title tag descr assign status #f icon payload))
   
 (define (qst-title qst) (list-ref qst 1))
-(define (qst-descr qst) (list-ref qst 2))
+
+(define (qst-tag qst) (list-ref qst 2))
+
+(define (qst-descr qst) (list-ref qst 3))
 
 (define (qst-assign qst target) 
   (println "qst-assign")
-  (apply (eval (list-ref qst 3)) 
+  (apply (eval (list-ref qst 4)) 
          (list qst target)))
 
 (define (qst-status qst)
-  (apply (eval (list-ref qst 4))
+  (apply (eval (list-ref qst 5))
          (list qst)))
 
 (define (qst-done? qst) 
   (println "qst-done? qst=" qst)
-  (list-ref qst 5))
+  (list-ref qst 6))
 (define (qst-done! qst) 
   (kern-log-msg "^c+gYou have completed the quest ^c+w" (qst-title qst) "^c-!^c-")
-  (list-set-ref! qst 5 #t))
+  (list-set-ref! qst 6 #t))
 
-(define (qst-icon qst) (list-ref qst 6))
+(define (qst-icon qst) (list-ref qst 7))
   
-(define (qst-payload qst) (list-ref qst 7))
+(define (qst-payload qst) (list-ref qst 8))
 
 (define (quest-assign qst)
   (println "quest-assign")
@@ -93,11 +98,11 @@
 		(car alist))
 		(#t alist))) 
           
-(define (quest-get title)
+(define (quest-get tag)
 	(let* (
 		(qlst (tbl-get (gob (kern-get-player)) 'quests))
 		(matchlist (if (null? qlst) nil
-			(filter (lambda (quest) (eq? (qst-title quest) title)) qlst)))
+			(filter (lambda (quest) (eq? (qst-tag quest) title)) qlst)))
 		)
 		(head matchlist)
 	))
@@ -132,6 +137,6 @@
 	))
 	
 (define (qst-set-title! qst title) (list-set-ref! qst 1 title))
-(define (qst-set-descr! qst descr) (list-set-ref! qst 2 descr))
+(define (qst-set-descr! qst descr) (list-set-ref! qst 3 descr))
 (define (qst-set-icon! qst icon) (list-set-ref! qst 6 icon))
 

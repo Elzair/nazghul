@@ -334,8 +334,8 @@
 ;;(kern-set-start-proc simple-start)
 (kern-add-hook 'new_game_start_hook 'create-char)
 (load "quests-data.scm")
-(quest-assign (quest-data-get "Character Creation"))
+(quest-assign (quest-data-get 'questentry-charcreate))
 
 (kern-progress-bar-finish)
-
+(println "r2g")
 

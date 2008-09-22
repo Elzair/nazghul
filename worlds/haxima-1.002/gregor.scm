@@ -145,7 +145,7 @@
                        "When you get your equipment, go to Green Tower. "
                        "Ask there about bandits. "
                        "Someone may know where to find them.")
-                  (quest-assign (quest-data-get "Bandit Troubles"))
+                  (quest-assign (quest-data-get 'questentry-bandits))
                   (quest-accepted! quest #t)
                   )
                  (else
@@ -239,20 +239,20 @@
                                              "Take what's inside. Wanderers enter this world with little, "
                                              "and in the past some have done great good, "
                                              "so folks leave stuff in good will for the next one.")
-                                             (quest-data-update "Where am I?" 'wanderer 2)
+                                             (quest-data-update 'questentry-whereami 'wanderer 2)
        										(quest-whereami-update)))
        (method 'pare gregor-dead)
        (method 'plac gregor-hut)
 
        (method 'shar (lambda (knpc kpc) (say knpc "The Shard?  That's what we call this land, Wanderer.")
-       				(quest-data-update "Where am I?" 'shard 1)
+       				(quest-data-update 'questentry-whereami 'shard 1)
        				(quest-whereami-update)))
 
        (method 'shri (lambda (knpc kpc) (say knpc "This shrine is for those who come through the gate. "
                                              "Wanderers like yourself. "
                                              "Folks leave simple offerings here to help you on "
                                              "your journey.")
-                                             (quest-data-update "Where am I?" 'wanderer 1)
+                                             (quest-data-update 'questentry-whereami 'wanderer 1)
        											(quest-whereami-update)))
 
        (method 'spid (lambda (knpc kpc) (say knpc "Some of the spiders in the deep parts  "
@@ -274,7 +274,7 @@
        (method 'wand (lambda (knpc kpc) (say knpc "We call those who come through the gate Wanderers. "
                                              "No one knows where they come from or where they go. "
                                              "You are the first to come through in a long, long time.")
-                                             (quest-data-update "Where am I?" 'wanderer 1)
+                                             (quest-data-update 'questentry-whereami 'wanderer 1)
        										(quest-whereami-update)))
 
        (method 'wise (lambda (knpc kpc) (say knpc "The Wise are both strong and -mostly- good. "

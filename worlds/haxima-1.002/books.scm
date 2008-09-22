@@ -67,7 +67,7 @@
    ""
    "--Enchanter\n"
    )
-   (quest-assign (quest-data-get "A Call to Arms"))
+   (quest-assign (quest-data-get 'questentry-calltoarms))
    result-ok))
 
 ;;----------------------------------------------------------------------------

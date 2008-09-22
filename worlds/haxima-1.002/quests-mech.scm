@@ -9,27 +9,24 @@
 	"In progress"
 	)
 
-(define (quest-data-get title)
+(define (quest-data-get tag)
 	(let* ((questdata (tbl-get (gob (kern-get-player)) 'questdata))
-			(questinprog (quest-get title))
 			)
-		(if (null? questinprog)
-			(tbl-get questdata title)
-			questinprog
+			(tbl-get questdata tag)
 		)
-	))
+	)
 
 ;; assuming quest uses a tbl for payload, updates a key/value	
-(define (quest-data-update title key value)
-	(tbl-set! (car (qst-payload (quest-data-get title))) key value) 
+(define (quest-data-update tag key value)
+	(tbl-set! (car (qst-payload (quest-data-get tag))) key value) 
 	)
 
-(define (quest-data-descr! title descr)
-	(qst-set-descr! (quest-data-get title) descr)
+(define (quest-data-descr! tag descr)
+	(qst-set-descr! (quest-data-get tag) descr)
 	)
 
-(define (quest-data-icon! title icon)
-	(qst-set-icon! (quest-data-get title) icon)
+(define (quest-data-icon! tag icon)
+	(qst-set-icon! (quest-data-get tag) icon)
 	)
 
 	
@@ -38,7 +35,7 @@
 ;;
 		
 (define (quest-whereami-update)
-	(let* ((quest (quest-data-get "Where am I?"))
+	(let* ((quest (quest-data-get 'questentry-whereami))
 			(quest-tbl (car (qst-payload quest)))
 			(qp-shard (tbl-get quest-tbl 'shard))
 			(qp-wanderer (tbl-get quest-tbl 'wanderer)))
@@ -100,3 +97,31 @@
 			)
 		)
 	)
+
+
+(kern-add-hook 'new_game_start_hook 'reconcile-quests)
+
+;; Getting things to keep track of
+;;
+(define (reconcile-quests kplayer)
+	(println "reconciling quests")
+	(let ((questlist
+					(tbl-get (gob
+						(kern-get-player)) 'quests))
+				(questdata
+					(tbl-get (gob 
+						(kern-get-player)) 'questdata))
+			)
+		(println "ql " questlist)
+		(println "qd " questdata)
+		(map 
+			(lambda (quest)
+				(println "q")
+				(let ((tag (qst-tag quest)))
+					(println tag)
+					(if (and (not (null? tag))
+							(not (null? (tbl-get questdata tag))))
+						(tbl-set! questdata tag quest))
+				))
+		questlist)
+	))

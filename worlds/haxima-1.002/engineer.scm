@@ -177,7 +177,7 @@
            "which should be able to cross the void, but it isn't "
            "finished yet. I've got the plans around here someplace. "
            "If you find them let me know.")
-           (quest-data-update "Where am I?" 'shard 2)
+           (quest-data-update 'questentry-whereami 'shard 2)
            (quest-whereami-update)
            )
 
