@@ -42,3 +42,17 @@
       (if (equal? key (caadr tbl))
           (set-cdr! tbl (cddr tbl))
           (tbl-rm! (cdr tbl) key))))
+
+;; set table values from name/value list
+(define (tbl-set-all! tbl entrydata)
+	(if (not (null? entrydata))
+		(tbl-set! tbl (car entrydata) (car (cdr entrydata)))
+		(tbl-set-all! tbl (cddr entrydata))
+	))
+
+(define (tbl-build . entrydata)
+	(let ((tbl (tbl-mk)))
+		(tbl-set-all! tbl entrydata)
+		tbl
+	))
+          
