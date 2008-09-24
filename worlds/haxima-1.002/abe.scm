@@ -127,14 +127,12 @@
   (say knpc "The Shard, the moons and the stars all habitate a great void. "
        "The ancients could sail across the void in ships, the way we sail across a sea!")
        (quest-data-update 'questentry-whereami 'shard 2)
-       (quest-whereami-update)
        )
 
 (define (abe-ship knpc kpc)
   (say knpc "I know of the void ships, but not how they worked. "
        "Even the Master Wrights have lost the technique for making them."
        (quest-data-update 'questentry-whereami 'shard 2)
-       (quest-whereami-update)
        ))
 
 (define (abe-wrig knpc kpc)

@@ -178,7 +178,6 @@
            "finished yet. I've got the plans around here someplace. "
            "If you find them let me know.")
            (quest-data-update 'questentry-whereami 'shard 2)
-           (quest-whereami-update)
            )
 
     (if (quest-done? quest)
