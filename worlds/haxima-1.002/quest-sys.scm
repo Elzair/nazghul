@@ -5,25 +5,29 @@
 ;; title - a string that will be shown in the quest log listing and at the top
 ;; of the quest pane
 ;;
-;; tag - a tag (preferably unique) that can be used to retrieve the quest. (use nil to leave blank).
+;; tag - an optional tag (preferably unique) that can be used to retrieve the quest.
 ;;
 ;; descr - a list of strings (ie paragraph) that will be shown in the quest pane
 ;;
-;; assign - the symbol[1] for a proc that will run when the quest is assigned; of the
-;; form (assign quest target), where 'quest' is the thing being created right
+;; assign - an optional symbol[1] for a proc that will run when the quest is assigned;
+;; of the form (assign quest target), where 'quest' is the thing being created right
 ;; here and 'target' is the (scheme) object the quest is being assigned to. Iff
 ;; 'assign' returns #t then the quest will be added to the target's list of
 ;; quests.
 ;;
-;; status - the symbol [1] for a proc that will be called by the ztats pane, of
-;; the form (status quest). It should return a string describing how far along
-;; the quest is towards completion. Once the quest is completed this proc will
-;; no longer be called.
+;; status - an optional symbol [1] for a proc that will be called by the ztats pane, of
+;; the form (status quest), when the quest details are shown in the quest log.
+;; It is called before the description is written, so it may alter that if required.
+;; The method should return a list of strings to be appended to the description, or nil
+;; Note that this should not be used to update the icon or inprog/done/failed status, as
+;; they are used in the preceeding panel.
 ;;
 ;; icon - symbol [1] for sprite to use for the quest UI
 ;;
 ;; payload - whatever you want for your particular quest (this is an optional
 ;; number of parms)
+;;
+;; (* optional = use nil to ignore)
 ;;
 ;; Example:
 ;;
@@ -51,7 +55,7 @@
   (if (or (not (symbol? assign))
           (not (symbol? status)))
       (error "qst-mk: 'assign' and 'status' must be the symbols for procedures (ie, not the procedures themselves)"))
-  (list 'quest title tag descr assign status #f icon payload))
+  (list 'quest title tag descr assign status 'inprogress icon payload))
   
 (define (qst-title qst) (list-ref qst 1))
 
@@ -68,13 +72,26 @@
   (apply (eval (list-ref qst 5))
          (list qst)))
 
-(define (qst-done? qst) 
+(define (qst-done? qst)
   (println "qst-done? qst=" qst)
   (list-ref qst 6))
-(define (qst-done! qst) 
-  (kern-log-msg "^c+gYou have completed the quest ^c+w" (qst-title qst) "^c-!^c-")
-  (list-set-ref! qst 6 #t))
+  
+(define (qst-done! qst result)
+  ;;(kern-log-msg "^c+gYou have completed the quest ^c+w" (qst-title qst) "^c-!^c-")
+  (list-set-ref! qst 6 result))
 
+(define (qst-complete? qst)
+	(equal? (list-ref qst 6) 'complete))
+	
+(define (qst-complete! qst)
+  (list-set-ref! qst 6 'complete))
+  
+(define (qst-failed? qst)
+	(equal? (list-ref qst 6) 'failed))
+
+(define (qst-failed! qst)
+  (list-set-ref! qst 6 'failed))
+	
 (define (qst-icon qst) (list-ref qst 7))
   
 (define (qst-payload qst) (list-ref qst 8))
