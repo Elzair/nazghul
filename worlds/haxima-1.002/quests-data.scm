@@ -1,8 +1,13 @@
-(let
-	((questdata (tbl-mk)))
+(let*
+	((questdata (tbl-mk))
+		(questadd (lambda (quest)
+			(tbl-set! questdata (qst-tag quest) quest)
+			quest))
+
+	)
 	
-	(tbl-set! questdata 'questentry-charcreate
-(qst-mk "Character Creation"
+(questadd (qst-mk 
+	"Character Creation"
 	'questentry-charcreate
 	'(
 		"Move to the moongate at the north side of"
@@ -19,8 +24,7 @@
 	0
 ))
 
-	(tbl-set! questdata 'questentry-whereami
-(qst-mk "Where am I?"
+(questadd (qst-mk "Where am I?"
 	'questentry-whereami
 	'(
 		"You have found yourself in a world you have no"
@@ -34,13 +38,15 @@
 	'quest-assign-always
 	'quest-status-inprogress
 	's_quest_start
-	(tbl-mk)
+	(tbl-build
+		'on-update
+		'quest-whereami-update
+		)
 	;; 'shard- pc knows about shard(1), cosmology(2)
 	;; 'wanderer- pc knows about wanderers(1), potential(2), N's summoning(3)
 ))
 
-	(tbl-set! questdata 'questentry-calltoarms
-(qst-mk "A Call to Arms"
+(questadd (qst-mk "A Call to Arms"
 	'questentry-calltoarms
 	'(
 		"You have recieved an urgent message to contact"
@@ -57,8 +63,7 @@
 	(tbl-mk)
 ))
 	
-	(tbl-set! questdata 'questentry-bandits
-(qst-mk "Bandit Troubles"
+(questadd (qst-mk "Bandit Troubles"
 	'questentry-bandits
 	'(
 		"Gregor, an old charcoal burner, has asked for"

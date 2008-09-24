@@ -18,8 +18,13 @@
 
 ;; assuming quest uses a tbl for payload, updates a key/value	
 (define (quest-data-update tag key value)
-	(tbl-set! (car (qst-payload (quest-data-get tag))) key value) 
-	)
+	(let* ((qpayload (car (qst-payload (quest-data-get tag))))
+			(updatehook (tbl-get qpayload 'on-update))
+			)
+	(tbl-set! qpayload key value)
+	(if (not (null? updatehook))
+		(apply (eval updatehook)))
+	))
 
 (define (quest-data-descr! tag descr)
 	(qst-set-descr! (quest-data-get tag) descr)
@@ -28,6 +33,31 @@
 (define (quest-data-icon! tag icon)
 	(qst-set-icon! (quest-data-get tag) icon)
 	)
+
+;;-------------------------------------------------------
+;; Reconcile active and pregenned quests at game load to simplify
+;; ingame tracking
+	
+(kern-add-hook 'new_game_start_hook 'reconcile-quests)
+
+(define (reconcile-quests kplayer)
+	(let ((questlist
+					(tbl-get (gob
+						(kern-get-player)) 'quests))
+				(questdata
+					(tbl-get (gob 
+						(kern-get-player)) 'questdata))
+			)
+		(map 
+			(lambda (quest)
+				(let ((tag (qst-tag quest)))
+					(println tag)
+					(if (and (not (null? tag))
+							(not (null? (tbl-get questdata tag))))
+						(tbl-set! questdata tag quest))
+				))
+		questlist)
+	))
 
 	
 ;;----------------------------------------------------
@@ -98,30 +128,3 @@
 		)
 	)
 
-
-(kern-add-hook 'new_game_start_hook 'reconcile-quests)
-
-;; Getting things to keep track of
-;;
-(define (reconcile-quests kplayer)
-	(println "reconciling quests")
-	(let ((questlist
-					(tbl-get (gob
-						(kern-get-player)) 'quests))
-				(questdata
-					(tbl-get (gob 
-						(kern-get-player)) 'questdata))
-			)
-		(println "ql " questlist)
-		(println "qd " questdata)
-		(map 
-			(lambda (quest)
-				(println "q")
-				(let ((tag (qst-tag quest)))
-					(println tag)
-					(if (and (not (null? tag))
-							(not (null? (tbl-get questdata tag))))
-						(tbl-set! questdata tag quest))
-				))
-		questlist)
-	))
