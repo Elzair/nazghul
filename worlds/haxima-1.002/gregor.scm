@@ -82,12 +82,14 @@
        "Just myself and my granddaughter living there now."))
 
 (define (gregor-ench knpc kpc)
+  (quest-data-assign-once 'questentry-calltoarms)
   (say knpc "The Enchanter? "
        "He's one of the Wise, and is a kind and noble soul. "
        "It is said that he forsaw the coming of a Wanderer, such as yourself. "
        "He wishes to speak with you, and has asked me to direct you to him. "
        "Do you want directions? ")
   (cond ((yes? kpc)
+     (quest-data-update 'questentry-calltoarms 'directions 1)
 	 (say knpc "He dwells in a tower in the middle of a terrible swamp.\n"
 	      "\n"
 	      "To get there, \n"
@@ -145,7 +147,7 @@
                        "When you get your equipment, go to Green Tower. "
                        "Ask there about bandits. "
                        "Someone may know where to find them.")
-                  (quest-assign (quest-data-get 'questentry-bandits))
+                  (quest-data-assign-once 'questentry-bandits)
                   (quest-accepted! quest #t)
                   )
                  (else

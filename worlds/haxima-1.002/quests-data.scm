@@ -43,7 +43,8 @@
 		'quest-whereami-update
 		)
 	;; 'shard- pc knows about shard(1), cosmology(2)
-	;; 'wanderer- pc knows about wanderers(1), potential(2), N's summoning(3)
+	;; 'wanderer- pc knows about wanderers(1), potential(2)
+	;; 'nossifer- pc knows about N's summoning(3)
 ))
 
 (questadd (qst-mk "A Call to Arms"
@@ -53,14 +54,21 @@
 		"someone called the Enchanter as soon as"
 		"possible."
 		""
-		"The message suggests that you ask the caretaker"
-		"of the clearing that you arrived in for"
-		"directions."
+		"The message suggests that you ask the"
+		"caretaker of the clearing that you arrived in"
+		"for directions."
 	)
 	'quest-assign-always
 	'quest-status-inprogress
 	's_enchanter
-	(tbl-mk)
+	(tbl-build
+		'on-update
+		'quest-calltoarms-update
+		)
+	;; 'directions- pc has directions to tower
+	;; 'tower- pc has reached tower
+	;; 'talked- pc has talked to the enchanter
+	;; 'done- pc has been enlisted
 ))
 	
 (questadd (qst-mk "Bandit Troubles"

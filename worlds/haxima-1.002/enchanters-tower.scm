@@ -218,7 +218,7 @@
   (put (mk-shelf) 19 10)
   )
 
- (list 'on-entry-trigger-all) ; hooks
+ (list 'on-entry-trigger-all 'quest-calltoarms-tower) ; hooks
  (list  ; edge entrances
  	(list northeast 3 30)
  	(list southwest 30 14)

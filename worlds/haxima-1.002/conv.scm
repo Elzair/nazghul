@@ -47,6 +47,7 @@
               ((equal? kplace p_eastpass)
                (say knpc "Take the road west to Trigrave and ask around there."))
               ((equal? kplace p_trigrave)
+              	(quest-data-update 'questentry-calltoarms 'directions 1)
                (say knpc "Take the road north to The Fen."))
               (else 
                (say knpc "I'm not sure how to get there from here."))
