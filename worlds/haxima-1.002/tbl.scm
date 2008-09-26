@@ -7,26 +7,30 @@
 (define (tbl-get tbl key)
   (let ((kvpair (assoc key (cdr tbl))))
     (if kvpair
-        (cdr kvpair)
+        (cadr kvpair)
         nil)))
 
 ;; add key/val or replace the current val of key
 (define (tbl-set! tbl key val)
   (let ((kvpair (assoc key (cdr tbl))))
     (if kvpair
-        (set-cdr! kvpair val)
+        (set-cdr! kvpair (list val))
         (set-cdr! tbl 
-                  (cons (cons key val) 
+                  (cons (cons key (list val)) 
                         (cdr tbl))))))
 
-;; append val to the value of key; if key is not there make a new list with
-;; just val
+;; append val to the value of key;
+;; if key is not there make a new list with just val
+;; if current value is not a list, converts it to a list first
 (define (tbl-append! tbl key val)
   (let ((entry (assoc key (cdr tbl))))
-    (if (or (not entry)
-            (not (pair? (cdr entry))))
-        (tbl-set! tbl key (list val))
-        (set-cdr! entry (cons val (cdr entry))))))
+     (cond ((or (not entry)
+            	(not (pair? (cdr entry))))
+        	(tbl-set! tbl key (list val)))
+        ((not (pair? (cadr entry)))
+        	(set-cdr! entry (list (cons val (cdr entry)))))
+        (#t 
+        	(set-cdr! entry (list (cons val (cadr entry))))))))
 
 ;; run a procedure on each value in the table
 (define (tbl-for-each-val fx tbl)
@@ -55,4 +59,7 @@
 		(tbl-set-all! tbl entrydata)
 		tbl
 	))
-          
+
+	
+	
+	
