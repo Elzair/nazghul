@@ -41,6 +41,7 @@
   (kern-log-msg "He laughs, and the air reeks of sulphur.")
   (say knpc "You have opened the way, and served your purpose well. "
        "Now, receive your reward... ")
+  (quest-data-update 'questentry-whereami 'nossifer 1)
   (kern-being-set-base-faction knpc faction-demon)
   (kern-conv-end))
 

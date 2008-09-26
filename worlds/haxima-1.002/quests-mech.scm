@@ -74,6 +74,22 @@
 			(qp-shard (tbl-get quest-tbl 'shard))
 			(qp-wanderer (tbl-get quest-tbl 'wanderer)))
 		(qst-set-descr! quest
+		
+(if (not (null? (tbl-get quest-tbl 'nossifer)))
+
+			(list
+			"You have found yourself on the Shard, a small"
+			"fragment of a world, that floats surrounded by"
+			"a great void."
+			""
+			"The demon lord Nossifer arranged for your"
+			"arrival, to set in motion events that would"
+			"allow his own passage to the Shard."
+			""
+			"Now the Demon Gate is open, and the only"
+			"thing left in Nossifer's way is you..."
+		)
+		
 			(append
 ;;1 where
 (cond ((null? qp-shard)
@@ -130,5 +146,5 @@
 				)
 			)
 		)
-	)
+	))
 
