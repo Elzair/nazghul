@@ -12,7 +12,9 @@
 
 (define (signal-kobj kobj sig . args)
   ;;(display "signal-kobj")(newline)
-  (apply (kobj-ifc kobj) (cons sig args)))
+  (if (not (null? (kobj-ifc kobj)))
+  	(apply (kobj-ifc kobj) (cons sig args))
+  ))
 
 (define (kobj-can? kobj signal)
   (let ((gifc (kobj-ifc kobj)))
@@ -26,3 +28,4 @@
 	(let ((mcost (kern-place-get-movement-cost loc obj)))
 		(and (not (eqv? mcost 0))
 			(< mcost max_difficulty))))
+			
