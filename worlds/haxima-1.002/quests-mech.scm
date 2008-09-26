@@ -21,9 +21,14 @@
 	(let* ((qpayload (car (qst-payload (quest-data-get tag))))
 			(updatehook (tbl-get qpayload 'on-update))
 			)
-	(tbl-set! qpayload key value)
-	(if (not (null? updatehook))
-		(apply (eval updatehook)))
+		(if (not (equal? (tbl-get qpayload key) value))
+			(begin
+				(tbl-set! qpayload key value)
+				(if (not (null? updatehook))
+					(eval updatehook)
+				)
+				(qst-bump! (quest-data-get tag))
+			))
 	))
 
 (define (quest-data-descr! tag descr)
@@ -51,7 +56,6 @@
 		(map 
 			(lambda (quest)
 				(let ((tag (qst-tag quest)))
-					(println tag)
 					(if (and (not (null? tag))
 							(not (null? (tbl-get questdata tag))))
 						(tbl-set! questdata tag quest))

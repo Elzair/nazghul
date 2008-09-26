@@ -67,30 +67,35 @@
   (println "qst-assign")
   (apply (eval (list-ref qst 4)) 
          (list qst target)))
-
+         
 (define (qst-status qst)
   (apply (eval (list-ref qst 5))
          (list qst)))
 
 (define (qst-done? qst)
-  (println "qst-done? qst=" qst)
+  ;;(println "qst-done? qst=" qst)
   (list-ref qst 6))
   
 (define (qst-done! qst result)
-  ;;(kern-log-msg "^c+gYou have completed the quest ^c+w" (qst-title qst) "^c-!^c-")
-  (list-set-ref! qst 6 result))
+	;;(kern-log-msg "^c+gYou have completed the quest ^c+w" (qst-title qst) "^c-!^c-")
+	(if (not (equal? (list-ref qst 6) result))
+		(begin
+		  	(list-set-ref! qst 6 result)
+		  	(qst-bump! qst)
+		)
+	))
 
 (define (qst-complete? qst)
 	(equal? (list-ref qst 6) 'complete))
 	
 (define (qst-complete! qst)
-  (list-set-ref! qst 6 'complete))
+  (qst-done! qst 'complete))
   
 (define (qst-failed? qst)
 	(equal? (list-ref qst 6) 'failed))
 
 (define (qst-failed! qst)
-  (list-set-ref! qst 6 'failed))
+  (qst-done! qst 'failed))
 	
 (define (qst-icon qst) (list-ref qst 7))
   
@@ -103,12 +108,27 @@
              (notnull? target)
              (qst-assign qst target))
         (begin
-          (tbl-append! target 'quests qst)
+        	(quest-insert qst)
+          ;;(tbl-append! target 'quests qst)
           (println "quest-assign: " target)
           ;;(kern-log-msg "^c+gYou have a new quest: " (qst-title qst) "^c-")
           ))))
+          
+(define (quest-assigned? qst)
+	(println "quest-assigned?")
+	(let* ((target (gob (kern-get-player)))
+			(qstlist (tbl-get target 'quests))
+			)
+		(if (or (null? qst)
+				(null? qstlist)
+				)
+			#f
+			(in-list? qst qstlist)
+      	)
+	))
       
-(define (head alist)
+;; first item, if any, else nil 
+(define (safe-car alist)
 	(cond ((null? alist)
 		nil)
 		((pair? alist)
@@ -116,34 +136,28 @@
 		(#t alist))) 
           
 (define (quest-get tag)
-	(let* (
-		(qlst (tbl-get (gob (kern-get-player)) 'quests))
-		(matchlist (if (null? qlst) nil
-			(filter (lambda (quest) (eq? (qst-tag quest) title)) qlst)))
+	(safe-car
+		(filter 
+			(lambda (quest) (eq? (qst-tag quest) title))
+			(tbl-get (gob (kern-get-player)) 'quests)
 		)
-		(head matchlist)
-	))
-
-;; (cons a nil) = a; (cons nil b) != b;
-(define (quest-remove-helper qstlist removee)
-	(if (null? qstlist) nil
-		(let ((qhead (head qstlist)))
-			(println "rem? " (eq? qhead removee) " " )
-			(if (eq? qhead removee)
-				(if (pair? qstlist) 
-					(quest-remove-helper (cdr qstlist) removee)
-					nil)
-				(cons
-					qhead
-   					(if (pair? qstlist) 
-						(quest-remove-helper (cdr qstlist) removee)
-						nil)
-					)
-				)
-			)
 	))
 
 (define (quest-remove qst)
+	;; (cons a nil) = a; (cons nil b) != b;
+	(define (quest-remove-helper qstlist)
+		(if (null? qstlist) nil
+			(let ((qhead (safe-car qstlist)))
+				(println "rem? " (eq? qhead qst) " " )
+				(if (eq? qhead qst)
+					(cdr qstlist)
+					(cons
+						qhead
+						(quest-remove-helper (cdr qstlist))
+					)
+				)
+			)
+		))
 	(let* ((target (gob (kern-get-player)))
 			(trimmed  (quest-remove-helper (tbl-get target 'quests) qst))
 			)
@@ -157,3 +171,40 @@
 (define (qst-set-descr! qst descr) (list-set-ref! qst 3 descr))
 (define (qst-set-icon! qst icon) (list-set-ref! qst 6 icon))
 
+;; bump the quest to the top of its appropriate list
+(define (qst-bump! quest)
+	(if (quest-assigned? quest)
+		(begin
+			(quest-remove quest)
+			(quest-insert quest)
+		)
+	))
+	
+(define (quest-insert qst)
+	(let* ((target (gob (kern-get-player)))
+			(targlist (tbl-get target 'quests))
+			(inserttype (qst-done? qst))
+			)
+		(define (insert-here? testee)
+			(cond ((eq? inserttype 'inprogress) #t)
+				((eq? inserttype (qst-done? testee)) #t)
+				((eq? 'failed (qst-done? testee)) #t)
+				(#t #f))
+			)
+		(define (quest-insert-helper qstlist)
+			(if (null? qstlist) (list qst)
+				(let ((qhead (safe-car qstlist)))
+					(if (insert-here? qhead)
+						(cons qst qstlist)
+						(cons
+							qhead
+							(quest-insert-helper (cdr qstlist))
+						)
+					)
+				)
+			))
+		(if (null? targlist)
+			(tbl-append! target 'quests qst)
+			(tbl-set! target 'quests (quest-insert-helper targlist))
+			)
+	))
