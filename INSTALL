@@ -4,9 +4,16 @@ Nazghul requires the following libraries:
 
         SDL-1.2............http://www.libsdl.org
         libSDL_image-1.2...http://www.libsdl.org/projects/SDL_image/
+        libSDL_image-1.2...http://www.libsdl.org/projects/SDL_mixer/
         libpng.............http://www.libpng.org/pub/png/libpng.html
+        zlib
+        
+UNIXy systems
 
-To compile and install nazghul:
+The libraries should be available as packages for most systems- you will
+need dev versions of the packages, eg SDL_dev-1.2.deb
+
+To compile and install nazghul from a tarball:
 
         $ ./configure
         $ make
@@ -15,11 +22,29 @@ To compile and install nazghul:
 (If you don't want to install as root then use the --prefix option with
 configure. E.g., ./configure --prefix=$HOME)
 
+To compile and install from a CVS checkout rather than a milestone
+tarball:
+
+        $ ./autogen.sh
+        $ make
+        $ make install
+        
+The --prefix option may be applied to autogen in the same manner as
+configure.
+
 STARTING THE GAME
 
 To run haxima, the game that comes packaged with the engine:
 
         $ haxima.sh
+
+WIN32
+
+The prebuilt installers should simply be a case of download and click.
+
+Setting up a compilation environment and libraries for a cvs build can
+be more tricky: Detailed instuctions are available in win32/readme.txt
+
 
 TROUBLESHOOTING
 
