@@ -448,8 +448,12 @@
 (kern-mk-sprite 's_dex_statue   ss_bigobjects 1 12 #f 0 )
 (kern-mk-sprite 's_str_statue   ss_bigobjects 1 13 #f 0 )
 (kern-mk-sprite 's_int_statue   ss_bigobjects 1 14 #f 0 )
+(kern-mk-sprite 's_towertown_ruin   ss_bigobjects 1 15 #f 0 )
 (kern-mk-sprite 's_dragon   ss_bigobjects 4 16 #f 0 )
 (kern-mk-sprite 's_dragon_asleep   ss_bigobjects 1 20 #f 0 )
+(kern-mk-sprite 's_tower   ss_bigobjects 2 22 #f 0 )
+(kern-mk-sprite 's_towertown   ss_bigobjects 2 24 #f 0 )
+
 
 ;;----------------------------------------------------------------------------
 ;;;; (kern-mk-sprite 's_wanderer ss_addon 2 94 #f 0)
@@ -508,7 +512,7 @@
 
 (kern-mk-sprite 's_deer ss_creatures 4 0 #f 0)
 
-(kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
+;;(kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
 
 (kern-mk-sprite 's_trees         ss_overlays 1  20 #f 0 )
 (kern-mk-sprite 's_forest        ss_overlays 1  21 #f 0 )

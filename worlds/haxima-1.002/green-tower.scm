@@ -115,7 +115,7 @@
 ;; Place
 ;;----------------------------------------------------------------------------
 (kern-mk-place 
- 'p_green_tower "Green Tower" s_town m_green_tower #f #f #f #f 
+ 'p_green_tower "Green Tower" s_towertown_ruin m_green_tower #f #f #f #f 
  nil ;; subplaces
  nil ;; neighbors
 

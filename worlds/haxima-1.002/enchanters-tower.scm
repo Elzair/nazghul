@@ -137,7 +137,7 @@
 (kern-mk-place 
  'p_enchanters_tower ; tag
  "Enchanters Tower" ; name
- s_keep             ; sprite
+ s_tower             ; sprite
  m_enchanters_tower ; map
  #f                 ; wraps
  #f                 ; underground
