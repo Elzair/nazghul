@@ -1,0 +1,173 @@
+<html>
+  <head>
+    <title>Retabulate</title>
+    <meta content="">
+    <style></style>
+  </head>
+  <body>
+  <p>Script to reallign tables made of text. 2 spaces or a tab is considered the dividing point</p>
+  <p>Fields longer than the specified amount will be wrapped. And you can set a debug character to
+  see exactly where fields are being split</p>
+
+  <p>Copy/Paste Data in and out</p>
+  <textarea id="inputfield" rows="10" cols="100">
+  </textarea>
+  <div><button onclick="retab()">Retabulate</button>
+   &nbsp; &nbsp; Max Field Length: <input type="text" id="mlength" value="20"></input>
+   &nbsp; &nbsp; DebugChar: <input type="text" id="debug" value="" style="width:20px;"></input></div>
+  <textarea id="outputfield" rows="20" cols="100">
+  </textarea>
+	<script>
+	
+	var iotext = document.getElementById("inputfield");
+	var outtext = document.getElementById("outputfield");
+	var maxsize = document.getElementById("mlength");
+	var debug = document.getElementById("debug");
+			
+	function padString(strlen,padto)
+	{
+		var padlength=padto+2-strlen;
+		var out="";
+		//out="<"+strlen+"~"+padto+"="+padlength+">";
+		for(var k=0;k<padlength;k++)
+		{
+			out=out+" ";	
+		}
+		return out;
+	}
+	
+	function writeLine()
+	{
+		if (iotext.buffer.length <= iotext.bufferline)
+		{
+			return;
+		}
+		var textline = "";
+		var measures = iotext.measures;
+		var splittext = iotext.buffer[iotext.bufferline]
+		for (var i=0;i<splittext.length;i++)
+		{
+			textline=textline + debug.value;
+			textline=textline+splittext[i];
+			//textline=textline+"[" + splittext[i].length + "]"
+			if (i + 1 < splittext.length)
+			{
+				if (splittext[i].length > iotext.maxsize)
+				{
+					textline = textline + "\n";
+					for (var j=0;j<=i;j++)
+					{
+						textline=textline + debug.value;
+						textline=textline + padString(0,measures[j]);
+					}
+				}
+				else
+				{
+					textline=textline + padString(splittext[i].length,measures[i]);
+				}
+			}
+		}
+		textline=textline+"\n";
+		outtext.value=outtext.value+textline;
+		iotext.bufferline++;
+		setTimeout("writeLine()",10);
+	}	
+		
+	function measureLine()
+	{
+		if (iotext.buffer.length <= iotext.bufferline)
+		{
+			iotext.bufferline=0;
+			outtext.value="";
+			//outtext.value=outtext.value+"\n\n\n\n\n\n\n";
+			setTimeout("writeLine()",10);
+			return;
+		}
+		var splittext = iotext.buffer[iotext.bufferline]
+		var measures = iotext.measures;
+		for (var i=0;i<splittext.length;i++)
+		{
+			if (measures[i] && measures [i] >= splittext[i].length)
+			{
+				// do nothing		
+			}
+			else if (splittext[i].length < iotext.maxsize)
+			{
+				//outtext.value=outtext.value+"\n"+splittext[i]+"->"+splittext[i].length+"@"+i+"\n";				
+				measures[i] = splittext[i].length;
+			}	
+		}
+		outtext.value=outtext.value+".";
+		iotext.bufferline++;
+		setTimeout("measureLine()",10);
+	}
+	
+	function joinLine()
+	{
+		if (iotext.buffer.length <= iotext.bufferline)
+		{
+			iotext.bufferline=0;
+			outtext.value=outtext.value+"\nCalculating Column Sizes";
+			setTimeout("measureLine()",10);
+			return;
+		}
+		//outtext.value=outtext.value+"\n"+iotext.buffer[iotext.bufferline].length +" "+ iotext.buffer[iotext.bufferline-1].length +"~"+ iotext.linelength+"\n";
+		if (iotext.buffer[iotext.bufferline].length + iotext.buffer[iotext.bufferline-1].length == iotext.linelength+1)
+		{
+			//outtext.value=outtext.value+"MERGE"
+			var prev = iotext.buffer[iotext.bufferline-1];
+			var splittext = iotext.buffer[iotext.bufferline];
+			splittext.shift();
+			while (splittext.length)
+			{
+				prev.push(splittext.shift());
+			}
+			iotext.buffer.splice(iotext.bufferline,1);
+			//we removed this line, so dont inc bufferline
+		}
+		else
+		{
+			iotext.bufferline++;			
+		}
+		outtext.value=outtext.value+".";
+		setTimeout("joinLine()",10);
+	}
+  
+	function splitLine()
+	{
+		if (iotext.buffer.length <= iotext.bufferline)
+		{
+			iotext.bufferline=1;
+			outtext.value=outtext.value+"\nMerging Broken Lines";
+			setTimeout("joinLine()",10);
+			return;
+		}
+		var splittext = iotext.buffer[iotext.bufferline].replace(/\s+$/,"").split(/(?:  +)|(?: *\t *)/);
+		iotext.buffer[iotext.bufferline] = splittext;
+		if (splittext.length > iotext.linelength)
+		{
+			iotext.linelength=splittext.length;	
+		}		
+		outtext.value=outtext.value+".";
+		iotext.bufferline++;
+		setTimeout("splitLine()",10);
+	}
+	
+	function retab()
+	{
+		iotext.buffer = iotext.value.split("\n");
+		iotext.measures = [];
+		iotext.linelength = 0;		
+		for (var i=0;i<iotext.measures.length;i++)
+		{
+			iotext.measures[i]=0;
+		}
+		iotext.bufferline = 0;
+		iotext.maxsize = maxsize.value;
+		outtext.value="Splitting Lines";
+		setTimeout("splitLine()",10);
+	}
+	
+  </script>
+  </body>
+</html>
