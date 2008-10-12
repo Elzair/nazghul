@@ -49,6 +49,11 @@ dnl      to configure, such as AC_ARG_ENABLE. It is typical to put support code
 dnl      for the option in this section as well, if it is short enough.
 dnl ---------------------------------------------------------------------------
 
+AC_ARG_WITH(skills, [ --with-skills         enables skills (default="no")])
+if test "$with_skills" == "yes" ; then
+  AC_DEFINE([USE_SKILLS],1,[Is one if skills is enabled.])
+fi
+
 dnl ---------------------------------------------------------------------------
 dnl 3. Programs
 dnl      Next it is traditional to check for programs that are either needed by

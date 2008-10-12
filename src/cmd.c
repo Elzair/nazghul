@@ -815,29 +815,6 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
         return 0;  /* Keep on keyhandling */
 }
 
-static void *cmd_select_generic()
-{
-	struct KeyHandler kh;
-	struct ScrollerContext sc;
-
-        foogodSetHintText(SCROLLER_HINT);
-        foogodSetMode(FOOGOD_HINT);        
-
-	sc.selector = SelectSuperGeneric;
-	sc.selection = NULL;
-	kh.fx = scroller;
-	kh.data = &sc;
-
-	eventPushKeyHandler(&kh);
-	cmdwin_push("<select>");
-	eventHandle();
-	cmdwin_pop();
-	eventPopKeyHandler();
-
-        foogodSetMode(FOOGOD_DEFAULT);
-        return sc.selection;
-}
-
 struct inv_entry *ui_select_item(void)
 {
 	struct inv_entry *ie;
@@ -3969,6 +3946,32 @@ void cmdDrop(class Character *actor)
         return;
 }
 
+#ifdef USE_SKILLS
+
+static void *cmd_select_generic()
+{
+	struct KeyHandler kh;
+	struct ScrollerContext sc;
+
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);        
+
+	sc.selector = SelectSuperGeneric;
+	sc.selection = NULL;
+	kh.fx = scroller;
+	kh.data = &sc;
+
+	eventPushKeyHandler(&kh);
+	cmdwin_push("<select>");
+	eventHandle();
+	cmdwin_pop();
+	eventPopKeyHandler();
+
+        foogodSetMode(FOOGOD_DEFAULT);
+        return sc.selection;
+}
+
+
 /* Do common front-end processing. Migrate all commands to start using this. */
 static class Character *cmd_front_end(class Character *pc, char *cmdstr)
 {
@@ -4336,3 +4339,4 @@ void cmdYuse(class Character *actor)
 
         log_end(0);
 }
+#endif /* USE_SKILLS */
