@@ -54,6 +54,11 @@ if test "$with_skills" == "yes" ; then
   AC_DEFINE([USE_SKILLS],1,[Is one if skills is enabled.])
 fi
 
+AC_ARG_WITH(quests, [ --with-quests         enables quests (default="no")])
+if test "$with_quests" == "yes" ; then
+  AC_DEFINE([USE_QUESTS],1,[Is one if quests is enabled.])
+fi
+
 dnl ---------------------------------------------------------------------------
 dnl 3. Programs
 dnl      Next it is traditional to check for programs that are either needed by

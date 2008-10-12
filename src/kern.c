@@ -9341,6 +9341,10 @@ KERN_API_CALL(kern_ztats_add_pane)
         pointer penter, pscroll, ppaint, pselect, pgob;
         struct kern_ztats_pane *kzp;
 
+#ifndef USE_QUESTS
+        return sc->F;
+#endif
+
         if (unpack(sc, &args, "ooool", &penter, &pscroll, &ppaint, &pselect, &pgob)) {
                 load_err("kern-ztats-add-pane: bad args");
                 return sc->NIL;
