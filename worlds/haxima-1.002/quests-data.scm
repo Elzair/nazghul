@@ -9,14 +9,10 @@
 (questadd (qst-mk 
 	"Character Creation"
 	'questentry-charcreate
-	'(
-		"Move to the moongate at the north side of"
-		"the room to begin the game."
+	(kern-ui-paginate-text
+		"Move to the moongate at the north side of the room to begin the game."
 		""
-		"Along the way you will be prompted for your"
-		"characters name. You may also customize your"
-		"attributes by talking to the statues in the"
-		"room."
+		"Along the way you will be prompted for your characters name. You may also customize your attributes by talking to the statues in the room."
 	)
 	'quest-assign-always
 	'quest-status-inprogress
@@ -26,10 +22,8 @@
 
 (questadd (qst-mk "Where am I?"
 	'questentry-whereami
-	'(
-		"You have found yourself in a world you have no"
-		"knowledge of, with barest impressions of what"
-		"might have gone before."
+	(kern-ui-paginate-text
+		"You have found yourself in a world you have no knowledge of, with barest impressions of what might have gone before."
 		""
 		"Where are you?"
 		"How and why are you here?"
@@ -49,14 +43,10 @@
 
 (questadd (qst-mk "A Call to Arms"
 	'questentry-calltoarms
-	'(
-		"You have recieved an urgent message to contact"
-		"someone called the Enchanter as soon as"
-		"possible."
+	(kern-ui-paginate-text
+		"You have recieved an urgent message to contact someone called the Enchanter as soon as possible."
 		""
-		"The message suggests that you ask the"
-		"caretaker of the clearing that you arrived in"
-		"for directions."
+		"The message suggests that you ask the caretaker of the clearing that you arrived in for directions."
 	)
 	'quest-assign-always
 	'quest-status-inprogress
@@ -73,14 +63,10 @@
 	
 (questadd (qst-mk "Bandit Troubles"
 	'questentry-bandits
-	'(
-		"Gregor, an old charcoal burner, has asked for"
-		"your help in dealing with some troublesome"
-		"bandits that have been plaguing the great"
-		"forest."
+	(kern-ui-paginate-text
+		"Gregor, an old charcoal burner, has asked for your help in dealing with some troublesome bandits that have been plaguing the great forest."
 		""
-		"He suggests that the Rangers at Green Tower"
-		"will be able to assist in this task."
+		"He suggests that the Rangers at Green Tower will be able to assist in this task."
 	)
 	'quest-assign-always
 	'quest-status-inprogress
@@ -90,3 +76,4 @@
 
 	(tbl-set! (gob (kern-get-player)) 'questdata questdata)
 )
+
