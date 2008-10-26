@@ -142,13 +142,13 @@
 				)
      (if qlst
          (let ((qst (list-ref qlst (zqug-cur-entry zqug))))
-           (println "qst" qst)
 
            ;; paint proc - render the quest details pane
            (define (paint zqag)
-             (let ((rect (zqag-dims zqag))
+             (let* ((rect (zqag-dims zqag))
 	             (icon (safe-eval (qst-icon qst)))
 	             (line-offset sprite-lineheight)
+                 (display-lines-available (floor (/ (- (rect-h rect) sprite-lineheight kern-ascii-h) kern-ascii-h)))
 	             (max-offset (length (qst-descr qst)))
 	             )
                (kern-screen-erase rect)
@@ -157,13 +157,15 @@
              	)
 
                (kern-screen-print (rect-down rect sprite-offset-y) kern-sp-centered "^c+c" (qst-title qst) "^c-")
-					(println "kern-key-up " kern-key-up)
-					(println "kern-key-down " kern-key-down)
-					(println "kern-key-return " kern-key-return)
-					(println "kern-key-pgup " kern-key-pgup)
-					(println "kern-key-pgdn " kern-key-pgdn)
-					(println "kern-key-kp-pgup " kern-key-kp-pgup)
-					(println "kern-key-kp-pgdn " kern-key-kp-pgdn)
+           
+               ;; set offset to sane values
+               (if (> offset-page (- max-offset display-lines-available))
+                     (set! offset-page (- max-offset display-lines-available))
+               )
+               (if (< offset-page 0)
+                     (set! offset-page 0)
+               )
+               
 					(let ((offset-loop offset-page))
 				(map (lambda (line)
 					(if (and (eqv? offset-loop 0) (< (+ line-offset kern-ascii-h kern-ascii-h) (rect-h rect)))
@@ -188,7 +190,6 @@
               (paint zqag)
               (kern-event-run-keyhandler
                (lambda (key mod)	
-						(println "== " key)
                  (cond ((or (= key kern-key-esc)
 									(= key kern-key-space)
 									(= key kern-key-return)
