@@ -1728,8 +1728,14 @@
 (define (rect-down r v)
   (list (rect-x r) (+ v (rect-y r)) (rect-w r) (rect-h r)))
   
+(define (rect-crop-down r v)
+  (list (rect-x r) (+ v (rect-y r)) (rect-w r) (- (rect-h r) v)))
+ 
 (define (rect-offset r x y)
   (list (+ x (rect-x r)) (+ y (rect-y r)) (rect-w r) (rect-h r)))
 
+(define (rect-crop-offset r x y)
+  (list (+ x (rect-x r)) (+ y (rect-y r)) (- (rect-w r) x) (- (rect-h r) y))) 
+  
 (define (1- x) (- x 1))
 (define (1+ x) (+ x 1))
