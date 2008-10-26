@@ -7652,6 +7652,165 @@ static void kern_add_skill_set(struct kern_append_info *info, int pclvl,
         }
 }
 
+/**
+ * A generic append-to-scheme-list function.
+ */
+static void kern_list_append_pointer(struct kern_append_info *info, pointer cell)
+{
+        /* make it a list element */
+        cell = _cons(info->sc, cell, info->sc->NIL, 0);
+        
+        /* add it to the list */
+        if (info->head == info->sc->NIL) {
+                info->head = cell;
+                info->tail = cell;
+
+                /* Protect the head from garbage collection. As long as the
+                 * head is protected the entire list is protected. The caller
+                 * must unprotect the head just before returning the list back
+                 * to scheme, so the collector will clean it up when the script
+                 * no longer needs it. */
+                scm_protect(info->sc, cell);
+
+        } else {
+                info->tail->_object._cons._cdr = cell;
+                info->tail = cell;
+        }  
+}
+
+/**
+ * A generic pagination function.
+ * Copies one line of text to output.
+ * output should be pre-allocated, and large enough to glom all of input if necessary
+ * returns a pointer offset to the location the search finished at
+ */
+static char* kern_paginate_text(char *input, char *output)
+{
+	int curlength = 0;
+	char* endinput = NULL;
+	char* endoutput = output;
+	while (*input != 0)
+	{
+		if (isspace(*input))
+		{
+			endinput = input;
+			endoutput = output;
+			//printf("[ ]");
+		}
+		else if (*input == '^') // handle colour codes
+		{
+			//printf("[col:");
+			*output=*input;
+			input++;
+			output++;
+			if (*input == 0) break;
+			if (*input != 'c')
+			{
+				//printf("?%c]",*input);
+				*output=*input;
+				input++;
+				output++;
+				continue;
+			}
+			*output=*input;
+			input++;
+			output++;
+			if (*input == 0) break;
+			if (*input == '+')
+			{
+				//printf("+");
+				*output=*input;
+				input++;
+				output++;				
+				if (*input == 0) break;
+			}
+			//printf("%c]",*input);
+			*output=*input;
+			input++;
+			output++;
+			continue;
+		}
+		else
+		{
+			//printf("%c",*input);	
+		}
+		if (curlength >= STAT_CHARS_PER_LINE)
+		{		
+			//printf("[LEN]\n");
+			if (endinput != NULL)
+			{
+				*endoutput = '\0';
+				return (endinput + 1);
+			}
+			else
+			{
+				*output = '\0';
+				return input;
+			}
+		}
+		*output=*input;
+		curlength++;
+		input++;
+		output++;
+	}
+	//printf("[EOS]\n");
+	*output='\0';
+	return input;
+}
+
+KERN_API_CALL(kern_ui_paginate_text)
+{
+	struct kern_append_info info;
+	
+	/* initialize the context used by the callback to append objects */
+	info.sc = sc;
+	info.head = sc->NIL;
+	info.tail = sc->NIL;
+	info.filter = NULL;
+	info.data = NULL;
+	
+	while (scm_is_pair(sc, args))
+	{
+		char *line;	
+		if (unpack(sc, &args, "s", &line))
+		{
+			rt_err("kern-ui-paginate-text: bad text line");
+			break;
+		}
+		// shortcut empty strings
+		if (*line == '\0')
+		{
+			pointer paginated_string_element=scm_mk_string(sc,line);
+			kern_list_append_pointer(&info, paginated_string_element);
+			continue;
+		}
+		
+		char *buffer;
+		int totallen = strlen(line);
+		buffer = (char *)malloc((1+totallen)*sizeof(char));
+		assert(buffer);
+		assert(line[totallen]==0);	
+		
+		char* seek=line;
+		while (*seek != 0)
+		{
+			*buffer='\0';
+			seek = kern_paginate_text(seek,buffer);
+			pointer paginated_string_element=scm_mk_string(sc,buffer);
+			kern_list_append_pointer(&info, paginated_string_element);
+		}
+		
+		free(buffer);
+	}
+	
+	/* unprotect the list prior to return */
+	if (info.head != sc->NIL)
+	    scm_unprotect(sc, info.head);
+
+	return info.head;
+}
+
+
 KERN_API_CALL(kern_char_get_skills)
 {
         class Character *subj;
@@ -10115,6 +10274,7 @@ scheme *kern_init(void)
         
         /* ui api */
         API_DECL(sc, "kern-ui-direction", kern_ui_direction);
+        API_DECL(sc, "kern-ui-paginate-text", kern_ui_paginate_text);
         API_DECL(sc, "kern-ui-page-text", kern_ui_page_text);
         API_DECL(sc, "kern-ui-select-from-list", kern_ui_select_from_list);
         API_DECL(sc, "kern-ui-select-item", kern_ui_select_item);
@@ -10217,6 +10377,9 @@ scheme *kern_init(void)
 
         /* Shared constants */
         scm_define_int(sc, "kern-key-esc", SDLK_ESCAPE);
+        scm_define_int(sc, "kern-key-space", SDLK_SPACE);
+        scm_define_int(sc, "kern-key-up", SDLK_UP);
+        scm_define_int(sc, "kern-key-down", SDLK_DOWN);
         scm_define_int(sc, "kern-sp-centered", SP_CENTERED);
         scm_define_int(sc, "kern-ascii-h", ASCII_H);
         return sc;
