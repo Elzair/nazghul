@@ -10378,8 +10378,14 @@ scheme *kern_init(void)
         /* Shared constants */
         scm_define_int(sc, "kern-key-esc", SDLK_ESCAPE);
         scm_define_int(sc, "kern-key-space", SDLK_SPACE);
-        scm_define_int(sc, "kern-key-up", SDLK_UP);
-        scm_define_int(sc, "kern-key-down", SDLK_DOWN);
+        scm_define_int(sc, "kern-key-return", '\n'); // remapped in event.c::mapKey
+        scm_define_int(sc, "kern-key-enter", SDLK_KP_ENTER);
+        scm_define_int(sc, "kern-key-up", SDLK_KP8); // also handles arrowkeys
+        scm_define_int(sc, "kern-key-down", SDLK_KP2); // also handles arrowkeys
+        scm_define_int(sc, "kern-key-kp-pgup", SDLK_KP9);
+        scm_define_int(sc, "kern-key-kp-pgdn", SDLK_KP3);
+        scm_define_int(sc, "kern-key-pgup", SDLK_PAGEUP);
+        scm_define_int(sc, "kern-key-pgdn", SDLK_PAGEDOWN);
         scm_define_int(sc, "kern-sp-centered", SP_CENTERED);
         scm_define_int(sc, "kern-ascii-h", ASCII_H);
         return sc;

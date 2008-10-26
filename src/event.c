@@ -125,7 +125,7 @@ static int mapKey(SDL_keysym * keysym)
                 /* Code page not supported... fall through */
         }
 
-        /* Arrow keys */
+        /* Map arrow keys to equivalent numberpad entries */
         if (key >= SDLK_UP && key <= SDLK_LEFT) {
                 static int map[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, 
                                      KEY_WEST };

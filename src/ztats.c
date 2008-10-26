@@ -118,13 +118,16 @@ static int ztats_key_handler(struct KeyHandler * handler, int key, int keymod)
 		ztats_scroll(ztats, ScrollLeft);
 		break;
 	case SDLK_PAGEUP:
+	case SDLK_KP9:
 		ztats_scroll(ztats, ScrollPageUp);
 		break;
 	case SDLK_PAGEDOWN:
+	case SDLK_KP3:
 		ztats_scroll(ztats, ScrollPageDown);
 		break;
 	case SDLK_RETURN:
 	case SDLK_SPACE:
+	case SDLK_KP_ENTER:
         case KEY_HERE:
 	case '\n':
                 if (ztats->current->ops->select) {
