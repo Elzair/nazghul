@@ -25,7 +25,10 @@
 ;; Load the read-only game data. See the note on 'kern-load' vs 'load' above.
 ;;----------------------------------------------------------------------------
 (kern-load "game.scm")
+(kern-load "quests-mech.scm")
 (kern-load "camping-map.scm")
+
+(kern-load "quests-data-static.scm")
 (kern-load "zones.scm")
 (kern-load "runes.scm")
 (kern-load "prices.scm")
@@ -36,7 +39,6 @@
 (kern-load "lost-halls-mech.scm")
 (kern-load "voidgap-mech.scm")
 (kern-load "player.scm")
-(kern-load "quests-mech.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms
