@@ -2257,7 +2257,7 @@ int cmd_camp_in_wilderness(class Party *camper)
                         cmdwin_pop();
 			cmdwin_push("no watch");
 		}
-                if (guard->isDead()) {
+                else if (guard->isDead()) {
                         log_msg("You prop up the corpse and wave off "
                                 "the flies...");
                 }
