@@ -1,9 +1,17 @@
 (let*
-	((questdata (tbl-mk))
+	(
+		(newtbl (tbl-mk))
+		(oldtbl (tbl-get (gob (kern-get-player)) 'questdata))
+		(questdata (if (null? oldtbl)
+						(begin 
+							(tbl-set! (gob (kern-get-player)) 'questdata newtbl)
+							newtbl
+						)
+						oldtbl))
 		(questadd (lambda (quest)
-			(tbl-set! questdata (qst-tag quest) quest)
-			quest))
-
+			(if (null? (tbl-get questdata (qst-tag quest)))
+				(tbl-set! questdata (qst-tag quest) quest)
+			)))
 	)
 	
 (questadd (qst-mk 
@@ -33,8 +41,7 @@
 	'quest-status-inprogress
 	's_quest_start
 	(tbl-build
-		'on-update
-		'quest-whereami-update
+		'on-update 'quest-whereami-update
 		)
 	;; 'shard- pc knows about shard(1), cosmology(2)
 	;; 'wanderer- pc knows about wanderers(1), potential(2)
@@ -52,8 +59,8 @@
 	'quest-status-inprogress
 	's_enchanter
 	(tbl-build
-		'on-update
-		'quest-calltoarms-update
+		'on-update 'quest-calltoarms-update
+		'bonus-xp 0
 		)
 	;; 'directions- pc has directions to tower
 	;; 'tower- pc has reached tower
@@ -74,6 +81,5 @@
 	0
 ))
 
-	(tbl-set! (gob (kern-get-player)) 'questdata questdata)
 )
 
