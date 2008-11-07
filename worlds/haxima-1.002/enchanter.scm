@@ -196,7 +196,7 @@
                             (check-first-quest)
                             (say knpc "Yes, what is it this time?"))))))
         (begin
-          (quest-data-update-with 'questentry-calltoarms 'talked 1 (grant-xp-fn 10))
+          (quest-data-update-with 'questentry-calltoarms 'talked 1 (quest-notify (grant-xp-fn 10)))
           (kern-log-msg "This ageless mage looks unsurprised to see you.")
           (say knpc "I was wondering when you would get here. "
                "It took you long enough!")
@@ -248,10 +248,10 @@
               (if (kern-conv-get-yes-no? kpc)
                   ;; yes -- player is willing
                   (begin
-                  	(quest-data-update-with 'questentry-calltoarms 'done 1 (grant-xp-fn 10))
+              		(quest-complete (quest-data-get 'questentry-calltoarms))
                   	;; if you dont read the letter, you might not get the quest till now!
               		(quest-data-assign-once 'questentry-calltoarms)
-              		(quest-complete (quest-data-get 'questentry-calltoarms))
+                  	(quest-data-update-with 'questentry-calltoarms 'done 1 (grant-xp-fn 10))
                     (say knpc "Good! Rangers have tracked the thief to "
                          "Trigrave. Go there and inquire about a THIEF.")
                     (quest-accepted! (ench-first-quest (gob knpc)) #t)

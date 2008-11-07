@@ -114,7 +114,7 @@
 
 ;; give some xp for reaching the tower
 (define (quest-calltoarms-tower kplace kplayer)
-	(quest-data-update-with 'questentry-calltoarms 'tower 1 (grant-xp-fn 5))
+	(quest-data-update-with 'questentry-calltoarms 'tower 1 (quest-notify (grant-xp-fn 5)))
 	)
 
 
