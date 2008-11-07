@@ -20,6 +20,7 @@
   (original-load file)
   )
 
+(define use-quest-pane #f)
 
 ;;----------------------------------------------------------------------------
 ;; Load the read-only game data. See the note on 'kern-load' vs 'load' above.
