@@ -83,12 +83,13 @@
 	)
 	
 	
-(define (quest-notify quest subfunction)
+(define (quest-notify subfunction)
 	(lambda (quest) 
 		(if (and (quest-assigned? quest) use-quest-pane)
-			(kern-log-msg "Quest updated: " (qst-title qst))
+			(kern-log-msg "Quest updated: " (qst-title quest))
 			)
-		(subfunction quest)
+		(if (not (null? subfunction))
+			(subfunction quest))
 	))
 	
 	
@@ -101,7 +102,10 @@
 				(totalxp (+ bonusxp amount))
 				)
 			(if (quest-assigned? quest)
-				(kern-char-add-experience (car (kern-party-get-members (kern-get-player))) amount)
+				(begin
+					(kern-char-add-experience (car (kern-party-get-members (kern-get-player))) totalxp)
+					(tbl-set! qpayload 'bonus-xp 0)
+				)
 				(tbl-set! qpayload 'bonus-xp totalxp)
 			)
 		)
@@ -109,7 +113,6 @@
 	
 (define (grant-party-xp-fn amount)
 	(lambda (quest) 
-		(println "gef")
 		(let* ((qpayload (car (qst-payload quest)))
 				(bonusxp (tbl-get qpayload 'bonus-xp))
 				(bonusxp (if (null? bonusxp)
@@ -119,7 +122,10 @@
 				(xp-each (ceiling (/ totalxp (length party))))
 				)
 			(if (quest-assigned? quest)
-				(map (lambda (kchar) (kern-char-add-experience kchar xp-each)) party)
+				(begin
+					(map (lambda (kchar) (kern-char-add-experience kchar xp-each)) party)
+					(tbl-set! qpayload 'bonus-xp 0)
+				)
 				(tbl-set! qpayload 'bonus-xp totalxp)
 			)
 		)
