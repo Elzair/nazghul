@@ -4,6 +4,8 @@
 
 ;; This file loads 58 files
 
+;; Toggle handling for quests
+(define use-quest-pane #t)
 
 ;; Slots
 (define slot-nil              0)
