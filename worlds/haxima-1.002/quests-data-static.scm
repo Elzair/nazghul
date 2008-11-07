@@ -78,7 +78,7 @@
 	(let* ((quest (quest-data-get 'questentry-calltoarms))
 			(quest-tbl (car (qst-payload quest)))
 			(header (kern-ui-paginate-text
-					"You have recieved an urgent message to contact" someone called the Enchanter as soon as possible."
+					"You have recieved an urgent message to contact someone called the Enchanter as soon as possible."
 					"")))
 		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
 		(qst-set-descr! quest
