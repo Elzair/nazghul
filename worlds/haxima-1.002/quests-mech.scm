@@ -1,5 +1,17 @@
-(define (quest-assign-always target)
-	#t)
+(define (quest-assign-always quest target)
+	(let ((notifytext (if (qst-complete? quest)
+						"Quest completed: "
+						"New quest: "
+						)))
+		(if use-quest-pane
+			(kern-log-msg notifytext (qst-title quest))
+		)
+		#t
+	))
+	
+(define (quest-assign-silent quest target)
+		#t
+	)
 	
 (define (quest-status-from-payload quest)
 	"In progress"
@@ -43,11 +55,11 @@
 	(let* (	(quest (quest-data-get tag))
 			(qpayload (car (qst-payload quest)))
 			(updatehook (tbl-get qpayload 'on-update))
-			)
+			)		
 		(if (not (equal? (tbl-get qpayload key) value))
-			(begin
+			(begin			
 				(tbl-set! qpayload key value)
-				(callback)
+				(callback quest)
 				(if (not (null? updatehook))
 					((eval updatehook))
 				)		
@@ -63,9 +75,17 @@
 	(qst-set-icon! (quest-data-get tag) icon)
 	)
 	
+(define (quest-complete quest)
+	(if (and (quest-assigned? quest) use-quest-pane)
+		(kern-log-msg "Quest completed: " (qst-title quest))
+		)
+	(qst-complete! quest)
+	)
+	
+	
 (define (quest-notify quest subfunction)
 	(lambda (quest) 
-		(if (quest-assigned? quest)
+		(if (and (quest-assigned? quest) use-quest-pane)
 			(kern-log-msg "Quest updated: " (qst-title qst))
 			)
 		(subfunction quest)
@@ -75,7 +95,10 @@
 (define (grant-xp-fn amount)
 	(lambda (quest) 
 		(let* ((qpayload (car (qst-payload quest)))
-				(totalxp (+ (tbl-get qpayload 'bonus-xp) amount))
+				(bonusxp (tbl-get qpayload 'bonus-xp))
+				(bonusxp (if (null? bonusxp)
+							0 bonusxp))
+				(totalxp (+ bonusxp amount))
 				)
 			(if (quest-assigned? quest)
 				(kern-char-add-experience (car (kern-party-get-members (kern-get-player))) amount)
@@ -86,8 +109,12 @@
 	
 (define (grant-party-xp-fn amount)
 	(lambda (quest) 
+		(println "gef")
 		(let* ((qpayload (car (qst-payload quest)))
-				(totalxp (+ (tbl-get qpayload 'bonus-xp) amount))
+				(bonusxp (tbl-get qpayload 'bonus-xp))
+				(bonusxp (if (null? bonusxp)
+							0 bonusxp))
+				(totalxp (+ bonusxp amount))
 				(party (kern-party-get-members (kern-get-player)))
 				(xp-each (ceiling (/ totalxp (length party))))
 				)
@@ -124,6 +151,6 @@
 	))
 
 (define (refresh-quests)
-	(kern-load "quests-data.scm")
+	(load "quests-data.scm")
 	)
 	
