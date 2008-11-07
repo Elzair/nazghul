@@ -25,7 +25,9 @@
               0
               (zqug-max-entry! zqug (1- (length qlst)))
               )))))
- 
+
+(if use-quest-pane
+
 (kern-ztats-add-pane
 
  ;; enter
@@ -232,3 +234,5 @@
 
  ;; zqu gob
  (zqug-mk))
+ 
+)
