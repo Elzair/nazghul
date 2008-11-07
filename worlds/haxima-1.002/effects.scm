@@ -654,7 +654,7 @@
 (mk-effect 'ef_light                  "Magical light" s_light       'light-exec  'light-apply        'light-rm        'light-apply        start-of-turn-hook "L" 0   #t  -2)
 (mk-effect 'ef_torchlight             "Torchlight"    s_torchlight  nil          'torchlight-apply   'torchlight-rm   'torchlight-apply   start-of-turn-hook "T" 0   #f  60)
 (mk-effect 'ef_weaklight              "Torchlight"    s_torchlight  nil          'weaklight-apply    'weaklight-rm    'weaklight-apply    start-of-turn-hook "T" 0   #f  60)
-(mk-effect 'ef_protection             "Protection"    s_protect     nil          'protection-apply   'protection-rm   'protection-apply   start-of-turn-hook "p" 0   #t  10)
+(mk-effect 'ef_protection             "Protection"    s_protect     nil          'protection-apply   'protection-rm   'protection-apply   start-of-turn-hook "p" 0   #f  10)
 (mk-effect 'ef_charm                  "Charm"         s_charm       nil          'charm-apply        'charm-rm        'charm-apply        start-of-turn-hook "C" 0   #f   5)
 (mk-effect 'ef_invisibility           "Invisible"     s_invis       nil          'invisibility-apply 'invisibility-rm 'invisibility-apply start-of-turn-hook "N" 0   #t  10)
 (mk-effect 'ef_permanent_invisibility "Invisible"     s_invis       nil          'invisibility-apply 'invisibility-rm 'invisibility-apply start-of-turn-hook "N" 0   #t  -1)
