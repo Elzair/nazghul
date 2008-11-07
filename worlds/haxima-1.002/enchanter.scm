@@ -251,7 +251,7 @@
                   	(quest-data-update-with 'questentry-calltoarms 'done 1 (grant-xp-fn 10))
                   	;; if you dont read the letter, you might not get the quest till now!
               		(quest-data-assign-once 'questentry-calltoarms)
-              		(qst-complete! (quest-data-get 'questentry-calltoarms))
+              		(quest-complete (quest-data-get 'questentry-calltoarms))
                     (say knpc "Good! Rangers have tracked the thief to "
                          "Trigrave. Go there and inquire about a THIEF.")
                     (quest-accepted! (ench-first-quest (gob knpc)) #t)
