@@ -40,7 +40,8 @@
 	
 ;; updates as per quest-data-update, but additionally triggers a passed in function
 (define (quest-data-update-with tag key value callback)
-	(let* ((qpayload (car (qst-payload (quest-data-get tag))))
+	(let* (	(quest (quest-data-get tag))
+			(qpayload (car (qst-payload quest)))
 			(updatehook (tbl-get qpayload 'on-update))
 			)
 		(if (not (equal? (tbl-get qpayload key) value))
@@ -61,17 +62,39 @@
 (define (quest-data-icon! tag icon)
 	(qst-set-icon! (quest-data-get tag) icon)
 	)
-
+	
+(define (quest-notify quest subfunction)
+	(lambda (quest) 
+		(if (quest-assigned? quest)
+			(kern-log-msg "Quest updated: " (qst-title qst))
+			)
+		(subfunction quest)
+	))
+	
+	
 (define (grant-xp-fn amount)
-	(lambda () 
-		(kern-char-add-experience (car (kern-party-get-members (kern-get-player))) amount)
+	(lambda (quest) 
+		(let* ((qpayload (car (qst-payload quest)))
+				(totalxp (+ (tbl-get qpayload 'bonus-xp) amount))
+				)
+			(if (quest-assigned? quest)
+				(kern-char-add-experience (car (kern-party-get-members (kern-get-player))) amount)
+				(tbl-set! qpayload 'bonus-xp totalxp)
+			)
+		)
 	))
 	
 (define (grant-party-xp-fn amount)
-	(lambda ()
-		(let* ((party (kern-party-get-members (kern-get-player)))
-				(xp-each (ceiling (/ amount (length party)))))
-			(map (lambda (kchar) (kern-char-add-experience kchar xp-each)) party)
+	(lambda (quest) 
+		(let* ((qpayload (car (qst-payload quest)))
+				(totalxp (+ (tbl-get qpayload 'bonus-xp) amount))
+				(party (kern-party-get-members (kern-get-player)))
+				(xp-each (ceiling (/ totalxp (length party))))
+				)
+			(if (quest-assigned? quest)
+				(map (lambda (kchar) (kern-char-add-experience kchar xp-each)) party)
+				(tbl-set! qpayload 'bonus-xp totalxp)
+			)
 		)
 	))
 	
@@ -80,6 +103,7 @@
 ;; ingame tracking
 	
 (kern-add-hook 'new_game_start_hook 'reconcile-quests)
+(kern-add-hook 'new_game_start_hook 'refresh-quests)
 
 (define (reconcile-quests kplayer)
 	(let ((questlist
@@ -98,3 +122,8 @@
 				))
 		questlist)
 	))
+
+(define (refresh-quests)
+	(kern-load "quests-data.scm")
+	)
+	
