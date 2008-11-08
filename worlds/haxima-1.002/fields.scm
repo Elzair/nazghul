@@ -21,13 +21,13 @@
 (kern-mk-field-type 'F_illum  "glowing mote" s_magic          1024 5  pclass-none  nil	mmode-field)
 (kern-mk-field-type 'F_fire   "fire field"   s_field_fire     512  20 pclass-none  'burn	mmode-field)
 (kern-mk-field-type 'F_poison "poison field" s_field_poison   256  20 pclass-none  'apply-poison	mmode-field)
-(kern-mk-field-type 'F_sleep  "sleep field"  s_field_sleep    256  20 pclass-none  'apply-sleep	mmode-field)
+(kern-mk-field-type 'F_sleep  "sleep field"  s_field_sleep    256  20 pclass-none  'apply-field-sleep	mmode-field)
 (kern-mk-field-type 'F_energy "energy field" s_field_energy   512  20 pclass-repel 'apply-lightning	mmode-field)
 (kern-mk-field-type 'F_acid "acid field" s_field_acid   256  20 pclass-none 'apply-acid	mmode-field)
 (kern-mk-field-type 'web-type "spider web"   s_spider_web     0    20 pclass-none  'ensnare	mmode-field)
 
 (kern-mk-field-type 'F_poison_perm "poison field" s_field_poison 256 -1 pclass-none  'apply-poison	mmode-field)
-(kern-mk-field-type 'F_sleep_perm  "sleep field"  s_field_sleep  256 -1 pclass-none  'apply-sleep	mmode-field)
+(kern-mk-field-type 'F_sleep_perm  "sleep field"  s_field_sleep  256 -1 pclass-none  'apply-field-sleep	mmode-field)
 (kern-mk-field-type 'F_energy_perm "energy field" s_field_energy 512 -1 pclass-repel 'apply-lightning	mmode-field)
 (kern-mk-field-type 'F_fire_perm   "fire field"   s_field_fire   512 -1 pclass-none  'burn	mmode-field)
 (kern-mk-field-type 'F_acid_perm "acid field" s_field_acid 256 -1 pclass-none 'apply-acid	mmode-field)
@@ -68,11 +68,16 @@
           ((is-poison-field? ktype) (has-poison-immunity? kchar))
           ((is-sleep-field? ktype) (has-sleep-immunity? kchar))
           (else #f))))
-          
+                
+(define (apply-field-sleep kobj)
+	(if (> (modulo (random-next) 40) 1)
+    	(apply-sleep kobj)
+    ))
+    
 ;; smoke is here since it more closely resembles a field than anything else
 ;; TODO: smoke should calculate a duration and store that in a gob
 ;;   so that denser smoke can be created  
-          
+
 (define smoke-ifc
   (ifc nil
        (method 'exec (lambda (ksmoke)
