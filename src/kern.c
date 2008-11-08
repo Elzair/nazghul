@@ -9902,8 +9902,9 @@ KERN_API_CALL(kern_script_version)
         char *verstr = NULL;
 
         if (unpack(sc, &args, "s", &verstr)) {
-                load_err("%s: bad args", __FUNCTION__);
-                return sc->NIL;
+	        char buffer[40]; // max length of unsigned int = 10 digits
+	        sprintf(buffer,"%u.%u.%u",Session->major, Session->minor,Session->release);
+	        return scm_mk_string(sc, buffer);
         }
 
         if (sscanf(verstr, "%u.%u.%u", &Session->major, &Session->minor, 
