@@ -255,18 +255,6 @@
       (say knpc "I see you are still missing at least one rune. Don't give up, "
            "Wanderer! Ask among the Wise, delve into the deeps, search far and wide."))
 
-    (define (offer-quest)
-      (say knpc "Wanderer, I have a most important task for you: find the eight "
-           "rune-keys which lock the Demon Gate. Will you do this?")
-      (if (yes? kpc)
-          (begin
-            (quest-accepted! quest #t)
-            (say knpc "I know I can count on you. There is a most clever man, "
-                 "an Alchemist, who lives on Oparine. Perhaps you know of him already. He would "
-                 "be a good place to start."))
-          (say knpc "It is imperative that we find them. I am disappointed, my "
-               "friend, but no doubt you have your reasons.")))
-
     (define (end-quest)
       (quest-done! quest #t)
       (say knpc "Well done, Wanderer! You have collected all the lost runes, "
@@ -291,6 +279,28 @@
           (say knpc "[His shoulders slump] It was not your burden to bear, "
                "Wanderer, for you are a stranger to this "
                "world. Keep the keys safe, at least, if you will not change your mind.")))
+           
+    (define (offer-quest)
+      (say knpc "Wanderer, I have a most important task for you: find the eight "
+           "rune-keys which lock the Demon Gate. Will you do this?")
+      (if (yes? kpc)
+          (begin
+            (quest-accepted! quest #t)
+            (cond
+            	((has-all-runes?)
+            		(say knpc "You already have the runes?")
+            		(prompt-for-key)
+            		(end-quest)
+            		)
+            	((missing-only-s-rune?)
+            		(give-last-rune))
+            	(#t
+            		(say knpc "I know I can count on you. There is a most clever man, "
+                 	"an Alchemist, who lives on Oparine. Perhaps you know of him already. He would "
+                 	"be a good place to start."))
+             ))
+          (say knpc "It is imperative that we find them. I am disappointed, my "
+               "friend, but no doubt you have your reasons.")))
 
     (if (silas-will-help? gob)
         (if (quest-done? quest)
@@ -306,7 +316,6 @@
              "You will become the most famous Wanderer -- indeed, "
              "the greatest hero of the Shard -- for all time."))
     ))
-
 
 (define (pissed-off-silas knpc kpc)
   (map (lambda (tag)
