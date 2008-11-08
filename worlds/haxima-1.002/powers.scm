@@ -123,7 +123,8 @@
 					(for-each proc (kern-get-objects-at loc))
 				)
 				;; remove fields on semi-bad locations
-				(if (not (can-be-dropped? afield loc no-drop))
+				(if (or (< duration 1)
+						(not (can-be-dropped? afield loc no-drop)))
 					(kern-obj-remove afield)
 				)
 				(kern-map-repaint)
