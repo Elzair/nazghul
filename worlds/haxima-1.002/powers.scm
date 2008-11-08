@@ -123,8 +123,7 @@
 					(for-each proc (kern-get-objects-at loc))
 				)
 				;; remove fields on semi-bad locations
-				(if (or (< duration 1)
-						(not (can-be-dropped? afield loc no-drop)))
+				(if (not (can-be-dropped? afield loc no-drop))
 					(kern-obj-remove afield)
 				)
 				(kern-map-repaint)
@@ -428,7 +427,7 @@
 						)
 				))))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
-			(mk-basic-cone-proc poison-all F_poison 
+			(mk-basic-cone-proc (kern-obj-get-location caster) poison-all F_poison 
 				(powers-cone-basic-leaveproc 60 (+ 40 (* 3 power)))
 			)))
 			result-ok)
@@ -445,7 +444,7 @@
 						(apply-sleep kobj))
 				)))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
-			(mk-basic-cone-proc sleep-all F_sleep 
+			(mk-basic-cone-proc (kern-obj-get-location caster) sleep-all F_sleep 
 				(powers-cone-basic-leaveproc 40 (+ 30 (* 4 power)))
 			)))
 			result-ok)
@@ -881,7 +880,6 @@
     (if (not (null? (car targets)))
         (map
          (lambda (zappee)
-           (println zappee)
            (kern-log-msg (kern-obj-get-name zappee) " shocked!")
            (kern-obj-inflict-damage zappee "shocked" (kern-dice-roll dam) caster)						
            )
