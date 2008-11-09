@@ -163,7 +163,7 @@ void PlayerParty::changePlaceHook()
         mapSetPlace(place);
         Place = place;
         place_enter(place);
-        log_msg("Entering %s.", Place->name);
+        log_banner("Entering %s", Place->name);
         
         // --------------------------------------------------------------------
         // If the party is relocating to a non-wilderness place then I have to

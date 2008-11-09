@@ -209,6 +209,30 @@ void log_msg(char *fmt, ...)
         log_pop();        
 }
 
+void log_banner(char *fmt, ...)
+{
+        struct log_entry *entry;
+        va_list args;
+
+        if (log_disabled) {
+                return;
+        }
+
+        log_begin_group();
+        log_msg("^c+y*********************************^c-");
+        log_begin("^c+y*^c- ");
+        
+        
+        entry = outcast(log_stk.next, struct log_entry, stk_hook);
+        va_start(args, fmt);
+        log_entry_print(entry, fmt, args);
+        va_end(args);
+
+        log_end("");
+        log_msg("^c+y*********************************^c-");
+        log_end_group();
+}
+
 void log_begin_group()
 {
         if (log_disabled)

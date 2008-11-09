@@ -51,4 +51,7 @@ extern void log_msg(char *fmt, ...);
 extern void log_disable();
 extern void log_enable();
 
+/* Like log_msg, but with fancy borders. */
+extern void log_banner(char *fmt, ...);
+
 #endif

@@ -329,6 +329,8 @@ void conv_enter(Object *npc, Object *pc, struct conv *conv)
 
         assert(conv);
 
+	log_banner("^c+yCONVERSATION^c-");
+
         session_run_hook(Session, conv_start_hook, "pp", pc, npc);
 
         conv_done = 0;

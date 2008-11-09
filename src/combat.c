@@ -101,11 +101,6 @@ static int y_q[SEARCH_QUEUE_SZ];
 static int q_head;
 static int q_tail;
 
-static void combat_print_banner(char *msg)
-{
-        log_msg("*** %s ***", msg);
-}
-
 enum combat_state combat_get_state(void)
 {
         return Combat.state;
@@ -141,13 +136,13 @@ void combat_set_state(enum combat_state new_state)
         case COMBAT_STATE_DONE:
                 switch (new_state) {
                 case COMBAT_STATE_FIGHTING:
-                        combat_print_banner("COMBAT");
+                        log_banner("^c+mCOMBAT^c-");
                         sound_play(Combat.sound_enter, SOUND_MAX_VOLUME);
                         break;
                 case COMBAT_STATE_LOOTING:
                         break;
                 case COMBAT_STATE_CAMPING:
-                        combat_print_banner("CAMPING");
+                        log_banner("CAMPING");
                         break;
                 default:
                         assert(false);
@@ -158,12 +153,12 @@ void combat_set_state(enum combat_state new_state)
         case COMBAT_STATE_FIGHTING:
                 switch (new_state) {
                 case COMBAT_STATE_LOOTING:
-                        combat_print_banner("VICTORY");
+                        log_banner("^c+gVICTORY^c-");
                         sound_play(Combat.sound_victory, SOUND_MAX_VOLUME);
                         player_party->addExperience(COMBAT_VICTORY_XP);
                         break;
                 case COMBAT_STATE_DONE:
-                        combat_print_banner("DEFEAT");
+                        log_banner("^c+rDEFEAT^c-");
                         sound_play(Combat.sound_defeat, SOUND_MAX_VOLUME);
                         break;
                 default:
@@ -175,7 +170,7 @@ void combat_set_state(enum combat_state new_state)
         case COMBAT_STATE_LOOTING:
                 switch (new_state) {
                 case COMBAT_STATE_FIGHTING:
-                        combat_print_banner("COMBAT");
+                        log_banner("^c+mCOMBAT^c-");
                         sound_play(Combat.sound_enter, SOUND_MAX_VOLUME);
                         break;
                 case COMBAT_STATE_DONE:
@@ -189,7 +184,7 @@ void combat_set_state(enum combat_state new_state)
         case COMBAT_STATE_CAMPING:
                 switch (new_state) {
                 case COMBAT_STATE_FIGHTING:
-                        combat_print_banner("COMBAT");
+                        log_banner("^c+mCOMBAT^c-");
                         sound_play(Combat.sound_enter, SOUND_MAX_VOLUME);
                         break;
                 case COMBAT_STATE_LOOTING:

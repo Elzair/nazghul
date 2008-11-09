@@ -2112,19 +2112,13 @@ void cmdTalk(Object *member)
 
 	cmdwin_spush(obj->getName());
 
-	log_msg("*** CONVERSATION ***");
-
-	if (/*obj->getActivity() == SLEEPING || not sure why this was here... */
-            ((obj->getLayer() == being_layer) &&
-             ((class Character*)obj)->isAsleep())) {
+	if (((obj->getLayer() == being_layer) 
+             && ((class Character*)obj)->isAsleep())) {
 		log_msg("Zzzz...\n");
-                //log_end_group();
                 goto cleanup;
 	}
 
         conv_enter(obj, member, conv);
-        //log_end_group();
-
 	mapSetDirty();
 
  cleanup:

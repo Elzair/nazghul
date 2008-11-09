@@ -1642,7 +1642,7 @@ void Character::addExperience(int amount)
 	xp += amount;
 	if (xp >= getXpForLevel(getLevel()+1)) {
 		lvl++;
-                log_msg("%s gains level %d!", getName(), lvl);
+                log_banner("^c+b%s^c- gains level ^c+g%d^c-!", getName(), lvl);
                 if (isPlayerControlled()) {
                         mapFlash(1000);
                 }

@@ -3632,8 +3632,6 @@ static pointer kern_conv_begin(scheme *sc, pointer args)
                 return sc->F;                
         }
 
-	log_msg("*** CONVERSATION ***");
-
 	log_begin("You are accosted by ");
         Session->subject = player_party;
 	npc->describe();

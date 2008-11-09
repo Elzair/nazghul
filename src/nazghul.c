@@ -352,11 +352,12 @@ int main(int argc, char **argv)
         /* The first time we start print the vesrsion info. */
         if (print_version) {
                 print_version = 0;
-                log_begin_group();
-                log_msg("*********************************");
-                log_msg("Welcome to Nazghul version %s", PACKAGE_VERSION );
-                log_msg("*********************************");
-                log_end_group();
+                log_banner("^c+bNazghul version^c- ^c+G%s^c-", PACKAGE_VERSION );
+////                 log_begin_group();
+////                 log_msg("^c+y*********************************^c-");
+////                 log_msg("^c+y*^c- ^c+bNazghul version^c- ^c+G%s^c-", PACKAGE_VERSION );
+////                 log_msg("^c+y*********************************^c-");
+////                 log_end_group();
         }
 
         /* paint the border for the first time */
