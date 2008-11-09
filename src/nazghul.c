@@ -353,11 +353,6 @@ int main(int argc, char **argv)
         if (print_version) {
                 print_version = 0;
                 log_banner("^c+bNazghul version^c- ^c+G%s^c-", PACKAGE_VERSION );
-////                 log_begin_group();
-////                 log_msg("^c+y*********************************^c-");
-////                 log_msg("^c+y*^c- ^c+bNazghul version^c- ^c+G%s^c-", PACKAGE_VERSION );
-////                 log_msg("^c+y*********************************^c-");
-////                 log_end_group();
         }
 
         /* paint the border for the first time */
