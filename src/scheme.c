@@ -4612,6 +4612,12 @@ pointer scheme_call(scheme *sc, pointer func, pointer args) {
                 s_save(sc, OP_EXIT_REENTER, args, func);
         } else {
                 dump_stack_reset(sc);
+
+                /* gjm: file_push() pre-increments the load stack index, so
+                 * reset it so that the first call to load will use index
+                 * 0. (This fixes a crash when the code calls the load
+                 * procedure.) */
+                sc->file_i = -1;
         }
 #else
    dump_stack_reset(sc);
