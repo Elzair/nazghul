@@ -2763,7 +2763,7 @@ KERN_API_CALL(kern_log_enable)
 
 static pointer kern_conv_say(scheme *sc,  pointer args)
 {
-        Object *speaker;
+        class Character *speaker;
         struct conv *conv;
 
         if (unpack(sc, &args, "p", &speaker)) {
@@ -2780,8 +2780,14 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                 rt_err("%s() no conv for %s", __FUNCTION__, speaker->getName());
                 return sc->NIL;
         }
-
-        log_begin("^c+%c%s:^c- ", CONV_NPC_COLOR, speaker->getName());
+        
+        if (speaker->isKnown()) {
+                log_begin("^c+%c%s:^c- ", CONV_NPC_COLOR, speaker->getName());
+        } else {
+                log_begin("^c+%c", CONV_NPC_COLOR);
+                speaker->describe();
+                log_continue(":^c- ");
+        }
 
         args = scm_car(sc, args);
 
@@ -3085,6 +3091,24 @@ static pointer kern_obj_set_conv(scheme *sc, pointer args)
         }
 
         return scm_mk_ptr(sc, obj);
+}
+
+static pointer kern_char_set_known(scheme *sc, pointer args)
+{
+        class Character *ch;
+        int val;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-known");
+        if (!ch)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "b", &val)) {
+                rt_err("kern-char-set-known: bad args");
+                return sc->NIL;
+        }
+
+        ch->setKnown(val);
+        return scm_mk_ptr(sc, ch);
 }
 
 static pointer kern_obj_set_visible(scheme *sc, pointer args)
@@ -4496,6 +4520,18 @@ KERN_API_CALL(kern_char_join_player)
         if (ch->joinPlayer())
                 return sc->T;
         return sc->F;
+}
+
+KERN_API_CALL(kern_char_is_known)
+{
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-is-known");
+        if (!ch) {
+                return sc->F;
+        }
+
+        return ch->isKnown() ? sc->T : sc->F;
 }
 
 KERN_API_CALL(kern_char_leave_player)
@@ -10009,6 +10045,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
         API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
         API_DECL(sc, "kern-char-is-dead?", kern_char_is_dead);
+        API_DECL(sc, "kern-char-is-known?", kern_char_is_known);
         API_DECL(sc, "kern-char-join-player", kern_char_join_player);
         API_DECL(sc, "kern-char-kill", kern_char_kill);
         API_DECL(sc, "kern-char-leave-player", kern_char_leave_player);
@@ -10017,6 +10054,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-control-mode", kern_char_set_control_mode);
         API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
         API_DECL(sc, "kern-char-set-hp", kern_char_set_hp);
+        API_DECL(sc, "kern-char-set-known", kern_char_set_known);
         API_DECL(sc, "kern-char-set-level", kern_char_set_level);
         API_DECL(sc, "kern-char-set-mana", kern_char_set_mana);
         API_DECL(sc, "kern-char-set-schedule", kern_char_set_schedule);

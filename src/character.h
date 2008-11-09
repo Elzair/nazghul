@@ -225,6 +225,8 @@ class Character:public Being {
         void endLoitering();
         bool isLoitering();
 	bool flee();
+        bool isKnown();
+        void setKnown(bool val);
 
         struct node *plnode; // pointer back to party list node
 	class Party *party;
@@ -327,6 +329,7 @@ class Character:public Being {
         bool fleePathFound;
         int fleeX, fleeY, fleePathFlags;
         struct mmode *currentMmode;
+        bool known;
 };
 
 extern void char_dtor(void *val);

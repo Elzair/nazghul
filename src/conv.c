@@ -21,6 +21,7 @@
 //
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
+#include "character.h"
 //
 
 #include "bitset.h"
@@ -30,6 +31,7 @@
 #include "cmdwin.h"
 #include "common.h"
 #include "object.h"
+#include <string.h>
 #include "closure.h"
 #include "log.h"
 #include "session.h"
@@ -102,8 +104,10 @@ static int conv_get_player_query(struct KeyHandler *kh, int key, int keymod)
 	return 0;
 }
 
+
 /**
  * Force the player query to a value. This is mainly done to start the
+
  * conversation off with the "HAIL" keyword.
  *
  * @param str is the query value to set.
@@ -337,6 +341,11 @@ void conv_enter(Object *npc, Object *pc, struct conv *conv)
                 conv_query[4] = 0;
 
                 conv_mark_if_keyword(conv, conv_query);
+
+                /* If query was NAME, assume the NPC is now known */
+                if (!strcasecmp(conv_query, "NAME")) {
+                        ((class Character*)npc)->setKnown(true);
+                }
 
                 /* Query the NPC */
                 closure_exec(conv->proc, "ypp", conv_query, npc, pc);

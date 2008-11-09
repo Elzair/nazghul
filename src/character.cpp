@@ -182,6 +182,7 @@ Character::Character(char *tag, char *name,
           , fleeY(0)
           , fleePathFlags(0)
           , currentMmode(0)
+          , known(false)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -271,6 +272,7 @@ Character::Character():hm(0), xp(0), order(-1),
                       , fleeY(0)
                       , fleePathFlags(0)
                       , currentMmode(0)
+                      , known(false)
 {
         // This method is probably obsolete now
 
@@ -1733,14 +1735,16 @@ void Character::describe()
                 log_continue("a ");
         log_continue("%s", diplstr);
         log_continue(" L%d", getLevel());
-        log_continue(" %s", getName());
-#if 0
-        log_continue("%s level %d %s",
-                     diplstr,
-                     getLevel(), species->name);
-        if (occ && occ->name)
-                log_continue(" %s", occ->name);
-#endif
+        if (isKnown()) {
+                log_continue(" %s", getName());
+        } else {
+                if (species && species->name) {
+                        log_continue(" %s", species->name);
+                }
+                if (occ && occ->name) {
+                        log_continue(" %s", occ->name);
+                }
+        }
         if (!isVisible())
                 log_continue(" (invisible)");
         if (isSubmerged()) {
@@ -3081,14 +3085,17 @@ void Character::save(struct save *save)
 
         saved = save->session_id;
 
+        // Create it within a 'let' block
+        save->enter(save, "(let ((kchar ");
+
         if (getGob()) {
                 // wrap the declaration in a call to bind the object to the
                 // gob 
                 save->enter(save, "(bind\n");
-        }        
 
-        if (getForceContainerDrop()) {
-                save->enter(save, "(kern-char-force-drop");
+                if (getForceContainerDrop()) {
+                        save->enter(save, "(kern-char-force-drop");
+                }
         }
 
         // Create the object within a 'let' block
@@ -3174,7 +3181,16 @@ void Character::save(struct save *save)
                 // end the bind call
                 save->exit(save, ") ;; bind\n");
         }
+        
+        // close the args assignment section of the let block
+        save->write(save, ")) ");
 
+        if (isKnown()) {
+                save->write(save, "(kern-char-set-known kchar #t)\n");
+        }
+
+        // close the 'let' block
+        save->exit(save, "kchar)\n");
 }
 
 void Character::setSchedule(struct sched *val)
@@ -3373,4 +3389,14 @@ void Character::setForceContainerDrop(bool val)
 bool Character::isStationary()
 {
         return species->stationary;
+}
+
+bool Character::isKnown()
+{
+        return known;
+}
+
+void Character::setKnown(bool val)
+{
+        known = val;
 }
