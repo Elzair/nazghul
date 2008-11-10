@@ -190,7 +190,7 @@ static int conv_prefix_cmp(char *wptr, char *cptr)
 
         if (*wptr && len < 4) {
                 /* candidate is short but word is not */
-                return -1;
+                return 1;
         }
 
         return 0;
@@ -328,6 +328,13 @@ void conv_enter(Object *npc, Object *pc, struct conv *conv)
 	struct KeyHandler kh;
 
         assert(conv);
+
+        /* If NPC initiates conversation, make sure we have a valid session
+         * subject, else describe() will crash when determining if unknown NPC
+         * is hostile or not. */
+        if (! Session->subject) {
+            Session->subject = pc;
+        }
 
 	log_banner("^c+yCONVERSATION^c-");
 
