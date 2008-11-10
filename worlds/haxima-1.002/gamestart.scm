@@ -72,30 +72,32 @@
 (kern-obj-put-at (mk-step-trig 'gamestart-light-lamps nil "lamps") (list p_char_setup 11 16))
 
 (define (mk-start-statue tag name sprite conv)
-  (bind 
-   (kern-mk-char 
-    tag            ; tag
-    name             ; name
-    sp_statue         ; species
-    nil              ; occ
-    sprite     ; sprite
-    faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
-    999 0              ; hp mod/mult
-    0 0              ; mp mod/mult
-    max-health ; hp
-    0                   ; xp
-    max-health ; mp
-    0
-    9
-    #f               ; dead
-    conv         ; conv
-    nil           ; sched
-    'ankh-ai              ; special ai
-    nil              ; container
-    nil              ; readied
-    )
-   nil))
+  (let ((kchar (bind 
+                (kern-mk-char 
+                 tag            ; tag
+                 name             ; name
+                 sp_statue         ; species
+                 nil              ; occ
+                 sprite     ; sprite
+                 faction-men      ; starting alignment
+                 0 0 0            ; str/int/dex
+                 999 0              ; hp mod/mult
+                 0 0              ; mp mod/mult
+                 max-health ; hp
+                 0                   ; xp
+                 max-health ; mp
+                 0
+                 9
+                 #f               ; dead
+                 conv         ; conv
+                 nil           ; sched
+                 'ankh-ai              ; special ai
+                 nil              ; container
+                 nil              ; readied
+                 )
+                nil)))
+    (kern-char-set-known kchar #t)
+    ))
 
 (kern-obj-put-at (mk-start-statue 'str_statue "Statue of Might" s_str_statue 'gs-str-conv) (list p_char_setup 4 10))
 (kern-obj-put-at (mk-start-statue 'dex_statue "Statue of Agility" s_dex_statue 'gs-dex-conv) (list p_char_setup 9 8))
