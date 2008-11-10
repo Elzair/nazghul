@@ -333,7 +333,7 @@ void conv_enter(Object *npc, Object *pc, struct conv *conv)
          * subject, else describe() will crash when determining if unknown NPC
          * is hostile or not. */
         if (! Session->subject) {
-            Session->subject = pc;
+            Session->subject = (class Being*)pc;
         }
 
 	log_banner("^c+yCONVERSATION^c-");
