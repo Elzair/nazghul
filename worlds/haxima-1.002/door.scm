@@ -244,6 +244,20 @@
     (kern-log-continue ")")
     ))
 
+(define (door-get-unlock-dc kdoor)
+  (let ((val (door-locked? (kobj-gob kdoor))))
+    ;; make it backwards-compatible for old saved games where the value is a bool
+    (if (number? val)
+        val
+        (if val dc-normal 0))))
+
+(define (door-get-magic-unlock-dc kdoor)
+  (let ((val (door-magic-locked? (kobj-gob kdoor))))
+    ;; make it backwards-compatible for old saved games where the value is a bool
+    (if (number? val)
+        val
+        (if val dc-normal 0))))
+
 (define door-ifc
   (ifc '()
        (method 'exec door-exec)
@@ -262,6 +276,8 @@
        (method 'use-key door-use-key)
        (method 'search door-search)
        (method 'describe door-describe)
+       (method 'get-unlock-dc door-get-unlock-dc)
+       (method 'get-magic-unlock-dc door-get-magic-unlock-dc)
        ))
 
 ;; Create the kernel "door" type

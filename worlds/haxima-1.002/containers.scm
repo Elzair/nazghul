@@ -292,7 +292,6 @@
 
 (define (kcontainer-unlock kcontainer khandler)
   (let ((container (gob kcontainer)))
-    (println "container-unlock: " container)
     (cond ((container-open? container) (kern-log-msg "Not closed!\n") #f)
           ((not (container-locked? container)) (kern-log-msg "Not locked!\n") #f)
           ((container-needs-key? container) (kern-log-msg "Needs the key!\n") #f)
@@ -303,7 +302,6 @@
 
 (define (kcontainer-magic-lock kcontainer khandler)
   (let ((container (gob kcontainer)))
-    (println "container-magic-lock: " container)
     (cond ((container-open? container) (kern-log-msg "Not closed!\n") #f)
           ((container-magic-locked? container) 
            (kern-log-msg "Already magically locked!\n") #f)
@@ -348,6 +346,19 @@
            (kcontainer-update-sprite kcontainer)
            ))))
   
+(define (kcontainer-get-unlock-dc kcontainer)
+  (let ((val (container-locked? (gob kcontainer))))
+    ;; make it backwards-compatible for old saved games where the value is a bool
+    (if (number? val)
+        val
+        (if val dc-normal 0))))
+
+(define (kcontainer-get-magic-unlock-dc kcontainer)
+  (let ((val (container-magic-locked? (gob kcontainer))))
+    ;; make it backwards-compatible for old saved games where the value is a bool
+    (if (number? val)
+        val
+        (if val dc-normal 0))))
 
 ;; This interface binds the 'open signal to our open procedure above.
 (define container-ifc
@@ -365,6 +376,8 @@
        (method 'magic-lock kcontainer-magic-lock)
        (method 'magic-unlock kcontainer-magic-unlock)
        (method 'use-key kcontainer-use-key)
+       (method 'get-unlock-dc kcontainer-get-unlock-dc)
+       (method 'get-magic-unlock-dc kcontainer-get-magic-unlock-dc)
 
        ))
 
