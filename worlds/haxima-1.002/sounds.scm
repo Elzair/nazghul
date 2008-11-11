@@ -44,7 +44,7 @@
 ;;==========================================================================
 ;; music
 
-(define default-music "ballad.mid")
+(define default-music "ballad.ogg")
 
 (define (music-list . entries)
 	(if (null? entries)
