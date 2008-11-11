@@ -151,25 +151,28 @@
   #t)
 
 (define (mk-talking-statue)
-  (kern-mk-char 
-   'ch_soj           ; tag
-   "ancient statue"     ; name
-   sp_statue         ; species
-   nil              ; occ
-   s_headless_w_sword_statue     ; sprite
-   faction-glasdrin      ; starting alignment
-   0 0 0            ; str/int/dex
-   0 0              ; hp mod/mult
-   0 0              ; mp mod/mult
-   1000 ; hp
-   0                   ; xp
-   0 ; mp
-   0
-   9                ; lvl
-   #f               ; dead
-   'soj-conv         ; conv
-   nil           ; sched
-   'soj-ai              ; special ai
-   nil              ; container
-   nil              ; readied
-   ))
+  (let ((kchar 
+         (kern-mk-char 
+          'ch_soj           ; tag
+          "Statue of Justice"     ; name
+          sp_statue         ; species
+          nil              ; occ
+          s_headless_w_sword_statue     ; sprite
+          faction-glasdrin      ; starting alignment
+          0 0 0            ; str/int/dex
+          0 0              ; hp mod/mult
+          0 0              ; mp mod/mult
+          1000 ; hp
+          0                   ; xp
+          0 ; mp
+          0
+          9                ; lvl
+          #f               ; dead
+          'soj-conv         ; conv
+          nil           ; sched
+          'soj-ai              ; special ai
+          nil              ; container
+          nil              ; readied
+          )))
+    (kern-char-set-known kchar #t)
+    kchar))
