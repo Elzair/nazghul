@@ -82,9 +82,24 @@
 ;;(define ap-to-use-scroll        12)
 
 
-;; Difficulty Classes
+;; Difficulty Classes. "Normal" means an L6 professional with key attribute at
+;; 24 will succeed 50% of the time. For example, an L6 wrogue with 24 dexterity
+;; will have a thiefly ability of 14. This person should be able to pick a
+;; normal lock 50% of the time (remember, he gets to retry with no penalty
+;; except mana loss and maybe breaking a pick on critical failure).
+;;
+;; 14 + 1d20 = 14 + 10.5 = 24.5, round down
+;;
+;; For the most difficult things, an L9 professional with an unusually strong
+;; key attribute of 30 will have an ability rating of 19, and should only
+;; succeed on a perfect roll:
+;;
+;; 19 + 20 = 39
+;;
 (define dc-escape-ensnare  26)
 (define dc-escape-paralyze 16)
+(define dc-normal 24)
+(define dc-supremely-hard 39)
 
 ;; Pmasks (keep them around until mechs are converted to use passability
 ;; classes (see below))
@@ -108,16 +123,6 @@
 
 (define no-drop    100)  ;; special, used for dropability (not related to speed-human)
 (define cant      255)  ;; special
-
-;(define norm       50)  ;; 1.0
-;(define s-hard     75)  ;; 1.5
-;(define hard      100)  ;; 2.0
-;(define v-hard    150)  ;; 3.0
-;(define fast       30)  ;; 0.6
-;(define s-fast     40)  ;; 0.4
-;(define no-drop   100)  ;; 2.0
-;(define cant      255)  ;; 
-
 
 ;; Passability classes
 (define pclass-none          0)
@@ -220,7 +225,7 @@
 (define faction-trigrave      faction-men)
 (define faction-nixie         faction-monster)
 (define faction-prisoner      12)
-(define faction-glasdrin      13)
+(define faction-glasdrin      faction-men)
 (define faction-num           14)
 
 ;; Layers (must match object.h)
