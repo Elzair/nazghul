@@ -10,80 +10,80 @@
 ;; These should be a short fanfare
 (define ml-battle-intro
 	(music-list
-"music/dragon-quest.mid"
-"music/into-battle.mid"
+"music/dragon-quest.ogg"
+"music/into-battle.ogg"
 ))
 
 ;; These should be a short fanfare
 (define ml-battle-over
 	(music-list
-"music/game-music2.mid"
-"music/dragon-slayer.mid"
+"music/game-music2.ogg"
+"music/dragon-slayer.ogg"
 ))
 
 ;; These should be a short fanfare
 (define ml-battle-lost
 	(music-list
-"music/fair-camelot.mid"
-"music/dragon-slayer.mid"
+"music/fair-camelot.ogg"
+"music/dragon-slayer.ogg"
 ))
 
 (define ml-battle-music
 	(music-list
-"music/double-trios.mid"
-"music/ballad.mid"
+"music/double-trios.ogg"
+"music/ballad.ogg"
 ))
 
 (define ml-outdoor-adventure
 	(music-list
-"music/double-trios.mid"
-"music/ballad.mid"
+"music/double-trios.ogg"
+"music/ballad.ogg"
 ))
 
 (define ml-dungeon-adventure
 	(music-list
-"music/double-trios.mid"
-"music/ballad.mid"	
+"music/double-trios.ogg"
+"music/ballad.ogg"	
 ))
 
 (define ml-creepy-area
 	(music-list
-"music/double-trios.mid"
-"music/ballad.mid"	
+"music/double-trios.ogg"
+"music/ballad.ogg"	
 ))
 
 (define ml-travelling
 	(music-list
-"music/plainchant-recorder-trio.mid"
-"music/harpsichord-piece.mid"
+"music/plainchant-recorder-trio.ogg"
+"music/harpsichord-piece.ogg"
 ))
 
 (define ml-small-town
 	(music-list
-"music/plainchant-recorder-trio.mid"
-"music/minstrel-dance.mid"
-"music/Minuet-like-Mozart.mid"
+"music/plainchant-recorder-trio.ogg"
+"music/minstrel-dance.ogg"
+"music/Minuet-like-Mozart.ogg"
 ))
 
 (define ml-large-town
 	(music-list
-"music/bassoons-and-harpsichord.mid"
-"music/Minuet-like-Mozart.mid"
+"music/bassoons-and-harpsichord.ogg"
+"music/Minuet-like-Mozart.ogg"
 ))
 
 (define ml-castle
 	(music-list
-"music/double-trios.mid"
-"music/ballad.mid"	
+"music/double-trios.ogg"
+"music/ballad.ogg"	
 ))
 
 (define ml-dungeon-town
 	(music-list
-"music/double-trios.mid"
-"music/ballad.mid"	
+"music/double-trios.ogg"
+"music/ballad.ogg"	
 ))
 
 (define ml-sailing
 	(music-list
-"music/wind-trio.mid"
+"music/wind-trio.ogg"
 ))
