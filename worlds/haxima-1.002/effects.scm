@@ -628,16 +628,20 @@
 ;; Note that removal of the curse is a hack: we assume that the original
 ;; camping proc is called camping-proc.
 ;; ----------------------------------------------------------------------------
+(define (unrest-camping-proc kplayer kplace fgob)
+  (println "unrest-camping-proc")
+  (kern-ambush-while-camping (mk-npc-party fgob) kplace)
+  (kern-ambush-while-camping (mk-npc-party fgob) kplace)
+  )
+
 (define (unrest-curse-apply fgob kobj)
   (println "unrest-curse-apply " fgob)
-  (kern-set-camping-proc (lambda (kplayer kplace)
-                           (kern-ambush-while-camping (mk-npc-party fgob) kplace)
-                           (kern-ambush-while-camping (mk-npc-party fgob) kplace)
-                           )))
+  (kern-add-hook 'camping_turn_start_hook 'unrest-camping-proc fgob)
+  )
 
 (define (unrest-curse-rm fgob kobj)
   (println "unrest-curse-rm " fgob)
-  (kern-set-camping-proc camping-proc)
+  (kern-rm-hook 'camping_turn_start_hook 'unrest-camping-proc)
   )
 
 (define (unrest-curse-apply-new ktarg party-tag)

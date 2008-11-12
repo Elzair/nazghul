@@ -83,11 +83,11 @@
   (put (mk-bull) 19 24)
 
   ;; guards
-  (put (guard-pt 'halberdier) 15 25)
-  (put (guard-pt 'halberdier) 14 12)
-  (put (guard-pt 'halberdier) 16 12)
-  (put (guard-pt 'crossbowman) 12 28)
-  (put (guard-pt 'crossbowman) 18 28)
+  (put (guard-pt 'glasdrin-halberdier) 15 25)
+  (put (guard-pt 'glasdrin-halberdier) 14 12)
+  (put (guard-pt 'glasdrin-halberdier) 16 12)
+  (put (guard-pt 'glasdrin-crossbowman) 12 28)
+  (put (guard-pt 'glasdrin-crossbowman) 18 28)
 
   ;; doors
   (put (mk-windowed-door) 21 21)

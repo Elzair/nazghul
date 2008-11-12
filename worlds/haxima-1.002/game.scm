@@ -225,7 +225,7 @@
 (define faction-trigrave      faction-men)
 (define faction-nixie         faction-monster)
 (define faction-prisoner      12)
-(define faction-glasdrin      faction-men)
+(define faction-glasdrin      13) ;; must be separate from men, or exile by statue will affect player with all towns
 (define faction-num           14)
 
 ;; Layers (must match object.h)
