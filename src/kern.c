@@ -7473,17 +7473,43 @@ KERN_API_CALL(kern_add_hook)
                 return sc->NIL;
         }
 
+////         printf("%s() %s: ", __FUNCTION__, hookstr);
+////         if (scm_is_sym(sc, pproc)) {
+////             printf("%s\n", scm_sym_val(sc, pproc));
+////         } else {
+////             printf("<raw code>\n");
+////         }
+
         session_hook_id_t id = session_str_to_hook_id(hookstr);
-        if (id < NUM_HOOKS) {
-                pointer pargs = sc->NIL;
-                if (scm_is_pair(sc, args)) {
-                        pargs = scm_car(sc, args);
-                }
-                void *ret = session_add_hook(Session, (session_hook_id_t)id, closure_new(sc, pproc), pargs);
-                return ret ? scm_mk_ptr(sc, ret) : sc->NIL;
+        if (id >= NUM_HOOKS) {
+            load_err("%s: bad hook id=%d (%s)", __FUNCTION__, id, hookstr);
+            return sc->NIL;
         }
 
+        pointer pargs = sc->NIL;
+        if (scm_is_pair(sc, args)) {
+            pargs = scm_car(sc, args);
+        }
+        void *ret = session_add_hook(Session, (session_hook_id_t)id, closure_new(sc, pproc), pargs);
+        return ret ? scm_mk_ptr(sc, ret) : sc->NIL;
+}
+
+KERN_API_CALL(kern_rm_hook)
+{
+    pointer pproc;
+    char *hookstr;
+    
+    if(unpack(sc, &args, "yc", &hookstr, &pproc)) {
+        load_err("%s: bad args", __FUNCTION__);
         return sc->NIL;
+    }
+    
+    session_hook_id_t id = session_str_to_hook_id(hookstr);
+    if (id < NUM_HOOKS) {
+        session_rm_hook(Session, (session_hook_id_t)id, pproc);
+    }
+    
+    return sc->NIL;
 }
 
 KERN_API_CALL(kern_add_query)
@@ -10288,6 +10314,7 @@ scheme *kern_init(void)
                  kern_search_rect_for_obj_type);
         API_DECL(sc, "kern-add-hook", kern_add_hook);
         API_DECL(sc, "kern-add-query", kern_add_query);
+        API_DECL(sc, "kern-rm-hook", kern_rm_hook);
         API_DECL(sc, "kern-set-quicken-sprite", kern_set_quicken_sprite);
         API_DECL(sc, "kern-set-time-stop-sprite", kern_set_time_stop_sprite);
         API_DECL(sc, "kern-set-magic-negated-sprite", kern_set_magic_negated_sprite);

@@ -675,12 +675,6 @@ int session_save(char *fname)
         save->write(save, ";;--------------\n");
         freezer_save(save);
 
-        /* Hooks */
-        save->write(save, ";;--------------\n");
-        save->write(save, ";; Hooks\n");
-        save->write(save, ";;--------------\n");
-        session_save_hooks(save, Session);
-
         /* Save all the special-case stuff... */
         save->write(save, ";;--------------\n");
         save->write(save, ";; Miscellaneous\n");
@@ -805,6 +799,29 @@ void *session_add_hook(struct session *session, session_hook_id_t id, struct clo
 
         list_add_tail(&session->hook_table[id], &entry->list);
         return entry;
+}
+
+void session_rm_hook(struct session *session, session_hook_id_t id, pointer code)
+{
+        struct list *head, *lptr;
+        struct session_hook_entry *entry;
+
+        assert(id < NUM_HOOKS);
+        head = &session->hook_table[id];
+        lptr = head->next;
+        while (lptr != head) {
+            entry = list_entry(lptr, struct session_hook_entry, list);
+            struct closure *proc = entry->proc;
+            if (proc->code == code) {
+                list_remove(lptr);
+                scheme *sc = proc->sc;
+                sc->vptr->unprotect(sc, entry->args);
+                closure_unref(proc);
+                free(entry);
+                return;
+            }
+            lptr = lptr->next;
+        }
 }
 
 static void session_save_hooks(save_t *save, struct session *session)
