@@ -20,6 +20,7 @@
 //
 
 #include "cmd.h"
+#include "../config.h" /* for USE_SKILLS */
 #include "conv.h"
 #include "place.h"
 #include "constants.h"
@@ -2496,13 +2497,14 @@ static int cmd_eval_and_log_result(int result)
                 char *string;
                 int success;
         } tbl[] = {
-                { "ok!",               1 },
-                { "no target!",        0 },
-                { "no effect!",        1 },
-                { "no hostiles here!", 1 },
-                { "lacks skill!",      0 },
-                { "failed!",           1 },
-                { "not here!",         0 }
+                { "^c+gok^c-!",               1 },
+                { "^c+Gno target^c-!",        0 },
+                { "^c+yno effect^c-!",        1 },
+                { "^c+yno hostiles here^c-!", 1 },
+                { "^c+Glacks skill^c-!",      0 },
+                { "^c+rfailed^c-!",           1 },
+                { "^c+Gnot here^c-!",         0 },
+                { "^c+rcritical fail^c-!!!",  1 },
         };
 
         if (result < 0 || result >= array_sz(tbl)) {

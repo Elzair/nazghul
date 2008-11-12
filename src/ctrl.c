@@ -19,6 +19,7 @@
 // gmcnutt@users.sourceforge.net
 //
 
+#include "../config.h" /* for USE_SKILLS */
 #include "ctrl.h"
 #include "dice.h"
 #include "event.h"

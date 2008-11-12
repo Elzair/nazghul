@@ -31,5 +31,6 @@
 #define RESULT_LACKS_SKILL 4
 #define RESULT_FAILED      5
 #define RESULT_NOT_HERE    6
+#define RESULT_CRITICAL_FAIL 7
 
 #endif
