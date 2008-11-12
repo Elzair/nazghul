@@ -7,9 +7,17 @@
 ;; (eg, result-ok, result-no-target, etc... see naz.scm).
 
 (define (skill-unlock kactor)
-  (cast-ui-ranged-any powers-unlock
-                      kactor 1 (occ-ability-thief kactor)
-                      (mk-ifc-query 'unlock)))
+  (let ((result (cast-ui-ranged-any powers-unlock 
+                                    kactor 
+                                    1 
+                                    (occ-ability-thief kactor) 
+                                    (mk-ifc-query 'unlock))))
+    (cond ((= result result-critical-fail)
+           (kern-log-msg "Picklock broke!")
+           (take kactor t_picklock 1)))
+    result
+    ))
+    
 
 (define (skill-jump kactor)
   (cast-ui-ranged-loc powers-jump
@@ -260,34 +268,36 @@
 ;; skill.
 
 (define sks_wrogue
-  (kern-mk-skill-set "Wrogue" (list (list 1 sk_unlock)
-                                    (list 1 sk_jump)
-                                    (list 1 sk_detect_trap)
-                                    (list 1 sk_arm_trap)
-                                    (list 1 sk_sprint)
-                                    (list 1 sk_wriggle)
-                                    (list 1 sk_disarm_trap)
-                                    (list 1 sk_stealth)
-                                    (list 1 sk_reach)
-                                    (list 1 sk_pickpocket)
-                                    )))
+  (kern-mk-skill-set "Wrogue" (list 
+                               (list 1 sk_sprint)
+                               (list 2 sk_unlock)
+                               (list 3 sk_detect_trap)
+                               (list 4 sk_disarm_trap)
+                               (list 5 sk_jump)
+                               (list 6 sk_arm_trap)
+                               (list 7 sk_wriggle)
+                               (list 7 sk_reach)
+                               (list 8 sk_pickpocket)
+                               (list 8 sk_stealth)
+                               )))
 
 (define sks_wright
-  (kern-mk-skill-set "Wright" (list (list 1 sk_butcher)
-                                    )))
+  (kern-mk-skill-set "Wright" (list 
+                               (list 1 sk_butcher)
+                               )))
 
 (define sks_wanderer 
   (kern-mk-skill-set "Wanderer" (list 
-                                 (list 1 sk_unlock)
-                                 (list 1 sk_jump)
-                                 (list 1 sk_detect_trap)
-                                 (list 1 sk_arm_trap)
-                                 (list 1 sk_sprint)
-                                 (list 1 sk_wriggle)
-                                 (list 1 sk_disarm_trap)
-                                 (list 1 sk_stealth)
-                                 (list 1 sk_reach)
-                                 (list 1 sk_pickpocket)
+                               (list 2 sk_sprint)
+                               (list 4 sk_unlock)
+                               (list 6 sk_detect_trap)
+                               (list 8 sk_disarm_trap)
+                               (list 10 sk_jump)
+                               (list 12 sk_arm_trap)
+                               (list 13 sk_wriggle)
+                               (list 14 sk_reach)
+                               (list 15 sk_pickpocket)
+                               (list 16 sk_stealth)
                                  
-                                 (list 1 sk_butcher)
-                                 )))
+                               (list 2 sk_butcher)
+                               )))

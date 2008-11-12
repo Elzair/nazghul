@@ -11,6 +11,7 @@
 (define result-lacks-skill 4)
 (define result-failed      5)
 (define result-not-here    6)
+(define result-critical-fail 7)
 
 ;; Test if a result code indicates that the action was not completed
 (define (abortive-result? result)

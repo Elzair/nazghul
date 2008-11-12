@@ -1268,8 +1268,10 @@
             (if (ifc unlock-sig ktarg caster)
                 result-ok
                 result-no-effect)
-            result-failed)
-        )))
+            (if (< 5 roll) 
+                result-critical-fail
+                result-failed)
+        ))))
 
 (define (powers-unlock caster ktarg power)
   (powers-unlock-generic caster ktarg power 'get-unlock-dc 'unlock))
