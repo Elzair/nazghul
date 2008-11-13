@@ -88,18 +88,18 @@
 ;; normal lock 50% of the time (remember, he gets to retry with no penalty
 ;; except mana loss and maybe breaking a pick on critical failure).
 ;;
-;; 14 + 1d20 = 14 + 10.5 = 24.5, round down
+;; 1d14 + 1d20 = 6.5 + 10.5 = 17
 ;;
 ;; For the most difficult things, an L9 professional with an unusually strong
 ;; key attribute of 30 will have an ability rating of 19, and should only
-;; succeed on a perfect roll:
+;; succeed on two perfect rolls:
 ;;
 ;; 19 + 20 = 39
 ;;
 (define dc-escape-ensnare  26)
 (define dc-escape-paralyze 16)
-(define dc-normal 24)
-(define dc-supremely-hard 39)
+(define dc-normal 16)
+(define dc-supremely-hard 38)
 
 ;; Pmasks (keep them around until mechs are converted to use passability
 ;; classes (see below))

@@ -9,43 +9,28 @@
                   result-ok))
 
 ;; picklock
-;;;; (define (pick-lock-ok kuser ktarg)
-;;;;   (send-signal kuser ktarg 'unlock)
-;;;;   result-ok)
-;;;; (define (pick-lock-failed kuser ktool)
-;;;;   (kern-log-msg "Picklock broke!")
-;;;;   (kern-obj-remove-from-inventory kuser ktool 1)
-;;;;   result-failed)
-;;;; (define (pick-lock-bonus kuser)
-;;;;   (if (eqv? (kern-char-get-occ kuser)
-;;;;             oc_wrogue)
-;;;;       (floor (+ (kern-char-get-level kuser) (/ (kern-char-get-dexterity kuser) 3)))
-;;;;       (floor (/ (+ (kern-char-get-level kuser) (kern-char-get-dexterity kuser)) 4)))
-;;;;       )
-;;;; (mk-reusable-item 't_picklock "picklock" s_picklock v-hard
-;;;;                   (lambda (kobj kuser)
-;;;;                     (let ((ktarg (ui-target (kern-obj-get-location kuser)
-;;;;                                             1 
-;;;;                                             (mk-ifc-query 'unlock))))
-;;;;                       (if (null? ktarg)
-;;;;                           (begin
-;;;;                             (kern-log-msg "No effect!")
-;;;;                             nil)
-;;;;                           (let ((roll (kern-dice-roll "1d20"))
-;;;;                                 (bonus (kern-dice-roll (string-append "1d" 
-;;;;                                                                       (number->string (occ-ability-thief kuser)))))
-;;;;                                 )
-;;;;                             (println "rolled " roll " + " bonus)
-;;;;                             (if (= roll 20)
-;;;;                                 (pick-lock-ok kuser ktarg)
-;;;;                                 (if (> (+ roll bonus ) 
-;;;;                                        15)
-;;;;                                     (pick-lock-ok kuser ktarg)
-;;;;                                     (pick-lock-failed kuser kobj)
-;;;;                                     )))))))
-
-;; Picklocks must be y)used via the picklock skill now
-(mk-obj-type 't_picklock "picklock" s_picklock layer-item obj-ifc)
+ (mk-reusable-item 
+  't_picklock "picklock" s_picklock v-hard
+  (lambda (kobj kuser)
+    (let ((ktarg (ui-target (kern-obj-get-location kuser) 1 (mk-ifc-query 'unlock)))
+          )
+      (if (null? ktarg) 
+          result-no-target
+          (let ((roll (kern-dice-roll "1d20"))
+                (bonus (kern-dice-roll (string-append "1d" (number->string (occ-ability-thief kuser)))))
+                (dc ((kobj-ifc ktarg) 'get-unlock-dc ktarg kuser))
+                )
+            ;(println "rolled " roll " + " bonus " vs " dc)
+            (cond ((= 0 dc) result-no-target)
+                  ((or (= roll 20) (> (+ roll bonus ) dc)) 
+                   (send-signal kuser ktarg 'unlock)
+                   result-ok
+                   )
+                  (else
+                   (kern-log-msg "Picklock broke!")
+                   (kern-obj-remove-from-inventory kuser kobj 1)
+                   result-failed
+                   )))))))
 
 ;; gem -- use peer spell
 (mk-usable-item 't_gem "gem" s_gem norm

@@ -6,19 +6,6 @@
 ;; should always return (ie, evaluate to) one of the standard result-* codes
 ;; (eg, result-ok, result-no-target, etc... see naz.scm).
 
-(define (skill-unlock kactor)
-  (let ((result (cast-ui-ranged-any powers-unlock 
-                                    kactor 
-                                    1 
-                                    (occ-ability-thief kactor) 
-                                    (mk-ifc-query 'unlock))))
-    (cond ((= result result-critical-fail)
-           (kern-log-msg "Picklock broke!")
-           (take kactor t_picklock 1)))
-    result
-    ))
-    
-
 (define (skill-jump kactor)
   (cast-ui-ranged-loc powers-jump
                       kactor
@@ -114,18 +101,6 @@
   (kern-mk-skill name description (* base-skill-ap relative-ap-cost) mp-cost use-in-wilderness
                  is-passive yusage-proc yusage-special-check-proc list-of-required-tools list-of-required-consumables))
 					
-
-(define sk_unlock 
-  (mk-skill "Unlock" "Unlock a door with a picklock"
-            1
-            2 
-            #f 
-            #f
-            'skill-unlock 
-            nil 
-            (list t_picklock) 
-            nil
-            ))
 
 (define sk_jump
   (mk-skill "Jump" "Jump over impassable terrain"
@@ -270,7 +245,6 @@
 (define sks_wrogue
   (kern-mk-skill-set "Wrogue" (list 
                                (list 1 sk_sprint)
-                               (list 2 sk_unlock)
                                (list 3 sk_detect_trap)
                                (list 4 sk_disarm_trap)
                                (list 5 sk_jump)
@@ -289,7 +263,6 @@
 (define sks_wanderer 
   (kern-mk-skill-set "Wanderer" (list 
                                (list 2 sk_sprint)
-                               (list 4 sk_unlock)
                                (list 6 sk_detect_trap)
                                (list 8 sk_disarm_trap)
                                (list 10 sk_jump)

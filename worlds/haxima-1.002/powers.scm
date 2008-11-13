@@ -1256,28 +1256,15 @@
 	)
 	result-ok)
 
-(define (powers-unlock-generic caster ktarg power dc-sig unlock-sig)
-  (let* ((ifc (kobj-ifc ktarg))
-         (dc (ifc dc-sig ktarg))
-         (roll (kern-dice-roll "1d20"))
-         )
-    ;(println "power + roll vs dc =>" power "+" roll ">" dc "?")
-    (if (= 0 dc)
-        result-no-target
-        (if (> (+ power roll) dc)
-            (if (ifc unlock-sig ktarg caster)
-                result-ok
-                result-no-effect)
-            (if (< 5 roll) 
-                result-critical-fail
-                result-failed)
-        ))))
-
 (define (powers-unlock caster ktarg power)
-  (powers-unlock-generic caster ktarg power 'get-unlock-dc 'unlock))
+  (if ((kobj-ifc ktarg) 'unlock ktarg caster)
+      result-ok
+      result-no-effect))
 
 (define (powers-unlock-magic caster ktarg power)
-  (powers-unlock-generic caster ktarg power 'get-magic-unlock-dc 'magic-unlock))
+  (if ((kobj-ifc ktarg) 'magic-unlock ktarg caster)
+      result-ok
+      result-no-effect))
 	
 (define (powers-view caster ktarg power)
 	(kern-map-center-camera (kern-obj-get-location caster))
