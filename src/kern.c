@@ -27,6 +27,7 @@
 #include "character.h"
 #include "cmd.h"
 #include "conv.h"
+#include "config.h"
 #include "ctrl.h"
 #include "dice.h"
 #include "effect.h"
