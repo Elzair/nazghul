@@ -1997,7 +1997,7 @@
 
 (kern-mk-place
  'p_demo_scene   ; tag
- "Gate Portal"   ; name
+ "Demo Scene"    ; name
  nil             ; sprite
  m_demo_scene    ; map
  #f              ; wraps
