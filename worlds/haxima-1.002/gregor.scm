@@ -46,7 +46,9 @@
   (cast-missile-proc knpc ch_nate t_deathball)
   (aside kpc 'ch_nate "Gack!")
   (prompt-for-key)
-  (say knpc "[He turns to you] You shouldn't travel with folks like that. People might get the wrong idea about you.")
+  (if (equal? kpc ch_nate)
+      (kern-conv-end)
+      (say knpc "[He turns to you] You shouldn't travel with folks like that. People might get the wrong idea about you."))
   )
   
 
