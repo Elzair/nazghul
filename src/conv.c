@@ -188,7 +188,7 @@ static int conv_prefix_cmp(char *wptr, char *cptr)
                 return 1;
         }
 
-        if (*wptr && !isspace(*wptr) && len < 4) {
+        if (*wptr && !isspace(*wptr) && !ispunct(*wptr) && len < 4) {
                 /* candidate is short but word is not */
                 return 1;
         }
