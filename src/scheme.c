@@ -4927,3 +4927,15 @@ int main(int argc, char **argv) {
 }
 
 #endif
+
+int scm_len(scheme *sc, pointer list)
+{
+        int len = 0;
+
+        while (scm_is_pair(sc, list)) {
+                len++;
+                list = scm_cdr(sc, list);
+        }
+
+        return len;
+}

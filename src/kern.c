@@ -172,18 +172,6 @@ static void kern_run_wq_job(struct wq_job *job, struct list *wq)
 }
 /*****************************************************************************/
 
-static int scm_len(scheme *sc, pointer list)
-{
-        int len = 0;
-
-        while (scm_is_pair(sc, list)) {
-                len++;
-                list = scm_cdr(sc, list);
-        }
-
-        return len;
-}
-
 static void image_dtor(void *val)
 {
         images_del((struct images*)val);
@@ -1650,55 +1638,20 @@ static int kern_load_hooks(scheme *sc, pointer hook_tbl, Object *obj)
 
 static void kern_load_conv(scheme *sc, pointer sym, Object *obj)
 {
-        int len;
         struct conv *conv;
         struct closure *proc;
 
-        if (sym == sc->NIL) {
-                return;
-        }
-
-        pointer ifc = sc->vptr->find_slot_in_env(sc, sc->envir, sym, 1);
-        if (! scm_is_pair(sc, ifc)) {
-                load_err("%s symbol '%s' not found in top-level environment", __FUNCTION__, scm_sym_val(sc, sym));
-                return;
-        }
-
-        pointer clos = scm_cdr(sc, ifc);
-        if (! scm_is_closure(sc, clos)) {
-                load_err("%s() '%s' not a closure", __FUNCTION__, scm_sym_val(sc, sym));
-                return;
-        }
-
         if (! (proc = closure_new_ref(sc, sym))) {
-                load_err("%s() closure_new failed", __FUNCTION__);
+                load_err("%s: closure_new failed", __FUNCTION__);
                 return;
         }
 
-        pointer env = scm_cdr(sc, clos);
-        pointer vtable = scm_cdr(sc, scm_car(sc, scm_car(sc, env)));
-
-        len = scm_len(sc, vtable);
-
-        if (!(conv = conv_new(proc, len))) {
-                load_err("%s() conv_new failed", __FUNCTION__);
+        if (!(conv = conv_new(proc))) {
+                load_err("%s: conv_new failed", __FUNCTION__);
                 goto done2;
         }
 
-        while (scm_is_pair(sc, vtable)) {
-                pointer binding = scm_car(sc, vtable);
-                vtable = scm_cdr(sc, vtable);
-                pointer var = scm_car(sc, binding);
-                if (conv_add_keyword(conv, scm_sym_val(sc, var))) {
-                        load_err("%s() conv_add_keyword failed", __FUNCTION__);
-                        goto done;
-                }
-        }
-
-        conv_sort_keywords(conv);
         obj->setConversation(conv);
-
- done:
         conv_unref(conv);
  done2:
         closure_unref(proc);

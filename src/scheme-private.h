@@ -192,6 +192,7 @@ int is_promise(pointer p);
 int is_environment(pointer p);
 int is_immutable(pointer p);
 void setimmutable(pointer p);
+int scm_len(scheme *sc, pointer list);
 
 /* convenience macros for extrenal code that uses scheme internals */
 #define scm_protect(sc, cell) \

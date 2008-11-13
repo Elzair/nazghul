@@ -34,6 +34,7 @@
 #include <string.h>
 #include "closure.h"
 #include "log.h"
+#include "scheme-private.h" /* for keyword processing */
 #include "session.h"
 
 #include <ctype.h>
@@ -47,12 +48,11 @@
  * Conversation structure.
  */
 struct conv {
-        struct closure *proc; /* Closure which responds to keywords. */
-        int ref; /* Reference count. */
-        int n_keywords; /* Size of the keywords array. */
-        int key_index; /* Index of next empty keyword slot. */
-        char **keywords; /* Keyword array. */
-        bitset_t *marked; /* Used keywords */
+    struct closure *proc; /* Closure which responds to keywords. */
+    int ref; /* Reference count. */
+    int n_keywords; /* Size of the keywords array. */
+    char **keywords; /* Keyword array. */
+    bitset_t *marked; /* Used keywords */
 };
 
 static int conv_room, conv_len;
@@ -134,7 +134,7 @@ static void conv_del(struct conv *conv)
 
                 int i;
 
-                for (i = 0; i < conv->key_index; i++) {
+                for (i = 0; i < conv->n_keywords; i++) {
                         if (conv->keywords[i]) {
                                 free(conv->keywords[i]);
                         }
@@ -205,7 +205,7 @@ static int conv_prefix_cmp(char *wptr, char *cptr)
  */
 static int conv_lookup_keyword(struct conv *conv, char *word)
 {
-        int min = 0, max = conv->key_index, pivot;
+        int min = 0, max = conv->n_keywords, pivot;
 
         while (max > min) {
 
@@ -252,7 +252,76 @@ static void conv_mark_if_keyword(struct conv *conv, char *word)
         }
 }
 
-struct conv *conv_new(struct closure *proc, int n_keywords)
+static int conv_add_keyword(struct conv *conv, char *keyword, int key_index)
+{
+    assert(key_index < conv->n_keywords);
+    if (!(conv->keywords[key_index] = strdup(keyword))) {
+        warn("%s: strdup failed on %s", __FUNCTION__, keyword);
+        return -1;
+    }
+    return 0;
+}
+
+static void conv_sort_keywords(struct conv *conv)
+{
+        qsort(conv->keywords, conv->n_keywords, sizeof(char*), conv_sort_cmp);
+}
+
+static void conv_highlight_keywords(struct conv *conv)
+{
+    int key_index = 0;
+    scheme *sc = conv->proc->sc;
+    pointer sym = conv->proc->code;
+    
+    assert(sc);
+    assert(sym);
+
+    if (sym == sc->NIL) {
+        warn("%s: conv proc not a symbol", __FUNCTION__);
+        return;
+    }
+
+    pointer ifc = sc->vptr->find_slot_in_env(sc, sc->envir, sym, 1);
+    if (! scm_is_pair(sc, ifc)) {
+        warn("%s: conv '%s' has no value", __FUNCTION__, scm_sym_val(sc, sym));
+        return;
+    }
+
+    pointer clos = scm_cdr(sc, ifc);
+    if (! scm_is_closure(sc, clos)) {
+        warn("%s: conv '%s' not a closure", __FUNCTION__, scm_sym_val(sc, sym));
+        return;
+    }
+
+    pointer env = scm_cdr(sc, clos);
+    pointer vtable = scm_cdr(sc, scm_car(sc, scm_car(sc, env)));
+
+    conv->n_keywords = scm_len(sc, vtable);
+
+    if (!(conv->keywords = (char**)calloc(conv->n_keywords, sizeof(char*)))) {
+        warn("%s: failed to allocate keyword array size %d", __FUNCTION__, conv->n_keywords);
+        return;
+    }
+
+    if (!(conv->marked = bitset_alloc(conv->n_keywords))) {
+        warn("%s: failed to allocate bitset array size %d", __FUNCTION__, conv->n_keywords);
+        return;
+    }
+
+    while (scm_is_pair(sc, vtable)) {
+        pointer binding = scm_car(sc, vtable);
+        vtable = scm_cdr(sc, vtable);
+        pointer var = scm_car(sc, binding);
+        if (conv_add_keyword(conv, scm_sym_val(sc, var), key_index)) {
+            return;
+        }
+        key_index++;
+    }
+
+    conv_sort_keywords(conv);
+}
+
+struct conv *conv_new(struct closure *proc)
 {
         struct conv *conv;
 
@@ -260,17 +329,6 @@ struct conv *conv_new(struct closure *proc, int n_keywords)
                 return NULL;
         }
 
-        if (!(conv->keywords = (char**)calloc(n_keywords, sizeof(char*)))) {
-                conv_del(conv);
-                return NULL;
-        }
-
-        if (!(conv->marked = bitset_alloc(n_keywords))) {
-                conv_del(conv);
-                return NULL;
-        }
-
-        conv->n_keywords = n_keywords;
         conv->ref = 1;
         conv->proc = proc;
         closure_ref(proc);
@@ -281,21 +339,6 @@ struct conv *conv_new(struct closure *proc, int n_keywords)
 void conv_save(struct conv *conv, struct save *save)
 {
         closure_save(conv->proc, save);
-}
-
-int conv_add_keyword(struct conv *conv, char *keyword)
-{
-        assert(conv->key_index < conv->n_keywords);
-        if (!(conv->keywords[conv->key_index] = strdup(keyword))) {
-                return -1;
-        }
-        conv->key_index++;
-        return 0;
-}
-
-void conv_sort_keywords(struct conv *conv)
-{
-        qsort(conv->keywords, conv->key_index, sizeof(char*), conv_sort_cmp);
 }
 
 void conv_unref(struct conv *conv)
@@ -312,12 +355,6 @@ void conv_ref(struct conv *conv)
         conv->ref++;
 }
 
-char *conv_highlight_keywords(struct conv *conv, char *orig)
-{
-        return NULL;
-}
-
-
 void conv_end()
 {
         conv_done = 1;
@@ -328,6 +365,10 @@ void conv_enter(Object *npc, Object *pc, struct conv *conv)
 	struct KeyHandler kh;
 
         assert(conv);
+
+        if (! conv->keywords && conv_keyword_highlighting) {
+            conv_highlight_keywords(conv);
+        }
 
         /* If NPC initiates conversation, make sure we have a valid session
          * subject, else describe() will crash when determining if unknown NPC
@@ -468,7 +509,6 @@ void conv_enable_keyword_highlighting(int enable)
 {
         conv_keyword_highlighting = !!enable;
 }
-
 
 #else /* TEST_PORTRAITS */
 
@@ -972,4 +1012,4 @@ static void conv_op_run(struct applet *applet, SDL_Rect *dims, struct session *s
 }
 
 
-#endif
+#endif /* TEST_PORTRAITS */

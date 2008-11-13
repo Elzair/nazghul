@@ -37,12 +37,10 @@ struct conv;
  * Allocate a conversation struct and a fixed number of keywords slots.
  *
  * @param proc becomes the proc field with an added refcount.
- * @param n_keywords becomes the n_keywords field and is used to allocate the
- * keywords array.
  * @returns a new converstation struct on success, else NULL if allocaition
  * failed.
  */
-struct conv *conv_new(struct closure *proc, int n_keywords);
+struct conv *conv_new(struct closure *proc);
 
 /**
  * Save a conversation to the session file.
@@ -51,23 +49,6 @@ struct conv *conv_new(struct closure *proc, int n_keywords);
  * @param save is the save object.
  */
 void conv_save(struct conv *conv, struct save *save);
-
-/**
- * Add another keyword to the array. A copy of the keyword will be created.
- *
- * @param conv is the conversation.
- * @param keyword is the keyword to add.
- * @returns 0 on success, non-zero if a copy could not be allocated.
- */
-int conv_add_keyword(struct conv *conv, char *keyword);
-
-/**
- * Sort the conversation keywords. You must call this before calling
- * conv_has_prefix(), or that will not work properly.
- *
- * @param is the conversation.
- */
-void conv_sort_keywords(struct conv *conv);
 
 /**
  * Release a reference to a conversation. This may delete it.
