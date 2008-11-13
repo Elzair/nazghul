@@ -150,9 +150,8 @@ Use the ANNOUNCE template in this directory to create the release announcement.
 
 APPENDIX A: Instructions for Release Maintainers
 
-(1) ftp to upload.sourceforge.net and login as "anonymous" (I don't believe a
-    password is required, or you can just use your email address) and put your
-    file in the /incoming directory. Make sure to use binary mode.
+(1) sftp to frs.sourceforge.net and login using your SourceForge user name and
+    password. Put the file in the uploads directory.
 
 (2) Login to sourceforge via your browser
 
