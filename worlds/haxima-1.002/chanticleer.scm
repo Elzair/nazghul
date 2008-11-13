@@ -239,7 +239,7 @@
                      (say knpc "[He leans in close and whispers loudly] "
                           "Ever seen a witch carry a sword?")
                      (say knpc
-                          "Ah, our mysterious inkeeper...\n"
+                          "Ah, our mysterious innkeeper...\n"
                           "\n"
                           " When the gray dove is weeping\n"
                           " And the whole world is sleeping\n"
