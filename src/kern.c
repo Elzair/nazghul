@@ -1641,6 +1641,10 @@ static void kern_load_conv(scheme *sc, pointer sym, Object *obj)
         struct conv *conv;
         struct closure *proc;
 
+        if (sym == sc->NIL) {
+            return;
+        }
+
         if (! (proc = closure_new_ref(sc, sym))) {
                 load_err("%s: closure_new failed", __FUNCTION__);
                 return;
