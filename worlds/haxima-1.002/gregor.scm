@@ -35,16 +35,34 @@
 ;; and the first-time player.
 ;;----------------------------------------------------------------------------
 
+(define (gregor-kill-nate knpc kpc)
+  (say knpc "[He points a trembling finger at Nate] I have something for you.")
+  (aside kpc 'ch_nate "[Mumbling] What does this old fool want?")
+  (prompt-for-key)
+  (say knpc "[He takes out a scroll] It cost me a lot. I can't read it, but she told me what it says when I bought it.")
+  (aside kpc 'ch_nate "Wait... is that a...?")
+  (prompt-for-key)
+  (say knpc "XEN CORP!")
+  (cast-missile-proc kpc ch_nate t_deathball)
+  (aside kpc 'ch_nate "Gack!")
+  (prompt-for-key)
+  (say knpc "[He turns to you] You shouldn't travel with folks like that. People might get the wrong idea about you.")
+  )
+  
+
 (define (gregor-hail knpc kpc)
-  (if (in-inventory? kpc t_letter_from_enchanter)
-      (say knpc "I see you got your stuff, and that letter from the Enchanter, eh?"
-	   "Don't forget to ready your weapons before leaving. "
-           "It's dangerous out there!")
-      (say knpc "[You meet a grizzled old peasant]"
-           " Welcome, Wanderer. I've been watching for you."
-           " There's some things that belong to you, over in yonder cave."
-           " Go in where the chest is, open it, and get the things inside."
-	   " It's all for you.")))
+  (if (in-player-party? 'ch_nate)
+      (gregor-kill-nate knpc kpc)
+      ((if (in-inventory? kpc t_letter_from_enchanter)
+           (say knpc "I see you got your stuff, and that letter from the Enchanter. "
+                "Don't forget to ready your weapons before leaving. "
+                "It's dangerous out there!")
+           (say knpc "[You meet a grizzled old peasant]"
+                " Welcome, Wanderer. I've been watching for you."
+                " There's some things that belong to you, over in yonder cave."
+                " Go in where the chest is, open it, and get the things inside."
+                " It's all for you.")))
+      ))
 
 ;; Some prompting with initial commands:
 ;; 
@@ -66,7 +84,7 @@
 
 (define (gregor-dang knpc kpc)
   (say knpc "Very dangerous! If you need healing, a town inn is the safest place. "
-       "You can camp in the wilderness, but it's dangerous when you're alone and have no one to keep watch. "
+       "You can camp in the wilderness but it's dangerous when you're alone and have no one to keep watch. "
        "Of course, there are spells and potions for healing, too."))
 
 (define (gregor-dead knpc kpc)
@@ -83,30 +101,17 @@
 
 (define (gregor-ench knpc kpc)
   (quest-data-assign-once 'questentry-calltoarms)
-  (say knpc "The Enchanter? "
-       "He's one of the Wise, and is a kind and noble soul. "
-       "It is said that he forsaw the coming of a Wanderer, such as yourself. "
-       "He wishes to speak with you, and has asked me to direct you to him. "
-       "Do you want directions? ")
+  (say knpc "The Enchanter is one of the Wise. "
+       "He told me to look out for a Wanderer like you. "
+       "If I saw one I was to send him his way. You want directions? ")
   (cond ((yes? kpc)
-     (quest-data-update 'questentry-calltoarms 'directions 1)
-	 (say knpc "He dwells in a tower in the middle of a terrible swamp.\n"
-	      "\n"
-	      "To get there, \n"
-	      "  take the road South and West \n"
-	      "  to the keep that guards the pass.\n"
-	      "\n"
-	      "You shall meet rangers there, and soldiers tasked with guarding that keep.\n"
-	      "\n"
-	      "Through the pass, \n"
-	      "  head West and North \n"
-	      "  to Trigrave.\n"
-	      "\n"
-	      "The journey from there, I'm afraid may be difficult -- fear the swamps!"))
-	(else 
-	 (say knpc "As you wish. If you should want directions later, ask me of the Enchanter.")
-	 ))
-)
+         (quest-data-update 'questentry-calltoarms 'directions 1)
+         (say knpc "He lives in a tower in a swamp, somewhere west over the mountains. "
+	      "Take the road south, then follow it west and ask the rangers at the keep.")
+         (else 
+          (say knpc "As you wish. If you should want directions later, ask me of the Enchanter.")
+          ))
+        ))
 
 (define (gregor-cave knpc kpc)
   (say knpc "There, that little trail that leads off the main path to the South and West. "
@@ -114,13 +119,13 @@
        "Come back and we'll talk again, if you have more questions."))
 
 (define (gregor-ches knpc kpc)
-  (say knpc "Yes. Open it! Get the stuff inside!"))
+  (say knpc "Go ahead and open it and get the stuff inside."))
 
 (define (gregor-stuf knpc kpc)
-  (say knpc "The common folk made offerings of such things for you, knowing one day a Wanderer would come again."))
+  (say knpc "The common folk made offerings of such things, thinking one day a Wanderer might come again."))
 
 (define (gregor-leav knpc kpc)
-  (say knpc "When you're ready to leave just follow the trail south and step off the map."))
+  (say knpc "If you want to leave just follow the trail south and step off the map."))
 
 (define (gregor-band knpc kpc)
   (let ((quest (gregor-quest (kobj-gob-data knpc))))
@@ -137,11 +142,13 @@
            (say knpc "Bandits are in the woods. "
                 "They robbed me in my own hut. "
                 "I tried to fight them, "
-                "and now I walk with a limp and a cane. "
-                "The rangers would not help me. "
-                "I have a granddaughter living with me now, "
-                "and I am afraid of what they will do the next time they come... "
-                "If it's not too much trouble, will you help me?")
+                "and now I walk with a limp and a cane.")
+           (prompt-for-key)
+           (say knpc "I have a granddaughter living with me now. "
+                "She's just a little girl, but sometimes bad men don't care about that. "
+                "I am afraid of what they will do the next time.")
+           (prompt-for-key)
+           (say knpc "I hate to ask, but they say Wanderers used to help folks. Will you help me now?")
            (cond ((yes? kpc)
                   (say knpc "Thank you. "
                        "When you get your equipment, go to Green Tower. "
