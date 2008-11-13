@@ -42,6 +42,9 @@
 (define (ini-default knpc kpc)
   (say knpc "I can't help you with that."))
 
+(define (ini-notyet knpc kpc)
+  (say knpc "I probably shouldn't talk to civilians about that."))
+
 (define (ini-name knpc kpc)
   (say knpc "I am Inago, but everyone calls me Ini."))
 
@@ -75,7 +78,7 @@
      			(say knpc (if (is-player-party-member? knpc) "We" "You") " will need to look for the great stairs, in the northern part of the caves.")
      			(say knpc "Beware of the dungeon's inhabitants!")
      			)
-     		(ini-default knpc kpc))))
+     		(ini-notyet knpc kpc))))
      		
 (define (ini-inha knpc kpc)
    (let ((ini (kobj-gob-data knpc)))
@@ -84,7 +87,7 @@
      			(say knpc "Everytime we try to clear the place out, another band of gints or trolls decides to move in.")
      			(say knpc (if (is-player-party-member? knpc) "We" "You") "'d best be prepared for a long, hard battle.")
      			)
-     		(ini-default knpc kpc))))
+     		(ini-notyet knpc kpc))))
 
 (define (ini-stair knpc kpc)
    (let ((ini (kobj-gob-data knpc)))
@@ -92,7 +95,7 @@
      		(begin
      			(say knpc "I know the stairs are somewhere in the north, but I'm afraid I've never been that far, so I don't know their precise location.")
      			)
-     		(ini-default knpc kpc))))
+     		(ini-notyet knpc kpc))))
      			
 (define (ini-job knpc kpc)
   (say knpc "I'm a paladin. But I don't like it very much."))
