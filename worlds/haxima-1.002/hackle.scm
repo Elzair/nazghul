@@ -144,9 +144,9 @@
        "  And a mouse has both!\n"
        "  In the middle of the night\n"
        "  Down it will go!\n"
-       "Does it know what REVEALS?")
+       "Does it know what ^c+mreveals^c-?")
   (if (kern-conv-get-yes-no? kpc)
-      (say knpc "Then let it REVEAL and understand my riddle!")
+      (say knpc "Then let it ^c+mreveal^c- and understand my riddle!")
       (begin
         (say knpc "Wis Quas! The Red Bitch has a scroll, but has not the "
              "wisdom.")))
@@ -154,7 +154,7 @@
 
 (define (hackle-reve knpc kpc)
   (say knpc "The Bill-boy knows where the mouse disappeared! "
-       "Let it REVEAL there!"))
+       "Let it ^c+mreveal^c- there!"))
 
 (define (hackle-midd knpc kpc)
   (say knpc "Yes! The middle of the night!"))
