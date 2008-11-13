@@ -1,10 +1,10 @@
 (define (quest-assign-always quest target)
 	(let ((notifytext (if (qst-complete? quest)
-						"Quest completed: "
-						"New quest: "
+						"^c+mQuest completed: "
+						"^c+mNew quest: "
 						)))
 		(if use-quest-pane
-			(kern-log-msg notifytext (qst-title quest))
+			(kern-log-msg notifytext (qst-title quest) "^c-")
 		)
 		#t
 	))
@@ -77,7 +77,7 @@
 	
 (define (quest-complete quest)
 	(if (and (quest-assigned? quest) use-quest-pane)
-		(kern-log-msg "Quest completed: " (qst-title quest))
+		(kern-log-msg "^c+mQuest completed: " (qst-title quest) "^c-")
 		)
 	(qst-complete! quest)
 	)
@@ -86,7 +86,7 @@
 (define (quest-notify subfunction)
 	(lambda (quest) 
 		(if (and (quest-assigned? quest) use-quest-pane)
-			(kern-log-msg "Quest updated: " (qst-title quest))
+			(kern-log-msg "^c+mQuest updated: " (qst-title quest) "^c-")
 			)
 		(if (not (null? subfunction))
 			(subfunction quest))

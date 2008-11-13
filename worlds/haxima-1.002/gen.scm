@@ -177,7 +177,10 @@
 (define (gen-thie knpc kpc)
   (say knpc "I've seen no one odd around here, but the goblins who live in "
        "the north wood recently saw a lone man traveling northeast toward "
-       "Bole."))
+       "Bole.")
+       (quest-data-update 'questentry-thiefrune 'tower 1)
+       (quest-data-update-with 'questentry-thiefrune 'bole 1 (quest-notify (grant-party-xp-fn 10)))
+       )
 
 (define (gen-kama knpc kpc)
   (if (is-player-party-member? ch_kama)

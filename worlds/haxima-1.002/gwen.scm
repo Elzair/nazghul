@@ -72,7 +72,9 @@
                   (say knpc "Perhaps another time.")))))))
 
 (define (gwen-thie knpc kpc)
-  (say knpc "Some recent travelers from Green Tower met a man in great haste heading east through the pass. You might try asking around in Green Tower."))
+  (say knpc "Some recent travelers from Green Tower met a man in great haste heading east through the pass. You might try asking around in Green Tower.")
+  (quest-data-update-with 'questentry-thiefrune 'tower 1 (quest-notify (grant-party-xp-fn 10)))
+  )
 
 (define gwen-conv
   (ifc basic-conv

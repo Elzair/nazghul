@@ -198,7 +198,10 @@
   (say knpc "Hm. The goblin brute we have locked up below may be a thief. But "
        "he's been in our prison for some time. Now, our rangers did report "
        "a lone man traveling north through the forest, but we know not "
-       "whence. The only thing to the north is Bole."))
+       "whence. The only thing to the north is Bole.")
+       (quest-data-update 'questentry-thiefrune 'tower 1)
+       (quest-data-update-with 'questentry-thiefrune 'bole 1 (quest-notify (grant-party-xp-fn 10)))
+       )
 
 (define (deric-accu knpc kpc)
   (say knpc "I assure you, my good man, there are no Accursed around here."))

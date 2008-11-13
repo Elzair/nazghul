@@ -91,7 +91,7 @@
  ;; spellbooks
 (put (kern-mk-obj t_spell_book_illusion_1          1)  3  1)
 (put (kern-mk-obj t_spell_book_force_magick_fields 1)  2 12)
-(put (kern-mk-obj t_spell_book_force_magick_matter 1) 18 17)
+(put (kern-mk-obj t_spell_book_force_magick_matter 1) 16 17)
 
   ;; lucre
   (put (kern-mk-obj t_gold_coins 74) 6 2)
@@ -103,7 +103,7 @@
   (put (mk-bed) 3 1)
   
   )
- nil ; hooks
+ (list 'quest-thiefrune-den5) ; hooks
  nil ; edge entrances
  )
 

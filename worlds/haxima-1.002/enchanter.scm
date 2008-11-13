@@ -159,9 +159,10 @@
 
     ;; First Quest -- find the stolen Rune
     (define (finish-first-quest)
-      (kern-obj-add-gold kpc 200)
-      (kern-char-add-experience kpc 100)
       (say knpc "Ah, I see you've found my Rune at last!")
+      (kern-obj-add-gold kpc 200)
+		(quest-data-update-with 'questentry-thiefrune 'done 1 (grant-party-xp-fn 20))
+		(quest-complete (quest-data-get 'questentry-thiefrune))
       (say knpc "Perhaps your are not completely useless. "
            "Did you encounter any... resistance?")      
       (kern-conv-get-yes-no? kpc)
@@ -253,7 +254,8 @@
               		(quest-data-assign-once 'questentry-calltoarms)
                   	(quest-data-update-with 'questentry-calltoarms 'done 1 (grant-xp-fn 10))
                     (say knpc "Good! Rangers have tracked the thief to "
-                         "Trigrave. Go there and inquire about a THIEF.")
+                         "Trigrave. Go there and inquire about a ^c+mthief^c-.")
+							(quest-data-assign-once 'questentry-thiefrune)
                     (quest-accepted! (ench-first-quest (gob knpc)) #t)
                     )
                   ;; no -- player is not willing
@@ -335,12 +337,14 @@
        "He is greedy and very cunning, so be wary of him."))
 
 (define (ench-thie knpc kpc)
+	;;in case quest generated once in progress
+	(quest-data-assign-once 'questentry-thiefrune)
   (if (quest-done? (ench-first-quest (gob knpc)))
       (say knpc "Although a nuisance, he was only a middleman. "
            "I hope you did not treat him too harshly.")
       (say knpc "The thief who stole my item must be very clever. The rangers "
            "lost his trail in Trigrave. Inquire among everyone there if they "
-           "have seen the THIEF.")))
+           "have seen the ^c+mthief^c-.")))
 
 (define (ench-kalc knpc kpc)
   (say knpc "Kalcifax? She's rather hard to keep track of I'm afraid."))

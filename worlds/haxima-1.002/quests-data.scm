@@ -1,3 +1,4 @@
+
 (let*
 	(
 		(newtbl (tbl-mk))
@@ -68,6 +69,26 @@
 	;; 'done- pc has been enlisted
 ))
 	
+(questadd (qst-mk "To Catch a Thief"
+	'questentry-thiefrune
+	(kern-ui-paginate-text
+		"The Enchanter has asked you to investigate a theft from his tower."
+		""
+		"The ^c+mthief^c- has been tracked as far as Trigrave. The townsfolk there may be able to give you further information."
+	)
+	'quest-assign-always
+	'quest-status-inprogress
+	's_brigand
+	(tbl-build
+		'on-update 'quest-thiefrune-update
+		'bonus-xp 0
+		)
+	;; '
+	;; 'tower- pc has reached tower
+	;; 'talked- pc has talked to the enchanter
+	;; 'done- pc has been enlisted
+))
+
 (questadd (qst-mk "Bandit Troubles"
 	'questentry-bandits
 	(kern-ui-paginate-text

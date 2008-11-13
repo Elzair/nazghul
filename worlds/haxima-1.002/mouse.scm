@@ -15,6 +15,10 @@
 (define (mouse-mk) (list #t))
 (define (mouse-first-meeting? mouse) (car mouse))
 (define (mouse-set-first-meeting! mouse val) (set-car! mouse val))
+(define (mouse-talked)
+	(quest-data-update-with 'questentry-thiefrune 'talked 1 (quest-notify (grant-party-xp-fn 10)))
+	)
+
 
 (define (mouse-meet-first-time knpc kpc)
 
@@ -28,11 +32,17 @@
     (say knpc "Hi. You weren't sent by the Red Lady, were you?")
     (if (yes? kpc)
         (mouse-disappear)
-        (say knpc "Whew! You scared me for a minute.")))
+        (begin
+        	(say knpc "Whew! You scared me for a minute.")
+        	(mouse-talked)
+        )
+    ))
 
   (define (mouse-gratitude)
     (say knpc "Praise be to Alopex! The Red Lady is dead! "
-         "You've done me a great favor."))
+         "You've done me a great favor.")
+         (mouse-talked)
+         )
 
   (define (kathryn-speech)
     (say ch_kathryn "Fool, you have led me right to the thief!")
@@ -124,7 +134,11 @@
   (let ((mouse (kobj-gob-data knpc)))
     (if (mouse-first-meeting? mouse)
         (mouse-meet-first-time knpc kpc)
-        (say knpc "Ah, hello. Heh."))))
+        (begin
+        	(say knpc "Ah, hello. Heh.")
+   	        (mouse-talked)
+	    )
+        )))
 
 (define (mouse-default knpc kpc)
   (say knpc "Got me there."))
@@ -172,7 +186,9 @@
                        "whatever you can give me for it.")
                   (kern-obj-add-gold kpc (- 0 price)))))
           (kern-obj-remove-from-inventory knpc t_rune_k 1)
-          (kern-obj-add-to-inventory kpc t_rune_k 1))
+          (kern-obj-add-to-inventory kpc t_rune_k 1)
+          (quest-data-update-with 'questentry-thiefrune 'recovered 1 (quest-notify (grant-party-xp-fn 50)))
+          )
         
         (say knpc "This rune I got for the red lady has been nothing but "
              "trouble since I first heard of it. I don't even know what "

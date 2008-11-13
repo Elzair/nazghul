@@ -54,3 +54,5 @@
  )
 
 (mk-place-music p_traps_1 'ml-dungeon-town)
+
+(kern-place-add-on-entry-hook p_traps_1 'quest-thiefrune-den1)

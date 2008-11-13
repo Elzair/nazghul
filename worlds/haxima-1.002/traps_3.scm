@@ -86,3 +86,5 @@
  )
 
 (mk-place-music p_traps_3 'ml-dungeon-adventure)
+
+(kern-place-add-on-entry-hook p_traps_3 'quest-thiefrune-den3)
