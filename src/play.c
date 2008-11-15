@@ -22,6 +22,7 @@
 /* 12/14/2002  Added HANDLE command by Sam Glasby.
  */
 #include "config.h"
+#include "escape.h"
 #include "foogod.h"
 #include "play.h"
 #include "session.h"
@@ -191,6 +192,10 @@ static void play_loop(void)
                 times[2] = SDL_GetTicks();
                 eventHandlePending();
 
+                if (Reload) {
+                        play_reload();
+                }
+
                 // ------------------------------------------------------------
                 // Check for end-of-game conditions.
                 // ------------------------------------------------------------
@@ -322,6 +327,7 @@ int playRun(char *fname)
 	eventPushQuitHandler(&qh);
 	eventPushTickHandler(&th);
 	eventAddHook(updateAfterEvent);
+        escape_start_handler();
 
 	Quit = false;
         tick_run();
@@ -331,6 +337,7 @@ int playRun(char *fname)
         play_loop();
 
 	// Cleanup the event handlers.
+        escape_stop_handler();
 	eventPopTickHandler();
 	eventPopQuitHandler();
 	//eventPopKeyHandler();

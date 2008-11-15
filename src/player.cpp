@@ -1340,8 +1340,10 @@ void PlayerParty::endResting()
 
 static bool member_set_control_mode(class Character *member, void *data)
 {
+    if (member->isPlayerControlled()) {
         member->setControlMode(*((enum control_mode*)data));
-        return false;
+    }
+    return false;
 }
 
 enum party_control PlayerParty::getPartyControlMode()

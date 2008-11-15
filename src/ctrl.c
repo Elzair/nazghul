@@ -202,7 +202,6 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 cmdReload();
                 Session->subject = NULL;
                 return true;
-                break;
 
         case SDLK_F10:
                 cmdSettings();
@@ -977,7 +976,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         class Character *character = (class Character *) kh->data;
         class Object *portal;
-        class Character *solo_member;
 
         G_latency_start = SDL_GetTicks();
 
@@ -1015,33 +1013,18 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 cmdReload();
                 Session->subject = NULL;
                 return true;
-                break;
       
         case SDLK_F10:
                 cmdSettings();
                 break;
                         
         case 'f':
-
-                // ----------------------------------------------------
-                // Toggle Follow mode on or off. When turning follow
-                // mode off, set all party members to player
-                // control. When turning it on, set all party member to
-                // follow mode but set the leader to player control.
-                // ----------------------------------------------------
-                        
-                log_begin("Follow mode ");
-                if (player_party->getPartyControlMode() == 
-                    PARTY_CONTROL_FOLLOW) {
-                        log_end("OFF");
-                        player_party->enableRoundRobinMode();
-                } else {
-                        log_end("ON");
-                        player_party->enableFollowMode();
-                        if (! character->isLeader())
-                                character->endTurn();
+            if (cmdToggleFollowMode()) {
+                if (! character->isLeader()) {
+                    character->endTurn();
                 }
-                break;
+            }
+            break;
 
         case SDLK_1:
         case SDLK_2:
@@ -1052,20 +1035,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         case SDLK_7:
         case SDLK_8:
         case SDLK_9:                        
-
-                // ----------------------------------------------------
-                // Put a character in solo mode.
-                // ----------------------------------------------------
-                        
-                solo_member = 
-                        player_party->getMemberAtIndex(key - SDLK_1);
-                if (solo_member != NULL             &&
-                    !solo_member->isIncapacitated() &&
-                    solo_member->isOnMap()) {
-                        player_party->enableSoloMode(solo_member);
-                        character->endTurn();
-                }
-                break;
+            if (cmdSetSoloMode(key - SDLK_1)) {
+                character->endTurn();                        
+            }
+            break;
 
         case SDLK_0:
                 // ----------------------------------------------------

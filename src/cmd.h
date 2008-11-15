@@ -107,6 +107,8 @@ extern bool cmdLook(int x, int y);
 extern bool cmd_terraform(struct place *place, int x, int y);
 extern bool cmd_save_current_place (struct place * place);
 extern bool cmdSaveTerrainMap(class Character * pc);
+extern bool cmdSetSoloMode(int party_member_index);
+extern bool cmdToggleFollowMode(void);
 extern void cmdSettings(void);
 extern void cmdDrop(class Character *pc);
 extern void cmdYuse(class Character *pc);

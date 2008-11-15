@@ -4336,3 +4336,29 @@ void cmdYuse(class Character *actor)
         log_end(0);
 }
 #endif /* USE_SKILLS */
+
+bool cmdSetSoloMode(int party_member_index)
+{
+    class Character *solo_member = player_party->getMemberAtIndex(party_member_index);
+    if (solo_member != NULL             &&
+        !solo_member->isIncapacitated() &&
+        solo_member->isOnMap()) {
+        player_party->enableSoloMode(solo_member);
+        return true;
+    }
+    return false;
+}
+
+bool cmdToggleFollowMode(void)
+{
+    log_begin("Follow mode ");
+    if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW) {
+        log_end("OFF");
+        player_party->enableRoundRobinMode();
+        return false;
+    } else {
+        log_end("ON");
+        player_party->enableFollowMode();
+        return true;
+    }   
+}

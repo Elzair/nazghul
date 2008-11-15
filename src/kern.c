@@ -5344,6 +5344,26 @@ KERN_API_CALL(kern_char_set_fleeing)
 
 }
 
+KERN_API_CALL(kern_char_set_player_controlled)
+{
+        int val;
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-player-controlled");
+        if (!ch)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "b", &val)) {
+                rt_err("kern-char-set-player-controlled: bad args");
+                return sc->NIL;
+        }
+        
+        ch->setPlayerControlled(val);
+
+        return sc->NIL;
+
+}
+
 KERN_API_CALL(kern_char_get_species)
 {
         class Character *ch;
@@ -10039,6 +10059,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-known", kern_char_set_known);
         API_DECL(sc, "kern-char-set-level", kern_char_set_level);
         API_DECL(sc, "kern-char-set-mana", kern_char_set_mana);
+        API_DECL(sc, "kern-char-set-player-controlled", kern_char_set_player_controlled);
         API_DECL(sc, "kern-char-set-schedule", kern_char_set_schedule);
         API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
         API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);

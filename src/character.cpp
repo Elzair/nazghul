@@ -1467,7 +1467,7 @@ void Character::armThyself(void)
 {
 	struct knapsack ks;
 
-	assert(!isPlayerControlled());
+	//assert(!isPlayerControlled());
 
 	if (container == NULL)
 		return;
@@ -1894,12 +1894,60 @@ bool Character::isPlayerControlled() {
         return playerControlled;
 }
 
-void Character::setPlayerControlled(bool val) {
-        playerControlled = val;
-        if (playerControlled)
-                ctrl = ctrl_character_ui;
-        else
-                ctrl = ctrl_character_ai;
+void Character::setPlayerControlled(bool val) 
+{
+    if (val) {
+        playerControlled = true;
+        ctrl = ctrl_character_ui;
+
+        if (isPlayerPartyMember()) {
+            class Character *oldLeader, *newLeader;
+            switch (player_party->getPartyControlMode()) {
+            case PARTY_CONTROL_FOLLOW:
+                oldLeader = player_party->get_leader();
+                player_party->chooseNewLeader();
+                newLeader = player_party->get_leader();
+                if (oldLeader != newLeader) {
+                    oldLeader->setControlMode(CONTROL_MODE_FOLLOW);
+                }
+                if (newLeader != this) {
+                    setControlMode(CONTROL_MODE_FOLLOW);
+                }
+                break;
+            case PARTY_CONTROL_SOLO:
+                setControlMode(CONTROL_MODE_IDLE);
+                break;
+            case PARTY_CONTROL_ROUND_ROBIN:
+                setControlMode(CONTROL_MODE_PLAYER);
+                break;
+        }
+    }
+
+    } else {
+        playerControlled = false;
+        ctrl = ctrl_character_ai;
+
+        if (isPlayerPartyMember()) {
+            switch (player_party->getPartyControlMode()) {
+            case PARTY_CONTROL_FOLLOW:
+                if (isLeader()) {
+                    player_party->chooseNewLeader();
+                    assert(this != player_party->get_leader());
+                }
+                break;
+            case PARTY_CONTROL_SOLO:
+                if (isSolo()) {
+                    setSolo(false); // sets CONTROL_MODE_IDLE
+                    player_party->enableFollowMode();
+                }
+                break;
+            case PARTY_CONTROL_ROUND_ROBIN:
+                break;
+            }
+        }
+
+        setControlMode(CONTROL_MODE_AUTO);
+    }
 }
 
 void Character::setAttackTarget(class Character * newtarget) 
@@ -2652,14 +2700,17 @@ void Character::setSolo(bool val)
         solo = val;
 
         if (solo) {
-                attachCamera(true);
-                setControlMode(CONTROL_MODE_PLAYER);
-                log_msg("%s goes solo.", getName());
-                mapCenterCamera(getX(), getY());
-                mapSetDirty();
+            // Solo mode is used to cancel multi-turn tasks, the start of which
+            // set player-controlled to false
+            setPlayerControlled(true);
+            attachCamera(true);
+            setControlMode(CONTROL_MODE_PLAYER);
+            log_msg("%s goes solo.", getName());
+            mapCenterCamera(getX(), getY());
+            mapSetDirty();
         } else {
-                attachCamera(false);
-                setControlMode(CONTROL_MODE_IDLE);
+            attachCamera(false);
+            setControlMode(CONTROL_MODE_IDLE);
         }
 }
 
@@ -2951,7 +3002,9 @@ void Character::setLeader(bool val)
 
         if (is_leader) {
                 attachCamera(false);
-                setControlMode(CONTROL_MODE_IDLE);
+                if (isPlayerControlled()) {
+                    setControlMode(CONTROL_MODE_IDLE);
+                }
         } else {
                 attachCamera(true);
                 setControlMode(CONTROL_MODE_PLAYER);
@@ -2966,7 +3019,8 @@ void Character::setLeader(bool val)
 
 bool Character::canBeLeader()
 {
-        return (! isDead() && isOnMap() && ! isAsleep() && ! isCharmed());
+        return (! isDead() && isOnMap() && ! isAsleep() && ! isCharmed() && isPlayerControlled()
+            && (getActionPoints() > -(2*getActionPointsPerTurn())));
 }
 
 bool Character::isLeader()
@@ -3188,6 +3242,8 @@ void Character::save(struct save *save)
         if (isKnown()) {
                 save->write(save, "(kern-char-set-known kchar #t)\n");
         }
+
+        save->write(save, "(kern-obj-set-ap kchar %d)\n", getActionPoints());
 
         // close the 'let' block
         save->exit(save, "kchar)\n");

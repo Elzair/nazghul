@@ -172,7 +172,8 @@ nazghul_SOURCES =		\
 	applet.h \
 	session_hooks.h \
 	session_queries.h \
-	bitset.h
+	bitset.h \
+	escape.c escape.h
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \
