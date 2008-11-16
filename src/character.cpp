@@ -1149,8 +1149,6 @@ void Character::getEvasionVector(int *dx, int *dy)
         struct evasionVectorInfo info;
         int x2, y2;
 
-        printf("%s: getEvasionVector\n", getName());
-
         /* Get the vector away from foes. */
         memset(&info, 0, sizeof(info));
         info.subj = this;
@@ -1216,7 +1214,6 @@ bool Character::mapHasEdge()
         // don't want to deal with that right now, mostly because it
         // complicates the pathfinding heuristics, and I want to get this case
         // right first.
-        printf("%s: mapHasEdge\n", getName());
         return (place_get_parent(getPlace()));
 }
 
@@ -1237,7 +1234,6 @@ bool Character::exitMap()
 
 bool Character::followFleePath()
 {
-        printf("%s: followFleePath\n", getName());
         return (exitMap()
                 || pathfindTo(getPlace(), fleeX, fleeY, fleePathFlags));
 }
@@ -1278,17 +1274,12 @@ bool Character::findFleePath()
                 fleePathFlags = PFLAG_VERT;
         }
 
-        printf("%s: findFleePath: [%d %d]->[%d %d]\n", 
-               getName(), getX(), getY(), fleeX, fleeY);
-
         fleePathFound = true;
         return true;
 }
 
 bool Character::pathfindToMapEdge()
 {
-        printf("%s: pathfindToMapEdge\n", getName());
-
         if (fleePathFound
             && followFleePath()) {
                 return true;
@@ -1303,7 +1294,6 @@ bool Character::pathfindToMapEdge()
 
 bool Character::fleeToMapEdge()
 {
-        printf("%s: fleeToMapEdge\n", getName());
         return (mapHasEdge()
                 && pathfindToMapEdge());
 }
@@ -1311,7 +1301,6 @@ bool Character::fleeToMapEdge()
 bool Character::evade()
 {
         int dx = 0, dy = 0;
-        printf("%s: evade\n", getName());
         getEvasionVector(&dx, &dy);
         if (!dx && !dy) {
                 return false;
@@ -1322,7 +1311,6 @@ bool Character::evade()
 
 bool Character::flee()
 {
-        printf("%s: flee\n", getName());
         return (!isStationary()
                 && (fleeToMapEdge()
                     || evade()));
@@ -2796,10 +2784,6 @@ void Character::setControlMode(enum control_mode mode)
 
         if (isCharmed())
                 return;
-
-        if (!strcmp(getName(), "The Wanderer")) {
-            printf("%s <- %d\n", getName(), mode);
-        }
 
         control_mode = mode;
 
