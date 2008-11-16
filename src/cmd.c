@@ -2272,7 +2272,8 @@ int cmd_camp_in_wilderness(class Party *camper)
 
 void cmdLoiter(class Being *subject)
 {
-        int hours = 0;
+        int hours = 0, i = 0, num_pcs;
+        bool abort = false;
 
         cmdwin_clear();
         cmdwin_spush("Loiter");
@@ -2282,6 +2283,21 @@ void cmdLoiter(class Being *subject)
                 cmdwin_spush("foes nearby!");
                 log_msg("Loiter - foes nearby!");
                 return;
+        }
+        
+        /* Check if any party members are engaged in a task. */
+        num_pcs = player_party->getSize();
+        for (i = 0; i < num_pcs; i++) {
+            class Character *pc = player_party->getMemberAtIndex(i);
+            if (pc->engagedInTask()) {
+                log_msg("Loiter - %s engaged in task!", pc->getName());
+                abort = true;
+            }
+        }
+
+        if (abort) {
+            cmdwin_spush("busy with tasks!");
+            return;
         }
 
         /* Prompt for the number of hours. */
