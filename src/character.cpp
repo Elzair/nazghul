@@ -1058,14 +1058,18 @@ void Character::changeSleep(bool val)
                 // -----------------------------------------------------------
                 // Going to sleep.
                 // -----------------------------------------------------------
+            if (engagedInTask()) {
+                taskAbort();
+            }
 
-                if (isLeader()) {
-                        assert(isPlayerControlled());
-                        player_party->enableFollowMode();
-                } else if (isSolo()) {
-                        assert(isPlayerControlled());
-                        player_party->enableRoundRobinMode();
-                }
+
+            if (isLeader()) {
+                assert(isPlayerControlled());
+                player_party->enableFollowMode();
+            } else if (isSolo()) {
+                assert(isPlayerControlled());
+                player_party->enableRoundRobinMode();
+            }
 
         } else {
 
@@ -1380,6 +1384,7 @@ bool Character::dropItems()
 
 void Character::kill()
 {
+    // Why not turn this on again...? At least dropItems?
 // 	if (!isPlayerControlled() && isOnMap()) {
 // 		dropRdyArms();
 // 		dropItems();
@@ -1396,6 +1401,10 @@ void Character::kill()
                 container->relocate(getPlace(), getX(), getY());
                 obj_dec_ref(container);
                 container = NULL;
+        }
+
+        if (engagedInTask()) {
+            taskAbort();
         }
 
         if (isPlayerControlled()) {
@@ -1880,8 +1889,9 @@ void Character::setHp(int val)
 {
         hp = val;
         hp = clamp(hp, 0, getMaxHp());
-        if (hp == 0)
-                kill();
+        if (hp == 0) {
+            kill();
+        }
 }
 
 bool Character::isPlayerControlled() {
@@ -2375,7 +2385,7 @@ void Character::exec()
         bool noHostiles = false;
         bool appointmentChecked = false;
                 
-        printf("exec %s\n", getName());
+        //printf("exec %s\n", getName());
 
         startTurn();
         
