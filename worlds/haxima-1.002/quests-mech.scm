@@ -1,7 +1,7 @@
 (define (quest-assign-always quest target)
 	(let ((notifytext (if (qst-complete? quest)
-						"^c+mQuest completed: "
-						"^c+mNew quest: "
+						"^c+mQuest completed:^c-\n^c+m"
+						"^c+mNew quest:^c-\n^c+m"
 						)))
 		(if use-quest-pane
 			(kern-log-msg notifytext (qst-title quest) "^c-")
