@@ -50,8 +50,10 @@
 ;; set table values from name/value list
 (define (tbl-set-all! tbl entrydata)
 	(if (not (null? entrydata))
-		(tbl-set! tbl (car entrydata) (car (cdr entrydata)))
-		(tbl-set-all! tbl (cddr entrydata))
+		(begin
+			(tbl-set! tbl (car entrydata) (car (cdr entrydata)))
+			(tbl-set-all! tbl (cddr entrydata))
+		)
 	))
 
 (define (tbl-build . entrydata)
@@ -60,6 +62,7 @@
 		tbl
 	))
 
-	
+(define (is-tbl? tbl)
+	(equal? (car tbl) '*tbl*))
 	
 	
