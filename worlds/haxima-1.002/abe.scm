@@ -82,6 +82,8 @@
 	 (say knpc "\n[He whistles softly]\n"
 	     "You have some of the Eight Keys to the Demon Gate?\n"
 	     "I shall examine them for you!")
+		(quest-data-update 'questentry-runeinfo 'abe 1)
+	 (quest-data-update-with 'questentry-runeinfo 'keys 1 (quest-notify (grant-party-xp-fn 20)))
 	(if (any-in-inventory? kpc (list t_rune_k))
 	    (say knpc "[He examines a rune] This is the Rune of Knowledge!")
 	    )
@@ -116,8 +118,11 @@
 
 (define (abe-demo knpc kpc)
   (say knpc "The Demon Gate was sealed shut by the Wise long ago. "
-       "Its location was blotted from all records, but legend puts it somewhere to the north. "
-       ))
+       "Its location was blotted from all records, but legend puts it somewhere to the north. ")
+		(quest-data-update 'questentry-runeinfo 'abe 1)
+	     (quest-data-update 'questentry-runeinfo 'keys 1)
+  		(quest-data-update-with 'questentry-runeinfo 'gate 1 (quest-notify (grant-party-xp-fn 30)))
+       )
 
 (define (abe-keys knpc kpc)
   (say knpc "Yes, the Demon Gate was locked with eight locks and the keys separated. "

@@ -89,6 +89,22 @@
 	;; 'done- pc has been enlisted
 ))
 
+(questadd (qst-mk "The Secret of the Runes"
+	'questentry-runeinfo
+	(kern-ui-paginate-text
+		"The stolen rune that you recovered must have great significance to prompt it's theft. The Enchanter has given you the task of seeking out this reason."
+		""
+		"He suggests that you start with the ^c+mAlchemist^c-, who may be found at Oparine."
+	)
+	'quest-assign-always
+	'quest-status-inprogress
+	's_runestone_k
+	(tbl-build
+		'on-update 'quest-runeinfo-update
+		'bonus-xp 0
+		)
+))
+
 (questadd (qst-mk "Bandit Troubles"
 	'questentry-bandits
 	(kern-ui-paginate-text

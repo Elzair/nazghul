@@ -111,6 +111,7 @@
            "You might start with the Alchemist near Oparine. "
            "Although obscenely greedy, "
            "he has devoted his life to the acquisition of secrets.")
+      (quest-data-assign-once 'questentry-runeinfo)
       (kern-conv-end)
       )
 
@@ -135,10 +136,14 @@
            "So my Rune is one of eight keys to the Demon Gate. "
            "Very well, you must find the rest. "
            "The Accursed have a head start on us. "
-           "No doubt they already have one of the Runes. "
+           "No doubt they already have some of the Runes. "
            "When you have found all the Runes return to me.")
       (quest-done! (ench-second-quest ench) #t)
-      (kern-char-add-experience kpc 100)
+      (quest-data-update 'questentry-runeinfo 'abe 1)
+      (quest-data-update 'questentry-runeinfo 'keys 1)
+      (quest-data-update 'questentry-runeinfo 'gate 1)
+      (quest-data-update-with 'questentry-runeinfo 'done 1 (grant-party-xp-fn 30))
+      (quest-complete (quest-data-get 'questentry-runeinfo))
       (quest-accepted! (ench-quest ench 3) #t)
       )
 
@@ -148,14 +153,14 @@
           (begin
             (say knpc "Well, what?")
             (let ((reply (kern-conv-get-reply kpc)))
-              (if (equal? reply 'demo)
+              (if (or (equal? reply 'demo) (equal? reply 'gate) (equal? reply 'key))
                   (finish-second-quest)
                   (begin
-                    (say knpc "I don't think so. Have you asked all of the Wise about the RUNE?")
+                    (say knpc "I don't think so. Have you asked all of the Wise about the ^c+mrune^c-?")
                     (if (yes? kpc)
                         (say knpc "Surely one of them must have given you some clue!")
                         (say knpc "Seek them all."))))))
-          (say knpc "Ask all the Wise about the RUNE.")))
+          (say knpc "Ask all the Wise about the ^c+mrune^c-.")))
 
     ;; First Quest -- find the stolen Rune
     (define (finish-first-quest)
@@ -249,13 +254,13 @@
               (if (kern-conv-get-yes-no? kpc)
                   ;; yes -- player is willing
                   (begin
+                    (say knpc "Good! Rangers have tracked the thief to "
+                         "Trigrave. Go there and inquire about a ^c+mthief^c-.")
+							(quest-data-assign-once 'questentry-thiefrune)
               		(quest-complete (quest-data-get 'questentry-calltoarms))
                   	;; if you dont read the letter, you might not get the quest till now!
               		(quest-data-assign-once 'questentry-calltoarms)
                   	(quest-data-update-with 'questentry-calltoarms 'done 1 (grant-xp-fn 10))
-                    (say knpc "Good! Rangers have tracked the thief to "
-                         "Trigrave. Go there and inquire about a ^c+mthief^c-.")
-							(quest-data-assign-once 'questentry-thiefrune)
                     (quest-accepted! (ench-first-quest (gob knpc)) #t)
                     )
                   ;; no -- player is not willing

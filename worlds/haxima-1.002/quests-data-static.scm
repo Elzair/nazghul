@@ -204,3 +204,50 @@
 (define (quest-thiefrune-den5 kplace kplayer)
 	(quest-data-update-with 'questentry-thiefrune 'den5 1 (quest-notify (grant-party-xp-fn 10)))
 	)
+
+
+;;-----------------------
+;; runeinfo
+
+;; TODO: runes are unidentified until you check in with abe?
+
+(define (quest-runeinfo-update)
+	(let* ((quest (quest-data-get 'questentry-runeinfo))
+			(quest-tbl (car (qst-payload quest)))
+			(header (kern-ui-paginate-text
+				"The stolen rune that you recovered must have great significance to prompt it's theft. The Enchanter has given you the task of seeking out this reason."
+				""
+				)))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(kern-ui-paginate-text
+			"The rune you carry is one of the Keys to the Demon Gate. The gate itself lies somewhere in the north. It was sealed by the wise in ages past, and the Keys were scattered and hidden."
+		))
+	((tbl-flag? 'gate)
+		(append header
+		(kern-ui-paginate-text
+			"The runes are also known as the Keys to the Demon Gate. The gate itself lies somewhere in the north. It was sealed by the wise in ages past, and the Keys were scattered and hidden."
+		)))
+	((tbl-flag? 'keys)
+		(append header
+		(kern-ui-paginate-text
+			"The runes are also known as the Keys to the Demon Gate. What that means remains unknown."
+		)))
+	((tbl-flag? 'abe)
+		(append header
+		(kern-ui-paginate-text
+			"The Alchemist has advised you that ^c+mAbe^c-, at the Green Tower, has studied the nature of the runes."
+		)))
+	(#t
+		(append header
+		(kern-ui-paginate-text
+			"He suggests that you start with the ^c+mAlchemist^c-, who may be found at Oparine."
+		)))
+)
+
+		)
+	))
+
