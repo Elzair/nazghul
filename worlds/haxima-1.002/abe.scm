@@ -78,38 +78,38 @@
 
 (define (abe-rune knpc kpc)
   (if (any-in-inventory? kpc rune-types)
-      ( (say knpc "\n[He whistles softly]\n"
+      (begin
+	 (say knpc "\n[He whistles softly]\n"
 	     "You have some of the Eight Keys to the Demon Gate?\n"
 	     "I shall examine them for you!")
-	(if (any-in-inventory? kpc t_rune_k)
-	    (say kpnc "[He examines a rune] This is the Rune of KNOWLEDGE!")
+	(if (any-in-inventory? kpc (list t_rune_k))
+	    (say knpc "[He examines a rune] This is the Rune of Knowledge!")
 	    )
-	(if (any-in-inventory? kpc t_rune_p)
-	    (say kpnc "[He examines a rune] This is the Rune of POWER!")
+	(if (any-in-inventory? kpc (list t_rune_p))
+	    (say knpc "[He examines a rune] This is the Rune of Power!")
 	    )
-	(if (any-in-inventory? kpc t_rune_s)
-	    (say kpnc "[He examines a rune] This is the Rune of SKILL!")
+	(if (any-in-inventory? kpc (list t_rune_s))
+	    (say knpc "[He examines a rune] This is the Rune of Skill!")
 	    )
-	(if (any-in-inventory? kpc t_rune_c)
-	    (say kpnc "[He examines a rune] This is the Rune of CURIOUSITY!")
+	(if (any-in-inventory? kpc (list t_rune_c))
+	    (say knpc "[He examines a rune] This is the Rune of Curiousity!")
 	    )
-	(if (any-in-inventory? kpc t_rune_f)
-	    (say kpnc "[He examines a rune] This is the Rune of FREEDOM!")
+	(if (any-in-inventory? kpc (list t_rune_f))
+	    (say knpc "[He examines a rune] This is the Rune of Freedom!")
 	    )
-	(if (any-in-inventory? kpc t_rune_w)
-	    (say kpnc "[He examines a rune] This is the Rune of WISDOM!")
+	(if (any-in-inventory? kpc (list t_rune_w))
+	    (say knpc "[He examines a rune] This is the Rune of Wisdom!")
 	    )
-	(if (any-in-inventory? kpc t_rune_d)
-	    (say kpnc "[He examines a rune] This is the Rune of DISCRETION!")
+	(if (any-in-inventory? kpc (list t_rune_d))
+	    (say knpc "[He examines a rune] This is the Rune of Discretion!")
 	    )
-	(if (any-in-inventory? kpc t_rune_l)
-	    (say kpnc "[He examines a rune] This is the Rune of LEADERSHIP!")
+	(if (any-in-inventory? kpc (list t_rune_l))
+	    (say knpc "[He examines a rune] This is the Rune of Leadership!")
 	    )
 	(if (has-all-runes? kpc) 
 	    (say knpc "This is incredible!\n"
 		 "You have all of the Eight Keys to the Demon Gate!!!\n"
 		 "What do you intend to do with them?")
-	    (say knpc "Legend says that there are eight runes in all, are you seeking the others?")
 	    )
 	)
       (say knpc "There are many runes. Perhaps if you brought me an example...?")))
@@ -117,12 +117,28 @@
 (define (abe-demo knpc kpc)
   (say knpc "The Demon Gate was sealed shut by the Wise long ago. "
        "Its location was blotted from all records, but legend puts it somewhere to the north. "
-       "Are you looking for the other Runes?")
-  (if (yes? kpc)
-      (say knpc "I know a legend which tells of one kept in a temple in the void.")
-      (say knpc "Oh.")
        ))
 
+(define (abe-keys knpc kpc)
+  (say knpc "Yes, the Demon Gate was locked with eight locks and the keys separated. "
+       "Each takes the form of a powerful rune. "
+       "They've been lost or hidden since then."))
+       
+(define (abe-eigh knpc kpc)
+	(say knpc "Legend says that there are eight runes in all, are you seeking the others?")
+	(if (yes? kpc)
+		(say knpc "The old stories speak of some, such as King Clovis' charm, or the void temple.")
+		(say knpc "Just idle curiosity? Believe me, I understand.")))
+
+(define (abe-clov knpc kpc)
+     (say knpc "There's a legend that King Clovis carried one as a charm. "
+           "He fell in battle during the goblin wars, but it was never found on his body. "
+           "Perhaps someone (perhaps a ^c+mgoblin^c-!) looted his corpse and took it."))
+           
+(define (abe-temp knpc kpc)
+	(say knpc "Northwest of Oparine, there is a temple floating in the void. No one can reach it,"
+			" but legends say that a rune was sealed up there by the ancients."))
+      
 (define (abe-void knpc kpc)
   (say knpc "The Shard, the moons and the stars all habitate a great void. "
        "The ancients could sail across the void in ships, the way we sail across a sea!")
@@ -138,16 +154,6 @@
 (define (abe-wrig knpc kpc)
   (say knpc "Wrights specialize in the making of things. "
        "The Engineer is the greatest living Wright."))
-
-(define (abe-keys knpc kpc)
-  (say knpc "Yes, the Demon Gate was locked with eight locks and the keys separated. "
-       "Each takes the form of a powerful rune. "
-       "They've been lost or hidden since then. Are you looking for them?")
-  (if (yes? kpc)
-      (say knpc "There's a legend that King Clovis carried one as a charm. "
-           "He fell in battle during the goblin wars, but it was never found on his body. "
-           "Perhaps someone (perhaps a GOBLIN!) looted his corpse and took it.")
-      (say knpc "Just idle curiosity? Believe me, I understand.")))
 
 (define (abe-quee knpc kpc)
   (say knpc "I'm not sure what you're insinuating."))
@@ -192,11 +198,15 @@
        (method 'absa abe-absa)
        (method 'rune abe-rune)
        (method 'demo abe-demo)
+       (method 'gate abe-demo)
        (method 'keys abe-keys)
        (method 'key  abe-keys)
-       (method 'demo abe-keys)
-       (method 'gate abe-keys)
+       (method 'eigh abe-eigh)
        (method 'quee abe-quee)
+       (method 'king abe-clov)
+       (method 'clov abe-clov)
+       (method 'char abe-clov)
+       (method 'temp abe-temp)
        (method 'civi abe-civi)
        (method 'accu abe-accu)
        (method 'bye  abe-bye)
