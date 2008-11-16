@@ -177,6 +177,7 @@
 		(begin
 			(say knpc "Abe knows more about the runes themselves. Are you "
 				"interested in finding the others?")
+			(quest-data-update-with 'questentry-runeinfo 'abe 1 (quest-notify nil))
 			(alch-dragon-quest knpc kpc qstat))
 		(begin
 			(say knpc "[He gets a canny look] Runes, eh? I've seen a few in my time. "
@@ -191,6 +192,7 @@
 						   "but the person you really should speak to "
 						   "is Abe. Are you interested in finding the "
 						   "other runes?")
+						   (quest-data-update-with 'questentry-runeinfo 'abe 1 (quest-notify nil))
 					  (alch-dragon-quest knpc kpc qstat)
 					  )
 					(say knpc "I don't see it. Perhaps you dropped it?"))
