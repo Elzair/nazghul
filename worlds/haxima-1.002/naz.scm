@@ -480,12 +480,12 @@
   (search-rect kplace x y w h check))
 
 (define (in-inventory? kchar ktype)
-  (println (kern-type-get-name ktype))
+  ;;(println (kern-type-get-name ktype))
   (define (hasit? item inv)
     (cond ((null? inv) #f)
           ((eqv? item (car (car inv))) #t)
           (else 
-           (println " " (kern-type-get-name (car (car inv))))
+           ;;(println " " (kern-type-get-name (car (car inv))))
            (hasit? item (cdr inv)))))
   (hasit? ktype (kern-char-get-inventory kchar)))
 
