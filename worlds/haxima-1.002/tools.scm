@@ -69,6 +69,30 @@
                              (kern-log-msg "Usable only in the wilderness!")
                              result-not-here)))))
 
+;; ----------------------------------------------------------------------------
+;; special object for testing multi-turn tasks
+(define (test-task-proc kchar)
+  (cond ((< (kern-dice-roll "1d20") 3)
+         (kern-char-task-end kchar)
+         #t
+         )
+        (else
+         #t
+         )))
+
+(mk-reusable-item 
+ 't_test_obj "test object" s_gem 0
+ (lambda (ktool kuser)
+   ;; test-task-proc must be passed in quotes or saving/reloading won't
+   ;; work. The kernel enforces this. The only legitimate reason for failure
+   ;; would be if the player is in the wilderness when he tries do to this,
+   ;; hence the result-not-here on failure (yeah, this is probably not a good
+   ;; assumption going forward).
+   (if (kern-char-task-begin kuser "a test task" 'test-task-proc nil)
+       result-ok
+       result-not-here)
+   ))
+
 ;;----------------------------------------------------------------------------
 ;; shovel & buried object generator
 ;;----------------------------------------------------------------------------
