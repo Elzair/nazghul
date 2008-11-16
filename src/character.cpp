@@ -2375,6 +2375,7 @@ void Character::exec()
         bool noHostiles = false;
         bool appointmentChecked = false;
                 
+        printf("exec %s\n", getName());
 
         startTurn();
         
@@ -3205,7 +3206,12 @@ void Character::save(struct save *save)
                 save->write(save, "(kern-char-set-known kchar #t)\n");
         }
 
-        save->write(save, "(kern-obj-set-ap kchar %d)\n", getActionPoints());
+        // Only save AP debt, else when the game reloads and the character
+        // restarts its turn it will carry over what is saved as an unwarranted
+        // bonus.
+        if (getActionPoints() < 0) {
+            save->write(save, "(kern-obj-set-ap kchar %d)\n", getActionPoints());
+        }
 
         // save the task, if any
         if (taskproc) {
