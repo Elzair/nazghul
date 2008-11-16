@@ -228,6 +228,13 @@ class Character:public Being {
         bool isKnown();
         void setKnown(bool val);
 
+        void taskAbort();
+        void taskBegin(char *taskname, struct closure *taskproc, struct gob *taskgob);
+        void taskContinue(char *taskname, struct closure *taskproc, struct gob *taskgob);
+        void taskEnd();
+        bool engagedInTask();
+        const char *getTaskName();
+
         struct node *plnode; // pointer back to party list node
 	class Party *party;
 	struct species *species;
@@ -325,11 +332,17 @@ class Character:public Being {
         bool fleeToMapEdge();
         bool evade();
         bool exitMap();
+        void taskCleanup();
+        void taskSetup(char *taskname, struct closure *taskproc, struct gob *taskgob);
 
         bool fleePathFound;
         int fleeX, fleeY, fleePathFlags;
         struct mmode *currentMmode;
         bool known;
+
+        char *taskname;
+        struct closure *taskproc;
+        struct gob *taskgob;
 };
 
 extern void char_dtor(void *val);

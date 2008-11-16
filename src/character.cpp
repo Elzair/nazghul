@@ -183,6 +183,9 @@ Character::Character(char *tag, char *name,
           , fleePathFlags(0)
           , currentMmode(0)
           , known(false)
+          , taskname(NULL)
+          , taskproc(NULL)
+          , taskgob(NULL)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -267,12 +270,15 @@ Character::Character():hm(0), xp(0), order(-1),
                        //sprite(0),
                        sched_chars_node(0),
                        forceContainerDrop(false)
-                      , fleePathFound(false)
-                      , fleeX(0)
-                      , fleeY(0)
-                      , fleePathFlags(0)
-                      , currentMmode(0)
-                      , known(false)
+                       , fleePathFound(false)
+                       , fleeX(0)
+                       , fleeY(0)
+                       , fleePathFlags(0)
+                       , currentMmode(0)
+                       , known(false)
+                       , taskname(NULL)
+                       , taskproc(NULL)
+                       , taskgob(NULL)
 {
         // This method is probably obsolete now
 
@@ -1896,57 +1902,11 @@ bool Character::isPlayerControlled() {
 
 void Character::setPlayerControlled(bool val) 
 {
+    playerControlled = val;
     if (val) {
-        playerControlled = true;
         ctrl = ctrl_character_ui;
-
-        if (isPlayerPartyMember()) {
-            class Character *oldLeader, *newLeader;
-            switch (player_party->getPartyControlMode()) {
-            case PARTY_CONTROL_FOLLOW:
-                oldLeader = player_party->get_leader();
-                player_party->chooseNewLeader();
-                newLeader = player_party->get_leader();
-                if (oldLeader != newLeader) {
-                    oldLeader->setControlMode(CONTROL_MODE_FOLLOW);
-                }
-                if (newLeader != this) {
-                    setControlMode(CONTROL_MODE_FOLLOW);
-                }
-                break;
-            case PARTY_CONTROL_SOLO:
-                setControlMode(CONTROL_MODE_IDLE);
-                break;
-            case PARTY_CONTROL_ROUND_ROBIN:
-                setControlMode(CONTROL_MODE_PLAYER);
-                break;
-        }
-    }
-
     } else {
-        playerControlled = false;
         ctrl = ctrl_character_ai;
-
-        if (isPlayerPartyMember()) {
-            switch (player_party->getPartyControlMode()) {
-            case PARTY_CONTROL_FOLLOW:
-                if (isLeader()) {
-                    player_party->chooseNewLeader();
-                    assert(this != player_party->get_leader());
-                }
-                break;
-            case PARTY_CONTROL_SOLO:
-                if (isSolo()) {
-                    setSolo(false); // sets CONTROL_MODE_IDLE
-                    player_party->enableFollowMode();
-                }
-                break;
-            case PARTY_CONTROL_ROUND_ROBIN:
-                break;
-            }
-        }
-
-        setControlMode(CONTROL_MODE_AUTO);
     }
 }
 
@@ -2684,6 +2644,14 @@ void Character::exec()
         case CONTROL_MODE_IDLE:
                 break;
 
+        case CONTROL_MODE_TASK:
+            assert(taskproc);
+            if (isPlayerControlled()) {
+                log_msg("%s continues %s...", getName(), getTaskName());
+            }
+            closure_exec(taskproc, "pl", this, taskgob);
+            break;
+
         default:
                 assert(false);
                 break;
@@ -2700,9 +2668,9 @@ void Character::setSolo(bool val)
         solo = val;
 
         if (solo) {
-            // Solo mode is used to cancel multi-turn tasks, the start of which
-            // set player-controlled to false
-            setPlayerControlled(true);
+            if (engagedInTask()) {
+                taskAbort();
+            }
             attachCamera(true);
             setControlMode(CONTROL_MODE_PLAYER);
             log_msg("%s goes solo.", getName());
@@ -2829,6 +2797,10 @@ void Character::setControlMode(enum control_mode mode)
         if (isCharmed())
                 return;
 
+        if (!strcmp(getName(), "The Wanderer")) {
+            printf("%s <- %d\n", getName(), mode);
+        }
+
         control_mode = mode;
 
         switch (mode) {
@@ -2840,6 +2812,8 @@ void Character::setControlMode(enum control_mode mode)
         case CONTROL_MODE_FOLLOW:
                 ctrl = ctrl_character_ui;
                 break;
+        case CONTROL_MODE_TASK:
+            break;
         }
 }
 
@@ -2924,7 +2898,9 @@ void Character::beginLoitering(int hours)
 void Character::endLoitering()
 {
         loitering = false;
-        setControlMode(CONTROL_MODE_PLAYER);
+        if (! engagedInTask()) {
+            setControlMode(CONTROL_MODE_PLAYER);
+        }
 }
 
 bool Character::isLoitering()
@@ -3020,7 +2996,9 @@ void Character::setLeader(bool val)
 bool Character::canBeLeader()
 {
         return (! isDead() && isOnMap() && ! isAsleep() && ! isCharmed() && isPlayerControlled()
-            && (getActionPoints() > -(2*getActionPointsPerTurn())));
+                && (getActionPoints() > -(2*getActionPointsPerTurn()))
+                && ! engagedInTask()
+            );
 }
 
 bool Character::isLeader()
@@ -3245,6 +3223,18 @@ void Character::save(struct save *save)
 
         save->write(save, "(kern-obj-set-ap kchar %d)\n", getActionPoints());
 
+        // save the task, if any
+        if (taskproc) {
+            save->write(save, "(kern-char-task-continue kchar \"%s\" ", getTaskName());
+            closure_save(taskproc, save);
+            if (taskgob) {
+                gob_save(taskgob, save);
+            } else {
+                save->write(save, " nil");
+            }
+            save->write(save, ")\n");
+        }
+
         // close the 'let' block
         save->exit(save, "kchar)\n");
 }
@@ -3340,6 +3330,12 @@ void Character::setMovementMode(struct mmode *mmode)
 
 void Character::setCurrentFaction(int faction)
 {
+#if 1
+    Being::setCurrentFaction(faction);
+
+    // We need to implement charm differently. This is the wrong place to do
+    // it.
+#else
         if (! isPlayerPartyMember()) {
                 Being::setCurrentFaction(faction);
         } else {
@@ -3383,6 +3379,7 @@ void Character::setCurrentFaction(int faction)
                         }
                 }
         }
+#endif
 }
 
 class Container* Character::getInventoryContainer()
@@ -3455,4 +3452,132 @@ bool Character::isKnown()
 void Character::setKnown(bool val)
 {
         known = val;
+}
+
+const char * Character::getTaskName()
+{
+    return taskname ? taskname : "a nameless task";
+}
+
+void Character::taskCleanup()
+{
+    if (taskname) {
+        free(taskname);
+        taskname = NULL;
+    }
+
+    if (taskproc) {
+        closure_unref(taskproc);
+        taskproc = NULL;
+    }
+
+    if (taskgob) {
+        gob_unref(taskgob);
+        taskgob = NULL;
+    }
+
+    if (isPlayerPartyMember()) {
+        class Character *oldLeader, *newLeader;
+        switch (player_party->getPartyControlMode()) {
+        case PARTY_CONTROL_FOLLOW:
+            oldLeader = player_party->get_leader();
+            player_party->chooseNewLeader();
+            newLeader = player_party->get_leader();
+            if (oldLeader != newLeader) {
+                oldLeader->setControlMode(CONTROL_MODE_FOLLOW);
+            }
+            if (newLeader != this) {
+                setControlMode(CONTROL_MODE_FOLLOW);
+            }
+            break;
+        case PARTY_CONTROL_SOLO:
+            setControlMode(CONTROL_MODE_IDLE);
+            break;
+        case PARTY_CONTROL_ROUND_ROBIN:
+            setControlMode(CONTROL_MODE_PLAYER);
+            break;
+        }
+    }
+}
+
+void Character::taskAbort()
+{
+    if (isPlayerControlled()) {
+        log_msg("%s aborts %s!", getName(), getTaskName());
+    }
+
+    taskCleanup();
+}
+
+void Character::taskSetup(char *name_arg, struct closure *proc_arg, struct gob *gob_arg)
+{
+    assert(! engagedInTask());
+
+    if (name_arg) {
+        taskname = strdup(name_arg);
+    }
+
+    assert(proc_arg);
+    taskproc = proc_arg;
+    closure_ref(taskproc);
+
+    if (gob_arg) {
+        taskgob = gob_arg;
+        gob_ref(gob_arg);
+    }
+
+    if (isPlayerPartyMember()) {
+        switch (player_party->getPartyControlMode()) {
+        case PARTY_CONTROL_FOLLOW:
+            if (isLeader()) {
+                player_party->chooseNewLeader();
+                assert(this != player_party->get_leader());
+            }
+            break;
+        case PARTY_CONTROL_SOLO:
+            if (isSolo()) {
+                setSolo(false); // sets CONTROL_MODE_IDLE
+                player_party->enableFollowMode();
+            }
+            break;
+        case PARTY_CONTROL_ROUND_ROBIN:
+            break;
+        }
+    }
+
+    setControlMode(CONTROL_MODE_TASK);
+}
+
+void Character::taskBegin(char *name_arg, struct closure *proc_arg, struct gob *gob_arg)
+{
+    taskSetup(name_arg, proc_arg, gob_arg);
+
+    if (isPlayerControlled()) {
+        log_msg("%s begins %s.", getName(), getTaskName());
+    }
+
+    endTurn();
+}
+
+void Character::taskContinue(char *name_arg, struct closure *proc_arg, struct gob *gob_arg)
+{
+    if (isPlayerControlled()) {
+        log_msg("%s continues %s.", getName(), getTaskName());
+    }
+
+    taskSetup(name_arg, proc_arg, gob_arg);
+}
+
+void Character::taskEnd()
+{
+    if (isPlayerControlled()) {
+        log_msg("%s completes %s!", getName(), getTaskName());
+    }
+
+    taskCleanup();
+}
+
+bool Character::engagedInTask()
+{
+    return taskproc != NULL;
 }

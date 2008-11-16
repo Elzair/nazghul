@@ -1108,7 +1108,7 @@ enum control_mode Object::getControlMode()
 
 void Object::setControlMode(enum control_mode mode)
 {
-        control_mode = mode;
+    control_mode = mode;
 }
 
 void Object::attachCamera(bool val)

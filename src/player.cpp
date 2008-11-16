@@ -1005,25 +1005,26 @@ bool PlayerParty::addMember(class Character * c)
         // --------------------------------------------------------------------
         // Reevaluate leadership with the new member added to the group.
         // --------------------------------------------------------------------
-
-        switch (getPartyControlMode()) {
-        case PARTY_CONTROL_FOLLOW:
+        if (! c->engagedInTask()) {
+            switch (getPartyControlMode()) {
+            case PARTY_CONTROL_FOLLOW:
                 if (c != get_leader()) {
-                        c->setControlMode(CONTROL_MODE_FOLLOW);
+                    c->setControlMode(CONTROL_MODE_FOLLOW);
                 }
                 break;
                 
-        case PARTY_CONTROL_SOLO:
+            case PARTY_CONTROL_SOLO:
                 c->setControlMode(CONTROL_MODE_IDLE);
                 break;
                 
-        case PARTY_CONTROL_ROUND_ROBIN:
+            case PARTY_CONTROL_ROUND_ROBIN:
                 c->setControlMode(CONTROL_MODE_PLAYER);
                 break;
                 
-        default:
+            default:
                 assert(false);
                 break;
+            }
         }
 
         // Call statusSetMode() to force it to re-evaluate the necessary screen
@@ -1340,7 +1341,9 @@ void PlayerParty::endResting()
 
 static bool member_set_control_mode(class Character *member, void *data)
 {
-    if (member->isPlayerControlled()) {
+    if (member->isPlayerControlled()
+        && ! member->engagedInTask()
+        ) {
         member->setControlMode(*((enum control_mode*)data));
     }
     return false;

@@ -491,8 +491,11 @@ pointer vpack(scheme *sc, char *fmt, va_list ap)
                         arg = scm_mk_symbol(sc, strval);
                         break;
                 case 'l':
-                        arg = va_arg(ap, pointer);
-                        break;
+                    arg = va_arg(ap, pointer);
+                    if (!arg) {
+                        arg = sc->NIL;
+                    }
+                    break;
                 default:
                         assert(false);
                         break;
@@ -4532,6 +4535,115 @@ KERN_API_CALL(kern_char_set_ai)
 
         return sc->T;
 }
+
+KERN_API_CALL(kern_char_task_abort)
+{
+    class Character *ch;
+
+    ch = (class Character*)unpack_obj(sc, &args, "kern-char-task-abort");
+    if (ch) {
+        ch->taskAbort();
+    }
+    return sc->NIL;
+}
+
+KERN_API_CALL(kern_char_task_begin)
+{
+    char *taskname = NULL;
+    class Character *ch;
+    pointer taskproc, taskgob;
+    struct closure *closure = NULL;
+    struct gob *gob = NULL;
+
+    ch = (class Character*)unpack_obj(sc, &args, "kern-char-task-begin");
+    if (!ch) {
+        return sc->F;
+    }
+
+    if (unpack(sc, &args, "scl", &taskname, &taskproc, &taskgob)) {
+        rt_err("%s: bad args", __FUNCTION__);
+        return sc->F;
+    }
+
+    if (taskproc == sc->NIL) {
+        rt_err("%s: nil task procedure not allowed", __FUNCTION__);
+        return sc->F;
+    }
+
+    /* For now, disallow starting tasks in the wilderness. Maybe later. */
+    if (place_is_wilderness(ch->getPlace())) {
+        return sc->F;
+    }
+
+    if (!(closure = closure_new_ref(sc, taskproc))) {
+        return sc->F;
+    }
+
+    /* gob is optional */
+    if (taskgob != sc->NIL) {
+        if (!(gob = gob_new(sc, taskgob))) {
+            closure_unref(closure);
+            return sc->F;
+        }
+    }
+
+    ch->taskBegin(taskname, closure, gob);
+    closure_unref(closure);
+
+    return sc->T;
+}
+
+KERN_API_CALL(kern_char_task_continue)
+{
+    char *taskname = NULL;
+    class Character *ch;
+    pointer taskproc, taskgob;
+    struct closure *closure = NULL;
+    struct gob *gob = NULL;
+
+    ch = (class Character*)unpack_obj(sc, &args, "kern-char-task-continue");
+    if (!ch) {
+        return sc->F;
+    }
+
+    if (unpack(sc, &args, "scl", &taskname, &taskproc, &taskgob)) {
+        rt_err("%s: bad args", __FUNCTION__);
+        return sc->F;
+    }
+
+    if (taskproc == sc->NIL) {
+        return sc->F;
+    }
+    
+    if (!(closure = closure_new_ref(sc, taskproc))) {
+        return sc->F;
+    }
+
+    /* gob is optional */
+    if (taskgob != sc->NIL) {
+        if (!(gob = gob_new(sc, taskgob))) {
+            closure_unref(closure);
+            return sc->F;
+        }
+    }
+
+    ch->taskContinue(taskname, closure, gob);
+    closure_unref(closure);
+
+    return sc->T;
+}
+
+KERN_API_CALL(kern_char_task_end)
+{
+    class Character *ch;
+
+    ch = (class Character*)unpack_obj(sc, &args, "kern-char-task-end");
+    if (ch) {
+        ch->taskEnd();
+    }
+    return sc->NIL;
+}
+
 
 KERN_API_CALL(kern_char_set_sched)
 {
@@ -10043,6 +10155,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-strength", kern_char_set_strength);
         API_DECL(sc, "kern-char-set-dexterity", kern_char_set_dexterity);
         API_DECL(sc, "kern-char-set-intelligence", kern_char_set_intelligence);
+        API_DECL(sc, "kern-char-task-abort", kern_char_task_abort);
+        API_DECL(sc, "kern-char-task-begin", kern_char_task_begin);
+        API_DECL(sc, "kern-char-task-continue", kern_char_task_continue);
+        API_DECL(sc, "kern-char-task-end", kern_char_task_end);
         API_DECL(sc, "kern-char-get-skills", kern_char_get_skills);
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
         API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);

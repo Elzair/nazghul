@@ -4340,9 +4340,18 @@ void cmdYuse(class Character *actor)
 bool cmdSetSoloMode(int party_member_index)
 {
     class Character *solo_member = player_party->getMemberAtIndex(party_member_index);
-    if (solo_member != NULL             &&
-        !solo_member->isIncapacitated() &&
-        solo_member->isOnMap()) {
+    if (solo_member
+        && ! solo_member->isIncapacitated() 
+        && solo_member->isOnMap()
+        ) {
+
+        if (solo_member->engagedInTask()) {            
+            log_msg("%s is engaged in %s, abort?", solo_member->getName(), solo_member->getTaskName());
+            if (! ui_get_yes_no(solo_member->getName())) {
+                return false;
+            }
+        }
+
         player_party->enableSoloMode(solo_member);
         return true;
     }

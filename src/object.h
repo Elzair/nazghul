@@ -100,7 +100,8 @@ enum control_mode {
         CONTROL_MODE_AUTO = 0,
         CONTROL_MODE_PLAYER,
         CONTROL_MODE_IDLE,
-        CONTROL_MODE_FOLLOW
+        CONTROL_MODE_FOLLOW,
+        CONTROL_MODE_TASK
 };
 
 enum MoveResult {
