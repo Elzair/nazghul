@@ -1485,7 +1485,9 @@ bool PlayerParty::rendezvous(struct place *place, int rx, int ry)
                  * will be ignored in the code below. Although technically not
                  * correct behavior, it shouldn't crash or make the game
                  * unplayable. */
-                if (member->isAsleep()) {
+                if (member->isAsleep()
+                    || member->engagedInTask()
+                    ) {
                         abort = true;
                         continue;
                 }
