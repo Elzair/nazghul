@@ -1487,6 +1487,7 @@ bool PlayerParty::rendezvous(struct place *place, int rx, int ry)
                  * unplayable. */
                 if (member->isAsleep()
                     || member->engagedInTask()
+                    || ! member->isPlayerControlled()
                     ) {
                         abort = true;
                         continue;
