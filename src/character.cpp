@@ -1731,12 +1731,12 @@ void Character::describe()
     if (Session->subject) {
         char *diplstr = diplomacy_string(this, Session->subject);
         if (isvowel(diplstr[0]))
-            log_continue("an ");
+            log_continue("an");
         else
-            log_continue("a ");
-        log_continue("%s", diplstr);
+            log_continue("a");
+        log_continue(" %s", diplstr);
     } else {
-        log_continue("a ");
+        log_continue("an");
     }
     log_continue(" L%d", getLevel());
     if (isKnown()) {
@@ -1936,6 +1936,9 @@ void Character::setPlayerControlled(bool val)
             if (isSolo()) {
                 setSolo(false);
                 player_party->enableFollowMode();
+            }
+            if (engagedInTask()) {
+                taskAbort();
             }
         }
         setControlMode(CONTROL_MODE_AUTO);
@@ -3537,10 +3540,7 @@ void Character::taskCleanup()
 
 void Character::taskAbort()
 {
-    if (isPlayerControlled()) {
-        log_msg("%s aborts %s!", getName(), getTaskName());
-    }
-
+    log_msg("%s aborts %s!", getName(), getTaskName());
     taskCleanup();
 }
 
@@ -3586,11 +3586,7 @@ void Character::taskSetup(char *name_arg, struct closure *proc_arg, struct gob *
 void Character::taskBegin(char *name_arg, struct closure *proc_arg, struct gob *gob_arg)
 {
     taskSetup(name_arg, proc_arg, gob_arg);
-
-    if (isPlayerControlled()) {
-        log_msg("%s begins %s.", getName(), getTaskName());
-    }
-
+    log_msg("%s begins %s.", getName(), getTaskName());
     endTurn();
 }
 
@@ -3605,10 +3601,7 @@ void Character::taskContinue(char *name_arg, struct closure *proc_arg, struct go
 
 void Character::taskEnd()
 {
-    if (isPlayerControlled()) {
-        log_msg("%s completes %s!", getName(), getTaskName());
-    }
-
+    log_msg("%s completes %s!", getName(), getTaskName());
     taskCleanup();
 }
 
