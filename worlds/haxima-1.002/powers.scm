@@ -306,6 +306,25 @@
 	result-ok
 )
 
+;; Weaker than charm, this turns the target's alignment to be that of
+;; monsters. A useful tool for assassins, as guards and townsmen will likely
+;; kill the target.
+(define (powers-beastly-illusion caster target power)
+  (cond ((has-charm-immunity? target)
+         (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists illusion")
+         )
+        ((contest-of-skill (+ power 1) (occ-ability-magicdef target))
+         (let ((tloc (kern-obj-get-location target)))
+           (kern-obj-add-effect target ef_charm (charm-mk faction-monster))
+           (kern-map-flash-sprite s_heart (loc-x tloc) (loc-y tloc))
+           (msg-log-visible tloc (kern-obj-get-name target) " is deluded")
+           ))
+        (else (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists illusion"))
+        )
+  (kern-harm-relations target caster)
+  result-ok
+  )
+
 (define (powers-clone-range power)
 	(+ 1 (/ power 7)))
 

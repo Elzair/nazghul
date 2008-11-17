@@ -287,6 +287,7 @@
 (mk-sprite 's_vas_an_nox       58)
 (mk-sprite 's_ort_grav         59)
 (mk-sprite 's_bet_ylem_hur     60)
+(mk-sprite 's_rel_xen_quas     61)
 
 ;; ----------------------------------------------------------------------------
 ;; Now rip through the list of spells, adding them to the kernel.
@@ -347,6 +348,7 @@
 (mk-spell 'vas_mani         "Great Heal <Vas Mani>"             vas-mani         "VM"   5 context-any   s_vas_mani         (list mandrake spider_silk ginseng))
 (mk-spell 'rel_tym          "Quickness <Rel Tym>"               rel-tym          "RT"   5 context-any   s_rel_tym          (list sulphorous_ash blood_moss mandrake))
 (mk-spell 'kal_xen          "Summon Beast <Kal Xen>"            kal-xen          "KX"   5 context-town  s_kal_xen          (list spider_silk mandrake))
+(mk-spell 'rel_xen_quas     "Illusion of Beastliness <Rel Xen Quas>" rel-xen-quas "RXQ" 5 context-town  s_rel_xen_quas     (list nightshade blood_moss))
 
 ;; Sixth Circle
 (mk-spell 'in_an            "Negate Magic <In An>"              in-an            "IA"   6 context-any   s_in_an            (list garlic mandrake sulphorous_ash))

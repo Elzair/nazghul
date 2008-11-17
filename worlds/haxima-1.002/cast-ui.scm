@@ -469,6 +469,13 @@
 		(powers-charm-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
 
+(define (rel-xen-quas caster)
+  (cast-ui-basic-ranged-spell powers-beastly-illusion
+                              caster 
+                              (powers-charm-range (occ-ability-blackmagic caster))
+                              (occ-ability-blackmagic caster))
+  )
+
 (define (in-vas-por-ylem  caster)
 	(powers-tremor caster caster (occ-ability-blackmagic caster))
 	result-ok)
