@@ -4359,6 +4359,7 @@ bool cmdSetSoloMode(int party_member_index)
     if (solo_member
         && ! solo_member->isIncapacitated() 
         && solo_member->isOnMap()
+        && solo_member->isPlayerControlled()
         ) {
 
         if (solo_member->engagedInTask()) {            

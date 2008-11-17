@@ -872,10 +872,8 @@ void Character::remove()
         // ------------------------------------------------------------------
 
         if (isSolo()) {
-                assert(isPlayerControlled());
                 player_party->enableRoundRobinMode();
         } else if (isLeader()) {
-                assert(isPlayerControlled());
                 player_party->enableFollowMode();
         }
         obj_dec_ref(this);
@@ -1730,29 +1728,32 @@ bool Character::isShaded()
 
 void Character::describe()
 {
-        assert(Session->subject);
+    if (Session->subject) {
         char *diplstr = diplomacy_string(this, Session->subject);
         if (isvowel(diplstr[0]))
-                log_continue("an ");
+            log_continue("an ");
         else
-                log_continue("a ");
+            log_continue("a ");
         log_continue("%s", diplstr);
-        log_continue(" L%d", getLevel());
-        if (isKnown()) {
-                log_continue(" %s", getName());
-        } else {
-                if (species && species->name) {
-                        log_continue(" %s", species->name);
-                }
-                if (occ && occ->name) {
-                        log_continue(" %s", occ->name);
-                }
+    } else {
+        log_continue("a ");
+    }
+    log_continue(" L%d", getLevel());
+    if (isKnown()) {
+        log_continue(" %s", getName());
+    } else {
+        if (species && species->name) {
+            log_continue(" %s", species->name);
         }
-        if (!isVisible())
-                log_continue(" (invisible)");
-        if (isSubmerged()) {
-                log_continue(" (submerged)");
+        if (occ && occ->name) {
+            log_continue(" %s", occ->name);
         }
+    }
+    if (!isVisible())
+        log_continue(" (invisible)");
+    if (isSubmerged()) {
+        log_continue(" (submerged)");
+    }
 }
 
 void Character::examine()
@@ -1903,8 +1904,41 @@ void Character::setPlayerControlled(bool val)
     playerControlled = val;
     if (val) {
         ctrl = ctrl_character_ui;
+        if (isPlayerPartyMember()) {
+            class Character *oldLeader, *newLeader;
+            switch (player_party->getPartyControlMode()) {
+            case PARTY_CONTROL_FOLLOW:
+                oldLeader = player_party->get_leader();
+                player_party->chooseNewLeader();
+                newLeader = player_party->get_leader();
+                if (oldLeader != newLeader) {
+                    oldLeader->setControlMode(CONTROL_MODE_FOLLOW);
+                }
+                if (newLeader != this) {
+                    setControlMode(CONTROL_MODE_FOLLOW);
+                }
+                break;
+            case PARTY_CONTROL_SOLO:
+                setControlMode(CONTROL_MODE_IDLE);
+                break;
+            case PARTY_CONTROL_ROUND_ROBIN:
+                setControlMode(CONTROL_MODE_PLAYER);
+                break;
+            }
+        }
     } else {
         ctrl = ctrl_character_ai;
+        if (isPlayerPartyMember()) {
+            if (isLeader()) {
+                player_party->chooseNewLeader();
+                assert(this != player_party->get_leader());
+            }
+            if (isSolo()) {
+                setSolo(false);
+                player_party->enableFollowMode();
+            }
+        }
+        setControlMode(CONTROL_MODE_AUTO);
     }
 }
 
@@ -2664,18 +2698,19 @@ void Character::setSolo(bool val)
         if (solo == val)
                 return;
 
-        solo = val;
-
-        if (solo) {
+        if (val) {
+            assert(isPlayerControlled());
             if (engagedInTask()) {
                 taskAbort();
             }
+            solo = val;
             attachCamera(true);
             setControlMode(CONTROL_MODE_PLAYER);
             log_msg("%s goes solo.", getName());
             mapCenterCamera(getX(), getY());
             mapSetDirty();
         } else {
+            solo = val;
             attachCamera(false);
             setControlMode(CONTROL_MODE_IDLE);
         }
