@@ -378,17 +378,18 @@
 (define (charm-faction charm) (car charm))
 
 (define (charm-rm charm kchar)
-  (if (obj-is-char? kchar)
-      (begin
-        (kern-being-set-current-faction kchar
-                                        (kern-being-get-base-faction kchar))
-        (kern-log-msg (kern-obj-get-name kchar)
-                      " recovers from charm!")
+  (cond ((obj-is-char? kchar)
+         (kern-being-set-current-faction kchar (kern-being-get-base-faction kchar))
+         (kern-char-set-player-controlled kchar #t)
+         (kern-log-msg (kern-obj-get-name kchar) " recovers from charm!")
         )))
 
 (define (charm-apply charm kchar)
-  (if (obj-is-char? kchar)
-      (kern-being-set-current-faction kchar (charm-faction charm))))
+  (cond ((obj-is-char? kchar)
+         (kern-log-msg (kern-obj-get-name kchar) " is charmed!")
+         (kern-char-set-player-controlled kchar #f)
+         (kern-being-set-current-faction kchar (charm-faction charm))
+         )))
 
 ;; ----------------------------------------------------------------------------
 ;; Loot Drop
