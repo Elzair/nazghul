@@ -67,6 +67,11 @@
 			12)
 	))
 		
+(define (test-scroll-proc caster)
+  (kern-obj-add-effect caster
+                       ef_charm 
+                       (charm-mk faction-monster)))
+
 ;;-----------------------------------------------------------------------------------------
 ;; Scroll List
 ;;-----------------------------------------------------------------------------------------
@@ -84,3 +89,4 @@
 (mk-scroll 't_vas_mani_scroll "Vas Mani (Great Heal) scroll" s_vas_mani_scroll vas-mani) ;; context-any
 (mk-scroll 't_wis_quas_scroll "Wis Quas (Reveal) scroll" s_wis_quas_scroll wis-quas) ;; context-any
 (mk-scroll 't_wis_an_ylem_scroll "Wis An Ylem (X-Ray Vision) scroll" s_wis_an_ylem_scroll wis-an-ylem) ;; context-any
+(mk-scroll 't_test_scroll "Mr Hyde" s_an_xen_ex_scroll test-scroll-proc)
