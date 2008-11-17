@@ -89,6 +89,8 @@
                 (list (mk-ambient-sound 'sound-river) 25 26)
                 (put (mk-bed) 7 18)
                 (put (mk-bed) 7 16)
+                (put (mk-npc 'chicken 5) 13 23)
+                (put (mk-npc 'chicken 5) 14 24)
                 
                 )
                nil ; hooks

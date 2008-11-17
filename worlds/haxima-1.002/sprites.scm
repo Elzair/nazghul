@@ -511,6 +511,7 @@
 (kern-mk-sprite 's_dragon_party   ss_monsters 4 20 #f 0 )
 
 (kern-mk-sprite 's_deer ss_creatures 4 0 #f 0)
+(kern-mk-sprite 's_chicken ss_creatures 2 4 #f 0)
 
 ;;(kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
 

@@ -151,6 +151,7 @@
 ;; spawn-npc -- like mk-npc but mark the npc as spawned (this allows monster
 ;; managers to periodically clean up old spawned NPC's)
 (define (spawn-npc npct-tag lvl)
+  
   (let ((kchar (mk-npc npct-tag lvl)))
     (npcg-set-spawned! (gob kchar) #t)
     kchar))
@@ -798,6 +799,7 @@
 (define ratling-sorcerer (mk-npct2 "ratling sorcerer"  sp_ratling oc_wizard s_ratling_sorcerer wizard-traps wizard-equip  nil 'ratling-sorcerer-ai faction-monster nil 'drop-generic animal-loot))
 (define carabid (mk-npct2 "carabid" sp_carabid nil s_carabid nil nil nil 'carabid-ai faction-monster nil 'drop-generic animal-loot))
 (define deer (mk-npct2 "deer" sp_deer nil s_deer nil nil nil nil faction-none nil 'drop-generic deer-loot))
+(define chicken (mk-npct2 "chicken" sp_chicken nil s_chicken nil nil nil 'animal-ai faction-none nil 'drop-generic animal-loot))
 
 ;; NPC's with no drops
 

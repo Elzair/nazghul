@@ -318,6 +318,11 @@
   (list (mk-clock) 25 23)
   (put (mk-bed) 27 22)
 
+  ;; Chickens!
+  (put (mk-npc 'chicken 5) 15 15)
+  (put (mk-npc 'chicken 5) 16 16)
+  
+
   )
  (list 'lock-inn-room-doors) ;; hooks
  (list  ;; edge entrances
