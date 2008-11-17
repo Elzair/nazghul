@@ -1066,13 +1066,6 @@ void Object::endTurn()
 	{
 		setActionPoints(0);
 	}
-	// TODO: remove this before release
-	/*
-	if (combat_get_state() == COMBAT_STATE_FIGHTING
-			&& getLayer() == being_layer)
-	{
-		log_msg("Turn for %s ended", this->getName() );
-	}*/
 }
 
 void Object::startTurn()
