@@ -283,32 +283,34 @@
 (define (powers-charm-range power)
 	(+ 3 (/ power 3)))
 	
-;failed charm pisses off target
+; (Only) failed charm pisses off target
 (define (powers-charm caster target power)
 	(cond
-		((has-charm-immunity? target)
-			(msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists charm")
-			)
-		((contest-of-skill
-			(+ power 1)
-			(occ-ability-magicdef target))
-				(let ((tloc (kern-obj-get-location target)))
-					(kern-obj-add-effect target 
-								ef_charm 
-								(charm-mk (kern-being-get-current-faction caster)))
-					(kern-map-flash-sprite s_heart (loc-x tloc) (loc-y tloc))
+         ((has-charm-immunity? target)
+          (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " immune to charm")
+          )
+         ((contest-of-skill
+           (+ power 1)
+           (occ-ability-magicdef target))
+          (let ((tloc (kern-obj-get-location target)))
+            (kern-obj-add-effect target 
+                                 ef_charm 
+                                 (charm-mk (kern-being-get-current-faction caster)))
+            (kern-map-flash-sprite s_heart (loc-x tloc) (loc-y tloc))
 					(msg-log-visible tloc (kern-obj-get-name target) " is charmed")
-				)
-			)
-		(else (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists charm"))
-		)
-	(kern-harm-relations target caster)
+                                        )
+          )
+         (else 
+          (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists charm")
+          (kern-harm-relations target caster)
+          )
+         )
 	result-ok
-)
+        )
 
 ;; Weaker than charm, this turns the target's alignment to be that of
-;; monsters. A useful tool for assassins, as guards and townsmen will likely
-;; kill the target.
+;; monsters. The monster faction is hostile to most others, so the player can
+;; use it against outlaws, cave goblins, etc.
 (define (powers-beastly-illusion caster target power)
   (cond ((has-charm-immunity? target)
          (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists illusion")
