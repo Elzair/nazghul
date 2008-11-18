@@ -149,6 +149,8 @@
             (begin
               (kern-log-msg "Paralysis wears off of " (kern-obj-get-name kchar))
               (kern-obj-remove-effect kchar ef_paralyze)
+              (if (is-player-party-member? kobj)
+                  (kern-char-set-player-controlled kobj #t))
               #f)
             (begin
 	      (kern-log-msg "** " (kern-obj-get-name kchar) " remains paralyzed! **")
@@ -159,7 +161,9 @@
 (define (paralyze kobj)
   (if (can-paralyze? kobj)
       (begin
-        (kern-obj-add-effect kobj ef_paralyze nil))))
+        (kern-obj-add-effect kobj ef_paralyze nil)
+        (kern-char-set-player-controlled kobj #f)
+        )))
 
 ;;----------------------------------------------------------------------------
 ;; disease
@@ -380,7 +384,8 @@
 (define (charm-rm charm kchar)
   (cond ((obj-is-char? kchar)
          (kern-being-set-current-faction kchar (kern-being-get-base-faction kchar))
-         (kern-char-set-player-controlled kchar #t)
+         (if (is-player-party-member? kchar)
+             (kern-char-set-player-controlled kchar #t))
          (kern-log-msg (kern-obj-get-name kchar) " recovers from charm!")
         )))
 
@@ -689,7 +694,7 @@
 
 ;; Keystroke hooks
 (mk-effect 'ef_drunk    "Drunk"     s_drunk    'drunk-exec    'drunk-apply    'drunk-rm nil             keystroke-hook "A" 0 #t 60)
-(mk-effect 'ef_paralyze "Paralyzed" s_paralyse 'paralyze-exec 'paralyze-apply nil       'paralyze-apply keystroke-hook "Z" 0 #f 15)
+(mk-effect 'ef_paralyze "Paralyzed" s_paralyse 'paralyze-exec 'paralyze-apply nil       'paralyze-apply start-of-turn-hook "Z" 0 #f 15)
 (mk-effect 'ef_ensnare  "Ensnared"  s_tangle   'ensnare-exec  'ensnare-apply  nil       'ensnare-apply  keystroke-hook "E" 0 #f 15)
 
 ;; On-damage hooks
