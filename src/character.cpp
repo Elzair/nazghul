@@ -2685,7 +2685,7 @@ void Character::exec()
             if (isPlayerControlled()) {
                 log_msg("%s continues %s...", getName(), getTaskName());
             }
-            closure_exec(taskproc, "pl", this, taskgob);
+            closure_exec(taskproc, "pl", this, taskgob->p);
             break;
 
         default:
