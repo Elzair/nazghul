@@ -50,7 +50,7 @@
               	(quest-data-update 'questentry-calltoarms 'directions 1)
                (say knpc "Take the road north to The Fen."))
               (else 
-               (say knpc "I'm not sure how to get there from here."))
+               (say knpc "The Fens are somewhere in the northwest."))
         ))))
 
 ;; towns
@@ -79,7 +79,7 @@
                (say knpc "Follow the road south to the junction, then travel east. "
                     "When the road bends north keep going east into the woods."))
               (else 
-               (say knpc "I'm not sure how to get there from here."))
+               (say knpc "It's in the middle of the Great Forest."))
               ))))
 
 (define (basic-bole knpc kpc)
@@ -100,7 +100,7 @@
               ((equal? kplace p_enchanters_tower)
                (say knpc "Go south to Trigrave and ask there."))
               (else 
-               (say knpc "I'm not sure how to get there from here."))
+               (say knpc "I think it's by the mountains north of the Great Wood."))
               ))))
               
 (define (basic-absa knpc kpc)
@@ -126,7 +126,7 @@
               ((equal? kplace p_oparine)
                (say knpc "Well, here you are already!"))
               (else 
-               (say knpc "I'm not sure how to get there from here."))
+               (say knpc "It's on the southern coast somewhere."))
               ))))
 
 (define (basic-east knpc kpc)
@@ -148,7 +148,7 @@
               ((equal? kplace p_oparine)
                (say knpc "Take the road north to Trigrave and ask there."))
               (else 
-               (say knpc "I'm not sure how to get there from here."))
+               (say knpc "It's by the mountains west of the Great Forest."))
               ))))
 
 (define (basic-west knpc kpc)
@@ -170,7 +170,7 @@
               ((equal? kplace p_oparine)
                (say knpc "Take the road north to Trigrave and ask there."))
               (else 
-               (say knpc "I'm not sure how to get there from here."))
+               (say knpc "Follow the roard east from Trigrave."))
               ))))
 
 (define (basic-glas knpc kpc)
@@ -190,7 +190,7 @@
               ((equal? kplace p_oparine)
                (say knpc "Follow the road north to Trigave and ask there, or take a ship and follow the coastline all the way north."))
               (else 
-               (say knpc "I'm not sure how to get there from here."))
+               (say knpc "It's up near the northwest coast on an island."))
               ))))
 
 (define (basic-fens knpc kpc)
