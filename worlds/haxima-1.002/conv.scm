@@ -190,7 +190,7 @@
               ((equal? kplace p_oparine)
                (say knpc "Follow the road north to Trigave and ask there, or take a ship and follow the coastline all the way north."))
               (else 
-               (say knpc "It's up near the northwest coast on an island."))
+               (say knpc "It's up near the northeast coast on an island."))
               ))))
 
 (define (basic-fens knpc kpc)
