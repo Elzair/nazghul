@@ -2591,6 +2591,12 @@ void Character::exec()
                 /* Highlight the character & prompt the user */
                 select(true);
 
+                // Update name in foogod window
+                if (PARTY_CONTROL_ROUND_ROBIN == player_party->getPartyControlMode()) {
+                    foogod_set_title("Round Robin: %s", getName());
+                    foogodRepaint();
+                }
+
                 // If the character is out-of-site then change the camera to
                 // focus on the character.
                 if (! mapIsInCameraView(getPlace(), getX(), getY())) {

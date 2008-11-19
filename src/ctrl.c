@@ -23,6 +23,7 @@
 #include "ctrl.h"
 #include "dice.h"
 #include "event.h"
+#include "foogod.h"
 #include "cmd.h"
 #include "cmdwin.h"
 #include "map.h"
@@ -1023,6 +1024,9 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 if (! character->isLeader()) {
                     character->endTurn();
                 }
+            } else {
+                foogod_set_title("Round Robin: %s", character->getName());
+                foogodRepaint();
             }
             break;
 

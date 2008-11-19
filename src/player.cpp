@@ -173,6 +173,9 @@ void PlayerParty::changePlaceHook()
         if (! place_is_wilderness(place)) {
                 distributeMembers(place, x, y, dx, dy);
                 return;
+        } else {
+            foogod_set_title("Wilderness Travel");
+            foogodRepaint();
         }
 }
 
@@ -1374,10 +1377,13 @@ void PlayerParty::enableFollowMode()
         disableCurrentMode();
         forEachMember(member_set_control_mode, &mode);
         chooseNewLeader();
-        if (NULL == leader)
-                enableRoundRobinMode();
-        else
-                control_mode = PARTY_CONTROL_FOLLOW;
+        if (NULL == leader) {
+            enableRoundRobinMode();
+        } else {
+            control_mode = PARTY_CONTROL_FOLLOW;
+            foogod_set_title("Follow: %s", leader->getName());
+            foogodRepaint();
+        }
 
 }
 
@@ -1388,6 +1394,8 @@ void PlayerParty::enableRoundRobinMode()
         disableCurrentMode();
         forEachMember(member_set_control_mode, &mode);
         control_mode = PARTY_CONTROL_ROUND_ROBIN;
+        foogod_set_title("Round Robin: <pending>");
+        foogodRepaint();
 }
 
 void PlayerParty::enableSoloMode(class Character *solo)
@@ -1401,6 +1409,8 @@ void PlayerParty::enableSoloMode(class Character *solo)
         solo->setSolo(true);
         solo_member = solo;
         control_mode = PARTY_CONTROL_SOLO;
+        foogod_set_title("Solo: %s", solo->getName());
+        foogodRepaint();
 }
 
 void PlayerParty::chooseNewLeader()
@@ -1420,8 +1430,13 @@ void PlayerParty::chooseNewLeader()
                 }
         }
 
-        if (NULL != leader)
+        if (NULL != leader) {
                 leader->setLeader(true);
+                if (PARTY_CONTROL_FOLLOW == control_mode) {
+                    foogod_set_title("Follow: %s", leader->getName());
+                    foogodRepaint();
+                }
+        }
 }
 
 void PlayerParty::setLeader(class Character *character)

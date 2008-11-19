@@ -21,6 +21,7 @@
 //
 #include "foogod.h"
 #include "status.h"  // for status_get_h()
+#include "stdarg.h"
 #include "screen.h"
 #include "common.h"
 #include "player.h"
@@ -35,6 +36,9 @@
 
 #include <SDL_image.h>
 
+#define FOOGOD_CHARS_PER_LINE STAT_CHARS_PER_LINE
+#define FOOGOD_MAX_TITLE_LEN (FOOGOD_CHARS_PER_LINE-2)
+
 struct foogod {
 	SDL_Rect screenRect;
 	SDL_Rect turnRect;
@@ -43,6 +47,7 @@ struct foogod {
 	SDL_Rect goldRect;
 	SDL_Rect hullRect;
         SDL_Rect effectsRect;
+	SDL_Rect titleRect;
         foogod_mode_t mode;
         int hintLen;
         char *hintText;
@@ -51,43 +56,15 @@ struct foogod {
         char *progress_bar_title;
         struct images *image;
         struct sprite *progress_bar_sprites[3];
+	char title[FOOGOD_MAX_TITLE_LEN+1];
 } Foogod;
 
-/* XPM */
-//static char * foogod_progress_bar_xpm[] = {
-//        "24 16 16 1",
-//        " 	c None",
-//        ".	c #000000",
-//        "+	c #3E033E",
-//        "@	c #260226",
-//        "#	c #C880C8",
-//        "$	c #CE8FCE",
-//        "%	c #D59ED5",
-//        "&	c #D298D2",
-//        "*	c #7F007F",
-//        "=	c #FFC8FF",
-//        "-	c #FFDFFF",
-//        ";	c #FFFEFF",
-//        ">	c #D9A8D9",
-//        ",	c #9D3C9D",
-//        "'	c #5F005F",
-//        ")	c #620462",
-//        "..++++++++++++++++++++..",
-//        ".@++++++++++++++++++++@.",
-//        "++################$$%%++",
-//        "++################$%%%&+",
-//        "**##==============--;;&&",
-//        "**##==============--;;&&",
-//        "**################$->>>,",
-//        "**################$$>>,,",
-//        "''********************''",
-//        "''********************''",
-//        "'''''''''''''''''''''')'",
-//        "''''''''''''''''''''''''",
-//        "@@''''''''''''''''''''@@",
-//        "@@''''''''''''''''''''@@",
-//        ".@@@@@@@@@@@@@@@@@@@@@@.",
-//        "..@@@@@@@@@@@@@@@@@@@@.."};
+static void foogod_repaint_title(void)
+{
+    screenErase(&Foogod.titleRect);
+    screenPrint(&Foogod.titleRect, SP_CENTERED | SP_ONBORDER, "%s", Foogod.title);
+    screenUpdate(&Foogod.titleRect);
+}
 
 static int foogod_load_progress_bar_sprites(void)
 {
@@ -106,19 +83,6 @@ static int foogod_load_progress_bar_sprites(void)
 	    err("images_new() failed for file '%s': '%s'\n", fname, SDL_GetError() );
 	    goto fail;
 	}
-
-        //Foogod.image->w       = 8;
-        //Foogod.image->h       = 16;
-        //Foogod.image->rows    = 1;
-        //Foogod.image->cols    = 3;
-        //Foogod.image->offx    = 0;
-        //Foogod.image->offy    = 0;
-	// 
-        //Foogod.image->images = IMG_ReadXPMFromArray(foogod_progress_bar_xpm);
-	//if (!Foogod.image->images) {
-        //        err("IMG_ReadXPMFromArray() failed: '%s'\n", SDL_GetError() );
-        //        goto fail;
-	//}
 
         for (i = 0; i < 3; i++) {
                 if (!(Foogod.progress_bar_sprites[i] = sprite_new(0, 1, i, 0, 0, Foogod.image))) {
@@ -163,7 +127,6 @@ int foogodInit(void)
 
 	Foogod.screenRect.x = FOOGOD_X;
 	Foogod.screenRect.w = FOOGOD_W;
-	// Foogod.screenRect.y = STAT_Y + Status.screenRect.h + BORDER_H;
         foogod_set_y(STAT_Y + status_get_h() + BORDER_H);
         Foogod.screenRect.h = FOOGOD_H;
     
@@ -202,6 +165,12 @@ int foogodInit(void)
 	Foogod.combatRect.x = FOOGOD_X + FOOGOD_W - FOOGOD_W / 3;
 	Foogod.combatRect.y = foogod_get_y() + ASCII_H;
 	Foogod.combatRect.h = ASCII_H;
+
+        // title (on the border)
+        Foogod.titleRect.x = FOOGOD_X;
+        Foogod.titleRect.y = foogod_get_y() - BORDER_H;
+        Foogod.titleRect.w = FOOGOD_W;
+        Foogod.titleRect.h = BORDER_H;
 
         return foogod_load_progress_bar_sprites();
 }
@@ -335,6 +304,7 @@ void foogodRepaint(void)
                 break;
         }
 
+        foogod_repaint_title();
 	screenUpdate(&Foogod.screenRect);
 }
 
@@ -347,6 +317,7 @@ void foogod_set_y(int y)
 	Foogod.combatRect.y  = y + ASCII_H;
         Foogod.hullRect.y    = y;
         Foogod.effectsRect.y = y + ASCII_H;
+        Foogod.titleRect.y   = y - BORDER_H;
 }
 
 int foogod_get_y(void)
@@ -401,3 +372,12 @@ void foogod_progress_bar_finish()
         dbg("Foogod.progress_bar_steps=%d\n", Foogod.progress_bar_steps);
         Foogod.progress_bar_steps = Foogod.progress_bar_max_steps;
 }
+
+void foogod_set_title(char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(Foogod.title, FOOGOD_MAX_TITLE_LEN, fmt, args);
+    va_end(args);
+}
+
