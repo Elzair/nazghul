@@ -88,7 +88,7 @@ extern void cmdHelp(void);
 extern void cmdLoiter(class Being *subject);
 extern bool cmdMixReagents(class Character *mixer);
 extern void cmdNewOrder(void);
-extern void cmdSave(void);
+extern bool cmdSave(void);
 extern void cmdReload(void);
 extern bool cmdSearch(class Character *pc);
 extern void cmdTalk(Object *member);

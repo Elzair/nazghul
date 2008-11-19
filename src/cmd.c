@@ -128,6 +128,18 @@ static void print_terraform_help (void);
 
 /* functions */
 
+static class Character * cmdAnyPartyMemberEngagedInTask(void)
+{
+    int num_pcs = player_party->getSize();
+    for (int i = 0; i < num_pcs; i++) {
+        class Character *pc = player_party->getMemberAtIndex(i);
+        if (pc->engagedInTask()) {
+            return pc;
+        }
+    }
+    return NULL;
+}
+
 int dirkey(struct KeyHandler *kh, int key, int keymod)
 {
 	int *dir = (int *) kh->data;
@@ -1215,8 +1227,6 @@ bool cmdQuit(void)
 {
 	int yesno;
  	struct QuitHandler qh;
-        char *fname = 0;
-        bool ret = Quit;
 
         /* Bugfix: if the player tries to close the window while we're in one
          * of our getkey() calls, we'll enter this function recursively,
@@ -1235,7 +1245,7 @@ bool cmdQuit(void)
         /* Cancel quit? */
 	if (yesno == 'n') {
                 cmdwin_spush("abort!");
-                ret = false;
+                Quit = false;
                 goto pop_qh;
         }
 
@@ -1248,36 +1258,21 @@ bool cmdQuit(void)
         if (yesno == 'n') {
                 cmdwin_spush("not saving!");
                 Quit = true;
-                ret = true;
                 goto pop_qh;
         }
 
-        /* Select a filename to save to. */
-        cmdwin_pop();
-        fname = save_game_menu();
-
-        /* Did player cancel from the menu? */
-        if (!fname) {
-                cmdwin_spush("abort!");
-                ret = false;
-                goto pop_qh;
-        }
-        
-        log_begin("Saving to %s...", fname);
-        if (session_save(fname)) {
-                log_end("^c+rfailed!^c-");
+        if (cmdSave()) {
+            cmdwin_spush("saved!");
+            log_msg("Goodbye!\n");
+            Quit = true;
         } else {
-                log_end("^c+gok!^c-");
-                log_msg("Goodbye!\n");
-                Quit = true;
-                ret = true;
+            Quit = false;
         }
 
-        free(fname);
  pop_qh:
         eventPopQuitHandler();
 
-	return ret;
+	return Quit;
 }
 
 void cmdAttack(void)
@@ -2272,8 +2267,7 @@ int cmd_camp_in_wilderness(class Party *camper)
 
 void cmdLoiter(class Being *subject)
 {
-        int hours = 0, i = 0, num_pcs;
-        bool abort = false;
+    int hours = 0;
 
         cmdwin_clear();
         cmdwin_spush("Loiter");
@@ -2286,16 +2280,9 @@ void cmdLoiter(class Being *subject)
         }
         
         /* Check if any party members are engaged in a task. */
-        num_pcs = player_party->getSize();
-        for (i = 0; i < num_pcs; i++) {
-            class Character *pc = player_party->getMemberAtIndex(i);
-            if (pc->engagedInTask()) {
-                log_msg("Loiter - %s engaged in task!", pc->getName());
-                abort = true;
-            }
-        }
-
-        if (abort) {
+        class Character *pc;
+        if ((pc = cmdAnyPartyMemberEngagedInTask())) {
+            log_msg("Loiter - %s engaged in task!", pc->getName());
             cmdwin_spush("busy with tasks!");
             return;
         }
@@ -3384,16 +3371,34 @@ void cmdZoomIn(void)
         }
 }
 
-void cmdSave(void)
+bool cmdSave(void)
 {
-        char *fname = save_game_menu();
-        if (!fname)
-                return;
+    bool ret = true;
+    class Character *pc;
+    if ((pc = cmdAnyPartyMemberEngagedInTask())) {
+        log_msg("Denied - %s engaged in task!", pc->getName());
+        cmdwin_spush("busy with tasks!");
+        return false;
+    }
 
-        log_begin("Saving to %s...", fname);
-        session_save(fname);
-        log_end("ok!");
-        free(fname);
+    char *fname = save_game_menu();
+    if (!fname) {
+        cmdwin_spush("abort!");
+        return false;
+    }
+    
+    log_begin("Saving to %s...", fname);
+    if (session_save(fname)) {
+        log_end("^c+rfailed!^c-");
+        cmdwin_spush("failed!");
+        ret = false;
+    } else {
+        cmdwin_spush("ok!");
+        log_end("^c+gok!^c-");
+    }
+    session_save(fname);
+    free(fname);
+    return ret;
 }
 
 void cmdReload(void)
