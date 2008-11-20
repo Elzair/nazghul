@@ -630,9 +630,6 @@
 ;; Unrest-Curses. These replace the normal camping proc with one that always creates
 ;; an ambush. The 'fgob' of the effect is the tag of the npc party to
 ;; generate. This is specified when the unrest-curse effect is added to the target.
-;;
-;; Note that removal of the curse is a hack: we assume that the original
-;; camping proc is called camping-proc.
 ;; ----------------------------------------------------------------------------
 (define (unrest-camping-proc kplayer kplace fgob)
   (println "unrest-camping-proc")
@@ -690,6 +687,7 @@
 (mk-effect 'ef_temporary_fire_immunity         "Fire immunity"       s_im_fire  nil nil nil nil nil-hook "F" 0 #f  15)
 (mk-effect 'ef_magical_kill_immunity           "Magic kill immunity" s_im_death nil nil nil nil nil-hook "K" 0 #f  -1)
 (mk-effect 'ef_temporary_magical_kill_immunity "Magic kill immunity" s_im_death nil nil nil nil nil-hook "K" 0 #f  15)
+(mk-effect 'ef_fatigue                         "Fatigue"             s_unrest   nil nil nil nil nil-hook "F" 0 #f  5)
 (mk-effect 'ef_unrest_curse                    "Curse of Unrest"     s_unrest   nil 'unrest-curse-apply 'unrest-curse-rm 'unrest-curse-apply nil-hook "P" 0 #f  (* 60 24))
 
 ;; Keystroke hooks

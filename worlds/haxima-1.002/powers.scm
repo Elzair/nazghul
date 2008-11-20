@@ -1437,7 +1437,8 @@
     (for-each move-dude path)
     (kern-obj-dec-ref caster)
     )
-	result-ok)
+  (kern-obj-add-effect caster ef_fatigue nil)
+  result-ok)
 
 
 (define (powers-wriggle caster ktarg power)

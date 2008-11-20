@@ -21,35 +21,37 @@
                       ))
 
 (define (skill-sprint kactor)
-  (let* ((origin (kern-obj-get-location kactor))
-         (kplace (loc-place origin))
-         (sprint-max-range (occ-ability-stracro kactor))
-         (sprint-max-cost (* sprint-max-range (kern-obj-get-ap kactor)))
-         )
-    (println "max range " sprint-max-range ", max cost " sprint-max-cost)
-    (define (too-far? origin dest)
-      (let ((path (line (loc-x origin) (loc-y origin) 
-                        (loc-x dest) (loc-y dest))))
-        (let ((cost (foldr (lambda (d xy)
-                             (+ d 
-                                (kern-place-get-movement-cost (mk-loc kplace
-                                                                      (car xy) 
-                                                                      (cdr xy)) 
-                                                              kactor)
-                                ))
-                           0
-                           path)))
-          (> cost sprint-max-cost))))
-    (define (checkloc x y)
-      (let ((dest (mk-loc kplace x y)))
-        (and (kern-place-is-passable dest kactor)
-             (kern-in-los? origin dest)
-             (not (too-far? origin dest))
-             )))
-    (cast-ui-template-loc powers-sprint
-                          kactor
-                          (kern-mk-templ origin sprint-max-range 'checkloc)
-                          0)))
+  (if (has-effect? kactor ef_fatigue)
+      result-not-now
+      (let* ((origin (kern-obj-get-location kactor))
+             (kplace (loc-place origin))
+             (sprint-max-range (occ-ability-stracro kactor))
+             (sprint-max-cost (* sprint-max-range (kern-obj-get-ap kactor)))
+             )
+        (println "max range " sprint-max-range ", max cost " sprint-max-cost)
+        (define (too-far? origin dest)
+          (let ((path (line (loc-x origin) (loc-y origin) 
+                            (loc-x dest) (loc-y dest))))
+            (let ((cost (foldr (lambda (d xy)
+                                 (+ d 
+                                    (kern-place-get-movement-cost (mk-loc kplace
+                                                                          (car xy) 
+                                                                          (cdr xy)) 
+                                                                  kactor)
+                                    ))
+                               0
+                               path)))
+              (> cost sprint-max-cost))))
+        (define (checkloc x y)
+          (let ((dest (mk-loc kplace x y)))
+            (and (kern-place-is-passable dest kactor)
+                 (kern-in-los? origin dest)
+                 (not (too-far? origin dest))
+                 )))
+        (cast-ui-template-loc powers-sprint
+                              kactor
+                              (kern-mk-templ origin sprint-max-range 'checkloc)
+                              0))))
 
 (define (skill-wriggle kactor)
   ;; fixme: use smart target that only suggests viable locations?
