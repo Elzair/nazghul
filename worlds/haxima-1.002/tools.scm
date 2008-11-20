@@ -10,29 +10,33 @@
 
 ;; picklock
 (define (picklock-proc kchar ktarg)
-  (cond ((null? ktarg)
-         (kern-char-task-abort kchar)
-         result-no-target)
-        ;; roll to decide if enough turns have gone by
-        ((< (kern-dice-roll "1d20") (occ-ability-thief kchar))
-         (let ((roll (kern-dice-roll "1d20"))
-               (bonus (kern-dice-roll (string-append "1d" (number->string (occ-ability-thief kchar)))))
-               (dc ((kobj-ifc ktarg) 'get-unlock-dc ktarg kchar))
-               )
-           ;; (println "rolled " roll " + " bonus " vs " dc)
-           (cond ((= 0 dc) 
-                  result-no-target)
-                 ((or (= roll 20) (> (+ roll bonus ) dc))
-                  (send-signal kchar ktarg 'unlock)
-                  (kern-char-task-end kchar)
-                  result-ok
-                  )
-                 (else
-                  (kern-log-msg "Picklock broke!")
-                  (kern-obj-remove-from-inventory kchar t_picklock 1)
-                  (kern-char-task-end kchar) 
-                  result-failed
-                  ))))))
+  (let ((dc ((kobj-ifc ktarg) 'get-unlock-dc ktarg kchar)))
+    (if (= 0 dc) 
+        ;; difficulty=0 means it is no longer locked
+        (kern-char-task-abort kchar)
+        (let ((roll (kern-dice-roll "1d20"))
+              (bonus (kern-dice-roll (string-append "1d" (number->string (occ-ability-thief kchar)))))
+              (finish-dc (* 2 dc))
+              )
+          ;; roll to complete
+          ;(println "complete: " roll "+" bonus " vs " finish-dc)
+          (if (or (= 20 roll) (> (+ roll bonus ) finish-dc))
+              (let ((roll (kern-dice-roll "1d20"))
+                    (bonus (kern-dice-roll (string-append "1d" (number->string (occ-ability-thief kchar)))))
+                    )
+                ;; roll to succeed
+                ;(println "succeed: " roll "+" bonus " vs " dc)
+                (cond ((or (= roll 20) (> (+ roll bonus ) dc))
+                       (send-signal kchar ktarg 'unlock)
+                       (kern-char-task-end kchar)
+                       )
+                      (else
+                       (kern-log-msg "Picklock broke!")
+                       (kern-obj-remove-from-inventory kchar t_picklock 1)
+                       (kern-char-task-end kchar) 
+                       )
+                      )))))))
+        
 
 (mk-reusable-item 
   't_picklock "picklock" s_picklock norm
