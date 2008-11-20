@@ -23,9 +23,10 @@
 (define (skill-sprint kactor)
   (let* ((origin (kern-obj-get-location kactor))
          (kplace (loc-place origin))
-         (sprint-max-range (occ-ability-stracro))
-         (sprint-max-cost (* sprint-max-range (kern-char-get-ap kchar))
-        )
+         (sprint-max-range (occ-ability-stracro kactor))
+         (sprint-max-cost (* sprint-max-range (kern-obj-get-ap kactor)))
+         )
+    (println "max range " sprint-max-range ", max cost " sprint-max-cost)
     (define (too-far? origin dest)
       (let ((path (line (loc-x origin) (loc-y origin) 
                         (loc-x dest) (loc-y dest))))
@@ -44,7 +45,7 @@
         (and (kern-place-is-passable dest kactor)
              (kern-in-los? origin dest)
              (not (too-far? origin dest))
-        )))
+             )))
     (cast-ui-template-loc powers-sprint
                           kactor
                           (kern-mk-templ origin sprint-max-range 'checkloc)
