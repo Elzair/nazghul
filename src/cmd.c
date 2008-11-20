@@ -2508,6 +2508,7 @@ static int cmd_eval_and_log_result(int result)
                 { "^c+rfailed^c-!",           1 },
                 { "^c+Gnot here^c-!",         0 },
                 { "^c+rcritical fail^c-!!!",  1 },
+                { "^c+ynot now^c-!",          0 },
         };
 
         if (result < 0 || result >= array_sz(tbl)) {

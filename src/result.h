@@ -32,5 +32,6 @@
 #define RESULT_FAILED      5
 #define RESULT_NOT_HERE    6
 #define RESULT_CRITICAL_FAIL 7
+#define RESULT_NOT_NOW     8
 
 #endif
