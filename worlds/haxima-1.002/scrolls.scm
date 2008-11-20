@@ -75,6 +75,16 @@
       (rel-xen-quas caster))
   )
 
+(define (scroll-rel-xen-quas caster)
+  (if (in-wilderness? caster)
+      result-not-here
+      (rel-xen-quas caster))
+  )
+
+(define (scroll-paralyze caster)
+  (paralyze caster)
+  )
+
 ;;-----------------------------------------------------------------------------------------
 ;; Scroll List
 ;;-----------------------------------------------------------------------------------------
@@ -93,3 +103,4 @@
 (mk-scroll 't_wis_quas_scroll "Wis Quas (Reveal) scroll" s_wis_quas_scroll wis-quas) ;; context-any
 (mk-scroll 't_wis_an_ylem_scroll "Wis An Ylem (X-Ray Vision) scroll" s_wis_an_ylem_scroll wis-an-ylem) ;; context-any
 (mk-scroll 't_rel_xen_quas_scroll "Rel Xen Quas (Illusion of Beastliness) scroll" s_rel_xen_quas_scroll rel-xen-quas)
+(mk-scroll 't_test_paralyze_scroll "Paralyze Me!" s_an_tym_scroll scroll-paralyze)

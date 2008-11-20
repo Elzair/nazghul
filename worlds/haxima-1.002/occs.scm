@@ -350,3 +350,12 @@
   (occ-set-abil oc_warrior 7 lowskill)
   (occ-set-abil oc_ranger 7 modskill)
 )
+
+;----------------------------
+; Acrobatics
+
+;; These are for physical feats like sprinting and wriggling through
+;; bars. Piggyback on some of the other abilities for now.
+
+(define (occ-ability-stracro kchar) (occ-ability-strattack kchar))
+(define (occ-ability-dexacro kchar) (occ-ability-dexdef kchar))
