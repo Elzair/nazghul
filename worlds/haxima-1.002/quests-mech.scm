@@ -9,6 +9,18 @@
 		#t
 	))
 	
+(define (quest-assign-subquest quest target)
+	(let ((parent (quest-tbl-get quest 'qparent)))
+		(if (not (null? parent))
+			(quest-data-update parent 'qchildren
+				(cons
+					(qst-tag quest)
+					(quest-data-getvalue parent 'qchildren)
+				)
+			))
+		#t
+	))
+	
 (define (quest-assign-silent quest target)
 		#t
 	)
@@ -20,11 +32,17 @@
 (define (quest-status-inprogress quest)
 	"In progress"
 	)
-
+			
 (define (quest-data-get tag)
 	(let* ((questdata (tbl-get (gob (kern-get-player)) 'questdata))
 			)
 			(tbl-get questdata tag)
+		)
+	)
+	
+(define (quest-data-getvalue quest tag)
+	(let* ((qpayload (car (qst-payload (quest-data-get quest)))))
+		(tbl-get qpayload tag)
 		)
 	)
 
@@ -77,7 +95,7 @@
 	
 (define (quest-complete quest)
 	(if (and (quest-assigned? quest) use-quest-pane)
-		(kern-log-msg "^c+mQuest completed: " (qst-title quest) "^c-")
+		(kern-log-msg "^c+mQuest completed:^c-\n^c+m" (qst-title quest) "^c-")
 		)
 	(qst-complete! quest)
 	)
@@ -86,7 +104,7 @@
 (define (quest-notify subfunction)
 	(lambda (quest) 
 		(if (and (quest-assigned? quest) use-quest-pane)
-			(kern-log-msg "^c+mQuest updated: " (qst-title quest) "^c-")
+			(kern-log-msg "^c+mQuest updated:^c-\n^c+m" (qst-title quest) "^c-")
 			)
 		(if (not (null? subfunction))
 			(subfunction quest))

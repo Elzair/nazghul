@@ -110,7 +110,7 @@
         (begin
         	(quest-insert qst)
           ;;(tbl-append! target 'quests qst)
-          (println "quest-assign: " target)
+          ;;(println "quest-assign: " target)
           ;;(kern-log-msg "^c+gYou have a new quest: " (qst-title qst) "^c-")
           ))))
           
@@ -138,7 +138,7 @@
 (define (quest-get tag)
 	(safe-car
 		(filter 
-			(lambda (quest) (eq? (qst-tag quest) title))
+			(lambda (quest) (eq? (qst-tag quest) tag))
 			(tbl-get (gob (kern-get-player)) 'quests)
 		)
 	))
@@ -173,17 +173,40 @@
 
 ;; bump the quest to the top of its appropriate list
 (define (qst-bump! quest)
-	(if (quest-assigned? quest)
-		(begin
-			(quest-remove quest)
-			(quest-insert quest)
+	(define (qst-bump-base! qst)
+		(if (quest-assigned? qst)
+			(begin
+				(quest-remove qst)
+				(quest-insert qst)
+			)
+		))
+	;; if we have a parent quest, bump that first
+	(let ((parent (quest-tbl-get quest 'qparent)))
+		(if (not (null? parent))
+			(let ((pqst (quest-get parent)))
+				(if (not (null? pqst))
+					(qst-bump! pqst)
+				))
+		))
+	(qst-bump-base! quest)
+	;; if we have children, bump them
+	(let ((childlist (quest-tbl-get quest 'qchildren)))
+		(println childlist)
+		(map (lambda (entry)
+				(let ((cqst (quest-get entry)))
+					(if (not (null? cqst))
+						(qst-bump-base! cqst)
+						)
+					))
+			 childlist)
 		)
-	))
+	)
 	
 (define (quest-insert qst)
 	(let* ((target (gob (kern-get-player)))
 			(targlist (tbl-get target 'quests))
 			(inserttype (qst-done? qst))
+			(parent (quest-tbl-get qst 'qparent))
 			)
 		(define (insert-here? testee)
 			(cond ((eq? inserttype 'inprogress) #t)
@@ -203,8 +226,56 @@
 					)
 				)
 			))
-		(if (null? targlist)
-			(tbl-append! target 'quests qst)
-			(tbl-set! target 'quests (quest-insert-helper targlist))
+		(define (quest-insertchild-helper qstlist)
+			(if (null? qstlist) (list qst)
+				(let ((qhead (safe-car qstlist)))
+					(if (or (not (equal? parent (quest-tbl-get qhead 'qparent)))
+							(insert-here? qhead))
+						(cons qst qstlist)
+						(cons
+							qhead
+							(quest-insertchild-helper (cdr qstlist))
+						)
+					)
+				)
+			))
+		(define (quest-insert-findparent qstlist)
+			(if (null? qstlist) (nil)
+				(let ((qhead (safe-car qstlist)))
+					(if (equal? parent (qst-tag qhead))
+						(cons
+							qhead 
+							(quest-insertchild-helper (cdr qstlist))
+						)
+						(cons
+							qhead
+							(quest-insert-findparent (cdr qstlist))
+						)
+					)
+				)
+			))
+		(cond ((null? targlist) (tbl-append! target 'quests qst))
+			((null? parent) (tbl-set! target 'quests (quest-insert-helper targlist)))
+			(#t (tbl-set! target 'quests (quest-insert-findparent targlist)))
 			)
+	))
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Some special handling for quests with tbl payloads
+
+(define (quest-tbl? quest)
+	(let ((qpayload (qst-payload quest)))
+		(cond ((not (pair? qpayload)) #f)
+			 ((not (pair? (car qpayload))) #f)
+			(#t (is-tbl? (car qpayload)))
+		)
+	))
+	
+(define (quest-tbl-get quest tag)
+	(let ((qpayload (qst-payload quest)))
+		(cond ((not (pair? qpayload)) nil)
+			 ((not (pair? (car qpayload))) nil)
+			((not (is-tbl? (car qpayload))) nil)
+			(#t (tbl-get (car qpayload) tag))
+		)
 	))
