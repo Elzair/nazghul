@@ -55,7 +55,7 @@
 (define (gregor-hail knpc kpc)
   (if (in-player-party? 'ch_nate)
       (gregor-kill-nate knpc kpc)
-      ((if (in-inventory? kpc t_letter_from_enchanter)
+      (if (in-inventory? kpc t_letter_from_enchanter)
            (say knpc "I see you got your stuff, and that letter from the Enchanter. "
                 "Don't forget to ready your weapons before leaving. "
                 "It's dangerous out there!")
@@ -63,7 +63,7 @@
                 " Welcome, Wanderer. I've been watching for you."
                 " There's some things that belong to you, over in yonder cave."
                 " Go in where the chest is, open it, and get the things inside."
-                " It's all for you.")))
+                " It's all for you."))
       ))
 
 ;; Some prompting with initial commands:
@@ -71,17 +71,17 @@
 ;; Hmmm...perhaps it would be desirable to have game-UI promts
 ;; spoken out-of-character, so that the NPCs don't break the game fiction...
 (define (gregor-open knpc kpc)
-  (say knpc "Use the 'o' key to OPEN chests."))
+  (say knpc "Use the 'o' key to ^c+bopen^c- chests."))
 
 (define (gregor-get knpc kpc)
-  (say knpc "Use the 'g' key to GET stuff that's on the ground."))
+  (say knpc "Use the 'g' key to ^c+bget^c- stuff that's on the ground."))
 
 (define (gregor-read knpc kpc)
-  (say knpc "Use the 'r' key to READY weapons or armor. "
+  (say knpc "Use the 'r' key to ^c+bready^c- weapons or armor. "
        "You can't use a weapon in combat until it's ready."))
 
 (define (gregor-camp knpc kpc)
-  (say knpc "Use the 'k' key to KAMP, err...camp, in the wilderness and heal up."))
+  (say knpc "Use the 'k' key to ^c+bkamp^c-, err...camp, in the wilderness and heal up."))
 
 
 (define (gregor-dang knpc kpc)
