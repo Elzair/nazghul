@@ -414,6 +414,7 @@
 (mk-sprite 's_runestone_x 23)
 (mk-sprite 's_runestone_y 24)
 (mk-sprite 's_runestone_z 25)
+(mk-sprite 's_runestone_group 26)
 (mk-sprite 's_runestone_ankh 31)
 
 (kern-mk-sprite 's_fgob_stalker ss_humanoids  4 0 #f 0 )
