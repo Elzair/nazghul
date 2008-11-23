@@ -170,7 +170,7 @@
               ((equal? kplace p_oparine)
                (say knpc "Take the road north to Trigrave and ask there."))
               (else 
-               (say knpc "Follow the roard east from Trigrave."))
+               (say knpc "Follow the road east from Trigrave."))
               ))))
 
 (define (basic-glas knpc kpc)
