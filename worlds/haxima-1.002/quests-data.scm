@@ -195,13 +195,12 @@
 (questadd (qst-mk "A Rune in Fire"
 	'questentry-rune-w
 	(kern-ui-paginate-text
-		"A rune can be found in the Fire Sea."
+		"A rune was found amongst the hoard of a dragon lairing in the Fire Sea."
 	)
 	'quest-assign-notify
 	'quest-status-inprogress
 	's_runestone_r
 	(tbl-build
-		;;'on-update 'quest-allrunes-update
 		'bonus-xp 0
 		)
 ))
