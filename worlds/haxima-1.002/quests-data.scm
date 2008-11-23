@@ -105,6 +105,19 @@
 		)
 ))
 
+
+(questadd (qst-mk "Blood Price: Dragon"
+	'questentry-dragon
+	(kern-ui-paginate-text
+		"The Alchemist has offered to trade you information on the wherabouts of a Rune, in exchange for the blood of a dragon."
+	)
+	'quest-assign-always
+	'quest-dragon-update
+	's_dragon_party
+	(tbl-build
+		)
+))
+
 (questadd (qst-mk "Bandit Troubles"
 	'questentry-bandits
 	(kern-ui-paginate-text

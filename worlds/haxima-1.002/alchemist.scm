@@ -115,10 +115,12 @@
 ;; done: known to have found p rune
 (define (alch-dragon-reward knpc kpc)
   (say knpc "Oh, yes, the rune...")
+	(prompt-for-key)
   (say knpc
 	   "The paladins have built several fortifications in the "
 	   "deeps of Kurpolis. One of the runes was buried in the "
 	   "foundations of the deepest fort.")
+	(prompt-for-key)
   (say knpc
 	   "A pick and shovel may be enough to get it out again, "
 	   "but it might be difficult with a dozen paladins breathing "
@@ -158,46 +160,54 @@
 													 1)
 						  (say knpc "[He eyes the vial hungrily] "
 							   "Yes! It's just what I need!")
+							(quest-data-update 'questentry-dragon 'done 1)
+							(quest-complete (quest-data-get 'questentry-dragon))
+							(quest-data-assign-once 'questentry-dragon)
 						  (alch-dragon-reward knpc kpc))
-					(say knpc "Well, I suppose if you dig up the "
-					 "whole Shard you'll someday find it without "
-					 "my help. Good luck!"))
+					(begin
+						(say knpc "Well, I suppose if you dig up the "
+						"whole Shard you'll someday find it without "
+						"my help. Good luck!")
+						(quest-data-assign-once 'questentry-dragon)
+					))
 				))
 			(#t
 				(say knpc "Then perhaps we can exchange favors. "
 				   "I happen to know where one of these runes "
 				   "is buried. I'll tell you its location if you "
-				   "bring me a vial of dragon's blood. ")))
+				   "bring me a vial of dragon's blood. ")
+				(quest-data-assign-once 'questentry-dragon)))
 		(say knpc "Well, if you are, I happen to know where one is "
 		   "hidden.")))
 
-(define (alch-rune knpc kpc)
+(define (alch-more knpc kpc)
 	(let ((qstat (alchq-dragon (gob knpc))))
-	(if (quest-offered? qstat)
-		(begin
-			(say knpc "Abe knows more about the runes themselves. Are you "
-				"interested in finding the others?")
-			(quest-data-update-with 'questentry-runeinfo 'abe 1 (quest-notify nil))
-			(alch-dragon-quest knpc kpc qstat))
+		(say knpc "Abe knows more about the runes themselves. Are you "
+			"interested in finding the others?")
+		(quest-data-update-with 'questentry-runeinfo 'abe 1 (quest-notify nil))
+		(alch-dragon-quest knpc kpc qstat)
+	))
+		   
+(define (alch-rune knpc kpc)
+	(if (not (null? (quest-data-getvalue 'questentry-dragon 'rerune)))
+		(alch-more knpc kpc)
 		(begin
 			(say knpc "[He gets a canny look] Runes, eh? I've seen a few in my time. "
 			   "Have you one to look at?")
 			(if (kern-conv-get-yes-no? kpc)
 				(if (in-inventory? kpc t_rune_k 1)
 					(begin
-					  (quest-offered! qstat #t)
 					  (say knpc "Yes, I see. This once belonged to the Enchanter, "
 						   "I believe. I hope you didn't steal it! "
 						   "I have seen several more like it, "
 						   "but the person you really should speak to "
-						   "is Abe. Are you interested in finding the "
-						   "other runes?")
+						   "is Abe.")
+							(quest-data-update 'questentry-dragon 'rerune 1)
 						   (quest-data-update-with 'questentry-runeinfo 'abe 1 (quest-notify nil))
-					  (alch-dragon-quest knpc kpc qstat)
 					  )
 					(say knpc "I don't see it. Perhaps you dropped it?"))
 				(say knpc "I might be able to help if you could show me.")))
-		)))
+		))
 
 (define (alch-abe knpc kpc)
   (say knpc "An old acquaintance of mine. "
@@ -207,7 +217,8 @@
   (say knpc "I've never done it personally, but if one wants to obtain some "
        "dragon's blood my understanding is that one must kill a dragon! "
        "I hear they're common as cows in the regions of the Fire Sea."
-       ))
+			)
+	(quest-data-update-with 'questentry-dragon 'sea 1 (quest-notify nil)))
 
 
 ;; The Wise...
@@ -390,6 +401,7 @@
        (method 'poti alch-buy)
 
        (method 'rune alch-rune)
+       (method 'more alch-more)
        (method 'drag alch-drag)
 
        (method 'necr alch-necr)

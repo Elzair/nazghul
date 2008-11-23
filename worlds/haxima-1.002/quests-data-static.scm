@@ -251,3 +251,41 @@
 		)
 	))
 
+
+;;-----------------------
+;; dragon blood
+
+(define (quest-dragon-update quest)
+	(println "qbu?")
+	(let* ((quest-tbl (car (qst-payload quest)))
+			(header (kern-ui-paginate-text
+				"The Alchemist has offered to trade you information on the wherabouts of a Rune, in exchange for the blood of a dragon."
+				)))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(kern-ui-paginate-text
+			"The Alchemist has traded you information on the wherabouts of a Rune, in exchange for the blood of a dragon."
+		))
+	((in-inventory? (car (kern-party-get-members (kern-get-player))) t_dragons_blood 1)
+		(append header
+		(kern-ui-paginate-text
+			""
+			"You have a vial of dragon's blood in your possession."
+		)))
+	((tbl-flag? 'sea)
+		(append header
+		(kern-ui-paginate-text
+			""
+			"He suggests that the Fire Sea may be the best place to seek them out."
+		)))
+	(#t
+		header
+		)
+)
+
+		)
+	))
+
