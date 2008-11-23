@@ -1,4 +1,4 @@
-(define (quest-assign-always quest target)
+(define (quest-assign-notify quest target)
 	(let ((notifytext (if (qst-complete? quest)
 						"^c+mQuest completed:^c-\n^c+m"
 						"^c+mNew quest:^c-\n^c+m"
@@ -9,17 +9,30 @@
 		#t
 	))
 	
+(define (quest-data-add-child parent quest)
+	(let ((childlist (quest-data-getvalue parent 'qchildren)))
+		(if (not (in-list? quest childlist))
+			(quest-data-update parent 'qchildren
+				(cons
+					quest
+					childlist
+				)
+			))
+	))
+
 (define (quest-assign-subquest quest target)
 	(let ((parent (quest-tbl-get quest 'qparent)))
 		(if (not (null? parent))
-			(quest-data-update parent 'qchildren
-				(cons
-					(qst-tag quest)
-					(quest-data-getvalue parent 'qchildren)
-				)
-			))
+			(quest-data-add-child parent (qst-tag quest))
+			)
 		#t
 	))
+	
+(define (quest-data-convert-subquest quest parent)
+	(quest-data-update quest 'qparent parent)
+	;; this doesnt actually 
+	(quest-data-add-child parent quest)
+	)
 	
 (define (quest-assign-silent quest target)
 		#t
