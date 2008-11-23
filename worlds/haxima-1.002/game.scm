@@ -82,20 +82,24 @@
 ;;(define ap-to-use-scroll        12)
 
 
-;; Difficulty Classes. "Normal" means an L6 professional with key attribute at
-;; 24 will succeed 50% of the time. For example, an L6 wrogue with 24 dexterity
-;; will have a thiefly ability of 14. This person should be able to pick a
+;; Difficulty Classes. "Normal" means an L5 professional with key attribute at
+;; 16 will succeed 50% of the time. For example, an L5 wrogue with 16 dexterity
+;; will have a thiefly ability of 13. This person should be able to pick a
 ;; normal lock 50% of the time (remember, he gets to retry with no penalty
 ;; except mana loss and maybe breaking a pick on critical failure).
 ;;
-;; 1d14 + 1d20 = 6.5 + 10.5 = 17
+;; 1d13 + 1d20 = 7 + 10.5 = 17.5
 ;;
-;; For the most difficult things, an L9 professional with an unusually strong
-;; key attribute of 30 will have an ability rating of 19, and should only
-;; succeed on two perfect rolls:
+;; For the most difficult things, an L9 professional wrogue with an unusually
+;; strong key attribute of 30 will have an ability rating of 19, and should
+;; only succeed on two perfect rolls:
 ;;
 ;; 19 + 20 = 39
 ;;
+;; Caveat: for abilities other than wrogues (eg, magic or strength-based
+;; abilities), the relationship between ability level, key attribute and
+;; advancement level is different (in fact, it's different in each case, see
+;; occs.scm).
 (define dc-escape-ensnare  26)
 (define dc-escape-paralyze 16)
 (define dc-normal 16)
