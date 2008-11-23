@@ -7,10 +7,18 @@
 ;; (eg, result-ok, result-no-target, etc... see naz.scm).
 
 (define (skill-jump kactor)
-  (cast-ui-ranged-loc powers-jump
-                      kactor
-                      2
-                      0))
+  (define (range)
+    (let ((x (* (occ-ability-stracro kactor) (kern-obj-get-ap kactor))))
+      (cond ((> x 1000) 3) ;; inconceivable!
+            ((> x 500) 2)
+            ((> x 150) 1)
+            (else 0))))
+  (if (has-effect? kactor ef_fatigue)
+      result-not-now
+      (cast-ui-ranged-loc powers-jump
+                          kactor
+                          (range)
+                          0)))
 
 (define (skill-sprint kactor)
   (if (has-effect? kactor ef_fatigue)
@@ -37,6 +45,7 @@
         (define (checkloc x y)
           (let ((dest (mk-loc kplace x y)))
             (and (kern-place-is-passable dest kactor)
+                 (not (occupied? dest))
                  (kern-in-los? origin dest)
                  (not (too-far? origin dest))
                  )))
@@ -90,7 +99,7 @@
 
 (define sk_jump
   (mk-skill "Jump" "Jump over impassable terrain"
-            base-move-ap
+            0
             0 
             #f
             #f
@@ -114,7 +123,7 @@
 
 (define sk_sprint
   (mk-skill "Sprint" "Move quickly, in a straight line, for a short distance"
-            base-move-ap
+            0
             0
             #f
             #f
@@ -204,6 +213,12 @@
 ;; The number preceeding the skill name is the minimum level needed to use the
 ;; skill.
 
+(define sks_warrior
+  (kern-mk-skill-set "Warrior" (list
+                                (list 1 sk_jump)
+                                (list 1 sk_sprint)
+                                )))
+
 (define sks_wrogue
   (kern-mk-skill-set "Wrogue" (list 
                                (list 1 sk_sprint)
@@ -231,6 +246,5 @@
                                (list 14 sk_reach)
                                (list 15 sk_pickpocket)
                                (list 16 sk_stealth)
-                                 
                                (list 2 sk_butcher)
                                )))

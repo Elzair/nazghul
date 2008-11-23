@@ -24,7 +24,7 @@
 ;;        / a         / a       / o  / o / a / r / p
 ;;       / t         / n       / t  / t / d / a / x
 (mk-occ 'oc_wizard   "wizard"   -1  -1  -1  -1   4 nil)
-(mk-occ 'oc_warrior  "warrior"   1   0   1   0   4 nil)
+(mk-occ 'oc_warrior  "warrior"   1   0   1   0   4 sks_warrior)
 (mk-occ 'oc_wright   "wright"    0   1   0   1   4 nil)
 (mk-occ 'oc_wrogue   "wrogue"    1   1   0   0   4 sks_wrogue)
 (mk-occ 'oc_wanderer "wanderer"  5   5   5   5   8 sks_wanderer)

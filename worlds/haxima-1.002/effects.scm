@@ -687,7 +687,7 @@
 (mk-effect 'ef_temporary_fire_immunity         "Fire immunity"       s_im_fire  nil nil nil nil nil-hook "F" 0 #f  15)
 (mk-effect 'ef_magical_kill_immunity           "Magic kill immunity" s_im_death nil nil nil nil nil-hook "K" 0 #f  -1)
 (mk-effect 'ef_temporary_magical_kill_immunity "Magic kill immunity" s_im_death nil nil nil nil nil-hook "K" 0 #f  15)
-(mk-effect 'ef_fatigue                         "Fatigue"             s_unrest   nil nil nil nil nil-hook "F" 0 #f  5)
+(mk-effect 'ef_fatigue                         "Fatigue"             s_unrest   nil nil nil nil nil-hook "F" 0 #f  1)
 (mk-effect 'ef_unrest_curse                    "Curse of Unrest"     s_unrest   nil 'unrest-curse-apply 'unrest-curse-rm 'unrest-curse-apply nil-hook "P" 0 #f  (* 60 24))
 
 ;; Keystroke hooks

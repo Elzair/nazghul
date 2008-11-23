@@ -1409,6 +1409,7 @@
                                   result-no-effect)
                                  (else
                                   (kern-obj-relocate caster ktarg nil)
+                                  (kern-obj-add-effect caster ef_fatigue nil)
                                   result-ok))))
                       (kern-obj-set-mmode caster nil)
                       result))))))))
@@ -1427,14 +1428,23 @@
     ;; skill ;) Note that the dude may die along the way due to tile effects,
     ;; so keep a ref count just to be safe and check for death in the move-dude
     ;; function.
-    (define (move-dude xy)
-      (let ((loc (loc-mk kplace(car xy) (cdr xy))))
-        (cond ((not (kern-char-is-dead? caster))
-               (kern-obj-relocate caster loc nil)
-               (kern-map-repaint)
-               (kern-place-apply-tile-effects kplace caster)))))
+    (define (move-dude ok xy)
+      (and ok
+           (let ((loc (loc-mk kplace (car xy) (cdr xy))))
+             (cond ((or (not (passable? loc caster))
+                        (occupied? loc))
+                    (println loc " impassable")
+                    #f
+                    )
+                   ((not (kern-char-is-dead? caster))
+                    (kern-obj-relocate caster loc nil)
+                    (kern-map-repaint)
+                    (kern-place-apply-tile-effects kplace caster)
+                    #t
+                    )
+                   ))))
     (kern-obj-inc-ref caster)
-    (for-each move-dude path)
+    (foldr move-dude #t (cdr path))
     (kern-obj-dec-ref caster)
     )
   (kern-obj-add-effect caster ef_fatigue nil)
