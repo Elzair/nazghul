@@ -1741,3 +1741,9 @@
   
 (define (1- x) (- x 1))
 (define (1+ x) (+ x 1))
+
+;; Standard dc vs 1d20 + bonus, with a perfect roll granting automatic success.
+(define (check-roll dc bonus)
+  (let ((roll (kern-dice-roll "1d20")))
+    (or (= 20 roll)
+        (> (+ roll bonus) dc))))

@@ -84,11 +84,11 @@
 
 ;; Difficulty Classes. "Normal" means an L5 professional with key attribute at
 ;; 16 will succeed 50% of the time. For example, an L5 wrogue with 16 dexterity
-;; will have a thiefly ability of 13. This person should be able to pick a
+;; will have a thiefly ability of 10. This person should be able to pick a
 ;; normal lock 50% of the time (remember, he gets to retry with no penalty
 ;; except mana loss and maybe breaking a pick on critical failure).
 ;;
-;; 1d13 + 1d20 = 7 + 10.5 = 17.5
+;; 1d10 + 1d20 = 5.5 + 10.5 = 16
 ;;
 ;; For the most difficult things, an L9 professional wrogue with an unusually
 ;; strong key attribute of 30 will have an ability rating of 19, and should
@@ -102,7 +102,10 @@
 ;; occs.scm).
 (define dc-escape-ensnare  26)
 (define dc-escape-paralyze 16)
-(define dc-normal 16)
+(define dc-trivial        3)
+(define dc-easy           6)
+(define dc-normal         16)
+(define dc-challenging    26)
 (define dc-supremely-hard 38)
 
 ;; Pmasks (keep them around until mechs are converted to use passability

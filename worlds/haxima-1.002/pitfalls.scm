@@ -8,7 +8,7 @@
 ;; the character's thiefly skill to determine if the character detects and
 ;; avoids the trap before it trips.
 ;;----------------------------------------------------------------------------
-(define (mk-pitfall name ddc dmg) (list 'pitfall name ddc dmg #f #t))
+(define (mk-pitfall name ddc dmg usedc) (list 'pitfall name ddc dmg #f #t usedc))
 (define (pitfall-name pfall) (cadr pfall))
 (define (pitfall-detect-dc pfall) (caddr pfall))
 (define (pitfall-damage pfall) (cadddr pfall))
@@ -16,6 +16,7 @@
 (define (pitfall-set-detected! pfall val) (list-set-ref! pfall 4 val))
 (define (pitfall-known-to-npc? pfall) (list-ref pfall 5))
 (define (pitfall-set-known-to-npc! pfall val) (list-set-ref! pfall 5 val))
+(define (pitfall-use-dc pfall) (list-ref pfall 6))
 
 ;; The step handler runs whenever a character (kchar) steps on the pitfall
 ;; object (kobj). If the pitfall has already been detected then no harm
@@ -25,7 +26,6 @@
 ;; detected and made visible.
 (define (kpitfall-step-handler kobj kchar)
   (let ((pfall (kobj-gob-data kobj)))
-    (println pfall)
     (if (and (not (pitfall-detected? pfall))
              (or (is-player-party-member? kchar)
                  (not (pitfall-known-to-npc? pfall))
@@ -38,12 +38,12 @@
                      (> (+ roll bonus)
                         (pitfall-detect-dc pfall)))
                  (kern-log-msg (kern-obj-get-name kchar) 
-                               " avoids " 
+                               " ^c+gavoids^c- " 
                                (pitfall-name pfall) 
                                "!")
                  )
                 (else
-                 (kern-log-msg (kern-obj-get-name kchar) " trips "
+                 (kern-log-msg (kern-obj-get-name kchar) " ^c+rtrips^c- "
                                (pitfall-name pfall)
                                "!")
                  (kern-obj-apply-damage 
@@ -68,35 +68,49 @@
 ;; pitfall type (ktype) from inventory. This prompts the player to select a
 ;; tile. If the tile has the right passability and is unoccupied, this creates
 ;; a new instance and conceals it on the tile.
+;;
+;; Update: this is dangerous. Roll against the kchar's thiefly skill to
+;; determine if they succeed or just manage to hurt themselves.
 (define (kpitfall-use-handler ktype kchar)
-  (cond ((not (has-skill? kchar sk_arm_trap))
-         (kern-log-msg (kern-obj-get-name kchar)
-                       " lacks the skill to Arm Traps!"))
-        (else
-         (let ((loc (kern-ui-target (kern-obj-get-location kchar) 1)))
-           (cond ((null? loc) 
-                  (kern-log-msg "Abort!")
-                  #f)
-                 ((not (terrain-ok-for-pitfall? loc)) 
-                  (kern-log-msg "Wrong terrain type!")
-                  #f)
-                 ((occupied? loc) 
-                  (kern-log-msg "Somebody is there!")
-                  #f)
-                 (else
-                  (let ((kobj (mk-pitfall-from-ktype ktype)))
-                    (cond ((null? kobj) 
-                           (kern-log-msg "Script error: unknown type")
-                           #f)
-                          (else
-                           (kern-log-msg (kern-obj-get-name kchar)
-                                         " plants "
-                                         (pitfall-name (kobj-gob-data kobj))
-                                         "!")
-                           (kern-obj-put-at kobj loc)
-                           (kern-obj-remove-from-inventory kchar ktype 1)
-                           (pitfall-set-known-to-npc! (gob kobj) #f)
-                           #t)))))))))
+  (let ((loc (kern-ui-target (kern-obj-get-location kchar) 1)))
+    (cond ((null? loc) 
+           (kern-log-msg "Abort!")
+           result-no-target
+           )
+          ((not (terrain-ok-for-pitfall? loc)) 
+           (kern-log-msg "Wrong terrain type!")
+           result-not-here
+           )
+          ((occupied? loc) 
+           (kern-log-msg "Somebody is there!")
+           result-not-here
+           )
+          (else
+           (let* ((kobj (mk-pitfall-from-ktype ktype))
+                  (pfall (kobj-gob-data kobj))
+                  )
+             (cond ((null? kobj) 
+                    (kern-log-msg "Script error: unknown type")
+                    #f)
+                   ((not (check-roll (pitfall-use-dc pfall)
+                                     (occ-thief-dice-roll kchar)))
+                    (kern-log-msg "^c+rOOPS...^c- " 
+                                  (kern-obj-get-name kchar) 
+                                  " fumbles "
+                                  (pitfall-name pfall) "!")
+                    (kpitfall-step-handler kobj kchar)
+                    result-failed
+                    )
+                   (else
+                    (kern-log-msg (kern-obj-get-name kchar)
+                                  " plants "
+                                  (pitfall-name pfall)
+                                  "!")
+                    (kern-obj-put-at kobj loc)
+                    (kern-obj-remove-from-inventory kchar ktype 1)
+                    (pitfall-set-known-to-npc! pfall #f)
+                    result-ok
+                    )))))))
 
 (define ktrap-ifc
   (ifc obj-ifc
@@ -114,9 +128,9 @@
 (define (mk-caltrops)
   (let ((kobj (kern-mk-obj t_caltrops 1)))
     (kern-obj-add-effect kobj ef_permanent_invisibility nil)
-    (bind kobj (mk-pitfall "a caltrops" 18 "1d10"))))
+    (bind kobj (mk-pitfall "a caltrops" 18 "1d10" dc-easy))))
 
 (define (mk-beartrap)
   (let ((kobj (kern-mk-obj t_beartrap 1)))
     (kern-obj-add-effect kobj ef_permanent_invisibility nil)
-    (bind kobj (mk-pitfall "a beartrap" 16 "2d10"))))
+    (bind kobj (mk-pitfall "a beartrap" 16 "2d10" dc-challenging))))
