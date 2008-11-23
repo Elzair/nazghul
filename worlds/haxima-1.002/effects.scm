@@ -200,13 +200,6 @@
 (define (ensnare-apply fgob kobj)
   (kern-log-msg (kern-obj-get-name kobj) " stuck in web!"))
 
-(define (destroy-webs-at loc)
-  (define (destroy-web web)
-    (kern-obj-remove web))
-  (map destroy-web (find-object-types-at loc web-type))
-  (map destroy-web (find-object-types-at loc F_web_perm))
-  )
-
 (define (ensnare-exec fgob kobj)
   (if (not (can-ensnare? kobj))
       (kern-obj-remove-effect ef_ensnare)
@@ -218,10 +211,11 @@
                     (> (+ (kern-char-get-strength kchar) 
                           droll)
                        dc-escape-ensnare))
-                (begin
+                (let ((loc ((kern-obj-get-location kchar))))
                   (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
                   (kern-obj-remove-effect kchar ef_ensnare)
-                  (destroy-webs-at (kern-obj-get-location kchar))
+                  (map kern-obj-remove-web (find-object-types-at loc web-type))
+                  (map kern-obj-remove-web (find-object-types-at loc F_web_perm))
                   #t)
                 (begin
                   (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
@@ -235,6 +229,36 @@
   (if (can-ensnare? kobj)
       (begin
         (kern-obj-add-effect kobj ef_ensnare nil))))
+
+;; ----------------------------------------------------------------------------
+;; Stuck
+;;
+;; Like ensnare, but no webs involved, and the thiefly ability is used to roll
+;; free. This was added as a risk balance for the wriggle skill.
+;; ----------------------------------------------------------------------------
+(define (stuck-apply fgob kobj)
+  (kern-log-msg (kern-obj-get-name kobj) " stuck!"))
+
+(define (stuck-exec fgob kobj)
+  (cond ((check-roll dc-escape-stuck (occ-thief-dice-roll kobj))
+         (kern-log-msg (kern-obj-get-name kobj) " wriggles free!")
+         (kern-obj-remove-effect kobj ef_stuck)
+         #t
+         )
+        (else
+         (kern-log-msg (kern-obj-get-name kobj) " struggles!")
+         (kern-obj-set-ap kobj 0)
+         #f
+         )))
+
+(define (is-stuckd? kobj)
+  (in-list? ef_stuck (kern-obj-get-effects kobj)))
+
+(define (stuck kobj)
+  (if (can-stuck? kobj)
+      (begin
+        (kern-obj-add-effect kobj ef_stuck nil))))
+
 
 ;;----------------------------------------------------------------------------
 ;; poison immunity
@@ -694,6 +718,7 @@
 (mk-effect 'ef_drunk    "Drunk"     s_drunk    'drunk-exec    'drunk-apply    'drunk-rm nil             keystroke-hook "A" 0 #t 60)
 (mk-effect 'ef_paralyze "Paralyzed" s_paralyse 'paralyze-exec 'paralyze-apply nil       'paralyze-apply start-of-turn-hook "Z" 0 #f 15)
 (mk-effect 'ef_ensnare  "Ensnared"  s_tangle   'ensnare-exec  'ensnare-apply  nil       'ensnare-apply  keystroke-hook "E" 0 #f 15)
+(mk-effect 'ef_stuck    "Stuck"     s_tangle   'stuck-exec    'stuck-apply    nil       'stuck-apply    keystroke-hook "E" 0 #f 15)
 
 ;; On-damage hooks
 (mk-effect 'ef_split               "Split"          nil 'split-exec     nil nil nil             on-damage-hook ""  0 #f  -1)

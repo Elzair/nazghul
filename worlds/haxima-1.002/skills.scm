@@ -58,6 +58,14 @@
   ;; fixme: use smart target that only suggests viable locations?
   (cast-ui-ranged-loc powers-wriggle kactor 1 0))
 
+(define (check-wriggle kactor)
+  (cond ((null? (kern-char-get-arms kactor)) #t)
+        (else
+         (kern-log-msg "Must unready arms!")
+         #f
+         )))
+      
+
 (load "disarm-trap.scm")
   
 (define (skill-stealth kactor)
@@ -91,9 +99,9 @@
 ;;                <list-of-required-tools>
 ;;                <list-of-required-consumables>)
 
-(define (mk-skill name description relative-ap-cost mp-cost use-in-wilderness
+(define (mk-skill name description ap-cost mp-cost use-in-wilderness
                   is-passive yusage-proc yusage-special-check-proc list-of-required-tools list-of-required-consumables)
-  (kern-mk-skill name description (* base-skill-ap relative-ap-cost) mp-cost use-in-wilderness
+  (kern-mk-skill name description ap-cost mp-cost use-in-wilderness
                  is-passive yusage-proc yusage-special-check-proc list-of-required-tools list-of-required-consumables))
 					
 
@@ -141,7 +149,7 @@
             #f             ;; wilderness?
             #f             ;; passive?
             'skill-wriggle ;; yusage 
-            nil            ;; yusage check
+            'check-wriggle ;; yusage check
             nil            ;; tools
             (list (list t_grease 1)) ;; material
             ))
@@ -215,20 +223,20 @@
 
 (define sks_warrior
   (kern-mk-skill-set "Warrior" (list
-                                (list 1 sk_jump)
                                 (list 1 sk_sprint)
+                                (list 5 sk_jump)
                                 )))
 
 (define sks_wrogue
   (kern-mk-skill-set "Wrogue" (list 
                                (list 1 sk_sprint)
-                               (list 4 sk_disarm_trap)
-                               (list 5 sk_jump)
-                               (list 6 sk_arm_trap)
-                               (list 7 sk_wriggle)
-                               (list 7 sk_reach)
-                               (list 8 sk_pickpocket)
-                               (list 8 sk_stealth)
+                               (list 2 sk_disarm_trap)
+                               (list 3 sk_jump)
+                               (list 3 sk_arm_trap)
+                               (list 4 sk_wriggle)
+                               (list 5 sk_reach)
+                               (list 6 sk_pickpocket)
+                               (list 6 sk_stealth)
                                )))
 
 (define sks_wright
@@ -238,7 +246,7 @@
 
 (define sks_wanderer 
   (kern-mk-skill-set "Wanderer" (list 
-                               (list 2 sk_sprint)
+                               (list 1 sk_sprint)
                                (list 8 sk_disarm_trap)
                                (list 10 sk_jump)
                                (list 12 sk_arm_trap)

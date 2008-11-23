@@ -100,13 +100,17 @@
 ;; abilities), the relationship between ability level, key attribute and
 ;; advancement level is different (in fact, it's different in each case, see
 ;; occs.scm).
-(define dc-escape-ensnare  26)
-(define dc-escape-paralyze 16)
 (define dc-trivial        3)
 (define dc-easy           6)
 (define dc-normal         16)
 (define dc-challenging    26)
+(define dc-hard           28)
 (define dc-supremely-hard 38)
+
+(define dc-escape-ensnare  dc-challenging)
+(define dc-escape-paralyze dc-normal)
+(define dc-avoid-stuck     dc-hard)
+(define dc-escape-stuck    dc-hard)
 
 ;; Pmasks (keep them around until mechs are converted to use passability
 ;; classes (see below))

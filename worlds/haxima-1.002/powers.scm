@@ -1450,19 +1450,28 @@
   (kern-obj-add-effect caster ef_fatigue nil)
   result-ok)
 
-
+;; Roll to even make the attempt, then roll to see if you get stuck.
 (define (powers-wriggle caster ktarg power)
   (kern-obj-set-mmode caster mmode-wriggle)
   (cond ((not (kern-place-move-is-passable? (kern-obj-get-location caster)
                                             ktarg caster))
          (kern-log-msg "Wriggle failed: blocked!")
          (kern-obj-set-mmode caster nil)
-         result-no-effect)
+         result-not-here)
         (else
          (kern-obj-relocate caster ktarg nil)
-         (kern-log-msg (kern-obj-get-name caster) " wriggles through!")
          (kern-obj-set-mmode caster nil)
-         result-ok)))
+         (cond ((passable? (kern-obj-get-location caster) caster)
+                (kern-log-msg "(Was that really necessary?)")
+                result-ok
+                )
+               ((not (check-roll dc-avoid-stuck (occ-thief-dice-roll caster)))
+                (kern-obj-add-effect caster ef_stuck nil)
+                result-failed
+                )
+               (else
+                result-ok
+                )))))
 
 (define (powers-butcher caster ktarg power)
   (if ((kobj-ifc ktarg) 'butcher ktarg caster)

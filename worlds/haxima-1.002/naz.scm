@@ -1747,3 +1747,4 @@
   (let ((roll (kern-dice-roll "1d20")))
     (or (= 20 roll)
         (> (+ roll bonus) dc))))
+
