@@ -145,7 +145,7 @@
 	'quest-status-inprogress
 	's_runestone_r
 	(tbl-build
-		;;'on-update 'quest-allrunes-update
+		'on-update 'quest-rune-p-update
 		'bonus-xp 0
 		)
 ))

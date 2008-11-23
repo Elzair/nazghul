@@ -124,7 +124,10 @@
   (say knpc
 	   "A pick and shovel may be enough to get it out again, "
 	   "but it might be difficult with a dozen paladins breathing "
-	   "down your neck."))
+	   "down your neck.")
+	   (quest-data-assign-once 'questentry-rune-p)
+	   (quest-rune-p-update)
+	   )
 	   
 (define (alch-dragon-done knpc kpc)
   (say knpc "I am afraid I dont know the locations of the other "

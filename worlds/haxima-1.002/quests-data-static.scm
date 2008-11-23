@@ -256,7 +256,6 @@
 ;; dragon blood
 
 (define (quest-dragon-update quest)
-	(println "qbu?")
 	(let* ((quest-tbl (car (qst-payload quest)))
 			(header (kern-ui-paginate-text
 				"The Alchemist has offered to trade you information on the wherabouts of a Rune, in exchange for the blood of a dragon."
@@ -289,3 +288,30 @@
 		)
 	))
 
+;;-----------------------
+;; deeps rune
+
+(define (quest-rune-p-update)
+	(let* ((quest (quest-data-get 'questentry-rune-p))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(kern-ui-paginate-text
+			"A rune was found in the depths of Kurpolis."
+		))
+	(#t
+		(kern-ui-paginate-text
+			"The Alchemist provided you with information on a rune buried in the deeps of Kurpolis:"
+			""
+		   "\"The paladins have built several fortifications in the deeps of Kurpolis. One of the runes was buried in the foundations of the deepest fort.\""
+		   ""
+	   		"\"A pick and shovel may be enough to get it out again, but it might be difficult with a dozen paladins breathing down your neck.\""
+		))
+)
+
+		)
+	))
+	
