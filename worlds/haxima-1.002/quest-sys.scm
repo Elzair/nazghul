@@ -69,8 +69,11 @@
          (list qst target)))
          
 (define (qst-status qst)
-  (apply (eval (list-ref qst 5))
-         (list qst)))
+	(let ((statfn (list-ref qst 5)))
+		(if (not (null? statfn))
+			(apply (eval statfn) (list qst))
+		))
+)
 
 (define (qst-done? qst)
   ;;(println "qst-done? qst=" qst)

@@ -148,6 +148,8 @@
      (if qlst
          (let ((qst (list-ref qlst (zqug-cur-entry zqug))))
 
+				(qst-status qst)
+
            ;; paint proc - render the quest details pane
            (define (paint zqag)
              (let* ((rect (zqag-dims zqag))
