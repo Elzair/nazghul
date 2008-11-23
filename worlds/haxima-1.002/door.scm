@@ -74,8 +74,6 @@
 
 (define (door-trip-traps kdoor kchar)
   (let ((door (kobj-gob kdoor))
-        (thief-dice (string-append "1d" 
-                                   (number->string (occ-ability-thief kchar))))
         )
     (kern-obj-inc-ref kdoor)
     (kern-obj-inc-ref kchar)
@@ -234,6 +232,8 @@
                         (if described?
                             (kern-log-continue ", "))
                         (kern-log-continue (trap-name trap))
+                        (if (trap-tripped? trap)
+                            (kern-log-continue "[disarmed]"))
                         #t)
                        (else described?)))
                #f

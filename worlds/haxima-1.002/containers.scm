@@ -251,6 +251,8 @@
                         (if described?
                             (kern-log-continue ", "))
                         (kern-log-continue (trap-name trap))
+                        (if (trap-tripped? trap)
+                            (kern-log-continue "[disarmed]"))
                         #t)
                        (else 
                         described?)))

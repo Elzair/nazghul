@@ -209,7 +209,7 @@
                  oc_wrogue           ; occ
                  s_brigandess        ; sprite
                  faction-men         ; starting alignment
-                 0 3 5               ; str/int/dex
+                 0 3 10               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  max-health ; hp
