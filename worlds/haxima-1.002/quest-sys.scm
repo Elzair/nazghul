@@ -172,7 +172,7 @@
 	
 (define (qst-set-title! qst title) (list-set-ref! qst 1 title))
 (define (qst-set-descr! qst descr) (list-set-ref! qst 3 descr))
-(define (qst-set-icon! qst icon) (list-set-ref! qst 6 icon))
+(define (qst-set-icon! qst icon) (list-set-ref! qst 7 icon))
 
 ;; bump the quest to the top of its appropriate list
 (define (qst-bump! quest)
