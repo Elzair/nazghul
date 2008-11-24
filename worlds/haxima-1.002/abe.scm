@@ -138,7 +138,9 @@
 (define (abe-clov knpc kpc)
      (say knpc "There's a legend that King Clovis carried one as a charm. "
            "He fell in battle during the goblin wars, but it was never found on his body. "
-           "Perhaps someone (perhaps a ^c+mgoblin^c-!) looted his corpse and took it."))
+           "Perhaps someone (perhaps a ^c+mgoblin^c-!) looted his corpse and took it.")
+           (quest-data-assign-once 'questentry-rune-f)
+           )
            
 (define (abe-temp knpc kpc)
 	(say knpc "Northwest of Oparine, there is a temple floating in the void. No one can reach it,"

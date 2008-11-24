@@ -59,7 +59,9 @@
 
   )
 
- (list 'on-entry-to-dungeon-room) ; hooks
+ (list 'on-entry-to-dungeon-room
+ 	'quest-rune-f-lair
+ 	) ; hooks
  nil ; edge entrances
  )
 

@@ -315,3 +315,57 @@
 		)
 	))
 	
+	
+;;-----------------------
+;; spider rune
+
+(define (quest-rune-f-update)
+	(let* ((quest (quest-data-get 'questentry-rune-f))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(kern-ui-paginate-text
+			"The lost rune of King Clovis was retrieved from the Spider Queen Angriss."
+		))
+	((and (tbl-flag? 'angrisslair) (tbl-flag? 'angriss))
+		(kern-ui-paginate-text
+			"King Clovis once possessed a rune, but he fell during the Goblin Wars."
+			""
+			"Information from the goblins has lead you to Angriss' lair, which may be where the rune lies now."
+		))	
+	((tbl-flag? 'angriss)
+		(kern-ui-paginate-text
+			"King Clovis once possessed a rune, but he fell during the Goblin Wars."
+			""
+		   "The goblin Kama has given you a clue to its location- Something (maybe a spider?) can be found where the southern edge of the Great Forest meets the mountains in the east."
+		))		
+	((tbl-flag? 'kama)
+		(kern-ui-paginate-text
+			"King Clovis once possessed a rune, but he fell during the Goblin Wars."
+			""
+		   "The goblins may know what became of it. The goblin Kama may be able to help you, if you can find him."
+		))		
+	((tbl-flag? 'gen)
+		(kern-ui-paginate-text
+			"King Clovis once possessed a rune, but he fell during the Goblin Wars."
+			""
+		   "The goblins may know what became of it. Amongst humans, the ranger Gen has the greatest knowledge of their kind."
+		))		
+	(#t
+		(kern-ui-paginate-text
+			"King Clovis once possessed a rune, but he fell during the Goblin Wars."
+			""
+		   "The goblins may know what became of it, but would they tell you?"
+		))
+)
+
+		)
+	))
+	
+(define (quest-rune-f-lair kplace kplayer)
+	(if (not (null? (quest-data-getvalue 'questentry-rune-f 'angriss)))
+		(quest-data-update-with 'questentry-rune-f 'angrisslair 1 (quest-notify nil))
+	))

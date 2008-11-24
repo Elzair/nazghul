@@ -87,8 +87,9 @@
     (kern-conv-end)
     )
   (define (join-first-time)    
-    (say knpc "Hajo! Bona ka ruka! Iki [" (loc-x angriss-lair-loc)
-         " " (loc-y angriss-lair-loc) "]")
+    (say knpc "Hajo! Bona ka ruka!")
+	  (say knpc "[On the ground, he scratches what looks to be a map of the Great Forest area. Where the southern edge of the forest meets the eastern mountains, he marks an X several times for emphasis.]")
+	  (quest-data-update-with 'questentry-rune-f 'angriss 1 (quest-notify nil))
     (kama-joined-once! (gob knpc))
     (join-player knpc)
     ;; Improve the player's relations with forest goblins
@@ -130,10 +131,15 @@
           (say knpc "[He looks confused as you try to describe a Rune]"))))
 
 ;; Ruka == Rune
+;; Having a goblin spout out *sextant coordinates* is just daft. Changing to something descriptive
+;; Maybe for the repeat, give a pointed direction based on the parties location on the worldmap? "He points south" or whatever direction is appropriate
 (define (kama-ruka knpc kpc)
   (if (kama-joined-once? (gob knpc))
-      (say knpc "Iki [" (loc-x angriss-lair-loc)
-           " " (loc-y angriss-lair-loc) "]")
+  		(begin
+	      (say knpc "Iki ruka.")
+    	  (say knpc "[On the ground, he scratches what looks to be a map of the Great Forest area. Where the southern edge of the forest meets the eastern mountains, he marks an X several times for emphasis.]")
+    	  (quest-data-update-with 'questentry-rune-f 'angriss 1 (quest-notify nil))
+      	)
       (begin
         (say knpc "[In the dust on the cell floor he draws a circle with jointed legs. A spider. He then points to you, himself, and then he scuffs out the spider.]")
         (prompt-for-key)

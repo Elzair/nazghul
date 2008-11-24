@@ -43,17 +43,22 @@
   (ifc rune-ifc
        (method 'get rune-k-get)))
 	
-(define (rune-basic-quest kobj kchar questtag)
-	(kobj-get kobj kchar)
-	(quest-complete (quest-data-get questtag))
+;; also used where external events trigger quest
+(define (rune-basic-quest questtag questicon)
+   	(quest-complete (quest-data-get questtag))
 	(quest-data-assign-once questtag)
 	(quest-data-update-with questtag 'done 1 (grant-party-xp-fn 50))
-	(qst-set-icon! (quest-get questtag) (kern-obj-get-icon kobj))
+	(qst-set-icon! (quest-get questtag) questicon)
+	)
+	    
+(define (rune-basic-get kobj kchar questtag)
+	(kobj-get kobj kchar)
+	(rune-basic-quest questtag (kern-obj-get-sprite kobj))
 	)
        
 ;; trigger quest update
 (define (rune-p-get kobj kchar)
-	(rune-basic-quest kobj kchar 'questentry-rune-p)
+	(rune-basic-get kobj kchar 'questentry-rune-p)
 	)
 (define rune-p-ifc
   (ifc rune-ifc
@@ -61,19 +66,26 @@
 
 ;; trigger quest update
 (define (rune-w-get kobj kchar)
-	(rune-basic-quest kobj kchar 'questentry-rune-w)
+	(rune-basic-get kobj kchar 'questentry-rune-w)
 	)
 (define rune-w-ifc
   (ifc rune-ifc
        (method 'get rune-w-get)))
 
-
+;; trigger quest update
+(define (rune-f-get kobj kchar)
+	(rune-basic-get kobj kchar 'questentry-rune-f)
+	)
+(define rune-f-ifc
+  (ifc rune-ifc
+       (method 'get rune-f-get)))
+       
 ;; rune types
 (mk-quest-obj-type 't_rune_k "Rune of Knowledge" s_runestone_k layer-item rune-k-ifc)
 (mk-quest-obj-type 't_rune_p "Rune of Power" s_runestone_p layer-item rune-p-ifc)
 (mk-quest-obj-type 't_rune_s "Rune of Skill" s_runestone_s layer-item rune-ifc)
 (mk-quest-obj-type 't_rune_c "Rune of Curiosity" s_runestone_c layer-item rune-ifc)
-(mk-quest-obj-type 't_rune_f "Rune of Freedom" s_runestone_f layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_f "Rune of Freedom" s_runestone_f layer-item rune-f-ifc)
 (mk-quest-obj-type 't_rune_w "Rune of Wisdom" s_runestone_w layer-item rune-w-ifc)
 (mk-quest-obj-type 't_rune_d "Rune of Discretion" s_runestone_d layer-item rune-ifc)
 (mk-quest-obj-type 't_rune_l "Rune of Leadership" s_runestone_l layer-item rune-ifc)

@@ -95,8 +95,12 @@
   (say knpc "King Clovis carried a Rune of his own. He fell in battle during the "
        "Goblin Wars and the Rune was lost. Do you wish to find it?")
   (if (yes? kpc)
+  		(begin
       (say knpc "If anyone knows where it is, it would be the goblins. "
-           "Go to Green Tower and seek out Gen. Ask him of CLOVIS.")
+           "Go to Green Tower and seek out Gen. Ask him of ^c+mClovis^c-.")
+       	(quest-data-update 'questentry-rune-f 'gen 1)
+        (quest-data-assign-once 'questentry-rune-f)
+           )
       (say knpc "If you do, ask me now, for like all who are dead I am pulled "
            "to the Void, and cannot resist for long."
            ))

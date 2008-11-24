@@ -208,7 +208,9 @@
 (define (gen-clov knpc kpc)
   (say knpc "King Clovis led the paladins in the Goblin War. "
        "If my friend Kama would ever show up we could ask him "
-       "if the goblins ever recovered his body."))
+       "if the goblins ever recovered his body.")
+       (quest-data-update-with 'questentry-rune-f 'kama 1 (quest-notify nil))
+       )
 
 (define (gen-band knpc kpc)
   (say knpc "The goblins report a bandit camp somewhere to the south and west. "

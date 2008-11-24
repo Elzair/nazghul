@@ -113,7 +113,9 @@
                "The key to a lock of hell.\n"
                "Take it, it is thine.")
           (kern-obj-remove-from-inventory knpc t_rune_f 1)
-          (kern-obj-add-to-inventory kpc t_rune_f 1))
+          (kern-obj-add-to-inventory kpc t_rune_f 1)
+          (rune-basic-quest 'questentry-rune-f s_runestone_f)
+         )
         (say knpc "I know what you seek.\n"
              "But I wonder, do you? First,\n"
              "satisfy honor."))))
