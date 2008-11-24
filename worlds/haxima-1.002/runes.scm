@@ -80,6 +80,14 @@
   (ifc rune-ifc
        (method 'get rune-f-get)))
        
+;; trigger quest update
+(define (rune-d-get kobj kchar)
+	(rune-basic-get kobj kchar 'questentry-rune-d)
+	)
+(define rune-d-ifc
+  (ifc rune-ifc
+       (method 'get rune-d-get)))
+       
 ;; rune types
 (mk-quest-obj-type 't_rune_k "Rune of Knowledge" s_runestone_k layer-item rune-k-ifc)
 (mk-quest-obj-type 't_rune_p "Rune of Power" s_runestone_p layer-item rune-p-ifc)
@@ -87,7 +95,7 @@
 (mk-quest-obj-type 't_rune_c "Rune of Curiosity" s_runestone_c layer-item rune-ifc)
 (mk-quest-obj-type 't_rune_f "Rune of Freedom" s_runestone_f layer-item rune-f-ifc)
 (mk-quest-obj-type 't_rune_w "Rune of Wisdom" s_runestone_w layer-item rune-w-ifc)
-(mk-quest-obj-type 't_rune_d "Rune of Discretion" s_runestone_d layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_d "Rune of Discretion" s_runestone_d layer-item rune-d-ifc)
 (mk-quest-obj-type 't_rune_l "Rune of Leadership" s_runestone_l layer-item rune-ifc)
 (mk-quest-obj-type 't_rune_l_init "Rune of Leadership" s_runestone_l layer-item rune-l-ifc)
 

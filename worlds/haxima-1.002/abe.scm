@@ -144,7 +144,9 @@
            
 (define (abe-temp knpc kpc)
 	(say knpc "Northwest of Oparine, there is a temple floating in the void. No one can reach it,"
-			" but legends say that a rune was sealed up there by the ancients."))
+			" but legends say that a rune was sealed up there by the ancients.")
+			(quest-data-assign-once 'questentry-rune-d)
+			)
       
 (define (abe-void knpc kpc)
   (say knpc "The Shard, the moons and the stars all habitate a great void. "
