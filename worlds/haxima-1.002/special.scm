@@ -31,7 +31,7 @@
 ;; Angriss's Lair. Should return true iff it triggers to remove the step
 ;; generator that invokes it.
 ;;----------------------------------------------------------------------------
-(define angriss-lair-loc (list 'p_shard 89 70))
+(define angriss-lair-loc (list 'p_shard 88 69))
 (define (mk-angriss-lair kbeing)
   (if (eqv? kbeing 
             (kern-get-player))
