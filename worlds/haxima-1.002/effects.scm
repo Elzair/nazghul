@@ -470,7 +470,7 @@
         (bonus (occ-thief-dice-roll kobj))
         (bonus2 (kern-char-get-level kobj))
         )
-    (println "stealth:" roll "+" bonus "+" bonus2 ">?" dc)
+    ;;(println "stealth:" roll "+" bonus "+" bonus2 ">?" dc)
     (if (< (+ roll bonus bonus2) dc)
         (kern-obj-remove-effect kobj ef_stealth)
         )))
