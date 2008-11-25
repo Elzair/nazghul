@@ -72,45 +72,47 @@
 ;; Update: this is dangerous. Roll against the kchar's thiefly skill to
 ;; determine if they succeed or just manage to hurt themselves.
 (define (kpitfall-use-handler ktype kchar)
-  (let ((loc (kern-ui-target (kern-obj-get-location kchar) 1)))
-    (cond ((null? loc) 
-           (kern-log-msg "Abort!")
-           result-no-target
-           )
-          ((not (terrain-ok-for-pitfall? loc)) 
-           (kern-log-msg "Wrong terrain type!")
-           result-not-here
-           )
-          ((occupied? loc) 
-           (kern-log-msg "Somebody is there!")
-           result-not-here
-           )
-          (else
-           (let* ((kobj (mk-pitfall-from-ktype ktype))
-                  (pfall (kobj-gob-data kobj))
-                  )
-             (cond ((null? kobj) 
-                    (kern-log-msg "Script error: unknown type")
-                    #f)
-                   ((not (check-roll (pitfall-use-dc pfall)
-                                     (occ-thief-dice-roll kchar)))
-                    (kern-log-msg "^c+rOOPS...^c- " 
-                                  (kern-obj-get-name kchar) 
-                                  " fumbles "
-                                  (pitfall-name pfall) "!")
-                    (kpitfall-step-handler kobj kchar)
-                    result-failed
-                    )
-                   (else
-                    (kern-log-msg (kern-obj-get-name kchar)
-                                  " plants "
-                                  (pitfall-name pfall)
-                                  "!")
-                    (kern-obj-put-at kobj loc)
-                    (kern-obj-remove-from-inventory kchar ktype 1)
-                    (pitfall-set-known-to-npc! pfall #f)
-                    result-ok
-                    )))))))
+  (if (not (has-skill? kuser sk_arm_trap))
+      result-lacks-skill
+      (let ((loc (kern-ui-target (kern-obj-get-location kchar) 1)))
+        (cond ((null? loc) 
+               (kern-log-msg "Abort!")
+               result-no-target
+               )
+              ((not (terrain-ok-for-pitfall? loc)) 
+               (kern-log-msg "Wrong terrain type!")
+               result-not-here
+               )
+              ((occupied? loc) 
+               (kern-log-msg "Somebody is there!")
+               result-not-here
+               )
+              (else
+               (let* ((kobj (mk-pitfall-from-ktype ktype))
+                      (pfall (kobj-gob-data kobj))
+                      )
+                 (cond ((null? kobj) 
+                        (kern-log-msg "Script error: unknown type")
+                        #f)
+                       ((not (check-roll (pitfall-use-dc pfall)
+                                         (occ-thief-dice-roll kchar)))
+                        (kern-log-msg "^c+rOOPS...^c- " 
+                                      (kern-obj-get-name kchar) 
+                                      " fumbles "
+                                      (pitfall-name pfall) "!")
+                        (kpitfall-step-handler kobj kchar)
+                        result-failed
+                        )
+                       (else
+                        (kern-log-msg (kern-obj-get-name kchar)
+                                      " plants "
+                                      (pitfall-name pfall)
+                                      "!")
+                        (kern-obj-put-at kobj loc)
+                        (kern-obj-remove-from-inventory kchar ktype 1)
+                        (pitfall-set-known-to-npc! pfall #f)
+                        result-ok
+                        ))))))))
 
 (define ktrap-ifc
   (ifc obj-ifc

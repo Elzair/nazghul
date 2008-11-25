@@ -215,6 +215,30 @@
             nil            ;; material
             ))
 
+(define sk_arm_trap
+  (mk-skill "Arm Trap" "Allows character to use beartraps and caltrops"
+            0
+            0
+            #f
+            #t
+            nil
+            nil
+            nil
+            nil
+             ))
+
+(define sk_unlock
+  (mk-skill "Unlock" "Unlock a door with a picklock"
+            1
+            2
+            #f
+            #f
+            'skill-unlock
+            nil
+            (list t_picklock)
+            nil
+            ))
+
 ;;----------------------------------------------------------------------------
 ;; Skill Set declarations
 ;;
@@ -230,13 +254,15 @@
 (define sks_wrogue
   (kern-mk-skill-set "Wrogue" (list 
                                (list 1 sk_sprint)
+                               (list 1 sk_unlock)
+                               (list 2 sk_arm_trap)
                                (list 2 sk_disarm_trap)
                                (list 3 sk_jump)
                                (list 3 sk_arm_trap)
                                (list 4 sk_wriggle)
-                               (list 5 sk_reach)
+                               (list 4 sk_reach)
+                               (list 5 sk_stealth)
                                (list 6 sk_pickpocket)
-                               (list 6 sk_stealth)
                                )))
 
 (define sks_wright
@@ -247,6 +273,7 @@
 (define sks_wanderer 
   (kern-mk-skill-set "Wanderer" (list 
                                (list 1 sk_sprint)
+                               (list 2 sk_unlock)
                                (list 8 sk_disarm_trap)
                                (list 10 sk_jump)
                                (list 12 sk_arm_trap)

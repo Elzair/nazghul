@@ -100,17 +100,20 @@
 ;; abilities), the relationship between ability level, key attribute and
 ;; advancement level is different (in fact, it's different in each case, see
 ;; occs.scm).
-(define dc-trivial        3)
-(define dc-easy           6)
-(define dc-normal         16)
-(define dc-challenging    26)
-(define dc-hard           28)
-(define dc-supremely-hard 38)
+(define dc-trivial        3) ;; >98%
+(define dc-easy           6) ;; >90%
+(define dc-nontrivial     10) ;; >75%
+(define dc-normal         15) ;; >50%
+(define dc-challenging    26) ;; 5%
+(define dc-hard           28) ;; <2%
+(define dc-masterful      30) ;; just impossible at L5,DEX=16
+(define dc-supremely-hard 38) ;; perfect roll at high levels
 
 (define dc-escape-ensnare  dc-challenging)
 (define dc-escape-paralyze dc-normal)
 (define dc-avoid-stuck     dc-hard)
 (define dc-escape-stuck    dc-hard)
+(define dc-reach           dc-hard)
 
 ;; Pmasks (keep them around until mechs are converted to use passability
 ;; classes (see below))

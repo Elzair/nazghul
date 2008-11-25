@@ -464,18 +464,25 @@
   (map (lambda (x) (kern-obj-add-effect kobj x nil))
        stealth-co-effects))
 
+;; Helper for the misc stealth effects
+(define (stealth-exec-generic kobj dc)
+  (let ((roll (kern-dice-roll "1d20"))
+        (bonus (occ-thief-dice-roll kobj))
+        (bonus2 (kern-char-get-level kobj))
+        )
+    (println "stealth:" roll "+" bonus "+" bonus2 ">?" dc)
+    (if (< (+ roll bonus bonus2) dc)
+        (kern-obj-remove-effect kobj ef_stealth)
+        )))
+  
 (define (stealth-exec fgob kobj)
-  (let ((mp (kern-char-get-mana kobj)))
-    (cond ((> mp 0)
-           (kern-char-dec-mana kobj 1)
-           ;; hack -- add the yuse-done hook now instead of in stealth-apply
-           ;; application. Otherwise, as soon as the player y)uses stealth, the
-           ;; yuse-done hook immediately runs and removes stealth mode.
-           (if (not (has-effect? kobj ef_stealth_yuse))
-               (kern-obj-add-effect kobj ef_stealth_yuse nil))
-           )
-          (else
-           (kern-obj-remove-effect kobj ef_stealth)))))
+  ;; hack -- add the yuse-done hook now instead of in stealth-apply
+  ;; application. Otherwise, as soon as the player y)uses stealth, the
+  ;; yuse-done hook immediately runs and potentially removes stealth mode.
+  (stealth-exec-generic kobj dc-nontrivial)
+  (if (not (has-effect? kobj ef_stealth_yuse))
+      (kern-obj-add-effect kobj ef_stealth_yuse nil))
+  )
 
 (define (stealth-rm fgob kobj)
   (kern-obj-set-visible kobj #t)
@@ -491,29 +498,19 @@
 ;; a DC of 16, An L3 wrogue with dexterity 10 will give itself away with
 ;; movement about 50% of the time.
 (define (stealth-do-simple-exec fgob kobj)
-  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
-         11)
-      (kern-obj-remove-effect kobj ef_stealth)))
+  (stealth-exec-generic kobj dc-nontrivial))
 
 (define (stealth-move-exec fgob kobj kplace x y)
-  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
-         11)
-      (kern-obj-remove-effect kobj ef_stealth)))
+  (stealth-exec-generic kobj dc-normal))
 
 (define (stealth-do-challenging-exec fgob kobj)
-  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
-         16)
-      (kern-obj-remove-effect kobj ef_stealth)))
+  (stealth-exec-generic kobj dc-challenging))
 
 (define (stealth-do-masterful-exec fgob kobj)
-  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
-         26)
-  (kern-obj-remove-effect kobj ef_stealth)))
+  (stealth-exec-generic kobj dc-masterful))
 
 (define (stealth-attack-exec fgob kobj kweap ktarg)
-  (if (< (+ (kern-dice-roll "1d20") (occ-ability-thief kobj))
-         26)
-  (kern-obj-remove-effect kobj ef_stealth)))
+  (stealth-exec-generic kobj dc-challenging))
 
 (define (stealth-do-impossible-exec fgob kobj)
   (kern-obj-remove-effect kobj ef_stealth))  

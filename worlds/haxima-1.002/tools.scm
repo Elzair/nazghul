@@ -41,11 +41,14 @@
 (mk-reusable-item 
   't_picklock "picklock" s_picklock norm
   (lambda (kobj kuser)
-    (let ((ktarg (ui-target (kern-obj-get-location kuser) 1 (mk-ifc-query 'unlock))))
-      (cond ((null? ktarg) result-no-target)
-            (else
-             (kern-char-task-begin kuser "picking a lock" 'picklock-proc ktarg)
-             result-ok)))))
+    (if (not (has-skill? kuser sk_unlock))
+        result-lacks-skill
+        (let ((ktarg (ui-target (kern-obj-get-location kuser) 1 (mk-ifc-query 'unlock))))
+          (cond ((null? ktarg) result-no-target)
+                (else
+                 (kern-char-task-begin kuser "picking a lock" 'picklock-proc ktarg)
+                 result-ok
+                 ))))))
 
 ;; gem -- use peer spell
 (mk-usable-item 't_gem "gem" s_gem norm
@@ -364,13 +367,24 @@
 ;; rope-and-hook -- use the wrogue's Reach skill. Works like telekineses but
 ;; range is limited by wrogue ability.
 ;;
+
 (mk-reusable-item 
  't_rope_hook "rope & hook" s_rope_hook hard
  (lambda (kobj kuser)
-   (cond ((not (has-skill? kuser sk_reach)) result-lacks-skill)
-         (else
-          (cast-ui-ranged-any powers-telekinesis
-                              kuser
-                              (powers-telekinesis-range (occ-ability-thief kuser))
-                              (occ-ability-thief kuser)
-                              kern-obj-is-mech?)))))
+   (if (not (has-skill? kuser sk_reach)) 
+       result-lacks-skill
+       (cast-ui-ranged-any (lambda (kchar ktarg power)
+                             (cond ((not (check-roll dc-reach (occ-ability-thief kuser)))
+                                    (take kchar t_rope_hook 1)
+                                    (kern-obj-put-at (kern-mk-obj t_rope_hook 1)
+                                                     (kern-obj-get-location ktarg))
+                                    result-failed
+                                    )
+                                   (else
+                                    ((kobj-ifc ktarg) 'handle ktarg kchar)
+                                    result-ok
+                                    )))
+                           kuser
+                           (powers-telekinesis-range (occ-ability-thief kuser))
+                           (occ-ability-thief kuser)
+                           kern-obj-is-mech?))))
