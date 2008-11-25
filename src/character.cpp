@@ -186,6 +186,7 @@ Character::Character(char *tag, char *name,
           , taskname(NULL)
           , taskproc(NULL)
           , taskgob(NULL)
+          , taskInterruptOnDamage(false)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -368,6 +369,55 @@ Character::~Character()
                 session_rm_sched_char(sched_chars_node);
 }
 
+static int yes_no_ignore(struct KeyHandler * kh, int key, int keymod)
+{
+	int *yesno = (int *) kh->data;
+
+	switch (key) {
+	case 'y':
+	case 'Y':
+		*yesno = 'y';
+		return 1;
+        case 'i':
+        case 'I':
+            *yesno = 'i';
+            return 1;
+	case 'n':
+	case 'N':
+	case CANCEL:
+		*yesno = 'n';
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+void Character::taskPromptToAbort()
+{
+    cmdwin_clear();
+    log_continue("^c+y%s damaged - abort task?^c-\n", getName());
+    log_flush();
+    cmdwin_spush("Abort");
+    cmdwin_spush("(Y/N/Ignore)");
+    int key;
+    getkey(&key, yes_no_ignore);
+    cmdwin_pop();
+    switch (key) {
+    case 'y':
+        taskAbort();
+        cmdwin_spush("abort!");
+        break;
+    case 'i':
+        taskInterruptOnDamage = false;
+        cmdwin_spush("ignore");
+        break;
+    case 'n':
+    default:
+        cmdwin_spush("no");
+        break;
+    }
+}
+
 void Character::damage(int amount)
 {
         if (hp <= 0)
@@ -382,10 +432,17 @@ void Character::damage(int amount)
         setHp(hp - amount);
 
 	if (isPlayerControlled()) {
-		statusFlash(getOrder(), Red);
+            statusFlash(getOrder(), Red);
+            if (!isDead()
+                   && engagedInTask() 
+                && taskInterruptOnDamage
+                ) {
+                taskPromptToAbort();
+            }
 	} else {
-		if (!isDead() && inCombat && getHp() < (getMaxHp() / 4))
-			setFleeing(true);
+            if (!isDead() && inCombat && (getHp() < (getMaxHp() / 4))) {
+                setFleeing(true);
+            }
 	}
         obj_dec_ref(this);
 }
@@ -3587,6 +3644,7 @@ void Character::taskSetup(char *name_arg, struct closure *proc_arg, struct gob *
     }
 
     setControlMode(CONTROL_MODE_TASK);
+    taskInterruptOnDamage = true;
 }
 
 void Character::taskBegin(char *name_arg, struct closure *proc_arg, struct gob *gob_arg)

@@ -334,6 +334,7 @@ class Character:public Being {
         bool exitMap();
         void taskCleanup();
         void taskSetup(char *taskname, struct closure *taskproc, struct gob *taskgob);
+        void taskPromptToAbort();
 
         bool fleePathFound;
         int fleeX, fleeY, fleePathFlags;
@@ -343,6 +344,7 @@ class Character:public Being {
         char *taskname;
         struct closure *taskproc;
         struct gob *taskgob;
+        bool taskInterruptOnDamage;
 };
 
 extern void char_dtor(void *val);
