@@ -229,10 +229,10 @@
 
 (define sk_unlock
   (mk-skill "Unlock" "Unlock a door with a picklock"
-            1
-            2
+            0
+            0
             #f
-            #f
+            #t ;; passive
             'skill-unlock
             nil
             (list t_picklock)
