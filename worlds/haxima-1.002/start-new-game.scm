@@ -321,7 +321,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 80 59)))
+  (kern-obj-put-at kplayer (list p_shard 0 97)))
   
 (define (create-char kplayer)
  (kern-obj-put-at kplayer (list p_char_setup 10 17)
@@ -331,9 +331,8 @@
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.
 ;;----------------------------------------------------------------------------
-;;(kern-set-start-proc start-scene)
-;;(kern-set-start-proc simple-start)
-(kern-add-hook 'new_game_start_hook 'create-char)
+;(kern-add-hook 'new_game_start_hook 'simple-start)
+;(kern-add-hook 'new_game_start_hook 'create-char)
 (load "quests-data.scm")
 (quest-assign (quest-data-get 'questentry-charcreate))
 
