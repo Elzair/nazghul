@@ -2404,19 +2404,10 @@ int place_set_edge_entrance(struct place *place, int dir, int x, int y)
 
 struct place *place_get_neighbor(struct place *place, int dir)
 {
-        /* check direction */
-        switch(dir) {
-        case NORTH:
-        case SOUTH:
-        case EAST:
-        case WEST:
-        case UP:
-        case DOWN:
-                return place->neighbors[dir];
-                break;
-        default:
-                return NULL;
-        }
+    if (dir < 0 || dir >= NUM_DIRECTIONS) {
+        return NULL;
+    }
+    return place->neighbors[dir];
 }
 
 int place_in_los(struct place *p1, int x1, int y1,
@@ -2454,8 +2445,8 @@ int place_in_los(struct place *p1, int x1, int y1,
 
 void place_set_neighbor(struct place *place, int dir, struct place *neighbor)
 {
-        int opdir = directionToOpposite(dir);
-        
+        int opdir = directionToOpposite(dir); 
+       
         /* unlink current neighbors */
         if (place->neighbors[dir]) {
                 place->neighbors[dir]->neighbors[opdir] = 0;

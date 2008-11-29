@@ -169,7 +169,7 @@ int vector_to_8facing(int dx, int dy)
 	{
 		dy = 0;	
 	}
-	if (abs(dy) > 2* (abs(dx)))
+	else if (abs(dy) > 2* (abs(dx)))
 	{
 		dx = 0;	
 	}

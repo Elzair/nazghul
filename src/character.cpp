@@ -788,8 +788,8 @@ enum MoveResult Character::move(int dx, int dy)
                         }
                         
                         groupExitTo(place_get_parent(getPlace()),
-                                    place_get_x(getPlace()), 
-                                    place_get_y(getPlace()),
+                                    place_get_x(getPlace()) + dx, 
+                                    place_get_y(getPlace()) + dy,
                                     NULL);
                         
                         endTurn();
