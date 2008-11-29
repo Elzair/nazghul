@@ -1327,8 +1327,7 @@
                  nil     ; subplaces
                  nil     ; neighbors
                  ;; objects -- automatically add a monster manager
-                 (cons (put (mk-monman) 0 0)
-                       objects)
+                 (cons (put (mk-monman) 0 0) objects)
                  (list 'on-entry-to-dungeon-room 'on-entry-trigger-all) ; hooks
                  entrances     ; edge entrances
                  ))
@@ -1336,23 +1335,23 @@
 
 ;; mk-dungeon-level -- given a 2d list of rooms, connect them up as neighbors
 (define (mk-dungeon-level . rooms)
-  (define (bind-east west-room east-room)
-    (if (and (not (null? west-room))
-             (not (null? east-room)))
-        (kern-place-set-neighbor east west-room east-room)))
-  (define (bind-south north-room south-room)
-    (if (and (not (null? north-room))
-             (not (null? south-room)))
-        (kern-place-set-neighbor south north-room south-room)))
+  (define (bind-dir r1 r2 dir)
+    (if (and (not (null? r1))
+             (not (null? r2)))
+        (kern-place-set-neighbor dir r1 r2)))
   (define (bind-row top bot)
     (if (not (null? top))
         (begin
           (if (not (null? (cdr top)))
-              (bind-east (car top) (cadr top)))
+              (bind-dir (car top) (cadr top) east))
           (if (null? bot)
               (bind-row (cdr top) nil)
               (begin
-                (bind-south (car top) (car bot))
+                (bind-dir (car top) (car bot) south)
+                (if (not (null? (cdr bot))) 
+                    (bind-dir (car top) (cadr bot) southeast))
+                (if (not (null? (cdr top))) 
+                    (bind-dir (cadr top) (car bot) southwest))
                 (bind-row (cdr top) (cdr bot)))))))
   (define (bind-rooms rooms)
     (if (not (null? rooms))

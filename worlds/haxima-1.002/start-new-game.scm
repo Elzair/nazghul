@@ -114,6 +114,7 @@
 (load "bandit-hideout.scm")
 (load "brundegardt.scm")
 (load "voidgap-passage.scm")
+(load "florinth.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -321,7 +322,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 0 97)))
+  (kern-obj-put-at kplayer (list p_shard 76 114)))
   
 (define (create-char kplayer)
  (kern-obj-put-at kplayer (list p_char_setup 10 17)
@@ -331,8 +332,8 @@
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.
 ;;----------------------------------------------------------------------------
-;(kern-add-hook 'new_game_start_hook 'simple-start)
-(kern-add-hook 'new_game_start_hook 'create-char)
+(kern-add-hook 'new_game_start_hook 'simple-start)
+;(kern-add-hook 'new_game_start_hook 'create-char)
 (load "quests-data.scm")
 (quest-assign (quest-data-get 'questentry-charcreate))
 

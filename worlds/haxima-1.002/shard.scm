@@ -561,7 +561,7 @@
         "~~ ~~ __ __ __ __ __ __ __ -- .. .. .. .. td tt tt tt ^^ ^^ ^^ ^^ tt ^^ ^^ ^^ {{ {{ -- -- -- -- "
         "~~ -- __ __ __ __ __ __ __ __ __ .. .. .. .. .. tt tt ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ -- -- {{ {{ {{ "
         "-- -- __ __ __ __ __ __ __ __ __ .. .. .. .. .. .. tt tt ^^ ^^ -- -- ^^ {{ {{ -- -- {{ {{ ^^ {{ "
-        "{{ -- -- __ __ __ __ __ __ __ __ __ .. .. .. .. .. .. tt ^^ ^^ ^^ -- -- -- -- -- -- {{ ^^ ^^ ^^ "
+        "{{ -- -- __ __ __ __ __ __ __ __ .. .. .. .. .. .. .. tt ^^ ^^ ^^ -- -- -- -- -- -- {{ ^^ ^^ ^^ "
         "-- -- ~~ -- __ __ __ __ __ __ __ __ -- -- .. .. .. .. ^^ ^^ ^^ ^^ ^^ {{ ~~ ~~ ~~ -- {{ {{ ^^ {{ "
         "-- ~~ ~~ ~~ __ __ __ __ __ __ __ __ __ -- -- -- -- ^^ ^^ ^^ {{ ^^ {{ -- -- -- -- -- -- {{ {{ {{ "
         "-- -- ~~ -- -- __ __ __ __ __ __ __ __ __ -- -- -- -- ^^ {{ {{ {{ -- -- {{ {{ {{ -- -- -- -- -- "
@@ -650,21 +650,17 @@
   (list p_gate_to_absalot  120  10)
   (list p_tower_of_absalot 120   8)
   (list p_kun               60  38)
-  (list p_lost_halls_entrance (loc-x lost-halls-loc)
-       (loc-y lost-halls-loc))
+  (list p_lost_halls_entrance (loc-x lost-halls-loc) (loc-y lost-halls-loc))
   (list p_voidgap_entrance   7  75)
   (list p_voidgap_exit       4  77)
+
+  (list p_florinth_n_tower  75 114)
+  (list p_florinth_wharf    75 115) 
+  (list p_florinth_s_tower  75 116)
+
+  (list p_florinth_bazaar   76 115) 
+
   )
- ;; SAM: For some Scheme reason, the interpreter throws a fit 
- ;;      when the following block of comments is placed prior to 
- ;;      the preceding close-paren, where they belong...
- ;; 
-  ;; Secret locations, player must find these
-  ;; These are placed by step triggers, which are placed in shard.scm and defined in special.scm
-  ;; p_bandit_hideout_l1
-  ;; p_angriss_lair
-  ;; p_brundegart
-  ;; p_mans_hideout
 
 
  nil ; neighbors
