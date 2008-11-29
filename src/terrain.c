@@ -92,7 +92,8 @@ struct terrain_palette *terrain_palette_new(char *tag)
 	assert(palette);
 	memset(palette, 0, sizeof(struct terrain_palette));
 
-        list_init(&palette->set);
+        list_init(&palette->lookup_head);
+        list_init(&palette->edit_head);
         palette->tag = strdup(tag);
         palette->widest_glyph = 0;
         palette->current_terrain_index = PAL_TERRAIN_NOT_SET;
@@ -106,7 +107,8 @@ terrain_palette_entry_new(char *glyph, struct terrain *terrain)
 {
         struct terrain_palette_entry *entry;
         entry = (struct terrain_palette_entry *)malloc(sizeof(*entry));
-        list_init(&entry->list);
+        list_init(&entry->lookup_list);
+        list_init(&entry->edit_list);
         entry->glyph = strdup(glyph);
         assert(entry->glyph);
         entry->terrain = terrain;
@@ -126,10 +128,10 @@ void terrain_palette_del(struct terrain_palette *pal)
 {
         struct list *elem;
 
-        elem = pal->set.next;
-        while (elem != &pal->set) {
+        elem = pal->edit_head.next;
+        while (elem != &pal->edit_head) {
                 struct terrain_palette_entry *entry;
-                entry = outcast(elem, struct terrain_palette_entry, list);
+                entry = outcast(elem, struct terrain_palette_entry, edit_list);
                 elem = elem->next;
                 terrain_palette_entry_del(entry);
         }
@@ -146,7 +148,8 @@ void terrain_palette_add(struct terrain_palette *pal, char *glyph,
         int n = strlen(glyph);
 
         entry = terrain_palette_entry_new(glyph, ter);
-        list_add_tail(&pal->set, &entry->list);
+        list_add_tail(&pal->lookup_head, &entry->lookup_list);
+        list_add_tail(&pal->edit_head, &entry->edit_list);
         pal->num_entries++;
         if (pal->widest_glyph < n)
                 pal->widest_glyph = n;
@@ -168,13 +171,13 @@ struct terrain_palette_entry *palette_entry(struct terrain_palette *palette,
                 return 0;
         }
 
-        elem = palette->set.next;
+        elem = palette->edit_head.next;
         while (n) {
                 elem = elem->next;
                 n--;
         }
 
-        return outcast(elem, struct terrain_palette_entry, list);
+        return outcast(elem, struct terrain_palette_entry, edit_list);
 }
 
 char *palette_glyph(struct terrain_palette *palette, int n)
@@ -193,8 +196,8 @@ palette_entry_for_terrain(struct terrain_palette * pp, struct terrain * tt)
         struct list *elem;
         struct terrain_palette_entry *entry;
 
-        list_for_each(&pp->set, elem) {
-                entry = outcast(elem, struct terrain_palette_entry, list);
+        list_for_each(&pp->lookup_head, elem) {
+                entry = outcast(elem, struct terrain_palette_entry, lookup_list);
                 if (tt == entry->terrain)
                         return entry;
         }
@@ -228,19 +231,17 @@ struct terrain *palette_terrain_for_glyph(struct terrain_palette *palette,
         struct list *elem;
         struct terrain_palette_entry *entry;
 
-        list_for_each(&palette->set, elem) {
-                entry = outcast(elem, struct terrain_palette_entry, list);
+        list_for_each(&palette->lookup_head, elem) {
+                entry = outcast(elem, struct terrain_palette_entry, lookup_list);
                 if (! strcmp(glyph, entry->glyph)) {
-
                         /* Odds are good that we'll want this same terrain in
                          * the near future, so move it to the front of the list
                          * (if not already there) to improve performance during
                          * startup. */
-                        if (elem != palette->set.next) {
+                        if (elem != palette->lookup_head.next) {
                                 list_remove(elem);
-                                list_add(&palette->set, elem);
+                                list_add(&palette->lookup_head, elem);
                         }
-
                         return entry->terrain;
                 }
         }
@@ -258,8 +259,8 @@ int palette_get_terrain_index(struct terrain_palette *palette,
         struct terrain_palette_entry *entry;
         int index = 0;
         
-        list_for_each(&palette->set, elem) {
-                entry = outcast(elem, struct terrain_palette_entry, list);
+        list_for_each(&palette->edit_head, elem) {
+                entry = outcast(elem, struct terrain_palette_entry, edit_list);
                 if (entry->terrain == tt)
                         return index;
                 index++;
@@ -451,9 +452,9 @@ void palette_print(FILE * fp, int indent, struct terrain_palette *palette)
     INDENT;
     fprintf(fp, ";; The widest glyph is %d characters\n",   palette->widest_glyph);
     
-    list_for_each(&palette->set, elem) {
+    list_for_each(&palette->edit_head, elem) {
         struct terrain_palette_entry *entry;
-        entry = outcast(elem, struct terrain_palette_entry, list);
+        entry = outcast(elem, struct terrain_palette_entry, edit_list);
 		palette_entry_print(fp, indent, entry);
 	}
 

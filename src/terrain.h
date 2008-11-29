@@ -74,24 +74,25 @@ extern void terrain_alloc_mmode_table(int n_mmodes);
 #define PAL_TERRAIN_NOT_SET    -1
 
 struct terrain_palette_entry {
-        struct list list;
-        char           * glyph;
-        struct terrain * terrain;
+    struct list lookup_list; /* listed by fast lookup order */
+    struct list edit_list; /* listed by palette order */
+    char           * glyph;
+    struct terrain * terrain;
 };
 
 void palette_entry_print(FILE * fp, int indent,
                          struct terrain_palette_entry *entry);
 
 struct terrain_palette {
-        struct list list;
-        char *tag;
-        int widest_glyph; 
-        int current_terrain_index;
-        int free_index;
-        int num_entries;
-        struct list set;
-        int quick_terrain[NUM_QUICK_TERRAINS];
-        // "quick terrain" for quick UI access (ten number keys 0..9)
+    struct list list; /* list of palettes */
+    char *tag;
+    int widest_glyph; 
+    int current_terrain_index;
+    int free_index;
+    int num_entries;
+    struct list lookup_head; /* list of terrains for lookup */
+    struct list edit_head; /* list of terrains for editor */
+    int quick_terrain[NUM_QUICK_TERRAINS]; /* "quick terrain" for quick UI access (ten number keys 0..9) */
 };
 
 struct terrain_palette * palette_contains_terrain (struct terrain_palette *pp, 
