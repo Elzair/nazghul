@@ -106,6 +106,11 @@ char * palette_glyph(struct terrain_palette *pp, int n);
 char * palette_glyph_for_terrain (struct terrain_palette * pp, 
                                   struct terrain * tt);
 
+struct terrain_palette_entry *palette_entry(struct terrain_palette *palette, int n);
+
+/* Returns the next palette entry after 'tpe' or NULL if it is the last one */
+struct terrain_palette_entry *palette_entry_next(struct terrain_palette *palette, struct terrain_palette_entry *tpe);
+
 struct terrain * palette_terrain(struct terrain_palette *pp, int n);
 struct terrain * palette_terrain_for_glyph(struct terrain_palette *pp, 
                                            char *glyph);

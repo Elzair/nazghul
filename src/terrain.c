@@ -155,8 +155,15 @@ void terrain_palette_add(struct terrain_palette *pal, char *glyph,
                 pal->widest_glyph = n;
 }
 
-struct terrain_palette_entry *palette_entry(struct terrain_palette *palette, 
-                                            int n)
+struct terrain_palette_entry *palette_entry_next(struct terrain_palette *palette, struct terrain_palette_entry *tpe)
+{
+    if (tpe->edit_list.next == &palette->edit_head) {
+        return NULL;
+    }
+    return outcast(tpe->edit_list.next, struct terrain_palette_entry, edit_list);
+}
+
+struct terrain_palette_entry *palette_entry(struct terrain_palette *palette, int n)
 {
         struct list *elem;
 

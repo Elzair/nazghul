@@ -65,30 +65,6 @@ typedef struct ui_select_target_req
 
 } ui_select_target_req_t;
 
-/* <<< gjm: moving these to a public space for terrain_editor.c */
-/* SAM: Using this typedef below */
-typedef void (*v_fncptr_iiv_t) (struct place *, int x, int y, void * v);
-typedef int (*i_fncptr_iiv_t) (struct place *, int x, int y, void * v);
-
-
-/**
- * Struct used by the movecursor function and it's mouse-handling counterparts
- * for commands which prompt the player to select a target from the map. 
- */
-struct movecursor_data {
-        v_fncptr_iiv_t each_tile_func;   /* called when cursor moves         */
-        i_fncptr_iiv_t each_target_func; /* called on 'enter' or leftclick   */
-        struct list *loc_list;           /* quick target list                */
-        struct list *cur_loc;            /* current target from list         */
-        int jump;                        /* distance to jump cursor          */
-        void *data;                      /* caller data passed to callbacks  */
-        char abort : 1;                  /* command was aborted              */
-};
-bool mouse_button_cursor(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *event);
-bool mouse_motion_cursor(struct MouseMotionHandler *mh, SDL_MouseMotionEvent *event);
-
-/* >>> gjm */
-
 #define SCROLLER_HINT "\005\006=scroll ENT=select ESC=exit"
 #define PAGER_HINT  "\005\006=scroll ESC=exit"
 

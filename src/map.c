@@ -1820,15 +1820,19 @@ void mapSetSelected(class Object *obj)
 
 int mapScreenToPlaceCoords(int *x, int *y)
 {
-        int px = (*x - Map.srect.x) / TILE_W + Map.aview->vrect.x + Map.aview->subrect.x;
-        int py = (*y - Map.srect.y) / TILE_H + Map.aview->vrect.y + Map.aview->subrect.y;
+    if (! point_in_rect(*x, *y, &Map.srect)) {
+        return -1;
+    }
+    int px = (*x - Map.srect.x) / TILE_W + Map.aview->vrect.x + Map.aview->subrect.x;
+    int py = (*y - Map.srect.y) / TILE_H + Map.aview->vrect.y + Map.aview->subrect.y;
+    
+    if (place_off_map(Map.place, px, py)) {
+        return -1;
+    }
 
-        if (place_off_map(Map.place, px, py))
-                return -1;
-
-        *x = place_wrap_x(Map.place, px);
-        *y = place_wrap_y(Map.place, py);
-        return 0;
+    *x = place_wrap_x(Map.place, px);
+    *y = place_wrap_y(Map.place, py);
+    return 0;
 }
 
 void mapSetImage(SDL_Surface *image)

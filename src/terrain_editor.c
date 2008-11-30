@@ -28,33 +28,26 @@
 #include "map.h"
 #include "place.h"
 #include "session.h"
+#include "sprite.h"
 #include "terrain.h"
 #include "terrain_editor.h"
 #include "vmask.h"
 
 struct terrain_editor_applet {
     struct applet base;
-    struct place *place;
-    int x, y;
+    struct place *place; /* place being edited */
+    int x, y; /* cursor location in place (used?) */
+    int max_cols; /* of the palette window */
+    int max_rows; /* of the palette window */
+    int top_index; /* index of terrain in ulc of status window */
+    int max_top_index; /* where last entry is on the bottom of the palette window */
 };
-
-/* Struct used by the terraform version of the movecursor function et al. It's
- * a superset of the standard movecursor_data and extends it with some extra
- * data. */
-struct terraform_mode_keyhandler {
-    struct place           * place;  // needed?
-    struct terrain_map     * map;
-    struct terrain_palette * palette;
-};
-
-typedef void (*v_fncptr_iiv_t) (struct place *, int x, int y, void * v);
-typedef int (*i_fncptr_iiv_t) (struct place *, int x, int y, void * v);
 
 static void print_terraform_help (void)
 {
     log_msg("");
-    log_msg(" PageUp/PageDn/ = Select terrain");
-    log_msg("      Home/End    from palette");
+    log_msg(" PageUp/PageDn/ = Scroll palette up/down");
+    log_msg("      Home/End  = Scroll to begin/end");
     log_msg("    Arrow Keys  = Move cursor");
     log_msg("    SPACE/ENTER = Paint terrain");
     log_msg("              C = Copy from ground");
@@ -104,29 +97,57 @@ static void cmd_terraform_fill(struct terrain *nt, struct terrain *ot, struct pl
     cmd_terraform_fill(nt, ot, place, x, y+1);
 }
 
-/*
- * cmd_terraform_movecursor_and_do - key handler function for terraform mode
+/**
+ * Terraform a tile.
  */
-static int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
+static void terrain_editor_change_xy(struct terrain_editor_applet *tea, int x, int y)
 {
-    struct movecursor_data *movedat;
-    struct terraform_mode_keyhandler *terdat;        
+    struct terrain_map     * map = tea->place->terrain_map;
+    struct terrain_palette * pp  = map->palette;
+    struct terrain         * tt  = palette_current_terrain(pp);
+
+    terrain_map_fill(map, x, y, 1, 1, tt); /* fixme: use place_set_terrain instead? */
+    vmask_invalidate(tea->place, x, y, 1, 1);
+    mapSetDirty();
+    mapUpdate(0);
+}
+
+/**
+ * Describe a tile in detail, DM mode.
+ */
+static void terrain_editor_look_at_xy(struct terrain_editor_applet *tea, int x, int y)
+{
+    if (!mapTileIsVisible(x, y) ) {
+        log_begin("(Out of LOS) At XY=(%d,%d) you see ", x, y);
+        place_describe(tea->place, x, y, PLACE_DESCRIBE_ALL);
+        log_end(NULL);
+        return;
+    }
+    log_begin("At XY=(%d,%d) you see ", x, y);
+    place_describe(tea->place, x, y, PLACE_DESCRIBE_ALL);
+    log_end(NULL);
+}
+
+/*
+ * terrain_editor_key_handler - key handler function for terraform mode
+ */
+static int terrain_editor_key_handler(struct KeyHandler * kh, int key, int keymod)
+{
     struct terrain_palette * pp;
     struct terrain * tt;
+    struct session *session;
 
     assert(kh);
 
-    movedat = (struct movecursor_data *)kh->data;
-    terdat = (struct terraform_mode_keyhandler *)movedat->data;
-    pp     = terdat->palette;
-  
-    if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN ||
-        key == SDLK_LCTRL || key == SDLK_RCTRL) {
-        int x = Session->crosshair->getX();
-        int y = Session->crosshair->getY();
-        if (movedat->each_target_func)
-            movedat->each_target_func(Session->crosshair->getPlace(),
-                                      x, y, terdat);
+    DECL_CAST(struct terrain_editor_applet, tea, kh->data);
+
+    pp = tea->place->terrain_map->palette;
+    session = tea->base.session;
+
+    if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN || key == SDLK_LCTRL || key == SDLK_RCTRL) {
+        int x = session->crosshair->getX();
+        int y = session->crosshair->getY();
+        terrain_editor_change_xy(tea, x, y);
         return 0;  /* Keep on keyhandling */
     }
 
@@ -135,31 +156,27 @@ static int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, int 
         /* SAM: TODO: The Terraform cursor should not be allowed to go
          *            past the Viewport bounds...
          */
-        Session->crosshair->move(directionToDx(dir), 
-                                 directionToDy(dir));
+        /* gjm: why not? */
+        session->crosshair->move(directionToDx(dir), directionToDy(dir));
         mapSetDirty();
-        int x = Session->crosshair->getX();
-        int y = Session->crosshair->getY();
-        if (movedat->each_tile_func)
-            movedat->each_tile_func(Session->crosshair->getPlace(),
-                                    x, y, terdat);
+        int x = session->crosshair->getX();
+        int y = session->crosshair->getY();
+        terrain_editor_look_at_xy(tea, x, y);
 
-        /* If the CTRL key is held down then also run the target
-         * function to paint the tile. */
-        if (keymod & KMOD_CTRL &&
-            movedat->each_target_func)
-            movedat->each_target_func(Session->crosshair->getPlace(),
-                                      x, y, terdat);
-
+        /* If the CTRL key is held down then also run the target function to
+         * paint the tile. */
+        if (keymod & KMOD_CTRL) {
+            terrain_editor_change_xy(tea, x, y);
+        }
         return 0;  /* Keep on keyhandling */
     }
 
     if (key == 'c') {
         /* Set the terrain beneath the cursor as the current "pen" */
         int index = -1;
-        tt = place_get_terrain(Session->crosshair->getPlace(),
-                               Session->crosshair->getX(),
-                               Session->crosshair->getY());
+        tt = place_get_terrain(session->crosshair->getPlace(),
+                               session->crosshair->getX(),
+                               session->crosshair->getY());
         index = palette_get_terrain_index(pp, tt);
         if (index >= 0) {
             palette_set_current_terrain(pp, index);
@@ -173,14 +190,14 @@ static int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, int 
         tt = palette_current_terrain(pp);
         if (tt) {
             struct terrain *ot;
-            ot = place_get_terrain(Session->crosshair->getPlace(),
-                                   Session->crosshair->getX(),
-                                   Session->crosshair->getY());
+            ot = place_get_terrain(session->crosshair->getPlace(),
+                                   session->crosshair->getX(),
+                                   session->crosshair->getY());
             if (tt != ot) {
                 cmd_terraform_fill(tt, ot,
-                                   Session->crosshair->getPlace(),
-                                   Session->crosshair->getX(),
-                                   Session->crosshair->getY());
+                                   session->crosshair->getPlace(),
+                                   session->crosshair->getX(),
+                                   session->crosshair->getY());
                 emit_terraform_status("Flood-Fill", pp, tt);
             }
             mapUpdate(0);
@@ -198,6 +215,10 @@ static int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, int 
         palette_prev_terrain(pp);
         tt = palette_current_terrain(pp);
         emit_terraform_status("Prev", pp, tt);
+        if (tea->top_index >= tea->max_cols) {
+            tea->top_index -= tea->max_cols;
+            statusRepaint();
+        }
         return 0;  /* Keep on keyhandling */
     }
     if (key == SDLK_PAGEDOWN) {
@@ -205,6 +226,10 @@ static int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, int 
         palette_next_terrain(pp);
         tt = palette_current_terrain(pp);
         emit_terraform_status("Next", pp, tt);
+        if (tea->top_index < tea->max_top_index) {
+            tea->top_index += tea->max_cols;
+            statusRepaint();
+        }
         return 0;  /* Keep on keyhandling */
     }
     if (key == SDLK_HOME) {
@@ -212,6 +237,8 @@ static int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, int 
         palette_first_terrain(pp);
         tt = palette_current_terrain(pp);
         emit_terraform_status("Frst", pp, tt);
+        tea->top_index = 0;
+        statusRepaint();
         return 0;  /* Keep on keyhandling */
     }
     if (key == SDLK_END) {
@@ -219,6 +246,8 @@ static int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, int 
         palette_last_terrain(pp);
         tt = palette_current_terrain(pp);
         emit_terraform_status("Last", pp, tt);
+        tea->top_index = tea->max_top_index;
+        statusRepaint();
         return 0;  /* Keep on keyhandling */
     }
 
@@ -245,123 +274,115 @@ static int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, int 
     }
 
     if (key == SDLK_ESCAPE) {
-        movedat->abort = 1;
-        return 1;  // Done (abort)
+        return 1; /* done */
     }
+
     return 0;  /* Keep on keyhandling */
 }
 
-
 /**
- * cmd_terraform_cursor_func - 
+ * Handle mouse clicks on the map viewer. (mx, my) are the place coordinates
+ * clicked.
  */
-static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
-                                     int range,
-                                     v_fncptr_iiv_t each_tile_func,
-                                     i_fncptr_iiv_t each_target_func,
-                                     struct place * place)
+static bool terrain_editor_map_click(struct terrain_editor_applet *tea, int mx, int my)
 {
-        struct movecursor_data movedat;
-        struct terraform_mode_keyhandler terdat;
-        struct KeyHandler kh;
-        struct MouseButtonHandler mbh;
-        struct MouseMotionHandler mmh;
+#if 0
+    /* gjm: let's try it without moving the crosshairs... */
+    struct session *session = tea->base.session;
+    class Cursor *crosshair = session->crosshair;
+    int cx = crosshair->getX();
+    int cy = crosshair->getY();
 
-        /* Position the cursor */
-        Session->crosshair->setRange(range);
-        Session->crosshair->setViewportBounded(1);
-        Session->crosshair->setOrigin(ox, oy);
-        Session->crosshair->relocate(Place, *x, *y);
+    /* Did the crosshair move? */
+    if ((cx != mx) || (cy != my)) {
+
+        /* Move the crosshair */
+        crosshair->move(mx - cx, my - cy);
         mapSetDirty();
-  
-        /* Setup the key handler */
-        terdat.map               = place->terrain_map;
-        terdat.palette           = place->terrain_map->palette;
-        movedat.each_tile_func   = each_tile_func;
-        movedat.each_target_func = each_target_func;
-        movedat.abort            = 0;
-        movedat.jump             = 1;
-        movedat.data             = &terdat;
 
-        kh.fx   = cmd_terraform_movecursor_and_do;
-        kh.data = &movedat;
+        /* Need to run our visitor function on each tile? */
+        terrain_editor_look_at_xy(tea, mx, my);
+    }
+#endif
+    terrain_editor_change_xy(tea, mx, my);
 
-        mbh.fx = mouse_button_cursor;
-        mbh.data = &movedat;
-
-        mmh.fx = mouse_motion_cursor;
-        mmh.data = &movedat;
-
-        /* Start interactive mode */
-        eventPushMouseButtonHandler(&mbh);
-        eventPushKeyHandler(&kh);
-        cmdwin_spush("<target> (ESC to exit)");
-        eventHandle();
-
-        /* Done -  cleanup */
-        cmdwin_pop();
-        eventPopKeyHandler();
-        eventPopMouseButtonHandler();
-  
-        *x = Session->crosshair->getX();
-        *y = Session->crosshair->getY();
-        Session->crosshair->remove();
-        mapSetDirty();
-  
-        cmdwin_spush("Done.");
-        log_msg("---Terraform Done---");
-
-        return 0;
+    return false;
 }
 
 /**
- * cmd_dm_xray_look_at_xy - like look_at_XY() but unconditionally reports what
- * is there.
+ * Handle mouse clicks on the palette viewer. (sx, sy) are the screen
+ * coordinates clicked.
  */
-static void cmd_dm_xray_look_at_xy(struct place *place, int x, int y, 
-                                   void * data)
+static bool terrain_editor_palette_click(struct terrain_editor_applet *tea, int sx, int sy)
 {
-        if (!mapTileIsVisible(x, y) ) {
-                log_begin("(Out of LOS) At XY=(%d,%d) you see ", x, y);
-                place_describe(place, x, y, PLACE_DESCRIBE_ALL);
-                log_end(NULL);
-                return;
-        }
-        log_begin("At XY=(%d,%d) you see ", x, y);
-        place_describe(place, x, y, PLACE_DESCRIBE_ALL);
-        log_end(NULL);
+    struct terrain_palette *palette = tea->place->terrain_map->palette;
+
+    /* Convert screen coordinates to row and column */
+    int row = (sy - tea->base.dims.y) / TILE_H;
+    int col = (sx - tea->base.dims.x) / TILE_W;
+
+    /* Convert row and column to palette index */
+    int index = tea->top_index + col + (row * tea->max_cols);
+    
+    /* Check */
+    if (index < palette->num_entries) {
+        palette_set_current_terrain(palette, index);
+    }
+
+    return false;
 }
 
-/**
- * cmd_terraform_xy  - terraform this tile
+/*
+ * terrain_editor_mouse_button_handler - mouse button handler function for terraform mode
  */
-static int cmd_terraform_xy(struct place *place, int x, int y, void * data)
+static bool terrain_editor_mouse_button_handler(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *event)
 {
-        struct terraform_mode_keyhandler * kh = 
-                (struct terraform_mode_keyhandler *) data;
-        struct terrain_map     * map = kh->map;
-        struct terrain_palette * pp  = kh->palette;
-        struct terrain         * tt  = palette_current_terrain(pp);
-
-        terrain_map_fill(map, x, y, 1, 1, tt);
-        vmask_invalidate(place, x, y, 1, 1);
-        mapSetDirty();
-        mapUpdate(0);
-        return 0; /* keep on targeting */
+    DECL_CAST(struct terrain_editor_applet, tea, mh->data);
+    int mx = event->x;
+    int my = event->y;
+    
+    /* Clicked on the map? */
+    if (! mapScreenToPlaceCoords(&mx, &my)) {
+        return terrain_editor_map_click(tea, mx, my);
+    }
+    
+    /* Clicked on the palette window? */
+    if (point_in_rect(event->x, event->y, &tea->base.dims)) {
+        terrain_editor_palette_click(tea, event->x, event->y);
+    }
+    
+    return false;
 }
+
 
 /**
  * Start and run the terrain editor until player quits back to game.
  */
 static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims, struct session *session)
 {
+    /* Initialize the base applet */
     applet->dims = *dims;
     applet->session = session;
 
+    /* Initialize the custom applet fields */
+    DECL_CAST(struct terrain_editor_applet, tea, applet);
+    tea->max_cols = dims->w / TILE_W;
+    tea->max_rows = dims->h / TILE_H;
+    tea->max_top_index = tea->place->terrain_map->palette->num_entries - (tea->max_cols * tea->max_rows);
+    if (tea->max_top_index < 0) {
+        tea->max_top_index = 0;
+    }
+
+    /* Initialize the status window */
+    status_set_title("Terrain Editor");
+    statusRepaint();
+
+    /* Initialize the cmdwin window */
     cmdwin_clear();
     cmdwin_spush("Terraform");
+    cmdwin_spush("<target> (ESC to exit)");
 
-    struct terrain_editor_applet *tea = (struct terrain_editor_applet*)applet;
+    /* Initialize the console */
     struct terrain_palette *palette = tea->place->terrain_map->palette;
     struct terrain *terrain = palette_current_terrain(palette);
     
@@ -375,22 +396,69 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
     
     print_terraform_help();
     log_msg("Press '?' for Terraform command help.");
-    
     emit_terraform_status("Trrn", palette, terrain);
-    
-    cmd_dm_xray_look_at_xy(tea->place, tea->x,tea->y, NULL);
-    cmd_terraform_cursor_func(tea->x, tea->y, &tea->x, &tea->y, 99,
-                              cmd_dm_xray_look_at_xy, 
-                              cmd_terraform_xy,
-                              tea->place);
+    terrain_editor_look_at_xy(tea, tea->x, tea->y);
+
+    /* Position the cursor */
+    session->crosshair->setRange(99);
+    session->crosshair->setViewportBounded(1);
+    session->crosshair->setOrigin(tea->x, tea->y);
+    session->crosshair->relocate(tea->place, tea->x, tea->y);
+    mapSetDirty();
+  
+    /* Setup the key handler */
+    struct KeyHandler kh;
+    kh.fx = terrain_editor_key_handler;
+    kh.data = tea;
+    eventPushKeyHandler(&kh);
+
+    /* Setup the mouse handler */
+    struct MouseButtonHandler mbh;
+    mbh.fx = terrain_editor_mouse_button_handler;
+    mbh.data = tea;
+    eventPushMouseButtonHandler(&mbh);
+
+    /* Enter interactive mode */
+    eventHandle();
+
+    /* Done -  cleanup */
+    cmdwin_pop();
+    eventPopKeyHandler();
+    eventPopMouseButtonHandler();
+    session->crosshair->remove();
+    mapSetDirty();
+  
+    cmdwin_spush("Done.");
+    log_msg("---Terraform Done---");
+
     
     log_end_group();
     
 }
 
+/**
+ * Called by statusRepaint(), this repaints the status window only, the map and
+ * console continue to be updated in their usual way.
+ */
 static void terrain_editor_applet_ops_paint(struct applet *applet)
 {
+    DECL_CAST(struct terrain_editor_applet, tea, applet);
 
+    int y = applet->dims.y;
+    struct terrain_palette_entry *tpe = palette_entry(tea->place->terrain_map->palette, tea->top_index);
+    if (tpe) {
+        for (int row = 0; tpe && (row < tea->max_rows); row++) {
+            int x = applet->dims.x;
+            for (int col = 0; tpe && (col < tea->max_cols); col++) {
+                sprite_paint(tpe->terrain->sprite, 0, x, y);
+                tpe = palette_entry_next(tea->place->terrain_map->palette, tpe);
+                x += TILE_W;
+            }
+            y += TILE_H;
+        }
+    }
+    screenUpdate(&applet->dims);
+    status_repaint_title();    
 }
 
 struct applet_ops terrain_editor_applet_ops = {

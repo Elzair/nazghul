@@ -1244,11 +1244,6 @@ void statusRepaint(void)
 	if (Status.suppressRepaint)
 		return;
 
-	// Check if we're early in startup and haven't set the paint function
-	// yet.
-	if (! Status.paint)
-		return;
-
 	// Prevent recursive entry since it messes up the coordinate counters
 	if (repainting)
 		return;
