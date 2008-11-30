@@ -173,7 +173,8 @@ nazghul_SOURCES =		\
 	session_hooks.h \
 	session_queries.h \
 	bitset.h \
-	escape.c escape.h
+	escape.c escape.h \
+	terrain_editor.c terrain_editor.h
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \

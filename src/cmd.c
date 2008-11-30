@@ -58,7 +58,6 @@
 #include "dice.h"
 #include "menus.h"
 #include "kern_intvar.h"
-
 #include "skill.h"
 #include "skill_set.h"
 #include "skill_set_entry.h"
@@ -66,6 +65,7 @@
 #include "occ.h"
 #include "nazghul.h"  // for DeveloperMode
 #include "ztats.h"
+#include "terrain_editor.h"
 
 #define DEBUG
 #include "debug.h"
@@ -85,34 +85,6 @@
 #define ENABLE_TOWN_ZOOM_IN 0
 #endif
 
-/* SAM: Using this typedef below */
-typedef void (*v_fncptr_iiv_t) (struct place *, int x, int y, void * v);
-typedef int (*i_fncptr_iiv_t) (struct place *, int x, int y, void * v);
-
-
-/**
- * Struct used by the movecursor function and it's mouse-handling counterparts
- * for commands which prompt the player to select a target from the map. 
- */
-struct movecursor_data {
-        v_fncptr_iiv_t each_tile_func;   /* called when cursor moves         */
-        i_fncptr_iiv_t each_target_func; /* called on 'enter' or leftclick   */
-        struct list *loc_list;           /* quick target list                */
-        struct list *cur_loc;            /* current target from list         */
-        int jump;                        /* distance to jump cursor          */
-        void *data;                      /* caller data passed to callbacks  */
-        char abort : 1;                  /* command was aborted              */
-};
-
-/* Struct used by the terraform version of the movecursor function et al. It's
- * a superset of the standard movecursor_data and extends it with
- * some extra data. */
-struct terraform_mode_keyhandler {
-        struct place           * place;  // needed?
-        struct terrain_map     * map;
-        struct terrain_palette * palette;
-};
-
 
 /* fwd decls */
 
@@ -124,7 +96,6 @@ static int select_target_rlcb(struct place *place,
                               struct list *suggest,
                               v_fncptr_iiv_t each_tile_func,
                               i_fncptr_iiv_t each_target_func);
-static void print_terraform_help (void);
 
 /* functions */
 
@@ -641,191 +612,6 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
         }
 
         return 0;   /* not done */
-}
-
-/*
- * emit_terraform_status - print the active terrain palette entry to the
- * console during terraform mode
- */
-void emit_terraform_status (char * msg, struct terrain_palette * pp, 
-                            struct terrain * tt)
-{
-    log_msg("[%s] %3d: %s '%s'", msg, pp->current_terrain_index, tt->tag, 
-            tt->name);
-}
-
-static void cmd_terraform_fill(struct terrain *nt, struct terrain *ot, 
-                               struct place *place, int x, int y)
-{
-        struct terrain *ct = place_get_terrain(place, x, y);
-
-        /* base case 1: off-map */
-        if (!ct)
-                return;
-
-        /* base case 2: current terrain does not match old terrain */
-        if (ct != ot)
-                return;
-
-        /* recursive case - change current terrain to new terrain */
-        place_set_terrain(place, x, y, nt);
-        vmask_invalidate(place, x, y, 1, 1);
-
-        /* recur on four neighbors */
-        cmd_terraform_fill(nt, ot, place, x-1, y);
-        cmd_terraform_fill(nt, ot, place, x+1, y);
-        cmd_terraform_fill(nt, ot, place, x, y-1);
-        cmd_terraform_fill(nt, ot, place, x, y+1);
-}
-
-/*
- * cmd_terraform_movecursor_and_do - key handler function for terraform mode
- */
-int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key, 
-                                    int keymod)
-{
-        struct movecursor_data *movedat;
-        struct terraform_mode_keyhandler *terdat;        
-        struct terrain_palette * pp;
-        struct terrain * tt;
-
-        assert(kh);
-
-        movedat = (struct movecursor_data *)kh->data;
-        terdat = (struct terraform_mode_keyhandler *)movedat->data;
-        pp     = terdat->palette;
-  
-        if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN ||
-            key == SDLK_LCTRL || key == SDLK_RCTRL) {
-                int x = Session->crosshair->getX();
-                int y = Session->crosshair->getY();
-                if (movedat->each_target_func)
-                        movedat->each_target_func(Session->crosshair->getPlace(),
-                                                  x, y, terdat);
-                return 0;  /* Keep on keyhandling */
-        }
-
-        if (keyIsDirection(key)) {
-                int dir = keyToDirection(key);
-                /* SAM: TODO: The Terraform cursor should not be allowed to go
-                 *            past the Viewport bounds...
-                 */
-                Session->crosshair->move(directionToDx(dir), 
-                                         directionToDy(dir));
-                mapSetDirty();
-                int x = Session->crosshair->getX();
-                int y = Session->crosshair->getY();
-                if (movedat->each_tile_func)
-                        movedat->each_tile_func(Session->crosshair->getPlace(),
-                                              x, y, terdat);
-
-                /* If the CTRL key is held down then also run the target
-                 * function to paint the tile. */
-                if (keymod & KMOD_CTRL &&
-                    movedat->each_target_func)
-                        movedat->each_target_func(Session->crosshair->getPlace(),
-                                               x, y, terdat);
-
-                return 0;  /* Keep on keyhandling */
-        }
-
-        if (key == 'c') {
-                /* Set the terrain beneath the cursor as the current "pen" */
-                int index = -1;
-                tt = place_get_terrain(Session->crosshair->getPlace(),
-                                       Session->crosshair->getX(),
-                                       Session->crosshair->getY());
-                index = palette_get_terrain_index(pp, tt);
-                if (index >= 0) {
-                        palette_set_current_terrain(pp, index);
-                        emit_terraform_status("Copy", pp, tt);
-                }
-                return 0;
-        }
-
-        if (key == 'f') {
-                /* "Fill" using the 4-neighbors algorithm */
-                tt = palette_current_terrain(pp);
-                if (tt) {
-                        struct terrain *ot;
-                        ot = place_get_terrain(Session->crosshair->getPlace(),
-                                               Session->crosshair->getX(),
-                                               Session->crosshair->getY());
-                        if (tt != ot) {
-                                cmd_terraform_fill(tt, ot,
-                                                   Session->crosshair->getPlace(),
-                                                   Session->crosshair->getX(),
-                                                   Session->crosshair->getY());
-				emit_terraform_status("Flood-Fill", pp, tt);
-                        }
-                        mapUpdate(0);
-                }
-                return 0;
-        }
-
-	if (key == '?') {
-	    print_terraform_help();
-	    return 0;
-	}
-
-        if (key == SDLK_PAGEUP) {
-                // Page Up == Cycle back through terrain in palette
-                palette_prev_terrain(pp);
-                tt = palette_current_terrain(pp);
-                emit_terraform_status("Prev", pp, tt);
-                return 0;  /* Keep on keyhandling */
-        }
-        if (key == SDLK_PAGEDOWN) {
-                // Page Down == Cycle forward through terrain in palette
-                palette_next_terrain(pp);
-                tt = palette_current_terrain(pp);
-                emit_terraform_status("Next", pp, tt);
-                return 0;  /* Keep on keyhandling */
-        }
-        if (key == SDLK_HOME) {
-                // Home == Select first terrain in palette
-                palette_first_terrain(pp);
-                tt = palette_current_terrain(pp);
-                emit_terraform_status("Frst", pp, tt);
-                return 0;  /* Keep on keyhandling */
-        }
-        if (key == SDLK_END) {
-                // End == Select last terrain in palette
-                palette_last_terrain(pp);
-                tt = palette_current_terrain(pp);
-                emit_terraform_status("Last", pp, tt);
-                return 0;  /* Keep on keyhandling */
-        }
-
-        if (key >= '0' && key <= '9') {
-                // Number key 0..9 == get/set quick terrain
-                int qt = key - '0';
-    
-                if ((keymod && KMOD_LCTRL) || (keymod && KMOD_RCTRL)) {
-                        // Control-NUM == set quick terrain to current:
-                        int index = palette_get_current_terrain_index(pp);
-                        palette_set_quick_terrain(pp, qt, index);
-                        tt = palette_current_terrain(pp);
-                        log_msg("[Set Quick %d] %3d: %s '%s'", qt, 
-                                pp->current_terrain_index, tt->tag, tt->name);
-                        return 0; /* Keep on keyhandling */
-                }
-                // Plain NUM == set current terrain from quick terrain:
-                int index = palette_get_quick_terrain_index(pp, qt);
-                palette_set_current_terrain(pp, index);
-                tt = palette_current_terrain(pp);
-                log_msg("[Quick %d] %3d: %s '%s'", qt, 
-                        pp->current_terrain_index, tt->tag, tt->name);
-                return 0;  /* Keep on keyhandling */
-        }
-
-        // ...
-    
-        if (key == SDLK_ESCAPE) {
-                movedat->abort = 1;
-                return 1;  // Done (abort)
-        }
-        return 0;  /* Keep on keyhandling */
 }
 
 struct inv_entry *ui_select_item(void)
@@ -1642,68 +1428,6 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         return select_target_rlcb(Place, ox, oy, x, y, range, 0, 
                                   each_tile_func, 
                                   each_target_func);
-}
-
-/**
- * cmd_terraform_cursor_func - 
- */
-static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
-                                     int range,
-                                     v_fncptr_iiv_t each_tile_func,
-                                     i_fncptr_iiv_t each_target_func,
-                                     struct place * place)
-{
-        struct movecursor_data movedat;
-        struct terraform_mode_keyhandler terdat;
-        struct KeyHandler kh;
-        struct MouseButtonHandler mbh;
-        struct MouseMotionHandler mmh;
-
-        /* Position the cursor */
-        Session->crosshair->setRange(range);
-        Session->crosshair->setViewportBounded(1);
-        Session->crosshair->setOrigin(ox, oy);
-        Session->crosshair->relocate(Place, *x, *y);
-        mapSetDirty();
-  
-        /* Setup the key handler */
-        terdat.map               = place->terrain_map;
-        terdat.palette           = place->terrain_map->palette;
-        movedat.each_tile_func   = each_tile_func;
-        movedat.each_target_func = each_target_func;
-        movedat.abort            = 0;
-        movedat.jump             = 1;
-        movedat.data             = &terdat;
-
-        kh.fx   = cmd_terraform_movecursor_and_do;
-        kh.data = &movedat;
-
-        mbh.fx = mouse_button_cursor;
-        mbh.data = &movedat;
-
-        mmh.fx = mouse_motion_cursor;
-        mmh.data = &movedat;
-
-        /* Start interactive mode */
-        eventPushMouseButtonHandler(&mbh);
-        eventPushKeyHandler(&kh);
-        cmdwin_spush("<target> (ESC to exit)");
-        eventHandle();
-
-        /* Done -  cleanup */
-        cmdwin_pop();
-        eventPopKeyHandler();
-        eventPopMouseButtonHandler();
-  
-        *x = Session->crosshair->getX();
-        *y = Session->crosshair->getY();
-        Session->crosshair->remove();
-        mapSetDirty();
-  
-        cmdwin_spush("Done.");
-        log_msg("---Terraform Done---");
-
-        return 0;
 }
 
 bool cmdHandle(class Character * pc)
@@ -2995,42 +2719,6 @@ int detailed_examine_XY(struct place *place, int x, int y, void *unused)
         return 0; /* keep on targeting */
 }
 
-/**
- * cmd_dm_xray_look_at_xy - like look_at_XY() but unconditionally reports what
- * is there.
- */
-static void cmd_dm_xray_look_at_xy(struct place *place, int x, int y, 
-                                   void * data)
-{
-        if (!mapTileIsVisible(x, y) ) {
-                log_begin("(Out of LOS) At XY=(%d,%d) you see ", x, y);
-                place_describe(place, x, y, PLACE_DESCRIBE_ALL);
-                log_end(NULL);
-                return;
-        }
-        log_begin("At XY=(%d,%d) you see ", x, y);
-        place_describe(place, x, y, PLACE_DESCRIBE_ALL);
-        log_end(NULL);
-}
-
-/*
- * cmd_terraform_xy  - terraform this tile
- */
-static int cmd_terraform_xy(struct place *place, int x, int y, void * data)
-{
-        struct terraform_mode_keyhandler * kh = 
-                (struct terraform_mode_keyhandler *) data;
-        struct terrain_map     * map = kh->map;
-        struct terrain_palette * pp  = kh->palette;
-        struct terrain         * tt  = palette_current_terrain(pp);
-
-        terrain_map_fill(map, x, y, 1, 1, tt);
-        vmask_invalidate(place, x, y, 1, 1);
-        mapSetDirty();
-        mapUpdate(0);
-        return 0; /* keep on targeting */
-}
-
 bool cmdXamine(class Object * pc)
 {
 	// SAM: Working on an improved (L)ook command,
@@ -3220,61 +2908,8 @@ bool cmdAT (class Character * pc)
  */
 bool cmd_terraform(struct place *place, int x, int y)
 {
-        struct terrain_map     * map;
-        struct terrain_palette * palette;
-        struct terrain         * terrain;
-
-	cmdwin_clear();
-	cmdwin_spush("Terraform");
-
-        map     = place->terrain_map;
-        palette = map->palette;
-        terrain = palette_current_terrain(palette);
-
-        /* SAM: It would probably be better to set the upper-right "status
-         * window" to a new mode.  Then I could show the sprite for the current
-         * terrain, and so forth.  That is TODO later; I have not written a new
-         * status mode before.  First thing is to get the map editor working.
-         */
-
-        log_begin_group();
-        log_msg("---Terraform---");
-        log_msg("Place %s",     place->tag  );
-        log_msg("      \"%s\"", place->name );
-        log_msg("Map   %s",     map->tag    );
-        log_msg("Palette %s",   palette->tag);
-        log_msg("");
-
-	print_terraform_help();
-	log_msg("Press '?' for Terraform command help.");
-
-        emit_terraform_status("Trrn", palette, terrain);
-
-        cmd_dm_xray_look_at_xy(place, x,y, NULL);
-	cmd_terraform_cursor_func(x, y, &x, &y, 99,
-                                  cmd_dm_xray_look_at_xy, 
-                                  cmd_terraform_xy,
-                                  place);
-
-        log_end_group();
-
-	return true;
-} // cmd_terraform()
-
-static void print_terraform_help (void)
-{
-        log_msg("");
-        log_msg(" PageUp/PageDn/ = Select terrain");
-        log_msg("      Home/End    from palette");
-        log_msg("    Arrow Keys  = Move cursor");
-        log_msg("    SPACE/ENTER = Paint terrain");
-        log_msg("              C = Copy from ground");
-        log_msg("              F = Flood-Fill");
-        log_msg("     1234567890 = Get from QuickKey");
-        log_msg("CTRL-1234567890 = Set QuickKey");
-        log_msg("            ESC = Exit Terraform mode");
-        log_msg("              ? = This help text");
-        log_msg("");
+    terrain_editor_run(place, x, y);
+    return true;
 }
 
 bool cmd_save_current_place (struct place * place)
