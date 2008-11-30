@@ -106,10 +106,13 @@ static void terrain_editor_change_xy(struct terrain_editor_applet *tea, int x, i
     struct terrain_palette * pp  = map->palette;
     struct terrain         * tt  = palette_current_terrain(pp);
 
-    terrain_map_fill(map, x, y, 1, 1, tt); /* fixme: use place_set_terrain instead? */
-    vmask_invalidate(tea->place, x, y, 1, 1);
-    mapSetDirty();
-    mapUpdate(0);
+    //terrain_map_fill(map, x, y, 1, 1, tt); /* fixme: use place_set_terrain instead? */
+    if (tt != place_get_terrain(tea->place, x, y)) {
+        place_set_terrain(tea->place, x, y, tt);
+        vmask_invalidate(tea->place, x, y, 1, 1);
+        mapSetDirty();
+        mapUpdate(0);
+    }
 }
 
 /**
@@ -286,8 +289,7 @@ static int terrain_editor_key_handler(struct KeyHandler * kh, int key, int keymo
  */
 static bool terrain_editor_map_click(struct terrain_editor_applet *tea, int mx, int my)
 {
-#if 0
-    /* gjm: let's try it without moving the crosshairs... */
+#if 1
     struct session *session = tea->base.session;
     class Cursor *crosshair = session->crosshair;
     int cx = crosshair->getX();
@@ -304,6 +306,7 @@ static bool terrain_editor_map_click(struct terrain_editor_applet *tea, int mx, 
         terrain_editor_look_at_xy(tea, mx, my);
     }
 #endif
+    printf("(%d %d)\n", mx, my);
     terrain_editor_change_xy(tea, mx, my);
 
     return false;
@@ -333,7 +336,8 @@ static bool terrain_editor_palette_click(struct terrain_editor_applet *tea, int 
 }
 
 /*
- * terrain_editor_mouse_button_handler - mouse button handler function for terraform mode
+ * terrain_editor_mouse_button_handler - mouse button handler function for
+ * terraform mode
  */
 static bool terrain_editor_mouse_button_handler(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *event)
 {
@@ -351,6 +355,25 @@ static bool terrain_editor_mouse_button_handler(struct MouseButtonHandler *mh, S
         terrain_editor_palette_click(tea, event->x, event->y);
     }
     
+    return false;
+}
+
+/*
+ * terrain_editor_mouse_motion_handler - mouse motion handler function for
+ * terraform mode
+ */
+static bool terrain_editor_mouse_motion_handler(struct MouseMotionHandler *mh, SDL_MouseMotionEvent *event)
+{
+    DECL_CAST(struct terrain_editor_applet, tea, mh->data);
+    int mx = event->x;
+    int my = event->y;
+    int dragging = event->state & SDL_BUTTON(1);
+
+    
+    /* Clicked on the map? */
+    if (dragging && ! mapScreenToPlaceCoords(&mx, &my)) {
+        return terrain_editor_map_click(tea, mx, my);
+    }
     return false;
 }
 
@@ -412,11 +435,17 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
     kh.data = tea;
     eventPushKeyHandler(&kh);
 
-    /* Setup the mouse handler */
+    /* Setup the mouse click handler */
     struct MouseButtonHandler mbh;
     mbh.fx = terrain_editor_mouse_button_handler;
     mbh.data = tea;
     eventPushMouseButtonHandler(&mbh);
+
+    /* Setup the mouse movement handler */
+    struct MouseMotionHandler mmh;
+    mmh.fx = terrain_editor_mouse_motion_handler;
+    mmh.data = tea;
+    eventPushMouseMotionHandler(&mmh);
 
     /* Enter interactive mode */
     eventHandle();
@@ -425,6 +454,7 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
     cmdwin_pop();
     eventPopKeyHandler();
     eventPopMouseButtonHandler();
+    eventPopMouseMotionHandler();
     session->crosshair->remove();
     mapSetDirty();
   
