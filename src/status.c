@@ -1778,20 +1778,6 @@ void statusRunApplet(struct applet *applet)
         list_remove(&applet->list); /* pop */
 }
 
-#if 0
-struct applet *statusPopApplet(void)
-{
-        struct applet *applet = statusGetCurrentApplet();
-        if (applet) {
-                list_remove(&applet->list);
-                if (applet->ops->stop) {
-                        applet->ops->stop(applet);
-                }
-        }
-        return applet;
-}
-#endif
-
 struct applet *statusGetCurrentApplet(void)
 {
         if (! list_empty(&Status.applet_stack)) {

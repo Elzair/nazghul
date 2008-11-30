@@ -240,7 +240,17 @@ extern char status_range_color(int cur, int max);
  */
 extern void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms);
 
+/**
+ * This pushes the current applet onto the applet stack and invokes it's run
+ * function. When that function returns, it pops it from the applet stack. Note
+ * that applets may run other applets in a strictly nested fashion by calling
+ * this function.
+ */
 extern void statusRunApplet(struct applet *applet);
+
+/**
+ * Returns the applet at the top of the applet stack.
+ */
 extern struct applet *statusGetCurrentApplet(void);
 
 END_DECL
