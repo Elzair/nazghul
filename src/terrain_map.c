@@ -546,11 +546,6 @@ void terrain_map_save(struct save *save, void *val)
         map->saved = save->session_id;
 }
 
-static inline struct terrain *terrain_map_get_terrain(struct terrain_map *map, int x, int y)
-{
-        return map->terrain[y * map->w + x];
-}
-
 static int terrain_not_sup(struct terrain *tt, int n_not_sup, struct terrain **not_sup)
 {
         int i;
