@@ -1823,8 +1823,8 @@ int mapScreenToPlaceCoords(int *x, int *y)
     if (! point_in_rect(*x, *y, &Map.srect)) {
         return -1;
     }
-    int px = (*x - Map.srect.x) / TILE_W + Map.aview->vrect.x + Map.aview->subrect.x;
-    int py = (*y - Map.srect.y) / TILE_H + Map.aview->vrect.y + Map.aview->subrect.y;
+    int px = ((*x - Map.srect.x) * Map.aview->zoom) / TILE_W + Map.aview->vrect.x + Map.aview->subrect.x;
+    int py = ((*y - Map.srect.y) * Map.aview->zoom) / TILE_H + Map.aview->vrect.y + Map.aview->subrect.y;
     
     if (place_off_map(Map.place, px, py)) {
         return -1;
