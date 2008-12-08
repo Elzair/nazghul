@@ -21,9 +21,10 @@
  */
 
 #include "applet.h"
-#include "cmd.h" /* for some types, may remove */
 #include "cmdwin.h"
 #include "cursor.h"
+#include "event.h"
+#include "foogod.h"
 #include "log.h"
 #include "map.h"
 #include "place.h"
@@ -33,18 +34,45 @@
 #include "terrain_editor.h"
 #include "vmask.h"
 
+/**
+ * The generic status pane.
+ */
+struct terrain_editor_pane {
+    struct list list;
+    struct terrain_editor_applet *app;
+    void (*paint)(struct terrain_editor_pane *pane);
+    int (*key_handler)(struct terrain_editor_pane *pane, int key, int keymod);
+    bool (*mouse_click_handler)(struct terrain_editor_pane *pane, int sx, int sy);
+};
+
+/**
+ * The terrain palette status pane.
+ */
+struct terrain_editor_palette {
+    struct terrain_editor_pane base;
+    int top_index; /* index of terrain in ulc of palette window */
+    int max_top_index; /* value for which last entry is on the bottom of the palette window */
+    int max_cols, max_rows; /* dimensions of the palette window */
+};
+
+/**
+ * Status window applet structure for the terrain editor. The terrain editor
+ * keeps a list of panes which appear in the status window. For example, the
+ * terrain palette is one, the help screen another, and there may be one in the
+ * future for selecting different editing tools, etc.
+ */
 struct terrain_editor_applet {
     struct applet base;
+    struct list panes; /* list of status panes */
     struct list cmds; /* list of commands (for undo/redo) */
+    struct terrain_editor_palette *pal; /* keep a pointer for ops_run init */
+    struct terrain_editor_pane *pane; /* current pane */
     struct place *place; /* place being edited */
     struct terrain *terrain; /* currently selected terrain to paint with */
     struct list *lastcmd; /* last command executed */
     struct terrain_map *origmap; /* clone of original map (for undo/redo) */
     struct terrain *quick[10]; /* quick terrain selection table */
     int x, y; /* cursor location in place (at least initially) */
-    int max_cols, max_rows; /* dimensions of the palette window */
-    int top_index; /* index of terrain in ulc of palette window */
-    int max_top_index; /* value for which last entry is on the bottom of the palette window */
 };
 
 typedef enum {
@@ -70,24 +98,6 @@ struct terrain_editor_cmd {
         struct terrain_editor_cmd_fill fill;
     } parms;
 };
-
-static void print_terraform_help (void)
-{
-    /* fixme: no longer visible because the status window is enlarged; move to
-     * a 'help' pane */
-    log_msg("");
-    log_msg(" PageUp/PageDn/ = Scroll palette up/down");
-    log_msg("      Home/End  = Scroll to begin/end");
-    log_msg("    Arrow Keys  = Move cursor");
-    log_msg("    SPACE/ENTER = Paint terrain");
-    log_msg("              C = Copy from ground");
-    log_msg("              F = Flood-Fill");
-    log_msg("     1234567890 = Get from QuickKey");
-    log_msg("CTRL-1234567890 = Set QuickKey");
-    log_msg("            ESC = Exit Terraform mode");
-    log_msg("              ? = This help text");
-    log_msg("");
-}
 
 /*
  * emit_terraform_status - print the active terrain palette entry to the
@@ -301,6 +311,39 @@ static void terrain_editor_look_at_xy(struct terrain_editor_applet *tea, int x, 
     log_end(NULL);
 }
 
+static int terrain_editor_palette_key_handler(struct terrain_editor_pane *pane, int key, int keymod)
+{
+    DECL_CAST(struct terrain_editor_palette, pal, pane);
+
+    switch (key) {
+    case SDLK_PAGEUP:
+        if (pal->top_index >= pal->max_cols) {
+            pal->top_index -= pal->max_cols;
+            statusRepaint();
+        }
+        return 0;
+
+    case SDLK_PAGEDOWN:
+        if (pal->top_index < pal->max_top_index) {
+            pal->top_index += pal->max_cols;
+            statusRepaint();
+        }
+        return 0;
+
+    case SDLK_HOME:
+        pal->top_index = 0;
+        statusRepaint();
+        return 0;
+
+    case SDLK_END:
+        pal->top_index = pal->max_top_index;
+        statusRepaint();
+        return 0;
+    }
+
+    return 0;
+}
+
 /*
  * terrain_editor_key_handler - key handler function for terraform mode
  */
@@ -360,6 +403,31 @@ static int terrain_editor_key_handler(struct KeyHandler * kh, int key, int keymo
     }
 
     switch (key) {
+
+    case KEY_SHIFT_EAST:
+    {
+        struct list *list = tea->pane->list.next;
+        if (list == &tea->panes) {
+            list = list->next;
+        }
+        assert(list != &tea->panes);
+        tea->pane = outcast(list, struct terrain_editor_pane, list);
+        statusRepaint();
+    }
+    break;
+
+    case KEY_SHIFT_WEST:
+    {
+        struct list *list = tea->pane->list.prev;
+        if (list == &tea->panes) {
+            list = list->prev;
+        }
+        assert(list != &tea->panes);
+        tea->pane = outcast(list, struct terrain_editor_pane, list);
+        statusRepaint();
+    }
+    break;
+
     case 'c':
         /* Set the terrain beneath the cursor as the current "pen" */
         tea->terrain = place_get_terrain(session->crosshair->getPlace(),
@@ -381,39 +449,16 @@ static int terrain_editor_key_handler(struct KeyHandler * kh, int key, int keymo
         terrain_editor_undo(tea);
         return 0;
 
-    case '?':
-        print_terraform_help();
-        return 0;
-
-    case SDLK_PAGEUP:
-        if (tea->top_index >= tea->max_cols) {
-            tea->top_index -= tea->max_cols;
-            statusRepaint();
-        }
-        return 0;
-
-    case SDLK_PAGEDOWN:
-        if (tea->top_index < tea->max_top_index) {
-            tea->top_index += tea->max_cols;
-            statusRepaint();
-        }
-        return 0;
-
-    case SDLK_HOME:
-        tea->top_index = 0;
-        statusRepaint();
-        return 0;
-
-    case SDLK_END:
-        tea->top_index = tea->max_top_index;
-        statusRepaint();
-        return 0;
-
     case SDLK_ESCAPE:
         return 1; /* done */
     }
 
-    return 0;  /* Keep on keyhandling */
+    /* pass it to the pane handler */
+    if (tea->pane->key_handler) {
+        return tea->pane->key_handler(tea->pane, key, keymod);
+    }
+
+    return 0;
 }
 
 /**
@@ -482,20 +527,22 @@ static terrain *terrain_editor_lookup(struct terrain_editor_applet *tea, int ind
  * Handle mouse clicks on the palette viewer. (sx, sy) are the screen
  * coordinates clicked.
  */
-static bool terrain_editor_palette_click(struct terrain_editor_applet *tea, int sx, int sy)
+static bool terrain_editor_palette_mouse_click_handler(struct terrain_editor_pane *pane, int pane_x, int pane_y)
 {
-    /* Convert screen coordinates to row and column */
-    int row = (sy - tea->base.dims.y) / TILE_H;
-    int col = (sx - tea->base.dims.x) / TILE_W;
+    DECL_CAST(struct terrain_editor_palette, pal, pane);
+
+    /* Convert pane pixel coordinates to row and column */
+    int row = pane_y / TILE_H;
+    int col = pane_x / TILE_W;
 
     /* Convert row and column to palette index */
-    int index = tea->top_index + col + (row * tea->max_cols);
+    int index = pal->top_index + col + (row * pal->max_cols);
     
     /* Lookup */
-    struct terrain *newter = terrain_editor_lookup(tea, index);
+    struct terrain *newter = terrain_editor_lookup(pane->app, index);
     if (newter) {
-        tea->terrain = newter;
-        emit_terraform_status("Set ", tea->terrain);
+        pane->app->terrain = newter;
+        emit_terraform_status("Set ", pane->app->terrain);
     }
 
     return false;
@@ -518,7 +565,7 @@ static bool terrain_editor_mouse_button_handler(struct MouseButtonHandler *mh, S
     
     /* Clicked on the palette window? */
     if (point_in_rect(event->x, event->y, &tea->base.dims)) {
-        terrain_editor_palette_click(tea, event->x, event->y);
+        tea->pane->mouse_click_handler(tea->pane, event->x - tea->base.dims.x, event->y - tea->base.dims.y);
     }
     
     return false;
@@ -555,13 +602,13 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
 
     /* Initialize the custom applet fields */
     DECL_CAST(struct terrain_editor_applet, tea, applet);
-    tea->max_cols = dims->w / TILE_W;
-    tea->max_rows = dims->h / TILE_H;
+    tea->pal->max_cols = dims->w / TILE_W;
+    tea->pal->max_rows = dims->h / TILE_H;
     assert(! list_empty(&session->terrains));
     tea->terrain = list_entry(session->terrains.next, struct terrain, session_list);
-    tea->max_top_index = list_len(&session->terrains) - (tea->max_cols * tea->max_rows);
-    if (tea->max_top_index < 0) {
-        tea->max_top_index = 0;
+    tea->pal->max_top_index = list_len(&session->terrains) - (tea->pal->max_cols * tea->pal->max_rows);
+    if (tea->pal->max_top_index < 0) {
+        tea->pal->max_top_index = 0;
     }
 
     /* Initialize the status window */
@@ -581,8 +628,6 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
     log_msg("Map   %s",     tea->place->terrain_map->tag    );
     log_msg("");
     
-    print_terraform_help();
-    log_msg("Press '?' for Terraform command help.");
     emit_terraform_status("Set ", tea->terrain);
     terrain_editor_look_at_xy(tea, tea->x, tea->y);
 
@@ -592,6 +637,10 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
     session->crosshair->setOrigin(tea->x, tea->y);
     session->crosshair->relocate(tea->place, tea->x, tea->y);
     mapSetDirty();
+
+    /* Initialize the foogod hints */
+    foogodSetHintText("SHIFT+\200\201=scroll ESC=exit");
+    foogodSetMode(FOOGOD_HINT);        
   
     /* Setup the key handler */
     struct KeyHandler kh;
@@ -615,6 +664,7 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
     eventHandle();
 
     /* Done -  cleanup */
+    foogodSetMode(FOOGOD_DEFAULT);
     cmdwin_pop();
     eventPopKeyHandler();
     eventPopMouseButtonHandler();
@@ -631,26 +681,73 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
 }
 
 /**
+ * Paint the help screen
+ */
+static void terrain_editor_help_paint(struct terrain_editor_pane *pane)
+{
+    static char *text[] = {
+        "  PageUp/PageDn/ = Scroll palette up/down",
+        "       Home/End  = Scroll to begin/end",
+        "     Arrow Keys  = Move cursor",
+        "     SPACE/ENTER = Paint terrain",
+        " CTRL-Arrow Keys = Paint continuously",
+        "               C = Copy from ground",
+        "               F = Flood-fill",
+        "SHIFT-Arrow Keys = Flip/scroll status",
+        "      1234567890 = Get from QuickKey",
+        " CTRL-1234567890 = Set QuickKey",
+        "          CTRL-Z = undo",
+        "          CTRL-R = redo",
+        "             ESC = Exit back to game",
+        NULL
+    };
+
+    SDL_Rect rect = pane->app->base.dims;
+    rect.h = ASCII_H;
+    rect.y += ASCII_H;
+
+    /* Naively assume we don't have to worry about wrapping/scrolling... since
+     * we probably won't unless the list starts getting long. */
+
+    for (int i = 0; text[i]; i++) {
+        screenPrint(&rect, 0, text[i]);
+        rect.y += ASCII_H;
+    }
+
+    status_set_title("Editor: Commands");
+}
+
+/**
+ * Paint the terrain palette pane.
+ */
+static void terrain_editor_palette_paint(struct terrain_editor_pane *pane)
+{
+    DECL_CAST(struct terrain_editor_palette, pal, pane);
+    SDL_Rect *dims = &pane->app->base.dims;
+    int y = dims->y;
+    struct terrain *ter = terrain_editor_lookup(pane->app, pal->top_index);
+    for (int row = 0; ter && (row < pal->max_rows); row++) {
+        int x = dims->x;
+        for (int col = 0; ter && (col < pal->max_cols); col++) {
+            sprite_paint(ter->sprite, 0, x, y);
+            ter = terrain_editor_next(pane->app, ter);
+            x += TILE_W;
+        }
+        y += TILE_H;
+    }
+    screenUpdate(dims);
+
+    status_set_title("Editor: Palette");
+}
+
+/**
  * Called by statusRepaint(), this repaints the status window only, the map and
  * console continue to be updated in their usual way.
  */
 static void terrain_editor_applet_ops_paint(struct applet *applet)
 {
     DECL_CAST(struct terrain_editor_applet, tea, applet);
-
-    int y = applet->dims.y;
-    struct terrain *ter = terrain_editor_lookup(tea, tea->top_index);
-    for (int row = 0; ter && (row < tea->max_rows); row++) {
-        int x = applet->dims.x;
-        for (int col = 0; ter && (col < tea->max_cols); col++) {
-            sprite_paint(ter->sprite, 0, x, y);
-            ter = terrain_editor_next(tea, ter);
-            x += TILE_W;
-        }
-        y += TILE_H;
-    }
-    screenUpdate(&applet->dims);
-    status_repaint_title();    
+    tea->pane->paint(tea->pane);
 }
 
 struct applet_ops terrain_editor_applet_ops = {
@@ -664,6 +761,14 @@ static void terrain_editor_applet_del(struct terrain_editor_applet *tea)
     /* delete the command list */
     terrain_editor_del_cmd_list(tea, tea->cmds.next);
 
+    /* delete the panes */
+    struct list *list = tea->panes.next;
+    while (list != &tea->panes) {
+        struct terrain_editor_pane *pane = outcast(list, struct terrain_editor_pane, list);
+        list = list->next;
+        free(pane);
+    }
+
     /* unref the clone of the original map */
     if (tea->origmap) {
         terrain_map_unref(tea->origmap);
@@ -674,11 +779,15 @@ static void terrain_editor_applet_del(struct terrain_editor_applet *tea)
 
 static struct terrain_editor_applet *terrain_editor_applet_new(struct place *place, int x, int y)
 {
+    struct terrain_editor_pane *help;
+
+    /* Create the base instance */
     struct terrain_editor_applet *tea = (struct terrain_editor_applet *)calloc(1, sizeof(*tea));
     if (!tea) {
         return NULL;
     }
 
+    list_init(&tea->panes);
     list_init(&tea->cmds);
     tea->lastcmd = &tea->cmds;
     tea->base.ops = &terrain_editor_applet_ops;
@@ -687,14 +796,42 @@ static struct terrain_editor_applet *terrain_editor_applet_new(struct place *pla
     tea->y = y;
 
     if (!(tea->origmap = terrain_map_clone(tea->place->terrain_map, tea->place->terrain_map->tag))) {
-        terrain_editor_applet_del(tea);
-        return NULL;
+        goto abort;
     }
 
     terrain_map_ref(tea->origmap);
 
+    /* Add the help pane */
+    help = (struct terrain_editor_pane *)calloc(1, sizeof(*help));
+    if (!help) {
+        goto abort;
+    }
+
+    help->paint = terrain_editor_help_paint;
+    help->key_handler = NULL;
+    help->mouse_click_handler = NULL;
+    help->app = tea;
+    list_add_tail(&tea->panes, &help->list);
+
+    /* Add the terrain palette pane */
+    tea->pal = (struct terrain_editor_palette *)calloc(1, sizeof(*(tea->pal)));
+    if (!tea->pal) {
+        goto abort;
+    }
+
+    tea->pal->base.paint = terrain_editor_palette_paint;
+    tea->pal->base.key_handler = terrain_editor_palette_key_handler;
+    tea->pal->base.mouse_click_handler = terrain_editor_palette_mouse_click_handler;
+    tea->pal->base.app = tea;
+    list_add_tail(&tea->panes, &tea->pal->base.list);
+
+    tea->pane = help;
 
     return tea;
+
+ abort:
+    terrain_editor_applet_del(tea);
+    return NULL;
 }
 
 void terrain_editor_run(struct place *place, int x, int y)

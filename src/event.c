@@ -32,7 +32,7 @@
 #include <common.h>
 
 #ifndef DEBUG_KEYS
-# define DEBUG_KEYS 0
+# define DEBUG_KEYS 1
 #endif
 
 #define EVENT_NONBLOCK   (1 << 0)
@@ -112,6 +112,7 @@ static int mapKey(SDL_keysym * keysym)
 
         /* If the key has a UNICODE representation and its from the default
          * Basic Latin code page then return it as an ASCII character. */
+        /* fixme: unicode is messing up ctrl+key sequences */
         if (keysym->unicode) {
 
                 /* Map CR to LF (legacy code expects this) */
