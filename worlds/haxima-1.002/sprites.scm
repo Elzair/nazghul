@@ -537,6 +537,17 @@
 (kern-mk-sprite 's_secret_nrock       ss_overlays 1  83 #f 0 )
 (kern-mk-sprite 's_headless_w_sword_statue ss_overlays 1 104 #f 0)
 
+(kern-mk-sprite 's_gold_cobble  ss_overlays 1 105 #f 0)
+(kern-mk-sprite 's_cyan_cobble  ss_overlays 1 106 #f 0)
+(kern-mk-sprite 's_gray_cobble  ss_overlays 1 107 #f 0)
+(kern-mk-sprite 's_blue_cobble  ss_overlays 1 108 #f 0)
+(kern-mk-sprite 's_olive_cobble ss_overlays 1 109 #f 0)
+(kern-mk-sprite 's_white_cobble ss_overlays 1 110 #f 0)
+(kern-mk-sprite 's_black_tile   ss_overlays 1 111 #f 0)
+(kern-mk-sprite 's_gold_spiral_tile   ss_overlays 1 112 #f 0)
+(kern-mk-sprite 's_blue_spiral_tile   ss_overlays 1 113 #f 0)
+(kern-mk-sprite 's_tombstone          ss_overlays 1 114 #f 0)
+
 (kern-mk-sprite 's_bulwark_ew     ss_ship 1  0 #f 0 )
 (kern-mk-sprite 's_bulwark_ns     ss_ship 1  1 #f 0 )
 (kern-mk-sprite 's_deck_w         ss_ship 1  2 #f 0 )

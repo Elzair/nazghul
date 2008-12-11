@@ -47,6 +47,17 @@
     (list  "d,"   t_doorway)
     (list  "cc"   t_cobblestone)        ;; "cobblestone"
     (list  "cx"   t_impassable_cobblestone)        ;; "cobblestone"
+
+    (list  "cg"   t_gold_cobble)
+    (list  "cy"   t_cyan_cobble)
+    (list  "cG"   t_gray_cobble)
+    (list  "cb"   t_blue_cobble)
+    (list  "co"   t_olive_cobble)
+    (list  "cw"   t_white_cobble)
+    (list  "Tb"   t_black_tile)
+    (list  "Tg"   t_gold_spiral_tile)
+    (list  "Tb"   t_blue_spiral_tile)
+
     (list  "ee"   t_deck)               ;; "deck"
     (list  "oo"   t_mast)               ;; "mast"
     (list  "ff"   t_fire_terrain)       ;; "fire"
@@ -65,6 +76,7 @@
     (list  "~p"   t_false_pillar)
     (list  "bb"   t_boulder)            ;; "boulder"
     (list  "b~"   t_water_rocks)        ;; "boulder" in water
+    (list  "bt"   t_tombstone)
 	
     (list  "rr"   t_wall_rock)          ;; "rock wall"
     (list  "r."   t_wall_rock_v)        ;; "rock wall"  (non-LOS-blocking)
