@@ -77,6 +77,7 @@
     (list  "bb"   t_boulder)            ;; "boulder"
     (list  "b~"   t_water_rocks)        ;; "boulder" in water
     (list  "bt"   t_tombstone)
+    (list  "bT"   t_tombstone2)
 	
     (list  "rr"   t_wall_rock)          ;; "rock wall"
     (list  "r."   t_wall_rock_v)        ;; "rock wall"  (non-LOS-blocking)

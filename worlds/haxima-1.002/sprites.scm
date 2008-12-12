@@ -547,6 +547,7 @@
 (kern-mk-sprite 's_gold_spiral_tile   ss_overlays 1 112 #f 0)
 (kern-mk-sprite 's_blue_spiral_tile   ss_overlays 1 113 #f 0)
 (kern-mk-sprite 's_tombstone          ss_overlays 1 114 #f 0)
+(kern-mk-sprite 's_tombstone2         ss_overlays 1 115 #f 0)
 
 (kern-mk-sprite 's_bulwark_ew     ss_ship 1  0 #f 0 )
 (kern-mk-sprite 's_bulwark_ns     ss_ship 1  1 #f 0 )

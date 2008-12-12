@@ -117,6 +117,7 @@
    (list 't_gold_spiral_tile     "floor tile"   pclass-grass     s_gold_spiral_tile       trn 0 nil)
    (list 't_blue_spiral_tile     "floor tile"   pclass-grass     s_blue_spiral_tile       trn 0 nil)
    (list 't_tombstone       "tombstone"     pclass-boulder s_tombstone trn 0 nil)
+   (list 't_tombstone2       "tombstone"     pclass-boulder s_tombstone2 trn 0 nil)
 
    (list 't_impassable_cobblestone    "cobblestone"   pclass-wall     s_cobblestone       trn 0 nil)
    (list 't_flagstones      "flagstones"    pclass-grass     s_flagstone         trn 0 nil)
