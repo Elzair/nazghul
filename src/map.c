@@ -617,14 +617,14 @@ void mapSetPlace(struct place *place)
 		return;
 
 	if (place_w(place) > MAP_TILE_W) {
-		Map.cam_max_x = place_w(place) - MAP_TILE_W / 2 - 1;
+		Map.cam_max_x = place_w(place) - (MAP_TILE_W - 1) / 2 - 1;
 		Map.cam_min_x = MAP_TILE_W / 2;
 	} else {
 		Map.cam_min_x = Map.cam_max_x = (place_w(place) + 1)/ 2 - 1;
 	}
 
 	if (place_h(place) > MAP_TILE_W) {
-		Map.cam_max_y = place_h(place) - MAP_TILE_H / 2 - 1;
+		Map.cam_max_y = place_h(place) - (MAP_TILE_H - 1) / 2 - 1;
 		Map.cam_min_y = MAP_TILE_H / 2;
 	} else {
 		Map.cam_min_y = Map.cam_max_y = (place_h(place) + 1) / 2 - 1;
