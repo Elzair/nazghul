@@ -59,7 +59,7 @@ int closure_execlpiv(closure_t *closure, pointer gob, void *obj, int hook_id,
                      char *fmt, va_list args);
 
 /* Another special form - for session_run_hook */
-int closure_execvl(closure_t *closure, char *fmt, va_list args, pointer args);
+int closure_execvl(closure_t *closure, char *fmt, va_list args, pointer cell);
 
 END_DECL
 
