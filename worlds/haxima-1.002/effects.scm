@@ -439,6 +439,20 @@
                (cons kchar
                      (loot-drop-hook-fx-parms fgob))))))
 
+;; ----------------------------------------------------------------------
+;; Generic death
+;; Just does some arbitary named closure
+;; (kern-obj-add-effect npc 
+;;           ef_generic_death
+;;           'a_closure_name)
+;; --------------------------------------------------------------------
+
+(define (generic-death-exec fgob kobj)
+  (if (not (obj-is-char? kobj))
+      (kern-obj-remove-effect kobj ef_loot_drop)
+      ((eval fgob) kobj)
+   ))      
+
 ;; ----------------------------------------------------------------------------
 ;; Invisibility
 ;;
@@ -732,6 +746,7 @@
 ;; On-death hooks
 (mk-effect 'ef_loot_drop         nil nil 'loot-drop-exec    nil nil nil on-death-hook "" 0 #f -1)
 (mk-effect 'ef_cleanup_tentacles nil nil 'cleanup-tentacles nil nil nil on-death-hook "" 0 #f -1)
+(mk-effect 'ef_generic_death         nil nil 'generic-death-exec    nil nil nil on-death-hook "" 0 #f -1)
 
 ;; Move-done hooks
 (mk-effect 'ef_stealth_move nil nil 'stealth-move-exec nil nil nil move-done-hook "" 0 #t -1)
