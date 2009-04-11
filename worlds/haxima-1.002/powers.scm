@@ -1484,6 +1484,9 @@
            (cond ((null? ktype) result-no-effect)
                  (else
                   (kern-obj-remove-from-inventory ktarg ktype 1)
+		  (if (ktype-can? ktype 'receive)
+			((kern-type-get-gifc ktype) 'receive ktype kactor)
+		  )
                   (kern-obj-add-to-inventory kactor ktype 1)
                   result-ok
                   ))))

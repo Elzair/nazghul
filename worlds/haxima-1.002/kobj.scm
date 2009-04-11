@@ -20,6 +20,11 @@
   (let ((gifc (kobj-ifc kobj)))
     (cond ((null? gifc) #f)
           (else (gifc 'can signal)))))
+	  
+(define (ktype-can? ktype signal)
+  (let ((gifc (kern-type-get-gifc  ktype)))
+    (cond ((null? gifc) #f)
+          (else (gifc 'can signal)))))
   
 (define (kobj-place kobj)
   (loc-place (kern-obj-get-location kobj)))
