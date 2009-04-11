@@ -28,11 +28,18 @@
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (meaney-mk) (list 0))
+(define (meaney-mk) (list 0 #t))
 (define (meaney-get-donated meaney) (car meaney))
 (define (meaney-donated? meaney) (> (meaney-get-donated meaney) 
                                     0))
 (define (meaney-donate! meaney q) (set-car! meaney (+ (car meaney) q)))
+(define (meaney-has-ring meaney) (cadr meaney))
+(define (meaney-remove-ring meaney) (set-car! (cdr meaney) #f))
+
+(define (meaney-on-death knpc)
+	(if  (meaney-has-ring (kobj-gob-data knpc))
+		(kern-obj-put-at (kern-mk-obj t_skull_ring_m 1) (kern-obj-get-location knpc))
+	))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -51,7 +58,8 @@
   (say knpc "I cannot help thee with that."))
 
 (define (meaney-name knpc kpc)
-  (say knpc "I am brother Meaney."))
+  (say knpc "I am brother Meaney.")
+  (quest-data-update 'questentry-ghertie 'meaney-loc 1))
 
 (define (meaney-join knpc kpc)
   (say knpc "My duty is to the poor and afflicted."))
@@ -123,9 +131,10 @@
 
 ;; Quest-related
 (define (meaney-pira knpc kpc)
-  (say knpc "Yes, I was once a pirate, long ago. "
-       "I sailed with Ma Ghertie on the Merciful Death. "
-       "Now I spend my life in penance to the poor."))
+	(quest-data-update 'questentry-ghertie 'meaney-loc 1)
+	(say knpc "Yes, I was once a pirate, long ago. "
+		"I sailed with Ma Ghertie on the Merciful Death. "
+		"Now I spend my life in penance to the poor."))
 
 (define (meaney-gher knpc kpc)
   (say knpc "Ma Ghertie treated us crew like family. "
@@ -147,16 +156,19 @@
 (define (meaney-firs knpc kpc)
   (say knpc "The first mate was an evil wretch named Jorn. "
        "I heard he is a bandit now, somewhere in the great forest to the east. "
-       "You might ask around Green Tower."))
+       "You might ask around Green Tower.")
+       (quest-data-update 'questentry-ghertie 'jorn-forest 1))
 
 (define (meaney-cook knpc kpc)
   (say knpc "Gholet is no doubt either dead or rotting in prison somewhere. "
        "The last time I saw him he stopped here for the night. "
        "When I awoke the next morning I found the lock on our donation box broken. "
-       "The box was even more empty than usual."))
+       "The box was even more empty than usual.")
+       (quest-data-update 'questentry-ghertie 'gholet-prison 1)
+       )
 
 (define (meaney-ring knpc kpc)
-  (if (not (in-inventory? knpc t_skull_ring))
+  (if (not (meaney-has-ring (kobj-gob-data knpc)))
       (say knpc "I hope I never see that cursed thing again.")
       (begin
         (say knpc "Yes, I wear the ring of Ma Ghertie's Bully Boys, "
@@ -181,8 +193,8 @@
                           "finger] Ah! There, it is off, and I am free from its curse. "
                           "I thank you, Wanderer. Know that if you ever need aid "
                           "or healing, I will do what I can for you.")
-                    (kern-obj-remove-from-inventory knpc t_skull_ring 1)
-                    (kern-obj-add-to-inventory kpc t_skull_ring 1)
+			(skullring-m-get nil kpc)
+			(meaney-remove-ring (kobj-gob-data knpc))
                     )
                   (say knpc "I wish I could be rid of the wretched thing!")))))))
 
@@ -229,8 +241,7 @@
        ))
 
 (define (mk-meaney)
-  (bind 
-   (kern-char-force-drop
+	(let ((knpc
     (kern-mk-char 
      'ch_meaney           ; tag
      "Meaney"             ; name
@@ -254,10 +265,14 @@
      ;;..........container (and contents)
      (mk-inventory
       (list
-       (list 1 t_skull_ring)
        (list 1 t_dagger)
        ))
      nil              ; readied
-     )
-    #t)
-   (meaney-mk)))
+     )))
+ (kern-char-force-drop knpc #t)
+  (bind knpc (meaney-mk))
+  (kern-obj-add-effect knpc 
+           ef_generic_death
+           'meaney-on-death)
+	  knpc) )
+  

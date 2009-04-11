@@ -439,7 +439,9 @@
 (define (glasdrin-cita knpc kpc)
   (say knpc "The Citadel is the inner keep in the north part of the castle."))
 (define (glasdrin-ghol knpc kpc)
-  (say knpc "I seem to recall a man named Gholet was arrested for theft. You might check the Citadel's dungeon."))
+  (say knpc "I seem to recall a man named Gholet was arrested for theft. You might check the Citadel's dungeon.")
+   (quest-data-update 'questentry-ghertie 'gholet-dungeon 1)
+   )
 (define (glasdrin-kurp knpc kpc)
   (say knpc "The dungeon Kurpolis is where most of our troops are now. Follow the mountains west, you'll find the entrance in a canyon."))
 

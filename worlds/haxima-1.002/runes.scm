@@ -35,13 +35,18 @@
        (method 'get rune-l-get)))
 
 ;; trigger quest update
-(define (rune-k-get kobj kchar)
+(define (rune-k-receive ktype kchar)
 	(quest-data-update-with 'questentry-thiefrune 'recovered 1 (quest-notify (grant-party-xp-fn 50)))
+	)
+(define (rune-k-get kobj kchar)
+	(rune-k-receive kobj kchar)
 	(kobj-get kobj kchar)
 	)
 (define rune-k-ifc
   (ifc rune-ifc
-       (method 'get rune-k-get)))
+       (method 'get rune-k-get)
+       (method 'receive rune-k-receive)
+       ))
 	
 ;; also used where external events trigger quest
 (define (rune-basic-quest questtag questicon)
@@ -87,12 +92,20 @@
 (define rune-d-ifc
   (ifc rune-ifc
        (method 'get rune-d-get)))
+
+;; trigger quest update
+(define (rune-c-get kobj kchar)
+	(rune-basic-get kobj kchar 'questentry-rune-c)
+	)
+(define rune-c-ifc
+  (ifc rune-ifc
+       (method 'get rune-c-get)))
        
 ;; rune types
 (mk-quest-obj-type 't_rune_k "Rune of Knowledge" s_runestone_k layer-item rune-k-ifc)
 (mk-quest-obj-type 't_rune_p "Rune of Power" s_runestone_p layer-item rune-p-ifc)
 (mk-quest-obj-type 't_rune_s "Rune of Skill" s_runestone_s layer-item rune-ifc)
-(mk-quest-obj-type 't_rune_c "Rune of Curiosity" s_runestone_c layer-item rune-ifc)
+(mk-quest-obj-type 't_rune_c "Rune of Curiosity" s_runestone_c layer-item rune-c-ifc)
 (mk-quest-obj-type 't_rune_f "Rune of Freedom" s_runestone_f layer-item rune-f-ifc)
 (mk-quest-obj-type 't_rune_w "Rune of Wisdom" s_runestone_w layer-item rune-w-ifc)
 (mk-quest-obj-type 't_rune_d "Rune of Discretion" s_runestone_d layer-item rune-d-ifc)

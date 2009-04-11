@@ -32,7 +32,8 @@
   (say knpc "Right you are, guv'nah, that's what I like about you!"))
 
 (define (gholet-name knpc kpc)
-  (say knpc "Gholet's me 'andle, but take no account o' me, guv'nah"))
+  (say knpc "Gholet's me 'andle, but take no account o' me, guv'nah")
+  (quest-data-update 'questentry-ghertie 'gholet-dungeon 1))
 
 (define (gholet-join knpc kpc)
   (say knpc "And leave behind 'is 'ere life of luxury? Tosh!"))
@@ -72,28 +73,33 @@
        "Best let sleeping dogs lie, as I like to say. "))
 
 (define (gholet-dog knpc kpc)
-  (say knpc "From what I 'ear, that dog lies at the White Stag."))
+  (say knpc "From what I 'ear, that dog lies at the White Stag.")
+  (quest-data-update 'questentry-ghertie 'jorn-loc 1))
 
 ;; Quest-related
 (define (gholet-ring knpc kpc)
 
-  (if (not (in-inventory? knpc t_skull_ring))
+  (if (not (in-inventory? knpc t_skull_ring_g))
       (say knpc "Ring? What ring?")
       (begin
 
         (define (take-picklocks)
           (if (< (num-in-inventory kpc t_picklock) 12)
+		(begin
+		(quest-data-update-with 'questentry-ghertie 'gholet-price 1 (quest-notify nil))
               (say knpc "Mmm. Bit of a problem, guv'nah, "
                    "you don't have enough picklocks. "
                    "But I'll keep the ring 'ere on layaway until you do.")
+		   )
               (begin
                 (say knpc "Right you are, 'ere you go, and there I go, "
                      "right as rain, right as rain! Enjoy your new ring, "
                      "guv'nah!")
                 (kern-obj-remove-from-inventory kpc t_picklock 12)
                 (kern-obj-add-to-inventory knpc t_picklock 12)
-                (kern-obj-remove-from-inventory knpc t_skull_ring 1)
-                (kern-obj-add-to-inventory kpc t_skull_ring 1))))
+                (kern-obj-remove-from-inventory knpc t_skull_ring_g 1)
+		(skullring-g-get nil kpc)
+		)))
 
         (say knpc "Oh, that old thing? It got to itchin', "
              "I must be allergic to it. "
@@ -114,6 +120,7 @@
                     (if (yes? kpc)
                         (take-picklocks)
                         (begin
+			(quest-data-update-with 'questentry-ghertie 'gholet-price 1 (quest-notify nil))
                           (say knpc "That's my price. "
                                "Come back when you're ready to pay.")
                           (kern-conv-end))))
@@ -172,7 +179,7 @@
     ;;..........container (and contents)
     (mk-inventory
               (list
-               (list 1 t_skull_ring)
+               (list 1 t_skull_ring_g)
                ))
     nil              ; readied
     )

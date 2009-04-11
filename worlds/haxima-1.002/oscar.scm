@@ -106,12 +106,17 @@
 
 (define (oscar-luck knpc kpc)
   (say knpc "The ghost in room 3 likes the name. I don't want the ghost of "
-       "a wicked pirate mad at me."))
+       "a wicked pirate mad at me.")
+	(quest-data-assign-once 'questentry-ghertie)
+	(quest-data-update 'questentry-ghertie 'ghertieloc 1))
 
 (define (oscar-ghost knpc kpc)
   (say knpc "Ghastly Ghertie was murdered by her crew in room 3. "
        "She still haunts it so I don't rent it out. "
-       "I wish she would pay her bill."))
+       "I wish she would pay her bill.")
+	(quest-data-update 'questentry-ghertie 'ghertieid 1)
+	(quest-data-update 'questentry-ghertie 'ghertieloc 1)
+	(quest-data-assign-once 'questentry-ghertie))
 
 ;; Leg...
 (define (oscar-leg knpc kpc)
@@ -126,7 +131,8 @@
 
 (define (oscar-gher knpc kpc)
   (say knpc "Ghertie was a wicked pirate back before my time. "
-       "Her own crew murdered her and left with her ship and her treasure."))
+       "Her own crew murdered her and left with her ship and her treasure.")
+	(quest-data-assign-once 'questentry-ghertie))
 
 (define (oscar-alch knpc kpc)
   (say knpc "His shop is next to the tavern. He's always looking for weird "

@@ -369,3 +369,185 @@
 	(if (not (null? (quest-data-getvalue 'questentry-rune-f 'angriss)))
 		(quest-data-update-with 'questentry-rune-f 'angrisslair 1 (quest-notify nil))
 	))
+
+;;-----------------------
+;; void rune
+
+;; todo add more sections? info on voidships, etc?
+
+(define (quest-rune-d-update)
+	(let* ((quest (quest-data-get 'questentry-rune-d))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(kern-ui-paginate-text
+			"A rune was recovered from the Temple of the Void."
+		))
+	(#t
+		(kern-ui-paginate-text
+			"Legends tell of a temple in the void, which housed a rune."
+		))
+)
+
+		)
+	))
+
+;;-----------------------
+;; pirate rune
+
+(define (quest-rune-c-update)
+	(println "is this really happening?")
+	(let* ((quest (quest-data-get 'questentry-rune-c))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(println "done")
+		(kern-ui-paginate-text
+			"A rune was recovered from the wreck of the Merciful Death."
+		))
+	((tbl-flag? 'shiploc)
+		(println "shiploc")
+		(append
+			(kern-ui-paginate-text
+			"The pirate captain Ghertie once held a rune aboard her ship, the Merciful Death."
+			""
+			)
+			(kern-ui-paginate-text (string-append "Her ghost has revealed the location of the ship: [" (number->string merciful-death-x) ", " (number->string merciful-death-y) "]."))
+			(if (tbl-flag? 'shipraise)
+				(kern-ui-paginate-text
+				""
+				"The ship may be raised with the Vas Uus Ylem spell, mixed using mandrake, blood moss and spider silk."
+				)
+				nil
+			)
+		))
+	((tbl-flag? 'info)
+		(println "info")
+		(kern-ui-paginate-text
+			"The pirate captain Ghertie once held a rune aboard her ship, the Merciful Death."
+			""
+			"Her ghost now haunts Oparine, seeking ^c+mrevenge^c- upon her crew."
+		))
+	(#t
+		(println "else")
+		(kern-ui-paginate-text
+			"The pirate captain Ghertie once held a rune."
+		))
+)
+
+		)
+	))
+
+;;-----------------------
+;; pirate quest
+
+(define (quest-ghertie-update)
+	(let* ((quest (quest-data-get 'questentry-ghertie))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(kern-ui-paginate-text
+			(string-append "The ghost of Ghertie the pirate once haunted the inn at Oparine. In exchange for her revenge, she revealed the location of her sunken ship: [" (number->string merciful-death-x) ", " (number->string merciful-death-y) "].")
+		))
+	((tbl-flag? 'questinfo)
+		(append
+			(kern-ui-paginate-text
+				"The ghost of Ghertie the pirate haunts the inn at Oparine. She seeks revenge on the survivors of the crew that betrayed her."
+				""
+				"Gholet, Jorn and Meaney each wear a ring marking them as Gherties crew. Ghertie will accept the rings as proof that you have hunted them down, in exchange for the location of her sunken treasure."
+			)
+			(if (and (tbl-flag? 'ring-jorn)
+						(tbl-flag? 'ring-meaney)
+						(tbl-flag? 'ring-gholet))
+				(kern-ui-paginate-text
+					""
+					"You have retrieved all three skull rings."
+				)
+				(append
+					(cond 
+						((tbl-flag? 'ring-gholet)
+							(kern-ui-paginate-text
+								""
+								"You have retrieved a skull ring from Gholet."
+							))
+						((tbl-flag? 'gholet-price)
+							(kern-ui-paginate-text
+								""
+								"Gholet is held in the dungeons beneath Glasdrin, and will exchange the ring for a dozen lockpicks."
+							))
+						((tbl-flag? 'gholet-dungeon)
+							(kern-ui-paginate-text
+								""
+								"Gholet is held in the dungeons beneath Glasdrin."
+							))
+						((tbl-flag? 'gholet-prison)
+							(kern-ui-paginate-text
+								""
+								"If Gholet can be found anywhere it will be in some prison or another."
+							))
+						(#t nil)
+					)
+					(cond 
+						((tbl-flag? 'ring-jorn)
+							(kern-ui-paginate-text
+								""
+								"You have retrieved a skull ring from Jorn."
+							))
+						((tbl-flag? 'jorn-loc)
+							(kern-ui-paginate-text
+								""
+								"Jorn can be found a the Green Tower's White Stag Inn."
+							))
+						((tbl-flag? 'jorn-forest)
+							(kern-ui-paginate-text
+								""
+								"Jorn is a bandit somewhere in the Great Forest."
+							))
+						(#t nil)
+					)
+					(cond 
+						((tbl-flag? 'ring-meaney)
+							(kern-ui-paginate-text
+								""
+								"You have retrieved a skull ring from Meaney."
+							))
+						((tbl-flag? 'meaney-loc)
+							(kern-ui-paginate-text
+								""
+								"Meaney runs the Poor House, north of Oparine."
+							))
+						(#t nil)
+					)
+				)
+			)
+		))
+	(#t
+		(kern-ui-paginate-text
+			(string-append
+				(if (tbl-flag? 'ghertieid)
+					"The ghost of Ghertie the pirate" 
+					"A ghost")
+				(if (tbl-flag? 'ghertieloc)
+					"haunts the inn at Oparine. "
+					"may be found in Oparine. ")
+				(if (tbl-flag? 'revenge)
+					"She seeks ^c+mrevenge^c-, and may aid you if you take care of her unfinished business."
+					(string-append "Why does "
+						(if (tbl-flag? 'ghertieid) "she" "it")
+						"linger in undeath?"
+					)
+				))
+		))
+)
+
+		)
+	))

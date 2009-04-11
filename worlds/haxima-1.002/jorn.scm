@@ -28,6 +28,10 @@
 ;;----------------------------------------------------------------------------
 (define (jorn-mk) nil)
 
+(define (jorn-on-death knpc)
+	(kern-obj-put-at (kern-mk-obj t_skull_ring_j 1) (kern-obj-get-location knpc))
+	)
+
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;; 
@@ -45,6 +49,7 @@
 
 (define (jorn-name knpc kpc)
   (say knpc "I'm Jorn. Heard of me?")
+   (quest-data-update 'questentry-ghertie 'jorn-loc 1)
   (if (yes? kpc)
       (say knpc "Good, then you've been warned.")
       (say knpc "Too bad. Don't make me make an example out of you.")))
@@ -66,9 +71,7 @@
   (say knpc "You're starting to get on my nerves."))
 
 (define (jorn-ring knpc kpc)
-  (if (not (in-inventory? knpc t_skull_ring))
-      (say knpc "[He looks puzzled] Eh... where'd it go?")
-      (begin
+      (quest-data-update 'questentry-ghertie 'jorn-loc 1)
         (say knpc "[He gives you a cold look] What of it? Do you want it?")
         (if (no? kpc)
             (say knpc "Then quit staring at it.")
@@ -83,7 +86,7 @@
                          "he draws his sword and thrusts at you in the same "
                          "motion!]")
                     (kern-being-set-base-faction knpc faction-outlaw)
-                    (kern-conv-end))))))))
+                    (kern-conv-end))))))
 
 (define jorn-conv
   (ifc basic-conv
@@ -105,44 +108,44 @@
        ))
 
 (define (mk-jorn)
-  (bind 
-   (kern-char-force-drop
-   (kern-char-arm-self
-    (kern-mk-char 
-    'ch_jorn           ; tag
-    "Jorn"             ; name
-    jorn-species     ; species
-    jorn-occ         ; occ
-    s_brigand        ; sprite
-    faction-men      ; starting alignment
-    2 0 1            ; str/int/dex
-    0 0              ; hp mod/mult
-    0 0              ; mp mod/mult
-    max-health ; hp
-    -1                ; xp
-    max-health ; mp
-    0
-    jorn-lvl
-    #f               ; dead
-    'jorn-conv       ; conv
-    sch_jorn           ; sched
-    'spell-sword-ai  ; special ai
+	(let ((knpc
+		(kern-mk-char 
+			'ch_jorn           ; tag
+			"Jorn"             ; name
+			jorn-species     ; species
+			jorn-occ         ; occ
+			s_brigand        ; sprite
+			faction-men      ; starting alignment
+			2 0 1            ; str/int/dex
+			0 0              ; hp mod/mult
+			0 0              ; mp mod/mult
+			max-health ; hp
+			-1                ; xp
+			max-health ; mp
+			0
+			jorn-lvl
+			#f               ; dead
+			'jorn-conv       ; conv
+			sch_jorn           ; sched
+			'spell-sword-ai  ; special ai
 
-    ;; container
-    (mk-inventory
-              (list
-               (list 1 t_skull_ring)
-               (list 1 t_sword_2)
-               (list 1 t_dagger_4)
-               (list 1 t_armor_leather_2)
-               (list 1 t_leather_helm_2)
-               (list 67 t_gold_coins)
-               (list 3 t_picklock)
-               (list 3 t_heal_potion)
-               ))
-
-
-    nil              ; readied
-    ))
-   #t)
-   (jorn-mk)))
+			;; container
+			(mk-inventory (list
+				(list 1 t_sword_2)
+				(list 1 t_dagger_4)
+				(list 1 t_armor_leather_2)
+				(list 1 t_leather_helm_2)
+				(list 67 t_gold_coins)
+				(list 3 t_picklock)
+				(list 3 t_heal_potion)
+			))
+			nil              ; readied
+		)))
+		(bind knpc  (jorn-mk))
+		(kern-char-force-drop knpc #t)
+		(kern-char-arm-self knpc)
+		(kern-obj-add-effect knpc 
+			ef_generic_death
+			'jorn-on-death)
+		knpc
+	))

@@ -228,7 +228,7 @@
 	'quest-status-inprogress
 	's_runestone_r
 	(tbl-build
-		;;'on-update 'quest-allrunes-update
+		'on-update 'quest-rune-c-update
 		'bonus-xp 0
 		)
 ))
@@ -274,6 +274,32 @@
 	(tbl-build
 		'qparent 'questentry-wise
 		;;'on-update 'quest-necromancer-update
+		)
+))
+
+(questadd (qst-mk "A Haunted Inn"
+	'questentry-ghertie
+	(kern-ui-paginate-text
+		"A ghost haunts the inn at Oparine. Why does it linger in undeath?"
+	)
+	'quest-assign-notify
+	'quest-status-inprogress
+	's_ghost
+	(tbl-build
+		'on-update 'quest-ghertie-update
+		;; ghertieloc  - gherties loc
+		;; ghertieid - ghertie info
+		;; revenge	- gherties trigger
+		;; questinfo - quest info revealed
+		;; meaney-loc - location of meaney
+		;; ring-meaney - got ring from meaney
+		;; jorn-forest - rough info on jorn
+		;; jorn-loc - jorn found
+		;; ring-jorn - got ring from jorn
+		;; gholet-prison - rough info on gholet
+		;; gholet-glasdrin - found gholet
+		;; gholet-price - gholets offer for ring
+		;; ring-gholet - got ring from gholet
 		)
 ))
 

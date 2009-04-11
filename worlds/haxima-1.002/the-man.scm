@@ -156,12 +156,22 @@
   (if (kern-conv-get-yes-no? kpc)
       (say knpc "Well, aren't we the accomplished magician? I hope you don't "
            "know any love spells, Wizard!")
-      (say knpc "Mix mandrake, blood moss and spider silk, then chant Vas "
-           "Uus Ylem next to the spot where the ship has sunk."))
+      (begin
+			(say knpc "Mix mandrake, blood moss and spider silk, then chant Vas "
+			"Uus Ylem next to the spot where the ship has sunk.")
+			(quest-data-update 'questentry-rune-c 'shipraise 1)
+		)
+	)
   (say knpc "Ghertie will not give up the location of her ship freely. But "
        "even the dead have desires, indeed that is the worst part of "
-       "death! And Ghertie desires nothing more than REVENGE. Mark that word "
-       "well, and remember it when you meet her ghost."))
+       "death! And Ghertie desires nothing more than ^c+mrevenge^c-. Mark that word "
+       "well, and remember it when you meet her ghost.")
+	(quest-data-update 'questentry-rune-c 'info 1)
+	(quest-data-assign-once 'questentry-rune-c)
+	(quest-data-update 'questentry-ghertie 'ghertieid 1)
+	(quest-data-update-with 'questentry-ghertie 'revenge 1 (quest-notify nil))
+	(quest-data-assign-once 'questentry-ghertie)
+	)
 
 (define (man-chan knpc kpc)
   (say knpc "So you've met Chanticleer? No doubt HE was the one who told you where to find me! "

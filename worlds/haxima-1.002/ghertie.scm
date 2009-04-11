@@ -30,11 +30,13 @@
 
 ;; Quest...
 (define (ghertie-give-instr knpc kpc)
-  (say knpc "Write this down lest you forget. Each member of my crew wears a "
+  (say knpc "Each member of my crew wears a "
        "cursed ring, with a skull for a signet. It cannot be "
        "removed without the finger. Jorn, Gholet and Meaney still "
        "live. Bring me their rings to fulfil your part of the "
-       "bargain, and I will then fulfill mine."))
+       "bargain, and I will then fulfill mine.")
+	(quest-data-update-with 'questentry-ghertie 'questinfo 1 (quest-notify nil))
+)
 
 (define (ghertie-update-quest knpc kpc)
   (let ((nrem (- 3 (num-in-inventory kpc t_skull_ring))))
@@ -45,7 +47,10 @@
                "] by the sextant. But how you will pillage her when "
                "she lies at the bottom of the sea is your problem! "
                "[She vanishes with a cruel laugh]")
-          (kern-conv-end)
+			(quest-data-update-with 'questentry-rune-c 'shiploc 1 (quest-notify nil))
+			(quest-data-assign-once 'questentry-ghertie)
+			(quest-data-update-with 'questentry-ghertie 'done 1 (grant-party-xp-fn 20))
+			 (kern-conv-end)
           (kern-obj-remove knpc)
           (kern-map-set-dirty))
         (begin
@@ -63,6 +68,8 @@
 ;; Basics...
 (define (ghertie-hail knpc kpc)
   (let ((quest (ghertie-quest (kobj-gob-data knpc))))
+		(quest-data-update 'questentry-ghertie 'ghertieloc 1)
+		(quest-data-assign-once 'questentry-ghertie)
     (display "quest:")(display quest)(newline)
     (if (quest-accepted? quest)
         (ghertie-update-quest knpc kpc)        
@@ -73,6 +80,7 @@
   (say knpc "I care not for this line of talk."))
 
 (define (ghertie-name knpc kpc)
+	(quest-data-update 'questentry-ghertie 'ghertieid 1)
   (say knpc "I am Ghertrude."))
 
 (define (ghertie-join knpc kpc)
@@ -124,6 +132,7 @@
           (say knpc "[She fixes you with an icy glare] "
                "You speak the word dearest to my dead heart. "
                "Are you offering to avenge me?")
+	(quest-data-update 'questentry-ghertie 'revenge 1)
           (if (kern-conv-get-yes-no? kpc)
               (begin
                 (say knpc "Not all of my crew went down with the ship. "
@@ -144,7 +153,9 @@
                 (kern-conv-end)))))))
 
 (define (ghertie-fort knpc kpc)
-  (say knpc "Gold, gems, magical items, weapons armor and runes."))
+  (say knpc "Gold, gems, magical items, weapons armor and runes.")
+	(quest-data-assign-once 'questentry-rune-c)
+	)
 
 (define ghertie-conv
   (ifc basic-conv

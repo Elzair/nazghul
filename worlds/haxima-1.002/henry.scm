@@ -92,13 +92,15 @@
 (define (henry-gher knpc kpc)
   (say knpc "So ye've 'eard the legend o' Ghastly Ghertie! "
        "If ye don't mind a bit o' unsolicited advice from an old seabird, "
-       "steer clear o' ghosts! 'ungry they is!"))
+       "steer clear o' ghosts! 'ungry they is!")
+	(quest-data-assign-once 'questentry-ghertie))
 
 (define (henry-ghos knpc kpc)
   (say knpc "The sea is full of the dead, and Ghertie did her share o' "
        "puttin' 'em there. I've seen nights on full moons where they rise "
        "up an' prowl the waves like cats! Dreadful is the dead, "
-       "an' Henry's in no 'urry to be joinin' 'em!"))
+       "an' Henry's in no 'urry to be joinin' 'em!")
+	(quest-data-assign-once 'questentry-ghertie))
 
 (define (henry-alch knpc kpc)
   (say knpc "Aye, 'e's a queer one."))
