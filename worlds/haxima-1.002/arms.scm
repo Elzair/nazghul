@@ -496,6 +496,7 @@
    (list 't_acid_spray     "acid spray"      nil          "-7"     "1d6"    "+0"     (weap-ap 1) 0    slot-nil      2      2     t_slimeglob      nil     #t     0        10       50       20       1.0  proj-ifc)
    (list 't_fire_glob      "fire glob"       nil          "-8"     "1d6"    "+0"     (weap-ap 1) 0    slot-nil      2      2     t_fireball       nil     #t     0        10       50       20       1.0  proj-ifc)
    (list 't_stun_wand      "stun wand"       s_stun_wand  "-2"     "1d4"    "-1"     (weap-ap 1) 0    slot-weapon   1      6     t_stunball       nil     #t     2         0       80        0       1.0  proj-ifc)
+   (list 't_acid_wand      "acid wand"       s_stun_wand  "-2"     "1d4"    "-1"     (weap-ap 1) 0    slot-weapon   1      6     t_acid_bolt      nil     #t     2         0       80        0       1.0  proj-ifc)
    (list 't_prismatic_gaze "prismatic gaze"  nil          "1d4"    "0"      "+0"     (weap-ap 1) 0    slot-nil      1      3     t_prismatic_bolt nil     #t     0         0        0        0       0.85 proj-ifc)
    ))
 
@@ -828,4 +829,23 @@
           (kern-obj-set-facing kcannon facing) 
           (bind kcannon (list facing 0))
           kcannon))
-          
+
+;; Weapons that aren't affected by acid       
+(define arms-immune-to-acid
+  (list t_flaming_sword
+        t_shield_4
+        t_armor_plate_4
+        t_armor_chain_4
+        t_armor_leather_2
+        t_armor_leather_4
+        t_iron_helm_4
+        t_chain_coif_4
+        t_leather_helm_2
+        t_leather_helm_4
+        t_sword_2
+        t_sword_4
+        t_eldritch_blade
+        t_mystic_sword
+        t_magic_axe
+        t_doom_staff
+        t_stun_wand))

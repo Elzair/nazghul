@@ -858,10 +858,13 @@
         (if (null? arms)
             (kern-log-msg "Acid has no effect!")
             (let ((ktype (random-select arms)))
-              (kern-log-msg "Acid dissolves 1 " (kern-type-get-name ktype) 
-                            " held by " (kern-obj-get-name kchar))
-              (kern-char-unready kchar ktype)
-              (kern-obj-remove-from-inventory kchar ktype 1))))))
+              (if (in-list? ktype arms-immune-to-acid)
+                  (kern-log-msg "Acid hits " (kern-type-get-name ktype) " but has no effect!")
+                  (begin
+                    (kern-log-msg "Acid dissolves 1 " (kern-type-get-name ktype) 
+                                  " held by " (kern-obj-get-name kchar))
+                    (kern-char-unready kchar ktype)
+                    (kern-obj-remove-from-inventory kchar ktype 1))))))))
 
 ;; TODO: multiply damage by kern-ticks-per-turn?
 ;;	TODO: define ifc for objects taking damage from fire
