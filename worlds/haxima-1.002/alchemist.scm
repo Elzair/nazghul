@@ -285,8 +285,7 @@
 
 (define (alch-hydr knpc kpc)
   (say knpc "The hydra is a most difficult foe. "
-       "I understand conventional weapons are useless, "
-       "because striking them only increases their number! "
+       "I understand that striking them only increases their strength! "
        "But if you do succeed in killing one their blood is quite useful "
        "to the arcane arts."))
 
