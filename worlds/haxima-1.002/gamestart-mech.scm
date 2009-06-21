@@ -149,7 +149,7 @@
 	#f
 	)
 	
-(mk-obj-type 't_start_portal "path forward" s_moongate_full layer-mechanism step-trig-ifc)	
+(mk-obj-type 't_start_portal "path forward" s_blackgate_full layer-mechanism step-trig-ifc)	
 
 (define (mk-start-portal proc-tag . args)
   (bind (kern-mk-obj t_start_portal 1)
