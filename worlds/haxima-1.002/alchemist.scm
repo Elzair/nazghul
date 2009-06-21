@@ -312,7 +312,7 @@
 	(prompt-for-key)
 	(say knpc 
 		 "There is, however, an older route that bypasses the fortress. "
-		 "Search the east wall of the first cavern, "
+		 "Probe the east wall of the first cavern, "
 		 "you will find a hidden passage.")
 	(prompt-for-key)
 	(say knpc
