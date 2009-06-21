@@ -176,6 +176,7 @@
 (define demon-effects (list ef_poison_immunity 
                             ef_fire_immunity 
                             ef_disease_immunity 
+                            ef_sleep_immunity
                             ef_magical_kill_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
 (define drag-effects (list ef_fire_immunity))
