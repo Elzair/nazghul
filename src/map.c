@@ -1562,7 +1562,12 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		{ 
 			i = AdX;	
 		}
-		paintloopsize = paintloopsize * (AdX*AdX)/((AdX*AdX)+(AdY*AdY));
+                if (AdX==0 && AdY==0) {
+                    // Fix for 2364311: avoid divide-by-zero
+                    paintloopsize = 0;
+                } else {
+                    paintloopsize = paintloopsize * (AdX*AdX)/((AdX*AdX)+(AdY*AdY));
+                }
 	}
 	else
 	{
