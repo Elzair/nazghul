@@ -57,9 +57,11 @@
 	)
 	    
 (define (rune-basic-get kobj kchar questtag)
-	(kobj-get kobj kchar)
-	(rune-basic-quest questtag (kern-obj-get-sprite kobj))
-	)
+  ;; kobj-get may destroy the object, so get the sprite first
+  (let ((ksprite (kern-obj-get-sprite kobj)))
+    (kobj-get kobj kchar)
+    (rune-basic-quest questtag ksprite)
+    ))
        
 ;; trigger quest update
 (define (rune-p-get kobj kchar)
