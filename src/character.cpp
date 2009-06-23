@@ -3153,6 +3153,7 @@ void Character::leavePlayer(void)
         unreadyAll();
 
         player_party->removeMember(this);
+        log_msg("%s leaves the party", getName());
         if (wasLeader) {
                 player_party->enableFollowMode();
         }

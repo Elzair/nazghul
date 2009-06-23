@@ -102,8 +102,9 @@ static bool quitHandler(struct QuitHandler *kh)
 
 static void play_print_end_of_game_prompt()
 {
-	consolePrint("\n\n*** YOU HAVE DIED ***\n\n");
-	consolePrint("Press any key to exit.\n");
+	log_msg("\n\n^c+r*** YOU HAVE DIED ***^c-\n\n");
+        log_msg("No one is left alive in your party!");
+	log_msg("Press any key to exit.\n");
 	getkey(NULL, anykey);
 }
 
