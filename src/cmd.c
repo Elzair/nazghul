@@ -106,7 +106,9 @@ struct movecursor_data {
 
 /* fwd decls */
 
+#ifdef USE_SKILLS
 static class Character *cmd_front_end(class Character *pc, char *cmdstr);
+#endif
 static int cmd_eval_and_log_result(int result);
 static int select_target_rlcb(struct place *place,
                               int ox, int oy, int *x, int *y,
@@ -671,7 +673,10 @@ class Character *select_party_member(void)
 	class Character *character;
 
         if (1 == player_party->getSize()) {
-                return player_party->getMemberByOrder(0);
+                character = player_party->getMemberByOrder(0);
+                /* fixme: move to cmd_front_end? */
+		cmdwin_spush("%s", character->getName());
+                return character;
         }
 
         foogodSetHintText(SCROLLER_HINT);
