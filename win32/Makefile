@@ -30,6 +30,8 @@ nazghul_SOURCES =		\
         dup_constants.h \
         event.c \
         event.h \
+	escape.c \
+	escape.h \
         Field.h \
 	Field.cpp \
         floodfill.c \
@@ -157,6 +159,24 @@ nazghul_SOURCES =		\
 	templ.h templ.c \
 	objectfreezer.h objectfreezer.c \
 	kern_intvar.h kern_intvar.c \
+	ztats.c \
+	ztats.h \
+	ztats_arms.c \
+	ztats_arms.h \
+	ztats_container_pane.c \
+	ztats_container_pane.h \
+	ztats_items.c \
+	ztats_items.h \
+	ztats_misc.c \
+	ztats_misc.h \
+	ztats_pane.c \
+	ztats_pane.h \
+	ztats_pm.c \
+	ztats_pm.h \
+	ztats_reagents.c \
+	ztats_reagents.h \
+	ztats_spells.c \
+	ztats_spells.h \
 	res.rc
 
 nazghul_OBJS =		\
@@ -173,6 +193,7 @@ nazghul_OBJS =		\
         cursor.o \
 	debug.o \
         event.o \
+	escape.o \
 	Field.o \
         floodfill.o \
         foogod.o \
@@ -237,10 +258,19 @@ nazghul_OBJS =		\
 	templ.o \
 	objectfreezer.o \
 	kern_intvar.o \
+	ztats.o \
+	ztats_arms.o \
+	ztats_container_pane.o \
+	ztats_items.o \
+	ztats_misc.o \
+	ztats_pane.o \
+	ztats_pm.o \
+	ztats_reagents.o \
+	ztats_spells.o \
 	res.o
 
-INCLUDES = -I. -I..
-LIBS = -lSDL_image -lSDL_mixer -mwindows -lmingw32 -lSDLmain -lSDL.dll -llibpng -lzlib
+INCLUDES = -I. -I.. -I/mingw/include -I/mingw/include/SDL
+LIBS = -lSDL_image -lSDL_mixer -mwindows -lmingw32 -lSDLmain -lSDL.dll -llibpng -lz
 
 .SUFFIXES: .c .cpp .o .obj .rc
 

@@ -1,3 +1,7 @@
 
 #define PACKAGE_VERSION "0.6.0"
 
+#define MIN_SCRIPT_MAJOR 0
+#define MIN_SCRIPT_MINOR 6
+#define MIN_SCRIPT_RELEASE 0
+
