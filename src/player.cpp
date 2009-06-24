@@ -494,7 +494,12 @@ MoveResult PlayerParty::move(int newdx, int newdy)
                 if (vehicle)
                         mv_cost *= vehicle->getMovementCostMultiplier();
                 decActionPoints(mv_cost);
-                
+
+                extern int DeveloperMode;
+                if (DeveloperMode) {
+                    log_msg("mv_cost=%d\n", mv_cost);
+                }
+
                 // none of this is used atm
                 //
                 // // reload mv_cost because diagonal movement shouldnt affect 'very slow' etc

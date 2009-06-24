@@ -52,7 +52,7 @@ extern "C" {
 #define DOWN      10
 #define NUM_DIRECTIONS 11
 #define NUM_PLANAR_DIRECTIONS 9
-#define NUM_WIND_DIRECTIONS 4
+#define NUM_WIND_DIRECTIONS 9 
 #define IS_LEGAL_DIRECTION(dir) ((dir)>=0 && (dir)<NUM_DIRECTIONS)
 
 #define CANCEL    SDLK_ESCAPE

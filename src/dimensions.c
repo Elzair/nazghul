@@ -135,7 +135,7 @@ int dimensions_init()
         FOOGOD_W = STAT_W;
         FOOGOD_H = (2 * ASCII_H);
 
-        WIND_W =  (strlen("wind:north") * ASCII_W);
+        WIND_W =  (strlen("wind:northeast") * ASCII_W);
         WIND_H =  BORDER_H;
         WIND_X =  (BORDER_W + (MAP_W - WIND_W) / 2);
         WIND_Y =  (MAP_Y + MAP_H);

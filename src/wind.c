@@ -24,6 +24,7 @@
 #include "common.h"
 #include "screen.h"
 #include "session.h"
+#include "log.h"
 
 static SDL_Rect windRect;
 static int windDirection;
@@ -37,7 +38,8 @@ void windAdvanceTurns(void)
 	}
 
 	if (rand() % 100 < WIND_CHANGE_PROBABILITY) {
-		windSetDirection(rand() % NUM_WIND_DIRECTIONS, 10);
+            int dir = rand() % NUM_WIND_DIRECTIONS;
+            windSetDirection(dir, 10);
 	}
 }
 
@@ -56,9 +58,17 @@ int windInit(void)
 
 void windSetDirection(int dir, int dur)
 {
-	windDirection = dir;
-	windDuration = dur;
-        windRepaint();
+    if (HERE == dir || dir >= NUM_WIND_DIRECTIONS) {
+        return;
+    }
+
+    if (dir != windDirection) {
+        log_msg("The wind shifts to the %s", directionToString(dir));
+    }
+
+    windDirection = dir;
+    windDuration = dur;
+    windRepaint();
 }
 
 int windGetDirection(void)

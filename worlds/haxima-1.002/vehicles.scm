@@ -281,9 +281,9 @@
                       #t        ; must turn
                       "sail"    ; move description
                       sound-ship-move ; move sound
-                      2           ; tailwind penalty
+                      1           ; tailwind penalty
                       4           ; headwind penalty
-                      1           ; crosswind penalty
+                      2           ; crosswind penalty
                       100         ; max hp
                       speed-ship  ; speed
                       mmode-ship  ; pmask
@@ -405,9 +405,9 @@
                       #t        ; must turn
                       "sail"    ; move description
                       sound-ship-move ; move sound
-                      2           ; tailwind penalty
+                      1           ; tailwind penalty
                       4           ; headwind penalty
-                      1           ; crosswind penalty
+                      2           ; crosswind penalty
                       100         ; max hp
                       speed-ship  ; speed
                       mmode-voidship  ; pmask

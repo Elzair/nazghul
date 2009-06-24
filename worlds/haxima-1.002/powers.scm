@@ -1336,7 +1336,7 @@
 	result-ok)
 
 (define (powers-wind-change caster dir power)
-	(kern-set-wind dir (kern-dice-roll (mkdice (* 2 power) 6)))
+	(kern-set-wind dir (+ 10 (kern-dice-roll (mkdice (* 2 power) 6))))
 	result-ok)
 	
 (define (powers-xray caster dir power)

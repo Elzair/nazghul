@@ -309,7 +309,8 @@
 
 (define (rel-hur  caster)
   (let ((dir (ui-get-direction)))
-    (cond ((null? dir)
+    (cond ((or (null? dir)
+               (= here dir))
            result-no-target)
           (else 
            (powers-wind-change caster dir (occ-ability-whitemagic caster))

@@ -108,20 +108,17 @@ int VehicleType::getWindPenalty(int facing)
 	wdy = directionToDy(windGetDirection());
 
 	// take the vector dot product
-	switch (vdx * wdx + vdy * wdy) {
-	case -1:
-                // with the wind
-		return tailwind_penalty;
-	case 0:
-		// tacking across the wind
-		return crosswind_penalty;
-	case 1:
-		// against the wind
-		return headwind_penalty;
-	default:
-		assert(false);
-		return 0;
-	}
+        int dotprod = (vdx * wdx + vdy * wdy);
+        if (dotprod < 0) {
+            // with the wind
+            return tailwind_penalty;
+        } else if (0 == dotprod) {
+            // tacking across the wind
+            return crosswind_penalty;
+        } else {
+            // against the wind
+            return headwind_penalty;
+        }
 }
 
 bool VehicleType::mustTurn()

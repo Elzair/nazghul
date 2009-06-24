@@ -52,11 +52,7 @@ static void backtrace2stderr(void)
 		backtrace_symbols_fd(bt+1, depth-2, 2);
 	}
 }
-#else
-static void backtrace2stderr(void) {
-	fprintf(stderr, "no backtrace functionality available...\n");
-}
-#endif
+#endif /* DEBUG */
 
 
 #define ASCII_DEF_CLR White /* default printing color is white */
