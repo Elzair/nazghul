@@ -353,7 +353,7 @@
                           (kern-obj-dec-ref knpc)
                           0)
                          (else
-                          (kern-being-set-base-faction knpc faction-none)
+                          (kern-being-set-base-faction knpc (kern-being-get-base-faction kuser))
                           (kern-obj-set-temporary knpc #t)
                           (kern-obj-put-at knpc loc))))))))
 
