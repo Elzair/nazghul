@@ -49,16 +49,6 @@ dnl      to configure, such as AC_ARG_ENABLE. It is typical to put support code
 dnl      for the option in this section as well, if it is short enough.
 dnl ---------------------------------------------------------------------------
 
-AC_ARG_WITH(skills, [ --with-skills         enables skills (default="no")])
-if test "$with_skills" == "yes" ; then
-  AC_DEFINE([USE_SKILLS],1,[Is one if skills is enabled.])
-fi
-
-AC_ARG_WITH(quests, [ --with-quests         enables quests (default="no")])
-if test "$with_quests" == "yes" ; then
-  AC_DEFINE([USE_QUESTS],1,[Is one if quests is enabled.])
-fi
-
 dnl ---------------------------------------------------------------------------
 dnl 3. Programs
 dnl      Next it is traditional to check for programs that are either needed by
@@ -219,6 +209,9 @@ AC_DEFINE(MIN_SCRIPT_MINOR, 6,
 
 AC_DEFINE(MIN_SCRIPT_RELEASE, 0,
           [Minimum supported script version])
+
+AC_DEFINE(USE_SKILLS, 1, [Enable Yuse command and skills])
+AC_DEFINE(USE_QUESTS, 1, [Enable quest log])
 
 # Finally create all the generated files
 AC_CONFIG_FILES([Makefile \
