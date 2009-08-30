@@ -551,3 +551,107 @@
 
 		)
 	))
+
+
+;;------------------------------------------------------------------------ 
+;; Warritrix rune
+;; 
+
+(define (quest-rune-l-update)
+	(let * ((quest (quest-data-get 'questentry-rune-l))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(kern-ui-paginate-text
+			"A rune was recovered from the fallen Warritrix."
+		))
+	((and (tbl-flag? 'located) (tbl-flag? 'know-hall))
+		(kern-ui-paginate-text
+			(append
+			"One of the runes is carried by the Warritrix. "
+			"She may be found in the Lost Halls, at [" 
+			(number->string (loc-x lost-halls-loc)) "," (number->string (loc-y lost-halls-loc))
+			"]."
+			)
+		))
+	((and (tbl-flag? 'located) (tbl-flag? 'approx-hall))
+		(kern-ui-paginate-text
+			(append
+			"One of the runes is carried by the Warritrix. "
+			"She may be found in the Lost Halls, on the Shard's south coast."
+			)
+		))
+	((tbl-flag? 'located)
+		(kern-ui-paginate-text
+			"One of the Runes is carried by the Warritrix, who may be found at the Lost Halls."
+		))
+	(#t
+		(kern-ui-paginate-text
+			"One of the Runes is carried by the Warritrix."
+		))
+)		
+
+		)
+	))
+
+;;-----------------------
+;; absalot rune
+
+(define (quest-rune-s-update)
+	(let* ((quest (quest-data-get 'questentry-rune-s))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'done)
+		(kern-ui-paginate-text
+			"A rune was recovered from the Absalot ruins."
+		))
+	((tbl-flag? 'silasinfo)
+		(kern-ui-paginate-text
+			"Silas has a rune hidden in the Absalot ruins."
+		))
+	(#t
+		(kern-ui-paginate-text
+			"A rune may be found somewhere in Absalot."
+		))
+)
+
+		)
+	))
+
+;;-----------------------
+;; enchanter rune
+;; tracks if the player has gotten the rune back from the enchanter
+
+(define (quest-rune-k-update)
+	(let* ((quest (quest-data-get 'questentry-rune-k))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond 
+	((tbl-flag? 'entrusted-with-rune)
+		(kern-ui-paginate-text
+			"The Enchanter has entrusted the Rune of Knowledge into your care."
+		))
+	((tbl-flag? 'player-got-rune)
+		(kern-ui-paginate-text
+			"The Rune of Knowledge belonged to the Enchanter, but has since fallen into your hands."
+		))
+	((tbl-flag? 'ench-should-have-rune)
+		(kern-ui-paginate-text
+			"The Rune of Knowledge belongs to the Enchanter. You may be able to convince him to turn it over to you."
+		))
+	(#t
+		(kern-ui-paginate-text
+			"The Rune of Knowledge belonged to the Enchanter."
+		))
+)
+
+		)
+	))

@@ -999,6 +999,10 @@
 
 ;;----------------------------------------------------------------------------
 ;; Stewardess's Journal
+;;
+;; TODO: update last entry time to match when warritrix quest becomes available
+;; Journal should not be updated if stolen by wanderer (This would also destroy its applicability as evidence)
+;;
 (mk-reusable-item 
  't_stewardess_journal "Victoria's Journal" s_lexicon norm
  (lambda (klexicon kuser)
@@ -1014,6 +1018,8 @@
     "They owe us a large debt. Not that they can  "
     "be trusted. "
     ""
+    "..."
+    ""
     "11.13.1610"
     "I finally managed to get that pest Valus     "
     "out of the way. A little evidence in the     "
@@ -1025,6 +1031,8 @@
     "cell. The statue's powers are probably a     "
     "myth, but I see no point in taking chances.  "
     ""
+    "..."
+    ""
     "4.1.1611"
     "S. has warned me that rumours of a Wanderer  "
     "are afoot. S. is such a useful tool. I do    "
@@ -1034,6 +1042,8 @@
     "greatly exaggerated. The last time a Wanderer"
     "appeared, the Old Gods still walked the      "
     "Shard, if the myths are true.                "
+    ""
+    "..."
     ""
     "6.12.1611"
     "I have received word from S. All is prepared."
@@ -1051,5 +1061,7 @@
     "journal. But no one will ever find it, and   "
     "when I am queen of all the Shard the scribes "
     "will need it for their histories.            "
+    ""
+    "..."
    )
    result-ok))

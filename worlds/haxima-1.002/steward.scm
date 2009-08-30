@@ -90,7 +90,9 @@
 ;; Rune...
 (define (stew-rune knpc kpc)
   (say knpc "I know the Warritrix wore... wears a Rune about her neck, "
-       "but I know not what it signifies."))
+       "but I know not what it signifies.")
+       (quest-data-assign-once 'questentry-rune-l)
+       )
 
 (define (stew-wore knpc kpc)
   (say knpc "What are you implying? It was merely a slip of the tongue."))

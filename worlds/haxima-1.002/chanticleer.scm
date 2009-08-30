@@ -129,7 +129,11 @@
                  "So I won't bore you with detail!\n"
                  "\n"
                  "[stops playing] If you simply MUST go investigate, "
-                 "search the southern coast.")))))
+                 "search the southern coast.")
+		 (if (null? (quest-data-getvalue 'questentry-rune-l 'know-hall))
+			(quest-data-update-with 'questentry-rune-l 'approx-hall 1 (quest-notify nil))
+		)
+		 ))))
 
 (define (chant-thie knpc kpc)
   (if (isdrunk? knpc)

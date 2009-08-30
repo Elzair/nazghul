@@ -64,10 +64,13 @@
 (define (ini-lost knpc kpc)
    (let ((ini (kobj-gob-data knpc)))
      (if (ini-will-join? ini)
+			(begin
   			(say knpc "The entrance to the Lost Halls is a cavern far to the southwest. "
   				"Find a ship and sail to ["
            (loc-x lost-halls-loc) " "
            (loc-y lost-halls-loc) "].")
+			(quest-data-update-with 'questentry-rune-l 'know-hall 1 (quest-notify nil))
+			)
   			(say knpc "The Lost Halls are very dangerous. I'd advise you to stay clear!"))))
      		
 (define (ini-cave knpc kpc)

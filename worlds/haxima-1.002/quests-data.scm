@@ -122,6 +122,7 @@
 		)
 ))
 
+;; TODO- alternate path in which the rune is lost?
 (questadd (qst-mk "A Rune in Hand"
 	'questentry-rune-k
 	(kern-ui-paginate-text
@@ -131,7 +132,10 @@
 	'quest-status-inprogress
 	's_runestone_k
 	(tbl-build
-		;;'on-update 'quest-allrunes-update
+		'on-update 'quest-rune-k-update
+		'entrusted-with-rune 0
+		'player-got-rune 0
+		'ench-should-have-rune 0
 		'bonus-xp 0
 		)
 ))
@@ -159,8 +163,11 @@
 	'quest-status-inprogress
 	's_runestone_r
 	(tbl-build
-		;;'on-update 'quest-allrunes-update
+		'on-update 'quest-rune-l-update
 		'bonus-xp 0
+		'located 0
+		'know-hall 0
+		'approx-hall 0
 		)
 ))
 

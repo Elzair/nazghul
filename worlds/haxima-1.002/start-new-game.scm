@@ -45,10 +45,10 @@
 (define hour 07)
 (define minutes 00)
 (define time-in-minutes (+ (* hour 60) minutes))
-(define game-start-time (time-mk 0 0 0 0 hour minutes))
+(define game-start-time (time-mk 1611 0 0 0 hour minutes))
 
 (kern-set-clock 
- 0 ; year
+ 1611 ; year
  0 ; month
  0 ; week
  0 ; day

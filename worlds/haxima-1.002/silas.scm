@@ -249,7 +249,10 @@
     (define (give-last-rune)
       (say knpc "I see you have all save 1 of the runes. Please forgive me for "
            "a small deception, but I have hidden the last rune here in Old "
-           "Absalot. Consider it one last test for you to find it."))
+           "Absalot. Consider it one last test for you to find it.")
+	(quest-data-update-with 'questentry-rune-s 'silasinfo 1 (quest-notify nil))
+	(quest-data-assign-once 'questentry-rune-s)
+	)
 
     (define (continue-quest) 
       (say knpc "I see you are still missing at least one rune. Don't give up, "

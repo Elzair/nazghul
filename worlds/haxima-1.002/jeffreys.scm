@@ -121,7 +121,9 @@
   (say knpc "[He looks a bit uneasy] Yes, she took a squad to the Lost Halls. "
        "It's odd that she hasn't reported back yet... "
        "Normally I would send a search party, "
-       "but at the moment I haven't the troops to spare."))
+       "but at the moment I haven't the troops to spare.")
+      (quest-data-update-with 'questentry-rune-l 'located 1 (quest-notify nil)) 
+       )
 
 (define (jeff-sear knpc kpc)
   (say knpc "[He grows exasperated] I can spare no one to search for the "
@@ -161,10 +163,13 @@
        "I'd advise you to stay away! Now good day, sir!")
   (kern-conv-end)
   (if (is-player-party-member? ch_ini)
+	(begin
       (say ch_ini "Don't worry. I know where to find the Lost Halls. "
            "We'll need to get a ship and sail to ["
            (loc-x lost-halls-loc) " "
            (loc-y lost-halls-loc) "]."))
+	   (quest-data-update-with 'questentry-rune-l 'know-hall 1 (quest-notify nil))
+	   )
   )
 
 (define jeff-conv

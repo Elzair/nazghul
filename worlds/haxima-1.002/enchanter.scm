@@ -88,10 +88,31 @@
       )
 
     (define (check-third-quest)
-      (if (has-all-runes? kpc)
+	(define (missing-only-s-rune?)
+		(all-in-inventory? kpc
+                         (filter (lambda (ktype)
+                                   (not (eqv? ktype t_rune_s)))
+                                 rune-types)))
+	(cond			 
+		((missing-only-s-rune?)
+			(say knpc "You appear to have found most of the Runes now.")
+		(prompt-for-key)
+		(say knpc "Hmmm.")
+		(prompt-for-key)
+		(say knpc "I hesitated to raise this before, but it may be within your abilities after all.")
+		(prompt-for-key)
+		(say knpc "We know that the Accursed also seek the runes. We should consider ourselves fortunate if only one has fallen into their clutches.")
+		(prompt-for-key)
+		(say knpc "You will need to seek it in the very lair of our enemies: the ruins of Absalot.")
+		(quest-data-assign-once 'questentry-rune-s)
+		)
+		
+		((has-all-runes? kpc)
           (finish-third-quest)
           (say knpc "Return when you have found all the Runes. "
-               "Consult with the other Wise, they may have clues about where to find the Runes.")))
+               "Consult with the other Wise, they may have clues about where to find the Runes.")
+	       ))
+	       )
 
     ;; Second Quest -- find out what the Runes are for
     (define (second-quest-spurned)
@@ -106,6 +127,7 @@
     (define (start-second-quest)
       (quest-accepted! (ench-second-quest ench) #t)
       (say knpc "Good! First, keep my rune, and guard it well. ")
+      (quest-data-update 'questentry-rune-k 'entrusted-with-rune 1)
       (prompt-for-key)
       (say knpc "Second, find the other Wise and ask them of the RUNE. "
            "You might start with the Alchemist near Oparine. "
@@ -142,6 +164,7 @@
       (quest-data-update 'questentry-runeinfo 'abe 1)
       (quest-data-update 'questentry-runeinfo 'keys 1)
       (quest-data-update 'questentry-runeinfo 'gate 1)
+      (quest-data-update 'questentry-rune-k 'entrusted-with-rune 1)
       (quest-data-update-with 'questentry-runeinfo 'done 1 (grant-party-xp-fn 30))
       (quest-complete (quest-data-get 'questentry-runeinfo))
       ;; temporary setup- will require information gathering first when done
@@ -150,19 +173,12 @@
       (quest-data-convert-subquest 'questentry-rune-k 'questentry-allrunes)
       (quest-data-assign-once 'questentry-rune-k)
       (quest-data-convert-subquest 'questentry-rune-c 'questentry-allrunes)
-      (quest-data-assign-once 'questentry-rune-c)
       (quest-data-convert-subquest 'questentry-rune-d 'questentry-allrunes)
-      (quest-data-assign-once 'questentry-rune-d)
       (quest-data-convert-subquest 'questentry-rune-l 'questentry-allrunes)
-      (quest-data-assign-once 'questentry-rune-l)
       (quest-data-convert-subquest 'questentry-rune-p 'questentry-allrunes)
-      (quest-data-assign-once 'questentry-rune-p)
       (quest-data-convert-subquest 'questentry-rune-s 'questentry-allrunes)
-      (quest-data-assign-once 'questentry-rune-s)
       (quest-data-convert-subquest 'questentry-rune-w 'questentry-allrunes)
-      (quest-data-assign-once 'questentry-rune-w)
       (quest-data-convert-subquest 'questentry-rune-f 'questentry-allrunes)
-      (quest-data-assign-once 'questentry-rune-f)
       (quest-accepted! (ench-quest ench 3) #t)
       )
 
