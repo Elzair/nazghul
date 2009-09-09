@@ -60,7 +60,7 @@
 			"Now you are here, what are you going to do?"
 		))
 	(#t (kern-ui-paginate-text
-			"Wanderers like yourself, who are occasionally stumbled upon this world, have in the past been responsible for great deeds."
+			"Wanderers like yourself, who have occasionally stumbled upon this world, have in the past been responsible for great deeds."
 			""
 			"How will you make your place?"
 		))
