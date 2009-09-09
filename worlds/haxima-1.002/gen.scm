@@ -90,13 +90,13 @@
 (define (gen-shakespeare gen player)
   (say gen "You know of him! Very good! Some interesting conversation at last.")
   (if (in-player-party? 'ch_kama)
-      (say gen player "[He points at Kama] Another who knows of the Bard!  You should hear his telling of Hamlet!")
+      (say gen player "[He points at Kama] Another who knows of the Bard! You should hear his telling of Hamlet!")
       ))
 
 (define (gen-ranger gen player) (say gen "Rangers fought in these woods during the Goblin Wars. Now they maintain a token presence."))
 (define (gen-wars   gen player) (say gen "Yes, I fought as a Ranger in the goblin wars. That was a generation ago, and people forget. "
 				     "They see the goblins as lesser beings, defeated and worthy of slow extinction."))
-(define (gen-goblin gen player) (say gen "An interesting species. Beyond CULTURE, they have their own LANGUAGE, though they have no writing. "
+(define (gen-goblin gen player) (say gen "An interesting species. Although they have their own language they have no writing. "
 				     "They are much like men, but more savage, more primal. "
 				     "Their warriors are beserkers, their shamans are ecstatic mystics."))
 (define (gen-primal gen player) (say gen "You can tell I admire them? But in the wars I fought them, not understanding what they were. "
@@ -111,7 +111,7 @@
         (if (gen-gave-notes? gen)
             (say kgen "Study the notes I gave you, and then practice on me.")
             (begin
-              (say kgen "Here are some notes I have made on their language. You may keep it. Feel free to PRACTICE with me.")
+              (say kgen "Here are some notes I have made on their language. You may keep it. Feel free to practice with me.")
               (kern-obj-add-to-inventory player t_goblin_lexicon 1)
               (gen-set-gave-notes! gen #t)))
         (say kgen "Perhaps another time."))))
@@ -152,7 +152,7 @@
 (define (gen-eh  gen player) (say gen "Eh?  Ah yes, Eh-Na-Me means what is your job, or duty." ))
 (define (gen-iki gen player) (say gen "Ha! Bo-Iki-Da means 'I go home'."))
 
-(define (gen-me  gen player) (say gen "Bo-Ma-Zu. I watch the forest, or I seek the hidden ways.  Me-Lu-Ki is to grow, change, learn, explore.  Such the the path of the Wanderer!"))
+(define (gen-me  gen player) (say gen "Bo-Ma-Zu. I watch the forest, or I seek the hidden ways.  Me-Lu-Ki is to grow, change, learn, explore.  Such is the path of the Wanderer!"))
 (define (gen-ka  gen player) (say gen "Ha! Ka-Ha-To means warrior.  And Me-Ka-Ha is the path of the Warrior!"))
 (define (gen-hi  gen player) (say gen "Ha! Hi-Ma-To is the word for 'shaman'.  And Me-Ha-Zu-Ru is the path of the Wizard!"))
 (define (gen-nin gen player) (say gen "Ha! Nin-Ma-To is a Forest Stalker.  And Me-Ha-Nin-Zu is the path of the Rogue!"))
