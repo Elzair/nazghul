@@ -653,13 +653,6 @@
   (list p_lost_halls_entrance (loc-x lost-halls-loc) (loc-y lost-halls-loc))
   (list p_voidgap_entrance   7  75)
   (list p_voidgap_exit       4  77)
-
-  (list p_florinth_n_tower  75 114)
-  (list p_florinth_wharf    75 115) 
-  (list p_florinth_s_tower  75 116)
-
-  (list p_florinth_bazaar   76 115) 
-
   )
 
 
