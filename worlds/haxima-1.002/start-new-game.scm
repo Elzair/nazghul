@@ -114,7 +114,6 @@
 (load "bandit-hideout.scm")
 (load "brundegardt.scm")
 (load "voidgap-passage.scm")
-(load "florinth.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
