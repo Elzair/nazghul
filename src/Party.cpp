@@ -1052,9 +1052,12 @@ Object *Party::getSpeaker()
 
         // For each party member that has a conversation, add it to the list.
         FOR_EACH_MEMBER(entry, member) {
-                conv = member->getConversation();
-                if (! conv)
-                        continue;
+
+            // Fix for crasher: 'conv' is a member of this object, so don't use
+            // it as a temp variable!
+            if (!member->getConversation()) {
+                continue;
+            }
 
                 statlist[list_sz].sprite = member->getSprite();
                 snprintf(statlist[list_sz].line1, STAT_LIST_CHARS_PER_LINE,
