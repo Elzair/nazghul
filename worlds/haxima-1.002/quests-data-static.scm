@@ -463,7 +463,7 @@
 			(kern-ui-paginate-text
 				"The ghost of Ghertie the pirate haunts the inn at Oparine. She seeks revenge on the survivors of the crew that betrayed her."
 				""
-				"Gholet, Jorn and Meaney each wear a ring marking them as Gherties crew. Ghertie will accept the rings as proof that you have hunted them down, in exchange for the location of her sunken treasure."
+				"Gholet, Jorn and Meaney each wear a ring marking them as Ghertie's crew. Ghertie will accept the rings as proof that you have hunted them down, in exchange for the location of her sunken treasure."
 			)
 			(if (and (tbl-flag? 'ring-jorn)
 						(tbl-flag? 'ring-meaney)
@@ -505,7 +505,7 @@
 						((tbl-flag? 'jorn-loc)
 							(kern-ui-paginate-text
 								""
-								"Jorn can be found a the Green Tower's White Stag Inn."
+								"Jorn can be found at the Green Tower's White Stag Inn."
 							))
 						((tbl-flag? 'jorn-forest)
 							(kern-ui-paginate-text
