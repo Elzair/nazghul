@@ -72,7 +72,7 @@
 ;; Update: this is dangerous. Roll against the kchar's thiefly skill to
 ;; determine if they succeed or just manage to hurt themselves.
 (define (kpitfall-use-handler ktype kchar)
-  (if (not (has-skill? kuser sk_arm_trap))
+  (if (not (has-skill? kchar sk_arm_trap))
       result-lacks-skill
       (let ((loc (kern-ui-target (kern-obj-get-location kchar) 1)))
         (cond ((null? loc) 
