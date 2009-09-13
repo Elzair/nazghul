@@ -75,9 +75,7 @@
         ;; gave quest
         (if (shroom-quest-done? shroom)
             ;; quest already done
-            (say knpc "I've forgotten all the others. But long ago the "
-                 "librarian from Glasdrin had me teach him and he wrote them "
-                 "all down. Check with him.")
+            (say knpc "I've forgotten all the others.")
             ;; quest NOT yet done
             (begin
               (say knpc "Bring me the mushrooms and I will teach ye the ward "
@@ -162,6 +160,8 @@
                                             "and the like.")))
        (method 'name (lambda (knpc kpc) (say knpc "I'm known as Shroom. At "
                                                 "your service.")))
+       (method 'cape shroom-roya)
+       (method 'roya shroom-roya)
        (method 'shro (lambda (knpc kpc) (say knpc "Mushrooms are my "
                                                 "specialty. That's why they "
                                                 "call me Shroom.")))
