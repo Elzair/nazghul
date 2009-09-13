@@ -25,10 +25,9 @@
       result-not-now
       (let* ((origin (kern-obj-get-location kactor))
              (kplace (loc-place origin))
-             (sprint-max-range (occ-ability-stracro kactor))
+             (sprint-max-range (+ 2 (occ-ability-stracro kactor)))
              (sprint-max-cost (* sprint-max-range (kern-obj-get-ap kactor)))
              )
-        ;;(println "max range " sprint-max-range ", max cost " sprint-max-cost)
         (define (too-far? origin dest)
           (let ((path (line (loc-x origin) (loc-y origin) 
                             (loc-x dest) (loc-y dest))))
@@ -111,7 +110,7 @@
             0 
             #f
             #f
-            'skill-jump
+           'skill-jump
             nil
             nil
             nil
@@ -215,18 +214,6 @@
             nil            ;; material
             ))
 
-(define sk_arm_trap
-  (mk-skill "Arm Trap" "Allows character to use beartraps and caltrops"
-            0
-            0
-            #f
-            #t
-            nil
-            nil
-            nil
-            nil
-             ))
-
 (define sk_unlock
   (mk-skill "Unlock" "Unlock a door with a picklock"
             0
@@ -256,6 +243,7 @@
                                 (list 1 sk_sprint)
                                 (list 2 sk_butcher)
                                 (list 3 sk_jump)
+                                (list 4 sk_arm_trap)
                                 (list 6 sk_stealth)
                                 )))
 
@@ -275,19 +263,19 @@
 (define sks_wright
   (kern-mk-skill-set "Wright" (list 
                                (list 1 sk_butcher)
-                               (list 2 sk_arm_trap)
-                               (list 3 sk_unlock)
-                               (list 4 sk_disarm_trap)
+                               (list 1 sk_arm_trap)
+                               (list 2 sk_unlock)
+                               (list 3 sk_disarm_trap)
                                )))
 
 (define sks_wanderer 
   (kern-mk-skill-set "Wanderer" (list 
-                               (list 2 sk_sprint)
-                               (list 3 sk_butcher)
-                               (list 4 sk_unlock)
+                               (list 1 sk_sprint)
+                               (list 2 sk_butcher)
+                               (list 3 sk_unlock)
                                (list 4 sk_arm_trap)
                                (list 5 sk_jump)
                                (list 6 sk_disarm_trap)
-                               (list 8 sk_reach)
-                               (list 9 sk_stealth)
+                               (list 7 sk_reach)
+                               (list 8 sk_stealth)
                                )))
