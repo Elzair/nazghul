@@ -55,16 +55,9 @@
              result-ok))
 
 (define (potion-gain-stats kuser current-stat stat-name stat-setter)
-	(let ((total-stats (+ (kern-char-get-base-strength kuser)
-				(kern-char-get-base-dexterity kuser)
-				(kern-char-get-base-intelligence kuser))))
-		(println "Total stats: " total-stats)
-		(cond ((> (kern-dice-roll "1d30") total-stats)
-                       (kern-log-msg (kern-obj-get-name kuser) " gains " stat-name "!")
-                       (stat-setter kuser (+ current-stat 1))
-                       result-ok)
-                      (else
-                       result-failed))))
+  (kern-log-msg (kern-obj-get-name kuser) " gains " stat-name "!")
+  (stat-setter kuser (+ current-stat (kern-dice-roll "1d3")))
+  result-ok)
 
 (mk-potion 't_str_potion "potion of strength" s_round_bubbly_yellow
 		(lambda (kpotion kuser)
