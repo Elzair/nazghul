@@ -277,7 +277,7 @@
 (define (summon-ratling-proc kchar)
   (cast-summon-proc kchar
                     (lambda () 'ratling-swarmer)
-                    (* (kern-char-get-level kchar) 1)
+                    (* (kern-char-get-level kchar) 3)
                     ))
 
 ;;----------------------------------------------------------------------------
