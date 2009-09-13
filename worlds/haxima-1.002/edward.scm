@@ -128,7 +128,7 @@
   (cond ((in-player-party? 'ch_nate) (edward-give-nate knpc kpc))
         (else
          (say knpc "I feed the prisoners and swap stories with them. "
-              "I'm supposed to guard them, to. Prevent escapes.")
+              "I'm supposed to guard them, too. Prevent escapes.")
          )))
 
 (define edward-conv
