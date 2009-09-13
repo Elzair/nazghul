@@ -132,7 +132,7 @@
        "Unless thou art a demon from beyond the void..."))
 
 (define anaxes-conv
-  (ifc basic-conv
+  (ifc nil
 
        ;; basics
        (method 'accu anaxes-accu)

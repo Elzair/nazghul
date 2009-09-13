@@ -68,7 +68,7 @@
        "Have they come for my other arm?  The chicks are so hungry! So cruel!"))
 
 (define tim-conv
-  (ifc basic-conv
+  (ifc nil
        (method 'hail tim-hail)
        (method 'eye  tim-eye)
        (method 'key  tim-key)

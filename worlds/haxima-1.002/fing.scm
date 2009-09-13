@@ -93,7 +93,7 @@
 
 
 (define fing-conv
-  (ifc basic-conv
+  (ifc nil
 
        ;; basics
        (method 'default fing-default)
