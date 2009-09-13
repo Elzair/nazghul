@@ -1062,7 +1062,9 @@ static void mapRepaintView(struct mview *view, int flags)
                               (unsigned char *) Map.vmask, &view->subrect,
                               TILE_W, TILE_H);
 		t6 = SDL_GetTicks();
-		myShadeScene(&view->subrect);
+                if (! XrayVision) {
+                        myShadeScene(&view->subrect);
+                }
 		t7 = SDL_GetTicks();
                 map_paint_cursor();
 
