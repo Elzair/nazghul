@@ -75,11 +75,11 @@
    (list nightshade             (* 11 reagent-price-mult) "The nightshade is rare in these parts.")
    (list mandrake               (* 11 reagent-price-mult) "I grow mandrake with my ginseng.")
    
-   (list t_in_an_scroll         (*  6 base-scroll-cost) "When faced with magic stronger than your own, use this to even the score.")
+   (list t_in_an_scroll         (*  3 base-scroll-cost) "When faced with magic stronger than your own, use this to even the score.")
    (list t_in_mani_corp_scroll  (*  8 base-scroll-cost) "You need not mourn a fallen companion when you carry one of these.")
-   (list t_vas_rel_por_scroll   (*  8 base-scroll-cost) "You can travel great distances or escape dire circumstances with this gate scroll.")
-   (list t_vas_mani_scroll      (*  5 base-scroll-cost) "When sorely wounded this will restore you to health.")
-   (list t_wis_quas_scroll      (*  4 base-scroll-cost) "This scroll will open your eyes to the invisible world.")
+   (list t_vas_rel_por_scroll   (*  3 base-scroll-cost) "You can travel great distances or escape dire circumstances with this gate scroll.")
+   (list t_vas_mani_scroll      (*  2 base-scroll-cost) "When sorely wounded this will restore you to health.")
+   (list t_wis_quas_scroll      (*  2 base-scroll-cost) "This scroll will open your eyes to the invisible world.")
    ))
 
 (define (lia-trade knpc kpc)  (conv-trade knpc kpc "trade" lia-merch-msgs lia-catalog))
