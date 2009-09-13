@@ -172,6 +172,11 @@ static void ztats_op_run(struct applet *applet, SDL_Rect *dims, struct session *
 	cmdwin_pop();
 	cmdwin_spush("ok");
 
+        /* Reset to NULL; else if the current pane removes itself during a
+         * session teardown it will trigger a scroll action, which will
+         * probably crash. */
+        ztats->current = NULL;
+
 }
 
 void ztats_init(void)

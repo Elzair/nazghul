@@ -9582,6 +9582,7 @@ struct kern_ztats_pane {
         struct closure *enter, *scroll, *paint, *select;
         struct gob *gob;
         scheme *sc;
+        unsigned char added:1;
 };
 
 static pointer pack_rect(scheme *sc, SDL_Rect *rect)
@@ -9620,6 +9621,11 @@ static void kern_ztats_pane_select(struct ztats_pane *pane)
 static void kern_ztats_pane_dtor(void *val)
 {
         struct kern_ztats_pane *kzp = (struct kern_ztats_pane*)val;
+
+        if (kzp->added) {
+                ztats_rm_pane(&kzp->base);
+        }
+
         if (kzp->gob) {
                 gob_unref(kzp->gob);
         }
@@ -9684,6 +9690,11 @@ KERN_API_CALL(kern_ztats_add_pane)
         gob_ref(kzp->gob);
 
         ztats_add_pane(&kzp->base);
+
+        /* Mark that we've added it so that we remember to remove it in the
+         * dtor. */
+        kzp->added = 1;
+
         session_add(Session, kzp, kern_ztats_pane_dtor, NULL, NULL);
         return sc->T;
 
