@@ -109,6 +109,7 @@
 
 (define nate-conv
   (ifc basic-conv
+       (method 'name (lambda (knpc kpc) (say knpc "I am called Nate.")))
        (method 'brun nate-brun)
        (method 'hail nate-hail)
        (method 'pass nate-pass)
