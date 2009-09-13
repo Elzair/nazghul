@@ -201,6 +201,7 @@
   (kern-log-msg (kern-obj-get-name kobj) " stuck in web!"))
 
 (define (ensnare-exec fgob kobj)
+  (println "ensnare-exec")
   (if (not (can-ensnare? kobj))
       (kern-obj-remove-effect ef_ensnare)
       (let ((kchar kobj)
@@ -211,7 +212,7 @@
                     (> (+ (kern-char-get-strength kchar) 
                           droll)
                        dc-escape-ensnare))
-                (let ((loc ((kern-obj-get-location kchar))))
+                (let ((loc (kern-obj-get-location kobj)))
                   (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
                   (kern-obj-remove-effect kchar ef_ensnare)
                   (map kern-obj-remove-web (find-object-types-at loc web-type))
@@ -542,7 +543,7 @@
   (let ((loc (kern-obj-get-location kobj)))
     (if (not (kern-place-is-wilderness? (loc-place loc)))
         (begin
-          (if (> (kern-dice-roll "1d20") 12)
+          (if (> (kern-dice-roll "1d20") 6)
               (let* (
 					(orighp (kern-char-get-hp kobj))
 					(orighproll (string-append "1d" (number->string (kern-char-get-max-hp kobj))))
