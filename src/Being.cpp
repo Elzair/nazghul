@@ -269,13 +269,21 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         // script from generating log messages
                         log_disable();
                         mech->getObjectType()->handle(mech, this);
-                        this->decActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
                         log_enable();
                         mapSetDirty();
                         
                         // Now try and move again.
                         result = move(pathPtr->x - getX(), 
                                       pathPtr->y - getY());
+
+                        // Workaround an infinite loop in Character::exec()
+                        // where a party member is trying to rendezvous on a
+                        // path through a mech, and it keeps handling the mech,
+                        // thus decrementing its action points, but in fact it
+                        // can't move on any path.
+                        if (MovedOk == result) {
+                                this->decActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
+                        }
 
                 }
                 
