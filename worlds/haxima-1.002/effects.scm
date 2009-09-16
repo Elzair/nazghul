@@ -543,7 +543,8 @@
   (let ((loc (kern-obj-get-location kobj)))
     (if (not (kern-place-is-wilderness? (loc-place loc)))
         (begin
-          (if (> (kern-dice-roll "1d20") 6)
+          ;; seven is too low
+          (if (> (kern-dice-roll "1d20") 8)
               (let* (
 					(orighp (kern-char-get-hp kobj))
 					(orighproll (string-append "1d" (number->string (kern-char-get-max-hp kobj))))
