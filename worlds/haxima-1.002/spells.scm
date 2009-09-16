@@ -307,7 +307,7 @@
 (mk-spell 'bet_ylem_hur     "Conjure Smoke <Bet Ylem Hur>"      bet-ylem-hur     "BYH"  1 context-town  s_bet_ylem_hur     (list sulphorous_ash))
 
 ;; Second Circle
-(mk-spell 'sanct_nox        "Poison Ward <Sanct Nox>"           sanct-nox        "SN"   2 context-any   s_sanct_nox        (list nightshade garlic))
+(mk-spell 'sanct_nox        "Poison Ward <Sanct Nox>"           sanct-nox        "SN"   2 context-any   s_sanct_nox        (list nightshade garlic t_royal_cape))
 (mk-spell 'an_sanct         "Unlock <An Sanct>"                 an-sanct         "AS"   2 context-town  s_an_sanct         (list sulphorous_ash blood_moss))
 (mk-spell 'sanct            "Lock <Sanct>"                      sanct            "S"    2 context-town  s_sanct            (list sulphorous_ash spider_silk))
 (mk-spell 'an_xen_corp      "Turn Undead <An Xen Corp>"         an-xen-corp      "AXC"  2 context-town  s_an_xen_corp      (list garlic sulphorous_ash))
@@ -338,7 +338,7 @@
 (mk-spell 'in_sanct         "Protection <In Sanct>"             in-sanct         "IS"   4 context-any   s_in_sanct         (list sulphorous_ash ginseng garlic))
 (mk-spell 'wis_quas         "Reveal <Wis Quas>"                 wis-quas         "WQ"   4 context-any   s_wis_quas         (list nightshade sulphorous_ash))
 (mk-spell 'bet_por          "Blink <Bet Por>"                   bet-por          "BP"   4 context-town  s_bet_por          (list black_pearl blood_moss))
-(mk-spell 'vas_sanct_nox    "Mass Poison Ward <Vas Sanct Nox>"  vas-sanct-nox    "VSN"  3 context-any   s_vas_sanct_nox    (list mandrake nightshade garlic))
+(mk-spell 'vas_sanct_nox    "Mass Poison Ward <Vas Sanct Nox>"  vas-sanct-nox    "VSN"  3 context-any   s_vas_sanct_nox    (list mandrake nightshade garlic t_royal_cape))
 (mk-spell 'ort_grav         "Lightning Bolt <Ort Grav>"         ort-grav         "OG"   1 context-town  s_ort_grav         (list black_pearl mandrake sulphorous_ash))
 
 ;; Fifth Circle
