@@ -71,7 +71,7 @@
   (say knpc "Oops! Gotta go!")
   (kern-obj-add-effect knpc ef_invisibility nil)
   (kern-char-set-fleeing knpc #t)
-  (kern-obj-add-effect knpc ef_charm (charm-mk faction-outlaw))
+  (kern-being-set-current-faction knpc faction-outlaw)
   (kern-conv-end)
   )
 
