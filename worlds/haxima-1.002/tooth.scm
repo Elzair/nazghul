@@ -80,6 +80,7 @@
   (list
    (list t_picklock            5 "Unlock doors! Takes a bit of skill!")
    (list t_gem                20 "Find hidden rooms and passages! Thieves love 'em!")
+   (list t_grease             25 "In a tight squeeze? Grease is the word!")
 
    (list t_oil                 5 "Perfect for fighting slimes!")
    (list t_slime_vial         30 "Kal Xen Nox in a bottle! Great for escaping the guards!")

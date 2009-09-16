@@ -60,6 +60,7 @@
    
    (list t_sextant           500 "You can figure your location anywhere in the wilderness with one of these without wasting any reagents or scrolls.")
    (list t_chrono            300 "This little timepiece is invaluable when there aren't any clocks around.")
+   (list t_grease             23 "Wrogues seem to like this stuff. I'm afraid to ask why.")
    ))
 
 (define (earl-trade knpc kpc) (conv-trade knpc kpc "trade" earl-merch-msgs earl-catalog))
