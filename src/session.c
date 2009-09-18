@@ -763,20 +763,19 @@ static void session_init_hooks(struct session *session)
 
 void session_run_hook(struct session *session, session_hook_id_t id, char *fmt, ...)
 {
-        va_list args;
         struct list *lptr, *head;
 
         assert(id < NUM_HOOKS);
         head = &session->hook_table[id];
 
-        va_start(args, fmt);
-
         list_for_each(head, lptr) {
                 struct session_hook_entry *entry = list_entry(lptr, struct session_hook_entry, list);
+                va_list args;
+                va_start(args, fmt);
                 closure_execvl(entry->proc, fmt, args, entry->args);
+                va_end(args);
         }
         
-        va_end(args);
         
 }
 
