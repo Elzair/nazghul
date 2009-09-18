@@ -177,6 +177,8 @@ nazghul_SOURCES =		\
 	ztats_reagents.h \
 	ztats_spells.c \
 	ztats_spells.h \
+	terrain_editor.c \
+	terrain_editor.h \
 	res.rc
 
 nazghul_OBJS =		\
@@ -267,6 +269,7 @@ nazghul_OBJS =		\
 	ztats_pm.o \
 	ztats_reagents.o \
 	ztats_spells.o \
+	terrain_editor.o \
 	res.o
 
 INCLUDES = -I. -I.. -I/mingw/include -I/mingw/include/SDL
