@@ -307,7 +307,6 @@ Character::Character():hm(0), xp(0), order(-1),
         hp_mod       = 0;
         hp_mult      = 0;
         sched        = NULL;
-        conv         = NULL;
         appt         = 0;
         is_leader    = false;
         factionSwitch= 0;
@@ -623,8 +622,6 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
                 
                 assert(getPlace());
                 assert(getPlace()->location.place);
-
-                dbg("disembarking");
 
                 vehicle->setOccupant(0);
                 vehicle->relocate(getPlace()->location.place,
@@ -1819,11 +1816,20 @@ void Character::examine()
         int n = 0;
 	char *diplstr = diplomacy_string(this, Session->subject);
 
-        log_continue("%s level %d %s, %s [", 
-                     diplstr, 
-                     getLevel(), 
-                     getName(), 
-                     getWoundDescription());
+        log_continue("%s level %d", diplstr, getLevel());
+
+        if (isKnown()) {
+                log_continue(" %s,", getName());
+        } else {
+                if (species && species->name) {
+                        log_continue(" %s", species->name);
+                }
+                if (occ && occ->name) {
+                        log_continue(" %s", occ->name);
+                }
+        }
+
+        log_continue(" %s [", getWoundDescription());
 
         for (ArmsType *arms = enumerateArms(&i); arms; 
              arms = getNextArms(&i)) {
