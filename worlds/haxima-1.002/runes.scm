@@ -9,14 +9,15 @@
 	)
 	    
 (define (rune-basic-get kobj kchar questtag)
-	(kobj-get kobj kchar)
-	(rune-basic-quest questtag (kern-obj-get-sprite kobj))
-	)
+  ;; Get the sprite before picking up the object, because picking it up will
+  ;; deallocate it.
+  (let ((sprite (kern-obj-get-sprite kobj)))
+    (kobj-get kobj kchar)
+    (rune-basic-quest questtag sprite)))
 
 ;; rune interface: when a rune is used on a special altar, it transforms the
 ;; alter and signals the demon gate mechanism
 (define (rune-use ktype kuser)
-  (println "rune-use")
   (let ((loc (get-target-loc kuser 1)))
     (cond ((null? loc) 
            result-no-target)
