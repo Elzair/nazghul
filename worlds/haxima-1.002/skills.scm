@@ -9,9 +9,9 @@
 (define (skill-jump kactor)
   (define (range)
     (let ((x (* (occ-ability-stracro kactor) (kern-obj-get-ap kactor))))
-      (cond ((> x 1000) 3) ;; inconceivable!
-            ((> x 500) 2)
-            ((> x 150) 1)
+      (cond ((> x 1000) 4) ;; inconceivable!
+            ((> x 500) 3)
+            ((> x 150) 2)
             (else 0))))
   (if (has-effect? kactor ef_fatigue)
       result-not-now
