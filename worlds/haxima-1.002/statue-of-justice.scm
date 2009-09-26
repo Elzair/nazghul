@@ -82,11 +82,17 @@
            (quest-data-update-with 'questentry-warritrix 'avenged 1 (quest-notify (grant-party-xp-fn 200)))
 
            (if (defined? 'ch_jeffreys)
-               (kern-char-set-sched ch_jeffreys sch_jeff_resigned)
+           		(begin
+               		(kern-char-set-sched ch_jeffreys sch_jeff_resigned)
+               		(kern-obj-set-sprite ch_jeffreys s_fallen_paladin)
+               	)
                )
 
            (if (defined? 'ch_valus)
-               (kern-char-set-sched ch_valus sch_jeff)
+           		(begin
+               		(kern-char-set-sched ch_valus sch_jeff)
+               		(kern-obj-set-sprite ch_valus s_companion_paladin)
+               	)
                )
 
            (kern-conv-end)

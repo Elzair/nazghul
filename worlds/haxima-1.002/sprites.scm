@@ -500,6 +500,7 @@
 (kern-mk-sprite 's_ranger_captain ss_people 4 104 #f 0)
 (kern-mk-sprite 's_old_ranger ss_people 4 108 #f 0)
 (kern-mk-sprite 's_old_townsman ss_people 4 112 #f 0)
+(kern-mk-sprite 's_fallen_paladin ss_people 4 116 #f 0)
 
 (kern-mk-sprite 's_carabid ss_monsters 4 0 #f 0)
 (kern-mk-sprite 's_carabid_asleep ss_monsters 1 0 #f 0)

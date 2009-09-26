@@ -151,7 +151,7 @@
                  "Valus"          ; name
                  sp_human            ; species
                  oc_warrior          ; occ
-                 s_companion_paladin ; sprite
+                 s_fallen_paladin ; sprite
                  faction-glasdrin         ; starting alignment
                  2 1 1               ; str/int/dex
                  0 0                 ; hp mod/mult
