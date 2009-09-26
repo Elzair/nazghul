@@ -815,3 +815,4 @@
 ;; Quest icons (well, many quests will use stuff already in the game, but whatever)
 
 (kern-mk-sprite 's_quest_start ss_quests 1 0 #f 0 )
+(kern-mk-sprite 's_quest_wise ss_quests 1 1 #f 0 )

@@ -134,6 +134,8 @@
            "Although obscenely greedy, "
            "he has devoted his life to the acquisition of secrets.")
       (quest-data-assign-once 'questentry-runeinfo)
+      (quest-wise-subinit 'questentry-alchemist)
+      (quest-wise-init)
       (kern-conv-end)
       )
 

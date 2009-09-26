@@ -250,7 +250,7 @@
 	)
 	'quest-assign-notify
 	'quest-status-inprogress
-	's_enchanter
+	's_quest_wise
 	(tbl-build
 		;;'on-update 'quest-wise-update
 		)
@@ -270,6 +270,20 @@
 		)
 ))
 
+(questadd (qst-mk "The Alchemist"
+	'questentry-alchemist
+	(kern-ui-paginate-text
+		"The Alchemist is one of the wise."
+	)
+	'quest-assign-subquest
+	'quest-status-inprogress
+	's_companion_tinker
+	(tbl-build
+		;;'on-update 'quest-enchanter-update
+		'qparent 'questentry-wise
+		)
+))
+
 (questadd (qst-mk "The Warritrix"
 	'questentry-warritrix
 	(kern-ui-paginate-text
@@ -277,11 +291,20 @@
 	)
 	'quest-assign-subquest
 	'quest-status-inprogress
-	's_companion_paladin
+	's_avatar
 	(tbl-build
 		'on-update 'quest-warritrix-update
 		'qparent 'questentry-wise
 		)
+		;;'name - knows existance, but no info
+		;;'common - basic info
+		;;'general-loc - common knowledge info
+		;;'assignment - failed to find her
+		;;'lost-hall - where she has been sent
+		;;'lost-hall-loc - additionally, knows location of hall
+		;;'slain - indirect evidence of her fall
+		;;'found - located corpse
+		;;'avenged - completed justice quest TODO- pull from that quest info instead
 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

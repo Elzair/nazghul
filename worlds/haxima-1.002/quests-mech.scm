@@ -64,7 +64,11 @@
 		(if (not (quest-assigned? questentry))
 			(quest-assign questentry)
 		)
-	))	
+	))
+	
+(define (quest-data-assigned? tag)
+	(quest-assigned? (quest-data-get tag))
+	)
 	
 ;; assuming quest uses a tbl for payload, updates a key/value	
 (define (quest-data-update tag key value)
