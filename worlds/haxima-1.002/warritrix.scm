@@ -26,7 +26,7 @@
 (define (warr-hail knpc kpc)
   (meet "The spectre of a calm, stately woman confronts you.")
   (say knpc "Hail, Wanderer.")
-  (player-found-warritrix!)
+  (quest-data-update-with 'questentry-warritrix 'found 1 (quest-notify nil))
   )
 
 (define (warr-name knpc kpc)

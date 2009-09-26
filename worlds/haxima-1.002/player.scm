@@ -5,7 +5,6 @@
                          #f ;; found warritix
                          #f ;; trial of stewardess done
                          ))
-(define (player-found-warritrix?) (list-ref (player-gob) 0))
-(define (player-found-warritrix!) (set-car! (list-tail (player-gob) 0) #t))
-(define (player-stewardess-trial-done?) (list-ref (player-gob) 1))
-(define (player-stewardess-trial-done!) (set-car! (list-tail (player-gob) 1) #t))
+(define (player-found-warritrix?) (not (null? (quest-data-getvalue 'questentry-warritrix 'found))))
+(define (player-stewardess-trial-done?) (not (null? (quest-data-getvalue 'questentry-warritrix 'avenged))))
+

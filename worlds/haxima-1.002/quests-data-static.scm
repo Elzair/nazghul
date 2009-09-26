@@ -399,7 +399,6 @@
 ;; pirate rune
 
 (define (quest-rune-c-update)
-	(println "is this really happening?")
 	(let* ((quest (quest-data-get 'questentry-rune-c))
 			(quest-tbl (car (qst-payload quest))))
 		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
@@ -407,12 +406,10 @@
 		
 (cond 
 	((tbl-flag? 'done)
-		(println "done")
 		(kern-ui-paginate-text
 			"A rune was recovered from the wreck of the Merciful Death."
 		))
 	((tbl-flag? 'shiploc)
-		(println "shiploc")
 		(append
 			(kern-ui-paginate-text
 			"The pirate captain Ghertie once held a rune aboard her ship, the Merciful Death."
@@ -428,14 +425,12 @@
 			)
 		))
 	((tbl-flag? 'info)
-		(println "info")
 		(kern-ui-paginate-text
 			"The pirate captain Ghertie once held a rune aboard her ship, the Merciful Death."
 			""
 			"Her ghost now haunts Oparine, seeking ^c+mrevenge^c- upon her crew."
 		))
 	(#t
-		(println "else")
 		(kern-ui-paginate-text
 			"The pirate captain Ghertie once held a rune."
 		))
@@ -650,6 +645,83 @@
 	(#t
 		(kern-ui-paginate-text
 			"The Rune of Knowledge belonged to the Enchanter."
+		))
+)
+
+		)
+	))
+
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Search for the Wise quest group
+
+(define (quest-warritrix-update)
+	(let* ((quest (quest-data-get 'questentry-warritrix))
+			(quest-tbl (car (qst-payload quest))))
+		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
+		(qst-set-descr! quest
+		
+(cond
+	((tbl-flag? 'avenged)
+		(kern-ui-paginate-text
+			"The Warritrix was the most cunning warrior of the age, but was slain in an ambush in the Lost Halls."
+			""
+			"You have since brought her betrayers to justice."
+		))
+	((tbl-flag? 'found)
+		(kern-ui-paginate-text
+			"The Warritrix was the most cunning warrior of the age, but was slain in an ambush in the Lost Halls."
+		))
+	((tbl-flag? 'slain)
+		(cond
+			((tbl-flag? 'lost-hall-loc)
+				(kern-ui-paginate-text
+					(append
+					"The Warritrix was the most cunning warrior of the age, but her spirit has been seen in the Void."
+					""
+					"Her mortal remains may still lie in the Lost Halls, at ["
+					(number->string (loc-x lost-halls-loc)) "," (number->string (loc-y lost-halls-loc))
+					"]."
+					)
+				))
+			((tbl-flag? 'lost-hall)
+				(kern-ui-paginate-text
+					"The Warritrix was the most cunning warrior of the age, but her spirit has been seen in the Void."
+					""
+					"Her mortal remains may still lie in the Lost Halls."
+				))
+			(#t
+				(kern-ui-paginate-text
+					"The Warritrix was the most cunning warrior of the age, but her spirit has been seen in the Void."
+				))
+		))
+	((tbl-flag? 'lost-hall-loc)
+		(kern-ui-paginate-text
+			(append
+			"The Warritrix is the most cunning warrior of the age. She is overdue from her mission the the Lost Halls, which can be found at ["
+			(number->string (loc-x lost-halls-loc)) "," (number->string (loc-y lost-halls-loc))
+			"]."
+			)
+		))
+	((tbl-flag? 'lost-hall)
+		(kern-ui-paginate-text
+			"The Warritrix is the most cunning warrior of the age. A mission has taken her to the Lost Halls."
+		))
+	((tbl-flag? 'assignment)
+		(kern-ui-paginate-text
+			"The Warritrix is the most cunning warrior of the age. She is currently away from Glasdrin on a mission."
+		))
+	((tbl-flag? 'general-loc)
+		(kern-ui-paginate-text
+			"The Warritrix is the most cunning warrior of the age. She can normally be found around Glasdrin."
+		))
+	((tbl-flag? 'common)
+		(kern-ui-paginate-text
+			"The Warritrix is the most cunning warrior of the age."
+		))
+	(#t
+		(kern-ui-paginate-text
+			"The Warritrix is one of the wise."
 		))
 )
 

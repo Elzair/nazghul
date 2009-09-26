@@ -23,7 +23,7 @@
 ;; trial.
 (kern-mk-sched 'sch_jeff_resigned
                (list 0 0 kun-road "sleeping")
-               (list 6 0 campfire-4 "sleeping")
+               (list 9 0 campfire-4 "idle")
                (list 13 0 cantina-5 "idle")
                (list 20 0 kun-road "idle")
                )
@@ -31,10 +31,8 @@
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (jeff-mk) (list 'townsman #f))
-(define (jeff-resigned? gob) (cadr gob))
-(define (jeff-resigned! gob) (set-car! (cdr gob) #t))
-
+(define (jeff-mk) nil)
+               
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;; 
@@ -45,7 +43,7 @@
 
 ;; Basics...
 (define (jeff-hail knpc kpc)
-  (cond ((player-stewardess-trial-done?)
+  (cond	((player-stewardess-trial-done?)
          (say knpc "I want you to know Wanderer, I did not betray the Warritrix. I did not know about the ambush. "
               "But I knew something was amiss, I should have acted on my suspicions. "
               "The Commander of Glasdrin must never fail in diligence. "
@@ -94,7 +92,7 @@
        "nigh unbeatable."))
 
 (define (jeff-warr knpc kpc)
-  (cond ((player-found-warritrix?))
+  (cond ((player-found-warritrix?)
          (if (ask? knpc kpc "[Cough] Yes. Most unfortunate. We all mourn her loss. "
                    "But to lose her whole squad like that she must have made some error in judgment. "
                    "Don't you think so?")
@@ -115,7 +113,7 @@
               "warrior of the age. I've seen her beat men twice her size and "
               "slay fearsome beasts. At the moment she has been called away on an "
               "errand.")
-         ))
+         )))
 
 (define (jeff-erra knpc kpc)
   (say knpc "[He looks a bit uneasy] Yes, she took a squad to the Lost Halls. "

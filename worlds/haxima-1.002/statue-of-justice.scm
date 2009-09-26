@@ -79,11 +79,10 @@
                 "and may your name be a curse forevermore.")
            (aside kpc 'ch_ini "Justice at last!")
            (kern-being-set-current-faction kchar faction-monster)
-           (player-stewardess-trial-done!)
+           (quest-data-update-with 'questentry-warritrix 'avenged 1 (quest-notify (grant-party-xp-fn 200)))
 
            (if (defined? 'ch_jeffreys)
                (kern-char-set-sched ch_jeffreys sch_jeff_resigned)
-               (jeff-resigned! (gob ch_jeffreys))
                )
 
            (if (defined? 'ch_valus)

@@ -270,6 +270,23 @@
 		)
 ))
 
+(questadd (qst-mk "The Warritrix"
+	'questentry-warritrix
+	(kern-ui-paginate-text
+		"The Warritrix is one of the wise."
+	)
+	'quest-assign-subquest
+	'quest-status-inprogress
+	's_companion_paladin
+	(tbl-build
+		'on-update 'quest-warritrix-update
+		'qparent 'questentry-wise
+		)
+))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (questadd (qst-mk "The Necromancer"
 	'questentry-necromancer
 	(kern-ui-paginate-text
