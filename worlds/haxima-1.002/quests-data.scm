@@ -279,7 +279,49 @@
 	'quest-status-inprogress
 	's_companion_tinker
 	(tbl-build
-		;;'on-update 'quest-enchanter-update
+		;;'on-update 'quest-alchemist-update
+		'qparent 'questentry-wise
+		)
+))
+
+(questadd (qst-mk "The MAN"
+	'questentry-the-man
+	(kern-ui-paginate-text
+		"The MAN is one of the wise."
+	)
+	'quest-assign-subquest
+	'quest-status-inprogress
+	's_companion_bard
+	(tbl-build
+		;;'on-update 'quest-the-man-update
+		'qparent 'questentry-wise
+		)
+))
+
+(questadd (qst-mk "The Engineer"
+	'questentry-engineer
+	(kern-ui-paginate-text
+		"The Alchemist is one of the wise."
+	)
+	'quest-assign-subquest
+	'quest-status-inprogress
+	's_companion_tinker
+	(tbl-build
+		;;'on-update 'quest-engineer-update
+		'qparent 'questentry-wise
+		)
+))
+
+(questadd (qst-mk "The Necromancer"
+	'questentry-necromancer
+	(kern-ui-paginate-text
+		"The Necromancer is one of the wise."
+	)
+	'quest-assign-subquest
+	'quest-status-inprogress
+	's_black_mage
+	(tbl-build
+		;;'on-update 'quest-necromancer-update
 		'qparent 'questentry-wise
 		)
 ))

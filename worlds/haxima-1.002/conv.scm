@@ -216,9 +216,16 @@
   (say knpc "I don't know much about runes. Try asking one of the Wise."))
 
 (define (basic-wise knpc kpc)
-  (say knpc "The Wise have great influence over affairs in the Shard. Do you want to know their names?")
-  (if (yes? kpc)
-      (say knpc "There's the Enchanter, the Necromancer, the Alchemist, the MAN, the Engineer and the Warritrix.")))
+	(say knpc "The Wise have great influence over affairs in the Shard. Do you want to know their names?")
+	(if (yes? kpc)
+		(begin
+			(say knpc "There's the Enchanter, the Necromancer, the Alchemist, the MAN, the Engineer and the Warritrix.")
+			(map quest-wise-subinit
+				(list 'questentry-enchanter 'questentry-warritrix  'questentry-alchemist
+						'questentry-the-man 'questentry-engineer  'questentry-necromancer)
+			)
+		)
+	))
 
 (define (basic-shar knpc kpc)
   (say knpc "The Shard is what we call our world.")
