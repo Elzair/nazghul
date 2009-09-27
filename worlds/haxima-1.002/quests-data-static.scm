@@ -711,6 +711,8 @@
 			(#t
 				(kern-ui-paginate-text
 					"The Warritrix was the most cunning warrior of the age, but her spirit has been seen in the Void."
+					""
+					"When alive, she served the city of Glasdrin."
 				))
 		))
 	((tbl-flag? 'lost-hall-loc)

@@ -266,7 +266,10 @@
   (say knpc "The Warritrix is Wise and fierce, "
        "and like yourself prone to Wandering. "
        "In fact, at the moment I don't know where she is. "
-       "Try Glasdrin."))
+       "Try Glasdrin.")
+       (quest-wise-subinit 'questentry-warritrix)
+       (quest-data-update 'questentry-warritrix 'general-loc 1)
+       )
 
 (define (ench-wand knpc kpc)
   (say knpc "Yes, I've met your type before. Unpredictable. "
@@ -362,21 +365,33 @@
 (define (ench-wrog knpc kpc)
   (say knpc "The Wisest of Wrogues is The MAN, who comes and goes as if on "
        "the wind. If the MAN has a home, it is well-hidden. Ask around, "
-       "perhaps your inquiries will prompt a meeting."))
+       "perhaps your inquiries will prompt a meeting.")
+       (quest-wise-subinit 'questentry-the-man)
+       (quest-data-update 'questentry-the-man 'common 1)
+       )
 
 (define (ench-wrig knpc kpc)
   (say knpc "The Wisest Wright prefers to work in isolation. You may find him "
        "if you are persistent, but not in any city. "
-       "Seek the mage Kalcifax, I think she knows the Engineer well."))
+       "Seek the mage Kalcifax, I think she knows the Engineer well.")
+       (quest-wise-subinit 'questentry-engineer)
+       (quest-data-update 'questentry-engineer 'kalcifax 1)
+       )
 
 (define (ench-necr knpc kpc)
   (say knpc "The most depraved and wicked of all the Wise, "
        "my nemesis the Necromancer abides somewhere in the underworld. "
-       "He is powerful, deceitful and corrupt beyond redemption."))
+       "He is powerful, deceitful and corrupt beyond redemption.")
+       (quest-wise-subinit 'questentry-necromancer)
+       (quest-data-update 'questentry-necromancer 'general-loc 1)
+      )
 
 (define (ench-alch knpc kpc)
   (say knpc "The Alchemist keeps a lab near Oparine. "
-       "He is greedy and very cunning, so be wary of him."))
+       "He is greedy and very cunning, so be wary of him.")
+       (quest-wise-subinit 'questentry-alchemist)
+       (quest-data-update 'questentry-alchemist 'oparine 1)
+       )
 
 (define (ench-thie knpc kpc)
 	;;in case quest generated once in progress

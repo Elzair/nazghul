@@ -246,7 +246,9 @@
        "their own interests."))
 
 (define (eng-necr knpc kpc)
-  (say knpc "Not a bad sort. I've conferred with him a time or two."))
+  (say knpc "Not a bad sort. I've conferred with him a time or two.")
+  (quest-data-update 'questentry-necromancer 'nonevil 1)
+  )
 
 (define (eng-alch knpc kpc)
   (say knpc "A tricky bastard but I have to respect him."))

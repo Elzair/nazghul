@@ -106,8 +106,11 @@
   (say knpc "The Enchanter is one of the Wise. "
        "He told me to look out for a Wanderer like you. "
        "If I saw one I was to send him his way. You want directions? ")
+  (quest-wise-subinit 'questentry-enchanter)
+  (quest-data-update 'questentry-enchanter 'common 1)
   (cond ((yes? kpc)
          (quest-data-update 'questentry-calltoarms 'directions 1)
+         (quest-data-update 'questentry-enchanter 'general-loc 1)
          (say knpc "He lives in a tower in a swamp, somewhere west over the mountains. "
 	      "Take the road south, then follow it west and ask the rangers at the keep.")
          (else 

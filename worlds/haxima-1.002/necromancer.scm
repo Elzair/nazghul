@@ -250,26 +250,35 @@
 ;; the wise
 (define (necr-ench knpc kpc)
   (say knpc "The old fool thinks me one of the Accursed! "
-       "He does not understand that his ways are not the only ways."))
+       "He does not understand that his ways are not the only ways.")
+       )
 
 (define (necr-man knpc kpc)
   (say knpc "She comes to me sometimes when she needs information... "
-       "and in return she sometimes... acquires things for me."))
+       "and in return she sometimes... acquires things for me.")
+  (quest-data-update 'questentry-the-man 'common 1)
+  )
 
 (define (necr-alch knpc kpc)
-  (say knpc "A clever man. A deep man, good in his own way."))
+  (say knpc "A clever man. A deep man, good in his own way.")
+  (quest-data-update 'questentry-alchemist 'common 1)
+  )
 
 (define (necr-engi knpc kpc)
   (say knpc "Smart fellow, and very curious, "
        "but always has to be making something. "
        "And as soon as he's done, he starts on another! "
-       "(COUGH) Never time to reflect on anything worthy."))
+       "(COUGH) Never time to reflect on anything worthy.")
+       (quest-data-update 'questentry-engineer 'common 1)
+       )
 
 (define (necr-warr knpc kpc)
   (say knpc "Alas, she is fallen. I have met her spirit in the void. "
        "She was betrayed by the leadership of Glasdrin. "
        "Would that the gods had not abandoned us, "
-       "and Vale, lord of vengeance, still stalked the Shard!"))
+       "and Vale, lord of vengeance, still stalked the Shard!")
+       (quest-data-update 'questentry-warritrix 'slain 1)
+       )
 
 (define (necr-vale knpc kpc)
   (say knpc "An ancient god, known only to the dead now."))

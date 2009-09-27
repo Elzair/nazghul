@@ -130,7 +130,9 @@
 (define (stew-wise knpc kpc)
   (say knpc "The Wise are an aid to the rulers of the cities, but alone they "
        "have little power. Even the Enchanter could not stand against the "
-       "armed might of Glasdrin should he ever stand in our way."))
+       "armed might of Glasdrin should he ever stand in our way.")
+       (quest-wise-subinit 'questentry-enchanter)
+       )
 
 (define (stew-rogu knpc kpc)
   (say knpc "Where do you come from? What is your purpose in our land? "

@@ -39,6 +39,8 @@
 (define (basic-ench knpc kpc)
   (say knpc "The Enchanter is the Wise Wizard. "
        "He lives in a tower by the Fens, do you need directions?")
+  (quest-wise-subinit 'questentry-enchanter)
+  (quest-data-update 'questentry-enchanter 'general-loc 1)
   (if (yes? kpc)
       (let ((kplace (get-place knpc)))
         (cond ((equal? kplace p_westpass)
@@ -236,23 +238,38 @@
   (say knpc "The Peninsula is our little corner of the Shard."))
 
 (define (basic-warr knpc kpc)
-  (say knpc "The Warritrix is the Wise Warrior. If you're looking for her try Glasdrin."))
+  (say knpc "The Warritrix is the Wise Warrior. If you're looking for her try Glasdrin.")
+  (quest-wise-subinit 'questentry-warritrix)
+  (quest-data-update 'questentry-warritrix 'general-loc 1)
+  )
 
 (define (basic-engi knpc kpc)
   (say knpc "I've heard the Engineer is the greatest Wright in the land, "
-       "but I don't know much about him."))
+       "but I don't know much about him.")
+       (quest-wise-subinit 'questentry-engineer)
+       (quest-data-update 'questentry-engineer 'common 1)
+       )
 
 (define (basic-man knpc kpc)
   (say knpc "The MAN is a master wrogue. Nobody knows where his hideout is. "
-       "It's rumoured that he travels in disguise."))
+       "It's rumoured that he travels in disguise.")
+       (quest-wise-subinit 'questentry-the-man)
+       (quest-data-update 'questentry-the-man 'common 1)
+       )
 
 (define (basic-alch knpc kpc)
   (say knpc "The Alchemist is a Wise Wright who specializes in potions. "
-       "You'll find his shop in Oparine."))
+       "You'll find his shop in Oparine.")
+       (quest-wise-subinit 'questentry-alchemist)
+       (quest-data-update 'questentry-alchemist 'general-loc 1)
+       )
 
 (define (basic-necr knpc kpc)
   (say knpc "The Necromancer is a Wise Wizard who specializes in death magic. "
-       "I've heard he lives in a hidden cave."))
+       "I've heard he lives in a hidden cave.")
+       (quest-wise-subinit 'questentry-necromancer)
+       (quest-data-update 'questentry-necromancer 'general-loc 1)
+       )
 
 (define (basic-drag knpc kpc)
   (say knpc "Stories say a mighty dragon is terrorizing shipping on the "

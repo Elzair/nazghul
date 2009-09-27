@@ -26,7 +26,9 @@
 (define (warr-hail knpc kpc)
   (meet "The spectre of a calm, stately woman confronts you.")
   (say knpc "Hail, Wanderer.")
-  (quest-data-update-with 'questentry-warritrix 'found 1 (quest-notify nil))
+  (quest-data-update 'questentry-warritrix 'found 1)
+  (quest-data-icon! 'questentry-warritrix 's_ghost)
+  (quest-complete (quest-data-get 'questentry-warritrix))
   )
 
 (define (warr-name knpc kpc)
@@ -65,7 +67,10 @@
 
 (define (warr-evid knpc kpc)
   (say knpc "The wrogues are masters of finding what others try to hide, "
-       "and the MAN is master of all wrogues."))
+       "and the MAN is master of all wrogues.")
+       (quest-wise-subinit 'questentry-the-man)
+       (quest-data-update 'questentry-the-man 'common 1)
+       )
 
 (define (warr-wise knpc kpc)
   (say knpc "The Wise are deceived and divided in their opinions. "
