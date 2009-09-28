@@ -1,3 +1,52 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Quest Data Mechanism
+;;
+;; The basic quest data mechanism is based on a tbl of quest information
+;;
+;; The questadd function here handles creation of quests (it also makes sure the quest is
+;; created iff it is needed, so savegames have some chance of updating right)
+;;
+;; It is inside a let definition, and hence wont work elsewhere. The quest to be added is
+;; a quest using qst-mk from the quest-sys module
+;;
+;; (questadd (qst-mk
+;;    "Name of Quest"
+;;    'tag-to-refer-to-quest
+;;    "Text description of quest, probably using kern-ui-paginate-text"
+;;    'function-called-on-quest-assignment  ;; probably 'quest-assign-notify, or nil
+;;    'function-called-before-quest-is-displayed  ;; probably nil
+;;    'sprite-for-quest
+;;    quest-payload
+;;	)
+;;
+;; The various quest-data-* methods assume that quest-payload is a tbl, containing various
+;; info possibly including:
+;;
+;; 		'on-update  a method name that will be called in response to a quest-data-update call
+;;		'bonus-xp   a storage space for experience rewards that are accrued before the player
+;;					knows about the quest (the xp will increase the rewards given once the
+;;					the player knows why they are being given xp)
+;;
+;;
+;; Using quests basically boils down to:
+;;      defining the quest here
+;;      adding a (quest-data-assign-once 'tag-to-refer-to-quest) at the relevent place in the game code
+;;      adding a (quest-complete (quest-data-get 'tag-to-refer-to-quest))
+;;                                         at the relevent place in the game code
+;;								TODO: making a quest-data-complete function may be justified here
+;;		
+;;		for nicely updating quest information, add the on-update method as described above, and sprinkle
+;;      the plot with
+;;          (quest-data-update 'tag-to-refer-to-quest 'name-of-quest-flag value-to-set-tag-to)
+;;             and
+;;          (quest-data-update-with 'tag-to-refer-to-quest 'name-of-quest-flag value-to-set-tag-to
+;;                  function-to-perform-if-the-tag-wasnt-already-set-that-way)
+;;      a common example of the latter would be giving the party an xp reward:
+;;          (quest-data-update-with 'tag-to-refer-to-quest 'name-of-quest-flag value-to-set-tag-to
+;;                  (grant-party-xp-fn amount-of-xp-to-share-out))
+;;
+;;
 
 (let*
 	(

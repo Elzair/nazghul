@@ -1,7 +1,14 @@
 ;;----------------------------------------------------
 ;; this is a collection place for updates to quests
 ;;
-		
+;; the function is an arbitary method call, but the ones here tend to
+;; basically boil down to retreiving a bunch of flags from the quest payload
+;; and updating the quest via (qst-set-descr! text)
+;;
+;; the boilerplate at the front of the methods just makes the quest data easily accessible
+;; via a tbl-flag? method without needing to go through several level of redirection each time
+;;
+
 ;;---------------
 ;; whereami
 
