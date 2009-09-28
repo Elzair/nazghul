@@ -113,6 +113,7 @@
               "warrior of the age. I've seen her beat men twice her size and "
               "slay fearsome beasts. At the moment she has been called away on an "
               "errand.")
+              (quest-data-update-with 'questentry-warritrix 'assignment 1)
          )))
 
 (define (jeff-erra knpc kpc)
@@ -121,6 +122,7 @@
        "Normally I would send a search party, "
        "but at the moment I haven't the troops to spare.")
       (quest-data-update-with 'questentry-rune-l 'located 1 (quest-notify nil)) 
+      (quest-data-update-with 'questentry-warritrix 'lost-hall 1)
        )
 
 (define (jeff-sear knpc kpc)
@@ -167,6 +169,7 @@
            (loc-x lost-halls-loc) " "
            (loc-y lost-halls-loc) "]."))
 	   (quest-data-update-with 'questentry-rune-l 'know-hall 1 (quest-notify nil))
+	   (quest-data-update-with 'questentry-warritrix 'lost-hall-loc 1)
 	   )
   )
 

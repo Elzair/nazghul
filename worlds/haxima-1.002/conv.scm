@@ -442,7 +442,10 @@
 (define (glasdrin-warr knpc kpc)
   (if (player-found-warritrix?)
       (say knpc "We all mourn her loss.")
-      (say knpc "The Warritrix is the most cunning warrior of the age. I'm not sure where she is right now, ask the Steward or Commander Jeffries.")))
+      (say knpc "The Warritrix is the most cunning warrior of the age. I'm not sure where she is right now, ask the Steward or Commander Jeffries.")
+  	)
+  	(quest-data-update 'questentry-warritrix 'general-loc 1)
+  )
 
 (define (glasdrin-stew knpc kpc)
   (if (player-stewardess-trial-done?)

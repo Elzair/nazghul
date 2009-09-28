@@ -92,7 +92,10 @@
   (say knpc "I'm afraid I can't help you with that."))
 
 (define (alch-name knpc kpc)
-  (say knpc "I'm known as the Alchemist."))
+  (say knpc "I'm known as the Alchemist.")
+  (quest-data-update 'questentry-alchemist 'found 1)
+  (quest-complete (quest-data-get 'questentry-alchemist))
+  )
 
 (define (alch-join knpc kpc)
   (say knpc "Too busy! And far too old for adventures."))
@@ -301,7 +304,10 @@
        "I understand he is quite the recluse."))
 
 (define (alch-alch knpc kpc)
-  (say knpc "Yes, that's me. I am the Alchemist."))
+  (say knpc "Yes, that's me. I am the Alchemist.")
+  (quest-data-update 'questentry-alchemist 'found 1)
+  (quest-complete (quest-data-get 'questentry-alchemist))
+  )
 
 
 ;; Absalot...

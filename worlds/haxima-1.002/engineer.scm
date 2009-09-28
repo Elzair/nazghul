@@ -79,7 +79,10 @@
   (say knpc "I understand she's one of the finest warriors to ever live, "
        "but I know for a fact she's one of the most noble. When she isn't "
        "off doing something incredibly brave and stupid you can find her "
-       "at Glasdrin."))
+       "at Glasdrin.")
+    (quest-wise-subinit 'questentry-warritrix)
+  	(quest-data-update 'questentry-warritrix 'general-loc 1)
+       )
 
 (define (eng-make knpc kpc)
   (say knpc "I work on all kinds of different things. Lately I've been "
