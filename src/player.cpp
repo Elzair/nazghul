@@ -145,9 +145,7 @@ static bool pc_eat_food(class Character * pm, void *data)
 		return false;
 	}
 
-	consolePrint("Starving!");
-	consoleNewline();
-	consoleRepaint();
+	log_msg("Starving!");
 
         /* Partial fix for SF BUG [ 1526910 ] "starvation is lame". Instead of
          * a fixed amount of damage, make damage proportional to existing

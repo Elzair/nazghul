@@ -29,7 +29,7 @@ extern "C" {
 	extern int consoleInit(void);
 	extern void consolePrint(char *fmt, ...);
 	extern void consoleBackspace(int n);
-	extern void consoleNewline(void);
+	//extern void consoleNewline(void);
 	extern void consoleRepaint(void);
 	//extern void console_set_y(int y);
 	extern int console_get_y(void);

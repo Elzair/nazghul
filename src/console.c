@@ -62,6 +62,8 @@ static struct console {
 static char console_scratch_buf[MAX_MSG_SZ + 1];
 static char console_last_msg[MAX_MSG_SZ + 1];
 
+static void consoleNewline(void);
+
 static int consolePage(void)
 {
         int yesno = 1;
@@ -354,6 +356,8 @@ void consolePrint(char *fmt, ...)
                  * start-of-line code. */
                 continue;
         }
+
+        consoleRepaint();
 }
 
 void consoleBackspace(int n)
@@ -379,26 +383,26 @@ void consoleBackspace(int n)
 #endif
 }
 
-void consoleNewline(void)
+static void consoleNewline(void)
 {
   Console.line = (Console.line + 1) % CONS_LINES;
 
-        if (Console.numLines < (CONS_LINES))
-                Console.numLines++;
-        else
-                Console.firstLine = (Console.firstLine + 1) % CONS_LINES;
+  if (Console.numLines < (CONS_LINES))
+          Console.numLines++;
+  else
+          Console.firstLine = (Console.firstLine + 1) % CONS_LINES;
 
-        Console.cursor = Console.lines[Console.line];
-
-        memset(Console.cursor, 0, CONSOLE_MAX_MSG_SZ + 1);
-        Console.room = CONSOLE_MAX_MSG_SZ;
-
+  Console.cursor = Console.lines[Console.line];
+  
+  memset(Console.cursor, 0, CONSOLE_MAX_MSG_SZ + 1);
+  Console.room = CONSOLE_MAX_MSG_SZ;
+  
 #ifdef DEBUG
-        if (Console.log != NULL)
-                fprintf(Console.log, "\n");
+  if (Console.log != NULL)
+          fprintf(Console.log, "\n");
 #endif
-
-        consoleRepaint();
+  
+  //consoleRepaint();
 }
 
 void consoleRepaint(void)
