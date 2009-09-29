@@ -403,21 +403,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-(questadd (qst-mk "The Necromancer"
-	'questentry-necromancer
-	(kern-ui-paginate-text
-		"The Necromancer is a Wise Wizard who specializes in death magic."
-	)
-	'quest-assign-subquest
-	'quest-status-inprogress
-	's_necromancer
-	(tbl-build
-		'qparent 'questentry-wise
-		;;'on-update 'quest-necromancer-update
-		)
-))
-
 (questadd (qst-mk "A Haunted Inn"
 	'questentry-ghertie
 	(kern-ui-paginate-text
