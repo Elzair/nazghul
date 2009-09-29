@@ -42,9 +42,10 @@
   (kern-log-msg "An apparition appears!")
   (kern-obj-put-at (mk-warritrix)
                    (kern-obj-get-location kobj))
-  (kern-obj-remove kobj)
-  (kobj-get (kern-mk-obj t_rune_l 1) kchar)
-  (rune-basic-quest 'questentry-rune-l (kern-obj-get-sprite kobj))
+  (let ((sprite (kern-obj-get-sprite kobj)))
+    (kern-obj-remove kobj)
+    (kobj-get (kern-mk-obj t_rune_l 1) kchar)
+    (rune-basic-quest 'questentry-rune-l sprite))
   )
 (define rune-li-ifc
   (ifc rune-ifc
