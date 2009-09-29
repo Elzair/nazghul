@@ -1,3 +1,33 @@
+;; Sets a quest to be complete, with notification if it is in progress
+;; Note that if you set the quest to be complete before you assign it,
+;; then the assignment notification will say that it has been immediately
+;; completed, avoiding spamming the player with multiple notifications
+
+(define (quest-complete quest)
+	(if (and (quest-assigned? quest) use-quest-pane)
+		(kern-log-msg "^c+mQuest completed:^c-\n^c+m" (qst-title quest) "^c-")
+		)
+	(qst-complete! quest)
+	)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; internal utility methods
+
+(define (quest-data-add-child parent quest)
+	(let ((childlist (quest-data-getvalue parent 'qchildren)))
+		(if (not (in-list? quest childlist))
+			(quest-data-update parent 'qchildren
+				(cons
+					quest
+					childlist
+				)
+			))
+	))
+		
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; quest assignment callbacks for use in quest definition
+
+;; causes a notification on assignment
 (define (quest-assign-notify quest target)
 	(let ((notifytext (if (qst-complete? quest)
 						"^c+mQuest completed:^c-\n^c+m"
@@ -9,17 +39,7 @@
 		#t
 	))
 	
-(define (quest-data-add-child parent quest)
-	(let ((childlist (quest-data-getvalue parent 'qchildren)))
-		(if (not (in-list? quest childlist))
-			(quest-data-update parent 'qchildren
-				(cons
-					quest
-					childlist
-				)
-			))
-	))
-
+;; ensures parent/subquest relation once quest is assigned
 (define (quest-assign-subquest quest target)
 	(let ((parent (quest-tbl-get quest 'qparent)))
 		(if (not (null? parent))
@@ -28,24 +48,36 @@
 		#t
 	))
 	
-(define (quest-data-convert-subquest quest parent)
-	(quest-data-update quest 'qparent parent)
-	;; this doesnt actually 
-	(quest-data-add-child parent quest)
-	)
-	
+;; allows quest to proceed without any other action
 (define (quest-assign-silent quest target)
 		#t
 	)
 	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; quest display callbacks for use in quest definition
+	
+;; doesnt actually do anything
 (define (quest-status-from-payload quest)
 	"In progress"
 	)
 
+;; doesnt actually do anything
 (define (quest-status-inprogress quest)
 	"In progress"
 	)
-			
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Interacting with the Quest Data Table
+;;
+;; The quest data table is a global storage location for fixed, plot
+;; based quests that are created once and then activated at the
+;; appropriate time
+;;
+;; Anything procedurally generated on the fly would need
+;; to interface directly with the quest-sys module.
+;;
+	
+;; retrieves a quest from the quest data table
 (define (quest-data-get tag)
 	(let* ((questdata (tbl-get (gob (kern-get-player)) 'questdata))
 			)
@@ -53,12 +85,16 @@
 		)
 	)
 	
+;; retrieves a value from a quest payload tbl, given the key for the quest
+;; and for the value
 (define (quest-data-getvalue quest tag)
 	(let* ((qpayload (car (qst-payload (quest-data-get quest)))))
 		(tbl-get qpayload tag)
 		)
 	)
 
+;; assigns a quest from the quest data table, while ensuring it is not
+;;      given out repeatedly
 (define (quest-data-assign-once tag)
 	(let ((questentry (quest-data-get tag)))
 		(if (not (quest-assigned? questentry))
@@ -66,11 +102,12 @@
 		)
 	))
 	
+;; checks if a quest from the quest data table has been assigned
 (define (quest-data-assigned? tag)
 	(quest-assigned? (quest-data-get tag))
 	)
 	
-;; assuming quest uses a tbl for payload, updates a key/value	
+;; assuming quest in the QDT uses a tbl for payload, updates a key/value pair
 (define (quest-data-update tag key value)
 	(let* ((qpayload (car (qst-payload (quest-data-get tag))))
 			(updatehook (tbl-get qpayload 'on-update))
@@ -101,23 +138,28 @@
 				(qst-bump! (quest-data-get tag))
 			))
 	))
-
+	
+;; sets the description for a quest in the QDT
 (define (quest-data-descr! tag descr)
 	(qst-set-descr! (quest-data-get tag) descr)
 	)
 
+;; sets the icon for a quest in the QDT
 (define (quest-data-icon! tag icon)
 	(qst-set-icon! (quest-data-get tag) icon)
+	)	
+
+;; sets a quest in the QDT to be complete, giving a notification if appropriate
+;;    see the notes for quest-complete, above
+(define (quest-data-complete tag)
+	(quest-complete (quest-data-get tag))
 	)
-	
-(define (quest-complete quest)
-	(if (and (quest-assigned? quest) use-quest-pane)
-		(kern-log-msg "^c+mQuest completed:^c-\n^c+m" (qst-title quest) "^c-")
-		)
-	(qst-complete! quest)
-	)
-	
-	
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+;; callbacks for quest-data-update-with
+
+;; if appropriate, notifies the player about a change in quest state
+;; can be chained to further functions
 (define (quest-notify subfunction)
 	(lambda (quest) 
 		(if (and (quest-assigned? quest) use-quest-pane)
@@ -127,7 +169,8 @@
 			(subfunction quest))
 	))
 	
-	
+;; grants the player a given amount of experience, using or adding to the bonus xp
+;;          as appropriate
 (define (grant-xp-fn amount)
 	(lambda (quest) 
 		(let* ((qpayload (car (qst-payload quest)))
@@ -146,6 +189,8 @@
 		)
 	))
 	
+;; shares amongst the players party a given amount of experience,
+;;       using or adding to the bonus xp as appropriate
 (define (grant-party-xp-fn amount)
 	(lambda (quest) 
 		(let* ((qpayload (car (qst-payload quest)))
@@ -166,9 +211,11 @@
 		)
 	))
 	
-;;-------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Reconcile active and pregenned quests at game load to simplify
 ;; ingame tracking
+;;
+;; internal methods- will run automatically
 	
 (kern-add-hook 'new_game_start_hook 'reconcile-quests)
 (kern-add-hook 'new_game_start_hook 'refresh-quests)
@@ -195,3 +242,12 @@
 	(load "quests-data.scm")
 	)
 	
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; utilities
+	
+;; links a quest and subquest after they are already in-play
+(define (quest-data-convert-subquest quest parent)
+	(quest-data-update quest 'qparent parent)
+	(quest-data-add-child parent quest)
+	)	
