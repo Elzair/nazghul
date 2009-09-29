@@ -95,7 +95,7 @@
 (mk-species 'sp_queen_spider    "queen spider"   18  6 12   100  20   4  10 mmode-crawl     t_G_fangs    nil       4 s_asleep           "1d2"   sound-walking   )
 (mk-species 'sp_skeleton        "skeleton"       12  8 12   100  12   2  10 mmode-walk      t_hands      humanoid  3 s_asleep           nil     sound-walking   )
 (mk-species 'sp_snake           "snake"           2  2 14   100   6   0   6 mmode-walk      t_fangs      nil       1 s_asleep           nil     sound-walking   )
-(mk-species 'sp_bat             "bat"             2  2 14   120   2   0   8 mmode-fastfly   t_fangs      nil       1 s_asleep           nil     nil             )
+(mk-species 'sp_bat             "bat"             2  2 14   120   2   0  19 mmode-fastfly   t_fangs      nil       1 s_asleep           nil     nil             )
 (mk-species 'sp_rat             "rat"             4  2 12   100   6   0   6 mmode-crawl     t_F_fangs    nil       1 s_asleep           nil     nil             )
 (mk-species 'sp_spider          "spider"         12  6 14   120   8   2  10 mmode-fastcrawl t_fangs      nil       2 s_asleep           nil     sound-walking   )
 (mk-species 'sp_statue          "statue"          1  1  1   100  99   0   1 mmode-none      nil          nil       0 nil                "16"    nil             )
