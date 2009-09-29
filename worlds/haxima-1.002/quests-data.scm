@@ -1,8 +1,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Quest Data Mechanism
+;; Quest Data Table
 ;;
-;; The basic quest data mechanism is based on a tbl of quest information
+;; The basic quest data mechanism is based on a tbl of quest information. This allows quests
+;; to be created once, then tracked and updated from a central repository.
+;; While not suitable for quests generated on the fly, this is a lot more convenient for
+;; complex plot based quests. On the fly quests can still interface directly with the
+;; quest-sys module.
 ;;
 ;; The questadd function here handles creation of quests (it also makes sure the quest is
 ;; created iff it is needed, so savegames have some chance of updating right)
@@ -32,9 +36,8 @@
 ;; Using quests basically boils down to:
 ;;      defining the quest here
 ;;      adding a (quest-data-assign-once 'tag-to-refer-to-quest) at the relevent place in the game code
-;;      adding a (quest-complete (quest-data-get 'tag-to-refer-to-quest))
-;;                                         at the relevent place in the game code
-;;								TODO: making a quest-data-complete function may be justified here
+;;      adding a (quest-data-complete 'tag-to-refer-to-quest)
+;;                                   at the relevent place in the game code
 ;;		
 ;;		for nicely updating quest information, add the on-update method as described above, and sprinkle
 ;;      the plot with

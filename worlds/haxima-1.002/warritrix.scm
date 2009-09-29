@@ -28,7 +28,7 @@
   (say knpc "Hail, Wanderer.")
   (quest-data-update 'questentry-warritrix 'found 1)
   (quest-data-icon! 'questentry-warritrix 's_ghost)
-  (quest-complete (quest-data-get 'questentry-warritrix))
+  (quest-data-complete 'questentry-warritrix)
   )
 
 (define (warr-name knpc kpc)

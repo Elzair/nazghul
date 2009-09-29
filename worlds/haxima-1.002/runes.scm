@@ -2,7 +2,7 @@
 
 ;; also used where external events trigger quest
 (define (rune-basic-quest questtag questicon)
-   	(quest-complete (quest-data-get questtag))
+   	(quest-data-complete questtag)
 	(quest-data-assign-once questtag)
 	(quest-data-update-with questtag 'done 1 (grant-party-xp-fn 50))
 	(qst-set-icon! (quest-get questtag) questicon)

@@ -168,7 +168,7 @@
       (quest-data-update 'questentry-runeinfo 'gate 1)
       (quest-data-update 'questentry-rune-k 'entrusted-with-rune 1)
       (quest-data-update-with 'questentry-runeinfo 'done 1 (grant-party-xp-fn 30))
-      (quest-complete (quest-data-get 'questentry-runeinfo))
+      (quest-data-complete 'questentry-runeinfo)
       ;; temporary setup- will require information gathering first when done
       (prompt-for-key)
       (quest-data-assign-once 'questentry-allrunes)
@@ -204,7 +204,7 @@
       (say knpc "Ah, I see you've found my Rune at last!")
       (kern-obj-add-gold kpc 200)
 		(quest-data-update-with 'questentry-thiefrune 'done 1 (grant-party-xp-fn 20))
-		(quest-complete (quest-data-get 'questentry-thiefrune))
+		(quest-data-complete 'questentry-thiefrune)
       (say knpc "Perhaps your are not completely useless. "
            "Did you encounter any... resistance?")      
       (kern-conv-get-yes-no? kpc)
@@ -297,7 +297,7 @@
                     (say knpc "Good! Rangers have tracked the thief to "
                          "Trigrave. Go there and inquire about a ^c+mthief^c-.")
 							(quest-data-assign-once 'questentry-thiefrune)
-              		(quest-complete (quest-data-get 'questentry-calltoarms))
+              		(quest-data-complete 'questentry-calltoarms)
                   	;; if you dont read the letter, you might not get the quest till now!
               		(quest-data-assign-once 'questentry-calltoarms)
                   	(quest-data-update-with 'questentry-calltoarms 'done 1 (grant-xp-fn 10))

@@ -94,7 +94,7 @@
 (define (alch-name knpc kpc)
   (say knpc "I'm known as the Alchemist.")
   (quest-data-update 'questentry-alchemist 'found 1)
-  (quest-complete (quest-data-get 'questentry-alchemist))
+  (quest-data-complete 'questentry-alchemist)
   )
 
 (define (alch-join knpc kpc)
@@ -167,7 +167,7 @@
 						  (say knpc "[He eyes the vial hungrily] "
 							   "Yes! It's just what I need!")
 							(quest-data-update 'questentry-dragon 'done 1)
-							(quest-complete (quest-data-get 'questentry-dragon))
+							(quest-data-complete 'questentry-dragon)
 							(quest-data-assign-once 'questentry-dragon)
 						  (alch-dragon-reward knpc kpc))
 					(begin
@@ -306,7 +306,7 @@
 (define (alch-alch knpc kpc)
   (say knpc "Yes, that's me. I am the Alchemist.")
   (quest-data-update 'questentry-alchemist 'found 1)
-  (quest-complete (quest-data-get 'questentry-alchemist))
+  (quest-data-complete 'questentry-alchemist)
   )
 
 
