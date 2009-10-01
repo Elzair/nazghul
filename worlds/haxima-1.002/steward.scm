@@ -72,11 +72,11 @@
           ))
       ((quest-data-assigned? 'questentry-wise)
 		(say knpc "I have not seen her in some time. I believe she has been called away on some errand.")
-		(quest-data-update-with 'questentry-warritrix 'assignment 1)
+		(quest-data-update 'questentry-warritrix 'assignment 1)
 		)
 	(else
 		(say knpc "One of our finest warriors. I believe she is out on patrol right now.")
-		 (quest-data-update-with 'questentry-warritrix 'general-loc 1)
+		 (quest-data-update 'questentry-warritrix 'general-loc 1)
 		 )
       ))
 

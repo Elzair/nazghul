@@ -560,7 +560,7 @@
 ;; 
 
 (define (quest-rune-l-update)
-	(let * ((quest (quest-data-get 'questentry-rune-l))
+	(let* ((quest (quest-data-get 'questentry-rune-l))
 			(quest-tbl (car (qst-payload quest))))
 		(define (tbl-flag? tag) (not (null? (tbl-get quest-tbl tag))))
 		(qst-set-descr! quest
@@ -572,7 +572,7 @@
 		))
 	((and (tbl-flag? 'located) (tbl-flag? 'know-hall))
 		(kern-ui-paginate-text
-			(append
+			(string-append
 			"One of the runes is carried by the Warritrix. "
 			"She may be found in the Lost Halls, at [" 
 			(number->string (loc-x lost-halls-loc)) "," (number->string (loc-y lost-halls-loc))
@@ -581,7 +581,7 @@
 		))
 	((and (tbl-flag? 'located) (tbl-flag? 'approx-hall))
 		(kern-ui-paginate-text
-			(append
+			(string-append
 			"One of the runes is carried by the Warritrix. "
 			"She may be found in the Lost Halls, on the Shard's south coast."
 			)
@@ -701,7 +701,7 @@
 		(cond
 			((tbl-flag? 'lost-hall-loc)
 				(kern-ui-paginate-text
-					(append
+					(string-append
 					"The Warritrix was the most cunning warrior of the age, but her spirit has been seen in the Void."
 					""
 					"Her mortal remains may still lie in the Lost Halls, at ["
@@ -724,7 +724,7 @@
 		))
 	((tbl-flag? 'lost-hall-loc)
 		(kern-ui-paginate-text
-			(append
+			(string-append
 			"The Warritrix is the most cunning warrior of the age. She is overdue from her mission the the Lost Halls, which can be found at ["
 			(number->string (loc-x lost-halls-loc)) "," (number->string (loc-y lost-halls-loc))
 			"]."

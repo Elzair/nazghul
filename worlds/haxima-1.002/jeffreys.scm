@@ -113,13 +113,13 @@
               "warrior of the age. I've seen her beat men twice her size and "
               "slay fearsome beasts. At the moment she has been called away on an "
               "errand.")
-              (quest-data-update-with 'questentry-warritrix 'assignment 1)
+              (quest-data-update 'questentry-warritrix 'assignment 1)
          )
 	 (else
          (say knpc "The Warritrix is a living treasure; the most cunning, versatile "
               "warrior of the age. I've seen her beat men twice her size and "
               "slay fearsome beasts. At the moment she is out on patrol.")
-              (quest-data-update-with 'questentry-warritrix 'general-loc 1)
+              (quest-data-update 'questentry-warritrix 'general-loc 1)
          )
 	 ))
 
@@ -136,7 +136,7 @@
        "Normally I would send a search party, "
        "but at the moment I haven't the troops to spare.")
       (quest-data-update-with 'questentry-rune-l 'located 1 (quest-notify nil)) 
-      (quest-data-update-with 'questentry-warritrix 'lost-hall 1)
+      (quest-data-update 'questentry-warritrix 'lost-hall 1)
        )))
 
 (define (jeff-sear knpc kpc)
@@ -182,9 +182,10 @@
       (say ch_ini "Don't worry. I know where to find the Lost Halls. "
            "We'll need to get a ship and sail to ["
            (loc-x lost-halls-loc) " "
-           (loc-y lost-halls-loc) "]."))
+           (loc-y lost-halls-loc) "].")
 	   (quest-data-update-with 'questentry-rune-l 'know-hall 1 (quest-notify nil))
-	   (quest-data-update-with 'questentry-warritrix 'lost-hall-loc 1)
+	   (quest-data-update 'questentry-warritrix 'lost-hall-loc 1)
+	   )
 	   )
   )
 

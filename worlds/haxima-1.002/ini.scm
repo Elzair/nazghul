@@ -67,9 +67,10 @@
 			(begin
   			(say knpc "The entrance to the Lost Halls is a cavern far to the southwest. "
   				"Find a ship and sail to ["
-           (loc-x lost-halls-loc) " "
+           (loc-x lost-halls-loc) ","
            (loc-y lost-halls-loc) "].")
 			(quest-data-update-with 'questentry-rune-l 'know-hall 1 (quest-notify nil))
+			(quest-data-update 'questentry-warritrix 'lost-hall-loc 1)
 			)
   			(say knpc "The Lost Halls are very dangerous. I'd advise you to stay clear!"))))
      		
@@ -135,6 +136,7 @@
 				(say knpc "She can be hard to find. I believe she is out on patrol right now. ")
 				(say knpc "If you want come back later, I'll keep an eye out and let you know if she's back")
 			)
+		))
 	))
 
 ;; Paladin...
