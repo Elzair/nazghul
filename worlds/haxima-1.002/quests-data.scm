@@ -397,6 +397,7 @@
 		;;'lost-hall - where she has been sent
 		;;'lost-hall-loc - additionally, knows location of hall
 		;;'slain - indirect evidence of her fall
+		;;'reached - reached location of corpse - used by losthalls mechs
 		;;'found - located corpse
 		;;'avenged - completed justice quest TODO- pull from that quest info instead
 ))
@@ -439,6 +440,23 @@
 	's_dragon_party
 	(tbl-build
 		)
+))
+
+(questadd (qst-mk "A Soldiers Justice"
+	'questentry-warrjustice
+	(kern-ui-paginate-text
+		"The Warritrix has been slain by treachery. Will this crime go unpunished?"
+	)
+	'quest-assign-subquest
+	'quest-status-inprogress
+	's_ghost
+	(tbl-build
+		'on-update 'quest-warrjustice-update
+		)
+		;;'statue - info about statue
+		;;'book - info about journal
+		;;'havejournal - found journal
+		;;'avenged - completed justice quest
 ))
 
 (questadd (qst-mk "Bandit Troubles"

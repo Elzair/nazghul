@@ -495,15 +495,6 @@
  
 	(list
 		(put (mk-monman) 0 0)
-	 (put (mk-corpse2
-       '(
-        (1 t_rune_l_init)
-        (1 t_armor_chain_4)
-        (1 t_chain_coif_4)
-        (1 t_sword_4)
-        (1 t_shield_4)
-        (1 t_warritrix_orders)
-        )) 10 10)
 		(put (spawn-pt 'yellow-slime) 8 9)
 		(put (spawn-pt 'yellow-slime) 13 11)
 	); objects
@@ -512,11 +503,10 @@
 	 (list
 		'on-entry-to-dungeon-room
 		'losthalls-room-handle-rroom
+		'losthalls-handle-rshrine
 	) ;; hooks
 	nil
 )
-
-(drop-random-corpses p_lost_halls_rshrine 5)
 
 (kern-mk-place 
 	'p_lost_halls_fountains

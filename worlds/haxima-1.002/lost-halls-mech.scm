@@ -695,7 +695,22 @@
 		(kern-place-set-neighbor north kplace (eval 'p_lost_halls_r1))
 	))	
 	
-
-	
-	
+(define (losthalls-handle-rshrine kplace kplayer)
+	(if (and (quest-data-assigned? 'questentry-wise)
+			(null? (quest-data-getvalue 'questentry-warritrix 'reached)))
+		(begin
+			(kern-obj-put-at (mk-corpse2
+			       '(
+			        (1 t_rune_l_init)
+			        (1 t_armor_chain_4)
+			        (1 t_chain_coif_4)
+			        (1 t_sword_4)
+			        (1 t_shield_4)
+			        (1 t_warritrix_orders)
+			        )) (list p_lost_halls_rshrine 10 10))
+			(drop-random-corpses p_lost_halls_rshrine 5)
+			(quest-data-update 'questentry-warritrix 'reached 1)
+		)
+	)
+	)
 	
