@@ -108,31 +108,46 @@
                  ))
          (kern-conv-end)
          )
-        (else
+	 ((quest-data-assigned? 'questentry-wise)
          (say knpc "The Warritrix is a living treasure; the most cunning, versatile "
               "warrior of the age. I've seen her beat men twice her size and "
               "slay fearsome beasts. At the moment she has been called away on an "
               "errand.")
               (quest-data-update-with 'questentry-warritrix 'assignment 1)
-         )))
+         )
+	 (else
+         (say knpc "The Warritrix is a living treasure; the most cunning, versatile "
+              "warrior of the age. I've seen her beat men twice her size and "
+              "slay fearsome beasts. At the moment she is out on patrol.")
+              (quest-data-update-with 'questentry-warritrix 'general-loc 1)
+         )
+	 ))
+
+(define (jeff-warr-ready subfn)
+	(if (quest-data-assigned? 'questentry-wise)
+		(subfn)
+		(jeff-default knpc kpc)
+		))
 
 (define (jeff-erra knpc kpc)
+	(jeff-warr-ready (lambda ()
   (say knpc "[He looks a bit uneasy] Yes, she took a squad to the Lost Halls. "
        "It's odd that she hasn't reported back yet... "
        "Normally I would send a search party, "
        "but at the moment I haven't the troops to spare.")
       (quest-data-update-with 'questentry-rune-l 'located 1 (quest-notify nil)) 
       (quest-data-update-with 'questentry-warritrix 'lost-hall 1)
-       )
+       )))
 
 (define (jeff-sear knpc kpc)
-  (say knpc "[He grows exasperated] I can spare no one to search for the "
+	(jeff-warr-ready (lambda ()
+	(say knpc "[He grows exasperated] I can spare no one to search for the "
        "Warritrix! Now, if you don't mind, I'm a busy man...")
   (kern-conv-end)
   (if (is-player-party-member? ch_ini)
       (say ch_ini "Something smells rotten in Denmark. "
            "We've got to find her!"))
-  )
+  )))
 
 ;; Townspeople...
 (define (jeff-glas knpc kpc)

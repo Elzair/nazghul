@@ -59,7 +59,7 @@
 
 ;; Warritrix...
 (define (stew-warr knpc kpc)
-  (if (player-found-warritrix?)
+  (cond ((player-found-warritrix?)
       (if (ask? knpc kpc "I heard of her passing. Surely you do not think I had anything to do with it?")
           (begin
             (say knpc "If you dare to accuse me, strike the statue in the courtyard. "
@@ -69,8 +69,15 @@
                    "and with more than just words.")
             )
           (say knpc "Of course not. Ignore the rumours. They are spread by jealous political rivals.")
-          )
-      (say knpc "I have not seen her in some time. I believe she has been called away on some errand.")
+          ))
+      ((quest-data-assigned? 'questentry-wise)
+		(say knpc "I have not seen her in some time. I believe she has been called away on some errand.")
+		(quest-data-update-with 'questentry-warritrix 'assignment 1)
+		)
+	(else
+		(say knpc "One of our finest warriors. I believe she is out on patrol right now.")
+		 (quest-data-update-with 'questentry-warritrix 'general-loc 1)
+		 )
       ))
 
 (define (stew-erra knpc kpc)
@@ -89,13 +96,20 @@
 
 ;; Rune...
 (define (stew-rune knpc kpc)
-  (say knpc "I know the Warritrix wore... wears a Rune about her neck, "
-       "but I know not what it signifies.")
+	(if (quest-data-assigned? 'questentry-wise)
+		(say knpc "I know the Warritrix wore... wears a Rune about her neck, "
+			"but I know not what it signifies.")
+		(say knpc "I know the Warritrix wears a Rune about her neck, "
+			"but I know not what it signifies.")
+		)
        (quest-data-assign-once 'questentry-rune-l)
        )
 
 (define (stew-wore knpc kpc)
-  (say knpc "What are you implying? It was merely a slip of the tongue."))
+	(if (quest-data-assigned? 'questentry-wise)
+		(say knpc "What are you implying? It was merely a slip of the tongue.")
+		(stew-default knpc kpc)
+	))
 
 ;; Absalot...
 (define (stew-absa knpc kpc)

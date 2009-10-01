@@ -107,28 +107,35 @@
   (say knpc "So long."))
 
 (define (ini-warr knpc kpc)
-  (cond ((player-found-warritrix?)
-         (cond ((player-stewardess-trial-done?)
+  (cond ((player-stewardess-trial-done?)
                 (say knpc "Justice has been served, and now I can grieve her loss." ))
-               (else
+	((player-found-warritrix?)
                 (if (ask? knpc kpc "The Stewardess is powerful, but there is a way to see that justice is done. An ancient way. A dangerous way. Will you hear me?")
                     (say knpc "There is a statue in the center of Glasdrin. "
                          "If you strike it with your sword, you will invoke the oldest law of the city, and a trial will be held. "
                          "But we dare not strike it until we have convincing evidence against the Stewardess, because if our evidence is lacking then judgment will be passed on us instead!")
-                    (say knpc "We can't let the Stewardess get away with this. Someone must call her to account!")))))
-        (else
-         (say knpc "[He straightens up a bit] Something is amiss! The Warritrix has "
-              "been gone too long with no word. The Commander should have sent out "
-              "search parties by now. Instead he sits idly by, pretending to be "
-              "distracted by other problems. I sense foul play. Will you search for "
-              "her?")
-         (if (kern-conv-get-yes-no? kpc)
-             (begin
-               (say knpc "I would join you! I know the deeps well, and though my "
-                    "duty is here, I won't obey an order that leaves her to die.")
-               (ini-will-join! (kobj-gob-data knpc)))
-             (say knpc "Someone must do something! The realm owes her a great "
-                  "debt.")))))
+                    (say knpc "We can't let the Stewardess get away with this. Someone must call her to account!")))
+	((quest-data-assigned? 'questentry-wise)
+		 (say knpc "[He straightens up a bit] Something is amiss! The Warritrix has "
+		      "been gone too long with no word. The Commander should have sent out "
+		      "search parties by now. Instead he sits idly by, pretending to be "
+		      "distracted by other problems. I sense foul play. Will you search for "
+		      "her?")
+		 (if (kern-conv-get-yes-no? kpc)
+		     (begin
+		       (say knpc "I would join you! I know the deeps well, and though my "
+			    "duty is here, I won't obey an order that leaves her to die.")
+		       (ini-will-join! (kobj-gob-data knpc)))
+		     (say knpc "Someone must do something! The realm owes her a great "
+			  "debt.")))
+	(else
+		(say knpc "Are you looking for the Warritrix?")
+		(if (kern-conv-get-yes-no? kpc)
+			(begin
+				(say knpc "She can be hard to find. I believe she is out on patrol right now. ")
+				(say knpc "If you want come back later, I'll keep an eye out and let you know if she's back")
+			)
+	))
 
 ;; Paladin...
 (define (ini-pala knpc kpc)
