@@ -273,12 +273,17 @@
        )
 
 (define (necr-warr knpc kpc)
-  (say knpc "Alas, she is fallen. I have met her spirit in the void. "
-       "She was betrayed by the leadership of Glasdrin. "
-       "Would that the gods had not abandoned us, "
-       "and Vale, lord of vengeance, still stalked the Shard!")
-       (quest-data-update 'questentry-warritrix 'slain 1)
-       )
+	(if (quest-data-assigned? 'questentry-wise)
+		(begin
+		  (say knpc "Alas, she is fallen. I have met her spirit in the void. "
+		       "She was betrayed by the leadership of Glasdrin. "
+		       "Would that the gods had not abandoned us, "
+		       "and Vale, lord of vengeance, still stalked the Shard!")
+		       (quest-data-update 'questentry-warritrix 'slain 1)
+		 )
+		 (say knpc "The hasn't been another knight so noble and so strong in "
+		 "a long, long time.")
+       ))
 
 (define (necr-vale knpc kpc)
   (say knpc "An ancient god, known only to the dead now."))
