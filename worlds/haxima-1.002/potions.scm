@@ -55,9 +55,28 @@
              result-ok))
 
 (define (potion-gain-stats kuser current-stat stat-name stat-setter)
-  (kern-log-msg (kern-obj-get-name kuser) " gains " stat-name "!")
-  (stat-setter kuser (+ current-stat (kern-dice-roll "1d3")))
-  result-ok)
+  (println "cur:" current-stat)
+  (cond ((< current-stat 20)
+         (kern-log-msg (kern-obj-get-name kuser) " gains " stat-name "!")
+         (stat-setter kuser (+ current-stat (kern-dice-roll "1d3+1")))
+         result-ok)
+        ((< current-stat 25)
+         (kern-log-msg (kern-obj-get-name kuser) " gains a little " stat-name "!")
+         (stat-setter kuser (+ current-stat (kern-dice-roll "1d3")))
+         result-ok)
+        ((< current-stat 35)
+         (let ((droll (kern-dice-roll "1d2-1")))
+           (println "droll:" droll)
+           (cond ((> droll 0)
+                  (kern-log-msg (kern-obj-get-name kuser) " already has a lot of " stat-name ", but gets a wee bit more.")
+                  (stat-setter kuser (+ current-stat 1))
+                  result-ok)
+                 (else
+                  (kern-log-msg (kern-obj-get-name kuser) " already has a lot of " stat-name " and now just feels a little sick.")
+                  result-no-effect))))
+        (else
+         (kern-log-msg (kern-obj-get-name kuser) " has too much " stat-name " and has become such an arrogant bore that potions have no more effect.")
+         result-no-effect)))
 
 (mk-potion 't_str_potion "potion of strength" s_round_bubbly_yellow
 		(lambda (kpotion kuser)
