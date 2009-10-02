@@ -1278,9 +1278,21 @@
 	result-ok)
 
 (define (powers-unlock caster ktarg power)
-  (if ((kobj-ifc ktarg) 'unlock ktarg caster)
-      result-ok
-      result-no-effect))
+  (println "power:" power)
+  (let ((dc ((kobj-ifc ktarg) 'get-unlock-dc ktarg caster)))
+    (println "dc:" dc)
+    (if (= 0 dc) 
+        result-no-effect
+        (let ((roll (kern-dice-roll "1d20"))
+              (bonus (kern-dice-roll (string-append "1d" (number->string power)))))
+          (println "roll:" roll)
+          (println "bonus:" bonus)
+          (cond ((or (= roll 20) 
+                     (> (+ roll bonus ) dc))
+                 (if ((kobj-ifc ktarg) 'unlock ktarg caster)
+                     result-ok
+                     result-no-effect))
+                (else result-failed))))))
 
 (define (powers-unlock-magic caster ktarg power)
   (if ((kobj-ifc ktarg) 'magic-unlock ktarg caster)

@@ -280,8 +280,10 @@
 ;;----------------------------------------------------------------------------
 (define (an-sanct  caster)
 	(cast-ui-ranged-any powers-unlock
-		caster 1 (occ-ability-whitemagic caster)
-		(mk-ifc-query 'unlock)))
+                            caster 1 (ceiling (/ (+ (occ-ability-whitemagic caster)
+                                                    (occ-ability-thief caster))
+                                                 2))
+                            (mk-ifc-query 'unlock)))
 
 (define (sanct  caster)
 	(cast-ui-ranged-any powers-lock
