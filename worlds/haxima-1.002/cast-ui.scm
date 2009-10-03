@@ -249,7 +249,9 @@
 ;todo currently only checks topmost item
 (define (wis-sanct caster)
   (cast-ui-ranged-any powers-detect-traps
-                      caster 1 (occ-ability-whitemagic caster)
+                      caster 1 (ceiling (/ (+ (occ-ability-whitemagic caster)
+                                              (occ-ability-thief caster))
+                                           2))
                       (lambda (kobj)
                         (and (kern-obj-is-visible? kobj)
                              (handles? kobj 'get-traps)))
@@ -258,7 +260,9 @@
 ;todo currently only checks topmost item
 (define (an-sanct-ylem caster)
   (cast-ui-ranged-any powers-disarm-traps
-                      caster 1 (occ-ability-whitemagic caster)
+                      caster 1 (ceiling (/ (+ (occ-ability-whitemagic caster)
+                                              (occ-ability-thief caster))
+                                           2))
                       (lambda (kobj)
                         (and (kern-obj-is-visible? kobj)
                              (handles? kobj 'rm-traps)))

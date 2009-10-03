@@ -517,22 +517,45 @@
 	(effects-dispel-magic ktarg)
 	result-ok)
 
-;todo currently only checks topmost item
-(define (powers-disarm-traps caster ktarg power)
-  (let ((traps (ifccall ktarg 'get-traps)))
+(define (powers-disarm-traps kchar ktarg power)
+  (let (
+        (traps (filter (lambda (trap) 
+                          (and (trap-detected? trap) 
+                               (not (trap-tripped? trap))))
+                        (ifccall ktarg 'get-traps)))
+        )
+    ;; Check if any unprocessed traps remaining
     (cond ((null? traps) 
-           (kern-log-msg "No traps!")
-           result-no-target)
+           result-no-effect
+           )
           ((not (handles? ktarg 'rm-traps)) 
            (kern-log-msg "Traps can't be removed!")
-           result-no-target)
+           result-no-effect
+           )
           (else
-           (map (lambda (trap)
-                  (kern-log-msg (kern-obj-get-name caster)
-                                " disarms a " (trap-name trap) " trap!"))
-                traps)
-           (ifccall ktarg 'rm-traps)
-           result-ok))))
+           ;; Roll to succeed
+           (let* (
+                  (trap (car traps))
+                  (dc (trap-avoid-dc trap))
+                  (roll (kern-dice-roll "1d20"))
+                  (bonus (kern-dice-roll (string-append "1d" (number->string power))))
+                  )
+             (cond ((or 
+                     (= roll 20) 
+                     (> (+ roll bonus) dc)
+                     )
+                    ;; Success - disarm the trap
+                    (kern-log-msg (kern-obj-get-name kchar) " ^c+gdisarms^c- a " (trap-name trap) " trap!")
+                    (trap-set-tripped! trap #t)
+                    result-ok
+                    )
+                   (else
+                    ;; Failure - trip the trap (kchar will get another roll
+                    ;; to avoid the damage)
+                    (trap-trigger trap ktarg kchar)
+                    result-failed
+                    )))))))
+
 
 ;todo limit range?
 (define (powers-fear caster unused power)			
