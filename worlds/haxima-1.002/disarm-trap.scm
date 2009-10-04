@@ -93,7 +93,7 @@
   (cast-ui-ranged-any cb
                       kactor 
                       1
-                      (occ-ability-whitemagic kactor)
+                      (occ-ability-thief kactor)
                       (lambda (kobj)
                         (and (kern-obj-is-visible? kobj)
                              (handles? kobj 
