@@ -14,7 +14,7 @@
     (if (= 0 dc) 
         ;; difficulty=0 means it is no longer locked
         (kern-char-task-abort kchar)
-        (let ((roll (kern-dice-roll "1d20"))
+        (let ((roll (kern-dice-roll "1d20+4"))
               (bonus (kern-dice-roll (string-append "1d" (number->string (occ-ability-thief kchar)))))
               (finish-dc (* 2 dc))
               )
