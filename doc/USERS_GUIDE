@@ -428,7 +428,7 @@ Sulphurous Ash | SA
                                 Table 2: Spells
 ============================================================================
 Syllables        | Effects        | Reagents               | Party/Combat
-============================================================================
+=================================(1)========================================
 An Nox           | Cure Poison    | GI, GA                 | PC
 An Zu            | Awaken         | GI, GA                 | PC
 Grav Por         | Magic Missile  | SA, BP                 | C
@@ -436,33 +436,34 @@ In Lor           | Light          | SA                     | PC
 Mani             | Heal           | GI, SS                 | PC
 Wis Sanct        | Detect Trap    | SA                     | PC
 An Sanct Ylem    | Disarm Trap    | BM                     | PC
-----------------------------------------------------------------------------
+---------------------------------(2)----------------------------------------
 An Sanct         | Unlock         | SA, BM                 | PC
 An Xen Corp      | Repel Undead   | GA, SA                 | C
 In Wis           | Locate         | NI                     | P
-Kal Xen          | Summon Snakes  | SS, MA                 | C
 Rel Hur          | Change Wind    | SA, BM                 | P
 In Nox Por       | Poison Missile | NI, BM, BP             | C
-----------------------------------------------------------------------------
+Bet Flam Hur     | Fire Spray     | BP, SA, BM             | C
+In Bet Xen       | Summon Vermin  | SS, BM, SA             | C
+---------------------------------(3)----------------------------------------
 In Flam Grav     | Fire Field     | SA, BP, SS             | C
 In Zu Grav       | Sleep Field    | GI, BP, SS             | C
 In Nox Grav      | Poison Field   | NI, BP, SS             | C
 Vas Flam         | Fire Ball      | BP, SA                 | C
 Vas Lor          | Great Light    | SA, MA                 | PC
-----------------------------------------------------------------------------
+---------------------------------(4)----------------------------------------
 An Grav          | Dispel Field   | BP, SA                 | PC
 In Sanct Grav    | Energy Field   | MA, BP, SS             | C
 In Sanct         | Protection     | SA, GI, GA             | PC
 Wis Quas         | Reveal Hidden  | NI, SA                 | PC
 Bet Por          | Blink (Caster) | BP, BM                 | C
-----------------------------------------------------------------------------
+---------------------------------(5)----------------------------------------
 In Ex Por        | Unlock Magic   | SA, BM                 | PC
 An Ex Por        | Magic Lock     | SA, BM, GA             | PC
-In Bet Xen       | Insect Swarm   | SS, BM, SA             | C
 In Zu            | Sleep          | GI, NI, SS             | C
 Vas Mani         | Great Heal     | GI, SS, MA             | PC
 Rel Tym          | Quickness      | SA, BM, MA             | PC
-----------------------------------------------------------------------------
+Kal Xen          | Summon Beast   | SS, MA                 | C
+---------------------------------(6)----------------------------------------
 An Xen Ex        | Charm          | BP, NI, SS             | C
 In An            | Negate Magic   | GA, MA, SA             | C
 In Vas Por Ylem  | Earthquake     | BM, MA, SA             | C
@@ -470,14 +471,14 @@ Quas An Wis      | Confuse        | MA, NI                 | C
 Wis An Ylen      | Xray Vision    | MA, SA                 | PC
 In Rel Por       | Telekinesis    | BP, BM, SS             | C
 Vas Por          | Blink (Party)  | MA, BP, BM             | P
-----------------------------------------------------------------------------
+---------------------------------(7)----------------------------------------
 In Nox Hur       | Poison Wind    | NI, SA, BM             | C
+In Zu Hur        | Sleep Wind     | MA, GI, BM             | C
 In Quas Corp     | Fear           | NI, MA, GA             | C
-In Quas Wis      | Peer           | NI, MA                 | PC
 In Quas Xen      | Clone          | NI, MA, SA, SS, BM, GI | C
 Sanct Lor        | Invisibility   | NI, MA, BM             | C
 Xen Corp         | Kill           | NI, BP                 | C
-----------------------------------------------------------------------------
+---------------------------------(8)----------------------------------------
 An Tym           | Stop Time      | MA, GA, BM             | WC
 In Flam Hur      | Flame Wind     | MA, SA, BM             | C
 In Vas Grav Corp | Energy Wind    | MA, SA, NI             | C
