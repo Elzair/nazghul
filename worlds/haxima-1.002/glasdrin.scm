@@ -137,9 +137,8 @@
   (put (mk-ladder-down 'p_prison 6 4) 2 2)
 
   ;; Stewardess's chest
-  (put (let* ((kchest (mk-chest 'burn-trap '((1 t_stewardess_journal)))))
+  (put (let* ((kchest (make-invisible (mk-chest nil '((1 t_stewardess_journal))))))
          (kcontainer-lock-with-key kchest 't_stewardess_chest_key)
-         (kcontainer-magic-lock kchest nil)
          kchest)
        10 14)
 
