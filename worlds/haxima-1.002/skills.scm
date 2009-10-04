@@ -241,28 +241,26 @@
 (define sks_ranger
   (kern-mk-skill-set "Ranger" (list
                                 (list 1 sk_sprint)
-                                (list 2 sk_butcher)
-                                (list 3 sk_jump)
-                                (list 4 sk_arm_trap)
-                                (list 6 sk_stealth)
+                                (list 2 sk_jump)
+                                (list 3 sk_arm_trap)
+                                (list 5 sk_stealth)
                                 )))
 
 (define sks_wrogue
   (kern-mk-skill-set "Wrogue" (list 
                                (list 1 sk_sprint)
-                               (list 2 sk_arm_trap)
+                               (list 1 sk_arm_trap)
                                (list 2 sk_unlock)
-                               (list 3 sk_disarm_trap)
+                               (list 2 sk_disarm_trap)
                                (list 3 sk_jump)
-                               (list 4 sk_wriggle)
+                               (list 3 sk_wriggle)
                                (list 4 sk_reach)
+                               (list 4 sk_pickpocket)
                                (list 5 sk_stealth)
-                               (list 6 sk_pickpocket)
                                )))
 
 (define sks_wright
   (kern-mk-skill-set "Wright" (list 
-                               (list 1 sk_butcher)
                                (list 1 sk_arm_trap)
                                (list 2 sk_unlock)
                                (list 3 sk_disarm_trap)
@@ -270,12 +268,12 @@
 
 (define sks_wanderer 
   (kern-mk-skill-set "Wanderer" (list 
-                               (list 1 sk_sprint)
-                               (list 2 sk_butcher)
+                               (list 2 sk_sprint)
+                               (list 3 sk_jump)
                                (list 3 sk_unlock)
                                (list 4 sk_arm_trap)
-                               (list 5 sk_jump)
-                               (list 6 sk_disarm_trap)
-                               (list 7 sk_reach)
-                               (list 8 sk_stealth)
+                               (list 4 sk_disarm_trap)
+                               (list 5 sk_reach)
+                               (list 5 sk_pickpocket)
+                               (list 6 sk_stealth)
                                )))
