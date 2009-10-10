@@ -32,6 +32,7 @@
       (join-player knpc)
       (give kpc t_arrow 20)
       (nate-caught! nate)
+      (quest-data-update-with 'questentry-bandits 'captured-nate 1 (quest-notify nil))
       )
     (nate-met! nate)
     (cond ((nate-caught? nate)

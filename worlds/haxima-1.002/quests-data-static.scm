@@ -10,72 +10,120 @@
 ;;
 
 ;;---------------
+;; bandits
+(define (quest-bandits-update)
+  (println "quest-bandits-update")
+  (let* ((quest (quest-data-get 'questentry-bandits))
+         (quest-tbl (car (qst-payload quest)))
+         (header (kern-ui-paginate-text
+                  "Gregor, an old charcoal burner, has asked for your help in dealing with some troublesome bandits that have been plaguing the great forest."
+                  "")))
+    (println "quest-tbl:" quest-tbl)
+    (define (tbl-flag? tag) 
+      (not (null? (tbl-get quest-tbl tag)))
+      )
+    (qst-set-descr! quest
+                    (cond ((tbl-flag? 'done)
+                           (kern-ui-paginate-text
+                            "You have delivered Nate to the Rangers of Green Tower and he is now their problem."
+                            ))
+                          ((tbl-flag? 'nate-given-to-jailor)
+                           (append header
+                                   (kern-ui-paginate-text
+                                    "Take the jailor's receipt back to Deric, the commander of the Green Tower rangers, to collect the reward."
+                                    )))
+                          ((tbl-flag? 'captured-nate-and-talked-to-deric)
+                           (append header
+                                   (kern-ui-paginate-text
+                                    "Deliver Nate to the jailor in Green Tower and he will give you a receipt."
+                                    )))
+                          ((tbl-flag? 'captured-nate)
+                           (append header
+                                   (kern-ui-paginate-text 
+                                    "Take Nate back to Green Tower and talk to the Ranger commander."
+                                    )))
+                          ((tbl-flag? 'talked-to-deric)
+                           (append header
+                                   (kern-ui-paginate-text 
+                                    "Deric, commander of the rangers, was not much help. But he did give you signed orders to enlist one of his men."
+                                    )))
+                          (else
+                           (append header
+                                   (kern-ui-paginate-text
+                                    "Gregor said to ask about the bandits in Green Tower."
+                                    )))
+                          )
+
+		)
+	))
+
+;;---------------
 ;; whereami
 
-(define (quest-whereami-update)
-	(let* ((quest (quest-data-get 'questentry-whereami))
-			(quest-tbl (car (qst-payload quest)))
-			(qp-shard (tbl-get quest-tbl 'shard))
-			(qp-wanderer (tbl-get quest-tbl 'wanderer)))
+    (define (quest-whereami-update)
+      (let* ((quest (quest-data-get 'questentry-whereami))
+             (quest-tbl (car (qst-payload quest)))
+             (qp-shard (tbl-get quest-tbl 'shard))
+             (qp-wanderer (tbl-get quest-tbl 'wanderer)))
 
-		(qst-set-descr! quest
-		
-(if (not (null? (tbl-get quest-tbl 'nossifer)))
+        (qst-set-descr! quest
+                        
+                        (if (not (null? (tbl-get quest-tbl 'nossifer)))
 
-			(kern-ui-paginate-text
-			"You have found yourself on the Shard, a small fragment of a world, that floats surrounded by a great void."
-			""
-			"The demon lord Nossifer arranged for your arrival, to set in motion events that would allow his own passage to the Shard."
-			""
-			"Now the Demon Gate is open, and the only thing left in Nossifer's way is you..."
-		)
-		
-		 (append
-;;1 where
-(cond ((null? qp-shard)
-		(kern-ui-paginate-text
-			"You have found yourself in a world you have no knowledge of, with barest impressions of what might have gone before."
-			""
-		))
-	((equal? 1 qp-shard)
-		(kern-ui-paginate-text
-			"You have found yourself in a world you have no knowledge of. The inhabitants refer to it as the Shard."
-			""
-		))
-	(#t (kern-ui-paginate-text
-			"You have found yourself on the Shard, a small fragment of a world, that floats surrounded by a great void."
-			""
-		))
-	)
+                            (kern-ui-paginate-text
+                             "You have found yourself on the Shard, a small fragment of a world, that floats surrounded by a great void."
+                             ""
+                             "The demon lord Nossifer arranged for your arrival, to set in motion events that would allow his own passage to the Shard."
+                             ""
+                             "Now the Demon Gate is open, and the only thing left in Nossifer's way is you..."
+                             )
+                            
+                            (append
+                             ;;1 where
+                             (cond ((null? qp-shard)
+                                    (kern-ui-paginate-text
+                                     "You have found yourself in a world you have no knowledge of, with barest impressions of what might have gone before."
+                                     ""
+                                     ))
+                                   ((equal? 1 qp-shard)
+                                    (kern-ui-paginate-text
+                                     "You have found yourself in a world you have no knowledge of. The inhabitants refer to it as the Shard."
+                                     ""
+                                     ))
+                                   (#t (kern-ui-paginate-text
+                                        "You have found yourself on the Shard, a small fragment of a world, that floats surrounded by a great void."
+                                        ""
+                                        ))
+                                   )
 
 
-;; how
-(if (and (null? qp-wanderer) (null? qp-shard))
-		(kern-ui-paginate-text "Where are you?")
-		nil
-	)
-			
-(cond ((null? qp-wanderer)
-		(kern-ui-paginate-text
-			"How and why are you here?"
-			"And what are you going to do now?"
-		))
-	((equal? 1 qp-wanderer)
-		(kern-ui-paginate-text
-			"Others like you have in the past been found stumbling into this world. The inhabitants know you as 'Wanderers'."
-			""
-			"Now you are here, what are you going to do?"
-		))
-	(#t (kern-ui-paginate-text
-			"Wanderers like yourself, who have occasionally stumbled upon this world, have in the past been responsible for great deeds."
-			""
-			"How will you make your place?"
-		))
-	)
+                             ;; how
+                             (if (and (null? qp-wanderer) (null? qp-shard))
+                                 (kern-ui-paginate-text "Where are you?")
+                                 nil
+                                 )
+                             
+                             (cond ((null? qp-wanderer)
+                                    (kern-ui-paginate-text
+                                     "How and why are you here?"
+                                     "And what are you going to do now?"
+                                     ))
+                                   ((equal? 1 qp-wanderer)
+                                    (kern-ui-paginate-text
+                                     "Others like you have in the past been found stumbling into this world. The inhabitants know you as 'Wanderers'."
+                                     ""
+                                     "Now you are here, what are you going to do?"
+                                     ))
+                                   (#t (kern-ui-paginate-text
+                                        "Wanderers like yourself, who have occasionally stumbled upon this world, have in the past been responsible for great deeds."
+                                        ""
+                                        "How will you make your place?"
+                                        ))
+                                   )
 
-				)
-			)
-		)
+                             )
+                            )
+                        )
 	))
 
 ;;-----------------------

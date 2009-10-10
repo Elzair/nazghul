@@ -469,7 +469,9 @@
 	'quest-assign-notify
 	'quest-status-inprogress
 	's_brigand
-	0
+	(tbl-build
+         'on-update 'quest-bandits-update
+         )
 ))
 
 )

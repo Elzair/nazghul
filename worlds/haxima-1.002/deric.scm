@@ -177,6 +177,7 @@
               "Deliver him downstairs to the jailer and I will give you the "
               "reward.")
          (rm-ranger-merc)
+         (quest-data-update-with 'questentry-bandits 'captured-nate-and-talked-to-deric 1 (quest-notify nil))
          )        
         ((has? kpc t_prisoner_receipt 1)
          (say knpc "Putting that bandit behind bars will look very good on my "
@@ -186,6 +187,8 @@
          (take kpc t_prisoner_receipt 1)
          (quest-done! (deric-bandit-quest (kobj-gob-data knpc)) #t)
          (rm-ranger-merc)
+         (quest-data-update-with 'questentry-bandits 'done 1 (grant-party-xp-fn 30))
+         (quest-data-complete 'questentry-bandits)
          )
         (else
          (say knpc "Well met, indeed!")
@@ -238,6 +241,7 @@
                       "These orders will temporarily assign one of my Rangers "
                       "to you. Just ask one to join your party.")
                  (give kpc t_ranger_orders 1)
+                 (quest-data-update-with 'questentry-bandits 'talked-to-deric 1 (quest-notify nil))
                  )
                (say knpc "You'll never gain a reputation that way!")))
           )))

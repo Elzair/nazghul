@@ -63,6 +63,9 @@
 	))
 
 (define (is-tbl? tbl)
-	(equal? (car tbl) '*tbl*))
+  (and (pair? tbl)
+       (equal? (car tbl) '*tbl*)
+       )
+  )
 	
 	

@@ -65,6 +65,7 @@
                 (say knpc "Here's your receipt, in case the Captain wants it.")
                 (give (kern-get-player) t_prisoner_receipt 1)
                 (edward-has-nate! (kobj-gob-data knpc))
+                (quest-data-update-with 'questentry-bandits 'nate-given-to-jailor 1 (quest-notify nil))                
                 )))
         (else
          (say knpc "Hokay. [He gives Nate a look, then shrugs]")
