@@ -925,3 +925,8 @@ char *session_get_last_error(void)
 {
         return session_last_error;
 }
+
+void session_eval(struct session *session, char *buf)
+{
+        scheme_load_string((scheme *)(session->interp), (const char*)buf);
+}

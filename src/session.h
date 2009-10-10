@@ -328,6 +328,7 @@ extern void session_rm_sched_char(struct node *node);
 extern void session_synch_sched_chars(struct session *session);
 extern void session_intro_sched_chars(struct session *session);
 extern char *session_get_last_error(void);
+extern void session_eval(struct session *session, char *buf);
 
 // Global session object.
 extern struct session *Session;

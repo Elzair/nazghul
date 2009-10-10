@@ -1151,6 +1151,27 @@ void cmdAttack(void)
         combat_enter(&cinfo);
 }
 
+void cmdDeveloperEval(struct session *session)
+{
+        unsigned int len = 1024;
+        char *buf = (char*)calloc(len, sizeof(char));
+        if (!buf) {
+                log_msg("Eval: not enough memory!");
+                return;
+        }
+
+        if (!ui_getline_filtered(buf, len, NULL)) {
+                log_msg("Eval: abort");
+                goto cleanup;
+        }
+
+        log_msg("Eval: %s", buf);
+        session_eval(session, buf);
+
+ cleanup:
+        free(buf);
+}
+
 void cmdFire(void)
 {
 	int dir;
@@ -4052,3 +4073,4 @@ bool cmdToggleFollowMode(void)
         return true;
     }   
 }
+

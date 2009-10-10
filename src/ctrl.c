@@ -993,13 +993,17 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         cmd_terraform(character->getPlace(), character->getX(),
                                       character->getY());
                         break;
-
+                        
 		case KEY_CTRL_O:
-		    cmd_save_current_place(character->getPlace() );
-		    break;
-
+                        cmd_save_current_place(character->getPlace() );
+                        break;
+                        
                 case KEY_CTRL_Z:
                         mapTogglePeering();
+                        break;
+                        
+                case KEY_CTRL_E:
+                        cmdDeveloperEval(Session);
                         break;
                 }
         }

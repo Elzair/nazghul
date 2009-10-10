@@ -112,6 +112,7 @@ extern bool cmdToggleFollowMode(void);
 extern void cmdSettings(void);
 extern void cmdDrop(class Character *pc);
 extern void cmdYuse(class Character *pc);
+extern void cmdDeveloperEval(struct session *);
   
 extern class Character *select_party_member(void);
     
