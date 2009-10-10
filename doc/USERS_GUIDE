@@ -274,8 +274,14 @@ Special commands:
 
     <ESC>....................Aborts most commands
 
-Editing commands:
+Editing commands (run nazghul with -d):
 
+    CTRL-E)valuate...........Evaluate a scheme expression within the game. For
+                             example, the string: "(kern-obj-relocate
+                             ch_wanderer (list p_shard 51 47) nil)" will
+                             teleport the player to the surface at coords [51
+                             47].
+    CTRL-O)..................Save the current map to its own file
     CTRL-T)erraform..........Alter terrain. This deserves its own section. [1]
     CTRL-Z)oom...............Zoom in or out (like peering at a gem but free)
 
