@@ -1160,8 +1160,12 @@ void cmdDeveloperEval(struct session *session)
                 return;
         }
 
+        cmdwin_clear();
+        cmdwin_push("Eval:");
+
         if (!ui_getline_filtered(buf, len, NULL)) {
                 log_msg("Eval: abort");
+                cmdwin_push("abort!");
                 goto cleanup;
         }
 
