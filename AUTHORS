@@ -93,6 +93,24 @@ In worlds/haxima-1.002/mouse.scm, minor bugfix
 Added nazghul.nsi, nazinst.ico
 In src/factions.h, minor bugfix
 
+Patersen, Jim (http://www.mfiles.co.uk):
+In worlds/haxima-1.002/music:
+        ballad.mid
+        dragon-slayer.mid
+        into-battle.mid
+        Minuet-like-Mozart.mid
+        bassoons-and-harpsichord.mid  
+        fair-camelot.mid       
+        Lute-and-recorder-ballad.mid  
+        plainchant-recorder-trio.mid
+        double-trios.mid              
+        game-music2.mid        
+        medieval-quest.mid            
+        wind-trio.mid
+        dragon-quest.mid              
+        harpsichord-piece.mid  
+        minstrel-dance.mid
+
 Riberdy, Steve:
 In worlds/haxima-1.002/runestones.png, provided the images
 

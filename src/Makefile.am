@@ -157,7 +157,6 @@ nazghul_SOURCES =		\
 	skill_set_entry.h skill_set_entry.c \
 	repstr.h repstr.c \
 	templ.h templ.c \
-	bitfield.h \
 	objectfreezer.h objectfreezer.c \
         kern_intvar.c kern_intvar.h \
 	ztats.h ztats.c \
