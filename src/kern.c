@@ -81,6 +81,8 @@
 #include "macros.h"
 #include "ztats.h"
 #include "ztats_pane.h"
+#include "../config.h" /* for USE_QUESTS */
+// kern.c *doesnt* include kern.h?? wtf??
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
