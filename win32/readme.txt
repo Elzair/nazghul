@@ -73,6 +73,10 @@ If you want to run it, just put the exe file, the DLLs in the
 /mingw/lib directory, and all the files from the haxima-1.002 dir in
 one directory, and run the exe from there.
 
-If the Makefile is out of date, you may get complaints about missing include files, 
+If the win32/Makefile is out of date, you may get complaints about missing include files, 
 or "undefined references". If you go the part of the Makefile where there is a huge
 list of *.h, *.c and *.o files, and add whatever ones we forgot, then it should work.
+
+You may also need to tweak the options in win32/config.h as well, especially in respect to
+version number. Version number in the worlds/haxima/start-new-game can get out of date easily,
+too...
