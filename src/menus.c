@@ -1219,10 +1219,14 @@ char * main_menu(void)
         char *load_fname = 0;
         char *save_game_fname = cfg_get("save-game-filename");
         struct TickHandler th;
-        int run_demo = 0;
         int show_demo_option = 0;
         static int first_time = 1;
         char *demo_fname = 0;
+
+        /* If the player has a saved game, then he's already seen the
+         * demo. Don't make him wait to load it before he can continue his
+         * game. */
+        int run_demo = ! file_exists_in_save_dir(save_game_fname);
 
         /* setup main menu quit handler so player can click close window to
          * exit */
@@ -1236,9 +1240,9 @@ char * main_menu(void)
 
                 /* Can we find it? */
                 if (file_exists(demo_fname)) {
-
-                        /* Is this NOT the first time in the main menu? */
-                        if (! first_time) {
+                        
+                        /* Have we already run the demo once? */
+                        if (! run_demo || ! first_time) {
 
                                 /* Show the demo as a menu option but don't
                                  * automatically start it. */
@@ -1251,10 +1255,13 @@ char * main_menu(void)
                                 session_load(demo_fname);
                                 foogodSetMode(FOOGOD_DEFAULT);
                                 Session->is_demo = 1;
-                                session_run_hook(Session, new_game_start_hook, "p", Session->player);
+                                session_run_hook(Session, 
+                                                 new_game_start_hook, "p", 
+                                                 Session->player);
                                 th.fx = menus_demo_tick_handler;
                                 eventPushTickHandler(&th);
                                 Quit = false;
+                                cfg_set("demo-has-run", "yes");
                         }
                 }
         }
@@ -1497,7 +1504,7 @@ static struct option options[OPTION_NUMOPTIONS] = {
         DECL_YESNO_OPTION("Keyword Highlighting", 
                           "Highlight keywords in conversations with NPC's.",
                           "keyword-highlighting", option_yes_no,
-                          conv_enable_keyword_highlighting, 0)
+                          conv_enable_keyword_highlighting, 0),
 };
 
 /* option_screen_dims -- let player select desired screen size from a list */
