@@ -154,14 +154,14 @@ class ObjectType {
 	virtual bool isType(int classID);
 	virtual int getType();
 	ObjectType();
-        ObjectType(char *tag, char *name, struct sprite *sprite, 
+        ObjectType(const char *tag, const char *name, struct sprite *sprite, 
                    enum layer layer);
 	virtual ~ObjectType();
 	virtual bool init(char *tag, char *name, enum layer layer, 
                           struct sprite * sprite);
         virtual void setSprite(struct sprite *sprite);
-	virtual char *getTag();
-	virtual char *getName();
+	virtual const char *getTag();
+	virtual const char *getName();
 	virtual struct sprite *getSprite();
 	virtual enum layer getLayer();
 	virtual class Object *createInstance();
@@ -273,7 +273,7 @@ class Object {
 	virtual enum layer getLayer(void);
 	virtual int getLight();
         virtual int getMaxHp();
-	virtual char *getName(void);
+	virtual const char *getName(void);
 	virtual class ObjectType *getObjectType();
 	virtual struct place *getPlace();
         virtual int getRequiredActionPoints();
@@ -358,7 +358,7 @@ class Object {
         virtual bool addEffect(struct effect *effect, struct gob *gob);
         virtual void restoreEffect(struct effect *effect, struct gob *gob, 
                                    int flags, clock_alarm_t expiration);
-        virtual void runHook(int hook_id, char *fmt, ...);
+        virtual void runHook(int hook_id, const char *fmt, ...);
         virtual void saveHooks(struct save *save);
         virtual bool removeEffect(struct effect *effect);
         

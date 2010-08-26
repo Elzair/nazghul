@@ -38,7 +38,7 @@ BEGIN_DECL;
 #include "status.h"
 struct ScrollerContext {
         enum StatusSelection selector;
-        void *selection;
+        const void *selection;
         bool abort;
         bool done;
         bool mixing; // for mix reagents
@@ -125,13 +125,13 @@ struct location_list {
 extern int select_target(int ox, int oy, int *x, int *y, int range, 
                          struct list *suggest);
 
-extern char * name_of_context (void);
+extern const char * name_of_context (void);
 
 extern int ui_get_quantity(int max);
   
 // the new ui api
 extern int ui_get_direction(void);
-extern int ui_get_yes_no(char *asked_persons_name);
+extern int ui_get_yes_no(const char *asked_persons_name);
 extern int ui_getline(char *buf, int len);
 extern int ui_getline_plain(char *buf, int len);
 extern void ui_name_vehicle(class Vehicle *vehicle);
@@ -140,7 +140,7 @@ extern void ui_name_vehicle(class Vehicle *vehicle);
  * The merchant information for a trading session.
  */
 struct merchant {
-        char *name;                /* The merchant's name */
+        const char *name;                /* The merchant's name */
         int n_trades;              /* Num entries in the array of items */
         struct trade_info *trades; /* The array of trade items */
 };

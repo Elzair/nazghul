@@ -496,7 +496,7 @@ void mapForEachView(void (*fx) (struct mview *, void *), void *data)
 	}
 }
 
-void mapSetLosStyle(char *los)
+void mapSetLosStyle(const char *los)
 {
         if (LosEngine) {
                 los_destroy(LosEngine);

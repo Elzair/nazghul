@@ -39,13 +39,13 @@
 #include <SDL_mixer.h>
 
 #define NUM_SOUNDS 64
-#define SOUND_MAGIC "sound"
+#define SOUND_MAGIC 50043
 
 #define IS_SOUND(ptr) ((ptr)->magic == SOUND_MAGIC)
 
 
 struct sound {
-        char *magic;
+        int magic;
 	     char *tag;
         Mix_Chunk *data;
         int channel;
@@ -66,10 +66,10 @@ static int sound_enabled = 1;
 /* This is 1 iff SDL_Audio() is initialized and ready for use. */
 static int sound_activated = 0;
 
-static int config_to_soundvolume(char* config)
+static int config_to_soundvolume(const char* config)
 {
 	//our input percentages have nicely unique initial characters
-	char* comp="O2571";
+	const char* comp="O2571";
 	int i;
 	for (i=0;i<5;i++)
 	{
@@ -197,7 +197,7 @@ void sound_del(sound_t *sound)
                 sound_unref(sound);
 }
 
-sound_t *sound_new(char *tag, char *file)
+sound_t *sound_new(const char *tag, const char *file)
 {
    sound_t *sound;
 	char *fn;
@@ -288,7 +288,7 @@ void sound_haltall()
 	//Mix_HaltChannel(-1);
 }
 
-char *sound_get_tag(sound_t *sound)
+const char *sound_get_tag(sound_t *sound)
 {
         return sound->tag;
 }
@@ -318,7 +318,7 @@ int music_volume=0;
 bool music_needtrack=false;
 
 //setting must be one of Off 25% 50% 75% 100%
-void set_music_volume(char *setting)
+void set_music_volume(const char *setting)
 {
 	music_volume = config_to_soundvolume(setting);
 	fprintf(stderr, "vol: %s\n", setting);
@@ -329,7 +329,7 @@ void set_music_volume(char *setting)
 	fprintf(stderr, "vol?: %d\n", Mix_VolumeMusic(-1));
 }
 
-void music_load_track(char *file)
+void music_load_track(const char *file)
 {
 	// nasty hack:
 	// SDL mixer seems to have some rather odd timing requirements.

@@ -543,7 +543,7 @@ extern void sprite_zoom_in(int factor)
         sprite_zoom_factor /= factor;
 }
 
-struct sprite * sprite_new(char *tag, int frames, int index, int wave, 
+struct sprite * sprite_new(const char *tag, int frames, int index, int wave, 
                            int facings, struct images *images)
 {
 	struct sprite *sprite;
@@ -596,7 +596,7 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
         return 0;
 }
 
-struct sprite *sprite_clone(struct sprite *orig, char *tag)
+struct sprite *sprite_clone(struct sprite *orig, const char *tag)
 {
         SDL_Rect *frames;
 

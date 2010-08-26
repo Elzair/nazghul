@@ -153,7 +153,7 @@ static void getEvasionVectorVisitor(Object *obj, void *data)
         info->dy += (subj->getX() - obj->getX());
 }
 
-Character::Character(char *tag, char *name, 
+Character::Character(const char *tag, const char *name, 
                      struct sprite *sprite, 
                      struct species *species, struct occ *occ, 
                      int str, int intl, int dex, 
@@ -578,9 +578,9 @@ bool Character::unready(class ArmsType * arms)
 	return false;
 }
 
-char *Character::getWoundDescription()
+const char *Character::getWoundDescription()
 {
-	static char *desc[] = {
+	static const char *desc[] = {
 		"Critical",
 		"Heavily wounded",
 		"Moderately wounded",
@@ -1783,7 +1783,7 @@ bool Character::isShaded()
 void Character::describe()
 {
     if (Session->subject) {
-        char *diplstr = diplomacy_string(this, Session->subject);
+        const char *diplstr = diplomacy_string(this, Session->subject);
         if (isvowel(diplstr[0]))
             log_continue("an");
         else
@@ -1814,7 +1814,7 @@ void Character::examine()
 {
         int i;
         int n = 0;
-	char *diplstr = diplomacy_string(this, Session->subject);
+	const char *diplstr = diplomacy_string(this, Session->subject);
 
         log_continue("%s level %d", diplstr, getLevel());
 

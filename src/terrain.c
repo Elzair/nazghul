@@ -32,8 +32,8 @@
 
 //int TERRAIN_MAGIC = 0xc01dbee3;
 
-extern struct terrain *terrain_new(char *tag, 
-                                   char *name,
+extern struct terrain *terrain_new(const char *tag, 
+                                   const char *name,
                                    struct sprite *sprite,
                                    int pclass, 
                                    int alpha, 
@@ -86,7 +86,7 @@ void palette_entry_print(FILE * fp, int indent,
     fprintf(fp, "(list  %-6s %-20s  ;; \"%s\"\n", glyph_str, tag_str, entry->terrain->name);
 } // palette_entry_print()
 
-struct terrain_palette *terrain_palette_new(char *tag)
+struct terrain_palette *terrain_palette_new(const char *tag)
 {
 	struct terrain_palette *palette = new struct terrain_palette;
 	assert(palette);

@@ -33,8 +33,6 @@ BEGIN_DECL
 extern char *TERRAIN_MAP_MAGIC;
 
 struct terrain_map {
-        char *magic;
-        /*struct list list;*/
         char *tag;
         int w;
         int h;
@@ -51,16 +49,14 @@ struct terrain_map {
         char composite : 1;  /* save as composite */
 };
 
-#define is_terrain_map(ptr) (((struct terrain_map*)(ptr))->magic == TERRAIN_MAP_MAGIC)
-        
-extern struct terrain_map *terrain_map_new(char *tag, 
+extern struct terrain_map *terrain_map_new(const char *tag, 
                                            unsigned int w, 
                                            unsigned int h,
                                            struct terrain_palette * pal);
 #define terrain_map_ref(map) ((map)->refcount++)
 extern void terrain_map_unref(struct terrain_map *map);
 extern struct terrain_map *terrain_map_clone(struct terrain_map *orig, 
-                                             char *tag);
+                                             const char *tag);
 extern void terrain_map_rotate(struct terrain_map *map, int degree);
 extern void terrain_map_blit(struct terrain_map *dest, int dest_x,
                              int dest_y, struct terrain_map *src,

@@ -56,8 +56,8 @@ struct occ {
         struct skill_set *skills;
 };
 
-extern struct occ *occ_new(char *tag,
-                           char *name,
+extern struct occ *occ_new(const char *tag,
+                           const char *name,
                            float magic,
                            int hp_mod,
                            int hp_mult,

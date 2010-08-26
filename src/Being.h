@@ -36,13 +36,13 @@ class Being:public Object {
 	virtual ~Being();
         virtual int getCurrentFaction();
 	virtual enum layer getLayer();
-	virtual char *getName();
+	virtual const char *getName();
         virtual void setCurrentFaction(int faction);
 
         int getBaseFaction();
         bool pathfindTo(struct place *place, int x, int y, int flags = 0);
         void setBaseFaction(int faction);
-	void setName(char *name);
+	void setName(const char *name);
 
         // These are public because player_party::rendezvous makes heavy use of
         // them...

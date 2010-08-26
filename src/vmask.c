@@ -68,7 +68,7 @@ void vmask_dump(struct vmask *vmask)
         }
 }
 
-static void vmask_error(char *msg)
+static void vmask_error(const char *msg)
 {
         fprintf(stderr, "vmask.c: %s\n", msg);
         exit(1);
@@ -80,7 +80,7 @@ static void vmask_make_key(char *key, struct place *place, int x, int y)
 }
 
 
-static struct vmask *vmask_lookup(char *key)
+static struct vmask *vmask_lookup(const char *key)
 {
         struct vmask *vmask;
         struct tree *tree;
@@ -161,7 +161,7 @@ static void vmask_los(struct vmask *vmask, struct place *place,
         memcpy(vmask->data, LosEngine->vmask, VMASK_SZ);
 }
 
-static struct vmask *vmask_create(char *key, struct place *place, int x, int y)
+static struct vmask *vmask_create(const char *key, struct place *place, int x, int y)
 {
         struct vmask *vmask;
 

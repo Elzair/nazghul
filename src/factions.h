@@ -86,7 +86,7 @@ static inline void harm_relations(Being *a, Being *b)
 	}
 }
 
-static inline char * diplomacy_string(Being *a, Being *b)
+static inline const char * diplomacy_string(Being *a, Being *b)
 {
         return dtable_describe(session_dtable(),
                                a->getCurrentFaction(),

@@ -50,13 +50,13 @@ extern int foogod_get_y(void);
 extern int foogod_get_h(void);
 
 extern void foogodSetMode(foogod_mode_t mode);
-extern void foogodSetHintText(char *text);
+extern void foogodSetHintText(const char *text);
 
-extern void foogod_progress_bar_set_title(char *title);
+extern void foogod_progress_bar_set_title(const char *title);
 extern void foogod_progress_bar_set_max_steps(unsigned int val);
 extern void foogod_progress_bar_advance(unsigned int steps);
 extern void foogod_progress_bar_finish(void);
-extern void foogod_set_title(char *fmt, ...);
+extern void foogod_set_title(const char *fmt, ...);
 
 END_DECL
 

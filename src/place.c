@@ -463,8 +463,8 @@ static void place_remove_from_turn_list(struct place *place, Object *object)
         node_unref(node);
 }
 
-struct place *place_new(char *tag,
-                        char *name, 
+struct place *place_new(const char *tag,
+                        const char *name, 
                         struct sprite *sprite,
                         struct terrain_map *terrain_map,
                         int wraps,

@@ -1052,7 +1052,7 @@ void PlayerParty::paint(int sx, int sy)
 		Object::paint(sx, sy);
 }
 
-char *PlayerParty::getName()
+const char *PlayerParty::getName()
 {
 	return "player party";
 }

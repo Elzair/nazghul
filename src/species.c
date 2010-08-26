@@ -38,8 +38,8 @@ struct species_spell_elem {
         class Spell *spell;
 };
 
-struct species *species_new(char *tag,
-                            char *name,
+struct species *species_new(const char *tag,
+                            const char *name,
                             sound_t *damage_sound,
                             sound_t *movement_sound,
                             int str,

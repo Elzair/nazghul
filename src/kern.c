@@ -137,7 +137,7 @@ struct kern_ui_target_info {
  * the list of querys directly into an array of string pointers. */
 #undef SESSION_DECL_QUERY
 #define SESSION_DECL_QUERY(id) #id
-static char * query_to_id[] = {
+static const char * query_to_id[] = {
 #       include "session_queries.h"
 };
 
@@ -256,7 +256,7 @@ static void blender_dtor(void *val)
         free(blender);
 }
 
-static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
+static int unpack(scheme *sc, pointer *cell, const char *fmt, ...)
 {
         va_list args;
         int expect, count = 0, errs = 0;
@@ -404,7 +404,7 @@ static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
         return (! *fmt && ! errs) ? 0 : -1;
 }
 
-static Object *unpack_obj(scheme *sc, pointer *args, char *caller)
+static Object *unpack_obj(scheme *sc, pointer *args, const char *caller)
 {
         class Object *obj;
 
@@ -422,7 +422,7 @@ static Object *unpack_obj(scheme *sc, pointer *args, char *caller)
 }
 
 static int unpack_loc(scheme *sc, pointer *args, struct place **place, int *x,
-                      int *y, char *func)
+                      int *y, const char *func)
 {
         pointer loc;
 
@@ -467,7 +467,7 @@ static int unpack_rect(scheme *sc, pointer *args, SDL_Rect *rect)
         return 0;
 }
 
-pointer vpack(scheme *sc, char *fmt, va_list ap)
+pointer vpack(scheme *sc, const char *fmt, va_list ap)
 {
         pointer head=sc->NIL;
         pointer tail=sc->NIL;
@@ -526,7 +526,7 @@ pointer vpack(scheme *sc, char *fmt, va_list ap)
         return head;
 }
 
-struct mview * kern_unpack_mview(scheme *sc, pointer *args, char *caller)
+struct mview * kern_unpack_mview(scheme *sc, pointer *args, const char *caller)
 {
         struct mview *obj;
 
@@ -544,7 +544,7 @@ struct mview * kern_unpack_mview(scheme *sc, pointer *args, char *caller)
 }
 
 static int kern_unpack_loc(scheme *sc, pointer *args, struct place **place,
-                           int *x, int *y, char *caller)
+                           int *x, int *y, const char *caller)
 {
         pointer loc;
 
@@ -569,7 +569,7 @@ static int kern_unpack_loc(scheme *sc, pointer *args, struct place **place,
         return 1;
 }
 
-static pointer pack(scheme *sc, char *fmt, ...)
+static pointer pack(scheme *sc, const char *fmt, ...)
 {
         pointer head;
         va_list ap;
@@ -586,7 +586,7 @@ static pointer kern_mk_sprite_set(scheme *sc, pointer args)
         int width, height, rows, cols, offx, offy;
         char *fname;
         struct images *image = NULL;
-        char *tag = TAG_UNK;
+        const char *tag = TAG_UNK;
         pointer ret;
 
         if (unpack(sc, &args, "ydddddds", &tag, &width, &height, &rows, &cols,
@@ -608,7 +608,7 @@ static pointer kern_mk_sprite(scheme *sc, pointer args)
         struct images *images;
         int n_frames, index, facings, wave;
         struct sprite *sprite;
-        char *tag = TAG_UNK;
+        const char *tag = TAG_UNK;
         pointer ret;
 
         if (unpack(sc, &args, "ypddbd", &tag, &images, &n_frames, &index,
@@ -635,7 +635,7 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
         int alpha, light;
         void *sprite;
         struct terrain *terrain;
-        char *tag = TAG_UNK, *name;
+        const char *tag = TAG_UNK, *name;
         pointer ret;
         int pclass;
         pointer proc = NULL;
@@ -666,7 +666,7 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
 static pointer kern_mk_sound(scheme *sc, pointer args)
 {
         sound_t *sound;
-        char *tag = TAG_UNK, *name;
+        const char *tag = TAG_UNK, *name;
         pointer ret;
 
         if (unpack(sc, &args, "ys", &tag, &name)) {
@@ -687,7 +687,7 @@ static pointer kern_mk_sound(scheme *sc, pointer args)
 static pointer kern_mk_palette(scheme *sc, pointer args)
 {
         int argno = 1;
-         char *tag = TAG_UNK;
+         const char *tag = TAG_UNK;
         pointer ret;
 
         if (Session->palette) {
@@ -740,7 +740,7 @@ static pointer kern_mk_map(scheme *sc, pointer args)
 {
         int width, height, x, y, i;
         struct terrain_palette *pal;
-        char *tag = TAG_UNK;
+        const char *tag = TAG_UNK;
         struct terrain_map *map;
         pointer ret;
         struct list *elem;
@@ -824,7 +824,7 @@ static pointer kern_mk_map(scheme *sc, pointer args)
 static pointer kern_mk_composite_map(scheme *sc, pointer args)
 {
         int width, height, x = 0, y = 0, i = 0;
-        char *tag = TAG_UNK;
+        const char *tag = TAG_UNK;
         struct terrain_map *map=NULL, *submap=NULL;
         pointer ret;        
         struct list *elem;
@@ -1212,7 +1212,7 @@ KERN_API_CALL(kern_mk_place)
         struct terrain_map *map;
         struct place *place;
         struct sprite *sprite;
-        char *tag = TAG_UNK, *name;
+        const char *tag = TAG_UNK, *name;
         pointer ret;
 
         if (unpack(sc, &args, "ysppbbbb", &tag, &name, &sprite, &map,
@@ -1259,7 +1259,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         int stationary=0;
         struct sprite *sleep_sprite;
         class ArmsType *weapon;
-        char *tag = TAG_UNK, *name, *armor_dice;
+        const char *tag = TAG_UNK, *name, *armor_dice;
         sound_t *damage_sound, *walking_sound;
         pointer slots;
         pointer spells;
@@ -1346,7 +1346,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
 static pointer kern_mk_arms_type(scheme *sc, pointer args)
 {
         class ArmsType *arms;
-        char *tag = TAG_UNK, *name;
+        const char *tag = TAG_UNK, *name;
         sound_t *fire_sound;
         int slots, hands, range, weight;
         char *hit, *defend, *damage, *armor;
@@ -1429,7 +1429,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
 static pointer kern_mk_missile_type(scheme *sc, pointer args)
 {
 	class MissileType *arms;
-	char *tag = TAG_UNK, *name;
+	const char *tag = TAG_UNK, *name;
 	struct sprite *sprite;
 	pointer gifc;
 	pointer ret;
@@ -1471,7 +1471,7 @@ static pointer kern_mk_missile_type(scheme *sc, pointer args)
 static pointer kern_mk_field_type(scheme *sc, pointer args)
 {
         class FieldType *field;
-        char *tag = TAG_UNK, *name;
+        const char *tag = TAG_UNK, *name;
         struct sprite *sprite;
         int light, duration, pclass;
         closure_t *clx = NULL;
@@ -1524,7 +1524,7 @@ KERN_API_CALL(kern_mk_mmode)
 static pointer kern_mk_obj_type(scheme *sc, pointer args)
 {
         class ObjectType *type;
-        char *tag = TAG_UNK, *name;
+        const char *tag = TAG_UNK, *name;
         char *pluralName=NULL;
         enum layer layer;
         struct sprite *sprite;
@@ -1584,7 +1584,7 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         struct occ *occ;
         int hpmod, hpmult;
         int mpmod, mpmult, hit, def, dam, arm, xpval;
-        char *tag = TAG_UNK, *name;
+        const char *tag = TAG_UNK, *name;
         struct skill_set *skset;
         float magic;
         pointer ret;
@@ -1671,7 +1671,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         class Character *character;
         int str, intl, dex, hpmod, hpmult;
         int mpmod, mpmult, hp, xp, mp, AP_per_round, lvl, dead;
-        char *tag = TAG_UNK, *name;
+        const char *tag = TAG_UNK, *name;
         struct species *species;
         struct occ *occ;
         struct sprite *sprite;
@@ -3704,7 +3704,7 @@ static pointer kern_mk_astral_body(scheme *sc, pointer args)
 KERN_API_CALL(kern_mk_vehicle_type)
 {
         VehicleType *type;
-        char *tag = TAG_UNK;
+        const char *tag = TAG_UNK;
         char *name;
         struct sprite *sprite;
         struct terrain_map *map;
@@ -4669,7 +4669,7 @@ KERN_API_CALL(kern_char_set_sched)
 
 KERN_API_CALL(kern_char_set_control_mode)
 {
-        static struct { char *str; enum control_mode mode; } tbl[] = {
+        static struct { const char *str; enum control_mode mode; } tbl[] = {
                 { "auto", CONTROL_MODE_AUTO },
                 { "player", CONTROL_MODE_PLAYER },
                 { "idle", CONTROL_MODE_IDLE },
@@ -5919,11 +5919,6 @@ KERN_API_CALL(kern_place_set_terrain_map)
                 return sc->NIL;
         }
 
-        if (!is_terrain_map(map)) {
-                rt_err("kern-place-set-terrain-map: not a terrain map!");
-                return sc->NIL;
-        }
-
         place_set_terrain_map(place, map);
         return scm_mk_ptr(sc, place);
 }
@@ -6577,11 +6572,6 @@ KERN_API_CALL(kern_terrain_map_inc_ref)
                 return sc->NIL;
         }
 
-        if (!is_terrain_map(map)) {
-                rt_err("kern-terrain-map-inc-ref: not a terrain map!");
-                return sc->NIL;
-        }
-
         terrain_map_ref(map);
         return scm_mk_ptr(sc, map);
 }
@@ -6592,11 +6582,6 @@ KERN_API_CALL(kern_terrain_map_dec_ref)
 
         if (unpack(sc, &args, "p", &map)) {
                 rt_err("kern-terrain-map-dec-ref: bad args");
-                return sc->NIL;
-        }
-
-        if (!is_terrain_map(map)) {
-                rt_err("kern-terrain-map-dec-ref: not a terrain map!");
                 return sc->NIL;
         }
 
@@ -6689,11 +6674,6 @@ KERN_API_CALL(kern_terrain_map_blend)
 
         if (unpack(sc, &args, "pp", &map,  &inf)) {
                 rt_err("kern-terrain-map-blend: bad args");
-                return sc->NIL;
-        }
-
-        if (!is_terrain_map(map)) {
-                rt_err("kern-terrain-map-blend: not a terrain map!");
                 return sc->NIL;
         }
 
@@ -6900,7 +6880,7 @@ KERN_API_CALL(kern_ui_select_from_list)
 {
         struct KeyHandler kh;
 	struct ScrollerContext data;
-        char **strings;
+        const char **strings;
         int list_sz;
         int i = 0;
         enum StatusMode omode;
@@ -6910,7 +6890,7 @@ KERN_API_CALL(kern_ui_select_from_list)
         if (! list_sz)
                 return sc->NIL;
 
-        strings = (char**)calloc(list_sz, sizeof(strings[0]));
+        strings = (const char**)calloc(list_sz, sizeof(strings[0]));
         assert(strings);
 
         while (scm_is_pair(sc, args)) {
@@ -7234,10 +7214,10 @@ KERN_API_CALL(kern_mk_dtable)
 
 #define DTABLE_FX_USES_LEVEL(fx) ((fx) & 0x80)
 
-static pointer kern_dtable_aux(scheme *sc, pointer args, char *name, int fx)
+static pointer kern_dtable_aux(scheme *sc, pointer args, const char *name, int fx)
 {
         int f1, f2, level;
-        char *errstr = NULL;
+        const char *errstr = NULL;
 
         if (! session_dtable()) {
                 errstr = "no dtable";

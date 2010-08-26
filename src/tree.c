@@ -161,7 +161,7 @@ struct tree *tree_i_search(struct tree *root, int key) {
         return root;
 }
 
-struct tree *tree_s_search(struct tree *root, char *key)
+struct tree *tree_s_search(struct tree *root, const char *key)
 {
         while (root && strcmp(root->key.s_key, key)) {
                 assert(root->key_type == tree_s_key);

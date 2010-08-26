@@ -158,7 +158,7 @@ void dtable_dec(struct dtable *dtable, int f1, int f2)
 
 }
 
-extern char *dtable_describe(struct dtable *dtable, int f1, int f2)
+extern const char *dtable_describe(struct dtable *dtable, int f1, int f2)
 {
         int level = dtable_get(dtable, f1, f2);
         

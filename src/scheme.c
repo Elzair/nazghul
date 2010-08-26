@@ -36,7 +36,6 @@ void dump_protect(scheme *sc);
 #include "file.h"
 
 #if USE_CELLDUMP
-static void memdump(scheme *sc);
 static void memleakcheck(scheme *sc);
 #endif
 
@@ -357,7 +356,7 @@ static int is_ascii_name(const char *name, int *pc) {
 static int file_push(scheme *sc, const char *fname);
 static void file_pop(scheme *sc);
 static int file_interactive(scheme *sc);
-static INLINE int is_one_of(char *s, int c);
+static INLINE int is_one_of(const char *s, int c);
 static void nomem(scheme *sc);
 static int alloc_cellseg(scheme *sc, int n);
 static long binary_decode(const char *s);
@@ -387,12 +386,12 @@ static void gc(scheme *sc, pointer a, pointer b);
 static int basic_inchar(port *pt);
 static int inchar(scheme *sc);
 static void backchar(scheme *sc, int c);
-static char   *readstr_upto(scheme *sc, char *delim);
+static char   *readstr_upto(scheme *sc, const char *delim);
 static pointer readstrexp(scheme *sc);
 static INLINE void skipspace(scheme *sc);
 static int token(scheme *sc);
 static void printslashstring(scheme *sc, char *s, int len);
-static void atom2str(scheme *sc, pointer l, int f, char **pp, int *plen);
+static void atom2str(scheme *sc, pointer l, int f, const char **pp, int *plen);
 static void printatom(scheme *sc, pointer l, int f);
 static pointer mk_proc(scheme *sc, enum scheme_opcodes op);
 static pointer mk_closure(scheme *sc, pointer c, pointer e);
@@ -414,9 +413,9 @@ static pointer opexe_6(scheme *sc, enum scheme_opcodes op);
 static pointer opexe_ghul(scheme *sc, enum scheme_opcodes op);
 #endif
 static void Eval_Cycle(scheme *sc, enum scheme_opcodes op);
-static void assign_syntax(scheme *sc, char *name);
+static void assign_syntax(scheme *sc, const char *name);
 static int syntaxnum(pointer p);
-static void assign_proc(scheme *sc, enum scheme_opcodes, char *name);
+static void assign_proc(scheme *sc, enum scheme_opcodes, const char *name);
 
 #define num_ivalue(n)       (n.is_fixnum?(n).value.ivalue:(long)(n).value.rvalue)
 #define num_rvalue(n)       (!n.is_fixnum?(n).value.rvalue:(double)(n).value.ivalue)
@@ -1360,7 +1359,7 @@ static int file_interactive(scheme *sc) {
 
 static port *port_rep_from_filename(scheme *sc, const char *fn, int prop) {
   FILE *f;
-  char *rw;
+  const char *rw;
   port *pt;
   if(prop==(port_input|port_output)) {
     rw="a+";
@@ -1388,7 +1387,7 @@ static pointer port_from_filename(scheme *sc, const char *fn, int prop) {
 }
 
 static port *port_rep_from_file(scheme *sc, FILE *f, int prop) {
-  char *rw;
+  const char *rw;
   port *pt;
   pt=(port*)sc->malloc(sizeof(port));
   if(pt==0) {
@@ -1545,7 +1544,7 @@ INTERFACE void putcharacter(scheme *sc, int c) {
 }
 
 /* read characters up to delimiter, but cater to character constants */
-static char   *readstr_upto(scheme *sc, char *delim) {
+static char   *readstr_upto(scheme *sc, const char *delim) {
   char   *p = sc->strbuff;
 
   while (!is_one_of(delim, (*p++ = inchar(sc))));
@@ -1637,7 +1636,7 @@ static pointer readstrexp(scheme *sc) {
 }
 
 /* check c is in chars */
-static INLINE int is_one_of(char *s, int c) {
+static INLINE int is_one_of(const char *s, int c) {
      if(c==EOF) return 1;
      while (*s)
           if (*s++ == c)
@@ -1767,7 +1766,7 @@ static void printslashstring(scheme *sc, char *p, int len) {
 
 /* print atoms */
 static void printatom(scheme *sc, pointer l, int f) {
-  char *p;
+  const char *p;
   int len;
   atom2str(sc,l,f,&p,&len);
   putchars(sc,p,len);
@@ -1775,8 +1774,8 @@ static void printatom(scheme *sc, pointer l, int f) {
 
 
 /* Uses internal buffer unless string pointer is already available */
-static void atom2str(scheme *sc, pointer l, int f, char **pp, int *plen) {
-     char *p;
+static void atom2str(scheme *sc, pointer l, int f, const char **pp, int *plen) {
+     const char *p;
 
      if (l == sc->NIL) {
           p = "()";
@@ -1787,15 +1786,15 @@ static void atom2str(scheme *sc, pointer l, int f, char **pp, int *plen) {
      } else if (l == sc->EOF_OBJ) {
           p = "#<EOF>";
      } else if (is_port(l)) {
+          strcpy(sc->strbuff, "#<PORT>");
           p = sc->strbuff;
-          strcpy(p, "#<PORT>");
      } else if (is_number(l)) {
-          p = sc->strbuff;
           if(is_integer(l)) {
-               sprintf(p, "%ld", ivalue_unchecked(l));
+               sprintf(sc->strbuff, "%ld", ivalue_unchecked(l));
           } else {
-               sprintf(p, "%.10g", rvalue_unchecked(l));
+               sprintf(sc->strbuff, "%.10g", rvalue_unchecked(l));
           }
+          p = sc->strbuff;
      } else if (is_string(l)) {
           if (!f) {
                p = strvalue(l);
@@ -1807,40 +1806,40 @@ static void atom2str(scheme *sc, pointer l, int f, char **pp, int *plen) {
           }
      } else if (is_character(l)) {
           int c=charvalue(l);
-          p = sc->strbuff;
           if (!f) {
-               p[0]=c;
-               p[1]=0;
+               sc->strbuff[0]=c;
+               sc->strbuff[1]=0;
           } else {
                switch(c) {
                case ' ':
-                    sprintf(p,"#\\space"); break;
+                    sprintf(sc->strbuff,"#\\space"); break;
                case '\n':
-                    sprintf(p,"#\\newline"); break;
+                    sprintf(sc->strbuff,"#\\newline"); break;
                case '\r':
-                    sprintf(p,"#\\return"); break;
+                    sprintf(sc->strbuff,"#\\return"); break;
                case '\t':
-                    sprintf(p,"#\\tab"); break;
+                    sprintf(sc->strbuff,"#\\tab"); break;
                default:
 #if USE_ASCII_NAMES
                     if(c==127) {
-                         strcpy(p,"#\\del"); break;
+                         strcpy(sc->strbuff,"#\\del"); break;
                     } else if(c<32) {
-                         strcpy(p,"#\\"); strcat(p,charnames[c]); break;
+                         strcpy(sc->strbuff,"#\\"); strcat(sc->strbuff,charnames[c]); break;
                     }
 #else
 		    if(c<32) {
-		      sprintf(p,"#\\x%x",c); break;
+		      sprintf(sc->strbuff,"#\\x%x",c); break;
 		    }
 #endif
-                    sprintf(p,"#\\%c",c); break;
+                    sprintf(sc->strbuff,"#\\%c",c); break;
                }
           }
+          p = sc->strbuff;
      } else if (is_symbol(l)) {
           p = symname(l);
      } else if (is_proc(l)) {
+          sprintf(sc->strbuff, "#<%s PROCEDURE %ld>", procname(l),procnum(l));
           p = sc->strbuff;
-          sprintf(p, "#<%s PROCEDURE %ld>", procname(l),procnum(l));
      } else if (is_macro(l)) {
           p = "#<MACRO>";
      } else if (is_closure(l)) {
@@ -1848,8 +1847,8 @@ static void atom2str(scheme *sc, pointer l, int f, char **pp, int *plen) {
      } else if (is_promise(l)) {
           p = "#<PROMISE>";
      } else if (is_foreign(l)) {
+          sprintf(sc->strbuff, "#<FOREIGN PROCEDURE %ld>", procnum(l));
           p = sc->strbuff;
-          sprintf(p, "#<FOREIGN PROCEDURE %ld>", procnum(l));
      } else if (is_continuation(l)) {
           p = "#<CONTINUATION>";
      } else {
@@ -3092,7 +3091,7 @@ static pointer opexe_2(scheme *sc, enum scheme_opcodes op) {
      case OP_ATOM2STR: /* atom->string */
        x=car(sc->args);
        if(is_number(x) || is_character(x) || is_string(x) || is_symbol(x)) {
-	 char *p;
+	 const char *p;
 	 int len;
 	 atom2str(sc,x,0,&p,&len);
 	 s_return(sc,mk_counted_string(sc,p,len));
@@ -4044,10 +4043,10 @@ static struct {
 
 typedef struct {
   dispatch_func func;
-  char *name;
+  const char *name;
   int min_arity;
   int max_arity;
-  char *arg_tests_encoding;
+  const char *arg_tests_encoding;
 } op_code_info;
 
 #define INF_ARG 0xffff
@@ -4160,14 +4159,14 @@ static void Eval_Cycle(scheme *sc, enum scheme_opcodes op) {
 
 /* ========== Initialization of internal keywords ========== */
 
-static void assign_syntax(scheme *sc, char *name) {
+static void assign_syntax(scheme *sc, const char *name) {
      pointer x;
 
      x = oblist_add_by_name(sc, name); 
      typeflag(x) |= T_SYNTAX; 
 }
 
-static void assign_proc(scheme *sc, enum scheme_opcodes op, char *name) {
+static void assign_proc(scheme *sc, enum scheme_opcodes op, const char *name) {
      pointer x, y;
 
      x = mk_symbol(sc, name);
@@ -4448,6 +4447,7 @@ void scheme_set_external_data(scheme *sc, void *p) {
  sc->ext_data=p;
 }
 
+#if 0
 static void scheme_finalize_all(scheme *sc)
 {
         int i, j=0;
@@ -4465,6 +4465,7 @@ static void scheme_finalize_all(scheme *sc)
         }
         fprintf(stderr, "scheme_finalize_all: %d finalized\n", j);
 }
+#endif
 
 void scheme_deinit(scheme *sc) {
   int i;
@@ -4709,7 +4710,7 @@ void scheme_serialize(scheme *sc, pointer p, struct save *save)
 #define MAX_DUMP_LEN 256
 void celldump(scheme *sc, pointer pp)
 {
-        static char *typestr[T_LAST_SYSTEM_TYPE+1] = {
+        static const char *typestr[T_LAST_SYSTEM_TYPE+1] = {
                 "---", "STR", "NUM", "SYM", "PRO",
                 "PAI", "CLO", "CON", "FOR",
                 "CHA", "POR", "VEC", "MAC",
@@ -4755,7 +4756,7 @@ void celldump(scheme *sc, pointer pp)
                                         car(pp), cdr(pp));
                 } else {
                         int len = 0;
-                        char *str;
+                        const char *str;
                         atom2str(sc, pp, 0, &str, &len);
                         bptr += sprintf(bptr, "%s", str);
                 }
@@ -4780,6 +4781,8 @@ void celldump(scheme *sc, pointer pp)
         fprintf(stderr,strbuf);
         fflush(NULL);
 }
+
+#if 0
 static void memdump(scheme *sc)
 {
         int i, j;
@@ -4792,6 +4795,8 @@ static void memdump(scheme *sc)
                 }
         }
 }
+#endif 
+
 static void memleakcheck(scheme *sc)
 {
         int i, j, leaks = 0;
@@ -4808,8 +4813,6 @@ static void memleakcheck(scheme *sc)
         }
         fprintf(stderr, "%d leaked cells detected\n", leaks);
 }
-
-
 #endif /* USE_CELLDUMP */
 
 #if USE_PROTECT

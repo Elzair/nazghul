@@ -47,11 +47,11 @@ extern void cmdwin_flush(void);
 
 /* cmdwin_push -- append a string to the cmdwin prompt (this can be undone with
  * cmdwin_pop). Works just like printf for string formatting. */
-extern void cmdwin_push(char *fmt, ...);
+extern void cmdwin_push(const char *fmt, ...);
 
 /* cmdwin_spush -- same as push, but print a '-' after it if anything else is
  * pushed (the 's' is for 'segment', you're pushing a prompt segment) */
-extern void cmdwin_spush(char *fmt, ...);
+extern void cmdwin_spush(const char *fmt, ...);
 
 /* cmdwin_pop -- remove a string appended by one of the push commands */
 extern void cmdwin_pop(void);

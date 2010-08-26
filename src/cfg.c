@@ -31,7 +31,7 @@ struct cfg_entry {
         char *key, *val;        
 } *cfg_hash[CFG_HASH_SIZE];
 
-static struct cfg_entry *cfg_entry_new(char *key, const char *val)
+static struct cfg_entry *cfg_entry_new(const char *key, const char *val)
 {
         struct cfg_entry *entry = (struct cfg_entry*)malloc(sizeof(*entry));
         assert(entry);
@@ -47,7 +47,7 @@ static struct cfg_entry *cfg_entry_new(char *key, const char *val)
         return entry;
 }
 
-static int hashfn(char *key)
+static int hashfn(const char *key)
 {
         unsigned int hashed = 0; 
         const char *c; 
@@ -67,7 +67,7 @@ int cfg_init()
         return 0;
 }
 
-void cfg_set(char *key, const char *val)
+void cfg_set(const char *key, const char *val)
 {
         int hashkey = hashfn(key);
         struct cfg_entry *entry = cfg_hash[hashkey];
@@ -88,7 +88,7 @@ void cfg_set(char *key, const char *val)
         }
 }
 
-char *cfg_get(char *key)
+char *cfg_get(const char *key)
 {
         int hashkey = hashfn(key);
         struct cfg_entry *entry = cfg_hash[hashkey];

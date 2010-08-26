@@ -31,7 +31,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-static char *file_errstr = "Success";
+static const char *file_errstr = "Success";
 
 char *file_mkpath(const char *dir, const char *fname)
 {
@@ -88,7 +88,7 @@ int file_exists_in_save_dir(const char *fname)
 
 }
 
-FILE *file_open(const char *fname, char *mode)
+FILE *file_open(const char *fname, const char *mode)
 {
         FILE *file = NULL;
 
@@ -108,7 +108,7 @@ FILE *file_open(const char *fname, char *mode)
         return file;
 }
 
-FILE *file_open_in_dir(const char *dirname, const char *fname, char *mode)
+FILE *file_open_in_dir(const char *dirname, const char *fname, const char *mode)
 {
         FILE *file = 0;
         char *path = file_mkpath(dirname, fname);
@@ -124,7 +124,7 @@ FILE *file_open_in_include_dir(const char *fname)
         return file_open_in_dir(cfg_get("include-dirname"), fname, "r");
 }
 
-FILE *file_open_in_save_dir(const char *fname, char *mode)
+FILE *file_open_in_save_dir(const char *fname, const char *mode)
 {
         char *dir = cfg_get("saved-games-dirname");
 

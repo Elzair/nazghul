@@ -139,8 +139,8 @@ struct place {
 
 extern struct place *Place;
 
-extern struct place *place_new(char *tag,
-                               char *name,
+extern struct place *place_new(const char *tag,
+                               const char *name,
                                struct sprite *sprite,
                                struct terrain_map *terrain_map,
                                int wraps,

@@ -47,7 +47,7 @@
 // ----------------------------------------------------------------------------
 
 
-VehicleType::VehicleType(char *tag, char *name, struct sprite *sprite,
+VehicleType::VehicleType(const char *tag, const char *name, struct sprite *sprite,
                          struct terrain_map *_map,
                          ArmsType *_ordnance,
                          bool _vulnerable,
@@ -351,7 +351,7 @@ struct mmode *Vehicle::getMovementMode()
         return getObjectType()->mmode;
 }
 
-char *Vehicle::getName()
+const char *Vehicle::getName()
 {
         if (name)
                 return name;

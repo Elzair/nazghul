@@ -21,8 +21,8 @@
 #define cfg_h
 
 int cfg_init();
-int cfg_save(char *fname);
-void cfg_set(char *key, const char *val);
-char *cfg_get(char *key);
+int cfg_save(const char *fname);
+void cfg_set(const char *key, const char *val);
+char *cfg_get(const char *key);
 
 #endif

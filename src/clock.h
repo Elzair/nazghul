@@ -68,9 +68,9 @@ extern char * vague_time_as_string       (void);
 extern char * time_HHMM_as_string       (void);
 extern char * time_YYYY_MM_DD_as_string (void);
 
-extern char * month_name (void);
-extern char * week_name  (void);
-extern char * day_name   (void);
+extern const char * month_name (void);
+extern const char * week_name  (void);
+extern const char * day_name   (void);
 
 
 #ifdef INCLUDE_UNUSED_CLOCK_ROUTINES
@@ -80,9 +80,9 @@ extern int clock_alarm_expired(struct clock *clock);
 #endif
 
 #ifdef OTHER_TIME_STRING_FUNCTIONS
-extern char * time_YYYY_as_string (void);
-extern char * time_MM_as_string   (void);
-extern char * time_DD_as_string   (void);
+extern const char * time_YYYY_as_string (void);
+extern const char * time_MM_as_string   (void);
+extern const char * time_DD_as_string   (void);
 #endif // OTHER_TIME_STRING_FUNCTIONS
         
 END_DECL

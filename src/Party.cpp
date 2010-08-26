@@ -738,7 +738,7 @@ struct formation *Party::get_formation()
 void Party::describe()
 {
         assert(Session->subject);
-        char *diplstr = diplomacy_string(this, Session->subject);
+        const char *diplstr = diplomacy_string(this, Session->subject);
         if (isvowel(diplstr[0]))
                 log_continue("an ");
         else

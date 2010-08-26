@@ -336,12 +336,12 @@ void foogodSetMode(foogod_mode_t mode)
         foogodRepaint();
 }
 
-void foogodSetHintText(char *text)
+void foogodSetHintText(const char *text)
 {
         strncpy(Foogod.hintText, text, Foogod.hintLen);
 }
 
-void foogod_progress_bar_set_title(char *title)
+void foogod_progress_bar_set_title(const char *title)
 {
         if (Foogod.progress_bar_title) {
                 free(Foogod.progress_bar_title);
@@ -373,7 +373,7 @@ void foogod_progress_bar_finish()
         Foogod.progress_bar_steps = Foogod.progress_bar_max_steps;
 }
 
-void foogod_set_title(char *fmt, ...)
+void foogod_set_title(const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);

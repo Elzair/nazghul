@@ -32,7 +32,7 @@ class MissileType:public ObjectType
 {
 		public:
 	MissileType();
-	MissileType(char *tag, char *name, struct sprite *sprite, bool isBeam, bool isFixedRange, struct mmode *mmode);
+	MissileType(const char *tag, const char *name, struct sprite *sprite, bool isBeam, bool isFixedRange, struct mmode *mmode);
 	virtual ~ MissileType();
 	
 	virtual bool isType(int classID);

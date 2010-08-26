@@ -53,9 +53,9 @@ extern void sprite_append_decoration(struct sprite *sprite,
                                      struct sprite *decor);
 
 /* sprite_clone - clone an existing sprite and give it a new tag. */
-extern struct sprite *sprite_clone(struct sprite *orig, char *new_tag);
+extern struct sprite *sprite_clone(struct sprite *orig, const char *new_tag);
 
-extern struct sprite * sprite_new(char *tag, int frames, int index, int wave, 
+extern struct sprite * sprite_new(const char *tag, int frames, int index, int wave, 
                                   int facings, struct images *image);
 extern void sprite_del(struct sprite *sprite);
 extern char *sprite_get_tag(struct sprite *sprite);

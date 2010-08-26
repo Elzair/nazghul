@@ -112,7 +112,7 @@ static int conv_get_player_query(struct KeyHandler *kh, int key, int keymod)
  *
  * @param str is the query value to set.
  */
-static void conv_set_query(char *str)
+static void conv_set_query(const char *str)
 {
 	snprintf(conv_query, sizeof(conv_query) - 1, "%s", str);
 	conv_query[MAX_KEYWORD_SZ] = 0;

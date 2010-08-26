@@ -68,7 +68,7 @@ enum ascii_ctrl_states {
 
 /* This is a default character image set in XPM format. For emergency use
  * only. */
-static char * charset_xpm[] = {
+static const char * charset_xpm[] = {
 "128 144 44 1",
 " 	c None",
 ".	c #000000",
@@ -509,7 +509,7 @@ static struct images *ascii_load_fixed_charset(void)
         images->rows    = 9;
         images->cols    = 16;
 
-        images->images = IMG_ReadXPMFromArray(charset_xpm);
+        images->images = IMG_ReadXPMFromArray((char**)charset_xpm);
 	if (!images->images) {
 		err("IMG_ReadXPMFromArray() failed: '%s'\n", SDL_GetError() );
 		images_del(images);

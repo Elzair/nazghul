@@ -48,9 +48,9 @@
 #define save_err_inc() (save_errs++)
 
 /* Shared between session.c and kern.c */
-extern void load_err(char *fmt, ...);
-extern void rt_err(char *fmt, ...);
-extern void save_err(char *fmt, ...);
+extern void load_err(const char *fmt, ...);
+extern void rt_err(const char *fmt, ...);
+extern void save_err(const char *fmt, ...);
 
 /* Shared between session.c and kern.c */
 extern int load_errs;
@@ -149,7 +149,7 @@ struct session {
         enum StatusMode status_mode;
 
         // Saved LOS style.
-        char *los;
+        const char *los;
 
         // Only one palette per session will be allowed, and it will be
         // globally accessible here. This is to accomodate the creation of
@@ -266,16 +266,16 @@ typedef struct save {
         int session_id;
 
         // printf with tabs
-        void (*write)(struct save *save, char *fmt, ...);
+        void (*write)(struct save *save, const char *fmt, ...);
 
         // printf without tabs
-        void (*append)(struct save *save, char *fmt, ...);
+        void (*append)(struct save *save, const char *fmt, ...);
 
         // printf with tabs & incr tabs
-        void (*enter)(struct save *save, char *fmt, ...);
+        void (*enter)(struct save *save, const char *fmt, ...);
 
         // printf with tabs & decr tabs
-        void (*exit)(struct save *save, char *fmt, ...);
+        void (*exit)(struct save *save, const char *fmt, ...);
 
         
 
@@ -313,15 +313,15 @@ extern void * session_add_connection(struct session *session, void *obj,
         );
 extern void session_rm(struct session *session, void *handle);
 
-extern void session_run_hook(struct session *session, session_hook_id_t id, char *fmt, ...);
+extern void session_run_hook(struct session *session, session_hook_id_t id, const char *fmt, ...);
 extern void *session_add_hook(struct session *session, session_hook_id_t id, struct closure *proc, pointer args);
 extern void session_rm_hook(struct session *session, session_hook_id_t id, pointer code);
-extern int session_run_query(struct session *session, session_query_id_t id, char *fmt, ...);
+extern int session_run_query(struct session *session, session_query_id_t id, const char *fmt, ...);
 extern void session_add_query(struct session *session, session_query_id_t id, struct closure *proc);
-extern char *session_hook_id_to_str(session_hook_id_t id);
+extern const char *session_hook_id_to_str(session_hook_id_t id);
 extern session_hook_id_t session_str_to_hook_id(char *str);
 
-extern void save_err(char *fmt, ...);
+extern void save_err(const char *fmt, ...);
 extern struct node *session_add_sched_char(struct session *session,
                                            class Character *npc);
 extern void session_rm_sched_char(struct node *node);

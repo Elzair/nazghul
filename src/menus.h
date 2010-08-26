@@ -47,6 +47,6 @@ extern void options_menu(void);
  *
  * @param fmt The printf-formatted error message.
  */
-void menu_startup_error(char *fmt, ...);
+void menu_startup_error(const char *fmt, ...);
 
 #endif

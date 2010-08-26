@@ -28,7 +28,7 @@
 class FieldType:public ObjectType {
 
       public:
-        FieldType(char *tag, char *name, struct sprite *sprite, int light, 
+        FieldType(const char *tag, const char *name, struct sprite *sprite, int light, 
                   int duration, int pclass, closure_t *effect);
 	virtual ~FieldType();
 	virtual bool isType(int classID);

@@ -57,7 +57,7 @@ struct sched {
 extern struct sched *sched_new(char *tag, int n_appts);
 extern void sched_del(struct sched*);
 extern int sched_name_to_activity(char *activity_name);
-extern char *sched_activity_to_name(int activity);
+extern const char *sched_activity_to_name(int activity);
 extern struct appt *sched_get_appointment(struct sched *sched, 
                                           int hr, int min);
 extern struct place *sched_appt_get_place(struct sched *sched, 

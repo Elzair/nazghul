@@ -49,7 +49,7 @@ BEGIN_DECL
 
 struct trade_info {
         struct sprite *sprite;
-        char *name;
+        const char *name;
         int quantity;
         int cost;
         void *data; /* object type */
@@ -66,7 +66,7 @@ struct stat_list_entry {
 };
 
 struct stat_super_generic_data {
-        char *title;
+        const char *title;
         struct node list;
         struct node *selected;
         struct node *first_shown;
@@ -122,10 +122,10 @@ extern void statusFlash(int line, unsigned int color);
 extern void statusSetMode(enum StatusMode mode);
 extern enum StatusMode statusGetMode(void);
 extern void statusScroll(enum StatusScrollDir dir);
-extern void *statusGetSelected(enum StatusSelection sel);
+extern const void *statusGetSelected(enum StatusSelection sel);
 extern void statusSelectCharacter(int partyOrderIndex);
 
-extern void statusSetPageText(char *title, char *text);
+extern void statusSetPageText(const char *title, const char *text);
 extern void statusSetTradeInfo(int list_sz, struct trade_info *trades);
 extern void statusUpdateTradeInfo(int list_sz, 
                                   struct trade_info *trades);
@@ -147,7 +147,7 @@ extern int status_get_h(void);
  * call does not make its own copy, so all the pointers must remain valid while
  * the GenericList mode is in use.
  */
-extern void statusSetGenericList(char *title, int list_sz, 
+extern void statusSetGenericList(const char *title, int list_sz, 
                                  struct stat_list_entry *list);
 
 /**
@@ -165,7 +165,7 @@ extern void statusSetGenericList(char *title, int list_sz,
  * call does not make its own copy, so all the pointers must remain valid while
  * the StringList mode is in use.
  */
-extern void statusSetStringList(char *title, int list_sz, char **list);
+extern void statusSetStringList(const char *title, int list_sz, const char **list);
 
 /**
  * When in one of the list modes, this forces the list entry at the given index
@@ -220,12 +220,12 @@ extern void statusSetSuperGenericData(struct stat_super_generic_data *data);
  * @param container is the container object to browse
  * @param title is shown at the top of the status window
  */
-extern void statusBrowseContainer(class Container *container, char *title);
+extern void statusBrowseContainer(class Container *container, const char *title);
 
 /**
  * Set the text of the title at the top of the status window.
  */
-extern void status_set_title(char *title);
+extern void status_set_title(const char *title);
 extern void status_repaint_title(void);
 
 /**

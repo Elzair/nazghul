@@ -188,7 +188,7 @@ static void parse_args(int argc, char **argv)
 static void nazghul_init_internal_libs(void)
 {
         struct lib_entry {
-                char *name;
+                const char *name;
                 int (*init)(void);
         };
 
@@ -240,7 +240,7 @@ void nazghul_splash(void)
         /* The first time through load the splash image from a file. */
         if (! splash) {
                 char *dims = cfg_get("screen-dims");
-                char *suffix = "-splash-image-filename";
+                const char *suffix = "-splash-image-filename";
                 char *key;
                 char *basename;
                 char *filename;

@@ -17,7 +17,7 @@
  * call, which returns non-zero if the format is ok and 0 otherwise.
  *
  */
-extern int dice_roll(char *fmt);
-extern int dice_valid(char *fmt);
-extern int dice_average(char *fmt);
+extern int dice_roll(const char *fmt);
+extern int dice_valid(const char *fmt);
+extern int dice_average(const char *fmt);
 extern int dice_roll_numeric(int num, int faces, int bias);

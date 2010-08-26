@@ -36,7 +36,7 @@ int FieldType::getType()
         return FIELD_TYPE_ID;
 }
 
-FieldType::FieldType(char *tag, char *name, struct sprite *sprite, 
+FieldType::FieldType(const char *tag, const char *name, struct sprite *sprite, 
                      int light_, int duration_, int pclass_, closure_t *clx)
         : ObjectType(tag, name, sprite, field_layer), 
           pclass(pclass_), light(light_), duration(duration_)

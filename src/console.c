@@ -168,7 +168,7 @@ static int console_handle_repeated_msg(void)
         return 1;
 }
 
-void consolePrint(char *fmt, ...)
+void consolePrint(const char *fmt, ...)
 {
         int printed;
         va_list args;

@@ -27,7 +27,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-char *activity_names[NUM_ACTIVITIES] = {
+const char *activity_names[NUM_ACTIVITIES] = {
         "idle",
         "working",
         "sleeping",
@@ -47,7 +47,7 @@ int sched_name_to_activity(char *activity_name)
         return -1;
 }
 
-char *sched_activity_to_name(int activity)
+const char *sched_activity_to_name(int activity)
 {
         if (activity < NUM_ACTIVITIES &&
             activity >= 0)

@@ -63,7 +63,7 @@ extern int dtable_get(struct dtable *dtable, int f1, int f2);
 extern void dtable_save(struct dtable *dtable, struct save *save);
 extern void dtable_inc(struct dtable *dtable, int f1, int f2);
 extern void dtable_dec(struct dtable *dtable, int f1, int f2);
-extern char *dtable_describe(struct dtable *dtable, int f1, int f2);
+extern const char *dtable_describe(struct dtable *dtable, int f1, int f2);
 
 END_DECL
 

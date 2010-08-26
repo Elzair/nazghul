@@ -43,7 +43,7 @@ MissileType::MissileType()
 	beam = false;
 }
 
-MissileType::MissileType(char *tag, char *name, struct sprite *sprite, bool isBeam, bool isFixedRange, struct mmode *mmode)
+MissileType::MissileType(const char *tag, const char *name, struct sprite *sprite, bool isBeam, bool isFixedRange, struct mmode *mmode)
 	: ObjectType(tag, name, sprite, item_layer),
 		beam(isBeam),
 		fixedrange(isFixedRange)

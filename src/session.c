@@ -96,19 +96,18 @@ int save_errs = 0;
 static void session_init_hooks(struct session *session);
 static void session_cleanup_hooks(struct session *session);
 static void session_cleanup_queries(struct session *session);
-static void session_save_hooks(save_t *save, struct session *session);
 
 /* Redefine the session hook macro to turn its arg into a string, then #include
  * the list of hooks directly into an array of string pointers. */
 #undef SESSION_DECL_HOOK
 #define SESSION_DECL_HOOK(id) #id
-static char * session_hook_str[] = {
+static const char * session_hook_str[] = {
 #       include "session_hooks.h"
 };
 
 static char session_last_error[128] = { 0 };
 
-void load_err(char *fmt, ...)
+void load_err(const char *fmt, ...)
 {
         load_err_inc();
         warn("load_err: ");
@@ -126,7 +125,7 @@ void load_err(char *fmt, ...)
         
 }
 
-void rt_err(char *fmt, ...)
+void rt_err(const char *fmt, ...)
 {
         load_err_inc();
         warn("runtime error: ");
@@ -141,7 +140,7 @@ void rt_err(char *fmt, ...)
 
 
 
-void save_err(char *fmt, ...)
+void save_err(const char *fmt, ...)
 {
         save_err_inc();
         warn("save_err: ");
@@ -526,14 +525,14 @@ int session_load(char *filename)
 }
 
 #define SAVE_INDENT_WIDTH 2
-static void save_vwrite(struct save *save, char *fmt, va_list args)
+static void save_vwrite(struct save *save, const char *fmt, va_list args)
 {
         if (save->indent)
                 fprintf(save->file, "%*c", save->indent, ' ');
         vfprintf(save->file, fmt, args);
 }
 
-static void save_write(save_t *save, char *fmt, ...)
+static void save_write(save_t *save, const char *fmt, ...)
 {
         va_list args;
         va_start(args, fmt);
@@ -541,7 +540,7 @@ static void save_write(save_t *save, char *fmt, ...)
         va_end(args);        
 }
 
-static void save_append(save_t *save, char *fmt, ...)
+static void save_append(save_t *save, const char *fmt, ...)
 {
         va_list args;
         va_start(args, fmt);
@@ -549,7 +548,7 @@ static void save_append(save_t *save, char *fmt, ...)
         va_end(args);    
 }
 
-static void save_enter(save_t *save, char *fmt, ...)
+static void save_enter(save_t *save, const char *fmt, ...)
 {
         va_list args;
         va_start(args, fmt);
@@ -558,7 +557,7 @@ static void save_enter(save_t *save, char *fmt, ...)
         save->indent += SAVE_INDENT_WIDTH;
 }
 
-static void save_exit(save_t *save, char *fmt, ...)
+static void save_exit(save_t *save, const char *fmt, ...)
 {
         va_list args;
         va_start(args, fmt);
@@ -761,7 +760,7 @@ static void session_init_hooks(struct session *session)
         }
 }
 
-void session_run_hook(struct session *session, session_hook_id_t id, char *fmt, ...)
+void session_run_hook(struct session *session, session_hook_id_t id, const char *fmt, ...)
 {
         struct list *lptr, *head;
 
@@ -823,25 +822,6 @@ void session_rm_hook(struct session *session, session_hook_id_t id, pointer code
         }
 }
 
-static void session_save_hooks(save_t *save, struct session *session)
-{
-        int i;
-        for (i = 0; i < NUM_HOOKS; i++) {
-                if (i == new_game_start_hook) {
-                        continue; /* special case */
-                }
-                struct list *lptr;
-                list_for_each(&session->hook_table[i], lptr) {
-                        struct session_hook_entry *entry = list_entry(lptr, struct session_hook_entry, list);
-                        scheme *sc = entry->proc->sc;
-                        save->write(save, "(kern-add-hook '%s '%s ", session_hook_str[i], 
-                                    scm_sym_val(sc, entry->proc->code));
-                        scheme_serialize(sc, entry->args, save);
-                        save->write(save, ")\n");
-                }
-        }        
-}
-
 static void session_cleanup_hooks(struct session *session)
 {
         int i;
@@ -859,7 +839,7 @@ static void session_cleanup_hooks(struct session *session)
         }
 }
 
-int session_run_query(struct session *session, session_query_id_t id, char *fmt, ...)
+int session_run_query(struct session *session, session_query_id_t id, const char *fmt, ...)
 {
         assert(id < NUM_QUERIES);
         struct closure *proc = session->query_table[id];
@@ -904,7 +884,7 @@ static void session_cleanup_queries(struct session *session)
         }
 }
 
-char *session_hook_id_to_str(session_hook_id_t id)
+const char *session_hook_id_to_str(session_hook_id_t id)
 {
         assert(id < NUM_HOOKS);
         return session_hook_str[id];

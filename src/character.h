@@ -61,7 +61,7 @@ class Character:public Being {
 	};
 
 	Character();
-        Character(char *tag, char *name, 
+        Character(const char *tag, const char *name, 
                   struct sprite *sprite,
                   struct species *species, struct occ *occ,
                   int str, int intl,
@@ -107,7 +107,7 @@ class Character:public Being {
         virtual struct mmode *getMovementMode();
         virtual void setMovementMode(struct mmode *mmode);
 	virtual int getArmourClass();
-	virtual char *getWoundDescription();
+	virtual const char *getWoundDescription();
 	virtual class Character *getAttackTarget(class ArmsType * weapon);
 	virtual class ArmsType *getNextArms(int * armsIndex);
 	virtual class ArmsType *getNextWeapon(int * armsIndex);

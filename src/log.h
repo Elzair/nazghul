@@ -33,9 +33,9 @@ extern void log_end_group();
 
 /* Begin a message that will start a group and prevent members of the group
  * from printing until it finishes. This is to de-interleave messages. */
-extern void log_begin(char *fmt, ...);
-extern void log_continue(char *fmt, ...);
-extern void log_end(char *fmt, ...);
+extern void log_begin(const char *fmt, ...);
+extern void log_continue(const char *fmt, ...);
+extern void log_end(const char *fmt, ...);
 extern void log_abort();
 
 /* log_flush - force a partial entry started with log_begin() to print now
@@ -46,12 +46,12 @@ extern void log_abort();
 extern void log_flush();
 
 /* Log a single message as its own group. */
-extern void log_msg(char *fmt, ...);
+extern void log_msg(const char *fmt, ...);
 
 extern void log_disable();
 extern void log_enable();
 
 /* Like log_msg, but with fancy borders. */
-extern void log_banner(char *fmt, ...);
+extern void log_banner(const char *fmt, ...);
 
 #endif

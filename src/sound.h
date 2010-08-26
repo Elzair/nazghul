@@ -35,10 +35,10 @@ extern int SOUND_MAX_VOLUME;
 
 extern int sound_init(void);
 extern void sound_exit(void);
-extern sound_t *sound_new(char *tag, char *file);
+extern sound_t *sound_new(const char *tag, const char *file);
 extern void sound_del(sound_t *sound);
 extern void sound_play(sound_t *sound, int volume, bool ambient = false);
-extern char *sound_get_tag(sound_t *sound);
+extern const char *sound_get_tag(sound_t *sound);
 extern void sound_flush_ambient();
 extern void sound_haltall();
 
@@ -59,8 +59,8 @@ extern void sound_enable(int enable);
  * called) */
 extern int sound_is_activated();
 
-extern void set_music_volume(char *setting);
-extern void music_load_track(char *file);
+extern void set_music_volume(const char *setting);
+extern void music_load_track(const char *file);
 extern bool music_need_track();
 extern void music_init(void);
 

@@ -61,7 +61,7 @@ struct terrain {
         closure_t *renderCombat; /* closure to set up combat map */
 };
 
-extern struct terrain *terrain_new(char *tag, char *name, 
+extern struct terrain *terrain_new(const char *tag, const char *name, 
                                    struct sprite *sprite,
                                    int pclass, 
                                    int alpha, 
@@ -93,7 +93,7 @@ struct terrain_palette {
 };
 
 struct terrain_palette * palette_contains_terrain (struct terrain_palette *pp, struct terrain *tt);
-struct terrain_palette * terrain_palette_new(char *tag);
+struct terrain_palette * terrain_palette_new(const char *tag);
 void terrain_palette_del(struct terrain_palette *pal);
 void terrain_palette_add(struct terrain_palette *pal, char *glyph, struct terrain *ter);
 char * palette_glyph(struct terrain_palette *pp, int n);

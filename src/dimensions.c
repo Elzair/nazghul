@@ -69,8 +69,8 @@ int SKY_SPRITE_W;
 static int dimensions_get_map_size(char *dimstr)
 {
         struct dimstr2mapsz {
-        char *dimstr;
-        int map_sz;
+                const char *dimstr;
+                int map_sz;
         };
 #       define ADD_SCREEN_DIM(dim,mapw) { (dim), (mapw) },
         struct dimstr2mapsz tbl[] = {

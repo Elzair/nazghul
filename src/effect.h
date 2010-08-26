@@ -32,14 +32,14 @@ BEGIN_DECL
 #define EFFECT_NONDETERMINISTIC   -2   /* can't tell when it expires */
 
 /* Runtime type-verification: */
-extern char *EFFECT_ID;
+extern const int EFFECT_ID;
 #define is_effect(eff) ((eff) && ((eff)->ID == EFFECT_ID))
 #define effect_will_expire(eff) ((eff)->duration > 0)
 
 /* An effect type defines an effect like poison, protection, etc. Effects are
  * attached to objects. */
 struct effect {
-        char *ID;               /* for runtime type-verification */
+        int ID;                 /* for runtime type-verification */
         closure_t *exec;        /* scheme proc to execute on-hook */
         closure_t *apply;       /* scheme proc to execute on-attach */
         closure_t *rm;          /* scheme proc to execute on-removal */

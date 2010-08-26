@@ -32,11 +32,11 @@ BEGIN_DECL
 extern int DEBUG;
 extern int VERBOSE;
 
-extern void dbg(char *fmt, ...);
-extern void err(char *fmt, ...);
-extern void info(char *fmt, ...);
-extern void warn(char *fmt, ...);
-extern void vwarn(char *fmt, va_list args);
+extern void dbg(const char *fmt, ...);
+extern void err(const char *fmt, ...);
+extern void info(const char *fmt, ...);
+extern void warn(const char *fmt, ...);
+extern void vwarn(const char *fmt, va_list args);
 
 END_DECL
 

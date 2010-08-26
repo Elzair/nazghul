@@ -31,9 +31,7 @@
 #include <stdlib.h>
 
 /* Defined in kern.c: */
-extern pointer vpack(scheme *sc, char *fmt, va_list ap);
-
-static char *CLOSURE_MAGIC = "CLOSURE";
+extern pointer vpack(scheme *sc, const char *fmt, va_list ap);
 
 /*
  * closure_del - free a closure (external code should use closure_unref)
@@ -41,7 +39,6 @@ static char *CLOSURE_MAGIC = "CLOSURE";
 static void closure_del(closure_t *closure)
 {
         assert(0 == closure->ref);
-        assert(closure->magic == CLOSURE_MAGIC);
         closure->sc->vptr->unprotect(closure->sc, closure->code);
         free(closure);
 }
@@ -103,7 +100,7 @@ static pointer closure_exec_with_scheme_args(closure_t *closure, pointer args)
  * are different. See kern.c's vpack() function.
  * @returns The Scheme result of evaluation.
  */
-pointer closure_execv(closure_t *closure, char *fmt, va_list args)
+pointer closure_execv(closure_t *closure, const char *fmt, va_list args)
 {
         pointer head;
 
@@ -156,7 +153,6 @@ closure_t *closure_new(scheme *sc, pointer code)
 {
         closure_t *clx = (closure_t*)calloc(1, sizeof(*clx));
         assert(clx);
-        clx->magic = CLOSURE_MAGIC;
         clx->sc = sc;
         clx->code = code;
         sc->vptr->protect(sc, code);
@@ -172,12 +168,11 @@ closure_t *closure_new_ref(scheme *sc, pointer code)
 
 void closure_init(closure_t *clx, scheme *sc, pointer code)
 {
-        clx->magic = CLOSURE_MAGIC;
         clx->sc = sc;
         clx->code = code;
 }
 
-int closure_exec(closure_t *closure, char *fmt, ...)
+int closure_exec(closure_t *closure, const char *fmt, ...)
 {
         pointer result;
         va_list ap;
@@ -222,7 +217,7 @@ void closure_unref(closure_t *closure)
 }
 
 int closure_execlpv(closure_t *closure, pointer cell, void *ptr, 
-                    char *fmt, va_list args)
+                    const char *fmt, va_list args)
 {
         pointer head, tmp, result;
         scheme *sc = closure->sc;
@@ -257,7 +252,7 @@ int closure_execlpv(closure_t *closure, pointer cell, void *ptr,
 }
 
 int closure_execlpiv(closure_t *closure, pointer cell, void *ptr, int id,
-                    char *fmt, va_list args)
+                    const char *fmt, va_list args)
 {
         pointer head, tmp, result;
         scheme *sc = closure->sc;
@@ -292,7 +287,7 @@ int closure_execlpiv(closure_t *closure, pointer cell, void *ptr, int id,
         return closure_translate_result(closure->sc, result);
 }
 
-int closure_execvl(closure_t *closure, char *fmt, va_list args, pointer cell)
+int closure_execvl(closure_t *closure, const char *fmt, va_list args, pointer cell)
 {
         pointer head, result;
         scheme *sc = closure->sc;

@@ -37,7 +37,7 @@ static void log_entry_del(struct log_entry *entry)
         free(entry);
 }
 
-static void log_entry_print(struct log_entry *entry, char *fmt, va_list args)
+static void log_entry_print(struct log_entry *entry, const char *fmt, va_list args)
 {
         /* If fmt is NULL experimentation shows that vsnprintf returns -1,
          * which is also the indication that we attempted to overflow the
@@ -149,7 +149,7 @@ void log_init(void)
         log_disabled = 0;
 }
 
-void log_begin(char *fmt, ...)
+void log_begin(const char *fmt, ...)
 {
         va_list args;
 
@@ -163,7 +163,7 @@ void log_begin(char *fmt, ...)
         va_end(args);
 }
 
-void log_continue(char *fmt, ...)
+void log_continue(const char *fmt, ...)
 {
         va_list args;
         struct log_entry *entry;
@@ -178,7 +178,7 @@ void log_continue(char *fmt, ...)
         va_end(args);
 }
 
-void log_end(char *fmt, ...)
+void log_end(const char *fmt, ...)
 {
         va_list args;
         struct log_entry *entry;
@@ -194,7 +194,7 @@ void log_end(char *fmt, ...)
         log_pop();
 }
 
-void log_msg(char *fmt, ...)
+void log_msg(const char *fmt, ...)
 {
         va_list args;
         struct log_entry *entry = log_entry_new();
@@ -209,7 +209,7 @@ void log_msg(char *fmt, ...)
         log_pop();        
 }
 
-void log_banner(char *fmt, ...)
+void log_banner(const char *fmt, ...)
 {
         struct log_entry *entry;
         va_list args;

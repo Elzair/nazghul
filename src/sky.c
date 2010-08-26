@@ -156,7 +156,7 @@ static int sky_get_light_from_astral_body(int arc, int maxlight)
         int degrees = (arc - SKY_HORZ_SHIFT);
         double radians = DEGREES_TO_RADIANS(degrees);
         double factor = SKY_AMPLITUDE * (sin(radians) + SKY_VERT_SHIFT);
-        factor = clamp(factor, 0.0, 1.0);
+        clamp(factor, 0.0, 1.0);
         int light = (int)(factor * maxlight);
         light = (light < 0) ? 0 : light;
         return light;

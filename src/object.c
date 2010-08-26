@@ -74,7 +74,7 @@ ObjectType::ObjectType()
         assert(false);
 }
 
-ObjectType::ObjectType(char *tag, char *sname, struct sprite *sprite_, 
+ObjectType::ObjectType(const char *tag, const char *sname, struct sprite *sprite_, 
                        enum layer layer_)
         : sprite(sprite_), layer(layer_), speed(0), required_action_points(0), 
           max_hp(0), gifc(NULL), gifc_cap(0), gob(NULL), pluralName(NULL)
@@ -139,7 +139,7 @@ void ObjectType::setSprite(struct sprite *sprite)
 	this->sprite = sprite;        
 }
 
-static int endsWith(char *word, char *end)
+static int endsWith(const char *word, const char *end)
 {
         int wlen=strlen(word)-1;
         int elen=strlen(end)-1;
@@ -194,12 +194,12 @@ int ObjectType::getType()
         return OBJECT_TYPE_ID;
 }
 
-char *ObjectType::getTag()
+const char *ObjectType::getTag()
 {
         return tag;
 }
 
-char *ObjectType::getName()
+const char *ObjectType::getName()
 {
         return name;
 }
@@ -854,7 +854,7 @@ enum layer Object::getLayer(void)
                 return null_layer;
 }
 
-char *Object::getName(void)
+const char *Object::getName(void)
 {
         if (type)
                 return type->getName();
@@ -1751,7 +1751,7 @@ void Object::restoreEffect(struct effect *effect, struct gob *gob, int flags,
 
 struct object_run_hook_entry_data {
         Object *obj;
-        char *fmt;
+        const char *fmt;
         va_list args;
 };
 
@@ -1769,7 +1769,7 @@ static int object_run_hook_entry(struct hook_entry *entry, void *data)
         return 0;
 }
 
-void Object::runHook(int hook_id, char *fmt, ...)
+void Object::runHook(int hook_id, const char *fmt, ...)
 {
         struct object_run_hook_entry_data data;
 

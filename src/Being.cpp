@@ -350,14 +350,14 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         return false;
 }
 
-char *Being::getName() 
+const char *Being::getName() 
 {
         if (name)
                 return name;
         return "<no name>";
 }
 
-void Being::setName(char *val) 
+void Being::setName(const char *val) 
 {
         if (val)
                 name = strdup(val);

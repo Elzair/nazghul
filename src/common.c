@@ -50,7 +50,7 @@ int commonInit(void)
 }
 
 // fixme -- obsolete, use the next one
-static char *dir_str[] = {
+static const char *dir_str[] = {
 	"Northwest", "North", "Northeast",
 	"West", "Here", "East",
 	"Southwest", "South", "Southeast", 
@@ -95,7 +95,7 @@ static int keyToDirectionTable[] = {
 	NORTHWEST, NORTH, NORTHEAST
 };
 
-char *directionToString(int dir)
+const char *directionToString(int dir)
 {
         if (dir < 0 || dir >= array_sz(dir_str))
                 return "*** invalid direction ***";
@@ -149,7 +149,7 @@ int directionToDy(int dir)
 	return directionToDyTable[dir];
 }
 
-char *get_dir_str(int dx, int dy)
+const char *get_dir_str(int dx, int dy)
 {
 	clamp(dx, -1, 1);
 	clamp(dy, -1, 1);

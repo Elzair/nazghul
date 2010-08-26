@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *EFFECT_ID = "EFFECT";
+const int EFFECT_ID = 0xeffec1;
 
 struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
                           pointer apply_proc, pointer rm_proc,

@@ -171,7 +171,7 @@ int cmdwin_init(void)
 	return 0;
 }
 
-static void cmdwin_vpush(int flags, char *fmt, va_list args)
+static void cmdwin_vpush(int flags, const char *fmt, va_list args)
 {
         /* Allocate a new fragment */
         struct cmdwin_frag *frag = (struct cmdwin_frag*)malloc(sizeof(*frag));
@@ -200,7 +200,7 @@ static void cmdwin_vpush(int flags, char *fmt, va_list args)
 	cmdwin_repaint();        
 }
 
-void cmdwin_spush(char *fmt, ...)
+void cmdwin_spush(const char *fmt, ...)
 {
 	va_list args;
 
@@ -210,7 +210,7 @@ void cmdwin_spush(char *fmt, ...)
         
 }
 
-void cmdwin_push(char *fmt, ...)
+void cmdwin_push(const char *fmt, ...)
 {
 	va_list args;
 

@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 	extern int consoleInit(void);
-	extern void consolePrint(char *fmt, ...);
+	extern void consolePrint(const char *fmt, ...);
 	extern void consoleBackspace(int n);
 	//extern void consoleNewline(void);
 	extern void consoleRepaint(void);

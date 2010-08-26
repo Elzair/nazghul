@@ -103,7 +103,7 @@ struct terrain_editor_cmd {
  * emit_terraform_status - print the active terrain palette entry to the
  * console during terraform mode
  */
-void emit_terraform_status (char * msg, struct terrain * tt)
+void emit_terraform_status (const char * msg, struct terrain * tt)
 {
     log_msg("[%s]: %s '%s'", msg, tt->tag, tt->name);
 }
@@ -685,7 +685,7 @@ static void terrain_editor_applet_ops_run(struct applet *applet, SDL_Rect *dims,
  */
 static void terrain_editor_help_paint(struct terrain_editor_pane *pane)
 {
-    static char *text[] = {
+    static const char *text[] = {
         "  PageUp/PageDn/ = Scroll palette up/down",
         "       Home/End  = Scroll to begin/end",
         "     Arrow Keys  = Move cursor",

@@ -103,16 +103,17 @@ static struct status {
          */
 	char title[MAX_TITLE_LEN+1];
 
-	char *pg_title, *pg_text;
+	const char *pg_title;
+        char *pg_text;
 	SDL_Surface *pg_surf;
 	SDL_Rect pg_rect;
 	int pg_max_y;
 
-	char *list_title;
+	const char *list_title;
 	int list_sz;
 	struct trade_info *trades;
 	struct stat_list_entry *list;
-	char **strlist;
+	const char **strlist;
 	
 	Container *container;
 	struct filter *filter;
@@ -304,7 +305,7 @@ int statusInit()
 	return 0;
 }
 
-void status_set_title(char *title)
+void status_set_title(const char *title)
 {
 	strncpy(Status.title, title, MAX_TITLE_LEN);
 	Status.title[MAX_TITLE_LEN]=0;
@@ -1439,7 +1440,7 @@ void statusSetMode(enum StatusMode mode)
 	statusRepaint();
 }
 
-void *statusGetSelected(enum StatusSelection sel)
+const void *statusGetSelected(enum StatusSelection sel)
 {
 	switch (sel)
 	{
@@ -1514,10 +1515,15 @@ void statusSelectCharacter(int partyOrderIndex)
 	Status.pcIndex = partyOrderIndex;
 }
 
-void statusSetPageText(char *title, char *text)
+void statusSetPageText(const char *title, const char *text)
 {
 	Status.pg_title = title;
-	Status.pg_text = text;
+        if (Status.pg_text) {
+                free(Status.pg_text);
+                Status.pg_text = NULL;
+        }
+        /* Make a writable copy so we can insert newlines during formatting. */
+	Status.pg_text = strdup(text);
 }
 
 void statusSetTradeInfo(int list_sz, struct trade_info *trades)
@@ -1536,15 +1542,15 @@ void statusUpdateTradeInfo(int list_sz, struct trade_info *trades)
 	statusRepaint();
 }
 
-void statusSetGenericList(char *title, int list_sz, 
-								struct stat_list_entry *list)
+void statusSetGenericList(const char *title, int list_sz, 
+                          struct stat_list_entry *list)
 {
 	Status.list_title = title;
 	Status.list_sz = list_sz;
 	Status.list	= list;
 }
 
-void statusSetStringList(char *title, int list_sz, char **strings)
+void statusSetStringList(const char *title, int list_sz, const char **strings)
 {
 	Status.list_title = title;
 	Status.list_sz = list_sz;
@@ -1739,7 +1745,7 @@ void statusSetSuperGenericData(struct stat_super_generic_data *data)
 	data->refcount++;
 }
 
-void statusBrowseContainer(class Container *container, char *title)
+void statusBrowseContainer(class Container *container, const char *title)
 {
 	switch_to_tall_mode();
 	status_set_title(title);

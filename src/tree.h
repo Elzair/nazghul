@@ -51,7 +51,7 @@ extern "C" {
         extern struct tree *tree_minimum(struct tree *node);
         extern void tree_replace(struct tree **root, struct tree *out, struct tree *in);
         extern struct tree *tree_i_search(struct tree *root, int key);
-        extern struct tree *tree_s_search(struct tree *root, char *key);
+        extern struct tree *tree_s_search(struct tree *root, const char *key);
 
 #ifdef __cplusplus
 }

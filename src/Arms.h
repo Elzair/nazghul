@@ -34,7 +34,7 @@ class ArmsType:public ObjectType {
 	virtual bool isType(int classID);
 	virtual int getType();
         ArmsType();
-        ArmsType(char *tag, char *name, struct sprite *sprite,
+        ArmsType(const char *tag, const char *name, struct sprite *sprite,
 			int slotMask,
 			char *to_hit_dice,
 			char *to_defend_dice,

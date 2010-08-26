@@ -118,7 +118,7 @@ void ztats_container_pane_paint(struct ztats_pane *pane)
 
 }
 
-void ztats_container_pane_init(struct ztats_container_pane *zcp, char *title, struct filter *filter, struct ztats_container_pane_ops *ops)
+void ztats_container_pane_init(struct ztats_container_pane *zcp, const char *title, struct filter *filter, struct ztats_container_pane_ops *ops)
 {
         static struct ztats_pane_ops base_ops = {
                 ztats_container_pane_enter,

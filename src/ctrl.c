@@ -874,8 +874,8 @@ static void ctrl_attack_ui(class Character *character)
 static void ctrl_move_character(class Character *character, int dir)
 {
         enum MoveResult move_result;
-        char *result = NULL;
-        char *dirstr = directionToString(dir);
+        const char *result = NULL;
+        const char *dirstr = directionToString(dir);
         int dx;
         int dy;
 

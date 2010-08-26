@@ -21,8 +21,7 @@
 #define kern_intvar_h
 
 int  kern_intvar_init();
-int  kern_intvar_save(char *fname);
-void kern_intvar_set(char *key, int value);
-int  kern_intvar_get(char *key);
+void kern_intvar_set(const char *key, int value);
+int  kern_intvar_get(const char *key);
 
 #endif

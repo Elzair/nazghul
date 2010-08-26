@@ -607,7 +607,7 @@ void screenFlash(SDL_Rect * rect, int mdelay, Uint32 color)
         SDL_Delay(mdelay);
 }
 
-void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
+void screenPrint(SDL_Rect * rect, int flags, const char *fmt, ...)
 {
 	va_list args;
 	int i;

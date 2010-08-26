@@ -302,7 +302,7 @@ typedef enum {
 char * version_as_string(void);  // From nazghul.c
 
 extern int commonInit(void);
-extern char *get_dir_str(int dx, int dy);
+extern const char *get_dir_str(int dx, int dy);
 extern void turnAdvance(int turns);
 extern int vector_to_dir(int dx, int dy);
 extern int vector_to_facing(int dx, int dy);
@@ -313,7 +313,7 @@ extern int stringToDirection(char *str);
 extern int keyToDirection(int key);
 extern int directionToDx(int dir);
 extern int directionToDy(int dir);
-extern char *directionToString(int dir);
+extern const char *directionToString(int dir);
 extern bool isvowel(char c);
 extern bool point_in_rect(int x, int y, SDL_Rect *rect);
 extern int directionToOpposite(int dir);

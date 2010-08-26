@@ -31,7 +31,7 @@ class VehicleType:public ObjectType {
  public:
 	virtual int getType();
         virtual bool isType(int classID);
-        VehicleType(char *tag, char *name, struct sprite *sprite,
+        VehicleType(const char *tag, const char *name, struct sprite *sprite,
                     struct terrain_map *map,
                     class ArmsType *ordnance,
                     bool vulnerable,
@@ -84,7 +84,7 @@ class Vehicle:public Object {
         Vehicle (VehicleType*, int facing, int hp);
 	virtual ~Vehicle();
         virtual class VehicleType *getObjectType();
-	virtual char *getName();
+	virtual const char *getName();
         virtual int getX();
         virtual int getY();
         virtual class ArmsType *getOrdnance();

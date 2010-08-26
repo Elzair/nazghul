@@ -34,7 +34,7 @@
 #include "player.h"
 #include "log.h"
 
-ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
+ArmsType::ArmsType(const char *tag, const char *name, struct sprite *sprite,
 			int slotMask,
 			char *to_hit_dice,
 			char *to_defend_dice,

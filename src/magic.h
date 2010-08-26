@@ -96,7 +96,7 @@ extern int spell_add_reagent(struct spell *spell, ObjectType *reagent);
 extern int magic_spell_code_to_name(struct magic *magic, char *buf, int len, char *code);
 
 /* Opposite of magic_spell_code_to_name() */
-extern int magic_spell_name_to_code(struct magic *magic, char *buf, int len, char *name);
+extern int magic_spell_name_to_code(struct magic *magic, char *buf, int len, const char *name);
 
 
 END_DECL

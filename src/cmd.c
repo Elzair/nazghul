@@ -107,7 +107,7 @@ struct movecursor_data {
 /* fwd decls */
 
 #ifdef USE_SKILLS
-static class Character *cmd_front_end(class Character *pc, char *cmdstr);
+static class Character *cmd_front_end(class Character *pc, const char *cmdstr);
 #endif
 static int cmd_eval_and_log_result(int result);
 static int select_target_rlcb(struct place *place,
@@ -212,7 +212,7 @@ struct get_number_info {
 };
 
 struct get_char_info {
-        char *string;
+        const char *string;
         char c;
 	int state;
 	char *prompt;
@@ -220,7 +220,7 @@ struct get_char_info {
 
 struct get_spell_name_data {
 	char spell_name[MAX_WORDS_IN_SPELL_NAME + 1];
-        char *prompt;
+        const char *prompt;
 	char *ptr;
 	int n;
         int state;
@@ -1220,7 +1220,7 @@ bool cmdReady(class Character * member)
 	struct inv_entry *ie;
 	struct KeyHandler kh;
 	struct ScrollerContext sc;
-	char *msg = 0;
+	const char *msg = 0;
 
 	cmdwin_clear();
 	cmdwin_spush("Ready");
@@ -1532,7 +1532,7 @@ bool cmdHandle(class Character * pc)
 
         // Handle it (sometimes mechs are intentionally nameless so that they
         // remain hidden from x)amine and s)earch commands)
-        char *mechName=mech->getName();
+        const char *mechName=mech->getName();
         if (!mechName) {
                 mechName = "a hidden mechanism";
         }
@@ -2269,7 +2269,7 @@ int select_spell(struct get_spell_name_data *context)
 static int cmd_eval_and_log_result(int result)
 {
         static struct {
-                char *string;
+                const char *string;
                 int success;
         } tbl[] = {
                 { "^c+gok^c-!",               1 },
@@ -2799,7 +2799,7 @@ bool cmdXamine(class Object * pc)
 	return ret;
 } // cmdXamine()
 
-char * name_of_context (void)
+const char * name_of_context (void)
 {
         // SAM: Perhaps this function belongs in common.c?
         switch (player_party->getContext()) {
@@ -2815,8 +2815,8 @@ char * name_of_context (void)
 bool cmdAT (class Character * pc)
 {
 	int x, y;
-        char * who = "";
-        char * place_name = "";
+        const char * who = "";
+        const char * place_name = "";
 
 	cmdwin_clear();
 
@@ -2963,7 +2963,7 @@ bool cmd_terraform(struct place *place, int x, int y)
 bool cmd_save_current_place (struct place * place)
 {
     FILE *   file;
-    char *   file_path;
+    const char *   file_path;
     save_t * save;
     int ret;
 
@@ -3095,7 +3095,7 @@ void cmdReload(void)
 #define MARKUP 4
 
 
-int ui_get_yes_no(char *name)
+int ui_get_yes_no(const char *name)
 {
 	int yesno;
 	cmdwin_clear();
@@ -3468,7 +3468,7 @@ int ui_trade(struct merchant *merch)
 	}
 }
 
-static char *cmd_help_text =
+static const char *cmd_help_text =
 "Use the arrow keys to indicate direction.\n"
 "Use the ESC key to cancel commands.\n"
 "Use the first letter to start a command.\n"
@@ -3649,7 +3649,7 @@ void cmdDrop(class Character *actor)
 
 #ifdef USE_SKILLS
 
-static void *cmd_select_generic()
+static const void *cmd_select_generic()
 {
 	struct KeyHandler kh;
 	struct ScrollerContext sc;
@@ -3674,7 +3674,7 @@ static void *cmd_select_generic()
 
 
 /* Do common front-end processing. Migrate all commands to start using this. */
-static class Character *cmd_front_end(class Character *pc, char *cmdstr)
+static class Character *cmd_front_end(class Character *pc, const char *cmdstr)
 {
         cmdwin_clear();
         cmdwin_spush(cmdstr);
@@ -3774,7 +3774,7 @@ static int cmd_paint_skill(struct stat_super_generic_data *self,
 {
         struct skill_set_entry *ssent = (struct skill_set_entry *)node->ptr;
         struct skill *skill = ssent->skill;
-        char *requires = "Requires:";
+        const char *requires = "Requires:";
         struct node *tnode;
         struct list *elem;
         SDL_Rect orect;

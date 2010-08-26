@@ -37,14 +37,14 @@ extern "C" {
 #endif
 
 struct alg_list_entry {
-	char *name;
+	const char *name;
 	int (*init) (struct los * los);
 } algs[] = {
 	{
-	"floodfill", FLOODFILL_Init}, {
-"angband", ANGBAND_Init},};
+                "floodfill", FLOODFILL_Init}, {
+                "angband", ANGBAND_Init},};
 
-struct los *los_create(char *name, int w, int h, int r)
+struct los *los_create(const char *name, int w, int h, int r)
 {
 	struct los *los;
 	unsigned int i;

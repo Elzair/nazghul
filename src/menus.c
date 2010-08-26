@@ -85,9 +85,9 @@ typedef struct {
         saved_game_t *save; /**< Currently highlighted saved game */
         char *entry;        /**< Currently highlighted string entry */
         char *hotkeys;      /**< Hotkey characters, in order of listing */
-        char **menu;        /**< Menu strings */
+        const char **menu;        /**< Menu strings */
         int n_menu;         /**< Number of menu strings */
-        char *title;        /**< Menu title */
+        const char *title;        /**< Menu title */
         char abort : 1;     /**< The player aborted the selection */
 } menu_scroll_data_t;
 
@@ -107,7 +107,7 @@ static saved_game_t *menu_current_saved_game = 0;
 /**
  * This is what the Save Game menu shows for the new game option.
  */
-static char *MENU_NEW_GAME_STR = "N)ew Saved Game";
+static const char *MENU_NEW_GAME_STR = "N)ew Saved Game";
 
 /**
  * This is a hack added to support demo mode. I'll try to explain, because it's
@@ -280,8 +280,8 @@ static bool main_menu_quit_handler(struct QuitHandler *kh)
 static void show_credits(void)
 {
         struct KeyHandler kh;
-        char *title = "Credits";
-        char *text = 
+        const char *title = "Credits";
+        const char *text = 
                 "Engine Programming\n"\
                 "...Gordon McNutt\n"\
                 "...Kris Parker\n"\
@@ -500,7 +500,7 @@ static saved_game_t *saved_game_lookup(char *fname)
  */
 static void menu_show_screenshot(SDL_Surface *screenshot)
 {
-        static char *MENU_SCREEN_SHOT_STR = "^c+ySCREEN SHOT^c-";
+        static const char *MENU_SCREEN_SHOT_STR = "^c+ySCREEN SHOT^c-";
         SDL_Rect rect;
 
         mapSetImage(screenshot);
@@ -839,7 +839,7 @@ char * journey_onward(void)
  */
 char * load_game_menu(void)
 {
-        char **menu = 0;
+        const char **menu = 0;
         char *menubuf, *menubufptr;
         int n = 0;
         int i = 0;
@@ -862,7 +862,7 @@ char * load_game_menu(void)
         n = list_len(&menu_saved_games);
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
-        menu = (char**)calloc(n, sizeof(menu[0]));
+        menu = (const char**)calloc(n, sizeof(menu[0]));
         assert(menu);
 
         data.hotkeys = (char*)calloc(n + 1, 1);
@@ -973,7 +973,7 @@ static char *prompt_for_fname()
  */
 char * save_game_menu(void)
 {
-        char **menu = 0;
+        const char **menu = 0;
         char *menubuf, *menubufptr;
         int n = 0;
         int i = 0;
@@ -990,7 +990,7 @@ char * save_game_menu(void)
         n = list_len(&menu_saved_games) + 1;
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
-        menu = (char**)calloc(n, sizeof(menu[0]));
+        menu = (const char**)calloc(n, sizeof(menu[0]));
         assert(menu);
 
         data.hotkeys = (char*)calloc(n+1, 1);
@@ -1114,7 +1114,7 @@ reselect:
                 
                 /* Replace the "New Saved Game" menu line with what the player
                    typed. */
-                strncpy(menu[0], new_name, linew);
+                strncpy(menubuf, new_name, linew);
                 
                 /* Add a new saved game struct to the list. */
                 selected_game = saved_game_new(new_name);
@@ -1195,15 +1195,15 @@ static bool menus_demo_tick_handler(struct TickHandler *th)
 
 char * main_menu(void)
 {
-        static char *START_NEW_GAME="S)tart New Game";
-        static char *JOURNEY_ONWARD="J)ourney Onward";
-        static char *LOAD_GAME="L)oad Game";
-        static char *CREDITS="C)redits";
-        static char *QUIT="Q)uit";
-        static char *TUTORIAL="T)utorial";
-        static char *SETTINGS = "S(e)ttings";
-        static char *DEMO = "Show (I)ntro";
-        char *menu[8];
+        static const char *START_NEW_GAME="S)tart New Game";
+        static const char *JOURNEY_ONWARD="J)ourney Onward";
+        static const char *LOAD_GAME="L)oad Game";
+        static const char *CREDITS="C)redits";
+        static const char *QUIT="Q)uit";
+        static const char *TUTORIAL="T)utorial";
+        static const char *SETTINGS = "S(e)ttings";
+        static const char *DEMO = "Show (I)ntro";
+        const char *menu[8];
         char hotkeys[8+1];
         int n_items = 0;
         struct KeyHandler kh;
@@ -1471,10 +1471,10 @@ enum {
 };
 
 struct option {
-        char name[OPTION_MAXNAMESTRLEN];
-        char *comment;
-        char *key;
-        char *val;
+        const char *name;
+        const char *comment;
+        const char *key;
+        const char *val;
         char *entry_val;
         char *startup_val;
         void (*handler)(struct option *);
@@ -1511,7 +1511,7 @@ static struct option options[OPTION_NUMOPTIONS] = {
 static void option_screen_dims(struct option *opt)
 {
 #       define ADD_SCREEN_DIM(dim,mapw) (dim),
-        char *menu[] = {
+        const char *menu[] = {
 #               include "screen_dims.h"
         };
         struct KeyHandler kh;
@@ -1570,7 +1570,7 @@ static void option_yes_no(struct option *opt)
 /* option_sound -- prompt player to enable music at given level */
 static void option_music(struct option *opt)
 {
-	char *menu[] = {
+	const char *menu[] = {
 		"Off","25%","50%","75%","100%"
 	};
 	struct KeyHandler kh;
@@ -1640,7 +1640,7 @@ void options_menu(void)
         int any_changed = 0;
         int any_restart = 0;
         char menu_strings[OPTION_NUMOPTIONS][OPTION_MAXMENUSTRLEN] = {};
-        char *menu[OPTION_NUMOPTIONS];
+        const char *menu[OPTION_NUMOPTIONS];
         struct KeyHandler kh;
 	struct ScrollerContext data;
 
@@ -1684,7 +1684,7 @@ void options_menu(void)
                 foogodSetHintText(SCROLLER_HINT);
                 foogodSetMode(FOOGOD_HINT);
                 statusSetStringList("Settings", OPTION_NUMOPTIONS, 
-                                    (char**)menu);
+                                    (const char**)menu);
                 statusSetMode(StringList);
                 data.selection = NULL;
                 data.selector  = String;
@@ -1765,7 +1765,7 @@ void options_menu(void)
         }        
 }
 
-void menu_startup_error(char *fmt, ...)
+void menu_startup_error(const char *fmt, ...)
 {
 	va_list args;
 	char buf[128], *ptr;

@@ -2,7 +2,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-static int dice_parse(char *ptr, int *num, int *faces, int *bias)
+static int dice_parse(const char *ptr, int *num, int *faces, int *bias)
 {
         int state = 0;
         int val = 0;
@@ -136,7 +136,7 @@ int dice_roll_numeric(int num, int faces, int bias)
 	return val;
 }
 
-int dice_roll(char *ptr)
+int dice_roll(const char *ptr)
 {
         int num = 0;
         int faces = 0;
@@ -151,7 +151,7 @@ int dice_roll(char *ptr)
         return dice_roll_numeric(num,faces,bias);
 }
 
-int dice_valid(char *fmt)
+int dice_valid(const char *fmt)
 {
         int num, faces, bias;
         if (!fmt) 
@@ -159,7 +159,7 @@ int dice_valid(char *fmt)
         return dice_parse(fmt, &num, &faces, &bias) ? 0 : 1;
 }
 
-int dice_average(char *fmt)
+int dice_average(const char *fmt)
 {
         int num, faces, bias;
         dice_parse(fmt, &num, &faces, &bias);

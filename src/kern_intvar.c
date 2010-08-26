@@ -34,7 +34,7 @@ struct kern_intvar_entry {
     int value;
 } *kern_intvar_hash[KERN_INTVAR_HASH_SIZE];
 
-static struct kern_intvar_entry *kern_intvar_entry_new(char *key, const int value)
+static struct kern_intvar_entry *kern_intvar_entry_new(const char *key, const int value)
 {
     struct kern_intvar_entry *entry = (struct kern_intvar_entry*) malloc(sizeof(*entry));
     assert(entry);
@@ -49,7 +49,7 @@ static struct kern_intvar_entry *kern_intvar_entry_new(char *key, const int valu
     return entry;
 }
 
-static int hashfn(char *key)
+static int hashfn(const char *key)
 {
     unsigned int hashed = 0; 
     const char *c; 
@@ -69,7 +69,7 @@ int kern_intvar_init()
     return 0;
 }
 
-void kern_intvar_set(char *key, int value)
+void kern_intvar_set(const char *key, int value)
 {
     int hashkey = hashfn(key);
     struct kern_intvar_entry *entry = kern_intvar_hash[hashkey];
@@ -91,7 +91,7 @@ void kern_intvar_set(char *key, int value)
     }
 }
 
-int kern_intvar_get(char *key)
+int kern_intvar_get(const char *key)
 {
     int hashkey = hashfn(key);
     struct kern_intvar_entry *entry = kern_intvar_hash[hashkey];

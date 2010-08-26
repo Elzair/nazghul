@@ -8,7 +8,7 @@
 int DEBUG = 1;
 int VERBOSE = 1;
 
-void dbg(char *fmt, ...)
+void dbg(const char *fmt, ...)
 {
         if (DEBUG) {
                 va_list args;
@@ -18,7 +18,7 @@ void dbg(char *fmt, ...)
         }
 }
 
-void err(char *fmt, ...)
+void err(const char *fmt, ...)
 {
         va_list args;
         va_start(args, fmt);
@@ -28,7 +28,7 @@ void err(char *fmt, ...)
         exit(-1);
 }
 
-void info(char *fmt, ...)
+void info(const char *fmt, ...)
 {
         if (VERBOSE) {
                 va_list args;
@@ -38,7 +38,7 @@ void info(char *fmt, ...)
         }
 }
 
-void warn(char *fmt, ...)
+void warn(const char *fmt, ...)
 {
         va_list args;
         va_start(args, fmt);
@@ -46,7 +46,7 @@ void warn(char *fmt, ...)
         va_end(args);
 }
 
-void vwarn(char *fmt, va_list args)
+void vwarn(const char *fmt, va_list args)
 {
         vprintf(fmt, args);
 }

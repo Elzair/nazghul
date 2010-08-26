@@ -27,9 +27,7 @@
 
 #include <assert.h>
 
-char *TERRAIN_MAP_MAGIC = "TERRAIN_MAP";
-
-struct terrain_map *terrain_map_new(char *tag, unsigned int w,
+struct terrain_map *terrain_map_new(const char *tag, unsigned int w,
                                     unsigned int h,
                                     struct terrain_palette * pal)
 {
@@ -39,7 +37,6 @@ struct terrain_map *terrain_map_new(char *tag, unsigned int w,
                 terrain_map->tag = strdup(tag);
                 assert(terrain_map->tag);
         }
-        terrain_map->magic = TERRAIN_MAP_MAGIC;
 	terrain_map->w = w;
 	terrain_map->h = h;
         terrain_map->palette = pal;
@@ -51,7 +48,7 @@ struct terrain_map *terrain_map_new(char *tag, unsigned int w,
 	return terrain_map;
 }
 
-struct terrain_map *terrain_map_clone(struct terrain_map *orig, char *tag)
+struct terrain_map *terrain_map_clone(struct terrain_map *orig, const char *tag)
 {
 	struct terrain_map *map;
 
@@ -403,7 +400,7 @@ static void terrain_map_composite_save(struct save *save, struct terrain_map *ma
     int w, h, sub_w, sub_h;
     int x, y, sub_x, sub_y;
     int nn;
-    char * tag;
+    const char * tag;
 
         map->saved = save->session_id;
 
@@ -496,8 +493,6 @@ void terrain_map_save(struct save *save, void *val)
         int x, y, i;
 
         map = (struct terrain_map*)val;
-
-	assert(is_terrain_map(map));
 
         if (map->saved == save->session_id) {
                 save->write(save, "%s\n", map->tag);

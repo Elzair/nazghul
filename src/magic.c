@@ -274,10 +274,10 @@ int magic_spell_code_to_name(struct magic *magic, char *buf, int len,
 }
 
 int magic_spell_name_to_code(struct magic *magic, char *code, int len, 
-                             char *name)
+                             const char *name)
 {
         int state = 2, i = 0;
-        char *ptr = name;
+        const char *ptr = name;
 
         len--; /* leave space for null terminator */
 

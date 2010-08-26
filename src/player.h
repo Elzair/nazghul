@@ -81,7 +81,7 @@ class PlayerParty : public Party {
         virtual bool addToInventory(class Object *object);
         virtual bool hasInInventory(class ObjectType *type);
         virtual struct sprite *getSprite(void);
-        virtual char *getName(void);
+        virtual const char *getName(void);
         virtual bool isVisible();
         virtual void describe();
         virtual void exec();

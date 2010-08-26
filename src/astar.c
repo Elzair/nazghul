@@ -319,8 +319,9 @@ struct astar_node *astar_search(struct astar_search_info *info)
 
                 /* Check if this node is at max depth */
                 if (node->depth == MAX_DEPTH ||
-                    info->limit_depth && node->depth == info->max_depth)
+                    (info->limit_depth && node->depth == info->max_depth)) {
                         continue;
+                }
 
 		/* Check the four non-diagonal neighbors of this node */
 		for (row = 0, info->y0 = node->y - 1; row < 3;

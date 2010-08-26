@@ -175,8 +175,8 @@ int images_convert2display(struct images *images)
 	return 1;
 }
 
-struct images *images_new(char *tag, int w, int h, int rows, int cols, 
-                          int offx, int offy, char *fname)
+struct images *images_new(const char *tag, int w, int h, int rows, int cols, 
+                          int offx, int offy, const char *fname)
 {
 	struct images *images;
 	char *filename;

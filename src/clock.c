@@ -226,7 +226,7 @@ char *time_DD_as_string(void)
 // will wait until we have GhulScript
 // for week and month names and such.
 // 
-char *month_name(void)
+const char *month_name(void)
 {
 	int month = Clock.month;
 	switch (month) {
@@ -259,7 +259,7 @@ char *month_name(void)
 	}
 }				// month_name()
 
-char *week_name(void)
+const char *week_name(void)
 {
 	int week = Clock.week;
 	switch (week) {
@@ -276,7 +276,7 @@ char *week_name(void)
 	}
 }				// week_name()
 
-char *day_name(void)
+const char *day_name(void)
 {
 	int day = Clock.day;
 	switch (day) {

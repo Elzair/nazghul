@@ -59,8 +59,8 @@ struct species {
         int stationary : 1;  /* doesn't move?                */
 };
 
-extern struct species *species_new(char *tag,
-                                   char *name,
+extern struct species *species_new(const char *tag,
+                                   const char *name,
                                    sound_t *damage_sound,
                                    sound_t *movement_sound,
                                    int str,
