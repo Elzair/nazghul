@@ -53,9 +53,9 @@
 
 // Convenience macro for iterating over party members:
 #define FOR_EACH_MEMBER(e,c)                                               \
-   for ((e) = members.next, (c) = (class Character *)(e)->ptr;             \
+        for ((e) = node_next(&members), (c) = (class Character *)(e)->ptr; \
         (e) != &members;                                                   \
-        (e) = (e)->next, (c) = (class Character *)(e)->ptr)
+        (e) = node_next(e), (c) = (class Character *)(e)->ptr)
 
 
 Party::Party()
@@ -452,12 +452,12 @@ void Party::forEachMember(bool (*fx) (class Character *, void *), void *data)
 {
 	struct node *elem;
 
-	elem = members.next;
+	elem = node_next(&members);
 	while (elem != &members) {
 		class Character *c;
 
 		c = (class Character *)elem->ptr;
-                elem = elem->next;
+                elem = node_next(elem);
 
 		if (fx(c, data))
 			return;
@@ -469,12 +469,12 @@ void Party::forEachReverseMember(bool (*fx) (class Character *, void *), void *d
 {
 	struct node *elem;
 
-	elem = members.prev;
+	elem = node_prev(&members);
 	while (elem != &members) {
 		class Character *c;
 
 		c = (class Character *)elem->ptr;
-                elem = elem->prev;
+                elem = node_prev(elem);
 
 		if (fx(c, data))
 			return;

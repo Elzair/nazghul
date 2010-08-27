@@ -731,10 +731,10 @@ void session_rm_sched_char(struct node *node)
 
 void session_synch_sched_chars(struct session *session)
 {
-        struct node *node = session->sched_chars.next;
+        struct node *node = node_next(&session->sched_chars);
         while (node != &session->sched_chars) {
                 class Character *npc = (class Character*)node->ptr;
-                node = node->next;
+                node = node_next(node);
                 npc->synchronize();
                 if (npc->isCharmed())
                         npc->unCharm();
@@ -743,11 +743,11 @@ void session_synch_sched_chars(struct session *session)
 
 void session_intro_sched_chars(struct session *session)
 {
-        struct node *node = session->sched_chars.next;
+        struct node *node = node_next(&session->sched_chars);
         while (node != &session->sched_chars) {
                 class Character *npc = (class Character*)node->ptr;
                 npc->introduce();
-                node = node->next;
+                node = node_next(node);
         }        
 }
 

@@ -24,27 +24,28 @@
 #define node_h
 
 #include "macros.h"
-#include "list.h"
+#include "olist.h"
 
 BEGIN_DECL
 
 struct node {
-        struct node *next;
-        struct node *prev;
-        int key; /* for nodes in ordered lists */
+        struct olist olist;
         void *ptr;
         int ref;
 };
 
 
-#define nodelst(n) ((struct list *)(n))
-#define nodekeyedlst(n) ((struct olist *)(n))
+#define nodelst(n) (&((n)->olist.list))
+#define nodekeyedlst(n) (&((n)->olist))
+#define node_next(n) ((struct node *)((n)->olist.list.next))
+#define node_prev(n) ((struct node *)((n)->olist.list.prev))
+#define node_key(n) ((n)->olist.key)
 #define node_add(n1,n2) list_add(nodelst(n1), nodelst(n2))
 #define node_addref(n) ((n)->ref++)
 #define node_add_keyed(n1, n2) olist_add(nodekeyedlst(n1), nodekeyedlst(n2))
 #define node_add_tail(n1,n2) list_add_tail(nodelst(n1), nodelst(n2))
 #define node_for_each(head,ptr) \
-        for ((ptr) = (head)->next; (ptr) != (head); (ptr) = (ptr)->next)
+        for ((ptr) = node_next(head); (ptr) != (head); (ptr) = node_next(ptr))
 #define node_init(n) { list_init(nodelst(n)); (n)->ptr = NULL; }
 #define node_list_empty(n) (list_empty(nodelst(n)))
 #define node_remove(n) list_remove(nodelst(n))

@@ -41,7 +41,7 @@ struct node *node_new_keyed(void *data, int key)
         struct node *node;
 
         node = node_new(data);
-        node->key = key;
+        node_key(node) = key;
 
         return node;
 }
@@ -61,11 +61,11 @@ void node_foldr(struct node *head,
         struct node *i;
         struct node *p;
 
-        i = head->next;
+        i = node_next(head);
 
         while (i != head) {
                 p = i;
-                i = i->next;
+                i = node_next(i);
 
                 fx(p, data);
         }
@@ -73,10 +73,10 @@ void node_foldr(struct node *head,
 
 int node_list_len(struct node *head)
 {
-        struct node *node = head->next;
+        struct node *node = node_next(head);
         int n = 0;
         while (node != head) {
-                node = node->next;
+                node = node_next(node);
                 n++;
         }
         return n;
@@ -84,9 +84,9 @@ int node_list_len(struct node *head)
 
 void node_list_unlink_and_unref(struct node *head)
 {
-        struct node *node = head->next;
+        struct node *node = node_next(head);
         while (node != head) {
-                struct node *tmp = node->next;
+                struct node *tmp = node_next(node);
                 node_remove(node);
                 node_unref(node);
                 node = tmp;

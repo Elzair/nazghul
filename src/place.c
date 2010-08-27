@@ -127,9 +127,9 @@ static void tile_for_each_object(struct tile *tile,
         struct node *elem;
         class Object *obj;
 
-        for (elem = tile->objstack.next; elem != &tile->objstack; ) {
+        for (elem = node_next(&tile->objstack); elem != &tile->objstack; ) {
 		obj = (class Object *)elem->ptr;
-                elem = elem->next;
+                elem = node_next(elem);
                 fx(obj, data);
 	}
 
@@ -144,9 +144,9 @@ static Object *tile_get_filtered_object(struct tile *tile, int (*filter)(Object*
 
         /* Traverse the list in reverse order, so the first item returned is
          * the one shown by the UI as topmost in the pile. */
-        for (elem = tile->objstack.prev; elem != &tile->objstack; ) {
+        for (elem = node_prev(&tile->objstack); elem != &tile->objstack; ) {
 		obj = (class Object *)elem->ptr;
-                elem = elem->prev;
+                elem = node_prev(elem);
                 if (filter(obj))
                         return obj;
 	}
@@ -192,9 +192,9 @@ static int tile_is_transparent(struct tile *tile)
 	struct node *elem;
 	class Object *obj;
 
-        for (elem = tile->objstack.next; elem != &tile->objstack; ) {
+        for (elem = node_next(&tile->objstack); elem != &tile->objstack; ) {
 		obj = (class Object *)elem->ptr;
-                elem = elem->next;
+                elem = node_next(elem);
                 if (obj->isOpaque())
                         return 0;
 	}
@@ -450,8 +450,9 @@ static void place_remove_from_turn_list(struct place *place, Object *object)
          * turn_list. In this special case we must setup the next object after
          * this to be processed instead. This can happen when one object
          * destroys or picks up another object on its turn. */
-        if (place->turn_elem == node)
-                place->turn_elem = node->next;
+        if (place->turn_elem == node) {
+                place->turn_elem = node_next(node);
+        }
 
         /* Unlink the node from the turn list. */
         node_remove(node);
@@ -1823,10 +1824,10 @@ void place_exec(struct place *place)
         place_lock(place);
         
         /* Flush ambient noises one cycle */
-   	   sound_flush_ambient();
-
+        sound_flush_ambient();
+        
         /* Start with the first node */
-        place->turn_elem = place->turn_list.next;
+        place->turn_elem = node_next(&place->turn_list);
 
         /* Loop over all nodes or until the player quits or dies. */
         while (place->turn_elem != &place->turn_list
@@ -1845,7 +1846,7 @@ void place_exec(struct place *place)
 
                 /* Advance the node pointer now in case we need to remove the
                  * object while running it. */
-                place->turn_elem = place->turn_elem->next;
+                place->turn_elem = node_next(place->turn_elem);
 
                 /* Check the global time stop thread. Only the player gets to
                  * move during time stop and no tile effects are applied to
@@ -2066,13 +2067,13 @@ static void place_save_objects(struct place *place, struct save *save)
 
         save->enter(save, "(list ;; objects in %s\n", place->tag);
 
-        pnode = place->turn_elem->prev;
+        pnode = node_prev(place->turn_elem);
         do {
-                pnode = pnode->prev;
+                pnode = node_prev(pnode);
                 if (pnode != &place->turn_list) {
                         place_save_object((class Object*)pnode->ptr, save);
                 }
-        } while (pnode != place->turn_elem->prev);
+        } while (pnode != node_prev(place->turn_elem));
 
         save->exit(save, ") ;; end of objects in %s\n", place->tag);
 }

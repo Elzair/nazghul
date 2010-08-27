@@ -1431,7 +1431,7 @@ void statusSetMode(enum StatusMode mode)
 		if (node_list_empty(&Status.super_generic->list)) {
 			Status.super_generic->first_shown = 0;
 		} else {
-			Status.super_generic->first_shown = Status.super_generic->list.next;
+			Status.super_generic->first_shown = node_next(&Status.super_generic->list);
 		}
 		Status.super_generic->selected = Status.super_generic->first_shown;
 		break;
@@ -1662,7 +1662,7 @@ static void stat_super_generic_paint()
                 Status.super_generic->first_to_last++;
                 
                 /* Advance the list */
-                node = node->next;
+                node = node_next(node);
 	}
 
         Status.super_generic->first_to_last--; /* overcounted by 1 */
@@ -1671,8 +1671,8 @@ static void stat_super_generic_paint()
 static void stat_super_generic_scroll(enum StatusScrollDir dir)
 {
 	struct stat_super_generic_data *gen = Status.super_generic;
-	struct node *first = gen->list.next;
-	struct node *last = gen->list.prev;
+	struct node *first = node_next(&gen->list);
+	struct node *last = node_prev(&gen->list);
 
 	/* Check for trivial case: empty list */
 	if (node_list_empty(&gen->list)) {
@@ -1684,7 +1684,7 @@ static void stat_super_generic_scroll(enum StatusScrollDir dir)
 	case ScrollPageUp:
 	case ScrollUp:
 		if (gen->selected != first) {
-			gen->selected = gen->selected->prev;
+			gen->selected = node_prev(gen->selected);
                         
                         /* If the selected item has reached the middle of the
                          * window, and there is more stuff to see above the
@@ -1692,7 +1692,7 @@ static void stat_super_generic_scroll(enum StatusScrollDir dir)
                         int selected_to_last = gen->first_to_last - gen->first_to_selected;
                         if ((gen->first_shown != first)
                             && (selected_to_last > gen->first_to_selected)) {
-                                gen->first_shown = gen->first_shown->prev;
+                                gen->first_shown = node_prev(gen->first_shown);
                         } else {
                                 gen->first_to_selected--;
                         }
@@ -1702,7 +1702,7 @@ static void stat_super_generic_scroll(enum StatusScrollDir dir)
 	case ScrollPageDown:
 	case ScrollDown:
 		if (gen->selected != last) {
-			gen->selected = gen->selected->next;
+			gen->selected = node_next(gen->selected);
                         
                         /* If the selected item has reached the middle of the
                          * window, and there is more stuff to see below the
@@ -1710,7 +1710,7 @@ static void stat_super_generic_scroll(enum StatusScrollDir dir)
                         int selected_to_last = gen->first_to_last - gen->first_to_selected;
                         if ((gen->last_shown != last)
                             && (selected_to_last <= gen->first_to_selected)) {
-                                gen->first_shown = gen->first_shown->next;
+                                gen->first_shown = node_next(gen->first_shown);
                         } else {
                                 gen->first_to_selected++;
                         }

@@ -254,14 +254,14 @@ bool PlayerParty::turn_vehicle(void)
 /* Note it is not safe to modify the member list within the block of the below
  * 'iterator'  */
 #define FOR_EACH_MEMBER(e,c) \
-      for ((e) = members.next, (c) = (class Character *)(e)->ptr; \
+        for ((e) = node_next(&members), (c) = (class Character *)(e)->ptr; \
            (e) != &members; \
-           (e) = (e)->next, (c) = (class Character *)(e)->ptr)
+           (e) = node_next(e), (c) = (class Character *)(e)->ptr)
 
 #define FOR_EACH_REVERSE_MEMBER(e,c) \
-      for ((e) = members.prev, (c) = (class Character *)(e)->ptr; \
+        for ((e) = node_prev(&members), (c) = (class Character *)(e)->ptr; \
            (e) != &members; \
-           (e) = (e)->prev, (c) = (class Character *)(e)->ptr)
+           (e) = node_prev(e), (c) = (class Character *)(e)->ptr)
 
 
 void PlayerParty::distributeMembers(struct place *new_place, int new_x, 
@@ -944,9 +944,9 @@ void PlayerParty::removeMember(class Character *c)
 	}
 
         // Re-order the indices of the remaining party members
-        for (entry = c->plnode->next, index = c->getOrder(); 
+        for (entry = node_next(c->plnode), index = c->getOrder(); 
              entry != &members; 
-             entry = entry->next, index++) {
+             entry = node_next(entry), index++) {
                 next_member = (class Character *)entry->ptr;
                 next_member->setOrder(index);
         }
@@ -1748,7 +1748,7 @@ void PlayerParty::save(save_t *save)
 
         inventory->save(save);
 
-        if (list_empty(&this->members)) {
+        if (list_empty(nodelst(&this->members))) {
                 save->write(save, "nil\n");
         } else {
                 struct node *elem;

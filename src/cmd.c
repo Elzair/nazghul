@@ -3886,10 +3886,10 @@ static void cmd_skill_list_unref(struct stat_super_generic_data *self)
         }
 
         /* Cleanup if no more refs. */
-        node = self->list.next;
+        node = node_next(&self->list);
         while (node != &self->list) {
                 struct node *tmp = node;
-                node = node->next;
+                node = node_next(node);
                 node_unref(tmp);
         }
 }
