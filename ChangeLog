@@ -1,3 +1,2167 @@
+2010-12-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* scripts/nazghul.iss:
+	Updated version number and URL. Changed the program name to haxima.
+
+2010-08-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Party.cpp, src/cmd.c, src/node.c, src/node.h, src/place.c, src/player.cpp, src/session.c, src/status.c:
+	Fixed all the warnings related to strict aliasing and type punning. We now compile warning-free with gcc 4.4.4.
+
+2010-08-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/map.h, src/menus.c, src/menus.h, src/nazghul.c, src/object.c, src/object.h, src/occ.c, src/occ.h, src/place.c, src/place.h, src/player.cpp, src/player.h, src/sched.c, src/sched.h, src/scheme.c, src/screen.c, src/screen.h, src/session.c, src/session.h, src/sky.c, src/sound.c, src/sound.h, src/species.c, src/species.h, src/sprite.c, src/sprite.h, src/status.c, src/status.h, src/terrain.c, src/terrain.h, src/terrain_editor.c, src/terrain_map.c, src/terrain_map.h, src/tree.c, src/tree.h, src/vehicle.cpp, src/vehicle.h, src/vmask.c, src/ztats_container_pane.c, src/ztats_container_pane.h, src/Arms.cpp, src/Arms.h, src/Being.cpp, src/Being.h, src/Field.cpp, src/Field.h, src/Missile.cpp, src/Missile.h, src/Party.cpp, src/ascii.c, src/astar.c, src/cfg.c, src/cfg.h, src/character.cpp, src/character.h, src/clock.c, src/clock.h, src/closure.c, src/closure.h, src/cmd.c, src/cmd.h, src/cmdwin.c, src/cmdwin.h, src/common.c, src/common.h, src/console.c, src/console.h, src/conv.c, src/ctrl.c, src/debug.c, src/debug.h, src/dice.c, src/dice.h, src/dimensions.c, src/dtable.c, src/dtable.h, src/effect.c, src/effect.h, src/factions.h, src/file.c, src/file.h, src/foogod.c, src/foogod.h, src/images.c, src/images.h, src/kern.c, src/kern_intvar.c, src/kern_intvar.h, src/log.c, src/log.h, src/los.c, src/los.h, src/magic.c, src/magic.h, src/map.c:
+	Fixed compiler warnings related to const vs non-const char pointers
+
+2010-03-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/menus.c:
+	Don't load the demo if the player has a saved game. In this case he probably just wants to Journey Onward with minimal delay.
+
+2009-10-19  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/start-new-game.scm:
+	game version number incremented
+
+	* src/kern.c:
+	kern.c gets USE_QUESTS from ../config.h, the same way USE_SKILLS works
+
+	* win32/config.h, win32/readme.txt: tweaks to win32 build
+
+2009-10-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Makefile.am, COPYING, NEWS, AUTHORS: Update for 0.7.0 release
+
+2009-10-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/USERS_GUIDE:
+	Added CTRL-E)val to the USERS_GUIDE with an example string for teleporting the player.
+
+	* src/cmd.c: CTRL-E)val now gives a prompt.
+
+	* worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/edward.scm, worlds/haxima-1.002/nate.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/tbl.scm:
+	Bandit quest log stuff now done.
+
+	* src/cmd.c, src/cmd.h, src/ctrl.c, src/event.c, src/event.h, src/session.c, src/session.h:
+	Added CTRL-E to developer mode. This will let you enter a Scheme expression in the cmdwin and then the kernel will evaluate it. I will not be responsible for the results.
+
+2009-10-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/USERS_GUIDE: Corrected some spell listings
+
+	* worlds/haxima-1.002/tools.scm:
+	Shortened the time it takes to pick locks
+
+	* worlds/haxima-1.002/skills.scm:
+	Reshuffled skills so that wanderer will get pickpocket eventually; also removed butcher from the lists since there isn't a lot one can do with it yet.
+
+	* worlds/haxima-1.002/naz.scm:
+	Made NPC's level depend on number of player party members
+
+	* worlds/haxima-1.002/disarm-trap.scm:
+	Disarm skill depended on wrong ability
+
+	* worlds/haxima-1.002/glasdrin.scm:
+	Made the Stewardess's chest invisible (to justify the MAN's hint about Wis Quas), and removed the magic lock and burn trap (I see no need to make it the most-protected chest in the game).
+
+2009-10-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm:
+	Made the Disarm Traps spell fallible. Bonus is the average of magical and thiefly abilities.
+
+2009-10-02  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm:
+	An Sanct (Unlock Mundane) can now fail. Caster's bonus is the average of white-magic and thief abilities
+
+	* worlds/haxima-1.002/potions.scm:
+	Changed stats potions as per kaypy's suggestion. Chance and degree of working now drops as base stat increases.
+
+2009-10-01  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/necromancer.scm:
+	necromancer conv changes with warritrix status
+
+	* worlds/haxima-1.002/lost-halls-mech.scm, worlds/haxima-1.002/lost-halls.scm, worlds/haxima-1.002/quests-data.scm:
+	can no longer find warritrix before quest
+
+	* worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/steward.scm:
+	a ream of quest debugging
+
+	* worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/steward.scm:
+	convs tweaked to delay warritrix mission
+
+2009-09-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/console.c, src/console.h, src/player.cpp:
+	Fixed a crasher that occurred when a console color push/pop crossed a newline boundary
+
+	* worlds/haxima-1.002/species.scm:
+	Gave bats vision radius 19 since they may attack the player when he's in the voidship
+
+	* worlds/haxima-1.002/runes.scm:
+	Fixed a crasher when getting the warritrix rune
+
+2009-09-29  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/quests-data.scm: purged a duplicate entry
+
+	* worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/runes.scm, worlds/haxima-1.002/warritrix.scm:
+	using quest-data-complete preferentially
+
+	* worlds/haxima-1.002/quests-mech.scm: A bunch more documentation
+	Added a quest-data-complete method
+
+2009-09-28  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/jeffreys.scm:
+	A bunch more triggers for Warritrix info updates
+
+	* worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm:
+	Some quest documentation
+
+2009-09-27  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/necromancer.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/warritrix.scm:
+	Wise quests pass 1- linked in results of find-in-files: wise
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm:
+	Placeholder quest entries for all of the wise
+
+2009-09-26  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/quests.png, worlds/haxima-1.002/sprites.scm:
+	Partial work toward tracking the players progress at finding the various wise
+
+	* worlds/library/artwork/hirespeople/paladin.xcf, worlds/haxima-1.002/hirespeople.png, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/valus.scm:
+	Added a bedraggled version of the paladin sprite for those in disgrace
+
+	* worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/player.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/warritrix.scm:
+	Convert and fix glasdrin convs
+
+2009-09-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/skills.scm: Jump should span at least one tile
+
+2009-09-22  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp: X)amine was showing the names of un-met NPC's
+
+	* worlds/haxima-1.002/runes.scm: Fixed a crasher when picking up runes
+
+	* worlds/haxima-1.002/effects.scm:
+	Think I finally got the slimes tuned right.
+
+	* worlds/haxima-1.002/sounds.scm: Fixed path to ballad.ogg
+
+2009-09-18  kaypy  <kaypy@localhost.localdomain>
+
+	* win32/Makefile: added terrain editor to win32
+
+2009-09-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/session.c: Fix for problem starting new game on x86_64
+
+2009-09-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm: Tuning slime split probability
+
+	* worlds/haxima-1.002/spells.scm:
+	Added royal cape as an ingredient to all the ward spells
+
+	* worlds/haxima-1.002/slywan.scm:
+	Change slywan's alignment directly to avoid 'Slyway is charmed' log message
+
+	* worlds/haxima-1.002/earl.scm, worlds/haxima-1.002/tooth.scm:
+	Added grease to merchandise of earl and tooth
+
+	* worlds/haxima-1.002/books.scm:
+	Added royal cape to the books on ward spells
+
+2009-09-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Being.cpp: Fixed a hang on rendezvous
+
+	* worlds/haxima-1.002/music/Makefile.am: Fixed music installation
+
+2009-09-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/skills.scm: Tuning skills
+
+	* worlds/haxima-1.002/quests-data-static.scm:
+	Fixed some typos in the quest text
+
+	* worlds/haxima-1.002/potions.scm:
+	Decided that gain-stats potions are rare enough that they shouldn't fail
+
+	* worlds/haxima-1.002/pitfalls.scm:
+	Fixed a cut-and-paste that prevents the Arm Trap skill from working
+
+	* worlds/haxima-1.002/edward.scm: Fixed typo in conv
+
+	* worlds/haxima-1.002/nate.scm: Nate responds to NAME keyword
+
+	* worlds/haxima-1.002/lia.scm: Made some scrolls cheaper
+
+	* worlds/haxima-1.002/shroom.scm:
+	Shroom responds to queries about royal cape
+
+	* worlds/haxima-1.002/anaxes.scm, worlds/haxima-1.002/fing.scm, worlds/haxima-1.002/tim.scm:
+	Some characters shouldn't respond to the 'common folk' keywords
+
+	* worlds/haxima-1.002/ability.scm: Ratlings summon more critters
+
+	* src/ztats.c, src/kern.c:
+	Fixed a crasher due to the quest pane not removing itself during session teardown
+
+	* worlds/haxima-1.002/effects.scm:
+	Fixed a bug that prevented ensnare from being removed
+
+	* src/map.c: Xray works in total darkness
+
+2009-09-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Party.cpp:
+	Fixed a crasher that occurred after talking to party members in wilderness mode
+
+2009-09-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/start-new-game.scm: Removed reference to florinth
+
+	* worlds/haxima-1.002/quests-data-static.scm: Grammatical error
+
+	* worlds/haxima-1.002/shard.scm: Removed refs to florinth
+
+	* worlds/haxima-1.002/gen.scm: Removed some spaces and uppercases words
+
+2009-08-30  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/books.scm, worlds/haxima-1.002/chanticleer.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/player.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/runes.scm, worlds/haxima-1.002/silas.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/steward.scm:
+	First pass at warritrix and absalot rune quest info
+
+2009-08-22  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* configure.ac: Turned on skills and quests by default
+
+2009-08-21  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/arms.scm:
+	Fix for 1843026: vial slimes set to user's faction
+
+2009-06-24  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/ascii.c, src/common.h, src/dimensions.c, src/player.cpp, src/vehicle.cpp, src/wind.c, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/vehicles.scm:
+	Fix for 1900156: Has anyone seen East or South winds for a while?
+
+	Haxima:
+	o In cast-wind-change don't allow HERE
+	o Alway ensure at least 10 turns on a wind change spell
+	o For ships switched tailwind to be better than crosswind
+
+	Kernel:
+	o Log to the console whenever the wind shifts
+	o Change wind directions to be 8-way instead of 4-way (changed vehicle code to
+	  accomodate)
+	o Make wind widget wide enough for longest string
+	o Log player party movement cost in developer mode
+
+2009-06-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c:
+	Fix for 1900157: kern_ui_select_party_member() unconditionally uses
+	cmdwin_pop() after calling select_party_member(), but in cases where there is
+	only one party member there was nothing to pop. Now there is.
+
+	* worlds/haxima-1.002/runes.scm:
+	Fix for crasher when picking up certain runes
+
+	* src/character.cpp, src/play.c:
+	Fix for 2129810: added some explanatory log messages
+
+	* win32/Makefile, win32/config.h: Fix for 2360126: applied patch
+
+2009-06-21  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/map.c: Fix for 2364311: avoid divide-by-zero error
+
+	* worlds/haxima-1.002/npc-types.scm:
+	Fix for 2364368: added sleep immunity to demons (incl Nossifer)
+
+	* worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/effects.scm:
+	Fix for 2398446: added list of acid-immune weapon types
+
+	* worlds/haxima-1.002/alchemist.scm:
+	Fix for 2404468: reworded 'search' to be 'probe'
+
+	* worlds/haxima-1.002/alchemist.scm:
+	Fix for 2404478: reworded a statement
+
+	* worlds/haxima-1.002/640x480_splash.png, worlds/haxima-1.002/splash.png:
+	Fix for 2466986: removed version number from splash images
+
+	* worlds/haxima-1.002/gamestart-mech.scm:
+	Fix for 2467008: make the blue gate in the character creation map black
+
+2009-04-11  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/ghertie.scm, worlds/haxima-1.002/gholet.scm, worlds/haxima-1.002/henry.scm, worlds/haxima-1.002/jewelry.scm, worlds/haxima-1.002/jorn.scm, worlds/haxima-1.002/meaney.scm, worlds/haxima-1.002/oscar.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/runes.scm, worlds/haxima-1.002/the-man.scm:
+	pirate rune quest and subquests
+	I think I have tested most of the paths through this, but it gets a touch baroque and thus could use more playtesting
+
+	* worlds/haxima-1.002/gamestart.scm, worlds/haxima-1.002/start-new-game.scm:
+	moved cheating tweaks into gamestart where they can tweak more
+
+	* worlds/haxima-1.002/effects.scm: added a generalized on-death method
+
+	* worlds/haxima-1.002/kobj.scm, worlds/haxima-1.002/powers.scm:
+	added an ifc for objects that need a callback when obtained via odd means such as pickpocketing (basically, anything that doesnt go via ifc-get ought to trigger ifc-receive instead)
+
+2009-04-09  kaypy  <kaypy@localhost.localdomain>
+
+	* src/map.c: Rounding tweak for viewscreens with even numbers of tiles
+
+	* src/closure.h: gcc didnt like repeated identifier
+
+2008-12-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/newterrain.png, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Added another tombstone
+
+2008-12-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/newterrain.png, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Added a tombstone
+
+2008-12-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/event.c, src/terrain_editor.c:
+	Engine changes:
+	o The terrain editor UI now has two status panes: the terrain palette and a
+	  list of commands.
+
+2008-12-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/map.c: Fixed mouse-clicking on the map while zoomed out
+
+2008-12-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/start-new-game.scm:
+	Accidentally committed my test version of this earlier, restoring it.
+
+	* src/terrain_editor.c, src/terrain_map.c, src/terrain_map.h:
+	Added undo (ctrl-z) and redo (ctrl-r) commands to terrain editor
+
+2008-11-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/terrain.c, src/terrain.h: Removed dead code
+
+	* src/terrain.c, src/terrain.h:
+	Removed the current terrain index and quick entries from the palette struct and terrain code (moved to terrain editor on my last commit)
+
+	* src/terrain_editor.c:
+	Part 1 of moving the current terrain and quick terrain settings from the palette struct to the terrain editor code
+
+	* src/terrain_editor.c:
+	Terrain editor now correctly handles dragging the mouse to paint
+
+	* worlds/haxima-1.002/florinth.scm:
+	The great and wicked city of Florinth. Now mostly blank.
+
+	* src/cmd.c, src/cmd.h, src/map.c, src/status.c, src/terrain.c, src/terrain.h, src/terrain_editor.c:
+	Engine changes:
+	o Terrain editor now displays the terrain pallete in a scrolling status
+	  window. Clicking on a terrain selects it for "painting".
+
+	* src/Makefile.am, src/cmd.c, src/cmd.h, src/terrain_editor.c, src/terrain_editor.h:
+	Engine changes:
+	o Moved code for terrain editing from cmd.c to newly created terrain_editor.c.
+
+	* src/status.c, src/status.h:
+	Changed a comment and removed some dead code
+
+2008-11-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/terrain.h, src/terrain.c:
+	Engine changes:
+	o Terrain palette entries are now listed in two ways: by glyph lookup (the old
+	  way, which helps load maps faster) and now by the order in which things are
+	  added to the palette (the even older way, which allows the map editor to list
+	  them in the same order as the script)
+
+	* worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/start-new-game.scm:
+	Changes to haxima:
+	o (mk-dungeon-level ...) now binds rooms in diagonal directions.
+
+	* src/character.cpp, src/common.c, src/place.c, src/place.h:
+	Engine changes:
+	o After exiting to wilderness, the party is positioned on the tile adjacent to
+	  the town in the exit direction. We'll see how this goes.
+
+2008-11-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/start-new-game.scm:
+	Forgot the island on my last commit.
+
+	* worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/start-new-game.scm:
+	Extended the Shard. Added new island.
+
+2008-11-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/character.h:
+	Prompt the user to abort a task on damage. Allow them to ignore damage.
+
+	* worlds/haxima-1.002/occs.scm, worlds/haxima-1.002/skills.scm:
+	Another attempt to tune skill level requirements
+
+	* worlds/haxima-1.002/effects.scm: Removed some debug
+
+	* worlds/haxima-1.002/powers.scm:
+	Pickpocket rolls to succeed before showing target inventory
+
+	* worlds/haxima-1.002/skills.scm: Made lockpicking a passive skill
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/pitfalls.scm, worlds/haxima-1.002/skills.scm, worlds/haxima-1.002/tools.scm:
+	Changes to haxima:
+	o Arming traps now entails some risk
+	o Tweaked stealth mode rolls
+
+	* scripts/dice_rolls.pl:
+	Perl script for computing dice roll probablities with 2 dice
+
+2008-11-24  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/runes.scm:
+	void temple rune quest upgraded
+
+	* worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/angriss-lair.scm, worlds/haxima-1.002/angriss.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/kama.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/runes.scm, worlds/haxima-1.002/warritrix.scm:
+	spider rune quest upgraded
+	angriss' lair location given by description
+	(sextant coords from goblins just seemed wierd)
+
+	* worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/special.scm:
+	moving angriss' lair a little (to a more readily describably location)
+
+2008-11-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/skills.scm:
+	Changes to haxima:
+	o Added a "stuck" effect that works like ensnare but rolls against thiefly
+	  ability
+	o Wriggle now has a very good chance of getting stuck.
+
+2008-11-23  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/runes.scm:
+	fire sea rune quest (such as it is) upgraded
+
+	* worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/runes.scm:
+	kurpolis rune quest upgraded
+
+	* worlds/haxima-1.002/quest-sys.scm: quest-set-icon! fixed
+
+2008-11-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/pitfalls.scm:
+	Changes to haxima:
+	o Using pitfalls entails some risk. Roll against thiefly ability. This is the
+	  arm trap skill.
+
+2008-11-23  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/quests-mech.scm:
+	a batch of subquests (although they wont all be set at once for much longer)
+
+	* worlds/haxima-1.002/conv.scm: typo
+
+	* worlds/haxima-1.002/runestones.png, worlds/haxima-1.002/sprites.scm:
+	runestone group sprite
+
+	* worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm:
+	dragons blood quest upgraded
+
+	* worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/ztats-quest-ui.scm:
+	tweaked quest-status callback. Also made the display routine actually invoke it
+
+2008-11-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/occs.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/skills.scm:
+	Changes to haxima:
+	o Reduced fatigue time
+	o Added warrior skill sets
+	o Jump now causes fatigue and is blocked by it
+	o Tuned jump range
+	o Bugfix: can't sprint through people or impassable terrain
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/disarm-trap.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/skills.scm, worlds/haxima-1.002/the-man.scm:
+	Changes to haxima:
+	o Removed mana cost for skills.
+	o Removed ap cost for some skills (replacing with multi-turn tasks)
+	o Removed the "detect trap" skill. Use existing s)earch command instead,
+	  thiefly ability already used to roll for success. Magic detect trap left
+	  as-is (no trip chance).
+	o Modified the "disarm trap" skill to be multi-turn
+	o When describing doors and chests, disarmed traps are annotated
+
+	* worlds/haxima-1.002/game.scm: Revised canonical difficulty classes
+
+2008-11-22  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/ztats-quest-ui.scm:
+	support for subquests
+
+	* worlds/haxima-1.002/gregor.scm: 'if' glitch
+	decapitalization
+
+2008-11-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/skills.scm:
+	Changes to haxima:
+	o Added simple fatigue effect
+	o Sprint causes fatigue
+	o Fatigue prevents sprint
+
+	* src/cmd.c, src/result.h: Engine changes:
+	o New result code: not-now
+
+	* worlds/haxima-1.002/skills.scm:
+	Fixing some errors; not sure what I was testing before my last commit
+
+	* worlds/haxima-1.002/occs.scm, worlds/haxima-1.002/scrolls.scm, worlds/haxima-1.002/skills.scm:
+	Changes to haxima:
+	o Added two new ability calculators for strength-based acrobatics and
+	  dexterity-based acrobatics.
+	o The sprint skill now uses strength-based acrobatics to compute max range.
+
+	* worlds/haxima-1.002/tools.scm: Time to pick a lock depends on dc
+
+2008-11-19  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/ctrl.c, src/foogod.c, src/foogod.h, src/player.cpp:
+	Foogod title bar now shows party movement mode and active party member
+
+	* worlds/haxima-1.002/conv.scm: No need to *lie* about the directions
+
+	* worlds/haxima-1.002/tools.scm:
+	Using picklocks now takes multiple turns
+
+	* worlds/haxima-1.002/conv.scm:
+	Made default directions somewhat helpful
+
+	* worlds/library/artwork/creatures/chicken.xcf: Changes to chicken art
+
+	* src/character.cpp:
+	Was passing the gob incorrectly to the task procedure
+
+	* src/cmd.c, src/cmd.h: Can't quit while engaged in a task
+
+2008-11-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/powers.scm:
+	Charm only hurts diplomacy on failure against a non-immune target
+
+	* worlds/haxima-1.002/effects.scm:
+	Paralyzed party members cannot rendezvous in follow mode
+
+2008-11-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/player.cpp: Can't rendezvous to exit if a party member is charmed
+
+	* src/character.cpp:
+	o NPC's now (in addition to PC's) log messages when they start, end or abort a
+	  task.
+	o setPlayerControlled(false) (ie, charm) cancels tasks
+	o Fixed an extra space char in describe(); made spacing consistent; changed "a
+	  LX" to "an LX"
+
+	* worlds/haxima-1.002/creatures.png, worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/scrolls.png, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/trigrave.scm:
+	Chickens
+
+	* worlds/library/artwork/creatures/chicken.xcf: Chicken
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/scrolls.png, worlds/haxima-1.002/scrolls.scm, worlds/haxima-1.002/spells.png, worlds/haxima-1.002/spells.scm:
+	Decided to go ahead and incorporate my test scroll as a new spell: Rel Xen Quas or Beastly Illusion will charm it's target with faction-monster, making decent folk attack them. Not sure if it's useful. Also tweaked some of the spell sprites to make party effect sprites more consistent with Vas An Nox.
+
+	* worlds/haxima-1.002/scrolls.scm:
+	Added a scroll to test charm on oneself
+
+	* worlds/haxima-1.002/effects.scm:
+	Modified the charm effect to use kern-char-set-player-controlled as well as changing the target's current faction
+
+	* src/character.cpp, src/cmd.c:
+	Changed setPlayerControlled for charm; it tries to do the right thing for party control when in solo or follow mode
+
+	* src/object.c: Removed some dead code
+
+2008-11-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp: Death and sleep cancel tasks
+
+	* src/cmd.c:
+	Loitering disabled while any party member is engaged in a task
+
+	* src/character.cpp:
+	Only save AP debt; a positive would be carried over as an unwarranted ap bonus when the game restarts
+
+	* src/character.cpp: Removed some old debug
+
+	* src/player.cpp:
+	Party cannot exit to wilderness while one or more is engaged in a task
+
+2008-11-16  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/tbl.scm: added is-tbl? check
+	also, lisp if syntax is a cruel abuse upon generations of innocent coders
+
+	* worlds/haxima-1.002/alchemist.scm:
+	"find out about runes" quest upgraded (missed a file)
+
+	* worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm:
+	"find out about runes" quest upgraded
+
+	* worlds/haxima-1.002/naz.scm: removed some debugging messages
+
+	* worlds/haxima-1.002/quests-mech.scm:
+	alter quest feedback to prevent colour glitches
+
+2008-11-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/tools.scm:
+	Added a special object to test multi-turn tasks.
+
+	* src/object.c, src/object.h, src/player.cpp, src/character.cpp, src/character.h, src/cmd.c, src/kern.c:
+	This set of changes is a second pass at implementing multi-turn tasks. It is
+	far from well-tested and I'm certain it breaks the charm effect. But the basics
+	of task starting, completing, aborting and saving/reloading are functional, and
+	the party control management that goes along with it. Tasks in wilderness are
+	not supported yet. Canceling tasks are accomplished by setting the PC to solo
+	mode (the player will be prompted to confirm).
+
+	o Added kern-char-task-begin, -end, -continue and -abort.
+	o Added corresponding methods to the Character class
+	o Ripped a bunch of code out of setCurrentFaction that was used to implement
+	  charm, but was munging things up now, and which probably never belonged there
+	  in the first place.
+	o Similarly I tore out the code I recently put in setControlMode, for similar
+	  reasons.
+	o Had to touch a few other places to prevent code from overriding the PC
+	  control mode while it was engaged in the task.
+
+2008-11-16  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/abe.scm: tweaks to Abe's conv
+
+2008-11-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/escape.c, src/escape.h:
+	Might need these to build after my last commit.
+
+	* src/Makefile.am, src/character.cpp, src/cmd.c, src/cmd.h, src/ctrl.c, src/kern.c, src/play.c, src/player.cpp:
+	Added an ESC interrupt menu. This allows the user to take some action when the active PC is stuck with a high AP debt. The intention is to use this for multi-turn tasks as well.
+
+2008-11-14  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/conv.c:
+	Another bug fixed in keyword highlighting: fen comes before fens
+
+2008-11-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/conv.c:
+	Short keywords that appeared with punctuation after them were not getting highlighted
+
+	* src/kern.c:
+	Bug introduced on my last commit: don't register NIL conversations
+
+	* src/conv.c, src/conv.h, src/kern.c, src/scheme-private.h, src/scheme.c:
+	Processing conversation keywords is now done lazily, when a conversation is entered the first time. This fixes a bug where in some save files the file containing a conversation is loaded after the character that uses it.
+
+	* worlds/haxima-1.002/gregor.scm:
+	End conv if Gregor kills Nate when Nate is speaker
+
+	* worlds/haxima-1.002/gregor.scm: Changed who shoots the deathball
+
+2008-11-13  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/gwen.scm, worlds/haxima-1.002/mouse.scm, worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/runes.scm, worlds/haxima-1.002/thiefs_den.scm, worlds/haxima-1.002/traps_1.scm, worlds/haxima-1.002/traps_2.scm, worlds/haxima-1.002/traps_3.scm, worlds/haxima-1.002/traps_4.scm:
+	thief quest upgraded
+
+	* worlds/haxima-1.002/hackle.scm: swapping allcaps for colour highlight
+
+	* worlds/haxima-1.002/chanticleer.scm: typo
+
+2008-11-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/skills.scm, worlds/haxima-1.002/tools.scm:
+	Reverted lockpicking and unlock spells; removed unlock as a skill
+
+	* worlds/haxima-1.002/demo.scm:
+	Renamed the Gate Portal as Demo Scene to make the starting console message clear that the player is watching a demo
+
+	* src/kern.c:
+	kern.c includes config.h so the quest status page will work when configured.
+
+	* worlds/haxima-1.002/gregor.scm:
+	Gregor kills Nate. Cleaned up his conv a bit, too.
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/quest-talk-to.scm:
+	Getting rid of obsolete quest file
+
+	* src/conv.c: Bugfix: short keywords not getting detected in some cases
+
+	* worlds/haxima-1.002/ini.scm:
+	For Ini, 'deep' was a keyword but he gave the default reply unless he was flagged as ready to join the party. I added an alternate default reply so it doesn't look like a bug.
+
+	* scripts/RELEASE_CHECKOFF: Some updated notes
+
+2008-11-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/camping-map.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/npc-types.scm:
+	Changes to haxima:
+	o The camping ambush was still being added via the obsolete
+	  kern-set-camping-proc. Fixed it to use kern-add-hook.
+	o Fixed the statue curse: same problem. Now uses kern-rm-hook as well.
+	o Reverted faction-glasdrin to be its own value so that the exile curse won't
+	  affect the player in all cities. Fixed the glasdrin guard spawn pts to spawn
+	  guards specific to glasdrin so they will enforce the exile curse.
+
+	* src/kern.c, src/session.c, src/session.h: Engine:
+	o Session no longer saves its hooks. All session hooks are either being loaded
+	  on startup via script files or via effects. Saving them was just causing them
+	  to be added multiple times on reload.
+	o Added kern-rm-hook and session_rm_sym_hook. To be removed, a hook proc must
+	  have been a symbol.
+
+	* worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/skills.scm, worlds/haxima-1.002/tools.scm:
+	Changes to haxima:
+	o Picklocks are no longer u)sable, the player must y)use the picklock skill
+	o Breaking lockpicks is done in the skill based on critical failure
+	o First pass at level requirements for wrogue skills
+
+	* src/cmd.c, src/ctrl.c, src/result.h: Engine:
+	o Added #include to enable skills if configured
+	o Added a new result code: critical failure
+	o Colorized reporting of result codes in the console
+
+2008-11-11  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/sounds.scm, worlds/haxima-1.002/music/Lute-and-recorder-ballad.ogg, worlds/haxima-1.002/music/Minuet-like-Mozart.ogg, worlds/haxima-1.002/music/ballad.ogg, worlds/haxima-1.002/music/bassoons-and-harpsichord.ogg, worlds/haxima-1.002/music/double-trios.ogg, worlds/haxima-1.002/music/dragon-quest.ogg, worlds/haxima-1.002/music/dragon-slayer.ogg, worlds/haxima-1.002/music/fair-camelot.ogg, worlds/haxima-1.002/music/game-music2.ogg, worlds/haxima-1.002/music/harpsichord-piece.ogg, worlds/haxima-1.002/music/into-battle.ogg, worlds/haxima-1.002/music/medieval-quest.ogg, worlds/haxima-1.002/music/minstrel-dance.ogg, worlds/haxima-1.002/music/music.scm, worlds/haxima-1.002/music/plainchant-recorder-trio.ogg, worlds/haxima-1.002/music/wind-trio.ogg:
+	Lets try Ogg music
+
+2008-11-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/powers.scm:
+	Changes to haxima:
+	o Locked and magically locked doors and chests have a difficulty
+	  class. Currently everything defaults to "normal".
+	o The lock and magic unlock powers roll to succeed.
+
+	* worlds/haxima-1.002/statue-of-justice.scm:
+	Status of Justice's name is known to player
+
+	* worlds/haxima-1.002/game.scm:
+	Removed some commented-out code; added some generic difficulty class values; changed glasdrin faction to match normal men (otherwise guards in glasdrin won't attack if you assault the populace or get exiled by the statue)
+
+2008-11-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/conv.c:
+	Maybe I should at least *compile* my changes before checking them in.
+
+	* src/conv.c:
+	Fixed crasher if unknown NPC initiaites conversation with player
+
+	* worlds/haxima-1.002/gamestart.scm:
+	Statue names are automatically known to player
+
+	* worlds/haxima-1.002/gamestart-statues.scm:
+	Gave the starting statues some personality.
+
+2008-11-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/nazghul.c: Removed some dead code
+
+	* COPYING, src/ascii.c, src/cmd.c, src/ctrl.c, src/images.c, src/images.h, src/map.c, src/menus.c, src/play.c, src/screen.h, src/screen_dims.h, src/sprite.c, worlds/haxima-1.002/kern-init.scm:
+	I did not get all of Eero's 16bpp patch applied. He sent me some new patches, which are applied now.
+
+	* src/character.cpp, src/cmd.c, src/combat.c, src/conv.c, src/kern.c, src/log.c, src/log.h, src/nazghul.c, src/player.cpp:
+	Added log_banner(), which provides a consistent format for especially notable log messages. Converted some existing messages over to use it.
+
+	* src/scheme.c:
+	Fixing a crash that may occur when a hook procedure loads a file.
+
+	* configure.ac: Bumped version to 0.7.0 on trunk for next time
+
+	* configure.ac: Bumped version to 0.6.2 for next time
+
+	* NEWS: Updated NEWS
+
+	* src/character.cpp, src/character.h, src/conv.c, src/kern.c:
+	In conversations, the NPC's name is not printed until the player queries NAME
+
+	* NEWS: Added a few more changes to NEWS
+
+	* src/Makefile.am: Removed bitfield.h from source list
+
+	* NEWS: Updated NEWS for 0.6.1 release
+
+	* worlds/haxima-1.002/bart.scm: Removed duplicate word in conv
+
+2008-11-09  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/game.scm:
+	uses kern-set-start-proc to initiate hotfix
+
+	* worlds/haxima-1.002/game.scm:
+	hotfix for saves with voidgap/deeps bug.
+
+	still needs hook code in kern
+
+2008-11-08  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/powers.scm: pullling in spell fixes
+
+	* worlds/haxima-1.002/voidgap-passage.scm: pulling in fix from 1.4
+
+	* worlds/haxima-1.002/scrolls.scm: pull in scroll fixes
+
+	* worlds/haxima-1.002/necromancer.scm:
+	pulled in conversation fix from 1.16
+
+	* worlds/haxima-1.002/naz.scm:
+	pulled in some fixes and stuff I will need for save update
+
+	* worlds/haxima-1.002/mouse.scm: pulled in conversation fix from 1.19
+
+	* worlds/haxima-1.002/enchanter.scm: pulled in spelling fix from 1.25
+
+2008-11-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/fields.scm:
+	Ported over chance to avoid sleep fields so that permanent sleep fields are not unavoidably lethal to one-man parties
+
+	* worlds/haxima-1.002/effects.scm:
+	Ported over fix for FR 2216959- prevent multiple protection spells on one character.
+
+	* worlds/haxima-1.002/silas.scm:
+	Ported over fix for Silas not giving the player a clue about the final rune
+
+2008-11-08  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/silas.scm:
+	silas is more forthcoming about the final rune
+
+	* worlds/haxima-1.002/powers.scm:
+	undo cone tweak- had undesirable side effects
+
+	* worlds/haxima-1.002/powers.scm:
+	fixed poison wind and sleep wind spells. tweaked cone display
+
+	* worlds/haxima-1.002/fields.scm:
+	sleep fields have a slight avoidance chance, so a character stuck in a permanent sleep field will have a chance to get out eventually
+
+	* src/kern.c:
+	(kern-script-version) with no arguments returns current version
+
+2008-11-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* configure.ac: Bumped version to 0.6.1 in prep for next release
+
+	* src/Makefile.am, src/nazghul.c, src/nazghul.h, src/screen.c:
+	Merged over Eero's 16bpp patch
+
+2008-11-07  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm:
+	quickfix for FR 2216959- prevent multiple protection spells on one character.
+
+	* worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/quests-data-static.scm:
+	adding quest update notifications
+	tweaked order of quest completion
+
+	* worlds/haxima-1.002/quests-mech.scm: bug fixing in quest callbacks
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/start-new-game.scm:
+	moved quest-ui flag to somewhere it doesnt break reloads
+
+	* worlds/haxima-1.002/enchanter.scm:
+	use quest complete with notification
+
+	* worlds/haxima-1.002/quests-mech.scm: quest notifications
+	used wrong loading type for refreshing questlist on save load
+
+	* worlds/haxima-1.002/quests-data-static.scm: bugfix- unmatched quotes
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm:
+	disable quest ui based on script side tag
+
+	* worlds/haxima-1.002/start-new-game.scm:
+	added script side quest interface disabling
+
+	* worlds/haxima-1.002/quests-mech.scm:
+	added procedure to reload quests-data to refresh quest info
+	mechanisms to handle postponing experience granted for partial completion of unassigned quests
+
+	* worlds/haxima-1.002/quests-data.scm:
+	quest data should now be created/expanded as necessary for out of date save games, provided they load quests-data.scm in the first place
+
+2008-10-29  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/quests-data-static.scm:
+	Passing a function a bunch of arguments and passing it a list containing those arguments are not the same thing. It is important to remember this.
+
+2008-10-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c:
+	Bugfix: if you hit ESC when selecting a guard for camping it would deref a null pointer when checking if the guard was dead
+
+2008-10-26  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/quests-data-static.scm, worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/start-new-game.scm:
+	Separated out static quest data from quest utilities
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm:
+	Second pass at fixing quest description listing- Scrolling now respects lower limit of description text
+
+	* worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/ztats-quest-ui.scm:
+	First pass at fixing quest description listing- No longer draws over bottom of display when overlong
+
+	* src/event.c, src/kern.c, src/ztats.c: Tweaks to menu controls
+
+	* worlds/haxima-1.002/quests-data.scm:
+	Quests should now all use the kern-ui-paginate-text function to lay out text nicely
+
+	* src/kern.c:
+	Added a kern function that takes a list of lines of text and returns them in a paginated format.
+
+2008-10-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* configure.ac, src/kern.c:
+	Disabling the quest UI by default, since it's still half-baked. Developers may
+	enable it with a configure option:
+
+	   ./configure --with-quests
+
+	Or by editing config.h:
+
+	   #define USE_QUESTS
+
+	This does *not* effectively disable quests, however. Some conversation scripts
+	are broken, apparently because they can't get quest data.
+
+	* src/ctrl.c, configure.ac, src/cmd.c:
+	Disabling the Y)use command (and hence skills) by default, in preparation for
+	the next release, since skills are still half-baked. For developers, there is
+	now a configure option to enable them:
+
+	  ./configure --with-skills
+
+	Or, if you do not use configure, add this to config.h:
+
+	  #define USE_SKILLS 1
+
+2008-10-06  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/retab.html:
+	A javascript app that handles lining up those tables like in arms.scm nicely
+
+	* worlds/library/artwork/terrain/city.xcf: Larger set of buildings
+
+	* worlds/library/artwork/terrain/towns.xcf:
+	Some higher res collections of houses
+
+2008-10-05  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanters-tower.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/sprites.scm:
+	Some towns use the new tower icons
+
+	* worlds/haxima-1.002/bigobjects.png:
+	a bunch of stuff hadnt worked quite right with the towers
+	(mostly scaling had been set to nearest pixel, rather than antialiasing)
+
+	* worlds/library/artwork/terrain/tower.xcf:
+	saved at right resolution this time.
+
+	* worlds/haxima-1.002/bigobjects.png: big tower sprites
+
+	* worlds/library/artwork/terrain/tower.xcf:
+	tower, intact or ruined, with optional town
+
+2008-09-27  kaypy  <kaypy@localhost.localdomain>
+
+	* INSTALL:
+	Added a few of the more recent libraries to the requirements list
+	Some additional instructions for cvs builds and a pointer to the win32
+	instructions
+
+2008-09-26  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/enchanters-tower.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/books.scm:
+	inital quest to go meet the enchanter
+
+	* worlds/haxima-1.002/kobj.scm:
+	signal-kobj now safely ignores inputs to non-present ifcs
+
+	* worlds/haxima-1.002/start-new-game.scm: start was a little off-center
+
+	* worlds/haxima-1.002/tbl.scm:
+	tbls were not roundtripping to savefiles correctly
+	also tightened specifications of tbl-append
+
+	* worlds/haxima-1.002/nossifer.scm, worlds/haxima-1.002/quests-mech.scm:
+	additional 'whereami' text after talking to N
+
+	* worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quests-mech.scm:
+	quests kept in order of in progress/complete/failed
+	fixed some bugs resulting from unexpected behaviour of pair? function
+
+2008-09-24  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/abe.scm:
+	removed now redundant quest update calls
+
+	* worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/quests-data.scm:
+	updating prebuild quests can trigger status update hook
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm:
+	quest list ui colored based on completion state
+
+	* worlds/haxima-1.002/quest-sys.scm:
+	quest completion includes failure option
+
+	* worlds/haxima-1.002/tbl.scm:
+	mechanism to preload a tbl when building it
+
+2008-09-22  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/gamestart-mech.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/abe.scm:
+	Uses optional tags rather title for quest lookups
+	Reconciles active and pregenerated quests after reload
+
+2008-09-21  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/quests-mech.scm: Spelling fix
+
+2008-09-15  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/abe.scm:
+	More detail on the 'Where am I?' quest
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm:
+	Cleaned out some superflouous debugging printlns
+
+	* worlds/haxima-1.002/books.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/ztats-quest-ui.scm:
+	A few more quests started
+	Prev patches had broken zstats-quest-ui up/down controls
+
+	* worlds/haxima-1.002/quests-mech.scm, worlds/haxima-1.002/quests.png, worlds/haxima-1.002/quests-data.scm, worlds/haxima-1.002/tbl.scm, worlds/haxima-1.002/ztats-quest-ui.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quest-talk-to.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/gamestart-mech.scm:
+	quests reenabled
+	quests have icons
+	quests can be removed from the log entirely
+	quests can be retrieved by title (assuming uniqueness, otherwise will get the first one)
+	a databank of not-yet-assigned quests is available, but not mandatory- Im thinking this is useful for quests that may have changes before the player recieves them
+	added some initial cases
+
+2008-09-13  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/ztats-quest-ui.scm:
+	quests take a list of strings for description, to allow longer, wrapped descriptions.
+
+	* src/sprite.h, src/sprite.c, src/kern.c:
+	Added a mechanism to directly paint a sprite in a sdl_rect. Intended for use with scripted UI panels
+
+2008-06-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/conv.c, src/conv.h, src/menus.c, src/nazghul.c, src/sound.c, src/sound.h:
+	Added a menu option for keyword highlighting
+
+	* worlds/haxima-1.002/start-new-game.scm:
+	Added version number to new game script
+
+	* src/session.h, src/session.c, src/ascii.h, src/kern.c, src/play.c:
+	Added support for script version number. If a session fails to load, check the version number and report it to the player.
+
+	* configure.ac:
+	Bumped the version number. Added min script version number.
+
+	* src/screen.c: Moved the screen's temp buf off the stack
+
+	* src/session.c:
+	Fixed some crashes that occur on a load error. session_del() should not assume
+	the player has been loaded, and session_load() was double-deallocating the
+	scheme instance.
+
+	* src/play.c: On load error, print 'error' in red
+
+	* src/scheme.c:
+	Reverting my last changes to this file; they caused a double-deallocation
+
+2008-06-07  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/foogod.c:
+	bugfix: don't assume the cfg contains progress-bar-image-filename
+
+	* src/menus.c: Bugfix: sometimes error popup was blank
+
+	* src/nazghul.c:
+	Using the primitive error dialog window for library init errors early in startup.
+
+	* src/terrain.c, src/scheme.c, src/sprite.c, src/Being.h, src/character.cpp, src/kern.c, src/Being.cpp:
+	Fixed some leaks; attempted to fix some other complaints from valgrind
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm:
+	Fixing a bug in my last commit
+
+2008-06-06  kaypy  <kaypy@localhost.localdomain>
+
+	* win32/readme.txt:
+	Updated based on latest attempt to compile the system from scratch
+
+2008-06-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/game.scm: Turning off the quest ui stuff for now
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm:
+	Changed quest ui to expect the player party gob to be a table
+
+	* worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quest-talk-to.scm:
+	Changed conv check hooks to expect the player party gob to be a table
+
+	* src/conv.c, src/sprite.c: Checking in turned-off portrait test code.
+
+	* src/status.c, src/applet.h:
+	Added optional get_desired_height call for applets
+
+	* src/kern.c, src/object.c, src/object.h: Added kern-set-portrait
+
+	* src/scheme.c:
+	Fixed a bug where a comment at the end of a loaded file could choke the interpreter
+
+2008-05-31  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Makefile.am, src/bitset.h, src/conv.c, src/conv.h, src/kern.c:
+	Kernel changes:
+	o Keywords which have already been used in a conversation are highlighted
+	  gray. Unused keywords are highlighted magenta. The engine "remembers" used
+	  keywords until the next time the game is loaded. In other words, it does not
+	  save this info as part of the session save file.
+
+	* worlds/haxima-1.002/gregor.scm:
+	Removed colorizing markup now that keywords can be automatically highlighted
+
+	* src/kern.c, src/object.c, src/object.h, src/character.cpp, src/cmd.c, src/conv.c, src/conv.h:
+	Conversation keyword highlighting
+
+	* src/log.c: Added some brackets to an if
+
+2008-05-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/minimal-game.scm, worlds/haxima-1.002/minimal-start.scm, worlds/haxima-1.002/monsters.png, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/tutorial.scm:
+	Fixed main game to work with my recent changes
+
+2008-05-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/sounds.scm, src/scheme-private.h, src/session.c, src/session.h, worlds/haxima-1.002/camping-map.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/minimal-game.scm, worlds/haxima-1.002/minimal-start.scm, worlds/haxima-1.002/quest-talk-to.scm, src/closure.c, src/kern.c:
+	Kernel changes:
+	o Moved the scm macros from kern.c to scheme-private.h for everyone to enjoy
+	o Removed some duplicate macros from closure.c
+	o Changed kern-add-hook to expect a symbol for the handler
+	o Added session_hook_id_to_str and session_str_to_hook_id
+	o session now saves the registered hook handlers (except for
+	  new_game_start_hook, which needs to be a special case for now at least)
+
+	Haxima changes:
+	o Had to update all the kern-add-hook calls to match the kernel changes
+	o Finally got my prototype quest offer to be persistent across sessions,
+	  remove itself when accepted, and in general work the way I want it to.
+
+2008-05-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/minimal-start.scm:
+	Experimental end-of-conv hook that will run multiple handlers; prototyping quest offers to run as handlers and remove themselves when accepted
+
+	* worlds/haxima-1.002/tbl.scm: Added tbl-rm! and tbl-for-each-val
+
+	* src/kern.c:
+	Added kern-define, for preserving scheme variables across sessions
+
+2008-05-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c: Fixed a crasher in the new unpack_rect fx
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/minimal-game.scm, worlds/haxima-1.002/minimal-start.scm, src/closure.c, src/closure.h, src/gob.c, src/kern.c, src/session.c, src/session.h, src/session_hooks.h, src/session_queries.h, worlds/haxima-1.002/demo.scm, src/Makefile.am, src/character.cpp:
+	Kernel changes:
+	o Split session hooks and queries up into separate tables.
+	o Hooks can have multiple handlers. Running the hooks does not return a value.
+	o Queries only have one handler and return an int.
+
+	Haxima changes:
+	o Fixed the query registration as per the kernel changes.
+	o Random experimental stuff in minimal-*.scm
+
+	* worlds/haxima-1.002/enchanter.scm: Spelling fix
+
+2008-05-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/minimal-game.scm, worlds/haxima-1.002/minimal-start.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quest-talk-to.scm, worlds/haxima-1.002/tbl.scm, worlds/haxima-1.002/ztats-quest-ui.scm, src/conv.c, src/session_hooks.h:
+	Kernel changes:
+	o Added conv_end_hook
+
+	Haxima changes:
+	o Re-implemented player gob in minimal game as a table.
+	o Changed quest stuff accordingly
+
+2008-05-21  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/quest-talk-to.scm, worlds/haxima-1.002/minimal-start.scm, worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/minimal-game.scm:
+	Haxima changes:
+	o Added a simplified talk-to quest which just awards xp when complete.
+
+	* worlds/haxima-1.002/minimal-game.scm, worlds/haxima-1.002/minimal-start.scm, worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quest-talk-to.scm:
+	Haxima changes:
+	o Had to change the quest ctor to require symbols instead of raw
+	  procedures. This was necessary to support saving quests as part of the
+	  object's gob (closures can't be saved).
+	o Added a proc for the conv_start_hook
+	o Talk-to quests can now be completed.
+
+2008-05-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm, worlds/haxima-1.002/minimal-start.scm, worlds/haxima-1.002/sounds.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/tutorial.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/minimal-game.scm, worlds/haxima-1.002/camping-map.scm, worlds/haxima-1.002/demo.scm, src/session.h, src/session_hooks.h, src/menus.c, src/play.c, src/session.c, src/conv.c, src/kern.c, src/character.cpp, src/closure.c, src/closure.h, src/combat.c, src/Makefile.am:
+	Kernel changes:
+	o Consolidated all of our ad-hoc session hook procedures (camping, start game,
+	  change music, query combat attributes, etc) into one table. This means they
+	  can re-use the same code to load, run and clean them up, instead of having to
+	  cut-and-paste them. There's also a new session_hooks.h file where all of the
+	  hooks need only be declared once. After adding your hook there, you just need
+	  to write the code to call it from someplace in the kernel source (a one-line
+	  change).
+	o Added a conv_start_hook (for talk-to quests).
+
+	Haxima changes:
+	o Replaced all the new-obsolete kern calls with kern-add-hook.
+
+	Note: the changed kern calls are not ones needed by saved games, only by the
+	new game startup scripts, so this should not break save-game compatibility.
+
+2008-05-19  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/minimal-game.scm, worlds/haxima-1.002/minimal-start.scm:
+	Adding a very simple but fast-loading game for development and test
+
+2008-05-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c, worlds/haxima-1.002/ztats-quest-ui.scm:
+	Exported ASCII_H to the script as kern-ascii-h
+
+	* src/quest.h, src/Makefile.am, src/quest.c:
+	Removed old prototype quest stuff
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm, src/applet.h, src/kern.c, src/ztats.c:
+	Kernel changes:
+	o Changed kern-event-push/pop-keyhandler to kern-event-run-keyhandler
+	o Removed the unused "stop" operation from the applet struct
+	o Added kern-screen-erase and kern-screen-update
+
+	Haxima changes:
+	o Added quest viewer applet for individual quest details
+
+	* src/ztats.h, worlds/haxima-1.002/ztats-quest-ui.scm, src/status.h, src/ztats.c, src/macros.h, src/status.c, src/cmd.c, src/kern.c, src/applet.h, src/Makefile.am:
+	Kernel changes:
+	o Added an applet struct
+	o Added statusRunApplet and statusGetCurrentApplet
+	o Added a "select" operation to the ztats panes
+	o Converted the ztats UI to run as an applet
+
+	Haxima changes:
+	o Modified quest log ui to implement a nop "select" proc
+
+2008-05-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/event.c, src/event.h, src/kern.c, src/status.c, src/ztats.c, src/ztats_pane.h:
+	Kernel changes:
+	o eventPopKeyHandler now returns the keyhandler that was popped
+	o added kern-event-push-keyhandler
+	o added kern-event-pop-keyhandler
+	o added a 'select' operation to the ztats_pane
+	o added eventRunKeyHandler to manage all the boilerplate of
+	  pushing/running/popping key handlers
+
+	* src/event.h, src/kern.c, src/event.c:
+	Fix for bug [ 1734069 ] pathfinder confused by diagonal gaps. The pathfinder
+	was written so that if the character could get one tile away from the
+	destination then this was good enough. This is ok for for combat pathfinding
+	and following the leader; but for commuting it's not ok when the last step is
+	impassable, because the character needs to actually get there or it will keep
+	trying to commute over and over. I added a new pathfinding flag to indicate
+	that "adjacent is NOT ok", and set this flag for commuting.
+
+2008-05-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm:
+	Got the quest log listing pane to scroll properly
+
+	* worlds/haxima-1.002/game.scm: Added scroll directions
+
+	* worlds/haxima-1.002/naz.scm: Added some rect and incr/decr utilities
+
+	* src/status.h:
+	Ensure enum (which must be in synch with script) starts at zero
+
+2008-05-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm, src/kern.c:
+	kernel passes ztats ui dimension rect as a list back to scheme; added kern-screen-shade
+
+	* worlds/haxima-1.002/quest-sys.scm, worlds/haxima-1.002/quest-talk-to.scm, worlds/haxima-1.002/ztats-quest-ui.scm, src/kern.c:
+	Kernel changes:
+	o kern-screen-print expects the rect arg to be a list now
+
+	Script changes:
+	o ztats-quest-ui.scm was
+	  ...updated to match kern-screen-print
+	  ...modified to print all the quests attached to the party
+	o quest-sys.scm prints a console msg when a quest is assigned
+
+	* worlds/haxima-1.002/naz.scm:
+	Added two new utilities: repeat and string-lower
+
+	* worlds/haxima-1.002/game.scm: Load the quest files
+
+	* src/kern.c:
+	kern-obj-get-place returns NIL if the object has a NULL place
+
+	* worlds/haxima-1.002/ztats-quest-ui.scm:
+	Display a little bit about current quests
+
+	* worlds/haxima-1.002/quest-talk-to.scm: Added basic talk-to quest type
+
+	* worlds/haxima-1.002/quest-sys.scm: Added basic quest type
+
+	* worlds/haxima-1.002/sounds.scm:
+	Changed music-on-combat-change to check for a null location (fixes a crashed when we start the game on the world map)
+
+	* worlds/haxima-1.002/naz.scm:
+	Added some more utilities, and changed player-member-loc to check for a null location
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/ztats-quest-ui.scm:
+	Added ztats-quest-ui.scm, which implements a stub for a quest log ztats pane.
+
+	* src/kern.c:
+	Added kern-ztats-add-pane, kern-ztats-set-title and kern-screen-print.
+
+	* src/gob.c: Just a todo comment
+
+2008-05-14  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/ztats_spells.h, src/ztats_reagents.c, src/ztats_reagents.h, src/ztats_spells.c, src/ztats_pm.h, src/ztats_pm.c, src/ztats_misc.h, src/ztats_pane.c, src/ztats_pane.h, src/ztats_items.c, src/ztats_items.h, src/ztats_misc.c, src/ztats_container_pane.h, src/ztats_container_pane.c, src/ztats_arms.c, src/ztats_arms.h, src/ztats.h, src/ztats.c, src/quest.h, src/status.c, src/status.h, src/player.h, src/quest.c, src/kern.c, src/player.cpp, src/Makefile.am, src/Party.cpp, src/Party.h:
+	Rewrote ztats UI.
+
+	* src/sound.h:
+	Fixed a c++ name-mangling compile error that cropped up out of the blue
+
+	* src/sound.c: Fixed what looks like an = vs == bug
+
+	* src/combat.c: Removed some dead code
+
+2008-05-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* configure.ac, worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/music/Makefile.am:
+	Andreas Bauer's fix for the music installation
+
+2008-04-06  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/mouse.scm:
+	fix for 1934040- kat/thud will no longer talk after betraying you.
+
+2008-03-17  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/voidgap-passage.scm:
+	fix for 1916322- the voidgap dungeon setup wrote some garbage over the endless deepness setup
+
+2008-03-02  kaypy  <kaypy@localhost.localdomain>
+
+	* src/menus.c, src/nazghul.c, src/play.c, src/sound.c, src/sound.h:
+	music-volume setting (unfortunately doesnt work on midi!)
+	better handling of music loading errors
+
+	* src/menus.c: Added music credits to title page
+
+2008-03-01  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/void-temple.scm, worlds/haxima-1.002/voidgap-passage.scm, worlds/haxima-1.002/westpass.scm, worlds/haxima-1.002/abandoned-cellar.scm, worlds/haxima-1.002/abandoned-farm.scm, worlds/haxima-1.002/absalot.scm, worlds/haxima-1.002/altar-room.scm, worlds/haxima-1.002/ancient-derelict.scm, worlds/haxima-1.002/angriss-lair.scm, worlds/haxima-1.002/ankh-shrine.scm, worlds/haxima-1.002/bandit-hideout.scm, worlds/haxima-1.002/bole.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/combat-maps.scm, worlds/haxima-1.002/crypt.scm, worlds/haxima-1.002/dank-cave.scm, worlds/haxima-1.002/eastpass.scm, worlds/haxima-1.002/enchanters-tower.scm, worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/engineers-hut.scm, worlds/haxima-1.002/fire_sea.scm, worlds/haxima-1.002/forsaken-prison.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/goblin-kingdoms.scm, worlds/haxima-1.002/green-tower-lower.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/keep.scm, worlds/haxima-1.002/kraken-lakes.scm, worlds/haxima-1.002/kun.scm, worlds/haxima-1.002/lich-tomb.scm, worlds/haxima-1.002/lost-halls.scm, worlds/haxima-1.002/mans-hideout.scm, worlds/haxima-1.002/merciful-death.scm, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/mushroom-cave.scm, worlds/haxima-1.002/necromancers-lair.scm, worlds/haxima-1.002/old-absalot.scm, worlds/haxima-1.002/old-mine.scm, worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/poor-house.scm, worlds/haxima-1.002/prison.scm, worlds/haxima-1.002/road_to_absalot.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/slimy-cavern.scm, worlds/haxima-1.002/thiefs_den.scm, worlds/haxima-1.002/traps_1.scm, worlds/haxima-1.002/traps_2.scm, worlds/haxima-1.002/traps_3.scm, worlds/haxima-1.002/traps_4.scm, worlds/haxima-1.002/treasury.scm, worlds/haxima-1.002/trigrave.scm:
+	Add music data to all the places
+
+	* worlds/haxima-1.002/game.scm: Init music hooks
+
+	* worlds/haxima-1.002/pseudorandom-map.scm:
+	Music compatible random maps content freezing
+
+	* worlds/haxima-1.002/statue-of-justice.scm: Typo in text
+
+	* worlds/haxima-1.002/gamestart-statues.scm: Fixed spelling
+	Statues respond to abbreviated stat names
+
+	* worlds/haxima-1.002/naz.scm:
+	Method to retrieve location of player party members (which occasionally differs from the location of the player party)
+
+	* worlds/haxima-1.002/sounds.scm:
+	Utility methods for tracking music in and out of combat (+ transitions) for different places
+
+	* worlds/haxima-1.002/music/wind-trio.mid, worlds/haxima-1.002/music/Lute-and-recorder-ballad.mid, worlds/haxima-1.002/music/Minuet-like-Mozart.mid, worlds/haxima-1.002/music/ballad.mid, worlds/haxima-1.002/music/bassoons-and-harpsichord.mid, worlds/haxima-1.002/music/credits.txt, worlds/haxima-1.002/music/double-trios.mid, worlds/haxima-1.002/music/dragon-quest.mid, worlds/haxima-1.002/music/dragon-slayer.mid, worlds/haxima-1.002/music/fair-camelot.mid, worlds/haxima-1.002/music/game-music2.mid, worlds/haxima-1.002/music/harpsichord-piece.mid, worlds/haxima-1.002/music/into-battle.mid, worlds/haxima-1.002/music/medieval-quest.mid, worlds/haxima-1.002/music/minstrel-dance.mid, worlds/haxima-1.002/music/music.scm, worlds/haxima-1.002/music/plainchant-recorder-trio.mid:
+	Added Jim Paterson's midi music (the zip on the ftp site says we have permission)
+
+	* src/kern.c, src/session.c, src/session.h:
+	Hooks for game start and for changes in combat state
+
+	* src/combat.c:
+	Entering combat map sets combat state _after_ participants are positioned (helps with combat state change hook)
+
+2008-02-23  kaypy  <kaypy@localhost.localdomain>
+
+	* src/character.cpp, src/combat.c, src/place.c:
+	Combat.state is more proactive abour tracking changes
+
+	* src/sound.c:
+	accepts a full path, so you can point it at your local mp3s if you want
+
+2008-02-21  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/sounds.scm, src/sound.c, src/sound.h, src/kern.c, src/play.c, src/session.c, src/session.h:
+	First pass at shuffle play music
+
+	* src/sound.c:
+	Music seems to work, for sufficiently hacky values of 'work'
+
+2008-02-04  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/gamestart-mech.scm, worlds/haxima-1.002/gamestart-statues.scm, worlds/haxima-1.002/gamestart.scm:
+	working statue char creation
+
+	* worlds/haxima-1.002/start-new-game.scm: initial stats tweaked
+
+2008-02-03  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/bigobjects.png, worlds/haxima-1.002/gamestart-mech.scm, worlds/haxima-1.002/gamestart-statues.scm, worlds/haxima-1.002/gamestart.scm, worlds/haxima-1.002/sprites.scm:
+	First pass at statue/conversation based character generation
+	Not yet functional
+
+	* worlds/haxima-1.002/fields.scm, worlds/haxima-1.002/sfx.png:
+	Added acid fields (I just needed something yellow, really)
+
+2008-01-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/session.c: Fixed a 3k leak that happened on quit
+
+2008-01-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/play.c:
+	Bugfix: reloading a game with a start-proc would not run the start-proc, which might result in a crash
+
+2007-12-30  kaypy  <kaypy@localhost.localdomain>
+
+	* src/sound.c: more paranoid memory handling
+	removed music for the moment
+
+2007-12-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/status.c, src/status.h:
+	y)use ui now scrolls like everything else
+
+2007-12-09  sglasby  <sglasby@localhost.localdomain>
+
+	* worlds/haxima-1.002/kern-init.scm:
+	Added a new config value for the progress bar image file.
+
+	* src/foogod.c: Changed foogod_load_progress_bar_sprites() to load
+	a distinct file, rather than load the image from an
+	inline XPM.
+
+	(A rather strange problem, perhaps associated with
+	an oddly-build RPM of SDL_image came up for OpenSUSE,
+	so it seems better to use a PNG.)
+
+	* worlds/haxima-1.002/progress_bar_image.png:
+	The progress bar sprite pieces, as a PNG file.
+	(There was a problem under at least one compilation environment,
+	with loading this image as an inline XPM.)
+
+	* worlds/haxima-1.002/tetzl.scm, worlds/haxima-1.002/the-man.scm, worlds/haxima-1.002/thorald.scm, worlds/haxima-1.002/thud.scm, worlds/haxima-1.002/tim.scm, worlds/haxima-1.002/tooth.scm, worlds/haxima-1.002/valus.scm, worlds/haxima-1.002/warritrix.scm, worlds/haxima-1.002/zane.scm:
+	Added various comments.
+
+	* worlds/haxima-1.002/silas.scm, worlds/haxima-1.002/slywan.scm, worlds/haxima-1.002/steward.scm:
+	Added some comments.
+
+2007-12-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/valus.scm:
+	Added asides for Ini
+
+	* src/kern.c: Oops. status.c doesn't like NULL containers.
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/skills.scm:
+	Pickpocket can fail (with consequences)
+
+	* worlds/haxima-1.002/skills.scm, worlds/haxima-1.002/statue-of-justice.scm, src/cmd.c, src/kern.c, src/status.c, src/status.h:
+	kern-ui-select-item now takes a kchar arg and browses *their* inventory, instead of being hardcoded to the player. The pickpocket skill exploits this.
+
+	* src/terrain.c: Performance tweak for looking up terrains in palettes
+
+	* configure.ac: Sam's changes to configure.ac for SDL_Mixer
+
+2007-12-07  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/skills.scm:
+	Oops. Didn't see the multiplier on my last. Also added basic pickpocket skill.
+
+	* worlds/haxima-1.002/skills.scm: Skills use the base-skill-ap variable
+
+	* worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/tools.png:
+	Shiny new chest sprites
+
+	* worlds/library/artwork/furniture/chest.xcf: Art for new chest sprites
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/keys.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/tools.png, worlds/haxima-1.002/tools.scm:
+	Locked and magically locked chests with some ugly sprites for same.
+
+2007-12-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/effects.png, worlds/haxima-1.002/effects.scm:
+	Finished the 'curse of unrest' effect. The SOJ in glasdrin uses it.
+
+	* src/kern.c: NPC party ambush direction was not random
+
+	* src/combat.c:
+	Introducing a party into combat that did not come from the world map (or someplace) caused a crash
+
+	* src/Being.cpp: Turned off some debug
+
+2007-12-05  sglasby  <sglasby@localhost.localdomain>
+
+	* worlds/haxima-1.002/selene.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/roland.scm, worlds/haxima-1.002/patch.scm:
+	Added some comments.
+
+	* worlds/haxima-1.002/oscar.scm: Corrected some comments.
+
+	* worlds/haxima-1.002/oscar.scm, worlds/haxima-1.002/patch.scm, worlds/haxima-1.002/melvin.scm, worlds/haxima-1.002/meaney.scm, worlds/haxima-1.002/may.scm:
+	Various comments regarding description and location, etc.
+
+2007-12-05  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/ascii.c, src/images.c, src/images.h, src/screen.c, src/screen.h, src/sprite.c:
+	Eero's 16-bit patch
+
+	* src/status.c: Tab cleanup and removed a dead function
+
+	* src/Makefile.am, src/map.c, src/menus.c, src/play.c, src/cmd.c, src/ctrl.c, src/nazghul.c, src/nazghul.h:
+	Eero's cleanup patch
+
+	* src/nazghul.h:
+	file nazghul.h was added on branch release_0_6_0_rc2_maint on 2008-11-08 04:30:15 +0000
+
+	* src/combat.c: Turned off some debug
+
+	* src/screen_dims.h:
+	Eero's patch for n800 screen size (kern-init.scm already patched)
+
+2007-12-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/statue-of-justice.scm:
+	A start on the statue curses
+
+	* src/foogod.c:
+	Show extra effects on the party (currently unused, see Party::addEffect for why)
+
+	* src/kern.c: kern-char-set-sched
+
+2007-12-03  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/scrolls.scm:
+	feature 1843033 scrolls explicitly labelled
+
+	* worlds/haxima-1.002/scrolls.scm:
+	fix for 1843001 scrolls fail in wilderness combat
+
+2007-12-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/valus.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/prison.scm:
+	Replacement for the Stewardess
+
+	* worlds/haxima-1.002/shroom.scm: Minor conv fix
+
+2007-12-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/zones.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/janice.scm, worlds/haxima-1.002/jeffreys.scm:
+	Replacement for Jeffries.
+
+	* worlds/haxima-1.002/conv.scm: Tweaked generic glasdrin reply to JEFF
+
+	* worlds/haxima-1.002/jeffreys.scm:
+	Jeffries becomes a vagabond in Kun after the trial
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/steward.scm:
+	Oops. Broke some things on my last commit. Also, updated generic glasdrin conv.
+
+	* worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/player.scm, worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/warritrix.scm:
+	Added another player flag for the trial of glasdrin being over.
+
+2007-11-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/skills.scm, worlds/haxima-1.002/species.scm:
+	Implemented butchering as an example crafting skill. You'll need a deer. Currently these aren't autogenerated anywhere.
+
+	* src/ctrl.c: Turned on y)use
+
+	* worlds/haxima-1.002/occs.scm:
+	Added preliminary crafting ability to occs
+
+	* worlds/haxima-1.002/occs.scm:
+	Fixed what looks like a bug in dexterity defense
+
+	* worlds/haxima-1.002/kern-init.scm:
+	Added 880x640 splash from Eero's 16bit patch
+
+	* worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/player.scm:
+	Jeffreys and Stewardess act guilty after player finds Warritrix
+
+	* worlds/haxima-1.002/zones.scm: Bug in holy grail table settings
+
+2007-11-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/start-new-game.scm:
+	Removed redefinitions of stuff in player.scm
+
+	* worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/warritrix.scm:
+	Added a gob for the player party.
+
+	* src/player.cpp: Player party object now saves its gob
+
+2007-11-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/foogod.c: Improved progress bar sprite
+
+	* worlds/haxima-1.002/newterrain.png: Put the SOJ on a pedastal
+
+	* src/object.c, src/status.c:
+	Fixing a bug I found by accidentally reloading a new game. Normally this is not possible, I had a weird case. It still doesn't work do to that, there are more bugs.
+
+	* worlds/haxima-1.002/newterrain.png:
+	Should have checked in the new image with the new statue sprite
+
+	* worlds/haxima-1.002/statue-of-justice.scm: Fixed a typo in the xamine
+
+	* worlds/haxima-1.002/game.scm:
+	Fixed the dtable problem I created last time I committed this file
+
+	* worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/statue-of-justice.scm:
+	Changed SOJ's sprite
+
+	* worlds/library/artwork/terrain/headless_statue_with_sword.xcf:
+	New statue sprite
+
+	* worlds/haxima-1.002/game.scm:
+	This should have gone in with my last batch of glasdrin changes
+
+2007-11-26  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/luximene.scm: correction to schedule comment
+
+	* worlds/haxima-1.002/naz.scm:
+	pick-loc checks for valid target locations
+
+	* worlds/haxima-1.002/books.scm: some typos in journal
+
+	* worlds/haxima-1.002/necromancer.scm:
+	fix for 1838195- necromancer now checks you have the skull
+
+2007-11-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/the-man.scm, worlds/haxima-1.002/warritrix.scm:
+	Fixed up some conversation bits
+
+	* worlds/haxima-1.002/the-man.scm, worlds/haxima-1.002/warritrix.scm:
+	Trading names between the MAN and the Warritrix.
+
+	* worlds/haxima-1.002/angela.scm, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/jess.scm, worlds/haxima-1.002/patch.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/steward.scm:
+	The SOJ now exiles the player if he accuses without evidence
+
+2007-11-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/angela.scm, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/patch.scm, worlds/haxima-1.002/statue-of-justice.scm:
+	Stewardess now punished when convicted. The townsfolk of glasdrin are now all armed.
+
+	* worlds/haxima-1.002/angela.scm, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/jess.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/patch.scm, worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/steward.scm:
+	The status of justice in glasdrin will now hold a trial
+
+	* src/cmd.c, src/cmd.h, src/kern.c: Added kern-ui-select-item
+
+	* src/Being.cpp:
+	If an NPC is using a cached path, and the next step is occupied, it discards the cached path so it will recompute next time
+
+	* src/status.c: Renamed a function
+
+2007-11-24  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/statue-of-justice.scm, worlds/haxima-1.002/terrains.scm:
+	Added statue of justice (doesn't do much yet)
+
+2007-11-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/books.scm, worlds/haxima-1.002/glasdrin.scm:
+	Added Stewardess's Journal
+
+2007-11-21  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/foogod.c: Made the progress bar purty.
+
+	* src/foogod.c, src/session.c:
+	The progress bar code generated in the save files is now a pretty good match to actual load times. Not perfect, but probably good enough.
+
+	* worlds/haxima-1.002/tutorial.scm: Added progress bar to tutorial
+
+2007-11-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/start-new-game.scm:
+	Progress bar now pretty good for start-new-game
+
+	* worlds/haxima-1.002/game.scm:
+	Pulled progress bar stuff out of generic file
+
+	* src/menus.c, src/play.c, src/session.c, src/session.h, src/kern.c, src/foogod.c:
+	Game-saving code generates (imperfect) progress bar info; delay switching foogod window back to normal so the complete progress bar is visible for a little bit of time
+
+	* worlds/haxima-1.002/books.scm: Fixed mismatched parenthesis
+
+2007-11-20  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/arms.scm: projectile weapons use missile sound
+
+	* worlds/haxima-1.002/ifc.scm, src/object.h, src/object.c, src/ctrl.c:
+	callback on weapon just before attack
+
+2007-11-20  sglasby  <sglasby@localhost.localdomain>
+
+	* worlds/haxima-1.002/kathryn.scm, worlds/haxima-1.002/lia.scm, worlds/haxima-1.002/luximene.scm:
+	Checking references to places and such.
+
+	Added notes on who and where the various characters are.
+
+	* worlds/haxima-1.002/kalcifax.scm:
+	Added some notes on who and where Kalcifax is.
+
+	* worlds/haxima-1.002/kama.scm, worlds/haxima-1.002/gen.scm:
+	Added some notes to Kama on who and where he is.
+
+	Added some detail to a cultural interest shared by Gen and Kama.
+
+	* worlds/haxima-1.002/books.scm:
+	Added a book related to an interest of Gen's.
+
+2007-11-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm: progress bar for demo
+
+	* worlds/haxima-1.002/game.scm:
+	Use progress bar (weakly; works ok for demo but not calibrated right for new or loaded games
+
+	* src/status.c, src/nazghul.c, src/foogod.c, src/foogod.h, src/kern.c:
+	Progress bar
+
+2007-11-19  sglasby  <sglasby@localhost.localdomain>
+
+	* worlds/haxima-1.002/jones.scm, worlds/haxima-1.002/jorn.scm, worlds/haxima-1.002/jess.scm, worlds/haxima-1.002/joel.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jake.scm, worlds/haxima-1.002/jeffreys.scm:
+	Checking place references and such.
+	Added notes regarding the who and where NPCs are / are at.
+
+	* worlds/haxima-1.002/ghertie.scm, worlds/haxima-1.002/gholet.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/hackle.scm, worlds/haxima-1.002/henry.scm:
+	Checking for consistency in place references and such.
+	Added some comments regarding the what and where that NPCs are / are at.
+
+	* worlds/haxima-1.002/gen.scm:
+	Added some missing responses for Goblin root words.
+	Added a few composite words related to character types,
+	and to make the ability to get Gen to join less subtle.
+	Grouped/organized some keywords to keep the Goblin language responses together.
+
+	Added notes regarding the type and location of Gen.
+
+2007-11-18  sglasby  <sglasby@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/fing.scm:
+	Checking location references and such.
+	Removed some duplicate definitions of a constant
+	for Trigrave inn prices.
+	Added comments for NPCs type and location.
+
+	* worlds/haxima-1.002/bart.scm, worlds/haxima-1.002/bill.scm, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/dennis.scm, worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/doris.scm, worlds/haxima-1.002/douglas.scm, worlds/haxima-1.002/edward.scm:
+	Checking references to places and such.
+	Adding suitable comments as to
+	what (species, gender, profession) an NPC is,
+	and where (what zone) they are at.
+	Removed some duplicate instances of a trigrave inn price constant.
+
+	* worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/abigail.scm, worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/alex.scm, worlds/haxima-1.002/amy.scm, worlds/haxima-1.002/anaxes.scm, worlds/haxima-1.002/angela.scm, worlds/haxima-1.002/angriss.scm, worlds/haxima-1.002/anne.scm:
+	Double-checking place references and such,
+	added comments where needed in regards to
+	what (species, gender, profession) is
+	and where (what zone) the NPC may be found.
+
+2007-11-18  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ability.scm: npcs use same cone attack as PCs
+
+	* worlds/haxima-1.002/powers.scm:
+	cleaned up, debugged and enhanced cone attacks
+
+	* worlds/haxima-1.002/fireblast.wav, worlds/haxima-1.002/sounds.scm:
+	fireblast sound for cone spells
+
+2007-11-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demon-gate.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/talking-ankh.scm, worlds/haxima-1.002/ankh-shrine.scm:
+	Changed the end-game map to match the demo map
+
+2007-11-18  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm: one word: oops
+
+	* worlds/haxima-1.002/demo.scm: passive-ai no longer includes std-ai:
+	the beggar was moving off when hit by stray fields
+
+	* worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/ability.scm:
+	collateral check for lightning bolt
+
+	* worlds/haxima-1.002/powers.scm:
+	various bugs in collateral damage routine fixed
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/powers.scm:
+	collateral check added to fireball
+
+2007-11-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm:
+	Final (famous last words) changes to the demo maps. Just undid Kris's blending, probably.
+
+	* worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/terrains.scm:
+	Added a non-los blocking version of t_trees
+
+2007-11-18  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm: blended aging terrains
+
+	* worlds/haxima-1.002/demo.scm: ai tweaks
+	deer in 'ages passed'
+	sound effect for closing gate
+	display refreshes & pauses when npcs are added
+
+	* worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/sprite-sets.scm:
+	deer sprite
+
+2007-11-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm: More aging of the demo scene.
+
+	* worlds/haxima-1.002/demo.scm:
+	Started the accelerated aging process on the demo scene
+
+	* worlds/haxima-1.002/demo.scm:
+	Demo: sprites animate during pauses; player gets a chance to see that the altars are glowing, not the runes
+
+	* worlds/haxima-1.002/ability.scm:
+	NPC wizards may now cast flame wind and lightning. Watch out.
+
+	* worlds/haxima-1.002/powers.scm:
+	Renamed a parameter to make it clear that it is a LOCATION and not a kernel object
+
+	* src/kern.c: Fixed a debug statement
+
+	* worlds/haxima-1.002/demo.scm:
+	Added some special effects to the part where the wise close the gate
+
+2007-11-17  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/creatures.png, worlds/library/artwork/creatures/deer.xcf:
+	first pass at a deer
+
+2007-11-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm: Changes to demo scene:
+	o The sprites of the wise are non-random
+	o Added random traveler sprites, depending on profession
+	o Sparsed the travelers even more
+	o Repaint the screen for each loot item the beggar picks up
+
+2007-11-17  kaypy  <kaypy@localhost.localdomain>
+
+	* src/character.cpp, src/character.h:
+	character uses object sprites, rather than having a second local sprite
+
+	* worlds/haxima-1.002/demo.scm: more line end problems
+	beggar is more indestructable
+	beggar cleans up loot and exits
+
+	* worlds/haxima-1.002/demo.scm:
+	reinforcements wander around for a bit instead of immediately exitting
+
+	* worlds/haxima-1.002/demo.scm: guards exit after the wise leave
+
+	* worlds/haxima-1.002/demo.scm: tweaked traveler ratios
+	wise have variety of appearances
+	human reinforcements appear in more timely fashion
+	runes are collected asynchronously
+	map tweaked
+
+	* worlds/haxima-1.002/demo.scm: fixeed line endings
+
+2007-11-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm:
+	Kris's improvements to the demo scene: another demon wave and reinforcements to repel them.
+
+	* src/menus.c, worlds/haxima-1.002/demo.scm:
+	When the demo is done the main menu goes back to the splash screen. At that point the player can opt to show the demo again.
+
+2007-11-17  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/powers.scm: clone spell more effective
+	sleep spell tweaked
+
+2007-11-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demon-gate.scm, src/kern.c:
+	Made kern-end-game more general by moving messages to the script
+
+	* src/menus.c:
+	Demo only starts automatically the first time the main menu comes up after starting the program. After that the option to play it appears in the menu.
+
+2007-11-16  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/lightning.wav, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/sounds.scm:
+	added lightning sound
+	fixed some bugs in field wall behaviour
+
+	* worlds/haxima-1.002/demo.scm: uses altar-on-grass sprites
+	centers view nicely in reduced size mode
+
+2007-11-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* scripts/blendmap.pl: Blender can handle 3-wide glyphs now
+
+	* worlds/haxima-1.002/demo.scm: Blended the demo map.
+
+	* src/kern.c, src/map.c, src/map.h:
+	Adding kern-map-blit-image, which isn't currently used anywhere, or planned to be used, but I already wrote and tested the code so might as well commit it.
+
+	* worlds/haxima-1.002/demo.scm: More tweaks to the demo scene
+
+	* worlds/haxima-1.002/effects.scm:
+	No more 'poison field immune to poison' messages
+
+2007-11-16  kaypy  <kaypy@localhost.localdomain>
+
+	* src/ctrl.c, src/Being.cpp:
+	fix for 1822685- adds AP cost to handling mechs by bumping into them
+
+2007-11-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm, worlds/haxima-1.002/gold_frame.png, worlds/haxima-1.002/haximatext.png:
+	Added a frame around the demo scene
+
+2007-11-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm, worlds/haxima-1.002/haximatext.png:
+	Added the logo above the demo. Started tweaking the demo map.
+
+2007-11-15  kaypy  <kaypy@localhost.localdomain>
+
+	* src/place.c: virtual cost of nasty tiles scaled to AP_per_turn
+
+	* src/Being.cpp:
+	npcs reevaluate their options before crossing nasty tiles
+
+	* worlds/haxima-1.002/sfx.png, worlds/haxima-1.002/sprites.scm:
+	transparent field sprites
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm:
+	remaining field spells use wall effect
+
+	* worlds/haxima-1.002/moon.scm:
+	dimming the moons a trifle- night is awfully well lit
+
+	* src/kern.c: mmode set if kern-mk-field-type
+	removed some debugging
+
+2007-11-14  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/powers.scm:
+	field walls are 'solid', with extra diagonal blocking cells that cost 1/2
+
+	* worlds/library/artwork/logos/haximatext.svg:
+	vector form of the haxima text
+
+	* worlds/library/artwork/logos/haximasplashbig.xcf, worlds/library/artwork/logos/haximasplashsmall.xcf:
+	layered versions of the splash screens
+
+2007-11-14  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm:
+	Demo scene script now runs to completion.
+
+2007-11-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/demo.scm:
+	In the intro scene the wise now appear and walk to the altars
+
+2007-11-13  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm:
+	in flam grav now uses first pass at wall style field spells
+
+	* worlds/haxima-1.002/powers.scm:
+	most missile spells have sound applied
+
+	* worlds/haxima-1.002/boom.wav, worlds/haxima-1.002/combat-maps.scm, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/sounds.scm, worlds/haxima-1.002/swish.wav:
+	some more sound added:
+	swishes and bangs fo magical projectiles
+	a first pass at some changing music tracks (but I still dont have uploadable music tracks to change...)
+
+2007-11-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/demo.scm:
+	Pulled game.scm inline into demo.scm and trimmed it to speed up demo loading.
+
+	* worlds/haxima-1.002/terrains.scm:
+	removed obsolete terrain-blender calls
+
+	* src/kern.c: Added kern-log-flush
+
+2007-11-12  kaypy  <kaypy@localhost.localdomain>
+
+	* win32/Makefile, win32/config.h, win32/configure, win32/haxima.ico, win32/readme.txt, win32/res.rc, win32/src_config.h:
+	First pass at including 'everything you need to make win32 builds go'
+
+2007-11-11  kaypy  <kaypy@localhost.localdomain>
+
+	* src/sound.c: cleaning up old code
+
+	* src/combat.c, src/combat.h, src/player.cpp, src/session.c:
+	fix for 1829927- reset combat state between games
+
+	* worlds/haxima-1.002/sprites.scm: alters have cobblestone background
+
+	* worlds/haxima-1.002/terrains.scm: altars have boulder passability
+
+	* nazghul.nsi: 0.6.0 installer
+
+	* worlds/haxima-1.002/sounds.scm, worlds/haxima-1.002/tools.scm, worlds/haxima-1.002/gong.wav:
+	clocks chime on the hour
+
+	* src/kern.c, src/clock.c, src/clock.h: kern call to get clock ticks
+
+2007-11-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/menus.c: Got rid of initial splash/demo flicker
+
+	* worlds/haxima-1.002/kern-init.scm:
+	Turning on the demo scene. To turn off just comment out the relevant line in kern-init.scm.
+
+	* worlds/haxima-1.002/demo.scm: Updated the demo scene a bit
+
+	* src/menus.c, src/place.c:
+	Kernel support for running a demo in the map viewer while processing the main menu
+
+	* src/session.h: Added a demo-mode flag to the session struct
+
+	* src/map.c: Removed another old debug statement
+
+	* src/kern.c:
+	Added kern-char-set-control-mode so that a player character may be forced into using an AI
+
+	* src/common.c, src/character.cpp: Removing some old debug
+
+2007-11-10  kaypy  <kaypy@localhost.localdomain>
+
+	* src/sound.c: Slight fade out when switching tracks
+
+	* worlds/haxima-1.002/sounds.scm:
+	Will play background music if insertmusic.mid is added (or the file is tweaked to point elsewhere)
+
+	* src/sound.h, src/kern.c, src/sound.c: First pass at music playing
+
+	* src/place.c: Removed some debugging cruft
+
+	* src/sound.c, src/sound.h:
+	Does most of the sound effects stuff again, but is rather buggy
+
+2007-11-09  kaypy  <kaypy@localhost.localdomain>
+
+	* src/sound.c: Converting sound to SDL_Mixer
+
+2007-11-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/demo.scm:
+	Started on a demo scene for the main menu
+
+	* worlds/haxima-1.002/silas.scm: Minor typographical change
+
+2007-11-08  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/sounds.scm, worlds/haxima-1.002/tools.scm, worlds/haxima-1.002/enchanters-tower-mech.scm, worlds/haxima-1.002/enchanters-tower.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/wind_1a.wav:
+	some tweaks to the sound
+	winds whistling through the brundegardt peaks
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/dog_9.wav:
+	tweaked ai to add sound effects as a 'free action'-
+	wolves will bark at random intervals
+
+	* src/kern.c: kern api call for plaing a oneoff sound 'at a location'
+
+	* src/sound.c:
+	minor tweak- maximum volume for oneoff sound completely separated from repeating volumes.
+
+	* src/sound.c:
+	ambient sounds fade out nicely as the player moves away (it was a touch jerky previously)
+
+	* worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/river.wav, worlds/haxima-1.002/sounds.scm:
+	general purpose "add some ambient noise here" object created
+	burbling river added to Gregors Hut as example
+
+2007-11-06  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ticktock.wav: a better clock sound
+
+	* src/sound.c:
+	was not properly checking for repeated sounds- it only checked up to the first free slot. Now it checks all
+
+	* worlds/haxima-1.002/sounds.scm, worlds/haxima-1.002/ticktock.wav, worlds/haxima-1.002/tools.scm:
+	first pass at a clock ticking. pity the wav sucks
+
+	* src/kern.c, src/place.c, src/place.h, src/sound.c, src/sound.h:
+	first pass at ambient sound
+
+	* src/sound.c: sound uses larger buffer to prevent glitches
+
+2007-11-04  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/lost-halls.scm: Missing dungeon sprite
+
+2007-11-03  kaypy  <kaypy@localhost.localdomain>
+
+	* AUTHORS: Update for 0.6.0
+
+	* ChangeLog: update for 0.6.0
+
+	* scripts/cvstochangelog.pl:
+	script to generate changelog from cvs log dump
+
+2007-11-02  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* scripts/RELEASE_CHECKOFF: Added a few notes for clariication
+
+2007-11-02  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/potions.scm:
+	some potions did not have right ap cost
+
+	* NEWS: changes for 0.6.0
+
 2007-11-02  Kris Parker  <kaypy@localhost.localdomain>
 
 	* NEWS:

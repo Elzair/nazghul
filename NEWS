@@ -1,3 +1,6 @@
+Changes between 0.7.0 and 0.7.1
+o Fixed c++ compile warnings (g++ (GCC) 4.4.4 20100630 (Red Hat 4.4.4-10))
+o Fixed missing libpng DLL in win32 release
 Changes between 0.6.0 and 0.7.0
 Engine
 o Y)use command for skills

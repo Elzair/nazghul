@@ -3,6 +3,7 @@
 #NAZGHUL=$HOME/nazghul-cvs
 NAZGHUL=`pwd`
 INSTALL=$HOME/nazghul-install
+TMPDIR=$HOME/nazghul-tmp
 
 version=$1
 if [ -z "$version" ]; then
@@ -18,7 +19,8 @@ find . -name '*~' -exec rm -f {} \;
 make cvsclean && \
 ./autogen.sh && \
 make alldist && \
-cd ~/nazghul-tmp &&                \
+mkdir -p $TMPDIR && \
+cd $TMPDIR && \
 rm -rf * && \
 tar -xvzf $NAZGHUL/nazghul-$version.tar.gz && \
 cd nazghul-$version &&     \

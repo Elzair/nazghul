@@ -34,49 +34,48 @@ PART II: BUILD AND TEST SOURCE DIST
 
 PART III: BUILD AND TEST WINDOWS BINARY
 
-Note: This section is obsolete; Roberto Amorim now maintains the windows binary
-      distribution. This section explains how to do a release using Cygwin and
-      the Nullsoft installer, and I'm leaving it in for future reference.
+Once you've installed the environment as per the nazghul/win32/readme...
 
-Note: this assumes Cygwin
+(1) Checking out from cvs
 
-(1) ftp nazghul-x.y.z.tar.gz to a cygwin session
-(2) untar, configure and build the nazghul.exe:
+Assuming you are using wincvs as your cvs client, replace your own username for
+gmcnutt and your own local directories where appropriate:
 
-        $ tar -xvzf nazghul-x.y.z.tar.gz
-        $ cd nazghul-x.y.z
-        # this next step is because of where I have installed SDL_image on my
-        environment... may not be necessary for other people:
-        $ export LDFLAGS=-L/usr/local/lib
-        $ ./configure
-        $ make
+Log in: Admin->Login
+  CVSROOT: :ssh:gmcnutt@nazghul.cvs.sourceforge.net:/cvsroot/nazghul
 
-(3) Make a new release dir:
+Checkout fresh repository: Remote->Checkout module
+  Module name and path on the server: nazghul
+  Local folder to checkout to: C:/Haxima Dev/trunk
+  CVSROOT: :ssh:gmcnutt@nazghul.cvs.sourceforge.net:/cvsroot/nazghul
 
-        $ RELEASE=~/release/nazghul-x.y.z
-        $ mkdir -p $RELEASE
-        $ cp src/nazghul.exe $RELEASE
-        $ cp doc/USERS_GUIDE $RELEASE/USERS_GUIDE.TXT
-        $ cp -R worlds/haxima-1.002/* $RELEASE
-        $ cd ..
-        $ cp ../common/* $RELEASE
-        $ cd $RELEASE
-        $ unix2dos USERS_GUIDE.TXT
 
-(4) Compile the nazghul.nsi script using Nullsoft
-  a) check the revision number in the script first
+(2) Building nazghul.exe
 
-(4) Test the release dir under windows by double-clicking on nazghul.exe in an
-    explorer window.
+Compile:
+  Start->MingGW->msys
+  cd /c/home/gmcnutt/Haxima Dev/trunk/nazghul/win32
+  ./configure
+  cd ../src
+  make
+  
+(3) Making the Inno installer
 
-(5) Convert README and USERS_GUIDE to be .TXT with DOS end-lines
+Update the version info in nazghul/scripts/nazghul.iss
 
-(6) If all is well then zip up the release:
+Make a directory under nazghul called dlls with the following in it:
+  SDL.dll  
+  SDL_image.dll
+  SDL_mixer.dll
+  jpeg.dll
+  libpng13.dll
+  zlib1.dll
 
-        $ cd ..
-        $ tar -cvzf nazghul-x.y.z-win32.tar.zip nazghul-x.y.z/
-
-(7) ftp it to another windows box without cygwin and test it out
+Build the installer:
+  Double-click on nazghul/scripts/nazghul.iss (runs the InnoIDE compiler)
+  Click Compile
+  F9 to test
+  The results is nazghul/scripts/nazghul-<ver>-setup
 
 PART IV: LABEL THE SOURCE
 
