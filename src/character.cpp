@@ -1952,7 +1952,11 @@ int Character::getArmourClass() {
 void Character::setHp(int val) 
 {
         hp = val;
-        hp = clamp(hp, 0, getMaxHp());
+        if (hp < 0) {
+                hp = 0;
+        } else if (hp > getMaxHp()) {
+                hp = getMaxHp();
+        }
         if (hp == 0) {
             kill();
         }
