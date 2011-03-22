@@ -24,7 +24,7 @@
 #include "file.h"
 #include "cfg.h"
 #include "debug.h"
-#include "screen.h" // for screenFormat()
+#include "screen.h" // for screen_format()
 
 #include <assert.h>
 #include <SDL_image.h>
@@ -111,7 +111,7 @@ int images_fade(struct images *images)
 	if (images->faded)
 		return 0;
 
-	images->faded = screenCreateSurface(images->images->w,
+	images->faded = screen_create_surface(images->images->w,
 					    images->images->h);
 	if (images->faded == NULL)
 		return -1;
@@ -128,7 +128,7 @@ int images_convert2display(struct images *images)
 	SDL_Surface *tmp;
 	int imagesbits, screenbits;
 	imagesbits = images->images->format->BitsPerPixel;
-	screenbits = screenFormat()->BitsPerPixel;
+	screenbits = screen_format()->BitsPerPixel;
 
 	/* Convert to video format for faster blitting
 	 * (*much* faster on certain display bit depths).

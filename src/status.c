@@ -215,7 +215,7 @@ static void switch_to_tall_mode(void)
 	foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
 
 	foogodRepaint();
-	consoleRepaint();
+	console_repaint();
 	screen_repaint_frame();
 }
 
@@ -232,7 +232,7 @@ static void status_set_line_height(int lines)
 	
 	foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
 	foogodRepaint();
-	consoleRepaint();
+	console_repaint();
 	screen_repaint_frame();
 }
 
@@ -251,7 +251,7 @@ static void switch_to_short_mode(void)
 	//console_set_y(foogod_get_y() + FOOGOD_H);
 
 	foogodRepaint();
-	consoleRepaint();
+	console_repaint();
 	screen_repaint_frame();
 }
 
@@ -313,10 +313,10 @@ void status_set_title(const char *title)
 
 void status_repaint_title(void)
 {
-	screenErase(&Status.titleRect);
-	screenPrint(&Status.titleRect, SP_CENTERED | SP_ONBORDER, "%s", 
+	screen_erase(&Status.titleRect);
+	screen_print(&Status.titleRect, SP_CENTERED | SP_ONBORDER, "%s", 
 						Status.title);
-	screenUpdate(&Status.titleRect);
+	screen_update(&Status.titleRect);
 }
 
 static char status_arms_stat_color(char *dice)
@@ -339,7 +339,7 @@ void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
 	char *def   = arms->getToDefendDice();
 	char *armor = arms->getArmorDice();
 
-	screenPrint(rect, 0, 
+	screen_print(rect, 0, 
 		    "^c+%cHit:^c%c%s ^c%cDmg:^c%c%s ^c%cDef:^c%c%s ^c%cArm:^c%c%s^c-", 
 
 		    STAT_LABEL_CLR,
@@ -379,13 +379,13 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
 	
 	/* quantity and name */
 	if (avail) {
-		screenPrint(rect, 0, "^c+%c%2d%c%s^c-",
+		screen_print(rect, 0, "^c+%c%2d%c%s^c-",
 			(inUse?STAT_INUSE_CLR:STAT_NULL_CLR),
 			avail,
 			(inUse?'*':' '),
 			arms->getName());
 	} else {
-		screenPrint(rect, 0, "^c+%c--%c%s^c-",
+		screen_print(rect, 0, "^c+%c--%c%s^c-",
 			(inUse?STAT_INUSE_CLR:STAT_UNAVAIL_CLR),
 			(inUse?'*':' '),
 			arms->getName());
@@ -420,7 +420,7 @@ static void status_show_character_var_stats(SDL_Rect *rect,
 {
 	/* Show the xp, hp and mp */
 	/* Note that getXpForLevel(2) - getXpForLevel(1) != getXpForLevel(1)*/
-	screenPrint(rect, 0, 
+	screen_print(rect, 0, 
 			"^c+%cHP:^c%c%d^cw/%d "
 			"^c%cMP:^c%c%d^cw/%d "
 			"^c%cAP:^c%c%d^cw/%d "
@@ -454,7 +454,7 @@ static void myShadeLines(int line, int n)
 	rect.y = Status.screenRect.y + line * TILE_H;
 	rect.w = STAT_W;
 	rect.h = ASCII_H * n;
-	screenShade(&rect, 128);
+	screen_shade(&rect, 128);
 }
 
 static void myShadeHalfLines(int line, int n)
@@ -464,7 +464,7 @@ static void myShadeHalfLines(int line, int n)
 	rect.y = Status.screenRect.y + line * ASCII_H;
 	rect.w = STAT_W;
 	rect.h = ASCII_H * n;
-	screenShade(&rect, 128);
+	screen_shade(&rect, 128);
 }
 
 /* status_show_generic_object_type -- show a generic object type (just name and
@@ -483,7 +483,7 @@ static void status_show_generic_object_type(SDL_Rect *rect, void *thing)
 		* vertically. */
 	rect->y += LINE_H / 4;
 
-	screenPrint(rect, 0, "%2d %s", ie->count - ie->ref, 
+	screen_print(rect, 0, "%2d %s", ie->count - ie->ref, 
 					ie->type->getName());
 
 	/* Carriage-return line-feed */
@@ -511,7 +511,7 @@ static void status_show_mix_reagent(SDL_Rect *rect, void *thing)
 		* been selected to be part of the mixture (see cmdMix() in cmd.c, this
 		* is something of a hack). Show an asterisk to mark selected
 		* reagents. */
-	screenPrint(rect, 0, "%2d%c%s", 
+	screen_print(rect, 0, "%2d%c%s", 
 			ie->count, 
 			(ie->ref ? '*':' '), 
 			ie->type->getName());
@@ -682,7 +682,7 @@ static void status_show_party_view_character_arms(class Character *pm,
 
 	/* Tell the sprite lib to scale down by 2x */
 	sprite_zoom_out(2);
-	screenZoomOut(2);
+	screen_zoom_out(2);
 
 		/* for each readied armament */
 	int armsIndex=0;
@@ -703,7 +703,7 @@ static void status_show_party_view_character_arms(class Character *pm,
 	}
 
 	/* Tell the sprite lib to go back to unscaled sprites */
-	screenZoomIn(2);
+	screen_zoom_in(2);
 	sprite_zoom_in(2);
 	
 	/* restore the left edge for the caller */
@@ -724,7 +724,7 @@ static bool status_show_party_view_character(class Character * pm, void *data)
 		Status.lineRect.y);
 
 	/* Paint the name on line 1 */
-	screenPrint(&Status.lineRect, 0, "%-*s", MAX_NAME_LEN,
+	screen_print(&Status.lineRect, 0, "%-*s", MAX_NAME_LEN,
 			pm->getName());
 
 	/* Show the readied arms as scaled-down icons right-justified on line
@@ -792,7 +792,7 @@ static void myScrollParty(enum StatusScrollDir dir)
 
 static void myPaintPage(void)
 {
-	screenBlit(Status.pg_surf, &Status.pg_rect, &Status.screenRect);
+	screen_blit(Status.pg_surf, &Status.pg_rect, &Status.screenRect);
 }
 
 static void myScrollPage(enum StatusScrollDir dir)
@@ -919,7 +919,7 @@ static void mySetPageMode(void)
 		if (Status.pg_surf) {
 			SDL_FreeSurface(Status.pg_surf);
 		}
-		Status.pg_surf = screenCreateSurface(STAT_W, h);
+		Status.pg_surf = screen_create_surface(STAT_W, h);
 		if (!Status.pg_surf)
 			return;
 	}
@@ -940,7 +940,7 @@ static void mySetPageMode(void)
 				ptr++;
 				continue;
 			}
-			if (asciiPaint(*ptr++, c * ASCII_W, y * ASCII_H,
+			if (ascii_paint(*ptr++, c * ASCII_W, y * ASCII_H,
 					Status.pg_surf))
 			{
 				c++;
@@ -1029,15 +1029,15 @@ static void myPaintTrade(void)
 					srect.y);
 		}
 		// name
-		screenPrint(&nrect, 0, "%s", Status.trades[i].name);
+		screen_print(&nrect, 0, "%s", Status.trades[i].name);
 
 		// quantity
 		if (Status.trades[i].show_quantity) {
-			screenPrint(&qrect, 0, "[You have %d]", 
+			screen_print(&qrect, 0, "[You have %d]", 
 												Status.trades[i].quantity);
 		}
 		// price
-		screenPrint(&prect, SP_RIGHTJUSTIFIED, "%dgp",
+		screen_print(&prect, SP_RIGHTJUSTIFIED, "%dgp",
 				Status.trades[i].cost);
 
 		// Shade unselected items.
@@ -1102,10 +1102,10 @@ static void statusPaintGenericList(void)
 		}
 
 		// print line 1
-		screenPrint(&l1rect, 0, "%s", Status.list[i].line1);
+		screen_print(&l1rect, 0, "%s", Status.list[i].line1);
 
 		// print line 2
-		screenPrint(&l2rect, 0, "%s", Status.list[i].line2);
+		screen_print(&l2rect, 0, "%s", Status.list[i].line2);
 
 
 		// Shade unselected items.
@@ -1155,7 +1155,7 @@ static void statusPaintStringList(void)
 		}
 
 		// print line 1
-		screenPrint(&l1rect, 0, "%s", Status.strlist[i]);
+		screen_print(&l1rect, 0, "%s", Status.strlist[i]);
 
 		// Shade unselected items.
 		if (i != Status.curLine) {
@@ -1251,7 +1251,7 @@ void statusRepaint(void)
 		
 	repainting = 1;
 
-	screenErase(&Status.screenRect);
+	screen_erase(&Status.screenRect);
 
         if (Status.paint) {
                 Status.paint();
@@ -1261,7 +1261,7 @@ void statusRepaint(void)
 
 
 	status_repaint_title();
-	screenUpdate(&Status.screenRect);
+	screen_update(&Status.screenRect);
 
 	repainting = 0;
 }
@@ -1275,7 +1275,7 @@ void statusFlash(int line, unsigned int color)
 	if (Status.lineRect.y >= (Status.screenRect.y + Status.screenRect.h))
 		return;
 	Status.lineRect.w = Status.screenRect.w - TILE_W;
-	screenFlash(&Status.lineRect, 50, color);
+	screen_flash(&Status.lineRect, 50, color);
 	statusRepaint();
 
 	statusSetMode(omode);
@@ -1584,7 +1584,7 @@ void statusFlashSelected(unsigned int color)
 					return;
 		rect.w = Status.screenRect.w;
 		rect.h = ASCII_H;
-		screenFlash(&rect, 50, color);
+		screen_flash(&rect, 50, color);
 		statusRepaint();
 		break;
 		
@@ -1630,7 +1630,7 @@ static void stat_super_generic_paint()
 	/* check for empty list */
 	if (!node)
 	{
-		screenPrint(&rect, 0, "No Skills!");
+		screen_print(&rect, 0, "No Skills!");
 		return;
 	}
 

@@ -61,9 +61,9 @@ struct foogod {
 
 static void foogod_repaint_title(void)
 {
-    screenErase(&Foogod.titleRect);
-    screenPrint(&Foogod.titleRect, SP_CENTERED | SP_ONBORDER, "%s", Foogod.title);
-    screenUpdate(&Foogod.titleRect);
+    screen_erase(&Foogod.titleRect);
+    screen_print(&Foogod.titleRect, SP_CENTERED | SP_ONBORDER, "%s", Foogod.title);
+    screen_update(&Foogod.titleRect);
 }
 
 static int foogod_load_progress_bar_sprites(void)
@@ -226,16 +226,16 @@ static void foogodPaintEffects()
 
 static void foogodPaintSessionInfo()
 {
-        screenPrint(&Foogod.turnRect, 0, "Turn: %d", session_get_turn_count());
+        screen_print(&Foogod.turnRect, 0, "Turn: %d", session_get_turn_count());
         foogodPaintEffects();
 
         if (player_party) {
-                screenPrint(&Foogod.foodRect, 0, "Food: %d", 
+                screen_print(&Foogod.foodRect, 0, "Food: %d", 
                             player_party->food);
-                screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  
+                screen_print(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  
                             player_party->gold);
                 if (player_party->getVehicle()) {
-                        screenPrint(&Foogod.hullRect, 0, "Hull: %d", 
+                        screen_print(&Foogod.hullRect, 0, "Hull: %d", 
                                     player_party->getVehicle()->getHp());
                 }
         }
@@ -250,7 +250,7 @@ static void foogod_progress_bar_paint()
 
         /* title */
         rect.h = ASCII_H;
-        screenPrint(&rect, SP_CENTERED, Foogod.progress_bar_title);
+        screen_print(&rect, SP_CENTERED, Foogod.progress_bar_title);
         
         /* bar */
         rect.y += ASCII_H;
@@ -272,7 +272,7 @@ static void foogod_progress_bar_paint()
         /* Paint the center. */
         for (i = 0; i < ticks; i++) {
                 sprite_paint(Foogod.progress_bar_sprites[1], 0, rect.x, rect.y);
-                //screenPrint(&rect, 0, ".");
+                //screen_print(&rect, 0, ".");
                 rect.x += ASCII_W;
         }
 
@@ -282,7 +282,7 @@ static void foogod_progress_bar_paint()
 
 void foogodRepaint(void)
 {
-	screenErase(&Foogod.screenRect);
+	screen_erase(&Foogod.screenRect);
 
         switch (Foogod.mode) {
 
@@ -291,12 +291,12 @@ void foogodRepaint(void)
                 if (Session) {
                         foogodPaintSessionInfo();
                 }
-                screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, 
+                screen_print(&Foogod.combatRect, SP_RIGHTJUSTIFIED, 
                             "Combat: %c", combatGetState());
                 break;
 
         case FOOGOD_HINT:
-                screenPrint(&Foogod.screenRect, 0, Foogod.hintText);
+                screen_print(&Foogod.screenRect, 0, Foogod.hintText);
                 break;
 
         case FOOGOD_PROGRESS_BAR:
@@ -305,7 +305,7 @@ void foogodRepaint(void)
         }
 
         foogod_repaint_title();
-	screenUpdate(&Foogod.screenRect);
+	screen_update(&Foogod.screenRect);
 }
 
 void foogod_set_y(int y)

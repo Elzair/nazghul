@@ -45,7 +45,7 @@ static void ztats_reagents_paint_item(struct inv_entry *ie, SDL_Rect *rect)
          * been selected to be part of the mixture (see cmdMix() in cmd.c, this
          * is something of a hack). Show an asterisk to mark selected
          * reagents. */
-	screenPrint(rect, 0, "%2d%c%s", ie->count, (ie->ref ? '*':' '), ie->type->getName());
+	screen_print(rect, 0, "%2d%c%s", ie->count, (ie->ref ? '*':' '), ie->type->getName());
 
 	/* Carriage-return line-feed */
 	rect->y += (TILE_H * 3) / 4;

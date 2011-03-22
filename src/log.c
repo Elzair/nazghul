@@ -66,8 +66,8 @@ void log_flush()
         entry = outcast(log_q.next, struct log_entry, q_hook);
 
         if (entry->ptr != entry->buf) {
-                consolePrint(entry->buf);
-                consoleRepaint();
+                console_print(entry->buf);
+                console_repaint();
                 memset(entry->buf, 0, sizeof(entry->buf));
                 entry->ptr = entry->buf;
                 entry->room = sizeof(entry->buf);
@@ -86,7 +86,7 @@ static inline void log_print_queued_msgs()
                 
                 entry = outcast(elem, struct log_entry, q_hook);
                 elem = elem->next;
-                consolePrint("%s\n", entry->buf);
+                console_print("%s\n", entry->buf);
                 list_remove(&entry->q_hook);
                 log_entry_del(entry);
         }
@@ -248,7 +248,7 @@ void log_end_group()
 
         log_group--;
         if (log_group == 0)
-                consolePrint("\n");
+                console_print("\n");
 }
 
 void log_disable()

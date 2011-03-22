@@ -255,7 +255,7 @@ static void sprite_blit_faded(SDL_Surface *source, SDL_Rect *from,
                 }
         }
         
-        screenBlit(tmp, NULL, to);
+        screen_blit(tmp, NULL, to);
         SDL_FreeSurface(tmp);
 }
 
@@ -299,7 +299,7 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
                 sprite_blit_faded(sprite->rsurf->surf,  &sprite->frames[frame],
                                   &dest);
         } else {
-                screenBlit(sprite->rsurf->surf, &src, &dest);
+                screen_blit(sprite->rsurf->surf, &src, &dest);
         }
 
 	src = sprite->frames[frame];
@@ -315,7 +315,7 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
                 sprite_blit_faded(sprite->rsurf->surf,  &sprite->frames[frame],
                                   &dest);
         } else {
-                screenBlit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
+                screen_blit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
         }
 
 }
@@ -349,7 +349,7 @@ static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
                 sprite_blit_faded(sprite->rsurf->surf,  &sprite->frames[frame],
                                   &dest);
         } else {
-                screenBlit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
+                screen_blit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
         }
 
 }
@@ -379,7 +379,7 @@ static void sprite_paint_preframed(struct sprite *sprite, int frame, int x, int 
                 sprite_blit_faded(sprite->rsurf->surf,  &sprite->frames[frame],
                                   &dest);
         } else {
-                screenBlit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
+                screen_blit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
         }
 
 }
@@ -885,5 +885,5 @@ int sprite_facings_list(struct sprite *sprite)
 
 void sprite_paint_direct(struct sprite *sprite, int frame, SDL_Rect *dest)
 {
-	screenBlit(sprite->rsurf->surf, &sprite->frames[frame], dest);
+	screen_blit(sprite->rsurf->surf, &sprite->frames[frame], dest);
 }

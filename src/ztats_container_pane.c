@@ -94,7 +94,7 @@ void ztats_container_pane_paint(struct ztats_pane *pane)
 	int line = 0;
 
         if (! container) {
-                screenPrint(&rect, 0, "No inventory!");
+                screen_print(&rect, 0, "No inventory!");
                 return;
         }
 
@@ -146,7 +146,7 @@ void ztats_container_paint_item_generic(struct inv_entry *ie, SDL_Rect *rect)
 		* vertically. */
 	rect->y += TILE_H / 4;
 
-	screenPrint(rect, 0, "%2d %s", ie->count - ie->ref, ie->type->getName());
+	screen_print(rect, 0, "%2d %s", ie->count - ie->ref, ie->type->getName());
 
 	/* Carriage-return line-feed */
 	rect->y += (TILE_H * 3) / 4;

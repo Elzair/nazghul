@@ -276,7 +276,7 @@ void cmdwin_repaint_cursor(void)
 	rect.x += (cmdwin.ptr - start) * ASCII_W;
 
 	sprite_paint(cmdwin.cursor_sprite, 0, rect.x, rect.y);
-	screenUpdate(&rect);
+	screen_update(&rect);
 }
 
 void cmdwin_repaint(void)
@@ -284,9 +284,9 @@ void cmdwin_repaint(void)
         /* If the string is too big, show the last part of it (in other words,
          * right-justify it) */
         char *start = max(cmdwin.buf, cmdwin.ptr - cmdwin.slen);
-	screenErase(&cmdwin.srect);
-	screenPrint(&cmdwin.srect, 0, start);
-	screenUpdate(&cmdwin.srect);
+	screen_erase(&cmdwin.srect);
+	screen_print(&cmdwin.srect, 0, start);
+	screen_update(&cmdwin.srect);
 	cmdwin_repaint_cursor();
 }
 

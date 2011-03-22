@@ -49,9 +49,9 @@ static void ztats_op_paint(struct applet *applet)
 {
         DECL_CAST(struct ztats, ztats, applet);
 
-        screenErase(&applet->dims);
+        screen_erase(&applet->dims);
         ztats->current->ops->paint(ztats->current);
-        screenUpdate(&applet->dims);
+        screen_update(&applet->dims);
 
         status_repaint_title();
 }

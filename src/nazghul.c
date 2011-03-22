@@ -194,15 +194,15 @@ static void nazghul_init_internal_libs(void)
 
         struct lib_entry libs[] = {
                 { "commonInit",     commonInit     },
-                { "screenInit",     screenInit     },
-                { "asciiInit",      asciiInit      },
+                { "screen_init",     screen_init     },
+                { "ascii_init",      ascii_init      },
                 { "sprite_init",    sprite_init    },
                 { "eventInit",      eventInit      },
                 { "windInit",       windInit       },
                 { "formation_init", formation_init },
                 { "astar_init",     astar_init     },
                 { "cmdwin_init",    cmdwin_init    },
-                { "consoleInit",    consoleInit    },
+                { "console_init",    console_init    },
                 { "mapInit",        mapInit        },
                 { "vmask_init",     vmask_init     },
                 { "combatInit",     combatInit     },
@@ -279,7 +279,7 @@ void nazghul_splash(void)
         rect.y = MAP_Y;
         rect.w = MAP_W;
         rect.h = MAP_H;
-        screenErase(&rect);
+        screen_erase(&rect);
 
         /* Fill out the screen destination rect */
         rect.x = max(0, (MAP_W - splash->w) / 2) + MAP_X;
@@ -287,8 +287,8 @@ void nazghul_splash(void)
         rect.w = min(splash->w, MAP_W);
         rect.h = min(splash->h, MAP_H);
 
-        screenBlit(splash, NULL, &rect);
-        screenUpdate(&rect);
+        screen_blit(splash, NULL, &rect);
+        screen_update(&rect);
 }
 
 /* init_default_cfg -- initialize the global cfg settings to start-up defaults
@@ -340,8 +340,8 @@ int main(int argc, char **argv)
 
  main_loop:
         /* blank out the whole screen */
-        screenErase(NULL);
-        screenUpdate(NULL);
+        screen_erase(NULL);
+        screen_update(NULL);
 
         /* pause animation tick generation */
         tick_pause();

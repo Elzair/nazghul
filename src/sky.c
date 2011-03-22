@@ -595,7 +595,7 @@ void sky_advance(struct sky *sky, int visible)
         struct list *elem;
         struct astral_body *body;
 
-	screenErase(&sky->screenRect);
+	screen_erase(&sky->screenRect);
 
         //dbg("sky_advance\n");
         list_for_each(&sky->bodies, elem) {
@@ -611,7 +611,7 @@ void sky_advance(struct sky *sky, int visible)
                 sky_get_eclipse(sky, body);
         }
 
-	screenUpdate(&sky->screenRect);
+	screen_update(&sky->screenRect);
 }
 
 void sky_init(struct sky *sky)

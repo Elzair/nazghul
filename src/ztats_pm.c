@@ -48,7 +48,7 @@ static void ztats_pm_paint_arms(SDL_Rect * rect, ArmsType *arms)
 	// SAM: I don't like cluttering the name line, but the range and AP 
 	//      are essential information, and previous attempts at multi-line 
 	//      status entries foundered.  So, until the thing can be re-written...
-	screenPrint(rect, 0, "%s  (Rng:%d, AP:%d, Spd:%d)", 
+	screen_print(rect, 0, "%s  (Rng:%d, AP:%d, Spd:%d)", 
 		    arms->getName(), arms->getRange(), arms->getRequiredActionPoints(), arms->get_AP_mod() );
 	rect->y += ASCII_H;
 
@@ -75,11 +75,11 @@ static int ztats_pm_paint_effect(hook_entry_t *entry, void *data)
 	rect->x += ASCII_W;
 
 	if (EFFECT_NONDETERMINISTIC == entry->effect->duration) {
-		screenPrint(rect, 0, " %s", entry->effect->name);
+		screen_print(rect, 0, " %s", entry->effect->name);
 	} else if (EFFECT_PERMANENT == entry->effect->duration) {
-		screenPrint(rect, 0, " %s (permanent)", entry->effect->name);
+		screen_print(rect, 0, " %s (permanent)", entry->effect->name);
 	} else {
-		screenPrint(rect, 0, " %s [%d min]", entry->effect->name, 
+		screen_print(rect, 0, " %s [%d min]", entry->effect->name, 
 			clock_alarm_remaining(&entry->expiration));
 	}
 	rect->x -= ASCII_W; /* back up to start next effect at column 0 */
@@ -151,7 +151,7 @@ void ztats_pm_paint(struct ztats_pane *pane)
         SDL_Rect rect = pane->dims;
 	
         if (! pane->party->getSize()) {
-                screenPrint(&rect, 0, "Empty party!");
+                screen_print(&rect, 0, "Empty party!");
                 return;
         }
 
@@ -159,10 +159,10 @@ void ztats_pm_paint(struct ztats_pane *pane)
         assert(ch);
 
 	/* Push the current color. */
-	screenPrint(&rect, 0, "^c+=");
+	screen_print(&rect, 0, "^c+=");
 
 	// Show experience level and XP information:
-	screenPrint(&rect, 0, 
+	screen_print(&rect, 0, 
 		    "^c%cLevel:^cw%d "
 		    "^c%cXP:^cw%d "
 		    "^c%cNext Level:^cw%d ",
@@ -174,7 +174,7 @@ void ztats_pm_paint(struct ztats_pane *pane)
 	rect.y += ASCII_H;
 
 	// Show the basic character attributes:
-	screenPrint(&rect, 0, 
+	screen_print(&rect, 0, 
 		    "^c%cStr:^cw%d "
 		    "^c%cInt:^cw%d "
 		    "^c%cDex:^cw%d ",
@@ -186,7 +186,7 @@ void ztats_pm_paint(struct ztats_pane *pane)
 	rect.y += ASCII_H;
 
 	// Show highly variable information such as HP/max, MP/max, and AP/max
-	screenPrint(&rect, 0, 
+	screen_print(&rect, 0, 
 		    "^c%cHP:^c%c%d^cw/%d "
 		    "^c%cMP:^c%c%d^cw/%d "
 		    "^c%cAP:^c%c%d^cw/%d ",
@@ -208,24 +208,24 @@ void ztats_pm_paint(struct ztats_pane *pane)
 	// Show species, class, and movement mode:
 	mmode = ch->getMovementMode();
 	assert(mmode);
-	screenPrint(&rect, 0, 
+	screen_print(&rect, 0, 
 		    "^c%cSpecies:    ^cw%s", 
 		    STAT_LABEL_CLR, ch->species ? ch->species->name:"Unknown");
 	rect.y += ASCII_H;
 
-	screenPrint(&rect, 0, 
+	screen_print(&rect, 0, 
 		    "^c%cOccupation: ^cw%s", 
 		    STAT_LABEL_CLR, ch->occ ? ch->occ->name : "None");
 	rect.y += ASCII_H;
 
-	screenPrint(&rect, 0, 
+	screen_print(&rect, 0, 
 		    "^c%cMovement:   ^cw%s", 
 		    STAT_LABEL_CLR, mmode->name);
 	rect.y += ASCII_H;
 	rect.y += ASCII_H;
 
 	/* Show effects */
-	screenPrint(&rect, 0 /*SP_CENTERED*/ , "^c%c*** Effects ***^cw", 
+	screen_print(&rect, 0 /*SP_CENTERED*/ , "^c%c*** Effects ***^cw", 
 						STAT_LABEL_CLR);
 	rect.y += ASCII_H;
 	for (i = 0; i < OBJ_NUM_HOOKS; i++) {
@@ -234,7 +234,7 @@ void ztats_pm_paint(struct ztats_pane *pane)
 	rect.y += ASCII_H;
 
 	/* Show arms */
-	screenPrint(&rect, 0 /*SP_CENTERED*/ , "^c%c*** Arms ***^cw", STAT_LABEL_CLR);
+	screen_print(&rect, 0 /*SP_CENTERED*/ , "^c%c*** Arms ***^cw", STAT_LABEL_CLR);
 	rect.y += ASCII_H;
 
 #if 1
@@ -254,7 +254,7 @@ void ztats_pm_paint(struct ztats_pane *pane)
 			status_show_member_arms(&rect, i, arms);
 		} else {
 			rect.x += TILE_W;
-			screenPrint(&rect, 0, "^c+y%d:^cG(empty)^c-", i);
+			screen_print(&rect, 0, "^c+y%d:^cG(empty)^c-", i);
 			rect.x -= TILE_W;
 			rect.y += ASCII_H;
 		}
@@ -262,7 +262,7 @@ void ztats_pm_paint(struct ztats_pane *pane)
 #endif
 
 	/* Pop the saved current color. */
-	screenPrint(&rect, 0, "^c-");
+	screen_print(&rect, 0, "^c-");
 
 
 	// fixme: currently this will overprint and it doesn't support

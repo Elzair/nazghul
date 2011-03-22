@@ -933,14 +933,14 @@ static void conv_op_paint(struct applet *applet)
 {
         DECL_CAST(struct conv_applet, ca, applet);
 
-        screenErase(&applet->dims);
+        screen_erase(&applet->dims);
         if (ca->portrait) {
                 int x = (applet->dims.w - PORTRAIT_W)/2 + applet->dims.x;
                 sprite_paint(ca->portrait, 0, x, applet->dims.y);
         } else {
-                screenPrint(&applet->dims, SP_CENTERED, "No portrait");
+                screen_print(&applet->dims, SP_CENTERED, "No portrait");
         }
-        screenUpdate(&applet->dims);
+        screen_update(&applet->dims);
 
         status_repaint_title();
 }

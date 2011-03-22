@@ -710,7 +710,7 @@ static void terrain_editor_help_paint(struct terrain_editor_pane *pane)
      * we probably won't unless the list starts getting long. */
 
     for (int i = 0; text[i]; i++) {
-        screenPrint(&rect, 0, text[i]);
+        screen_print(&rect, 0, text[i]);
         rect.y += ASCII_H;
     }
 
@@ -735,7 +735,7 @@ static void terrain_editor_palette_paint(struct terrain_editor_pane *pane)
         }
         y += TILE_H;
     }
-    screenUpdate(dims);
+    screen_update(dims);
 
     status_set_title("Editor: Palette");
 }

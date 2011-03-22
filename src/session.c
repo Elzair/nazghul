@@ -135,7 +135,7 @@ void rt_err(const char *fmt, ...)
         va_end(args);
         warn("\n");
 
-        consolePrint("\n*** script error! ***\n");
+        console_print("\n*** script error! ***\n");
 }
 
 
@@ -507,10 +507,10 @@ int session_load(char *filename)
         //session_synch_sched_chars(Session);
  
         /* Paint all the windows for the first time in the new session. */
-        screenErase(0);
+        screen_erase(0);
 	screen_repaint_frame();
 	foogodRepaint();
-	consoleRepaint();
+	console_repaint();
 	statusRepaint();
 
         /* show the sun, moon and wind status */

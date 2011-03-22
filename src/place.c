@@ -321,7 +321,7 @@ static void tile_paint(struct tile *tile, int sx, int sy)
                         rect.y = sy;
                         rect.w = TILE_W;
                         rect.h = TILE_H;
-                        screenHighlight(&rect);
+                        screen_highlight(&rect);
                 }
 
                 // Paint a red box around hostiles, green around allies, and
@@ -339,7 +339,7 @@ static void tile_paint(struct tile *tile, int sx, int sy)
                                 color = Green;
                         else if (are_hostile(Session->subject, (Being*)obj))
                                 color = Red;
-                        screenHighlightColored(&rect, color);
+                        screen_highlightColored(&rect, color);
                 }
 
 		if (sprite_is_faded(sprite))

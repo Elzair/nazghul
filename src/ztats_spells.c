@@ -49,12 +49,12 @@ static void ztats_spells_paint_item(struct inv_entry *ie, SDL_Rect *rect)
 	rect->x += TILE_W;
 
 	/* Print basic info available in the type. */
-	screenPrint(rect, 0, "%2d %s", ie->count, ie->type->getName());
+	screen_print(rect, 0, "%2d %s", ie->count, ie->type->getName());
 	rect->y += ASCII_H;
 
 	/* Print info only available in the spell struct. */
 	if (spell) {
-		screenPrint(rect, 0, 
+		screen_print(rect, 0, 
 			"^c+GLvl:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
 			spell->level, 
 			spell->cost, spell->action_points);

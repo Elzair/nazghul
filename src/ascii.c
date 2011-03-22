@@ -417,7 +417,7 @@ static void asciiBlitColored(SDL_Surface *src, SDL_Rect *srcrect,
         }
 }
 
-static void asciiPaintColored(unsigned char c, int x, int y, 
+static void ascii_paintColored(unsigned char c, int x, int y, 
                               SDL_Surface *surf, Uint32 color)
 {
 	SDL_Rect dest;
@@ -457,7 +457,7 @@ static void asciiPaintColored(unsigned char c, int x, int y,
                          color);
 }
 
-static void asciiPaintDefault(unsigned char c, int x, int y, 
+static void ascii_paintDefault(unsigned char c, int x, int y, 
                               SDL_Surface * surf)
 {
 	SDL_Rect dest;
@@ -522,7 +522,7 @@ static struct images *ascii_load_fixed_charset(void)
 	return images;
 }
 
-int asciiInit(void)
+int ascii_init(void)
 {
         char *fname = cfg_get("ascii-image-filename");
         
@@ -547,7 +547,7 @@ int asciiInit(void)
         return 0;
 }
 
-int asciiPaint(char c, int x, int y, SDL_Surface * surf)
+int ascii_paint(char c, int x, int y, SDL_Surface * surf)
 {
         int ret = 0;
 
@@ -575,9 +575,9 @@ int asciiPaint(char c, int x, int y, SDL_Surface * surf)
                         Ascii.state = ASCII_STATE_ESC;
                 } else {
                         if (ASCII_DEF_CLR==Ascii.color) {
-                                asciiPaintDefault(c, x, y, surf);
+                                ascii_paintDefault(c, x, y, surf);
                         } else {
-                                asciiPaintColored(c, x, y, surf, Ascii.color);
+                                ascii_paintColored(c, x, y, surf, Ascii.color);
                         }
                         ret = 1;
                 }
@@ -586,7 +586,7 @@ int asciiPaint(char c, int x, int y, SDL_Surface * surf)
         return ret;
 }
 
-int asciiStrlen(char *s)
+int ascii_strlen(char *s)
 {
         /* Start with the current state. */
         enum ascii_ctrl_states state = Ascii.state;

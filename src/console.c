@@ -68,14 +68,14 @@ static int consolePage(void)
 {
         int yesno = 1;
 
-        consolePrint("---More-Y/N?");
-        consoleRepaint();
+        console_print("---More-Y/N?");
+        console_repaint();
         getkey(&yesno, yesnokey);
-        consoleBackspace(12);
+        console_backspace(12);
         return yesno == 'y';
 }
 
-int consoleInit(void)
+int console_init(void)
 {
         int i;
 
@@ -163,12 +163,12 @@ static int console_handle_repeated_msg(void)
                          "[%d times]", Console.repeat);
         }
 
-        consoleRepaint();
+        console_repaint();
 
         return 1;
 }
 
-void consolePrint(const char *fmt, ...)
+void console_print(const char *fmt, ...)
 {
         int printed;
         va_list args;
@@ -357,10 +357,10 @@ void consolePrint(const char *fmt, ...)
                 continue;
         }
 
-        consoleRepaint();
+        console_repaint();
 }
 
-void consoleBackspace(int n)
+void console_backspace(int n)
 {
         int len;
 
@@ -402,24 +402,24 @@ static void consoleNewline(void)
           fprintf(Console.log, "\n");
 #endif
   
-  //consoleRepaint();
+  //console_repaint();
 }
 
-void consoleRepaint(void)
+void console_repaint(void)
 {
         SDL_Rect rect;
         int n_lines;
         int max_lines;
         int line;
 
-        //screenErase(&Console.screenRect);
+        //screen_erase(&Console.screenRect);
 
         rect.x = Console.screenRect.x;
         rect.w = Console.screenRect.w;
         rect.y = console_get_y();
         rect.h = console_get_h();
 
-        screenErase(&rect);
+        screen_erase(&rect);
 
         max_lines = rect.h / ASCII_H;
         n_lines = min(Console.numLines, max_lines);
@@ -434,12 +434,12 @@ void consoleRepaint(void)
         }
 
         while (n_lines--) {
-                screenPrint(&rect, 0, Console.lines[line]);
+                screen_print(&rect, 0, Console.lines[line]);
                 line = (line + 1) % CONS_LINES;
                 rect.y += ASCII_H;
         }
 
-        screenUpdate(&Console.screenRect);
+        screen_update(&Console.screenRect);
 }
 
 int console_get_y(void)

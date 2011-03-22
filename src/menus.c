@@ -309,7 +309,7 @@ static void show_credits(void)
 
         statusSetPageText(title, text);
         statusSetMode(Page);
-        consolePrint("[Hit ESC to continue]\n");
+        console_print("[Hit ESC to continue]\n");
 
         kh.fx = scroller;
         kh.data = NULL;
@@ -508,10 +508,10 @@ static void menu_show_screenshot(SDL_Surface *screenshot)
         rect.y = (MAP_Y + MAP_H)/4;
         rect.w = strlen(MENU_SCREEN_SHOT_STR);
         rect.h = ASCII_H;
-        screenPrint(&rect, 0, MENU_SCREEN_SHOT_STR);
+        screen_print(&rect, 0, MENU_SCREEN_SHOT_STR);
 
         rect.w *= ASCII_W;
-        screenUpdate(&rect);
+        screen_update(&rect);
 }
 
 /**
@@ -1149,7 +1149,7 @@ reselect:
                 rect.y = MAP_Y;
                 rect.w = MAP_W;
                 rect.h = MAP_H;
-                screenCapture(s_fname, &rect);
+                screen_capture(s_fname, &rect);
                 selected_game->screenshot = IMG_Load(s_fname);
                 menu_set_current_saved_game(selected_game);
                 free(s_fname);
@@ -1775,8 +1775,8 @@ void menu_startup_error(const char *fmt, ...)
 
         SCREEN_W = 320;
         SCREEN_H = 240;
-        screenInit();
-        asciiInit();
+        screen_init();
+        ascii_init();
         eventInit();
 
 	va_start(args, fmt);
@@ -1787,10 +1787,10 @@ void menu_startup_error(const char *fmt, ...)
         ptr = buf;
         rect.x = 0;
         rect.y = 0;
-        rect.w = screenWidth();
+        rect.w = screen_width();
         rect.h = ASCII_H;
 
-        screenPrint(&rect, 0, "^c+r*** STARTUP ERROR ***^c-");
+        screen_print(&rect, 0, "^c+r*** STARTUP ERROR ***^c-");
         rect.y += ASCII_H;
 
         /* Print the error message, wrapping lines to make it fit on the
@@ -1798,13 +1798,13 @@ void menu_startup_error(const char *fmt, ...)
         while (len) {
                 int n = min(len, rect.w/ASCII_W);
 
-                screenPrint(&rect, 0, ptr);
+                screen_print(&rect, 0, ptr);
                 len -= n;
                 ptr += n;
                 rect.y += ASCII_H;
         }
 
-        screenUpdate(0);
+        screen_update(0);
 
         /* Wait for the user to close the window. */
 	qh.fx = main_menu_quit_handler;

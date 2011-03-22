@@ -78,10 +78,10 @@ int windGetDirection(void)
 
 void windRepaint(void)
 {
-	screenErase(&windRect);
-	screenPrint(&windRect, SP_CENTERED, "Wind:%s",
+	screen_erase(&windRect);
+	screen_print(&windRect, SP_CENTERED, "Wind:%s",
 		    directionToString(windDirection));
-	screenUpdate(&windRect);
+	screen_update(&windRect);
 }
 
 void windSave(struct save *save)

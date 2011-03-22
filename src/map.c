@@ -466,7 +466,7 @@ static void myShadeScene(SDL_Rect *subrect)
 			 * lightmap values must be converted to opacity values
 			 * for a black square, so I reverse them by subtracting
 			 * them from LIT. */
-			screenShade(&rect, LIT - Map.lmap[lmap_i + x]);
+			screen_shade(&rect, LIT - Map.lmap[lmap_i + x]);
 		}
 	}
 }
@@ -594,7 +594,7 @@ int mapInit(void)
 	Map.peering   = false;
         LosEngine     = NULL;
 
-        Map.tile_scratch_surf = screenCreateSurface(TILE_W, TILE_H);
+        Map.tile_scratch_surf = screen_create_surface(TILE_W, TILE_H);
         assert(Map.tile_scratch_surf);
 
 	return 0;
@@ -606,7 +606,7 @@ abort:
 
 void mapFlash(int mdelay)
 {
-	screenFlash(&Map.srect, mdelay, White);
+	screen_flash(&Map.srect, mdelay, White);
 }
 
 void mapSetPlace(struct place *place)
@@ -693,9 +693,9 @@ void mapRepaintClock(void)
           return;
  
   // Show the clock time:
-  screenErase(&Map.clkRect);
-  screenPrint(&Map.clkRect, 0, "%s", date_time_str);
-  screenUpdate(&Map.clkRect);
+  screen_erase(&Map.clkRect);
+  screen_print(&Map.clkRect, 0, "%s", date_time_str);
+  screen_update(&Map.clkRect);
 } // mapRepaintClock()
 
 /**
@@ -776,7 +776,7 @@ static void map_paint_tile_terrain(struct place *place, int map_x, int map_y,
                 shade_rect.y = scr_y;
                 shade_rect.w = TILE_W;
                 shade_rect.h = TILE_H;
-                screenShade(&shade_rect, 128);
+                screen_shade(&shade_rect, 128);
         }
 
 }
@@ -809,7 +809,7 @@ static void map_paint_tile_objects(struct place *place, int map_x, int map_y,
                         shade_rect.y = scr_y;
                         shade_rect.w = TILE_W;
                         shade_rect.h = TILE_H;
-                        screenShade(&shade_rect, 128);
+                        screen_shade(&shade_rect, 128);
                 }
         }
 }
@@ -952,13 +952,13 @@ static void mapRepaintCoordinates(void)
         }
 
         if (player_party->isOnMap()) {
-                screenPrint(&Map.locRect, 0, "[%d,%d]", player_party->getX(), 
+                screen_print(&Map.locRect, 0, "[%d,%d]", player_party->getX(), 
                             player_party->getY());
                 return;
         }
         
         if (NULL != Map.subject)
-                screenPrint(&Map.locRect, 0, "[%d,%d]", Map.subject->getX(), 
+                screen_print(&Map.locRect, 0, "[%d,%d]", Map.subject->getX(), 
                             Map.subject->getY());
 }
 
@@ -969,7 +969,7 @@ static void mapRepaintTurnaround(void)
         if (! DeveloperMode)
                 return;
 
-	screenPrint(&Map.turnaroundRect, 0, "TA: %d", G_turnaround);
+	screen_print(&Map.turnaroundRect, 0, "TA: %d", G_turnaround);
 }
 
 extern int G_latency_start;
@@ -983,8 +983,8 @@ static void mapRepaintLatency(void)
         latency = SDL_GetTicks() - G_latency_start;
 
         //printf("repaint: %d\n", latency);
-        screenPrint(&Map.latencyRect, 0, "LAT: %d", latency);
-        screenUpdate(&Map.latencyRect);
+        screen_print(&Map.latencyRect, 0, "LAT: %d", latency);
+        screen_update(&Map.latencyRect);
 }
 
 /**
@@ -1014,7 +1014,7 @@ static void mapRepaintView(struct mview *view, int flags)
 
 	t1 = SDL_GetTicks();
 
-	screenErase(&Map.srect);
+	screen_erase(&Map.srect);
 
 	t2 = SDL_GetTicks();
 
@@ -1025,14 +1025,14 @@ static void mapRepaintView(struct mview *view, int flags)
 
 	if (Map.aview->zoom > 1) {
                 sprite_zoom_out(Map.aview->zoom);
-		screenZoomOut(Map.aview->zoom);
+		screen_zoom_out(Map.aview->zoom);
 		t5 = SDL_GetTicks();
 		mapPaintPlace(Map.place, &view->vrect, &Map.srect, 
                               0/* vmask */, &view->subrect, 
                               TILE_W / Map.aview->zoom, 
                               TILE_H / Map.aview->zoom);
 		t6 = SDL_GetTicks();
-		screenZoomIn(Map.aview->zoom);
+		screen_zoom_in(Map.aview->zoom);
                 sprite_zoom_in(Map.aview->zoom);
 	} else if (flags & REPAINT_NO_LOS) {
                 t5 = SDL_GetTicks();
@@ -1082,10 +1082,10 @@ static void mapRepaintView(struct mview *view, int flags)
         mapRepaintCoordinates();
 	mapRepaintClock();
         mapRepaintTurnaround();
-	screenUpdate(&Map.srect);
+	screen_update(&Map.srect);
 
         // ---------------------------------------------------------------------
-        // Repaint the latency AFTER the screenUpdate because we want that to
+        // Repaint the latency AFTER the screen_update because we want that to
         // be part of the time measurement.
         // ---------------------------------------------------------------------
 
@@ -1347,24 +1347,24 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 
 	// Save the backdrop of the new location
 	if (!beam)
-		screenCopy(rect, NULL, surf);
+		screen_copy(rect, NULL, surf);
 
 	// Paint the missile at the new location
         sprite_zoom_out(Map.aview->zoom);
-        screenZoomOut(Map.aview->zoom);
+        screen_zoom_out(Map.aview->zoom);
 	sprite_paint_frame(sprite, currentframe, rect->x, rect->y);
         sprite_zoom_in(Map.aview->zoom);
-        screenZoomIn(Map.aview->zoom);
+        screen_zoom_in(Map.aview->zoom);
 
-	screenUpdate(rect);
+	screen_update(rect);
 
 	SDL_Delay(dur);
 
 	// Erase the missile by blitting the background
 	if (!beam)
 	{
-		screenBlit(surf, NULL, rect);
-		screenUpdate(rect);
+		screen_blit(surf, NULL, rect);
+		screen_update(rect);
 	}
 }
 
@@ -1753,7 +1753,7 @@ void mapUpdateTile(struct place *place, int x, int y)
 
         rect.w = TILE_W/Map.aview->zoom;
         rect.h = TILE_H/Map.aview->zoom;
-        screenErase(&rect);
+        screen_erase(&rect);
 
         terrain = place_get_terrain(place, x, y);
 
@@ -1765,11 +1765,11 @@ void mapUpdateTile(struct place *place, int x, int y)
                 // ------------------------------------------------------------
                 
                 sprite_zoom_out(Map.aview->zoom);
-		screenZoomOut(Map.aview->zoom);
+		screen_zoom_out(Map.aview->zoom);
                 sprite_paint(terrain->sprite, 0, rect.x, rect.y);
                 place_paint_objects(place, x, y, rect.x, rect.y);
                 sprite_zoom_in(Map.aview->zoom);
-		screenZoomIn(Map.aview->zoom);
+		screen_zoom_in(Map.aview->zoom);
 
         } else {
 
@@ -1796,7 +1796,7 @@ void mapUpdateTile(struct place *place, int x, int y)
                     || Map.selected->getPlace() != Map.place
                     || Map.selected->getX() != x
                     || Map.selected->getY() != y)                
-                        screenShade(&rect, LIT - Map.lmap[index]);
+                        screen_shade(&rect, LIT - Map.lmap[index]);
 
         }
 
@@ -1806,7 +1806,7 @@ void mapUpdateTile(struct place *place, int x, int y)
         
         
 
-        screenUpdate(&rect);
+        screen_update(&rect);
 
 }
 
@@ -1856,12 +1856,12 @@ void mapSetImage(SDL_Surface *image)
                         rect.y = Map.srect.y + (Map.srect.h - image->h) / 2;
                         rect.h = image->h;
                 }
-                screenErase(&Map.srect);
-                screenBlit(image, NULL, &rect);
+                screen_erase(&Map.srect);
+                screen_blit(image, NULL, &rect);
         } else {
-                screenErase(&Map.srect);
+                screen_erase(&Map.srect);
         }
-        screenUpdate(&Map.srect);
+        screen_update(&Map.srect);
 }
 
 void mapClearImage(void)
@@ -1878,6 +1878,6 @@ void mapBlitImage(SDL_Surface *image, Uint32 x, Uint32 y)
         rect.w = Map.srect.w - x;
         rect.h = Map.srect.h - y;
 
-        screenBlit(image, NULL, &rect);
-        screenUpdate(&Map.srect);
+        screen_blit(image, NULL, &rect);
+        screen_update(&Map.srect);
 }

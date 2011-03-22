@@ -370,7 +370,7 @@ void clock_set_alarm(struct clock *clock, struct clock *offset)
         
         clock->year += offset->year;
 
-        consolePrint("Set alarm for year %d, month %d, week %d, day %d, "
+        console_print("Set alarm for year %d, month %d, week %d, day %d, "
                      "hour %d, min %d\n", clock->year, clock->month,
                      clock->week, clock->day, clock->hour, clock->min);
 }

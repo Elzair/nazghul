@@ -28,7 +28,7 @@
 
 BEGIN_DECL
 
-extern int asciiInit(void);
+extern int ascii_init(void);
 
 /**
  * Print a character using a build-in font and color. In the usual case this
@@ -62,22 +62,22 @@ extern int asciiInit(void);
  * @returns 1 if a character was painted, 0 if it was part of a control
  * sequence
  */
-extern int asciiPaint(char c, int x, int y, SDL_Surface * surface);
+extern int ascii_paint(char c, int x, int y, SDL_Surface * surface);
 
 /**
  * Get the length of a string NOT including the font and color control
  * characters. This is useful for determining how much screen space the string
- * will take when printed with asciiPaint().
+ * will take when printed with ascii_paint().
  *
  * The function assumes that the string applies to the current internal state
  * of the ascii painting engine. This is only important if the last character
- * to asciiPaint was part of an unfinished control sequence. In that case,
- * asciiStrlen() assumes that this string continues where that one left off.
+ * to ascii_paint was part of an unfinished control sequence. In that case,
+ * ascii_strlen() assumes that this string continues where that one left off.
  *
  * @param s is the null-terminated string to check.
  * @returns strlen(s) minus the number of control characters
  */
-extern int asciiStrlen(char *s);
+extern int ascii_strlen(char *s);
 
 END_DECL
 

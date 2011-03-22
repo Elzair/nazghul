@@ -2573,11 +2573,11 @@ static pointer kern_print(scheme *sc,  pointer args)
                 args = scm_cdr(sc, args);
 
                 if (scm_is_str(sc, val)) {
-                        consolePrint(scm_str_val(sc, val));
+                        console_print(scm_str_val(sc, val));
                 } else if (scm_is_int(sc, val)) {
-                        consolePrint("%d", scm_int_val(sc, val));
+                        console_print("%d", scm_int_val(sc, val));
                 } else if (scm_is_real(sc, val)) {
-                        consolePrint("%f", scm_real_val(sc, val));
+                        console_print("%f", scm_real_val(sc, val));
                 } else {
                         rt_err("kern-print: bad args");
                 }
@@ -6990,7 +6990,7 @@ KERN_API_CALL(kern_ui_page_text)
         foogodSetMode(FOOGOD_HINT);
         statusSetPageText(title, text);
         statusSetMode(Page);
-        consolePrint("[Hit ESC to continue]\n");
+        console_print("[Hit ESC to continue]\n");
 
         kh.fx = scroller;
         kh.data = NULL;
@@ -9743,7 +9743,7 @@ KERN_API_CALL(kern_screen_print)
                 room -= n;
         }
 
-        screenPrint(&rect, flags, buf);
+        screen_print(&rect, flags, buf);
 
         return sc->NIL;
 }
@@ -9779,7 +9779,7 @@ KERN_API_CALL(kern_screen_draw_sprite)
         
         sprite_paint_direct(toblit, 0, &rect);
         
-        //screenBlit(toblit->rsurf->surf, &toblit->frames[0], &rect);
+        //screen_blit(toblit->rsurf->surf, &toblit->frames[0], &rect);
 
         return sc->NIL;
 }
@@ -9805,7 +9805,7 @@ KERN_API_CALL(kern_screen_shade)
                 return sc->NIL;
         }
         
-        screenShade(&rect, amount);
+        screen_shade(&rect, amount);
         return sc->NIL;
 }
 
@@ -9818,7 +9818,7 @@ KERN_API_CALL(kern_screen_erase)
                 return sc->NIL;
         }
 
-        screenErase(&rect);
+        screen_erase(&rect);
         return sc->T;
 }
 
@@ -9831,7 +9831,7 @@ KERN_API_CALL(kern_screen_update)
                 return sc->NIL;
         }
 
-        screenUpdate(&rect);
+        screen_update(&rect);
         return sc->T;
 }
 

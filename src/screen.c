@@ -97,7 +97,7 @@ SDL_Color fontBlack = { 0, 0, 0, 0 };
 static void scaled_blit(SDL_Surface * source, SDL_Rect * from,
 			SDL_Surface * dest, SDL_Rect * to);
 
-void screenInitColors(void)
+void screen_initColors(void)
 {
 
 	Black   = SDL_MapRGB(Screen->format, 0x00, 0x00, 0x00);
@@ -202,7 +202,7 @@ void dump_SDL_Surface(SDL_Surface *surf)
         
 }
 
-void screenInitScreen(void)
+void screen_initScreen(void)
 {
 	Uint32 flags = SDL_ANYFORMAT;
 	const SDL_VideoInfo *fmt;
@@ -288,7 +288,7 @@ static SDL_Surface *create_shader(int fade_level)
 {
 	SDL_Surface *shader;
 
-	shader = screenCreateSurface(SHADER_W, SHADER_H);
+	shader = screen_create_surface(SHADER_W, SHADER_H);
 	if (shader == NULL)
 		return NULL;
 
@@ -303,7 +303,7 @@ static SDL_Surface *create_shader(int fade_level)
 	return shader;
 }
 
-void screenInitShader(void)
+void screen_initShader(void)
 {
 	int n, i;
 
@@ -314,9 +314,9 @@ void screenInitShader(void)
 	}
 }
 
-void screenInitHighlight(void)
+void screen_initHighlight(void)
 {
-	Highlight = screenCreateSurface(SHADER_W, SHADER_H);
+	Highlight = screen_create_surface(SHADER_W, SHADER_H);
         assert(Highlight != NULL);
 
 	SDL_FillRect(Highlight, NULL, SDL_MapRGBA(Highlight->format, 255, 255, 255, 0));
@@ -328,7 +328,7 @@ void screenInitHighlight(void)
 	}
 }
 
-static void screenInitFrame(void)
+static void screen_initFrame(void)
 {
         int i;
         char *fname = cfg_get("frame-image-filename");
@@ -350,13 +350,13 @@ static void screenInitFrame(void)
         }
 }
 
-int screenInit(void)
+int screen_init(void)
 {
-	screenInitScreen();
-	screenInitColors();
-	screenInitShader();
-        screenInitHighlight();
-        screenInitFrame();
+	screen_initScreen();
+	screen_initColors();
+	screen_initShader();
+        screen_initHighlight();
+        screen_initFrame();
 	Zoom = 1;
 
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
@@ -365,12 +365,12 @@ int screenInit(void)
         return 0;
 }
 
-void screenErase(SDL_Rect * rect)
+void screen_erase(SDL_Rect * rect)
 {
 	SDL_FillRect(Screen, rect, Black);
 }
 
-void screenFill(SDL_Rect * rect, Uint32 color)
+void screen_fill(SDL_Rect * rect, Uint32 color)
 {
 	SDL_Rect tmp = *rect;
 	rect->w /= Zoom;
@@ -378,7 +378,7 @@ void screenFill(SDL_Rect * rect, Uint32 color)
 	SDL_FillRect(Screen, rect, color);
 }
 
-void screenUpdate(SDL_Rect * rect)
+void screen_update(SDL_Rect * rect)
 {
 	if (rect) {
 		SDL_UpdateRect(Screen, rect->x, rect->y, rect->w, rect->h);
@@ -497,7 +497,7 @@ static void scale_then_blit_normal(SDL_Surface * source, SDL_Rect * from,
          * scaled_blit(). */
         o_zoom = Zoom;
         Zoom = 1;
-        screenBlit(tmp, &rect, to);
+        screen_blit(tmp, &rect, to);
         Zoom = o_zoom;
 
         /* Free the tmp surface. */
@@ -548,7 +548,7 @@ static void scaled_blit(SDL_Surface * source, SDL_Rect * from,
 	SDL_UnlockSurface(dest);
 }
 
-void screenBlit(SDL_Surface * source, SDL_Rect * from, SDL_Rect * to)
+void screen_blit(SDL_Surface * source, SDL_Rect * from, SDL_Rect * to)
 {
 	/* Clipping is really only needed for wave sprites right now. If the
 	 * following proves to be too expensive on slow machines... */
@@ -584,30 +584,30 @@ void screenBlit(SDL_Surface * source, SDL_Rect * from, SDL_Rect * to)
 	}
 }
 
-int screenWidth(void)
+int screen_width(void)
 {
 	return Screen->w;
 }
 
-int screenHeight(void)
+int screen_height(void)
 {
 	return Screen->h;
 }
 
-SDL_PixelFormat *screenFormat(void)
+SDL_PixelFormat *screen_format(void)
 {
 	return Screen->format;
 }
 
-void screenFlash(SDL_Rect * rect, int mdelay, Uint32 color)
+void screen_flash(SDL_Rect * rect, int mdelay, Uint32 color)
 {
-	screenFill(rect, color);
-	screenUpdate(rect);
+	screen_fill(rect, color);
+	screen_update(rect);
 	//usleep(mdelay * 1000);
         SDL_Delay(mdelay);
 }
 
-void screenPrint(SDL_Rect * rect, int flags, const char *fmt, ...)
+void screen_print(SDL_Rect * rect, int flags, const char *fmt, ...)
 {
 	va_list args;
 	int i;
@@ -621,7 +621,7 @@ void screenPrint(SDL_Rect * rect, int flags, const char *fmt, ...)
 	va_end(args);
 
 	slen = strlen(screen_buf);
-        alen = asciiStrlen(screen_buf);
+        alen = ascii_strlen(screen_buf);
         stop = rect->x + (rect->w * ASCII_W);
 
 	/* If painting on the border then first fill the line with the border
@@ -649,14 +649,15 @@ void screenPrint(SDL_Rect * rect, int flags, const char *fmt, ...)
 	/* If painting on the border, then paint the right stub 
          * to the left of the text. */
 	if (flags & SP_ONBORDER) {
-		sprite_paint(FrameSprites[FRAME_ENDR], 0, x - BORDER_W, rect->y);
+		sprite_paint(FrameSprites[FRAME_ENDR], 0, x - BORDER_W, 
+                             rect->y);
         }
 
         /* Paint the characters until we run out or hit the end of the
          * region. */
 	for (i = 0; i < slen && x < stop; i++) {
 
-                if (asciiPaint(screen_buf[i], x, y, Screen)) {
+                if (ascii_paint(screen_buf[i], x, y, Screen)) {
 
                         /* Move right. */
                         x += ASCII_W;
@@ -702,11 +703,13 @@ void screen_repaint_frame(void)
 
 	// Draw the bar across the bottom of the screen.
 	for (i = 0; i < SCREEN_W; i += BORDER_W)
-		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, SCREEN_H - BORDER_H);
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, 
+                             SCREEN_H - BORDER_H);
 
 	// Next draw the bottom of the status and food/gold window.
 	for (i = (MAP_X + MAP_W); i < SCREEN_W; i += BORDER_W) {
-		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, STAT_Y + status_get_h());
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, 
+                             STAT_Y + status_get_h());
 		sprite_paint(FrameSprites[FRAME_HORZ], 0, i,
 			    foogod_get_y() + FOOGOD_H);
 	}
@@ -715,7 +718,8 @@ void screen_repaint_frame(void)
 	for (i = 0; i < SCREEN_H; i += BORDER_H) {
 		sprite_paint(FrameSprites[FRAME_VERT], 0, 0, i);
 		sprite_paint(FrameSprites[FRAME_VERT], 0, MAP_X + MAP_W, i);
-		sprite_paint(FrameSprites[FRAME_VERT], 0, SCREEN_W - BORDER_W, i);
+		sprite_paint(FrameSprites[FRAME_VERT], 0, SCREEN_W - 
+                             BORDER_W, i);
 	}
 
 	// Now paint the four corner pieces
@@ -741,25 +745,29 @@ void screen_repaint_frame(void)
 
 	// Then the downward and upward-facing tee-joints
 	sprite_paint(FrameSprites[FRAME_TD], 0, MAP_X + MAP_W, 0);
-	sprite_paint(FrameSprites[FRAME_TU], 0, MAP_X + MAP_W, SCREEN_H - BORDER_H);
+	sprite_paint(FrameSprites[FRAME_TU], 0, MAP_X + MAP_W, 
+                     SCREEN_H - BORDER_H);
 
 	// And then the stubs around the sky section
 	sprite_paint(FrameSprites[FRAME_ENDR], 0, SKY_X - BORDER_W, 0);
 	sprite_paint(FrameSprites[FRAME_ENDL], 0, SKY_X + SKY_W, 0);
 
 	// And finally stubs around the wind section
-	sprite_paint(FrameSprites[FRAME_ENDR], 0, WIND_X - BORDER_W, MAP_X + MAP_H);
-	sprite_paint(FrameSprites[FRAME_ENDL], 0, WIND_X + WIND_W, MAP_X + MAP_H);
+	sprite_paint(FrameSprites[FRAME_ENDR], 0, WIND_X - BORDER_W, 
+                     MAP_X + MAP_H);
+	sprite_paint(FrameSprites[FRAME_ENDL], 0, WIND_X + WIND_W, 
+                     MAP_X + MAP_H);
 
         // And some stubs around the status title section
 	sprite_paint(FrameSprites[FRAME_ENDR], 0, STAT_X, 0);
-	sprite_paint(FrameSprites[FRAME_ENDL], 0, STAT_X + STAT_W - BORDER_W,   0);
+	sprite_paint(FrameSprites[FRAME_ENDL], 0, STAT_X + STAT_W - BORDER_W,
+                     0);
 
-	screenUpdate(0);
+	screen_update(0);
 
 }
 
-SDL_Surface *screenCreateSurface(int w, int h)
+SDL_Surface *screen_create_surface(int w, int h)
 {
 	SDL_Surface *surf = NULL, *tmp;
 
@@ -794,7 +802,7 @@ SDL_Surface *screenCreateSurface(int w, int h)
 	return surf;
 }
 
-void screenCopy(SDL_Rect * from, SDL_Rect * to, SDL_Surface * dest)
+void screen_copy(SDL_Rect * from, SDL_Rect * to, SDL_Surface * dest)
 {
 	if (SDL_BlitSurface(Screen, from, dest, to) < 0)
 		perror_sdl("SDL_BlitSurface");
@@ -824,7 +832,7 @@ void screenCopy(SDL_Rect * from, SDL_Rect * to, SDL_Surface * dest)
         }
 }
 
-void screenShade(SDL_Rect * area, unsigned char amount)
+void screen_shade(SDL_Rect * area, unsigned char amount)
 {
 	SDL_Surface *shade;
 
@@ -840,10 +848,10 @@ void screenShade(SDL_Rect * area, unsigned char amount)
 		shade = Shaders[0];
 		SDL_SetAlpha(shade, SDL_SRCALPHA, amount);
 	}
-	screenBlit(shade, NULL, area);
+	screen_blit(shade, NULL, area);
 }
 
-void screenHighlightColored(SDL_Rect * area, Uint32 color)
+void screen_highlightColored(SDL_Rect * area, Uint32 color)
 {
         SDL_Rect edge;
 
@@ -856,7 +864,7 @@ void screenHighlightColored(SDL_Rect * area, Uint32 color)
         edge.w = area->w;
         edge.h = HIGHLIGHT_THICKNESS;
 
-        screenFill(&edge, color);
+        screen_fill(&edge, color);
 
         // ---------------------------------------------------------------------
         // Bottom edge
@@ -867,7 +875,7 @@ void screenHighlightColored(SDL_Rect * area, Uint32 color)
         edge.w = area->w;
         edge.h = HIGHLIGHT_THICKNESS;
 
-        screenFill(&edge, color);
+        screen_fill(&edge, color);
 
         // ---------------------------------------------------------------------
         // Left edge
@@ -878,7 +886,7 @@ void screenHighlightColored(SDL_Rect * area, Uint32 color)
         edge.w = HIGHLIGHT_THICKNESS;
         edge.h = area->h;
 
-        screenFill(&edge, color);
+        screen_fill(&edge, color);
 
         // ---------------------------------------------------------------------
         // Right edge
@@ -889,26 +897,26 @@ void screenHighlightColored(SDL_Rect * area, Uint32 color)
         edge.w = HIGHLIGHT_THICKNESS;
         edge.h = area->h;
 
-        screenFill(&edge, color);
+        screen_fill(&edge, color);
 }
 
-void screenHighlight(SDL_Rect *area)
+void screen_highlight(SDL_Rect *area)
 {
-        screenHighlightColored(area, White);
+        screen_highlightColored(area, White);
 }
 
-int screenLock(void)
+int screen_lock(void)
 {
 	return SDL_LockSurface(Screen);
 }
 
-void screenUnlock(void)
+void screen_unlock(void)
 {
 	SDL_UnlockSurface(Screen);
 }
 
-/* assumes the pixel value is gotten from screenMapRGB() i.e. safe! */
-void screenSetPixel(int x, int y, Uint32 color)
+/* assumes the pixel value is gotten from screen_map_rgb() i.e. safe! */
+void screen_set_pixel(int x, int y, Uint32 color)
 {
 	Uint8 *pix = (Uint8*)(Screen->pixels);
 	pix += y * Screen->pitch + x * Screen->format->BytesPerPixel;
@@ -921,24 +929,24 @@ void screenSetPixel(int x, int y, Uint32 color)
 	}
 }
 
-Uint32 screenMapRGB(Uint8 red, Uint8 grn, Uint8 blu)
+Uint32 screen_map_rgb(Uint8 red, Uint8 grn, Uint8 blu)
 {
 	return SDL_MapRGB(Screen->format, red, grn, blu);
 }
 
-void screenZoomOut(int factor)
+void screen_zoom_out(int factor)
 {
 	if (factor)
 		Zoom *= factor;
 }
 
-void screenZoomIn(int factor)
+void screen_zoom_in(int factor)
 {
 	if (factor)
 		Zoom /= factor;
 }
 
-void screenCapture(char *fname, SDL_Rect *rect)
+void screen_capture(char *fname, SDL_Rect *rect)
 {
         png_structp png_ptr = 0;
         png_infop info_ptr = 0;
@@ -968,7 +976,7 @@ void screenCapture(char *fname, SDL_Rect *rect)
         }
         
         if (setjmp(png_jmpbuf(png_ptr))) {
-                warn("screenCapture: PNG error!\n");
+                warn("screen_capture: PNG error!\n");
                 goto done;
         }
 

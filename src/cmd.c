@@ -3787,10 +3787,10 @@ static int cmd_paint_skill(struct stat_super_generic_data *self,
         if (rect->h < ASCII_H) {
                 return -1;
         }
-        screenPrint(rect, 0, "^c+m%s^c-", skill->name);
+        screen_print(rect, 0, "^c+m%s^c-", skill->name);
 
         /* level, ap, mp */
-        screenPrint(rect, SP_RIGHTJUSTIFIED, 
+        screen_print(rect, SP_RIGHTJUSTIFIED, 
                     "^c+GLvl:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
                     ssent->level, 
                     skill->mp, 
@@ -3807,7 +3807,7 @@ static int cmd_paint_skill(struct stat_super_generic_data *self,
                 } else {
 
                         /* print "requires:" */
-                        screenPrint(rect, 0, " ^c+G%s^c-", requires);
+                        screen_print(rect, 0, " ^c+G%s^c-", requires);
                         
                         /* temporarily change x to print to right of "requires" */
                         rect->x += (strlen(requires) + 1) * ASCII_W;
@@ -3824,7 +3824,7 @@ static int cmd_paint_skill(struct stat_super_generic_data *self,
                                 struct inv_entry *ie=player_party->inventory->
                                         search(tool);
                                 char tool_clr=(ie&&ie->count)?'g':'r';
-                                screenPrint(rect, 0, "^c+%c%s^c-", tool_clr, 
+                                screen_print(rect, 0, "^c+%c%s^c-", tool_clr, 
                                             tool->getName());
 
                                 rect->y += ASCII_H;
@@ -3847,7 +3847,7 @@ static int cmd_paint_skill(struct stat_super_generic_data *self,
                                         search(objtype);
                                 char mat_clr=ie?'g':'r';
                                 char q_clr=(ie&&(ie->count>=mat->quantity))?'g':'r';
-                                screenPrint(rect, 0, "^c+%c%s^c+%c (%d/%d)^c-^c-", 
+                                screen_print(rect, 0, "^c+%c%s^c+%c (%d/%d)^c-^c-", 
                                             mat_clr,
                                             objtype->getName(), 
                                             q_clr,
@@ -3868,7 +3868,7 @@ static int cmd_paint_skill(struct stat_super_generic_data *self,
 
         /* if this is not the currently selected item then shade it */
         if (self->selected != node) {
-                screenShade(&orect, 128);
+                screen_shade(&orect, 128);
         }
 
         return complete;
