@@ -20,51 +20,15 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "ascii.h"
+#include "cfg.h"
+#include "common.h"
+#include "dimensions.h"
 #include "images.h"
 #include "screen.h"
-#include "common.h"
-#include "cfg.h"
-#include "dimensions.h"
-
-#include <SDL_image.h>
 
 #include <assert.h>
+#include <SDL_image.h>
 
-
-#define DEBUG 0
-#if DEBUG
-/* To see the function names in backtraces, you need to ask gcc to
- * add them to the binary with the -rdynamic linker (LDFLAGS) option
- * and disable the static keyword for objects which static functions
- * you'd like to see, either with -Dstatic= compiler option or just
- * using in those sources following: */
-#define static
-
-#include <execinfo.h>
-#define MAX_STACK_DEPTH 16
-static void backtrace2stderr(void)
-{
-	int depth;
-	void *bt[MAX_STACK_DEPTH];
-	depth = backtrace(bt, MAX_STACK_DEPTH);
-	if (depth > 1) {
-		/* skip this fuction and C++ main, show rest */
-		backtrace_symbols_fd(bt+1, depth-2, 2);
-	}
-}
-#endif /* DEBUG */
-
-
-#define ASCII_DEF_CLR White /* default printing color is white */
-#define ASCII_CLR_STK_SZ 32
-
-/* State machine states for embedded control sequences. */
-enum ascii_ctrl_states {
-        ASCII_STATE_DEF = 0,
-        ASCII_STATE_ESC,
-        ASCII_STATE_CLR,
-        ASCII_STATE_CLRPUSH
-};
 
 /* This is a default character image set in XPM format. For emergency use
  * only. */
@@ -261,14 +225,9 @@ static const char * charset_xpm[] = {
 
 static struct ascii {
         struct images *images;
-        int offset;
-        ascii_ctrl_states state;
-        Uint32 color_stack[ASCII_CLR_STK_SZ];
-        int i_color;  /* index onto stack */
-        Uint32 color; /* active color */
 } Ascii;
 
-static Uint32  asciiDecodeColor(char clr)
+static Uint32 ascii_decode_color(char clr)
 {
         switch (clr) {
         case 'w': return White;
@@ -282,56 +241,11 @@ static Uint32  asciiDecodeColor(char clr)
         case 'G': return Gray;
         default:
                 warn("Color '%c' unknown\n", clr);
-                return ASCII_DEF_CLR;
+                return White;
         }
 }
 
-static void asciiPushColor()
-{
-        /* Check for overrun. */
-        if (array_sz(Ascii.color_stack) == Ascii.i_color) {
-                warn("Ascii color stack overrun\n");
-                return;
-        }
-
-        /* Push the new color. */
-        Ascii.color_stack[Ascii.i_color] = Ascii.color;
-        Ascii.i_color++;
-}
-
-static void asciiPopColor()
-{
-        /* Check for underrun. */
-        if (0 == Ascii.i_color) {
-                warn("Ascii color stack already at bottom\n");
-                return;
-        }
-        
-        Ascii.i_color--;
-        Ascii.color = Ascii.color_stack[Ascii.i_color];
-        return;
-}
-
-static void asciiSetColor(char clr)
-{
-        /* Check for a pop. */
-        switch (clr) {
-        case '+': 
-                asciiPushColor();
-                break;
-        case '-':
-                asciiPopColor();
-                break;
-        case '=':
-                /* current color, nop */
-                break;
-        default:
-                Ascii.color = asciiDecodeColor(clr);
-                break;
-        }
-}
-
-static void asciiBlitColored16(SDL_Surface *src, SDL_Rect *srcrect,
+static void ascii_blit_colored_16(SDL_Surface *src, SDL_Rect *srcrect,
                                SDL_Surface *dst, SDL_Rect *dstrect,
                                Uint32 color)
 {
@@ -358,7 +272,7 @@ static void asciiBlitColored16(SDL_Surface *src, SDL_Rect *srcrect,
         }
 }
 
-static void asciiBlitColored32(SDL_Surface *src, SDL_Rect *srcrect,
+static void ascii_blit_colored_32(SDL_Surface *src, SDL_Rect *srcrect,
                                SDL_Surface *dst, SDL_Rect *dstrect,
                                Uint32 color)
 {
@@ -385,39 +299,29 @@ static void asciiBlitColored32(SDL_Surface *src, SDL_Rect *srcrect,
         }
 }
 
-static void asciiBlitColored(SDL_Surface *src, SDL_Rect *srcrect,
+static void ascii_blit_colored(SDL_Surface *src, SDL_Rect *srcrect,
                              SDL_Surface *dst, SDL_Rect *dstrect,
                              Uint32 color)
 {
-#if DEBUG
-        if (src->format->BitsPerPixel!=dst->format->BitsPerPixel) {
-		fprintf(stderr,
-			"ERROR: %dx%d@%d surface not in destination format!\n",
-			src->w, src->h, src->format->BytesPerPixel);
-		backtrace2stderr();
-		exit(-1);
-	}
-#else
 	assert(src->format->BitsPerPixel==dst->format->BitsPerPixel);
-#endif
         assert(dstrect->w==srcrect->w);
         assert(dstrect->h==srcrect->h);
 
         switch (dst->format->BitsPerPixel) {
         case 16:
-                asciiBlitColored16(src, srcrect, dst, dstrect, color);
+                ascii_blit_colored_16(src, srcrect, dst, dstrect, color);
                 break;
         case 32:
-                asciiBlitColored32(src, srcrect, dst, dstrect, color);
+                ascii_blit_colored_32(src, srcrect, dst, dstrect, color);
                 break;
         default:
-                err("asciiBlitColored: unsupported BitsPerPixel: %d\n",
+                err("ascii_blit_colored: unsupported BitsPerPixel: %d\n",
                     dst->format->BitsPerPixel);
                 break;
         }
 }
 
-static void ascii_paintColored(unsigned char c, int x, int y, 
+static void ascii_paint_colored(unsigned char c, int x, int y, 
                               SDL_Surface *surf, Uint32 color)
 {
 	SDL_Rect dest;
@@ -452,12 +356,12 @@ static void ascii_paintColored(unsigned char c, int x, int y,
 	dest.w = ASCII_W;
 	dest.h = ASCII_H;
 
-        asciiBlitColored(Ascii.images->images, &src, 
+        ascii_blit_colored(Ascii.images->images, &src, 
                          surf, &dest, 
                          color);
 }
 
-static void ascii_paintDefault(unsigned char c, int x, int y, 
+static void ascii_paint_default(unsigned char c, int x, int y, 
                               SDL_Surface * surf)
 {
 	SDL_Rect dest;
@@ -540,84 +444,18 @@ int ascii_init(void)
                 Ascii.images = ascii_load_fixed_charset();
         }
         assert(Ascii.images);
-        Ascii.offset = 0;
-        Ascii.state = ASCII_STATE_DEF;
-        Ascii.i_color = 0;
-        Ascii.color = ASCII_DEF_CLR;
+
         return 0;
 }
 
-int ascii_paint(char c, int x, int y, SDL_Surface * surf)
+void ascii_paint_glyph(glyph_t glyph, int x, int y, SDL_Surface *surf)
 {
-        int ret = 0;
-
-        switch (Ascii.state) {
-                        
-        case ASCII_STATE_CLR:
-                asciiSetColor(c);
-                Ascii.state = ('+'==c?ASCII_STATE_CLRPUSH:ASCII_STATE_DEF);
-                break;
-                
-        case ASCII_STATE_CLRPUSH:
-                asciiSetColor(c);
-                Ascii.state = ASCII_STATE_DEF;
-                break;
-
-        case ASCII_STATE_ESC:
-                if (c == 'c') {
-                        Ascii.state = ASCII_STATE_CLR;
-                }
-                break;
-                
-        case ASCII_STATE_DEF:
-        default:
-                if (c == '^') {
-                        Ascii.state = ASCII_STATE_ESC;
-                } else {
-                        if (ASCII_DEF_CLR==Ascii.color) {
-                                ascii_paintDefault(c, x, y, surf);
-                        } else {
-                                ascii_paintColored(c, x, y, surf, Ascii.color);
-                        }
-                        ret = 1;
-                }
+        char color = glyph_get_color(glyph);
+        char cc = glyph_get_char(glyph);
+        if ('w' == color) {
+                ascii_paint_default(cc, x, y, surf);
+        } else {
+                ascii_paint_colored(cc, x, y, surf, 
+                                    ascii_decode_color(color));
         }
-
-        return ret;
-}
-
-int ascii_strlen(char *s)
-{
-        /* Start with the current state. */
-        enum ascii_ctrl_states state = Ascii.state;
-        char c = 0;
-        int len = 0;
-
-        while ((c = *s++)) {
-                switch (state) {
-                case ASCII_STATE_CLR:
-                        state = ('+'==c?ASCII_STATE_CLRPUSH:ASCII_STATE_DEF);
-                        break;
-                        
-                case ASCII_STATE_CLRPUSH:
-                        state = ASCII_STATE_DEF;
-                        break;
-                        
-                case ASCII_STATE_ESC:
-                        if (c == 'c') {
-                                state = ASCII_STATE_CLR;
-                        }
-                        break;
-                        
-                case ASCII_STATE_DEF:
-                default:
-                        if ('^' == c) {
-                                state = ASCII_STATE_ESC;
-                        } else {
-                                len++;
-                        }
-                }
-        }
-        
-        return len;
 }

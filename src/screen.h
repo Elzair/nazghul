@@ -22,6 +22,7 @@
 #ifndef screen_h
 #define screen_h
 
+#include "glyph.h"
 #include "macros.h"
 
 BEGIN_DECL
@@ -69,6 +70,7 @@ extern int screen_height(void);
 extern SDL_PixelFormat *screen_format(void);
 extern void screen_flash(SDL_Rect * rect, int mdelay, Uint32 color);
 extern void screen_print(SDL_Rect * rect, int flags, const char *fmt, ...);
+extern void screen_print_glyph(SDL_Rect * rect, int flags, const glyph_t *glyphstr);
 
 // Added for missile animations
 extern SDL_Surface *screen_create_surface(int w, int h);

@@ -40,6 +40,7 @@ nazghul_SOURCES =		\
         foogod.h \
         formation.h \
 	formation.c \
+	glyph.h glyph.c \
         hash.c \
         hash.h \
         heap.c \

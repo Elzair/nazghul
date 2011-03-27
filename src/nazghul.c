@@ -36,6 +36,7 @@
 #include "cmdwin.h"
 #include "formation.h"
 #include "map.h"
+#include "mem.h"
 #include "vmask.h"
 #include "status.h"
 #include "log.h"
@@ -66,6 +67,12 @@ int DeveloperMode = 0;
 int ExitProgram = 0;
 
 static char program_name[] = "nazghul";
+
+static void nazghul_mem_error(int size)
+{
+        fprintf(stderr, "Error allocating %d bytes\n", size);
+        exit(-1);
+}
 
 static void print_version(void)
 {
@@ -222,6 +229,7 @@ static void nazghul_init_internal_libs(void)
         }
 
         log_init();
+        mem_set_err_handler(nazghul_mem_error);
 
         if (!strcmp("yes", cfg_get("sound-enabled"))) {
                 sound_init();

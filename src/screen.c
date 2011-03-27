@@ -22,6 +22,7 @@
 #include "screen.h"
 #include "common.h"
 #include "ascii.h"
+#include "glyph.h"
 #include "sprite.h"
 #include "status.h"
 #include "foogod.h"
@@ -72,6 +73,7 @@ static SDL_Surface *Highlight;
 static struct sprite *FrameSprites[FRAME_NUM_SPRITES];
 static int Zoom;
 static char screen_buf[128];
+static struct glyph_formatter *screen_gf = NULL;
 
 Uint32 Black;
 Uint32 Blue;
@@ -352,6 +354,10 @@ static void screen_initFrame(void)
 
 int screen_init(void)
 {
+        if (!(screen_gf = glyph_formatter_alloc())) {
+                return -1;
+        }
+
 	screen_initScreen();
 	screen_initColors();
 	screen_initShader();
@@ -607,39 +613,33 @@ void screen_flash(SDL_Rect * rect, int mdelay, Uint32 color)
         SDL_Delay(mdelay);
 }
 
-void screen_print(SDL_Rect * rect, int flags, const char *fmt, ...)
+void screen_print_glyph_buf(SDL_Rect * rect, int flags, glyph_buf_t *gbuf)
 {
-	va_list args;
 	int i;
 	int x = rect->x;
 	int y = rect->y;
-	int alen, slen, stop;
+	int len, stop;
 
-        /* Print the string to a buffer. */
-	va_start(args, fmt);
-	vsnprintf(screen_buf, sizeof(screen_buf), fmt, args);
-	va_end(args);
-
-	slen = strlen(screen_buf);
-        alen = ascii_strlen(screen_buf);
+	len = glyph_buf_room(gbuf);
         stop = rect->x + (rect->w * ASCII_W);
 
 	/* If painting on the border then first fill the line with the border
          * image. */
 	if (flags & SP_ONBORDER) {
-		for (x = rect->x; x < rect->x + rect->w; x += BORDER_W)
+		for (x = rect->x; x < rect->x + rect->w; x += BORDER_W) {
 			sprite_paint(FrameSprites[FRAME_HORZ], 0, x, rect->y);
+                }
 	}
 
         /* Calculate offset for center and right-justified cases */
 	if (flags & SP_CENTERED) {
-		int w = alen * ASCII_W;
+		int w = len * ASCII_W;
 		if (w > rect->w) {
 			w = rect->w;
 		}
 		x = (rect->w - w) / 2 + rect->x;
 	} else if (flags & SP_RIGHTJUSTIFIED) {
-		int w = alen * ASCII_W;
+		int w = len * ASCII_W;
 		if (w > rect->w) {
 			w = rect->w;
 		}
@@ -649,26 +649,36 @@ void screen_print(SDL_Rect * rect, int flags, const char *fmt, ...)
 	/* If painting on the border, then paint the right stub 
          * to the left of the text. */
 	if (flags & SP_ONBORDER) {
-		sprite_paint(FrameSprites[FRAME_ENDR], 0, x - BORDER_W, 
-                             rect->y);
+		sprite_paint(FrameSprites[FRAME_ENDR], 0, x - BORDER_W, rect->y);
         }
 
         /* Paint the characters until we run out or hit the end of the
          * region. */
-	for (i = 0; i < slen && x < stop; i++) {
-
-                if (ascii_paint(screen_buf[i], x, y, Screen)) {
-
-                        /* Move right. */
-                        x += ASCII_W;
-                }
+	for (i = 0; i < len && x < stop; i++) {
+                ascii_paint_glyph(glyph_buf_next(gbuf), x, y, Screen);
+                x += ASCII_W;
 	}
 
 	/* If painting on the border, then paint the left stub 
          * to the right of the text. */
 	if (flags & SP_ONBORDER) {
 		sprite_paint(FrameSprites[FRAME_ENDL], 0, x, rect->y);
-        }
+        }        
+}
+
+void screen_print(SDL_Rect * rect, int flags, const char *fmt, ...)
+{
+	va_list args;
+
+        /* Print the string to a buffer. */
+	va_start(args, fmt);
+	vsnprintf(screen_buf, sizeof(screen_buf), fmt, args);
+	va_end(args);
+
+        /* Convert it to a glyph string for printing */
+        glyph_buf_t *gbuf = glyph_buf_alloc_and_format(screen_gf, screen_buf);
+        screen_print_glyph_buf(rect, flags, gbuf);
+        glyph_buf_deref(gbuf);
 }
 
 void screen_repaint_frame(void)

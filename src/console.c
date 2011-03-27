@@ -62,9 +62,9 @@ static struct console {
 static char console_scratch_buf[MAX_MSG_SZ + 1];
 static char console_last_msg[MAX_MSG_SZ + 1];
 
-static void consoleNewline(void);
+static void console_new_line(void);
 
-static int consolePage(void)
+static int console_page(void)
 {
         int yesno = 1;
 
@@ -130,7 +130,7 @@ static int console_handle_repeated_msg(void)
                 if (Console.repeat != 0) {
                         // Yes, So we need to advance past the 'repeat' msg
                         // which occupies its own line
-                        consoleNewline();
+                        console_new_line();
                 }
                 // Setup for new msg.
                 Console.repeat = 0;
@@ -146,7 +146,7 @@ static int console_handle_repeated_msg(void)
                 // Yes. Are we at the beginning of a new line?
                 if (Console.room != CONSOLE_MAX_MSG_SZ) {
                         // No. So advance to a new line.
-                        consoleNewline();
+                        console_new_line();
                 }
                 // Print the repeat notice for the first time.
                 snprintf(Console.lines[Console.line], CONSOLE_MAX_MSG_SZ, 
@@ -342,12 +342,12 @@ void console_print(const char *fmt, ...)
               newline:
 
                 /* advance to the next line */
-                consoleNewline();
+                console_new_line();
                 n_lines++;
 
                 /* Rule 6 */
                 if (n_lines == (CONS_LINES - 1)) {
-                        if (!consolePage())
+                        if (!console_page())
                                 return;
                         n_lines = 0;
                 }
@@ -383,7 +383,7 @@ void console_backspace(int n)
 #endif
 }
 
-static void consoleNewline(void)
+static void console_new_line(void)
 {
   Console.line = (Console.line + 1) % CONS_LINES;
 

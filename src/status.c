@@ -22,6 +22,7 @@
 #include "status.h"
 
 #include "applet.h"
+#include "glyph.h"
 #include "screen.h"
 #include "sprite.h"
 #include "common.h"
@@ -125,6 +126,8 @@ static struct status {
          * zero. Limited to internal use only for now.
          */
 	int suppressRepaint;
+
+        glyph_formatter_t *gf;
 
 	/**
          * New experimental super-generic stuff
@@ -277,6 +280,7 @@ int statusInit()
 	Status.numLines = Status.screenRect.h / LINE_H;
 
 	foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
+        Status.gf = glyph_formatter_alloc();
 
         list_init(&Status.applet_stack);
 
@@ -822,131 +826,70 @@ static void myScrollPage(enum StatusScrollDir dir)
 	}
 }
 
-static int myFormatPgText()
+/**
+ * Allocate (or re-allocate) Status.pg_surf to fit the given number of lines of
+ * text.
+ */
+static void status_get_scratch_surface(int lines)
 {
-	char *ptr;
-	int n;
-	int lines = 0;
-	int normal_lines = 0;
-	int added_lines = 0;
-	int natural_breaks = 0;
-
-	assert(Status.pg_text);
-
-	ptr = Status.pg_text;
-	n = 0;
-
-	// Pass 1: wrap words
-	if (*ptr)
-		lines = 1;
-
-	while (1)
-	{
-		n = 0;
-		while (*ptr && n < STAT_CHARS_PER_LINE) {
-			if (*ptr == '\n') {
-				n = 0;
-				lines++;
-				normal_lines++;
-			} else
-				n++;
-			ptr++;
+	/* If we can reuse the existing scratch buffer then do so. Otherwise
+           make a new one. If this fails then silently abort this
+           request. Fixme: need to adjust the status ifc to return errors. */
+        int hh = lines * ASCII_H;
+	if (! Status.pg_surf || Status.pg_surf->h < hh) {
+		if (Status.pg_surf) {
+			SDL_FreeSurface(Status.pg_surf);
+                        Status.pg_surf = NULL;
 		}
-
-		/* End of message? */
-		if (!*ptr)
-			break;
-
-		/* At this point ptr is at the next character after the last
-		* one we're trying to fit on the line. If this character is a
-		* space or the last character was a space then this is a
-		* natural break in the line (i.e., we're not going to wrap a
-		* word by breaking the line here). */
-		if (isspace(*ptr) || isspace(*(ptr - 1))) {
-			lines++;
-			natural_breaks++;
-			continue;
-		}
-
-		/* At this point we know that we do not have a natural break
-		* and we're trying to wrap a word. We need to back up to find
-		* the beginning of the word and insert a newline just prior.
-		* But if the word is too long to fit on a single line then we
-		* give up and just wrap the word. */
-		ptr -= 2;
-		n = 2;
-		while (!isspace(*ptr) && n < STAT_CHARS_PER_LINE) {
-			ptr--;
-			n++;
-		}
-
-		if (n != STAT_CHARS_PER_LINE)
-		{
-			*ptr = '\n';
-			added_lines++;
-		}
-		else
-		{
-			ptr += n;
-		}
+		Status.pg_surf = screen_create_surface(STAT_W, hh);
 	}
-
-	printf("lines=%d normal_lines=%d added_lines=%d natural_breaks=%d\n",
-			lines, normal_lines, added_lines, natural_breaks);
-
-	return lines;
 }
 
-static void mySetPageMode(void)
+/**
+ * Setup the Status window to page text. This pre-renders the text to a scratch
+ * buffer.
+ */
+static void status_set_page_mode(void)
 {
-	int h, rows, x, y, c;
-	char *ptr;
-
 	assert(Status.pg_title);
 	assert(Status.pg_text);
 
-	rows = myFormatPgText();
+        /* Convert the text to a glyph string. */
+        glyph_buf_t *gbuf = glyph_buf_alloc_and_format(Status.gf, 
+                                                       Status.pg_text);
 
-	// Calculate how much space we need to hold all the text in a scratch
-	// buffer.
-	h = rows * ASCII_H;
+        /* Layout the glyph string in a glyph doc with nice line breaks. */
+        glyph_doc_t *gdoc = glyph_doc_alloc_and_layout(gbuf, STAT_W / ASCII_W);
+        glyph_buf_deref(gbuf);
 
-	// If we can reuse the existing scratch buffer then do so. Otherwise
-	// make a new one. If this fails then silently abort this
-	// request. Fixme: need to adjust the status ifc to return errors.
-	if (Status.pg_surf == NULL || Status.pg_surf->h < h)
-	{
-		if (Status.pg_surf) {
-			SDL_FreeSurface(Status.pg_surf);
-		}
-		Status.pg_surf = screen_create_surface(STAT_W, h);
-		if (!Status.pg_surf)
-			return;
-	}
-	// Render the text to the scratch surface.
+        /* Setup the scratch buffer for rendering. */
+        int h = glyph_doc_get_num_lines(gdoc);
+        status_get_scratch_surface(h);
 	SDL_FillRect(Status.pg_surf, 0, Black);
-	ptr = Status.pg_text;
-	for (y = 0; y < rows && *ptr; y++)
-	{
-		for (x = 0, c = 0; x < (STAT_W / ASCII_W) && *ptr; x++)
-		{
-			if (*ptr == '\n')
-			{
-				ptr++;
-				break;
-			}
-			if (!c && *ptr == ' ')
-			{
-				ptr++;
-				continue;
-			}
-			if (ascii_paint(*ptr++, c * ASCII_W, y * ASCII_H,
-					Status.pg_surf))
-			{
-				c++;
-			}
-		}
-	}
+
+        /* Render the glyphs to the scratch buffer. */
+        int row = 0;
+
+        /* For each glyph line... */
+        glyph_buf_t *gline;
+        for (gline = glyph_doc_first(gdoc); gline; 
+             gline = glyph_doc_next(gdoc)) {
+                int col = 0;
+                glyph_t gl;
+
+                /* For each glyph... */
+                for (gl = glyph_buf_first(gline); gl; 
+                     gl = glyph_buf_next(gline)) {
+
+                        /* Render it and advance the column */
+                        ascii_paint_glyph(gl, col, row, Status.pg_surf);
+                        col += ASCII_W;
+                }
+                row += ASCII_H;
+        }
+
+        /* Cleanup. */
+        glyph_doc_deref(gdoc);
 
 	// Position the paging rect at the top of the window.
 	Status.pg_rect.x = 0;
@@ -1364,7 +1307,7 @@ void statusSetMode(enum StatusMode mode)
 		
 	case Page:
 		switch_to_tall_mode();
-		mySetPageMode();
+		status_set_page_mode();
 		break;
 		
 	case Trade:

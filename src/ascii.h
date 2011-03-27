@@ -22,63 +22,11 @@
 #ifndef ascii_h
 #define ascii_h
 
-#include "macros.h"
+#include "glyph.h"
 
 #include <SDL.h>
 
-BEGIN_DECL
-
 extern int ascii_init(void);
-
-/**
- * Print a character using a build-in font and color. In the usual case this
- * prints the character to the surface using the current font and color. In the
- * general case, 'c' may be part of a control sequence, where the format is:
- *
- *       <SEQ> := ^c<CMD><COLOR>
- *     <COLOR> := B|w|r|g|b|c|y|m|G|!
- *       <CMD> := +|-|<NIL>
- *       <NIL> :=
- *
- * The '+' CMD pushes the current color before setting the new color. The '-'
- * CMD pops the last pushed color and makes it the new color.
- *
- * The color codes:
- *
- *   w White
- *   B Black
- *   r Red
- *   g Green
- *   b Blue
- *   y Yellow
- *   c Cyan
- *   m Magenta
- *   G Gray
- *
- * @param c is either a character to print or part of a control sequence.
- * @param x is the pixel x-coord of the upper left corner to paint to.
- * @param y is the pixel y-coord of the upper left corner to paint to.
- * @param surface is the surface to paint to.
- * @returns 1 if a character was painted, 0 if it was part of a control
- * sequence
- */
-extern int ascii_paint(char c, int x, int y, SDL_Surface * surface);
-
-/**
- * Get the length of a string NOT including the font and color control
- * characters. This is useful for determining how much screen space the string
- * will take when printed with ascii_paint().
- *
- * The function assumes that the string applies to the current internal state
- * of the ascii painting engine. This is only important if the last character
- * to ascii_paint was part of an unfinished control sequence. In that case,
- * ascii_strlen() assumes that this string continues where that one left off.
- *
- * @param s is the null-terminated string to check.
- * @returns strlen(s) minus the number of control characters
- */
-extern int ascii_strlen(char *s);
-
-END_DECL
+extern void ascii_paint_glyph(glyph_t glyph, int x, int y, SDL_Surface * surface);
 
 #endif
