@@ -54,6 +54,7 @@ nazghul_SOURCES =		\
         Makefile \
         map.c \
         map.h \
+	mem.c mem.h \
         nazghul.h \
         nazghul.c \
         Party.cpp \
