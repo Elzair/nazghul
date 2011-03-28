@@ -75,7 +75,7 @@
 #define DETAILED_PROFILE 0
 #endif
 
-bool Quit;
+int Quit;
 
 static int play_load_session(char *fname);
 

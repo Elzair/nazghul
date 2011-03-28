@@ -314,8 +314,8 @@ extern int keyToDirection(int key);
 extern int directionToDx(int dir);
 extern int directionToDy(int dir);
 extern const char *directionToString(int dir);
-extern bool isvowel(char c);
-extern bool point_in_rect(int x, int y, SDL_Rect *rect);
+extern int isvowel(char c);
+extern int point_in_rect(int x, int y, SDL_Rect *rect);
 extern int directionToOpposite(int dir);
 
 #define keyIsDirection(key) ((key) >= KEY_SOUTHWEST && (key) <= KEY_NORTHEAST)
@@ -326,7 +326,7 @@ extern int Turn;
 extern int AnimationTicks;
 extern int Tick;
 extern int TickMilliseconds;
-extern bool Quit;
+extern int Quit;
 extern struct los *LosEngine;
 extern int ShowAllTerrain;
 extern int logBase2(int val);

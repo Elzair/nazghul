@@ -205,7 +205,7 @@ int vector_to_dir(int dx, int dy)
 	}
 }
 
-bool isvowel(char c)
+int isvowel(char c)
 {
 	return (c == 'a' || c == 'A' ||
 		c == 'e' || c == 'E' ||
@@ -214,7 +214,7 @@ bool isvowel(char c)
 		c == 'u' || c == 'U' || c == 'y' || c == 'Y');
 }
 
-bool point_in_rect(int x, int y, SDL_Rect *rect)
+int point_in_rect(int x, int y, SDL_Rect *rect)
 {
         return (x >= rect->x && 
                 y >= rect->y &&
