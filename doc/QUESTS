@@ -1,0 +1,235 @@
+----------------------------------------------------------------------------
+quests-mech.scm
+
+    General utilities for haxima-style quests. In other words, these are not as
+    general as quest-sys.scm, since they depend on the haxima conventions for
+    the quest payload. Namely, they expect the payload to be a tbl. For
+    example:
+
+    (('*tbl*
+        ('directions 1)
+        ('bonus-xp 0)
+        ('on-update 'quest-calltoarms-update)))
+
+    This code also assumes that the 'questdata section of the player gob (aka
+    the QTD for Quest Data Table) is devoted to keeping the global list of all
+    quests in the system. Most of the following procedures modify things in
+    that table.
+
+(quest-complete quest)
+    Sets a quest to be complete, with notification if it is in progress and
+    the global variable use-quest-pane is set to #t.
+
+(quest-data-add-child parent quest)
+    Adds the quest to its parent's list of subquests. It modifies the copy of
+    the parent quest that is in the 'questdata section of the player gob (not
+    the copy in the 'quest section, see comments under quests-data.scm).
+
+(quest-assign-notify quest target)
+    Utility for emitting the console message when a quest is assigned. It
+    gracefully handles the case where a quest has already been completed before
+    it is assigned.
+
+(quest-assign-subquest quest target)
+    This is named as the assignment procedure in most of the haxima
+    subquests. It looks up the quest's 'qparent and calls quest-data-add-child.
+
+(quest-assign-silent quest target)
+    Just returns #t. Looks unused.
+
+(quest-status-from-payload quest)
+    Looks like a stub for something that was never implemented or used.
+
+(quest-status-inprogress quest)
+    Used as the status procedure in all current haxima quests. It returns "In
+    progress". I think it's a stub to satisfy the original quest system design,
+    but the new 'on-update procedure is used instead.
+
+(quest-data-get tag)
+    Lookup a quest in the QTD.
+
+(quest-data-getvalue quest tag)
+    Lookup a quest in the QTD and then lookup a value in its payload.
+
+(quest-data-assign-once tag)
+    Lookup a quest in the QTD and call quest-assign on it, if not already
+    marked as assigned.
+
+(quest-data-assigned? tag)
+    Check if a quest in the QTD has been assigned to the player.
+
+(quest-data-update tag key value)
+    Set the key/value pair in the quest in the QTD, call its 'on-update method,
+    and re-copy it to the assigned list (via qst-bump! in quest-sys.scm).
+
+(quest-data-update-with tag key value callback)
+    Like quest-data-update but invokes the callback between setting the value
+    and calling 'on-update.
+
+(quest-data-descr! tag descr)
+(quest-data-icon! tag icon)
+    Mutators on quests in the QTD.
+
+(quest-data-complete tag)
+    Calls quest-complete on a quest in the QTD.
+
+(quest-notify subfunction)
+    Creates a function which takes a quest as a parm and emits "Quest
+    updated: <title>" to the console before calling the subfunction with the
+    quest.
+
+(grant-xp-fn amount)
+    Creates a function which takes a quest as a parm and grants the player a
+    given amount of experience, using or adding to the 'bonus-xp from the quest
+    payload as appropriate.
+
+(grant-party-xp-fn amount)
+    Similar to grant-xp-fn but applies to the whole party.
+
+(reconcile-quests kplayer)
+    Registered on 'new_game_start_hook. For each quest in the assigned list, if
+    it is in the QTD then it is recopied back to the QTD. I think this is to
+    accomodate quests that are generated on-the-fly, and not via
+    quests-data.scm; the assumption being that on-the-fly quests will add
+    themselves to the assigned list but not necessarily the QTD.
+
+(refresh-quests)
+    Registed on 'new_game_start_hook after reconcile-quests. This reloads
+    quests-data.scm. This will have the affect of making sure all the quests in
+    quest-data.scm are in the QTD. It won't affect quests that are already
+    there.
+
+(quest-data-convert-subquest quest parent)
+    Set the quest parent and add it to the parent's subquest list.
+
+----------------------------------------------------------------------------
+quests-data-static.scm
+
+    This file contains all the update procedures referenced in
+    quests-data.scm. It is loaded for every session.
+
+    The update procedures modify the quest description as progress is
+    made. They are invoked by quest-data-update (see quests-mech.scm).
+
+----------------------------------------------------------------------------
+quests-data.scm
+
+    A big (let ...) statement that creates all the haxima quests when the game
+    is first started or when refresh-quests (see quests-mech.scm) is called. It
+    will get or make a new entry in the player gob table keyed 'questdata. The
+    value will be a table of all the quests, keyed by their tag.
+
+    The quests in the 'questdata section are all the quests in the game,
+    whether they are assigned or not. Initially they are all unassigned. When
+    they are assigned a copy is made in the 'quests section of the player
+    gob. This latter copy is modified as the quests progresses.
+
+----------------------------------------------------------------------------
+quest-sys.scm
+
+    This file contains the core functions that implement the quest system. It
+    is loaded for every session.
+
+    A quest is a list:
+
+    ('quest  ;; type identifier
+     title   ;; ui title
+     tag     ;; scheme name for quest var
+     descr   ;; descriptive paragraph
+     assign  ;; name of assignment proc
+     status  ;; name of status proc
+     done    ;; symbol for progress
+     icon    ;; ui icon
+     (payload) ;; quest-specific data
+    )
+
+    Although the payload may be anything, by convention most of the haxima
+    quests use a table for the payload. (A table is a list of key/value
+    pairs). Several keys are of special note:
+
+    'on-update names a procedure to use to update the quest. This procedure
+    updates the descriptive text in the UI depending on how far the quest has
+    progressed. (NB: the progress referred to here is quest-specific, and
+    stored in the payload table, it is not the done field of the main quest
+    body).
+
+    'qparent refers to the tag of a parent quest. This is to support the notion
+    of a quest being divided into sub-quests, each with their own entry.
+
+(qst-mk title tag descr assign status icon . payload)
+    Constructor.
+
+(qst-title qst) (list-ref qst 1))
+(qst-tag qst) (list-ref qst 2))
+(qst-descr qst) (list-ref qst 3))
+(qst-icon qst) (list-ref qst 7))
+(qst-payload qst) (list-ref qst 8))
+    Simple accessors. Note that qst-payload always returns a list.
+
+(qst-set-title! qst title) (list-set-ref! qst 1 title))
+(qst-set-descr! qst descr) (list-set-ref! qst 3 descr))
+(qst-set-icon! qst icon) (list-set-ref! qst 7 icon))
+    Simple mutators.
+
+(qst-assign qst target)
+    Invoke the assignment procedure.
+
+(qst-status qst)
+    Invoke the status procedure.
+
+(qst-done? qst)
+    Get the progress of the quest. Initially this is 'inprogress. 
+
+(qst-done! qst result)
+    Set the progress of the quest.
+
+(qst-complete? qst)
+    Check if the progress is 'complete.
+
+(qst-complete! qst)
+    Set the progress to 'complete.
+
+(qst-failed? qst)
+    Check if progress is 'failed.
+
+(qst-failed! qst)
+    Set the progress to 'failed.
+
+(quest-assign qst)
+    Invokes qst-assign on the player and then quest-insert.
+
+(quest-assigned? qst)
+    True iff the quest has been assigned to the player.
+
+(safe-car alist)
+    Utility function that should be moved somewhere else.
+
+(quest-get tag)
+    Look it up in the quests assigned to the player.
+
+(quest-remove qst)
+    Remove it from the quests assigned to the player.
+
+(qst-bump! quest)
+    Re-orders the quest into its proper place in the quest list. Not only that,
+    it replaces the current copy of the quest in the list whether or not its
+    order changes. This is used to update the quest when it has been changed
+    (see quest-data-update in quests-mech.scm).
+
+(quest-insert qst)
+    Insert the quest in the player gob. This assumes the player gob is a tbl
+    type which has 'quests as a key (if not, it will add one). The value is a
+    list of quests. It keeps the list sorted by the quest progress. 'inprogress
+    quests are first, 'failed quests are last, and everything else is
+    in-between (but quests with the same progress are kept clustered).
+
+    If a quest has a parent, then the quest is appended as described above
+    after the parent. If the parent cannot be found the quest is not appended
+    at all (bug?). Also, it seems a quest could be added outside the parent
+    group depending on what is left in the sort order after it?
+
+(quest-tbl? quest)
+    If the quest payload is a tbl, returns the tbl, else returns #f.
+
+(quest-tbl-get quest tag)
+    Looks up the tag in the payload. If the payload is not a table returns nil.
