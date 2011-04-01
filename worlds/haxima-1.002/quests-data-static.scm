@@ -773,7 +773,7 @@
 	((tbl-flag? 'lost-hall-loc)
 		(kern-ui-paginate-text
 			(string-append
-			"The Warritrix is the most cunning warrior of the age. She is overdue from her mission the the Lost Halls, which can be found at ["
+			"The Warritrix is the most cunning warrior of the age. She is overdue from her mission to the Lost Halls, which can be found at ["
 			(number->string (loc-x lost-halls-loc)) "," (number->string (loc-y lost-halls-loc))
 			"]."
 			)
