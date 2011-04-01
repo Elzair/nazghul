@@ -94,6 +94,8 @@ Added nazghul.nsi, nazinst.ico
 In src/factions.h, minor bugfix
 
 Patersen, Jim (http://www.mfiles.co.uk):
+(Now licensed under the Creative Commons Attribution Share Alike license,
+thanks to Jason L Tibbitts III and Tom Calloway)
 In worlds/haxima-1.002/music:
         ballad.mid
         dragon-slayer.mid
@@ -110,6 +112,7 @@ In worlds/haxima-1.002/music:
         dragon-quest.mid              
         harpsichord-piece.mid  
         minstrel-dance.mid
+
 
 Riberdy, Steve:
 In worlds/haxima-1.002/runestones.png, provided the images

@@ -19,4 +19,4 @@ wind-trio.mid
 
 Copyright Jim Paterson,
 www.mfiles.co.uk.
-Used for Haxima with his permission.
+Distributed under the Creative Commons Attribution Share Alike license.
