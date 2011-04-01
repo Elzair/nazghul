@@ -142,9 +142,10 @@
        "but the fearless hold it in contempt."))
 
 (define warr-conv
-  (ifc basic-conv
+  (ifc nil
 
        ;; basics
+       (method 'default (lambda (knpc kpc) (say knpc "I cannot help you with that.")))
        (method 'hail warr-hail)
        (method 'bye  warr-bye)
        (method 'job  warr-job)
