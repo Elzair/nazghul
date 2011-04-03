@@ -228,50 +228,51 @@ General syntax:
 
 General commands:
 
-    <dir>......................Move in that direction
-    A)ttack-<dir>..............Initiate combat
-    B)oard.....................Board/exit a vehicle like a ship or horse
+    <dir>......................Move in that direction.
+    A)ttack-<dir>..............Initiate combat.
+    B)oard.....................Board/exit a vehicle like a ship or horse.
     C)ast-<member>-<spell>-<*>...Cast a spell (the last argument depends on the
-                               spell)
-    E)nter.....................Enter a portal, including up or down ladders
-    F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
-    G)et-<dir>.................Get an object from the ground
-    H)andle-<member>-<target>..Activate a switch or lever
-    L)oiter-<0-9/sunrise>......Loiter a few hours
-    N)ew-order-<member>-<member>...Swap order of two party members
-    O)pen-<dir>................Open a container or door
-    Q)uit......................Quit & optionally save the game
+                               spell).
+    E)nter.....................Enter a portal, including up or down ladders.
+    F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon).
+    G)et-<dir>.................Get an object from the ground.
+    H)andle-<member>-<target>..Activate a switch or lever.
+    L)oiter-<0-9/sunrise>......Loiter a few hours to pass time.
+    N)ew-order-<member>-<member>...Swap order of two party members.
+    O)pen-<dir>................Open a container or door.
+    Q)uit......................Quit & optionally save the game.
     R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
-    S)earch-<dir>..............Look carefully
-    T)alk-<target>.............Talk to an NPC
-    U)se-<member>-<item>.......Use an item like a torch or potion
-    X)amine-<target>...........Examine map tiles within view
-    Z)tats.....................Show party stats like inventory, armaments, etc
-    @)AT.......................Information about where the party is AT, etc
-    <space>....................Pass one turn
-    CTRL-S)ave.................Save a game
-    CTRL-R)eload...............Reload a game
-    CTRL-<dir>.................Scroll the console window by lines
-    CTRL-[PAGEUP/PAGEDOWN].....Scroll the console window by pages
-    CTRL-[HOME/END]............Scroll to top/bottom of console window
+    S)earch-<dir>..............Look carefully.
+    T)alk-<target>.............Talk to an NPC.
+    U)se-<member>-<item>.......Use an item like a torch or potion.
+    X)amine-<target>...........Examine map tiles within view.
+    Z)tats.....................Show party stats like inventory, armaments, etc.
+    @)AT.......................Information about where the party is AT, etc.
+    <space>....................Pass one turn.
+    CTRL-S)ave.................Save a game.
+    CTRL-R)eload...............Reload a game.
+    CTRL-<dir>.................Scroll the console window by lines.
+    CTRL-[PAGEUP/PAGEDOWN].....Scroll the console window by pages.
+    CTRL-[HOME/END]............Scroll to top/bottom of console window.
 
 Wilderness-only commands:
 
     K)amp-<0-9/sunrise>-<y/n>-<player>
     ...........................Camp in the wilderness (to heal and recover 
                                mana) or aboard ship (to repair hull damage as 
-                               well)
+                               well).
+    SHIFT+>....................Zoom-in to town-level map.
 
 Town/Dungeon/Combat-only commands:
 
-    A)ttack-<target>.........Attack the specified target
-    C)ast-<spell>-<*>........Cast a spell
-    F)ollow..................Select follow mode, where the party members
-                             automatically follow the party leader.
+    A)ttack-<target>.........Attack the specified target.
+    C)ast-<spell>-<*>........Cast a spell.
+    F)ollow..................Toggle follow/round robin mode.
     [1-9]....................Select a party member for solo mode.
-    [0]......................Select turn-based party mode, where each party 
-                             member takes directions one at a time.
+    0........................Select round robin mode.
     K)amp-<0-9/sunrise>......Sleep on a bed.  
+    SHIFT+<..................Zoom-out to wilderness-level map.
+    ESC......................Zoom-out to wilderness-level map.
 
 Special commands:
 
@@ -284,9 +285,9 @@ Editing commands (run nazghul with -d):
                              ch_wanderer (list p_shard 51 47) nil)" will
                              teleport the player to the surface at coords [51
                              47].
-    CTRL-O)..................Save the current map to its own file
+    CTRL-O)..................Save the current map to its own file.
     CTRL-T)erraform..........Alter terrain. This deserves its own section. [1]
-    CTRL-Z)oom...............Zoom in or out (like peering at a gem but free)
+    CTRL-Z)oom...............Zoom in or out (like peering at a gem but free).
 
 Shortcuts:
 
@@ -294,8 +295,6 @@ Shortcuts:
                              hostile npc.
     -........................When targeting an attack, moves cursor to previous
                              hostile npc.
-    ESC......................When wilderness combat is over, exits to
-                             wilderness map.
 
                                 MOVEMENT MODES
 
