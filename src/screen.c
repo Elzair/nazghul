@@ -620,7 +620,7 @@ void screen_print_glyph_buf(SDL_Rect * rect, int flags, glyph_buf_t *gbuf)
 	int y = rect->y;
 	int len, stop;
 
-	len = glyph_buf_room(gbuf);
+	len = glyph_buf_len(gbuf);
         stop = rect->x + (rect->w * ASCII_W);
 
 	/* If painting on the border then first fill the line with the border
@@ -654,10 +654,12 @@ void screen_print_glyph_buf(SDL_Rect * rect, int flags, glyph_buf_t *gbuf)
 
         /* Paint the characters until we run out or hit the end of the
          * region. */
+        glyph_buf_iter_t *gbi = glyph_buf_iter_alloc(gbuf);
 	for (i = 0; i < len && x < stop; i++) {
-                ascii_paint_glyph(glyph_buf_next(gbuf), x, y, Screen);
+                ascii_paint_glyph(glyph_buf_iter_next(gbi), x, y, Screen);
                 x += ASCII_W;
 	}
+        glyph_buf_iter_deref(gbi);
 
 	/* If painting on the border, then paint the left stub 
          * to the right of the text. */

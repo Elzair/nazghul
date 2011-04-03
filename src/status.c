@@ -859,7 +859,7 @@ static void status_set_page_mode(void)
                                                        Status.pg_text);
 
         /* Layout the glyph string in a glyph doc with nice line breaks. */
-        glyph_doc_t *gdoc = glyph_doc_alloc_and_layout(gbuf, STAT_W / ASCII_W);
+        glyph_doc_t *gdoc = glyph_doc_alloc_and_layout(gbuf, CONS_W / ASCII_W);
         glyph_buf_deref(gbuf);
 
         /* Setup the scratch buffer for rendering. */
@@ -872,21 +872,23 @@ static void status_set_page_mode(void)
 
         /* For each glyph line... */
         glyph_buf_t *gline;
-        for (gline = glyph_doc_first(gdoc); gline; 
-             gline = glyph_doc_next(gdoc)) {
+        glyph_doc_iter_t *gdi = glyph_doc_iter_alloc(gdoc);
+        while ((gline = glyph_doc_iter_next(gdi))) {
                 int col = 0;
                 glyph_t gl;
 
                 /* For each glyph... */
-                for (gl = glyph_buf_first(gline); gl; 
-                     gl = glyph_buf_next(gline)) {
+                glyph_buf_iter_t *gbi = glyph_buf_iter_alloc(gline);
+                while ((gl = glyph_buf_iter_next(gbi))) {
 
                         /* Render it and advance the column */
                         ascii_paint_glyph(gl, col, row, Status.pg_surf);
                         col += ASCII_W;
                 }
+                glyph_buf_iter_deref(gbi);
                 row += ASCII_H;
         }
+        glyph_doc_iter_deref(gdi);
 
         /* Cleanup. */
         glyph_doc_deref(gdoc);

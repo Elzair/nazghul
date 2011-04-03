@@ -70,7 +70,7 @@ extern int screen_height(void);
 extern SDL_PixelFormat *screen_format(void);
 extern void screen_flash(SDL_Rect * rect, int mdelay, Uint32 color);
 extern void screen_print(SDL_Rect * rect, int flags, const char *fmt, ...);
-extern void screen_print_glyph(SDL_Rect * rect, int flags, const glyph_t *glyphstr);
+extern void screen_print_glyph_buf(SDL_Rect *rect, int flags, glyph_buf_t *gbuf);
 
 // Added for missile animations
 extern SDL_Surface *screen_create_surface(int w, int h);
