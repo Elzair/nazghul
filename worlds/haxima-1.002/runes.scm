@@ -13,7 +13,8 @@
   ;; deallocate it.
   (let ((sprite (kern-obj-get-sprite kobj)))
     (kobj-get kobj kchar)
-    (rune-basic-quest questtag sprite)))
+    (rune-basic-quest questtag 
+                      (kern-sprite-get-tag sprite))))
 
 ;; rune interface: when a rune is used on a special altar, it transforms the
 ;; alter and signals the demon gate mechanism
@@ -39,7 +40,7 @@
 ;; special extended interface for rune of leadership: summon the ghost of the
 ;; warritrix when the player picks it up
 (define (rune-li-get kobj kchar)
-  (kern-log-msg "An apparition appears!")
+  (kern-log-msg "^c+yAn apparition appears!^c-")
   (kern-obj-put-at (mk-warritrix)
                    (kern-obj-get-location kobj))
   (let ((sprite (kern-obj-get-sprite kobj)))
