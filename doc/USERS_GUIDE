@@ -251,6 +251,8 @@ General commands:
     <space>....................Pass one turn
     CTRL-S)ave.................Save a game
     CTRL-R)eload...............Reload a game
+    CTRL-<dir>.................Scroll the console window
+    PAGEUP/PAGEDOWN/HOME/END...Scroll the console window
 
 Wilderness-only commands:
 
