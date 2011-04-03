@@ -33,6 +33,13 @@ extern "C" {
 	extern int console_get_y(void);
 	extern int console_get_h(void);
 
+        extern void console_scroll_up(void);
+        extern void console_scroll_down(void);
+        extern void console_page_up(void);
+        extern void console_page_down(void);
+        extern void console_home(void);
+        extern void console_end(void);
+
 #ifdef __cplusplus
 }
 #endif

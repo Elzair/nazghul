@@ -48,6 +48,11 @@ static struct console {
         int line;                /* current line index */
 } Console;
 
+static int console_get_max_lines(void)
+{
+        return console_get_h() / ASCII_H;
+}
+
 int console_init(void)
 {
         memset(console_scratch_buf, 0, sizeof(console_scratch_buf));
@@ -96,16 +101,23 @@ void console_repaint(void)
         /* Slice the lines we want to print into a temp glyph doc. */
         SDL_Rect rectline = rectall;
         rectline.h = ASCII_H;
-        int maxlines = console_get_h() / ASCII_H;
+        int maxlines = console_get_max_lines();
+        int doclines = glyph_doc_get_num_lines(Console.gdoc);
         int startline, numlines;
         if (Console.line > maxlines) {
                 startline = Console.line - maxlines;
                 numlines = maxlines;
         } else {
                 startline = 0;
-                numlines = Console.line;
+                if (doclines > Console.line) {
+                        numlines = maxlines;
+                } else {
+                        numlines = Console.line;
+                }
         }
 
+        printf("line=%d startline=%d numlines=%d\n", Console.line, 
+               startline, numlines);
         glyph_doc_iter_goto(Console.gdi, startline);
 
         /* Render the lines. */
@@ -127,4 +139,51 @@ int console_get_y(void)
 int console_get_h(void)
 {
         return (SCREEN_H - BORDER_H - console_get_y());
+}
+
+static void console_scroll(int lines)
+{
+        Console.line += lines;
+        clamp(Console.line, 0, glyph_doc_get_num_lines(Console.gdoc));
+        console_repaint();
+}
+
+void console_scroll_up(void)
+{
+        if (Console.line > console_get_max_lines()) {
+                console_scroll(-1);
+        }
+}
+
+void console_scroll_down(void)
+{
+        console_scroll(1);
+}
+
+void console_page_up(void)
+{
+        if (Console.line > console_get_max_lines()) {
+                int gap = Console.line - console_get_max_lines();
+                int dist = min(gap, console_get_max_lines());
+                console_scroll(-dist);
+        }
+}
+
+void console_page_down(void)
+{
+        console_scroll(console_get_max_lines() - 1);
+}
+
+void console_home(void)
+{
+        if (Console.line > console_get_max_lines()) {
+                Console.line = console_get_max_lines();
+                console_repaint();
+        }
+}
+
+void console_end(void)
+{
+        Console.line = glyph_doc_get_num_lines(Console.gdoc);
+        console_repaint();
 }

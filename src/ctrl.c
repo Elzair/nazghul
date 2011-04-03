@@ -20,6 +20,7 @@
 //
 
 #include "../config.h" /* for USE_SKILLS */
+#include "console.h"
 #include "ctrl.h"
 #include "dice.h"
 #include "event.h"
@@ -85,16 +86,37 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         case KEY_SOUTHEAST:
 #endif   /* CONFIG_DIAGONAL_MOVEMENT */
         case KEY_NORTH:
+                if (keymod & KMOD_CTRL) {
+                        console_scroll_up();
+                        break;
+                }
+                /* else fall through */
+        case KEY_SOUTH:
+                if (keymod & KMOD_CTRL) {
+                        console_scroll_down();
+                        break;                        
+                }
+                /* else fall through */
         case KEY_WEST:
         case KEY_EAST:
-        case KEY_SOUTH:
-        {
                 dir = keyToDirection(key);
                 party->move(directionToDx(dir), directionToDy(dir));
                 mapSetDirty();
                 dir = keyToDirection(key);
-        }
         break;
+
+        case SDLK_PAGEUP:
+                console_page_up();
+                break;
+        case SDLK_PAGEDOWN:
+                console_page_down();
+                break;
+        case SDLK_HOME:
+                console_home();
+                break;
+        case SDLK_END:
+                console_end();
+                break;
 
 #if CONFIG_DIAGONAL_MOVEMENT
         case KEY_SHIFT_NORTHWEST:
@@ -1082,13 +1104,35 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         case KEY_SOUTHEAST:
 #endif   /* CONFIG_DIAGONAL_MOVEMENT */
         case KEY_NORTH:
+                if (keymod & KMOD_CTRL) {
+                        console_scroll_up();
+                        break;
+                }
+                /* else fall through */
+        case KEY_SOUTH:
+                if (keymod & KMOD_CTRL) {
+                        console_scroll_down();
+                        break;                        
+                }
+                /* else fall through */
         case KEY_WEST:
         case KEY_EAST:
-        case KEY_SOUTH:
                 dir = keyToDirection(key);
                 ctrl_move_character(character, dir);
                 break;
 
+        case SDLK_PAGEUP:
+                console_page_up();
+                break;
+        case SDLK_PAGEDOWN:
+                console_page_down();
+                break;
+        case SDLK_HOME:
+                console_home();
+                break;
+        case SDLK_END:
+                console_end();
+                break;
 
 #if CONFIG_DIAGONAL_MOVEMENT
         case KEY_SHIFT_NORTHWEST:

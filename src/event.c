@@ -32,7 +32,7 @@
 #include <common.h>
 
 #ifndef DEBUG_KEYS
-# define DEBUG_KEYS 0
+# define DEBUG_KEYS 1
 #endif
 
 #define EVENT_NONBLOCK   (1 << 0)

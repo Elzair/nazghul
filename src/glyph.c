@@ -80,6 +80,7 @@ typedef struct glyph_doc_iter {
         struct list *pos;
 } glyph_doc_iter_t;
 
+#ifdef DEBUG
 static void glyph_dbg(glyph_t gl)
 {
         printf("%c", glyph_get_char(gl));
@@ -107,6 +108,7 @@ static void glyph_doc_dbg(glyph_doc_t *gdoc)
         }
         glyph_doc_iter_deref(gdi);
 }
+#endif
 
 static void glyph_buf_fin(void *arg)
 {
