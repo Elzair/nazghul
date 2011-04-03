@@ -64,7 +64,8 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 	    switch (key) {
                         
                 case KEY_CTRL_T:
-		    cmd_terraform(party->getPlace(), party->getX(), party->getY());
+		    cmd_terraform(party->getPlace(), party->getX(), 
+                                  party->getY());
 		    break;
 
 		case KEY_CTRL_O:
@@ -77,6 +78,10 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 	    }
         }
 
+        if (console_handle_key(key, keymod)) {
+                return 0;
+        }
+
         switch (key) {
                 
 #if CONFIG_DIAGONAL_MOVEMENT
@@ -86,17 +91,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         case KEY_SOUTHEAST:
 #endif   /* CONFIG_DIAGONAL_MOVEMENT */
         case KEY_NORTH:
-                if (keymod & KMOD_CTRL) {
-                        console_scroll_up();
-                        break;
-                }
-                /* else fall through */
         case KEY_SOUTH:
-                if (keymod & KMOD_CTRL) {
-                        console_scroll_down();
-                        break;                        
-                }
-                /* else fall through */
         case KEY_WEST:
         case KEY_EAST:
                 dir = keyToDirection(key);
@@ -104,20 +99,6 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 mapSetDirty();
                 dir = keyToDirection(key);
         break;
-
-        case SDLK_PAGEUP:
-                console_page_up();
-                break;
-        case SDLK_PAGEDOWN:
-                console_page_down();
-                break;
-        case SDLK_HOME:
-                console_home();
-                break;
-        case SDLK_END:
-                console_end();
-                break;
-
 #if CONFIG_DIAGONAL_MOVEMENT
         case KEY_SHIFT_NORTHWEST:
         case KEY_SHIFT_NORTHEAST:
@@ -224,7 +205,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         case KEY_CTRL_R:
                 cmdReload();
                 Session->subject = NULL;
-                return true;
+                return 1;
 
         case SDLK_F10:
                 cmdSettings();
@@ -327,7 +308,7 @@ void ctrl_party_ai(class Party *party)
                         info.dy = 0;
 
                 memset(&cinfo, 0, sizeof(cinfo));
-                cinfo.defend = true;
+                cinfo.defend = 1;
                 cinfo.move = &info;
                 
                 combat_enter(&cinfo);
@@ -1039,7 +1020,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         case KEY_CTRL_R:
                 cmdReload();
                 Session->subject = NULL;
-                return true;
+                return 1;
       
         case SDLK_F10:
                 cmdSettings();
@@ -1084,6 +1065,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 break;
         }
 
+        if (console_handle_key(key, keymod)) {
+                return 0;
+        }
+
         // Don't run the keystroke hook until we get here. Keystroke
         // effects should not affect the special ctrl charactes
         // (otherwise something like being stuck in a web can prevent a
@@ -1091,9 +1076,8 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         character->runHook(OBJ_HOOK_KEYSTROKE, 0);
         if (character->isTurnEnded()) {
                 Session->subject = NULL;
-                return true;
+                return 1;
         }
-
 
         switch (key) {
 
@@ -1104,36 +1088,12 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         case KEY_SOUTHEAST:
 #endif   /* CONFIG_DIAGONAL_MOVEMENT */
         case KEY_NORTH:
-                if (keymod & KMOD_CTRL) {
-                        console_scroll_up();
-                        break;
-                }
-                /* else fall through */
         case KEY_SOUTH:
-                if (keymod & KMOD_CTRL) {
-                        console_scroll_down();
-                        break;                        
-                }
-                /* else fall through */
         case KEY_WEST:
         case KEY_EAST:
                 dir = keyToDirection(key);
                 ctrl_move_character(character, dir);
                 break;
-
-        case SDLK_PAGEUP:
-                console_page_up();
-                break;
-        case SDLK_PAGEDOWN:
-                console_page_down();
-                break;
-        case SDLK_HOME:
-                console_home();
-                break;
-        case SDLK_END:
-                console_end();
-                break;
-
 #if CONFIG_DIAGONAL_MOVEMENT
         case KEY_SHIFT_NORTHWEST:
         case KEY_SHIFT_NORTHEAST:
@@ -1483,7 +1443,7 @@ static bool ctrl_attack_target(class Character *character,
 	              	slowest_attack_AP = this_wpn_AP;
                 }
                 total_AP += this_wpn_AP;
-                attacked = true;
+                attacked = 1;
 
 		if (this_is_nth_attack == 1) {
 		    // 1st weapon attack (usual case)

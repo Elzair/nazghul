@@ -25,6 +25,7 @@
 //
 
 #include "bitset.h"
+#include "console.h"
 #include "conv.h"
 #include "cfg.h"
 #include "event.h"
@@ -70,38 +71,48 @@ static int conv_keyword_highlighting = 1;
  */
 static int conv_get_player_query(struct KeyHandler *kh, int key, int keymod)
 {
-	if (key == CANCEL) {
+        int done = 0;
+
+        if (console_handle_key(key, keymod)) {
+                return 0;
+        }
+
+        switch (key) {
+	case CANCEL:
+                console_end();
 		while (conv_ptr > conv_query) {
 			conv_ptr--;
 			*conv_ptr = 0;
 			cmdwin_pop();
 			conv_room++;
 		}
-		return 1;
-	}
-
-	if (key == '\n') {
-		return 1;
-	}
-
-	if (key == '\b') {
+                done = 1;
+                break;
+        case '\n':
+                console_end();
+                done = 1;
+                break;
+        case '\b':
+                console_end();
 		if (conv_ptr != conv_query) {
 			conv_ptr--;
 			*conv_ptr = 0;
 			conv_room++;
 			cmdwin_pop();
 		}
-		return 0;
-	}
+                break;
+        default:
+                if (isprintable(key) 
+                    && conv_room) {
+                        console_end();
+                        cmdwin_push("%c", key);
+                        *conv_ptr++ = key;
+                        conv_room--;
+                }
+                break;
+        }
 
-	if (isprintable(key) 
-            && conv_room) {
-		cmdwin_push("%c", key);
-		*conv_ptr++ = key;
-		conv_room--;
-	}
-
-	return 0;
+        return done;
 }
 
 

@@ -143,24 +143,27 @@ int console_get_h(void)
 
 static void console_scroll(int lines)
 {
-        Console.line += lines;
-        clamp(Console.line, 0, glyph_doc_get_num_lines(Console.gdoc));
-        console_repaint();
+        int val = Console.line + lines;
+        clamp(val, 0, glyph_doc_get_num_lines(Console.gdoc));
+        if (val != Console.line) {
+                Console.line = val;
+                console_repaint();
+        }
 }
 
-void console_scroll_up(void)
+static void console_scroll_up(void)
 {
         if (Console.line > console_get_max_lines()) {
                 console_scroll(-1);
         }
 }
 
-void console_scroll_down(void)
+static void console_scroll_down(void)
 {
         console_scroll(1);
 }
 
-void console_page_up(void)
+static void console_page_up(void)
 {
         if (Console.line > console_get_max_lines()) {
                 int gap = Console.line - console_get_max_lines();
@@ -169,12 +172,12 @@ void console_page_up(void)
         }
 }
 
-void console_page_down(void)
+static void console_page_down(void)
 {
         console_scroll(console_get_max_lines() - 1);
 }
 
-void console_home(void)
+static void console_home(void)
 {
         if (Console.line > console_get_max_lines()) {
                 Console.line = console_get_max_lines();
@@ -184,6 +187,44 @@ void console_home(void)
 
 void console_end(void)
 {
-        Console.line = glyph_doc_get_num_lines(Console.gdoc);
-        console_repaint();
+        int endline = glyph_doc_get_num_lines(Console.gdoc);
+        if (endline != Console.line) {
+                Console.line = endline;
+                console_repaint();
+        }
+}
+
+int console_handle_key(int key, int keymod)
+{
+        if (!(keymod & KMOD_CTRL)) {
+                return 0;
+        }
+
+        int handled = 1;
+
+        switch (key) {
+        case KEY_NORTH:
+                console_scroll_up();
+                break;
+        case KEY_SOUTH:
+                console_scroll_down();
+                break;
+        case SDLK_PAGEUP:
+                console_page_up();
+                break;
+        case SDLK_PAGEDOWN:
+                console_page_down();
+                break;
+        case SDLK_HOME:
+                console_home();
+                break;
+        case SDLK_END:
+                console_end();
+                break;
+        default:
+                handled = 0;
+                break;
+        }
+
+        return handled;
 }
