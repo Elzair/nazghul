@@ -4,9 +4,11 @@
 ;; completed, avoiding spamming the player with multiple notifications
 
 (define (quest-complete quest)
-	(if (and (quest-assigned? quest) use-quest-pane)
-		(kern-log-msg "^c+mQuest completed:^c-\n^c+m" (qst-title quest) "^c-")
-		)
+	(if (and (quest-assigned? quest) 
+                 use-quest-pane
+                 (not (qst-complete? quest)))
+            (kern-log-msg "^c+mQuest completed:^c-\n^c+m" (qst-title quest) "^c-")
+            )
 	(qst-complete! quest)
 	)
 
