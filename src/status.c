@@ -900,7 +900,7 @@ static void status_set_page_mode(void)
 	Status.pg_rect.h = TALL_H;
 
 	// Set the srolling limit.
-	Status.pg_max_y = max(0, h - Status.pg_rect.h);
+	Status.pg_max_y = max(0, (h * ASCII_H) - Status.pg_rect.h);
 
 	// Setup for viewing and scrolling.
 	status_set_title(Status.pg_title);
