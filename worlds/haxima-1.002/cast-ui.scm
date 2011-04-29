@@ -101,10 +101,10 @@
 			(ui-target loc range obj-is-char?))))
 	   
 (define (cast-ui-target-char caster range)
-	(let ((loc (get-target-loc caster range)))
-		(if (null? loc)
-			nil
-			(get-being-at loc))))
+  (let ((loc (get-target-loc caster range)))
+    (if (null? loc)
+        nil
+        (get-being-at loc))))
 			
 (define (cast-ui-target-any caster range checkproc)
 	(ui-target (kern-obj-get-location caster)
@@ -229,10 +229,10 @@
 		caster (occ-ability-whitemagic caster)))
 
 (define (grav-por caster)
-	(cast-ui-basic-ranged-spell powers-magic-missile
-		caster 
-		(powers-magic-missile-range (occ-ability-blackmagic caster))
-		(occ-ability-blackmagic caster)))
+  (cast-ui-basic-ranged-spell powers-magic-missile
+                              caster 
+                              (powers-magic-missile-range (occ-ability-blackmagic caster))
+                              (occ-ability-blackmagic caster)))
 
 (define (in-lor caster)
 	(powers-light caster caster (occ-ability-whitemagic caster))
