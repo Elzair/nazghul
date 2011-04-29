@@ -207,6 +207,9 @@ int scm_len(scheme *sc, pointer list);
 #define scm_mk_integer(sc, val) \
         (sc)->vptr->mk_integer((sc), (val))
 
+#define scm_mk_real(sc, val) \
+        (sc)->vptr->mk_real((sc), (val))
+
 #define scm_mk_symbol(sc, val) \
         (sc)->vptr->mk_symbol((sc), (val))
 
