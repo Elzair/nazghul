@@ -546,6 +546,12 @@ Poisoned (P)
     every turn until the poison is cured with a spell or potion. Poison is
     fatal! It won't wear off like disease.
 
+Outlawry (O)
+
+    See BEING BAD below. Outlawry applies to the entire party. While outlawed,
+    your party will be the enemy of most townspeople. Normal townsfolk will run
+    away from you and guards will attack. It will wear off with time.
+
 
                                  CONVERSATION
 
@@ -565,6 +571,17 @@ do or say something that impresses them).
 Food is consumed three times per day, one unit for each living party
 member. When the food runs out, party members take a point of damage at each
 meal time.
+
+
+                                   BEING BAD
+
+If you attack non-hostiles you will begin to accumulate a bad reputation. When
+it becomes bad enough you will be declared an outlaw (see Outlaw under
+EFFECTS). While you are an outlaw towns are dangerous places because the guards
+will attack. Eventually your reputation will cool off and it will be safe to
+enter towns again. The amount of time it takes to cool off will depend on the
+gravity of your crimes. For example, if you actually kill a friendly you will
+be outlawed for a week.
 
 
                              APPENDIX A: MAP HACKING
