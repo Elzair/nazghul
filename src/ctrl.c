@@ -429,6 +429,9 @@ static void ctrl_attack_done(class Character *character, class ArmsType *weapon,
         character->useAmmo(weapon);
 }
 
+/**
+ * Called for both AI and UI, and also from kern.c.
+ */
 void ctrl_do_attack(class Character *character, class ArmsType *weapon, 
                     class Character *target, int to_hit_penalty)
 {
@@ -437,13 +440,9 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         int damage;
         int armor;
         int critical = 0;
-		int misx;
-		int misy;
+        int misx;
+        int misy;
         bool miss;
-
-        /* Reduce the diplomacy rating between the attacker's and target's
-         * factions */
-        harm_relations(character, target);
 
         log_begin("^c%c%s^cw attacks ^c%c%s^cw with %s: "
                   , (are_hostile(character, player_party)?'r':'g')
@@ -453,30 +452,30 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                   , weapon->getName()
                 );
 
-        if (weapon->canOnAttack())
-        {
+        if (weapon->canOnAttack()) {
 	      	weapon->onAttack(NULL,character);  
-     		}
+        }
                 
-        miss = ! weapon->fire(target, character->getX(), character->getY(), &misx, &misy);
+        miss = ! weapon->fire(target, character->getX(), character->getY(), 
+                              &misx, &misy);
         ctrl_attack_done(character, weapon, target);
 
-        if (miss)
-        {
-				log_end("obstructed!");
-				weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,-1);
-				return;
+        if (miss) {
+                log_end("obstructed!");
+                weapon->fireHitLoc(character, NULL, character->getPlace(),
+                                   misx, misy, -1);
+                return;
         }
 
         /* Roll to hit. */
         log_continue("\n");
         hit = ctrl_calc_to_hit(character, weapon, to_hit_penalty);
         def = ctrl_calc_to_defend(target);
-        if (hit < def)
-        {
-				log_end("evaded!");
-				weapon->fireHitLoc(character, NULL, character->getPlace(),misx,misy,-1);
-				return;
+        if (hit < def) {
+                log_end("evaded!");
+                weapon->fireHitLoc(character, NULL, character->getPlace(),
+                                   misx, misy, -1);
+                return;
         }
 
         /* roll for critical hit */
@@ -492,11 +491,11 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         damage -= armor;
         damage = max(damage, 0);
         
-        if (damage <= 0)
-        {
-				log_end("blocked!");
-				weapon->fireHitLoc(character, target, character->getPlace(),misx,misy,0);
-				return;
+        if (damage <= 0) {
+                log_end("blocked!");
+                weapon->fireHitLoc(character, target, character->getPlace(),
+                                   misx, misy, 0);
+                return;
         }
 
         // the damage() method may destroy the target, so bump the refcount
@@ -504,7 +503,8 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         obj_inc_ref(target);
         target->damage(damage);
 
-			weapon->fireHitLoc(character, target, character->getPlace(),misx,misy,damage);
+        weapon->fireHitLoc(character, target, character->getPlace(),
+                           misx, misy, damage);
 
         log_end("%s!", target->getWoundDescription());
 
@@ -612,7 +612,9 @@ static void ctrl_del_suggest_list(struct list *head)
         }
 }
 
-
+/**
+ * Called for player attack.
+ */
 static void ctrl_attack_ui(class Character *character)
 {
         int x;
@@ -636,28 +638,29 @@ static void ctrl_attack_ui(class Character *character)
         int this_wpn_AP;
         for (weapon = character->enumerateWeapons(&armsIndex); weapon != NULL; 
              weapon = character->getNextWeapon(&armsIndex)) {
-	    struct nearest_hostile_info info;
+                struct nearest_hostile_info info;
                 				
                 // prompt the user
                 cmdwin_clear();
                 cmdwin_spush("Attack");
 
 		// Determine AP for this (potential) attack,
-		// as a discount may be applied for dual weapon attacks and such,
-		// and we need the discounted figure to display in the UI:
+		// as a discount may be applied for dual weapon attacks and
+                // such, and we need the discounted figure to display in the
+                // UI:
                 this_wpn_AP = weapon->getRequiredActionPoints();
 		if (this_is_nth_attack ==  1) {
-		    // 1st weapon attack (usual case), no AP cost adjustments
+                        // 1st weapon attack (usual case), no AP cost adjustments
 		}
 		else if (this_is_nth_attack == 2) {
-		    // 2nd weapon attack (dual weapon, 2nd weapon)
-		    int mult = kern_intvar_get("AP_MULT12:second_wpn_attack");
-		    this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
+                        // 2nd weapon attack (dual weapon, 2nd weapon)
+                        int mult = kern_intvar_get("AP_MULT12:second_wpn_attack");
+                        this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
 		}
 		else if (this_is_nth_attack >= 3) {
-		    // 3rd+ weapon attack (unusual case for multi-limbed beings...)
-		    int mult = kern_intvar_get("AP_MULT12:third_plus_wpn_attack");
-		    this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
+                        // 3rd+ weapon attack (unusual case for multi-limbed beings...)
+                        int mult = kern_intvar_get("AP_MULT12:third_plus_wpn_attack");
+                        this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
 		}
 
 		//log_msg("DEBUG: wpn = %s (AP=%d-->%d), remaining AP=%d\n", 
@@ -692,8 +695,8 @@ static void ctrl_attack_ui(class Character *character)
                 if (!character->hasAmmo(weapon)) {
                         cmdwin_spush("no ammo!");
                         log_msg("%s: %s - no ammo!\n",
-                                     character->getName(),
-                                     weapon->getName());
+                                character->getName(),
+                                weapon->getName());
                         continue;
                 }
 
@@ -705,9 +708,9 @@ static void ctrl_attack_ui(class Character *character)
                         if (near) {
                                 cmdwin_spush("blocked!");
                                 log_msg("%s: %s - blocked by %s!\n",
-                                             character->getName(),
-                                             weapon->getName(),
-                                             near->getName());
+                                        character->getName(),
+                                        weapon->getName(),
+                                        near->getName());
                                 continue;
                         }
                 }
@@ -782,16 +785,16 @@ static void ctrl_attack_ui(class Character *character)
 			
 			this_is_nth_attack++;				
 			
-			        if (weapon->canOnAttack())
-			        {
-				      	weapon->onAttack(NULL,character);  
-			     		}
+                        if (weapon->canOnAttack())
+                        {
+                                weapon->onAttack(NULL,character);  
+                        }
      			
                         bool miss = ! weapon->fire(character->getPlace(), 
-                                     character->getX(), 
-                                     character->getY(), 
-                                     &misx, 
-                                     &misy);
+                                                   character->getX(), 
+                                                   character->getY(), 
+                                                   &misx, 
+                                                   &misy);
 
                         if (miss)
                         {
@@ -802,8 +805,8 @@ static void ctrl_attack_ui(class Character *character)
                                      
                         ctrl_attack_done(character, weapon, NULL);
 
-								if (!miss)
-								{                     
+                        if (!miss)
+                        {                     
 	                        /* Check for a mech */
 	                        mech = place_get_object(character->getPlace(), x, y, 
 	                                                mech_layer);
@@ -855,17 +858,23 @@ static void ctrl_attack_ui(class Character *character)
 
                         // If we hit a party member then show their new hit
                         // points in the status window
-                        if (target->isPlayerControlled())
+                        if (target->isPlayerControlled()) {
                                 statusRepaint();
+                        }
+
+                        /* Let the script know about the attack. */
+                        session_run_hook(Session, post_attack_hook, "pp", character, 
+                                         target);
                 }
 
                 /* Warn the user if out of ammo. Originally this code used
                  * character->getCurrentWeapon() instead of weapon, that may
                  * still be okay now that getToHitPenalty() is outside of this
                  * loop, but not sure why it' would be preferred. */
-                if (! character->hasAmmo(weapon))
+                if (! character->hasAmmo(weapon)) {
                         log_msg("%s : %s now out of ammo\n", 
-                                     character->getName(), weapon->getName());
+                                character->getName(), weapon->getName());
+                }
                                 
 		character->decActionPoints(this_wpn_AP);
 		//log_msg("DEBUG: after attack, used %d, remaining AP=%d\n", 
@@ -1400,6 +1409,9 @@ static int ctrl_move_away_from_target(class Character *character,
         return 0;
 }
 
+/**
+ * Called for AI only (not UI).
+ */
 static bool ctrl_attack_target(class Character *character, 
                                class Character *target)
 {

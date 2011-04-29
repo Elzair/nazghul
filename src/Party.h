@@ -45,7 +45,6 @@ class Party:public Being {
         virtual struct sprite *getSprite();
 	virtual int getType();
 	virtual int getVisionRadius();
-        virtual bool addEffect(struct effect *effect, struct gob *gob);
         virtual bool addMember(class Character *);
         virtual bool allDead();
         virtual void burn();
@@ -57,7 +56,6 @@ class Party:public Being {
         virtual void distributeMembers();
 	virtual void exec();
 	virtual bool joinPlayer(void);
-        virtual bool removeEffect(struct effect *effect);
 	virtual void forEachMember(bool (*fx) (class Character *, void *), 
                                    void *);
 	virtual void forEachReverseMember(bool (*fx) (class Character *, void *), 
@@ -77,6 +75,7 @@ class Party:public Being {
         virtual void applyEffect(closure_t *effect);
         virtual Object *getSpeaker();
         virtual bool isStationary();
+        virtual void setBaseFaction(int faction);
 
         // NOTE: dup of getMemberAtIndex in player.cpp
         virtual class Character *getMemberByOrder(int order);

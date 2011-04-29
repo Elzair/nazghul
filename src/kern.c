@@ -2739,11 +2739,6 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                 return sc->NIL;
         }
 
-        if (!(conv = speaker->getConversation())) {
-                rt_err("%s() no conv for %s", __FUNCTION__, speaker->getName());
-                return sc->NIL;
-        }
-        
         if (speaker->isKnown()) {
                 log_begin("^c+%c%s:^c- ", CONV_NPC_COLOR, speaker->getName());
         } else {
@@ -2752,6 +2747,7 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                 log_continue(":^c- ");
         }
 
+        conv = speaker->getConversation();
         args = scm_car(sc, args);
 
         while (scm_is_pair(sc, args)) {
@@ -2761,7 +2757,7 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                 if (scm_is_str(sc, val)) {
                         char *beg, *end, *text = scm_str_val(sc, val);
                         while (text) {
-                                if (! conv_get_word(text, &beg, &end)) {
+                                if (!conv || !conv_get_word(text, &beg, &end)) {
                                         log_continue(text);
                                         text = NULL;
                                 } else {
@@ -7492,21 +7488,6 @@ KERN_API_CALL(kern_vehicle_set_name)
 
 }
 
-KERN_API_CALL(kern_harm_relations)
-{
-        class Character *cha;
-        class Character *chb;
-
-        if (unpack(sc, &args, "pp", &cha, &chb)) {
-                rt_err("kern-harm-relations: bad args");
-                return sc->NIL;
-        }
-
-		harm_relations(cha,chb);
-
-		return sc->NIL;
-}
-
 KERN_API_CALL(kern_being_get_current_faction)
 {
         class Being *being;
@@ -10406,7 +10387,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-get-time", kern_get_time);
         API_DECL(sc, "kern-time-get-remainder", kern_get_time_remainder);
         API_DECL(sc, "kern-get-total-minutes", kern_get_total_minutes);
-        API_DECL(sc, "kern-harm-relations", kern_harm_relations);		
         API_DECL(sc, "kern-in-los?", kern_in_los);
         API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);
         API_DECL(sc, "kern-include", kern_include);

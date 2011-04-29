@@ -875,35 +875,6 @@ void Party::setY(int y)
         }
 }
 
-bool Party::addEffect(struct effect *effect, struct gob *gob)
-{
-        struct node *entry;
-        class Character *member;
-        bool result = false;
-
-        // NOTE: in the future we'll probably want to distinguish between
-        // start-of-char-turn and start-of-party-turn for characters. Also,
-        // we'll want to specify if the hook should really apply to the party
-        // object or to its members.
-        FOR_EACH_MEMBER(entry, member)
-                result = member->addEffect(effect, gob) || result;
-        
-        return result;
-}
-
-bool Party::removeEffect(struct effect *effect)
-{
-        struct node *entry;
-        class Character *member;
-        bool result = false;
-
-        FOR_EACH_MEMBER(entry, member) {
-                result = member->removeEffect(effect) || result;
-        }
-        
-        return result;
-}
-
 void Party::startTurn()
 {
         struct node *entry;
@@ -1153,4 +1124,15 @@ void Party::absorbMemberAPDebt()
 class Container *Party::getInventory()
 {
         return NULL; // subclass(es) may override
+}
+
+void Party::setBaseFaction(int faction)
+{
+        struct node *entry;
+        class Character *member;
+        Being::setBaseFaction(faction);
+        FOR_EACH_MEMBER(entry, member) {
+                member->setBaseFaction(faction);
+        }
+
 }

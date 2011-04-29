@@ -452,14 +452,13 @@ void Character::inflictDamage(int amount, class Character *attacker)
 	if (!isDead())
 	{
 		mightkill = true;
-		harm_relations(attacker, this);
 	}
 	obj_inc_ref(this);
 	damage(amount);
-	if (mightkill && isDead())
-	{
+	if (mightkill && isDead()) {
 		attacker->addExperience(getExperienceValue());
-	}
+        }
+        session_run_hook(Session, post_attack_hook, "pp", attacker, this);
 	obj_dec_ref(this);
 }
 
