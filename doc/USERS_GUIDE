@@ -55,12 +55,12 @@ started.
                                    Exploring
 
 When you start you will have a party consisting of one character known
-initially as The Wanderer. The icon for this character will be in the center of
-the map view on the left. Explore around a bit using the arrow keys to
-move. Below the map you'll see a little window with a prompt. This gives you
-hints when you're entering commands to tell you what type of input the command
-wants. For example, if you type 'x' (for e[x]amine) the command prompt will
-say:
+initially as The Wanderer. The icon for this character will usually be in the
+center of the map view on the left. Explore around a bit using the arrow keys
+to move (hint: the keypad works too, you might need to turn on NUM LOCK). Below
+the map you'll see a little window with a prompt. This gives you hints when
+you're entering commands to tell you what type of input the command wants. For
+example, if you type 'x' (for e[x]amine) the command prompt will say:
 
     Xamine-<target>(ESC to exit)
 
@@ -75,11 +75,11 @@ finding time telling devices inside the game.
 
                                     Talking
 
-When you start the game, after selecting what kind of character to create, you'll
-see your first NPC to the south. To talk to the NPC press 't' for T)alk.
-This brings up a targeting crosshair. It might start out on the NPC or
-on your character, it it's on you then move it to the NPC with the arrow keys
-and hit enter. 
+When you start the game, after selecting what kind of character to create,
+you'll see your first NPC to the south. To talk to the NPC press 't' for T)alk.
+This brings up a targeting crosshair. It might start out on the NPC or on your
+character, it it's on you then move it to the NPC with the arrow keys and hit
+enter.
 
 That starts a conversation. During conversation you enter a keyword and the NPC
 will respond. For example, type NAME or JOB and see what this NPC says. When
@@ -337,7 +337,8 @@ Wilderness:
     In the outdoor or wilderness map the party moves as a single unit. You can
     enter into combat with enemy NPC parties by moving into them or waiting for
     them to attack you. Likewise you can enter towns, dungeons or moongates by
-    simply walking into them.
+    simply walking into them. Or, you can "zoom in" to the current map tile by
+    pressing SHIFT+>.
 
 Wilderness Combat:
 
@@ -368,7 +369,7 @@ or charm them right away.
 As usual, characters advance a level when they gain sufficient experience
 points. There is no maximum level limit. When a character advances his maximum
 HP and MP increase, depending on his class, species and personal bonuses. At
-the moment of advancment he is fully healed and mana is restored to their new
+the moment of advancement he is fully healed and mana is restored to their new
 maximum levels.
 
                           XP Required for Advancement
@@ -393,15 +394,15 @@ during the game.
 Strength
 
     Strength limits the total weight of readied weapons and armour. Strong
-	characters do more damage and are better at hitting with heavy or
-	bludgeoning weapons. It is also used when breaking free of spider webs
-	(most trolls don't stay ensnared too long...).
+    characters do more damage and are better at hitting with heavy or
+    bludgeoning weapons. It's also used when breaking free of spider webs (most
+    trolls don't stay ensnared too long...).
 
 Dexterity
 
     Dexterity is used when attacking with missile and balanced weaponry, and
-	helps when avoiding your opponents' blows. It is also needed when
-	picking locks and disarming trapped chests.
+    helps when avoiding your opponents' blows. It is also needed when picking
+    locks and disarming trapped chests.
 
 Intelligence
 
@@ -411,9 +412,9 @@ Intelligence
                                      MAGIC
 
 
-The example game contains a full complement of spells. The magic system is
-similar to Ultima 5 and Ultima 6: you select a spell by entering magic
-syllables. A spell name is a combination of one to four syllables.
+Haxima contains a full complement of spells. The magic system is similar to
+Ultima 5 and Ultima 6: you select a spell by entering magic syllables. A spell
+name is a combination of one to four syllables.
 
 The syllables, spell names and reagent mixtures provided in the example game
 are a direct ripoff of Ultima 5. If you don't have a u5 reference manual lying
