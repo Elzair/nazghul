@@ -145,6 +145,8 @@ static void play_loop(void)
 
         while (true) {
 
+                session_run_hook(Session, turn_start_hook, "p", Session->player);
+
                 // ------------------------------------------------------------
                 // If the player party is camping then run the camping hook
                 // so the script can do things like ambushes, visions, etc.
@@ -276,7 +278,8 @@ static void play_loop(void)
                                  times[5] - times[4]);
                         }
                 }
-                
+
+                session_run_hook(Session, turn_end_hook, "p", Session->player);
         }
 }
 
