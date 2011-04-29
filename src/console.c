@@ -116,8 +116,6 @@ void console_repaint(void)
                 }
         }
 
-        printf("line=%d startline=%d numlines=%d\n", Console.line, 
-               startline, numlines);
         glyph_doc_iter_goto(Console.gdi, startline);
 
         /* Render the lines. */
