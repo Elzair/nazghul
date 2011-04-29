@@ -50,20 +50,20 @@
       (kern-conv-end)
       (say knpc "[He turns to you] You shouldn't travel with folks like that. People might get the wrong idea about you."))
   )
-  
+
 
 (define (gregor-hail knpc kpc)
   (if (in-player-party? 'ch_nate)
       (gregor-kill-nate knpc kpc)
       (if (in-inventory? kpc t_letter_from_enchanter)
-           (say knpc "I see you got your stuff, and that letter from the Enchanter. "
-                "Don't forget to ready your weapons before leaving. "
-                "It's dangerous out there!")
-           (say knpc "[You meet a grizzled old peasant]"
-                " Welcome, Wanderer. I've been watching for you."
-                " There's some things that belong to you, over in yonder cave."
-                " Go in where the chest is, open it, and get the things inside."
-                " It's all for you."))
+          (say knpc "I see you got your stuff, and that letter from the Enchanter. "
+               "Don't forget to ready your weapons before leaving. "
+               "It's dangerous out there!")
+          (say knpc "[You meet a grizzled old peasant]"
+               " Welcome, Wanderer. I've been watching for you."
+               " There's some things that belong to you, over in yonder cave."
+               " Go in where the chest is, open it, and get the things inside."
+               " It's all for you."))
       ))
 
 ;; Some prompting with initial commands:
@@ -210,7 +210,7 @@
        (method 'band gregor-band)
        (method 'leav gregor-leav)
 
-;; SAM -- This response seems to be shadowed by the gregor-band declaration above?
+       ;; SAM -- This response seems to be shadowed by the gregor-band declaration above?
        (method 'band (lambda (knpc kpc) (say knpc "A band of rogues been raiding the shrine "
                                              "when I'm not around. They haven't attacked me, "
                                              "so they're probably just vagabonds, "
@@ -226,7 +226,7 @@
        (method 'folk (lambda (knpc kpc) (say knpc "There's homesteads scattered about in "
                                              "the woods and the foothills.")))
        (method 'fore (lambda (knpc kpc) (say knpc "Stay out of the deep woods. "
-                                               "Bandits, spiders and worse live there.")))
+                                             "Bandits, spiders and worse live there.")))
        (method 'gate (lambda (knpc kpc) (say knpc "No one can predict when it will open, "
                                              "or if anything will come through if it does. "
                                              "I've heard of other gates in other parts of the land, "
@@ -244,30 +244,30 @@
        (method 'ilya (lambda (knpc kpc) (say knpc "Yep. She lives at my place now "
                                              "that her parents are dead.")))
 
-;; SAM: I dont' see any reference to this lake anywhere, commenting this one out for now...
-;;       (method 'lake (lambda (knpc kpc) (say knpc "Exit this shrine and ye'll find yourself in a "
-;;                                             "hidden valley. Head south and you'll see the Gray Lake "
-;;                                             "to the west.")))
+       ;; SAM: I dont' see any reference to this lake anywhere, commenting this one out for now...
+       ;;       (method 'lake (lambda (knpc kpc) (say knpc "Exit this shrine and ye'll find yourself in a "
+       ;;                                             "hidden valley. Head south and you'll see the Gray Lake "
+       ;;                                             "to the west.")))
 
        (method 'offe (lambda (knpc kpc) (say knpc "There in the cave you'll find a chest. "
                                              "Take what's inside. Wanderers enter this world with little, "
                                              "and in the past some have done great good, "
                                              "so folks leave stuff in good will for the next one.")
-                                             (quest-data-update 'questentry-whereami 'wanderer 2)
-       										))
+                             (quest-data-update 'questentry-whereami 'wanderer 2)
+                             ))
        (method 'pare gregor-dead)
        (method 'plac gregor-hut)
 
        (method 'shar (lambda (knpc kpc) (say knpc "The Shard?  That's what we call this land, Wanderer.")
-       				(quest-data-update 'questentry-whereami 'shard 1)
-       			))
+                             (quest-data-update 'questentry-whereami 'shard 1)
+                             ))
 
        (method 'shri (lambda (knpc kpc) (say knpc "This shrine is for those who come through the gate. "
                                              "Wanderers like yourself. "
                                              "Folks leave simple offerings here to help you on "
                                              "your journey.")
-                                             (quest-data-update 'questentry-whereami 'wanderer 1)
-       											))
+                             (quest-data-update 'questentry-whereami 'wanderer 1)
+                             ))
 
        (method 'spid (lambda (knpc kpc) (say knpc "Some of the spiders in the deep parts  "
 					     "of the woods are monstrous --  "
@@ -288,8 +288,8 @@
        (method 'wand (lambda (knpc kpc) (say knpc "We call those who come through the gate Wanderers. "
                                              "No one knows where they come from or where they go. "
                                              "You are the first to come through in a long, long time.")
-                                             (quest-data-update 'questentry-whereami 'wanderer 1)
-       										))
+                             (quest-data-update 'questentry-whereami 'wanderer 1)
+                             ))
 
        (method 'wise (lambda (knpc kpc) (say knpc "The Wise are both strong and -mostly- good. "
                                              "They help the land, as they can, "
@@ -320,9 +320,9 @@
                  sch_gregor          ; sched
                  'townsman-ai                 ; special ai
                  nil                 ; container
-					   (list t_axe
-					         t_armor_leather
-					         )              ; readied
+                 (list t_axe
+                       t_armor_leather
+                       )              ; readied
                  )
    (gregor-mk)
    ))

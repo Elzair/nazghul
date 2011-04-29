@@ -237,22 +237,22 @@
 (kern-add-hook 'new_game_start_hook 'refresh-quests)
 
 (define (reconcile-quests kplayer)
-	(let ((questlist
-					(tbl-get (gob
-						(kern-get-player)) 'quests))
-				(questdata
-					(tbl-get (gob 
-						(kern-get-player)) 'questdata))
-			)
-		(map 
-			(lambda (quest)
-				(let ((tag (qst-tag quest)))
-					(if (and (not (null? tag))
-							(not (null? (tbl-get questdata tag))))
-						(tbl-set! questdata tag quest))
-				))
-		questlist)
-	))
+  (let ((questlist
+         (tbl-get (gob
+                   (kern-get-player)) 'quests))
+        (questdata
+         (tbl-get (gob 
+                   (kern-get-player)) 'questdata))
+        )
+    (map 
+     (lambda (quest)
+       (let ((tag (qst-tag quest)))
+         (if (and (not (null? tag))
+                  (not (null? (tbl-get questdata tag))))
+             (tbl-set! questdata tag quest))
+         ))
+     questlist)
+    ))
 
 (define (refresh-quests)
 	(load "quests-data.scm")
