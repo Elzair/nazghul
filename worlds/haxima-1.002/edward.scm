@@ -59,7 +59,7 @@
                (else
                 (say knpc "Oh, good. More company. [He takes Nate into custody and "
                      "locks him in a cell]")
-                (kern-char-leave-player ch_nate)
+                (leave-player ch_nate)
                 (kern-obj-relocate ch_nate (mk-loc p_green_tower_lower 9 10) nil)
                 (prompt-for-key)
                 (say knpc "Here's your receipt, in case the Captain wants it.")

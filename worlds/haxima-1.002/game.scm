@@ -240,7 +240,8 @@
 (define faction-nixie         faction-monster)
 (define faction-prisoner      12)
 (define faction-glasdrin      13) ;; must be separate from men, or exile by statue will affect player with all towns
-(define faction-num           14)
+(define faction-player-outlaw 14)
+(define faction-num           15)
 
 ;; Layers (must match object.h)
 (define layer-none       0)
@@ -382,6 +383,7 @@
 (load "drawbridge.scm")
 (load "weather-vane.scm")
 (load "wind-bridge.scm")
+(load "guard-call.scm")
 
 ;; Astronomy
 (load "moon.scm")
@@ -390,6 +392,8 @@
 (load "tbl.scm")
 (load "ztats-quest-ui.scm")
 (load "quest-sys.scm")
+
+(load "rep.scm")
 
 ;; Miscellaneous crap
 (mk-obj-type 't_crosshair "crosshair" s_crosshair layer-crosshair nil)

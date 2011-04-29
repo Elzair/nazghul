@@ -130,13 +130,6 @@
       	)
 	))
       
-;; first item, if any, else nil 
-(define (safe-car alist)
-	(cond ((null? alist)
-		nil)
-		((pair? alist)
-		(car alist))
-		(#t alist))) 
           
 (define (quest-get tag)
 	(safe-car

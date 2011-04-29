@@ -664,6 +664,8 @@
 (kern-mk-sprite 's_im_sleep	ss_effects 1 17 #f 0 )
 (kern-mk-sprite 's_paralyse	ss_effects 1 18 #f 0 )
 (kern-mk-sprite 's_unrest       ss_effects 1 24 #f 0 )
+(kern-mk-sprite 's_knave        ss_effects 1 25 #f 0 )
+(kern-mk-sprite 's_outlaw       ss_effects 1 26 #f 0 )
 
 ;; Global effect icons shown in the foogod window
 (kern-mk-sprite 's_time_stop    ss_effects 1 19 #f 0)

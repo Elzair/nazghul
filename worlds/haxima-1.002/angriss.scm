@@ -99,7 +99,7 @@
               (say knpc "Honor is satisfied.\n")
               (if (not (quest-done? quest))
                   (quest-done! quest #t))
-              (kern-char-leave-player kchar)
+              (leave-player kchar)
               (kern-being-set-base-faction kchar faction-none)
               (improve-relations knpc kpc)
               (kern-conv-end))))))

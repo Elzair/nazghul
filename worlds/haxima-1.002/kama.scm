@@ -157,7 +157,7 @@
         (say knpc "Kama tujo?")
         (if (yes? kpc)
             (begin
-              (if (kern-char-leave-player knpc)
+              (if (leave-player knpc)
                   (begin
                     (say knpc "Kama iki")
                     (kern-conv-end))

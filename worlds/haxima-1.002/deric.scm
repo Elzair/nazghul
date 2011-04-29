@@ -169,7 +169,7 @@
           (begin
             (prompt-for-key)
             (say knpc "I'll need to re-assign that ranger to a patrol.")
-            (kern-char-leave-player kmerc)
+            (leave-player kmerc)
             ))))
 
   (cond ((in-player-party? 'ch_nate)

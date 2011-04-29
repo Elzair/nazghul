@@ -25,19 +25,30 @@
 (define mix-done-hook      19)
 (define kamp-start-hook    20)
 
+;; Generic duration times.
+(define hour 60)
+(define day (* hour 24))
+(define week (* day 7))
+(define fortnight (* day 14))
+(define month (* week 4))
+
+;; General effect type ctor.
+;;
+;; 'tag' will become the scheme variable name for the effect.
+;; 'name' is displayed in the UI.
+;; 'sprite' is displayed in the UI. It needs to be an 8x16 sprite.
+;; 'exec' is called when the hook fires: (gob subject)
+;; 'apply' is called when the effect is attached: (gob subject)
+;; 'rm' is called when the effect is removed: (gob subject)
+;; 'restart' is called when...
+;; 'hook' is the hook to run the exec proc on.
+;; 'sym' is unused.
+;; 'ddc' is ???
+;; 'cum' is true iff the effect can be applied more than once.
+;; 'dur' is the duration of the effect in game minutes
+;;
 (define (mk-effect tag name sprite exec apply rm restart hook sym ddc cum dur)
-  (kern-mk-effect tag 
-                  name
-                  sprite
-                  exec 
-                  apply 
-                  rm 
-                  restart
-                  hook 
-                  ddc 
-                  cum 
-                  dur
-                  ))
+  (kern-mk-effect tag name sprite exec apply rm restart hook ddc cum dur))
 
 ;; apply-time-scaled damage account for damaging effects applied at wilderness
 ;; scale or when camping or loitering. At higher time scales I think it's not
@@ -201,7 +212,6 @@
   (kern-log-msg (kern-obj-get-name kobj) " stuck in web!"))
 
 (define (ensnare-exec fgob kobj)
-  (println "ensnare-exec")
   (if (not (can-ensnare? kobj))
       (kern-obj-remove-effect ef_ensnare)
       (let ((kchar kobj)
@@ -485,11 +495,10 @@
         (bonus (occ-thief-dice-roll kobj))
         (bonus2 (kern-char-get-level kobj))
         )
-    ;;(println "stealth:" roll "+" bonus "+" bonus2 ">?" dc)
     (if (< (+ roll bonus bonus2) dc)
         (kern-obj-remove-effect kobj ef_stealth)
         )))
-  
+
 (define (stealth-exec fgob kobj)
   ;; hack -- add the yuse-done hook now instead of in stealth-apply
   ;; application. Otherwise, as soon as the player y)uses stealth, the
@@ -669,24 +678,30 @@
 ;; generate. This is specified when the unrest-curse effect is added to the target.
 ;; ----------------------------------------------------------------------------
 (define (unrest-camping-proc kplayer kplace fgob)
-  (println "unrest-camping-proc")
   (kern-ambush-while-camping (mk-npc-party fgob) kplace)
   (kern-ambush-while-camping (mk-npc-party fgob) kplace)
   )
 
 (define (unrest-curse-apply fgob kobj)
-  (println "unrest-curse-apply " fgob)
   (kern-add-hook 'camping_turn_start_hook 'unrest-camping-proc fgob)
   )
 
 (define (unrest-curse-rm fgob kobj)
-  (println "unrest-curse-rm " fgob)
   (kern-rm-hook 'camping_turn_start_hook 'unrest-camping-proc)
   )
 
 (define (unrest-curse-apply-new ktarg party-tag)
   (kern-obj-add-effect ktarg ef_unrest_curse party-tag)
   )
+
+;; ----------------------------------------------------------------------------
+;; Panic
+;; ----------------------------------------------------------------------------
+(define (panic-apply fgob knpc)
+  (kern-char-set-fleeing knpc #t))
+
+(define (panic-rm fgob knpc)
+  (kern-char-set-fleeing knpc #f))
 
 ;; ----------------------------------------------------------------------------
 ;; Effects Table
@@ -706,6 +721,7 @@
 (mk-effect 'ef_disease                "Diseased"      s_disease    'disease-exec  nil                 nil              nil                start-of-turn-hook "D" 0   #f  -2)
 (mk-effect 'ef_graphics_update        nil             nil          'update-graphics nil               nil             'update-graphics    start-of-turn-hook ""  0   #f  -1)
 (mk-effect 'ef_stealth                "Stealth"       nil          'stealth-exec 'stealth-apply      'stealth-rm      'stealth-apply      start-of-turn-hook ""  0   #f  -1)
+(mk-effect 'ef_reputation             nil             nil          'rep-exec      nil                 nil              nil                start-of-turn-hook ""  0   #f  -1)
 
 ;; Add-hook hooks
 (mk-effect 'ef_poison_immunity               "Poison immunity"    s_im_poison   'poison-immunity-exec    nil nil nil add-hook-hook "I" 0   #f  -1)
@@ -725,7 +741,9 @@
 (mk-effect 'ef_magical_kill_immunity           "Magic kill immunity" s_im_death nil nil nil nil nil-hook "K" 0 #f  -1)
 (mk-effect 'ef_temporary_magical_kill_immunity "Magic kill immunity" s_im_death nil nil nil nil nil-hook "K" 0 #f  15)
 (mk-effect 'ef_fatigue                         "Fatigue"             s_unrest   nil nil nil nil nil-hook "F" 0 #f  1)
-(mk-effect 'ef_unrest_curse                    "Curse of Unrest"     s_unrest   nil 'unrest-curse-apply 'unrest-curse-rm 'unrest-curse-apply nil-hook "P" 0 #f  (* 60 24))
+(mk-effect 'ef_panic                           "Panic"               nil        nil 'panic-apply 'panic-rm nil nil-hook "F" 0 #f  5)
+(mk-effect 'ef_outlaw                          "Outlaw"              s_outlaw   nil nil nil nil nil-hook "O" 0 #f  -2)
+(mk-effect 'ef_unrest_curse                    "Curse of Unrest"     s_unrest   nil 'unrest-curse-apply 'unrest-curse-rm 'unrest-curse-apply nil-hook "P" 0 #f  day)
 
 ;; Keystroke hooks
 (mk-effect 'ef_drunk    "Drunk"     s_drunk    'drunk-exec    'drunk-apply    'drunk-rm nil             keystroke-hook "A" 0 #t 60)
@@ -755,6 +773,7 @@
 
 ;; Attack-done hooks
 (mk-effect 'ef_stealth_attack nil nil 'stealth-attack-exec nil nil nil attack-done-hook "" 0 #t -1)
+(mk-effect 'ef_player_assault nil nil 'assault-exec        nil nil nil attack-done-hook "" 0 #f -1)
 
 ;; Bunch of almost-generic co-effects for stealth
 (map (lambda (x)
@@ -795,6 +814,9 @@
 
 (define (is-poisoned? kobj)
   (in-list? ef_poison (kern-obj-get-effects kobj)))
+
+(define (is-panicked? kobj)
+  (in-list? ef_panic (kern-obj-get-effects kobj)))
 
 (define (is-paralyzed? kobj)
   (in-list? ef_paralyze (kern-obj-get-effects kobj)))

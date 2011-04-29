@@ -34,6 +34,12 @@
 
 (define nil '())
 
+;; first item, if any, else nil 
+(define (safe-car alist)
+  (cond ((null? alist) nil)
+        ((pair? alist) (car alist))
+        (#t alist)))
+
 ;; safe-eval -- evaluates an expression; bad expressions evaluate to '()
 ;; instead of causing an interpreter error
 (define (safe-eval expr)
@@ -117,8 +123,8 @@
 ;; to put a character.
 (define (pick-loc origin char)
   (search (lambda (loc) (and (kern-is-valid-location? loc)
-									(passable? loc char)
-									(not (occupied? loc))))
+                             (passable? loc char)
+                             (not (occupied? loc))))
           neighbors 
           origin
           10))
@@ -169,6 +175,13 @@
       (or (can-see? klooker (car kobjs))
           (can-see-any? klooker (cdr kobjs)))))
 
+(define (can-be-seen-by-any? klookee kobjs)
+  (if (null? kobjs)
+      #f
+      (or (can-see? (car kobjs) klookee)
+          (can-be-seen-by-any? klookee (cdr kobjs)))))
+  
+
 ;; check if knpc can see any of the player party members
 (define (any-player-party-member-visible? knpc)
   (can-see-any? knpc 
@@ -189,7 +202,6 @@
   (and (is-alive? kchar)
        (is-player-party-member? kchar)
        (not (foldr (lambda (found kchar2)
-                     (println  found " " (kern-obj-get-name kchar2))
                      (or found
                          (and (not (eqv? kchar kchar2))
                               (is-alive? kchar2))))
@@ -247,6 +259,8 @@
 (define (num-visible-hostiles kchar)
   (length (all-visible-hostiles kchar)))
 
+(define (is-friendly? kobj1 kobj2)
+  (not (is-hostile? kobj1 kobj2)))
 
 ;; Find all the characters in a place
 (define (all-chars kplace)
@@ -260,7 +274,6 @@
 
 ;; Check if a character's target is in range
 (define (can-hit? kchar ktarg range)
-  ;;(println "can-hit: " range)
   (in-range? (kern-obj-get-location kchar)
              range
              ktarg))
@@ -308,7 +321,6 @@
 
 ;; Inefficient code to find nearest location from a list
 (define (nearest-loc kobj klist)
-  (println "nearest-loc: " klist)
   (if (null? klist) 
       nil
       (let ((kloc (kern-obj-get-location kobj)))
@@ -340,12 +352,10 @@
 ;; pathfind - use the built-in kernel call that uses cached paths and tries to
 ;; handle blocking mechanisms
 (define (pathfind kobj kdest)
-  ;;(println "pathfind(" (kern-obj-get-name kobj) "," kdest ")")
   (and (kern-obj-is-being? kobj)
        (kern-being-pathfind-to kobj kdest)))
 
 (define (can-pathfind? kobj dest)
-  (println "can-pathfind?")
   (or (loc-8-adjacent? dest 
                      (kern-obj-get-location kobj))
       (not (null? (kern-obj-find-path kobj dest)))))
@@ -366,6 +376,14 @@
 
 (define (is-alive? kchar)
   (not (is-dead? kchar)))
+
+(define (is-asleep? kchar)
+  (kern-char-is-asleep? kchar))
+
+(define (can-speak? kchar)
+  (not (or (is-dead? kchar)
+           (is-asleep? kchar)
+           (is-paralyzed? kchar))))
 
 (define (has-ap? kobj) 
   (> (kern-obj-get-ap kobj) 0))
@@ -390,8 +408,8 @@
       a
       b))
 
-(define (join-player kchar)
-  (kern-char-join-player kchar))
+(define (leave-player kchar)
+  (kern-char-leave-player kchar))
 
 (define (random-select list)
   (if (or (null? list)
@@ -440,14 +458,12 @@
   (nearest-loc kobj (all-visible-terrain-of-type kobj kter)))
     
 (define (hidden? kchar)
-  ;;(println "hidden?")
   ;; Just check if the 8 neighbors are all los-blocking
   (let ((loc (kern-obj-get-location kchar)))
     (foldr-rect (loc-place loc)
                 (- (loc-x loc) 1) (- (loc-y loc) 1)
                 3 3
                (lambda (val neighbor)
-                 ;;(println neighbor " neighbor? " (equal? neighbor loc) " blocks? " (kern-place-blocks-los? neighbor))
                  (and val
                       (or (eq? neighbor loc)
                           (kern-place-blocks-los? neighbor))))
@@ -465,6 +481,11 @@
   (filter (lambda (kobj) (kobj-is-type? kobj ktype))
           (kern-place-get-objects kplace)))
 
+;; Get the first object of the given type, or null if none.
+(define (search-first-type kplace ktype)
+  (first (lambda (kobj) (kobj-is-type? kobj ktype))
+         (kern-place-get-objects kplace)))
+
 ;;----------------------------------------------------------------------------
 ;; find-objects -- return a list of locations with the given object on them
 ;;----------------------------------------------------------------------------
@@ -481,12 +502,10 @@
   (search-rect kplace x y w h check))
 
 (define (in-inventory? kchar ktype)
-  ;;(println (kern-type-get-name ktype))
   (define (hasit? item inv)
     (cond ((null? inv) #f)
           ((eqv? item (car (car inv))) #t)
           (else 
-           ;;(println " " (kern-type-get-name (car (car inv))))
            (hasit? item (cdr inv)))))
   (hasit? ktype (kern-char-get-inventory kchar)))
 
@@ -639,7 +658,7 @@
 ;; moving. This will give two backup vectors to try.
 ;;
 ;; ADDENDUM: I don't want to allow diagonal evasion, so the "normalized" vector
-;; must be skipped if it's a diagonal, thus causing us to try the fallbak
+;; must be skipped if it's a diagonal, thus causing us to try the fallback
 ;; vector(s).
 ;;
 ;; Now allowing diagonals, since that factor has changed
@@ -650,32 +669,32 @@
 (define (evade kchar foes)
   (let* ((tloc (kern-obj-get-location kchar))
          (v (loc-canonical
-				(foldr
-					(lambda (accum thisfoe) 
-						(loc-sum accum 
-							(loc-diff (kern-obj-get-location thisfoe) tloc)
-						))
-					(mk-loc (loc-place tloc) 0 0)
-					foes)
-				))
-			)
-		(define (move dx dy)
-			(if (kern-place-is-passable
-					(loc-sum
-						(mk-loc (loc-place tloc) dx dy) 
-						tloc) 
-					kchar)
-				(kern-obj-move kchar dx dy)
-				#f))
-		(define (evade-on-normal)
-				(move (loc-x v) (loc-y v)))    
-				   
-		(or (evade-on-normal)
-			(and (not (eq? 0 (loc-y v)))
-				(move (loc-x v) 0))
-			(and (not (eq? 0 (loc-x v)))
-				(move 0 (loc-y v))))
-		))
+             (foldr
+              (lambda (accum thisfoe) 
+                (loc-sum accum 
+                         (loc-diff (kern-obj-get-location thisfoe) tloc)
+                         ))
+              (mk-loc (loc-place tloc) 0 0)
+              foes)
+             ))
+         )
+    (define (move dx dy)
+      (if (kern-place-is-passable
+           (loc-sum
+            (mk-loc (loc-place tloc) dx dy) 
+            tloc) 
+           kchar)
+          (kern-obj-move kchar dx dy)
+          #f))
+    (define (evade-on-normal)
+      (move (loc-x v) (loc-y v)))    
+    
+    (or (evade-on-normal)
+        (and (not (eq? 0 (loc-y v)))
+             (move (loc-x v) 0))
+        (and (not (eq? 0 (loc-x v)))
+             (move 0 (loc-y v))))
+    ))
 
 
 ;; ----------------------------------------------------------------------------
@@ -819,7 +838,6 @@
 ;; ----------------------------------------------------------------------------
 (define (terrain-ok-for-field? loc)
   (let ((kter (kern-place-get-terrain loc)))
-    (println "kter: " kter)
     (if (null? kter)
         #f
         (let ((pclass (kern-terrain-get-pclass kter)))
@@ -1250,19 +1268,17 @@
             (pred? loc))
         (kern-obj-put-at (kern-mk-obj ktype 1)
                          loc)))
-(foldr-rect kplace x y w h drop-obj #f))
+  (foldr-rect kplace x y w h drop-obj #f))
 
 ;; on-entry-to-dungeon-room -- generic place on-enty procedure for dungeon
 ;; rooms. When the player enters (or re-enters) a dungeon this looks for a
 ;; monster manager object and triggers it.
 (define (on-entry-to-dungeon-room kplace kplayer)
-  ;;(println "on-entry-to-dungeon-room")
   (map (lambda (kmm)
-         ;;(println " signal")
          (signal-kobj kmm 'on kmm nil))
        (kplace-get-objects-of-type kplace t_monman))
   )
-       
+
 ;; trigger anything with an 'on-entry' ifc
 (define (on-entry-trigger-all kplace kplayer)
   (map (lambda (kobj)
@@ -1385,13 +1401,11 @@
    ))
 
 (define (is-good-loc? kchar loc)
-  ;;(println "is-good-loc?")
   (and (passable? loc kchar)
        (not (occupied? loc))
        (not (is-bad-loc? kchar loc))))
 
 (define (get-off-bad-tile? kchar)
-  ;;(println "get-off-bad-tile")
   
   (define (choose-good-tile tiles)
     ;;(display "choose-good-tile")(newline)
@@ -1420,7 +1434,6 @@
    (move-to-good-tile)))
 
 (define (move-away-from-foes? kchar)
-  ;;(println "move-away-from-foes?")
   (evade kchar (all-visible-hostiles kchar)))
 
 ;; random-loc -- choose a random location
@@ -1460,7 +1473,6 @@
     (if (= 0 (length members))
         1
         (/ (foldr (lambda (sum kchar)
-                    ;;(println "level:" (kern-char-get-level kchar))
                     (+ sum (kern-char-get-level kchar)))
                   0
                   members)
@@ -1575,14 +1587,12 @@
 ;; Safely if a character is in the player party. char-tag should be the
 ;; character's quoted scheme variable name, for example 'ch_dude.
 (define (in-player-party? kchar-tag)
-  (println "in-player-party? " kchar-tag)
   (and (defined? kchar-tag)
        (let ((kchar (eval kchar-tag)))
          (and (is-alive? kchar)
               (is-player-party-member? kchar)))))
 
 (define (set-wind-north)
-  (println "set-wind-north")
   (kern-set-wind north 10))
 
 ;; block-teleporting takes a place and a list of strings that looks
@@ -1638,7 +1648,6 @@
          (px x1)
          (py y1))
     (define (f1 i)
-      ;;(println "f1 i=" i " px=" px " py=" py)
       (cond ((>= i adx)
              nil)
             (else
@@ -1650,7 +1659,6 @@
              (cons (cons px py)
                    (f1 (+ 1 i))))))
     (define (f2 i)
-      ;;(println "f2 i=" i " px=" px " py=" py)
       (cond ((>= i ady)
              nil)
             (else
@@ -1748,3 +1756,52 @@
     (or (= 20 roll)
         (> (+ roll bonus) dc))))
 
+;; Get the first thing in the list for which pred? is true (usually faster than
+;; filter because it short-circuits on #t)
+(define (first pred? list)
+  (if (null? list)
+      nil
+      (if (pred? (car list))
+          (car list)
+          (first pred? (cdr list)))))
+
+;; #t iff pred? is true for every item in the list (usually faster than foldr
+;; because it short-circuits on #f)
+(define (all? pred? list)
+  (if (null? list)
+      #t
+      (and (pred? (car list))
+           (all? pred? (cdr list)))))
+
+;; #t iff pred? is true for any item in the list
+(define (any? pred? list)
+  (if (null? list)
+      #f
+      (or (pred? (car list))
+          (any? pred? (cdr list)))))
+
+(define (is-wanderer? kchar)
+  (eq? 'ch_wanderer
+       (kern-obj-get-tag kchar)))
+
+(define (is-town? kplace)
+  (not (kern-place-is-wilderness? kplace)))
+
+(define (in-town? kchar)
+  (is-town? (loc-place (kern-obj-get-location kchar))))
+
+(define (put kobj kloc)
+  (kern-obj-put-at kobj kloc))
+
+(define (party-add-effect kparty ef efgob)
+  (for-each (lambda (kchar) (kern-obj-add-effect kchar ef efgob))
+            (kern-party-get-members kparty)))
+
+;; Cry out and drop a guard-call object that will attract guards.
+(define (raise-alarm knpc cry)
+  (if (cry)
+      (taunt knpc nil (list "Guards!" "Help!" "Madman loose!"
+                            "Sound the alarm!" "PK!" "He's running amuck!"
+                            "Run away! Run away!")))
+  (put (mk-guard-call 200) (kern-obj-get-location knpc)))
+  

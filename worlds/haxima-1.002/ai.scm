@@ -73,7 +73,6 @@
          (all-visible-hostiles kchar)))
 
 (define (use-heal-spell-on? kchar ktarg)
-  ;;(println "use-heal-spell-on?")
   (or (and (wants-great-healing? ktarg)
            (can-use-ability? great-heal-ability kchar)
            (use-ability great-heal-ability kchar ktarg)
@@ -84,7 +83,6 @@
            )))
 
 (define (use-heal-spell-on-ally? kchar)
-  ;;(println "use-heal-spell-on-ally?")
   (and (or (can-use-ability? heal-ability kchar)
            (can-use-ability? great-heal-ability kchar))
        (foldr (lambda (val ktarg)
@@ -141,7 +139,6 @@
 
 
 (define (move-away-from-foes? kchar)
-  ;;(println "move-away-from-foes?")
   (evade kchar (all-visible-hostiles kchar)))
 
 (define (in-melee-range-of-foes? kchar)
@@ -150,7 +147,6 @@
 
 ;; stuck? -- #t iff kchar cannot safely move to a neighboring tile
 (define (stuck? kchar)
-  ;;(println " stuck?")
   (let* ((cloc (kern-obj-get-location kchar))
          (kplace (loc-place cloc))
          (x (loc-x cloc))
@@ -176,7 +172,6 @@
 
 (define (choose-blink-loc kchar)
   (let ((loc (blink-offset kchar)))
-    ;;(println "choose-blink-loc " loc)
     (if (and (not (null? loc))
              (not (loc-equal? loc
                               (kern-obj-get-location kchar)))
@@ -188,10 +183,8 @@
         nil)))
 
 (define (choose-random-blink-loc kchar)
-  ;;(println "   choose-random-blink-loc")
   (random-loc-place-iter (loc-place (kern-obj-get-location kchar))
                          (lambda (loc)
-                           ;;(println "    check loc" loc)
                            (and (not (loc-equal? loc
                                                  (kern-obj-get-location kchar)))
                                 (passable? loc kchar)
@@ -203,11 +196,9 @@
                          3))
 
 (define (blink-away-from-foes kchar)
-  ;;(println " blink-away-from-foes")
   (if (not (can-use-ability? teleport kchar))
       #f
       (let ((loc (choose-random-blink-loc kchar)))
-        ;;(println " blink-away-from-foes:" loc)
         (if (null? loc)
             #f
             (use-ability teleport kchar loc)))))
@@ -308,19 +299,16 @@
       (let ((hostiles (filter
                        not-disabled?
                        (all-visible-hostiles kchar))))
-        ;;(println " hostiles=" hostiles)
         (if (null? hostiles)
             #f
             (use-ability narcotize kchar)
             ))))
           
 (define (goto-post kchar)
-  ;;;;(println "goto-post")
   (let ((guard (gob kchar)))
     (if (npcg-has-post? guard)
         (let ((post (cons (loc-place (kern-obj-get-location kchar))
                           (npcg-get-post guard))))
-          ;;;;(println "post:" post)
           (pathfind kchar post)))))
 
 (define (summon-demon? kchar)
@@ -432,14 +420,12 @@
                                  (list disease-touch))))
 
 (define (craven-archer-ai kchar)
-  ;;(println "craven-archer-ai")
   (or (nolight-ai kchar)
       (and (stuck? kchar)
            (in-melee-range-of-foes? kchar)
            (blink-away-from-foes kchar))))
 
 (define (medik-ai kchar)
-  ;;(println "medik-ai")
   (or (std-ai kchar)
       (use-heal-spell-on-ally? kchar)
       (move-toward-patient? kchar)
@@ -455,11 +441,26 @@
                (or (use-ability disarm kchar (car victims))
                    #t)))
         #f))
+
+(define (goto-and-remove kchar kobj)
+  (let ((loc (kern-obj-get-location kobj)))
+    (if (loc-equal? loc (kern-obj-get-location kchar))
+        (kern-obj-remove kobj)
+        (pathfind kchar loc))
+    #t))
+
+(define (goto-guard-call kchar)
+  (let ((kcall (search-first-type (get-place kchar)
+                                  t_guard_call)))
+    (and (not (null? kcall))
+         (goto-and-remove kchar kcall))))
+
 (define (guard-ai kchar)
   (or (std-ai kchar)
       (if (any-visible-hostiles? kchar)
           (try-to-use-disarm kchar)
-          (goto-post kchar))))
+          (or (goto-guard-call kchar)
+              (goto-post kchar)))))
 
 
 ;; ranger-ai -- nothing special, but can act like a guard
@@ -467,8 +468,8 @@
   (or (std-ai kchar)
       (if (any-visible-hostiles? kchar)
           #f
-          (goto-post kchar)
-          )))
+          (or (goto-guard-call kchar)
+              (goto-post kchar)))))
 
 ;; A lich will summon undead minions
 (define (lich-ai kchar)
@@ -477,10 +478,11 @@
       (ai-summon kchar summon-skeleton)
       (spell-sword-ai kchar)))
 
+;; Don't use for townsmen because current flee algorithm tries to take subject
+;; off-map
 (define (flee kchar)
-  (println (kern-obj-get-name kchar) " flees")
-  (kern-char-set-fleeing kchar #t)
-  )
+  (kern-log-msg (kern-obj-get-name kchar) " flees")
+  (kern-char-set-fleeing kchar #t))
 
 ;; A kraken will chomp through planking to get at its foes. If foes exist, and
 ;; they are not in melee range, and the kraken cannot pathfind to them, it will
@@ -510,12 +512,10 @@
                         )))))))))
 
 (define (submerge kchar) 
-  ;;(println "SUBMERGE")
   (kern-obj-set-submerged kchar #t)
   )
 
 (define (surface kchar) 
-  ;;(println "SURFACE") 
   (kern-obj-set-submerged kchar #f)
   )
 
@@ -523,51 +523,38 @@
   (let ((foes (all-visible-hostiles kchar)))
     (if (null? foes)
         (begin
-          ;;(println "no foes, flee.")
           (flee kchar)
           )
         (if (not (null? (get-hostiles-in-range kchar 1)))
             (begin
-              ;;(println "foes in range 1, attack.")
               (surface kchar)
               #f)
             (let* ((kfoe (nearest-obj kchar foes))
                    (dest (kern-obj-get-location kfoe)))
-              ;;(println "no foes in range, submerging and selecting " (kern-obj-get-name kfoe) " as target...")
               (submerge kchar)
               (if (pathfind kchar dest)
                   (begin
-                    ;;(println " pathfinding...")
                     #f
                     )
                   (let* ((cloc (kern-obj-get-location kchar))
                          (vect (loc-to-delta (loc-diff cloc dest)))
                          (dest (loc-add cloc vect)))
-                    ;;(println " can't pathfind...")
                     (if (passable? dest kchar)
                         (begin
-                          ;;(println "   moving directly.")
                           (kern-obj-move kchar (loc-x vect) (loc-y vect))
                           )
                         (begin
-                          ;;(println "   trying to chomp...")
                           (if (and (is-deck? (kern-place-get-terrain dest))
                                    (can-use-ability? ability kchar)
                                    (use-ability ability kchar dest))
                               (begin
-                                ;;(println "    success!")
                                 (surface kchar)
                                 #t)
                               (begin
-                                ;;(println "    can't chomp, so flee.")
                                 (flee kchar)
                                 )
                               ))))))))))
 
-;; A kraken will chomp through planking to get at its foes. If foes exist, and
-;; they are not in melee range, and the kraken cannot pathfind to them, it will
-;; attempt a directional move toward them. If the move is blocked by deck, the
-;; kraken will destroy the deck.
 (define (kraken-ai kchar)
   (generic-kraken-ai kchar chomp-deck))
 
@@ -591,7 +578,6 @@
           (tentacles (filter is-sludge-tentacle? 
                              (kern-place-get-beings (loc-place (kern-obj-get-location kchar)))))
           )
-      ;;(println ktarg tentacles)
       (cond ((null? ktarg) #f)
             ((< (length tentacles) 
                 (* 2 (kern-char-get-level kchar)))
@@ -632,10 +618,10 @@
                                             cast-fire-wind
                                             )))))
 
-;; townsman-ai -- may be extended in the future to do things like flee from
-;; invaders, for now just do the basics and light up a torch if it gets dark.
+;; townsman-ai -- flee visible hostiles
 (define (townsman-ai kchar)
-  (std-ai kchar))
+  (or (std-ai kchar)
+      (move-away-from-foes? kchar)))
 
 ;; ratlings fear snakes
 (define (ratling-ai kchar)
@@ -669,18 +655,14 @@
 
 ;; carabid beetles tunnel through stone
 (define (carabid-ai kchar)
-  ;;(println "carabid-ai")
   (define (tunnel loc kter)
-    ;;(println "tunnel")
     (kern-place-set-terrain (kern-obj-get-location kchar) kter)
     (kern-place-set-terrain loc t_gravel)
     (kern-obj-relocate kchar loc nil)
     #t)
   (define (tunnel?)
-    ;;(println "tunnel?")
     (let* ((loc (random-neighbor-loc kchar))
            (kter (kern-place-get-terrain loc)))
-      ;;(println "loc=" loc)
       (cond ((or (eqv? kter t_wall)
                  (eqv? kter t_wall_rock))
              (tunnel loc t_boulder))

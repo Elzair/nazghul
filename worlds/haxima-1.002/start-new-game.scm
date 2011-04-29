@@ -266,7 +266,7 @@
 ;;       
 ;; Formatted for spreadsheet
 ;; ----------------------------------------------------------------------------
-(kern-mk-dtable																	
+(kern-mk-dtable
         ;;      non pla men cgb acc mon tro spd out gnt dem fgb prs gla                
         (list   2   0   0   0   -1  -2  -2  -2  0   -2  -2  0   0   0    ) ;; none
         (list   0   2   2   -2  -2  -2  -2  -2  -2  -2  -2  -2  2   2    ) ;; player
@@ -343,7 +343,7 @@
 
 ;;quickstart stuff for playtesting
 
-(if #f
+(if #t
     (begin
       (kern-obj-put-at 
        (mk-chest

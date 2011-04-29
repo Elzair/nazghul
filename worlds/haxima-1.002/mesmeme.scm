@@ -42,7 +42,7 @@
 		(say knpc "Be alone?")
         (if (yes? kpc)
             (begin
-              (if (kern-char-leave-player knpc)
+              (if (leave-player knpc)
                   (begin
                     (say knpc "Here waiting. Until void.")
                     (kern-conv-end))

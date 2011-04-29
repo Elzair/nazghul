@@ -24,7 +24,7 @@
                (else
                 (say knpc "Do you want me to leave your party now?")
                 (cond ((yes? kpc)
-                       (cond ((kern-char-leave-player knpc)
+                       (cond ((leave-player knpc)
                               (say knpc "If you change your mind I'll be here waiting.")
                               (kern-conv-end)
                               )

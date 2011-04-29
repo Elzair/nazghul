@@ -302,7 +302,7 @@
           )
          (else 
           (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists charm")
-          (kern-harm-relations target caster)
+          (rep-update-after-attack caster target assault-non-lethal)
           )
          )
 	result-ok
@@ -323,7 +323,7 @@
            ))
         (else (msg-log-visible (kern-obj-get-location target) (kern-obj-get-name target) " resists illusion"))
         )
-  (kern-harm-relations target caster)
+  (rep-update-after-attack caster target assault-non-lethal)
   result-ok
   )
 
@@ -356,16 +356,23 @@
 	result-ok)
 	
 (define (powers-cone-flamespray caster ktarg power)
-	(let ((damage (mkdice 2 (min (floor (+ 2 (/ power 2))) 10))))
-		(define (flambe-all kobj)
-			(if (and (is-being? kobj)
-					(not (has-fire-immunity? kobj)))
-				(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
-				))
-		(cone-do-simple caster ktarg 3.3
-			(mk-basic-cone-proc (kern-obj-get-location caster) flambe-all F_fire (lambda () 0))
-			))
-			result-ok)
+  (let ((damage (mkdice 2 (min (floor (+ 2 (/ power 2))) 10))))
+    (define (flambe-all kobj)
+      (and (is-being? kobj)
+           (not (has-fire-immunity? kobj))
+           (kern-obj-inflict-damage kobj 
+                                    "burning" 
+                                    (kern-dice-roll damage) 
+                                    caster)))
+    (cone-do-simple caster 
+                    ktarg 
+                    3.3
+                    (mk-basic-cone-proc (kern-obj-get-location caster) 
+                                        flambe-all 
+                                        F_fire 
+                                        (lambda () 0))
+                    ))
+  result-ok)
 
 (define (powers-cone-basic-leaveproc balance width)
 	(lambda ()
@@ -393,7 +400,6 @@
 ;; check for: no unintended victims
 ;;    at least 2 fire vulnerable targets
 (define (powers-cone-fire-test caster targloc power)
-	;;(println "test cone fire")
 	(let ((viable-targets (list 0))
 			(shot-ok (list #t)))
 		(define (checktarg kobj)
@@ -410,7 +416,6 @@
 		(cone-do-simple caster targloc (powers-cone-fire-range power)
 			(mk-basic-cone-proc (kern-obj-get-location caster) checktarg nil nil)
 			)
-		;;(println "tested cone fire " (car shot-ok) " " (car viable-targets))
 		(and (car shot-ok)
 			(> (car viable-targets )1))
 	))
@@ -422,7 +427,7 @@
 					(not (has-fire-immunity? kobj)))
 				(begin
 					(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
-					(kern-harm-relations kobj caster)
+					(rep-update-after-attack caster kobj assault-lethal)
 				)
 			))
 		(cone-do-simple caster targloc (powers-cone-fire-range power)
@@ -441,11 +446,8 @@
 					(apply-poison kobj)
 					(if (is-poisoned? kobj)
 						(begin
-							(kern-harm-relations kobj caster)
-							(kern-harm-relations kobj caster)
-							(kern-harm-relations kobj caster)
-							(kern-harm-relations kobj caster)
 							(kern-obj-inflict-damage kobj "poison" (kern-dice-roll damage) caster)
+							(rep-update-after-attack caster kobj assault-lethal)
 						)
 				))))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
@@ -459,7 +461,7 @@
 		(define (sleep-all kobj)
 			(if (is-being? kobj)
 				(begin
-					(kern-harm-relations kobj caster)
+					(rep-update-after-attack caster kobj assault-non-lethal)
 					(if (contest-of-skill
 							(+ power 8)
 							(occ-ability-magicdef kobj))
@@ -619,8 +621,7 @@
 				(not (has-poison-immunity? kobj)))
 			(begin
 				(apply-poison kobj)
-				(kern-harm-relations kobj caster)
-				(kern-harm-relations kobj caster)
+				(rep-update-after-attack caster kobj assault-lethal)
 			)
 		))
 	(powers-field-wall start stop F_poison (+ 10 (kern-dice-roll (mkdice 1 power))) (powers-field-length power) do-burn)
@@ -631,7 +632,7 @@
 		(if (and (kern-obj-is-char? kobj)
 				(not (has-sleep-immunity? kobj)))
 			(begin
-				(kern-harm-relations kobj caster)			
+				(rep-update-after-attack caster kobj assault-non-lethal)
 				(apply-sleep kobj)
 			)
 		))
@@ -675,7 +676,6 @@
 	
 ;; returns true if the location is ok
 (define (powers-fireball-collateral-check caster targloc apower)
-	;;(println "fireball check")
 	(let ((place (loc-place targloc))
 			(x (loc-x targloc))
 			(y (loc-y targloc)))
@@ -714,7 +714,6 @@
 	))
 	
 (define (powers-fireball caster ktarg apower)
-	;;(println "fireball")
 	(define (fireball-damage-dice power)
 		(if (> power 3) (string-append (number->string  (floor (/ power 2))) "d3")
 				"1d3"))
@@ -866,7 +865,6 @@
 	
 ;; todo will fail on looping maps
 (define (powers-lightning-collateral-check caster targloc apower)
-	;;(println "checkzap")
 	(let* ((range (powers-lightning-range apower))
 			(casterloc (kern-obj-get-location caster))
 			(targrange (+ 1 (kern-get-distance targloc casterloc)))
@@ -903,7 +901,6 @@
 	))
 	
 (define (powers-lightning caster targloc apower)
-	;;(println "zap")
   (let ((targets (list nil))
         (dam (mkdice (floor (+ 1 (/ apower 3))) 4))
         )
@@ -1013,10 +1010,7 @@
 	(kern-log-msg (kern-obj-get-name caster)
 				" hurls poison missile at "
 				(kern-obj-get-name ktarg))
-	(kern-harm-relations ktarg caster)
-	(kern-harm-relations ktarg caster)
-	(kern-harm-relations ktarg caster)
-	(kern-harm-relations ktarg caster)
+	(rep-update-after-attack ktarg caster assault-lethal)
 	(kern-sound-play-at sound-missile (kern-obj-get-location caster))
 	(kern-sound-play-at sound-missile (kern-obj-get-location ktarg))
 	(cast-missile-proc caster ktarg t_mpoison_bolt)
@@ -1027,10 +1021,8 @@
   (let ((party (kern-char-get-party caster)))
     (if (null? party) 
         (kern-obj-add-effect caster ef_protection nil)
-        (kern-obj-add-effect party ef_protection nil)
-        )
-    )
-	result-ok)
+        (party-add-effect party ef_protection nil)))
+  result-ok)
 
 ;todo duration based on power?
 (define (powers-protect-vs-fire caster ktarg power)
@@ -1047,10 +1039,8 @@
   (let ((party (kern-char-get-party caster)))
     (if (null? party) 
         (kern-obj-add-effect caster ef_temporary_poison_immunity nil)
-        (kern-obj-add-effect party ef_temporary_poison_immunity nil)
-        )
-    )
-	result-ok)
+        (party-add-effect party ef_temporary_poison_immunity nil)))
+  result-ok)
 
 (define (powers-quickness caster dir power)
 	(kern-add-quicken (kern-dice-roll
@@ -1096,7 +1086,7 @@
 	
 (define (powers-sleep-target caster ktarg power)
 	(powers-sleep-apply ktarg (+ power 6))
-	(kern-harm-relations ktarg caster)
+	(rep-update-after-attack ktarg caster assault-non-lethal)
   result-ok)
 
 ;todo limit to some range?
@@ -1301,15 +1291,11 @@
 	result-ok)
 
 (define (powers-unlock caster ktarg power)
-  (println "power:" power)
   (let ((dc ((kobj-ifc ktarg) 'get-unlock-dc ktarg caster)))
-    (println "dc:" dc)
     (if (= 0 dc) 
         result-no-effect
         (let ((roll (kern-dice-roll "1d20"))
               (bonus (kern-dice-roll (string-append "1d" (number->string power)))))
-          (println "roll:" roll)
-          (println "bonus:" bonus)
           (cond ((or (= roll 20) 
                      (> (+ roll bonus ) dc))
                  (if ((kobj-ifc ktarg) 'unlock ktarg caster)
@@ -1346,7 +1332,7 @@
 							power
 							(occ-ability-dexdefend targchar))
 						(ensnare targchar))
-						(kern-harm-relations kobj caster)))
+						(rep-update-after-attack caster kobj assault-non-lethal)))
 			(if (and (< (kern-dice-roll "1d20") power)
 					(terrain-ok-for-field? loc))
 				(kern-obj-put-at (kern-mk-obj web-type 1) loc))
@@ -1526,7 +1512,7 @@
                   result-ok
                   ))))
         (else
-         (harm-relations kactor ktarg)
+         (rep-update-after-attack kactor ktarg assault-non-lethal)
          result-failed
          )))
   

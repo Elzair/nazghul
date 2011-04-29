@@ -77,13 +77,13 @@
               ;; kathryn is alive in the party (if thud is defined then he must
               ;; be in the party, too; see kathryn.scm)
               (begin
-                (kern-char-leave-player ch_kathryn)
+                (leave-player ch_kathryn)
                 (kathryn-speech)
                 (if (defined? 'ch_thud)
                     (begin
                       (if (is-alive? ch_thud)
                           (thud-speech))
-                      (kern-char-leave-player ch_thud)))
+                      (leave-player ch_thud)))
                 (mouse-disappear))
 
               ;; kathryn is alive but not in the party so gate her in, and
@@ -107,15 +107,15 @@
 
               ;; but in the party so remove her and thud, too, if he's defined
               (begin
-                (kern-char-leave-player ch_kathryn)
+                (leave-player ch_kathryn)
                 (if (defined? 'ch_thud)
                     (if (is-alive? ch_thud)
                         (begin
                           (thud-speech)
-                          (kern-char-leave-player ch_thud)
+                          (leave-player ch_thud)
                           (mouse-disappear))
                         (begin
-                          (kern-char-leave-player ch_thud)
+                          (leave-player ch_thud)
                           (mouse-gratitude)))
                     (mouse-gratitude)))
 

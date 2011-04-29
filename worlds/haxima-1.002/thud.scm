@@ -49,7 +49,7 @@
   (if (is-player-party-member? ch_kathryn)
       (begin
         (say knpc "[Seeing Kathryn with you, he grunts his assent]")
-        (kern-char-join-player knpc)
+        (join-player knpc)
         (kern-conv-end))
       (say knpc "[He sneers]")))
 

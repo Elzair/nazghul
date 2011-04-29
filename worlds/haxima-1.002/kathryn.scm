@@ -90,13 +90,13 @@
                "thingies very well.")    
           (kern-obj-remove-from-inventory knpc t_wis_quas_scroll 1)
           (kern-obj-add-to-inventory kpc t_wis_quas_scroll 1)))
-    (kern-char-join-player knpc)
+    (join-player knpc)
     (if (and (defined? 'ch_thud)
              (is-alive? ch_thud))
         (begin
           (say knpc "You won't mind if my cousin Thud joins us. "
                "He's really such a child, and quite helpless without me.")
-          (kern-char-join-player ch_thud)))
+          (join-player ch_thud)))
     (kern-conv-end))
   (say knpc "It seems we have a common goal. Join us, and when we catch the "
        "villian we'll all return the item. You can keep any reward. "
