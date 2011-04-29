@@ -94,7 +94,7 @@ quests-mech.scm
     themselves to the assigned list but not necessarily the QTD.
 
 (refresh-quests)
-    Registed on 'new_game_start_hook after reconcile-quests. This reloads
+    Registered on 'new_game_start_hook after reconcile-quests. This reloads
     quests-data.scm. This will have the affect of making sure all the quests in
     quest-data.scm are in the QTD. It won't affect quests that are already
     there.
