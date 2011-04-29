@@ -38,6 +38,7 @@ void Being::setDefaults()
         cachedPath = NULL;
         cachedPathPlace = NULL;
         setBaseFaction(INVALID_FACTION);
+        setCurrentFaction(INVALID_FACTION);
 }
 
 Being::~Being()
@@ -52,8 +53,14 @@ Being::~Being()
 
 void Being::setBaseFaction(int faction)
 {
+        // Don't override current faction if it is currently different from the
+        // base. Usually this is due to an effect, which will restore current
+        // to base once it wears off.
+        if (getCurrentFaction() == baseFaction || 
+            getCurrentFaction() == INVALID_FACTION) {
+                setCurrentFaction(faction);
+        }
         baseFaction = faction;
-        setCurrentFaction(faction);
 }
 
 int Being::getBaseFaction()
