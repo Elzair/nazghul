@@ -61,11 +61,9 @@
    (kern-ui-page-text
     "To the Wanderer -- IMPORTANT"
    ""
-   "It is most ^c+rcritical^c- that you FIND ME. "
-   "The peasant who cares for this shrine can "
-   "point the way. Beware."
+   "It is most ^c+rcritical^c- that you ^c+yfind me^c-. The peasant who cares for this shrine can point the way. Beware."
    ""
-   "--Enchanter\n"
+   "--Enchanter"
    )
    (quest-data-assign-once 'questentry-calltoarms)
    result-ok))
