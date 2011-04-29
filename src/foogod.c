@@ -218,7 +218,7 @@ static void foogodPaintEffects()
 
         /* Custom effects added by the game */
 	for (int i = 0; i < OBJ_NUM_HOOKS; i++) {
-                player_party->hookForEach(i, foogod_paint_effect_wrapper, 0);
+                player_party->hookForEach(i, foogod_paint_effect_wrapper, &rect);
 	}
 
 
