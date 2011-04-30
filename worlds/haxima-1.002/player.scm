@@ -18,6 +18,8 @@
 (define (player-reconcile-gob kplayer)
   (if (not (player-has? 'rep))
       (player-set! 'rep 0))
+  (if (not (player-has? 'rapsheet))
+      (player-set! 'rapsheet '()))
   ;; update the dtable
   (kern-mk-dtable
    ;;      non pla men cgb acc mon tro spd out gnt dem fgb prs gla plaout              

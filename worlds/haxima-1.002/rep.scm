@@ -76,6 +76,15 @@
                   ))
             ))))
 
+(define (player-add-crime! what kvictim)
+  (println "player-add-crime!")
+  (let ((rap (player-get 'rapsheet))
+        (where (kern-place-get-name (loc-place (kern-obj-get-location kvictim))))
+        (towhom (kern-obj-get-name kvictim))
+        )
+    (player-set! 'rapsheet (cons (list what (kern-get-time) where towhom)
+                                 rap))))
+
 ;;----------------------------------------------------------------------------
 ;; Turn-end-hook
 ;;
@@ -100,33 +109,40 @@
 ;; reputation change, calling the guard, panicking the village, etc.
 ;;
 (define (rep-update-after-attack kpc knpc degree)
-  (if (is-hostile? kpc knpc)
-      (if (is-dead? knpc)
-          (println (kern-obj-get-name kpc) " killed hostile " (kern-obj-get-name knpc))
-          (println (kern-obj-get-name kpc) " attacked hostile " (kern-obj-get-name knpc)))
+  (if (not (is-hostile? kpc knpc))
       (let ((rep (player-rep)))
-        (cond ((is-dead? knpc)
-               (println (kern-obj-get-name kpc) " killed non-hostile " (kern-obj-get-name knpc))
+        (cond ((and (is-dead? knpc)
+                    (can-be-seen-by-any? kpc (all-allies knpc)))
+               ;; Murder with witnesses...
+               (println "murder")
                (player-set-rep! (- rep murder-rep))
-               (if (can-be-seen-by-any? kpc (all-allies knpc))
-                   (raise-alarm knpc #f))
+               (player-add-crime! "murder" knpc)
+               (raise-alarm knpc #f)
                )
               (else
-               (println (kern-obj-get-name kpc) " attacked non-hostile " (kern-obj-get-name knpc))
+               ;; The victim is a witness, might flip to hostile after this
+               (println "assault")
                (player-set-rep! (- rep degree))
+               (player-add-crime! "assault" knpc)
                (if (in-town? knpc)
-                   (if (is-hostile? kpc knpc)
-                       (raise-alarm knpc #t)
-                       (taunt knpc nil (list "Hey, watch it!" 
-                                             "Watch where you point that thing!"
-                                             "Behave!" "Take it outside!" 
-                                             "Why, I oughtta..."
-                                             "Keep it up and see what happens." 
-                                             "I dare you to try that again."
-                                             "You want to start something?"
-                                             "You're lucky I'm in a good mood."
-                                             "You got a problem?"))))
-               )))))
+                   (cond ((not (is-hostile? kpc knpc))
+                          ;; not hostile yet, but not happy
+                          (println "complain")
+                          (taunt knpc nil (list "Hey, watch it!" 
+                                                "Watch where you point that thing!"
+                                                "Behave!" "Take it outside!" 
+                                                "Why, I oughtta..."
+                                                "Keep it up and see what happens." 
+                                                "I dare you to try that again."
+                                                "You want to start something?"
+                                                "You're lucky I'm in a good mood."
+                                                "You got a problem?")
+                                 ))
+                         (else
+                          ;; that's it, call the guards
+                          (println "alarm")
+                          (raise-alarm knpc #t)
+                          ))))))))
 
 (define (rep-post-attack-hook kpc knpc)
   (rep-update-after-attack kpc knpc assault-lethal))
@@ -140,3 +156,26 @@
 ;; current reputation, including time left on outlawry or probation and a rap
 ;; sheet of past crimes.
 ;;
+;; Use 'rz' as the shortened prefix for 'rep-ztats'.
+;;
+
+;;;;(define (rz-mk) (list nil nil))
+;;;;(define (rz-dims! gob dims) (set-car! gob dims))
+;;;;(define (rz-dims gob) (list-ref gob 0))
+;;;;
+;;;;(define (rz-enter self kparty dir rect)
+;;;;  (kern-status-set-title "Reputation")
+;;;;  (self-dims! self dims)
+;;;;  )
+;;;;
+;;;;(define (rz-scroll self dir)
+;;;;  )
+;;;;
+;;;;(define (rz-paint self)
+;;;;  )
+;;;;
+;;;;(kern-ztats-add-pane rz-enter 
+;;;;                     rz-scroll 
+;;;;                     rz-paint 
+;;;;                     rz-select 
+;;;;                     (rz-mk))
