@@ -1804,4 +1804,31 @@
                             "Sound the alarm!" "PK!" "He's running amuck!"
                             "Run away! Run away!")))
   (put (mk-guard-call 200) (kern-obj-get-location knpc)))
-  
+
+;; Convert a numeric value into a list of (num . "unit") pairs
+(define (val->units val divisors names)
+  (if (null? divisors)
+      (if (null? names)
+          (list nil)
+          (list (cons val (car names))))
+      (if (< val (car divisors))
+          (list (cons val (car names)))
+          (let ((rem (remainder val (car divisors))))
+            (if (> rem 0)
+                (cons (cons (remainder val (car divisors)) 
+                            (car names))
+                      (val->units (quotient val (car divisors))
+                                  (cdr divisors)
+                                  (cdr names)))
+                (val->units (quotient val (car divisors))
+                            (cdr divisors)
+                            (cdr names)))))))
+
+;; Returns a list of pairs. Eg,
+;;   (turns->time 243200)
+;;   yields: ((40 . "minute") (10 . "hour") (1 . "day") (1 . "week"))
+(define (turns->time turns)
+  (val->units turns 
+              '(20 60 24 7 4 12 100 10) 
+              '("turn" "minute" "hour" "day" "week" "month" "year" 
+                "century" "millenium")))

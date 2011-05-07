@@ -50,11 +50,9 @@
 (define assault-non-lethal 15000)
 (define murder-rep 231600)
 
+
 ;;----------------------------------------------------------------------------
 ;; Utility methods
-(define (player-rep) 
-  (player-get 'rep))
-
 (define (player-set-rep! val)
   (if (> val max-bad-rep)
       (let ((kplayer (kern-get-player))
@@ -62,13 +60,15 @@
         (player-set! 'rep val)
         (println "old rep:" orep " new rep:" val)
         (if (< val outlaw-rep)
-            (if (>= orep outlaw-rep)
+            (if (not (equal? (kern-being-get-base-faction kplayer)
+                             faction-player-outlaw))
                 (begin
                   (kern-being-set-base-faction kplayer faction-player-outlaw)
                   (kern-obj-add-effect kplayer ef_outlaw nil)
-                  (kern-log-msg "^c+rYou have become an outlaw!^c-")
+                  (kern-log-msg "^c+rYou are an outlaw!^c-")
                   ))
-            (if (< orep outlaw-rep)
+            (if (not (equal? (kern-being-get-base-faction kplayer)
+                             faction-player))
                 (begin
                   (kern-being-set-base-faction kplayer faction-player)
                   (kern-obj-remove-effect kplayer ef_outlaw)
@@ -76,14 +76,33 @@
                   ))
             ))))
 
+;;----------------------------------------------------------------------------
+;; Rap Sheet
+;;
+(define (crime-mk when what whom where)
+  (list what when where whom))
+
+(define (crime-date-str crime)
+  (let ((date (cadr crime)))
+    (string-append (number->string (time-year date)) "/"
+                   (number->string (time-month date)) "/"
+                   (number->string (+ (* (time-week date) 7)
+                                      (time-day date))))))
+
+(define (crime-descr crime) (car crime))
+
+(define (crime-victim crime) (cadddr crime))
+
+(define (crime-where crime) (caddr crime))
+
 (define (player-add-crime! what kvictim)
-  (println "player-add-crime!")
   (let ((rap (player-get 'rapsheet))
         (where (kern-place-get-name (loc-place (kern-obj-get-location kvictim))))
         (towhom (kern-obj-get-name kvictim))
         )
-    (player-set! 'rapsheet (cons (list what (kern-get-time) where towhom)
+    (player-set! 'rapsheet (cons (crime-mk what (kern-get-time) towhom where)
                                  rap))))
+
 
 ;;----------------------------------------------------------------------------
 ;; Turn-end-hook
@@ -110,7 +129,7 @@
 ;;
 (define (rep-update-after-attack kpc knpc degree)
   (if (not (is-hostile? kpc knpc))
-      (let ((rep (player-rep)))
+      (let ((rep (player-get 'rep)))
         (cond ((and (is-dead? knpc)
                     (can-be-seen-by-any? kpc (all-allies knpc)))
                ;; Murder with witnesses...
@@ -130,8 +149,8 @@
                           (println "complain")
                           (taunt knpc nil (list "Hey, watch it!" 
                                                 "Watch where you point that thing!"
-                                                "Behave!" "Take it outside!" 
-                                                "Why, I oughtta..."
+                                                "Behave!" 
+                                                "Take it outside!" 
                                                 "Keep it up and see what happens." 
                                                 "I dare you to try that again."
                                                 "You want to start something?"
@@ -159,23 +178,78 @@
 ;; Use 'rz' as the shortened prefix for 'rep-ztats'.
 ;;
 
-;;;;(define (rz-mk) (list nil nil))
-;;;;(define (rz-dims! gob dims) (set-car! gob dims))
-;;;;(define (rz-dims gob) (list-ref gob 0))
-;;;;
-;;;;(define (rz-enter self kparty dir rect)
-;;;;  (kern-status-set-title "Reputation")
-;;;;  (self-dims! self dims)
-;;;;  )
-;;;;
-;;;;(define (rz-scroll self dir)
-;;;;  )
-;;;;
-;;;;(define (rz-paint self)
-;;;;  )
-;;;;
-;;;;(kern-ztats-add-pane rz-enter 
-;;;;                     rz-scroll 
-;;;;                     rz-paint 
-;;;;                     rz-select 
-;;;;                     (rz-mk))
+(define (rz-mk) (list nil nil 0 0 0))
+(define (rz-dims gob) (list-ref gob 0))
+(define (rz-dims! gob dims) (set-car! gob dims))
+(define (rz-text gob) (list-ref gob 1))
+(define (rz-text! gob val) (list-set-ref! gob 1 val))
+(define (rz-cur-entry gob) (list-ref gob 2))
+(define (rz-cur-entry! gob val) (list-set-ref! gob 2 val))
+(define (rz-max-entry! gob val) (list-set-ref! gob 3 val))
+(define (rz-max-entry gob) (list-ref gob 3))
+(define (rz-top-entry gob) (list-ref gob 4))
+(define (rz-top-entry! gob val) (list-set-ref! gob 4 val))
+
+
+(define (rz-enter self kparty dir rect)
+  (define (rep-text rep rapsheet)
+    (define (rep-hdr)
+      (cond ((= rep 0)
+             ;; rep cooled off, but may have a rap sheet
+             (cond ((null? rapsheet)  "^c+gModel Citizen^c-")
+                   (else "^c+yKnown Miscreant^c-")))
+            (else
+             ;; rep still hot, emit some flavor text
+             (cond ((<= rep max-bad-rep) "^c+yBlackguard^c-")
+                   ((<= rep (/ max-bad-rep 2)) "^c+yVillain^c-")
+                   ((<= rep (/ max-bad-rep 8)) "^c+yVarlet^c-")
+                   ((<= rep (/ max-bad-rep 32)) "^c+yKnave^c-")
+                    ((<= rep (/ max-bad-rep 128)) "^c+yScoundrel^c-")
+                    (else "^c+yTroublemaker^c-")))))
+    (define (cooloff->str rep)
+      (if (= rep 0) 
+          ""
+          (let ((units (car (last-pair (turns->time (- rep))))))
+            (string-append "^c+c("
+                           (number->string (car units))
+                           " more "
+                           (cdr units)
+                           (if (> (car units) 1)
+                               "s"
+                               "")
+                           ")^c-"))))
+    (define (rep-entry crime)
+      (string-append (crime-date-str crime) ": "
+                     (crime-descr crime) "ed "
+                     (crime-victim crime) " in "
+                     (crime-where crime)))
+    (cons (rep-hdr)
+          (cons (cooloff->str rep)
+                (map rep-entry rapsheet))))
+  (kern-status-set-title "Reputation")
+  (rz-dims! self rect)
+  (rz-text! self (rep-text (player-get 'rep)
+                           (player-get 'rapsheet)))
+  (println "rz-enter:" self)
+  )
+
+(define (rz-scroll self dir)
+  )
+
+(define (rz-paint self)
+  (println "rz-paint:" self)
+  (let ((dims (rz-dims self)))
+    (define (scrnprn lst rect)
+      (println "rect:" rect)
+      (if (null? lst)
+          (kern-screen-update dims)
+          (begin
+            (kern-screen-print rect 0 (car lst))
+            (scrnprn (cdr lst) (rect-crop-down rect kern-ascii-h)))))
+    (scrnprn (rz-text self) dims)))
+
+(kern-ztats-add-pane rz-enter 
+                     rz-scroll 
+                     rz-paint 
+                     nil 
+                     (rz-mk))
