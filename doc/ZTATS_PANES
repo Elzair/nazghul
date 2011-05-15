@@ -1,0 +1,332 @@
+                                  ZTATS_PANES
+
+You can extend the UI from the script by adding a custom pane that will be
+visible when the player uses the z)tats command. The pane will be inserted into
+the list of panes that are switched with the left and right arrow keys.
+
+
+                                  Conventions
+
+In all of the descriptions below 'rect' is a rectangle in the form '(x y w h),
+where 'x' and 'y' are the pixel coordinates of the upper left corner (the top
+left corner of the screen is 0, 0) and 'w' and 'h' are the width and height in
+pixels. Ascii characters are 8x16 pixels and most sprite images are 32x32
+pixels.
+
+Parameters prefixed with a k, as in kparty or ksprite, refer to kernel (C
+language) pointers, which are opaque. All other parameters are script (Scheme)
+objects, either lists or atoms.
+
+The 'dir' parameters are limited to these values: scroll-up, scroll-down,
+scroll-pageup, scroll-pagedown, scroll-top and scroll-bottom
+
+
+                              kern-ztats-add-pane
+
+The command to add a pane is kern-ztats-add-pane. There is no corresponding
+removal: once a pane is added it will persist for the game session. [1]
+
+    (kern-ztats-add-pane enter scroll paint select gob)
+
+ The first four args are procedures. The gob can be any scheme object; it will
+ be passed back to the procedures when they are invoked. The procedures are:
+
+    (enter gob kparty dir rect)
+
+        Called when the ztats viewer switches to the pane. 'gob' is the pane
+        gob passed to kern-ztats-add-pane, 'kparty' is the player party, 'dir'
+        is the direction scrolled from (not sure why this would ever matter),
+        and 'rect' specifies what portion of the screen your pane should paint
+        to.
+
+    (scroll gob dir)
+
+        Called when the player wants to scroll the pane up or down. (Horizontal
+        scrolling switches between panes, and that is handled by the kernel, so
+        your pane is not aware of this). 'dir' is the scroll directive.
+
+    (paint gob)
+
+        Called when the kernel wants your pane to paint itself. See the section
+        below on the kern-screen API. Your pane should limit its painting
+        activities to the 'dims' rect passed to 'enter'.
+
+    (select gob)    
+
+        Called when the kernel wants your pane to return a selected
+        object. Basically this happens whenever the player hits the Enter
+        key. This is intended for selection lists and the like, but your pane
+        can interpret this to mean other things, like "Show details on
+        something in the pane" or even "switch the pane to a new view". The
+        result should be a kernel object or nil.
+
+Your pane can set itself up to handle events other than the basic scroll/select
+by running its own keyhandler. See the kern-event API below.
+
+                              The kern-sreen API
+
+(kern-screen-draw-sprite rect flags ksprite)
+
+    Paint a sprite at 'rect'. 'flags' are unused. 'ksprite' is the pointer to
+    the sprite to paint (for animated sprites the zeroeth frame will be used).
+
+(kern-screen-erase rect)
+
+    Fill the rectangle with black.
+
+(kern-screen-print rect flags . args)
+
+    Print text to the screen at the location specified in 'rect'. 'flags'
+    should be 0 or the sum of:
+
+        1 - centered in rect
+        2 - inverted text
+        4 - right-justified in rect
+        8 - paint the border stubs on the right and left margins
+
+     'args' is one or more strings, ints or real values.
+
+(kern-screen-shade rect alpha)
+
+    Shade 'rect' with black at transparency 'alpha', where 'alpha' is a number
+    from 0 (transparent) to 255 (opaque). 128 is a good choice.
+
+(kern-screen-update rect)
+
+    Render changes to the screen. Until you call this all of the other routines
+    are buffered but won't appear on the screen.
+
+
+                              The kern-event API
+
+(kern-event-run-keyhandler handler)
+
+    Pass keystrokes to 'handler', which should be a closure of the form:
+
+    (handler key keymod)
+
+    Where 'key' will be the value of the pressed key and 'keymod' will indicate
+    the value of the SHIFT, ALT or CTRL keys. As long as the procedure does not
+    return #t the system will keep passing keypresses to it. When it returns #f
+    the (kern-event-run-keyhandler ...) call will return to its caller.
+
+
+                        Example: The Reputation Viewer
+
+The player party has a gob which includes a field called 'rapsheet, which is a
+list of crimes the player has committed. Each crime is recorded as a list of
+(<what> <when> <where> <to-whom>). For example:
+
+(list (list "murder" (list 1611 0 0 2 7 10) "Glasdrin" "Patch")
+      (list "assault" (list 1611 0 0 2 7 11) "Glasdrin" "Patch"))
+
+The gob also has a 'rep field which is the current reputation stored as an
+integer, the value of which is the number of turns until the player's rep cools
+off to zero.
+
+Our goal is to add a new ztats pane which will show some flavor text describing
+the player's current reputation, the amount of time left until it cools off,
+and his rap sheet. Since the rap sheet can be arbitraily long we have to
+support scrolling. We don't have to support selection. Here are some examples:
+
++----------------Reputation--------------------+
+|Upstanding Citizen                            |
+|                                              |
++----------------------------------------------+
+
++----------------Reputation--------------------+
+|Probation (5 hours remaining)                 |
+|                                              |
+|01/06/1611 Set a trap in Trigrave             |
++----------------------------------------------+
+
++----------------Reputation--------------------+
+|Outlaw (3 days remaining)                     |
+|                                              |
+|02/03/1611 Murdered a halberdier in Glasdrin  |
+|02/03/1611 Assaulted a halberdier in Glasdrin |
+|01/07/1611 Cast sleep on Chester in Glasdrin  |
+|01/06/1611 Set a trap in Trigrave             |
++----------------------------------------------+
+
++----------------Reputation--------------------+
+|Ex-Con                                        |
+|                                              |
+|02/03/1611 Murdered a halberdier in Glasdrin  |
+|02/03/1611 Assaulted a halberdier in Glasdrin |
+|01/07/1611 Cast sleep on Chester in Glasdrin  |
+|01/06/1611 Set a trap in Trigrave             |
++----------------------------------------------+
+
+The code for the reputation pane must convert the rapsheet in the player's gob
+into a formatted visual representation, paint it to the screen, and handle
+scrollkeys. The code is in rep.scm. This file is loaded at the start of every
+session (ie, if you reload a game with Ctrl-R it will re-run this file as part
+of the reload).
+
+Let's start with the call to create the pane:
+
+(kern-ztats-add-pane rz-enter 
+                     rz-scroll 
+                     rz-paint 
+                     nil 
+                     (rz-mk))
+
+Note that the selection procedure is nil because this pane won't support any
+sub-panes and it isn't a selection list. The call to (rz-mk) creates the gob
+for the pane. It just creates a list:
+
+(define (rz-mk) (list nil nil 0))
+
+There are a corresponding set of procs that "understand" this list format:
+
+(define (rz-dims gob) (list-ref gob 0))
+(define (rz-dims! gob dims) (set-car! gob dims))
+(define (rz-text gob) (list-ref gob 1))
+(define (rz-text! gob val) (list-set-ref! gob 1 val))
+(define (rz-top-entry gob) (list-ref gob 2))
+(define (rz-top-entry! gob val) (list-set-ref! gob 2 val))
+
+By convention, in Scheme, procedures that modify their args end in "!", so
+rz-text returns the current value and rx-text! set it.
+
+The most complicated procedure for this pane is rz-enter. Because the contents
+are not going to change while the pane is entered I chose to do all the
+formatting there. That makes the paint and scoll procs simpler. The body of
+rz-enter is a procedure definition followed by three calls:
+
+  (kern-status-set-title "Reputation")
+  (rz-dims! self rect)
+  (rz-text! self (rep-text (player-get 'rep)
+                           (player-get 'rapsheet)))
+
+These calls set the title of the pane, save the pane pixel dimensions in the
+gob, and then format the text and save that in the gob. The function that
+formats the text is defined within rz-enter as rep-text. The body of rep-text
+defines three helper procs and then make a single call to invoke them and glue
+their results together:
+
+    (cons (string-append (rep-hdr) " " (cooloff->str rep))
+          (cons "" (map rep-entry rapsheet))))
+
+The rep-hdr proc uses the player's current rep score and his rapsheet to create
+the one-line summary at the top of the presentation:
+
+    (define (rep-hdr)
+      (cond ((= rep 0)
+             ;; rep cooled off, but may have a rap sheet
+             (cond ((null? rapsheet)  "^c+gModel Citizen^c-")
+                   (else "^c+yKnown Miscreant^c-")))
+            (else
+             ;; rep still hot, emit some flavor text
+             (cond ((<= rep max-bad-rep) "^c+yBlackguard^c-")
+                   ((<= rep (/ max-bad-rep 2)) "^c+yVillain^c-")
+                   ((<= rep (/ max-bad-rep 8)) "^c+yVarlet^c-")
+                   ((<= rep (/ max-bad-rep 32)) "^c+yKnave^c-")
+                    ((<= rep (/ max-bad-rep 128)) "^c+yScoundrel^c-")
+                    (else "^c+yTroublemaker^c-")))))
+
+It's a nested cond statement (similar to the switch statement in C) that
+returns a string. The weird "^c" codes colorize the text. For example "^c+g"
+pushes the color green onto the color stack and "^c-" pops the current color
+off the stack. So this line:
+
+ "^c+gModel Citizen^c-"
+
+Will set the color to green, print "Model Citizen", then revert the color to
+whatever it was before (usually white). "^c+y" sets the color to yellow, "^c+c"
+to cyan, and "^c+G" to gray.
+
+The next proc is cooloff->str, which converts the player's reputation into a
+description of how long until it cools off to normal. The rep score is <= 0 and
+increments once per turn, so it is a measure of the number of turns left until
+it hits zero (normal).
+
+    (define (cooloff->str rep)
+      (if (= rep 0) 
+          ""
+          (let ((units (car (last-pair (turns->time (- rep))))))
+            (string-append "^c+G("
+                           (number->string (car units))
+                           " more "
+                           (cdr units)
+                           (if (> (car units) 1)
+                               "s"
+                               "")
+                           ")^c-"))))
+
+If reputation is zero this returns an empty string. Otherwise it builds a
+colorized string describing the time remaining. (turns->time x) will return a
+list of time unit pairs, for example:
+
+(turns->time 243200)
+((40 . "minute") (10 . "hour") (1 . "day") (1 . "week"))
+
+For our ztats pane, we only show the longest time unit, so we take the last
+pair and integrate it into our string.
+
+Finally comes the proc which we apply to every crime in the rapsheet, turning
+it into a string description:
+
+    (define (rep-entry crime)
+      (string-append (crime-date-str crime) ": "
+                     (crime-descr crime) "ed "
+                     (crime-victim crime) " in "
+                     (crime-where crime)))
+
+The various (crime-* crime) procs are used to access the values in the
+rapsheet.
+
+Once the text is all formatted in rz-enter it can be used in rz-paint:
+
+(define (rz-paint self)
+  (let ((dims (rz-dims self)))
+    (define (scrnprn lst rect)
+      (if (null? lst)
+          (kern-screen-update dims)
+          (begin
+            (kern-screen-print rect 0 (car lst))
+            (scrnprn (cdr lst) (rect-crop-down rect kern-ascii-h)))))
+    (scrnprn (list-tail (rz-text self) 
+                        (rz-top-entry self))
+             dims)))
+
+This proc defines a helper called scrnprn which does the work, iterating
+recursively line by line down the text we created in rz-enter and printing it
+to the screen. When we reach the end we update the screen. The call to
+list-tail allows our scroll function to vary which part of the list we start
+printing at the top of the pane. We skip the first rz-top-entry lines and send
+the rest to scrnprn. We don't have to worry about overrunning the end of the
+pane with a long list because kern-screen-print clips.
+
+Now all our scroll function has to do is vary the rz-top-entry:
+
+(define (rz-scroll self dir)
+  (let* ((top (rz-top-entry self))
+         (winh (/ (rect-h (rz-dims self)) 
+                  kern-ascii-h))
+         (maxtop (max 0 (- (length (rz-text self)) winh)))
+        )
+    (define (set-top val)
+           (rz-top-entry! self val)
+           #t)
+    (cond ((= dir scroll-up) (set-top (max 0 (- top 1))))
+          ((= dir scroll-down) (set-top (min maxtop (+ top 1))))
+          ((= dir scroll-pageup) (set-top (max 0 (- top winh))))
+          ((= dir scroll-pagedown) (set-top (min maxtop (+ top winh))))
+          ((= dir scroll-top) (set-top 0))
+          ((= dir scroll-bottom) (set-top maxtop))
+          (else #f))))
+
+It modifies rz-top-entry by the amount the user wants to scroll, and ensures it
+doesn't go below 0 or above the max. The max is the value that would show the
+last entry in our text at the bottom of the pane. 
+
+This proc must return #f for unhandled values so that horizontal scrolling will
+flip to the other ztat panes.
+
+
+
+NOTES
+
+[1] kern-ztats-rm-pane would not be hard, I just see no likely use case for it.
