@@ -188,7 +188,7 @@ There are a corresponding set of procs that "understand" this list format:
 (define (rz-top-entry! gob val) (list-set-ref! gob 2 val))
 
 By convention, in Scheme, procedures that modify their args end in "!", so
-rz-text returns the current value and rx-text! set it.
+rz-text returns the current value and rz-text! sets it.
 
 The most complicated procedure for this pane is rz-enter. Because the contents
 are not going to change while the pane is entered I chose to do all the
@@ -203,7 +203,7 @@ rz-enter is a procedure definition followed by three calls:
 These calls set the title of the pane, save the pane pixel dimensions in the
 gob, and then format the text and save that in the gob. The function that
 formats the text is defined within rz-enter as rep-text. The body of rep-text
-defines three helper procs and then make a single call to invoke them and glue
+defines three helper procs and then makes a single call to invoke them and glue
 their results together:
 
     (cons (string-append (rep-hdr) " " (cooloff->str rep))
@@ -259,8 +259,8 @@ If reputation is zero this returns an empty string. Otherwise it builds a
 colorized string describing the time remaining. (turns->time x) will return a
 list of time unit pairs, for example:
 
-(turns->time 243200)
-((40 . "minute") (10 . "hour") (1 . "day") (1 . "week"))
+call: (turns->time 243200)
+result: ((40 . "minute") (10 . "hour") (1 . "day") (1 . "week"))
 
 For our ztats pane, we only show the longest time unit, so we take the last
 pair and integrate it into our string.
