@@ -58,7 +58,6 @@
       (let ((kplayer (kern-get-player))
             (orep (player-get 'rep)))
         (player-set! 'rep val)
-        (println "old rep:" orep " new rep:" val)
         (if (< val outlaw-rep)
             (if (not (equal? (kern-being-get-base-faction kplayer)
                              faction-player-outlaw))
@@ -112,7 +111,6 @@
 (define (rep-update-after-turn kplayer)
   (let ((rep (player-get 'rep))
         (ticks (kern-ticks-per-turn)))
-    (println "rep:" rep " ticks:" ticks)
     (cond ((> rep 0) 
            (player-set-rep! (- rep (min ticks rep))))
           ((< rep 0) 
@@ -133,20 +131,17 @@
         (cond ((and (is-dead? knpc)
                     (can-be-seen-by-any? kpc (all-allies knpc)))
                ;; Murder with witnesses...
-               (println "murder")
                (player-set-rep! (- rep murder-rep))
                (player-add-crime! "murder" knpc)
                (raise-alarm knpc #f)
                )
               (else
                ;; The victim is a witness, might flip to hostile after this
-               (println "assault")
                (player-set-rep! (- rep degree))
                (player-add-crime! "assault" knpc)
                (if (in-town? knpc)
                    (cond ((not (is-hostile? kpc knpc))
                           ;; not hostile yet, but not happy
-                          (println "complain")
                           (taunt knpc nil (list "Hey, watch it!" 
                                                 "Watch where you point that thing!"
                                                 "Behave!" 
@@ -159,7 +154,6 @@
                                  ))
                          (else
                           ;; that's it, call the guards
-                          (println "alarm")
                           (raise-alarm knpc #t)
                           ))))))))
 
@@ -230,23 +224,34 @@
   (rz-dims! self rect)
   (rz-text! self (rep-text (player-get 'rep)
                            (player-get 'rapsheet)))
-  (println "rz-enter:" self)
   )
 
 (define (rz-scroll self dir)
-  )
+  (let* ((top (rz-top-entry self))
+         (winh (/ (rect-h (rz-dims self)) 
+                  kern-ascii-h))
+         (maxtop (max 0 (- (length (rz-text self)) winh)))
+        )
+    (cond ((= dir scroll-up) (rz-top-entry! self (max 0 (- top 1))))
+          ((= dir scroll-down) (rz-top-entry! self (min maxtop (+ top 1))))
+          ((= dir scroll-pageup) (rz-top-entry! self (max 0 (- top winh))))
+          ((= dir scroll-pagedown) (rz-top-entry! self (min maxtop (+ top winh))))
+          ((= dir scroll-top) (rz-top-entry! self 0))
+          ((= dir scroll-bottom) (rz-top-entry! self maxtop))
+          (else #f)))
+  #t)
 
 (define (rz-paint self)
-  (println "rz-paint:" self)
   (let ((dims (rz-dims self)))
     (define (scrnprn lst rect)
-      (println "rect:" rect)
       (if (null? lst)
           (kern-screen-update dims)
           (begin
             (kern-screen-print rect 0 (car lst))
             (scrnprn (cdr lst) (rect-crop-down rect kern-ascii-h)))))
-    (scrnprn (rz-text self) dims)))
+    (scrnprn (list-tail (rz-text self) 
+                        (rz-top-entry self))
+             dims)))
 
 (kern-ztats-add-pane rz-enter 
                      rz-scroll 
