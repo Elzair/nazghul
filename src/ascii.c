@@ -24,6 +24,7 @@
 #include "common.h"
 #include "dimensions.h"
 #include "images.h"
+#include "mem.h"
 #include "screen.h"
 
 #include <assert.h>
@@ -402,7 +403,7 @@ static struct images *ascii_load_fixed_charset(void)
 {
 	struct images *images;
 
-	images = new struct images;
+	images = MEM_ALLOC_TYPE(struct images, NULL);
         assert(images);
 	memset(images, 0, sizeof(*images));
 
@@ -416,11 +417,11 @@ static struct images *ascii_load_fixed_charset(void)
         images->images = IMG_ReadXPMFromArray((char**)charset_xpm);
 	if (!images->images) {
 		err("IMG_ReadXPMFromArray() failed: '%s'\n", SDL_GetError() );
-		images_del(images);
+		mem_deref(images);
 		return NULL;
 	}
 	if (!images_convert2display(images)) {
-		images_del(images);
+		mem_deref(images);
 		return NULL;
 	}
 	return images;
@@ -434,7 +435,7 @@ int ascii_init(void)
          * error messages can be displayed, and again later after the
          * configuration file has been found and parsed. */
         if (Ascii.images) {
-                images_del(Ascii.images);
+                mem_deref(Ascii.images);
                 Ascii.images = 0;
         }
 

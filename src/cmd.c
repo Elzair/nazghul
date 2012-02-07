@@ -36,6 +36,7 @@
 #include "player.h"
 #include "sky.h"
 #include "map.h"
+#include "mem.h"
 #include "wq.h"
 #include "foogod.h"
 #include "combat.h"
@@ -3339,7 +3340,7 @@ int ui_sell(struct merchant *merch)
         int sold = 0;
 
 	// Allocate the trade list.
-	trades = new struct trade_info[merch->n_trades];
+	trades = MEM_ALLOC_NTYPE(struct trade_info, merch->n_trades, NULL);
 	if (!trades) {
 		log_msg("^c+%c%s:^c- I don't need anything.\n", 
                         CONV_NPC_COLOR, merch->name);                
@@ -3418,7 +3419,7 @@ int ui_sell(struct merchant *merch)
 
 	statusSetMode(ShowParty);
 
-	delete trades;
+	mem_deref(trades);
         return sold;
 }
 

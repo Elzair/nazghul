@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "images.h"
+#include "mem.h"
 #include "screen.h"
 #include "file.h"
 #include "cfg.h"
@@ -91,8 +92,9 @@ void images_dump_surface(char *name, SDL_Surface *surf)
 
 }
 
-void images_del(struct images *images)
+void images_fin(void *mem)
 {
+	struct images *images = (struct images*)mem;
         if (images->tag)
                 free(images->tag);
         if (images->fname)
@@ -101,7 +103,6 @@ void images_del(struct images *images)
 		SDL_FreeSurface(images->images);
 	if (images->faded)
 		SDL_FreeSurface(images->faded);
-	delete images;
 }
 
 
@@ -181,9 +182,7 @@ struct images *images_new(const char *tag, int w, int h, int rows, int cols,
 	struct images *images;
 	char *filename;
 
-	images = new struct images;
-        assert(images);
-	memset(images, 0, sizeof(*images));
+	images = MEM_ALLOC_TYPE(struct images, images_fin);
 
         if (tag) {
                 images->tag     = strdup(tag);
@@ -224,7 +223,8 @@ struct images *images_new(const char *tag, int w, int h, int rows, int cols,
 		//images_dump_surface(fname, images->images);
 		return images;
 	}
-	images_del(images);
+	
+	mem_deref(images);
 	return NULL;
 }
 

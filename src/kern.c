@@ -48,6 +48,7 @@
 #include "sky.h"
 #include "ascii.h"
 #include "map.h"
+#include "mem.h"
 #include "cursor.h"
 #include "Arms.h"
 #include "Field.h"
@@ -176,7 +177,7 @@ static void kern_run_wq_job(struct wq_job *job, struct list *wq)
 
 static void image_dtor(void *val)
 {
-        images_del((struct images*)val);
+        mem_deref(val);
 }
 
 static void sprite_dtor(void *val)

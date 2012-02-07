@@ -4942,3 +4942,14 @@ int scm_len(scheme *sc, pointer list)
 
         return len;
 }
+
+#if USE_FILE_AND_LINE
+void scheme_debug_file_and_line(scheme *sc)
+{
+	int i;
+	for (i = 0; i <= sc->file_i; i++) {
+		printf("%s:%d\n", sc->load_stack[i].rep.stdio.name,
+		       sc->load_stack[i].rep.stdio.line);
+	}
+}
+#endif
