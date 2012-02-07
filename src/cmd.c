@@ -3493,6 +3493,7 @@ static const char *cmd_help_text =
 "U)se an item in inventory\n"
 "Z)tats (show party status)\n"
 "X)amine around\n"
+"Y)use a skill\n"
 "@)AT (info about place & time)\n"
 "<space> (pass a turn)\n"
 "CTRL-Q)uit without saving\n"
