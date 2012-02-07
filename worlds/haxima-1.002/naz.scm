@@ -1790,9 +1790,6 @@
 (define (in-town? kchar)
   (is-town? (loc-place (kern-obj-get-location kchar))))
 
-(define (put kobj kloc)
-  (kern-obj-put-at kobj kloc))
-
 (define (party-add-effect kparty ef efgob)
   (for-each (lambda (kchar) (kern-obj-add-effect kchar ef efgob))
             (kern-party-get-members kparty)))
@@ -1803,7 +1800,7 @@
       (taunt knpc nil (list "Guards!" "Help!" "Madman loose!"
                             "Sound the alarm!" "PK!" "He's running amuck!"
                             "Run away! Run away!")))
-  (put (mk-guard-call 200) (kern-obj-get-location knpc)))
+  (kern-obj-put-at (mk-guard-call 200) (kern-obj-get-location knpc)))
 
 ;; Convert a numeric value into a list of (num . "unit") pairs
 (define (val->units val divisors names)
