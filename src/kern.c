@@ -1081,6 +1081,7 @@ static int kern_place_load_contents(scheme *sc, pointer *args,
                                     struct place *place)
 {
         pointer contents;
+	int n = 0;
 
         if (! scm_is_pair(sc, *args)) {
                 load_err("kern-mk-place %s: missing the contents list",
@@ -1101,18 +1102,19 @@ static int kern_place_load_contents(scheme *sc, pointer *args,
                 contents = scm_cdr(sc, contents);
 
                 if (unpack(sc, &cell, "pdd", &obj, &x, &y)) {
-                        load_err("kern-mk-place %s: bad arg in content list",
-                                 place->tag);
+                        load_err("kern-mk-place %s: bad arg in content list "
+				 "for entry %d", place->tag, n);
                         return -1;
                 }
 
                 if (!obj) {
-                        load_err("kern-mk-place %s: null obj in content list",
-                                 place->tag);
+                        load_err("kern-mk-place %s: null obj in content list "
+				 "for entry %d", place->tag, n);
                         return -1;
                 }
 
                 obj->relocate(place, x, y, REL_NOTRIG);
+		n++;
         }
 
         return 0;
@@ -1241,7 +1243,8 @@ KERN_API_CALL(kern_mk_place)
             kern_place_load_entrances(sc, &args, place))
                 goto abort;
 
-        place->handle = session_add(Session, place, place_dtor, place_save, place_start);
+        place->handle = session_add(Session, place, place_dtor, place_save, 
+				    place_start);
         ret = scm_mk_ptr(sc, place);
         scm_define(sc, tag, ret);
         return ret;
@@ -1870,6 +1873,7 @@ static pointer kern_obj_put_at(scheme *sc, pointer args)
         loc = scm_car(sc, args);
         if (! scm_is_pair(sc, loc)) {
                 rt_err("kern-obj-put-at: invalid location");
+		scheme_debug_file_and_line(sc);
                 return sc->NIL;
         }
 
