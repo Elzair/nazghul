@@ -417,9 +417,14 @@ void eventPopMouseMotionHandler(void)
 	popHandler(&MouseMotionHandlers);
 }
 
-void eventAddHook(void (*fx) (void))
+void eventSetHook(void (*fx) (void))
 {
 	eventHook = fx;
+}
+
+void eventClearHook(void)
+{
+	eventHook = NULL;
 }
 
 void eventRunKeyHandler(key_handler_fx_t fx, void *data)

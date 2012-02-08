@@ -121,7 +121,8 @@ extern void eventPushMouseButtonHandler(struct MouseButtonHandler *keyh);
 extern void eventPopMouseButtonHandler(void);
 extern void eventPushMouseMotionHandler(struct MouseMotionHandler *keyh);
 extern void eventPopMouseMotionHandler(void);
-extern void eventAddHook(void (*fx) (void));
+extern void eventSetHook(void (*fx) (void));
+extern void eventClearHook(void);
 extern void eventRunKeyHandler(key_handler_fx_t fx, void *data);
 
 END_DECL

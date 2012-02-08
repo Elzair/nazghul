@@ -330,7 +330,7 @@ int playRun(char *fname)
 	th.fx = tickHandler;
 	eventPushQuitHandler(&qh);
 	eventPushTickHandler(&th);
-	eventAddHook(updateAfterEvent);
+	eventSetHook(updateAfterEvent);
         escape_start_handler();
 
 	Quit = false;
@@ -342,6 +342,7 @@ int playRun(char *fname)
 
 	// Cleanup the event handlers.
         escape_stop_handler();
+	eventClearHook();
 	eventPopTickHandler();
 	eventPopQuitHandler();
 	//eventPopKeyHandler();
