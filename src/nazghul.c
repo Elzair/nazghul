@@ -65,6 +65,7 @@ static char *nazghul_load_fname = 0;
 int FullScreenMode = 0;
 int DeveloperMode = 0;
 int ExitProgram = 0;
+int PrintOptions = 0;
 
 static char program_name[] = "nazghul";
 
@@ -117,7 +118,7 @@ static void parse_args(int argc, char **argv)
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
 
-	while ((c = getopt(argc, argv, "t:a:s:TdfR:S:P:I:G:vhr:")) != -1) {
+	while ((c = getopt(argc, argv, "t:a:s:TdfR:S:P:I:G:vhor:")) != -1) {
 		switch (c) {
 		case 't':
 			TickMilliseconds = atoi(optarg);
@@ -167,6 +168,9 @@ static void parse_args(int argc, char **argv)
                 case 'h':
                         print_usage();
                         exit(0);
+		case 'o':
+			PrintOptions = 1;
+			break;
                 case 'r':
                         /* set the screen dimensions */
                         cfg_set("screen-dims", optarg);
@@ -336,6 +340,10 @@ int main(int argc, char **argv)
                         warn("Could not load options script\n");
                 }
         }
+
+	if (PrintOptions) {
+		cfg_print(printf);
+	}
 
         if (dimensions_init()) {
                 err("dimensions_init() failed\n");

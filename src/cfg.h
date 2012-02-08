@@ -24,5 +24,6 @@ int cfg_init();
 int cfg_save(const char *fname);
 void cfg_set(const char *key, const char *val);
 char *cfg_get(const char *key);
+void cfg_print(int (*printfx)(const char *fmt, ...));
 
 #endif
