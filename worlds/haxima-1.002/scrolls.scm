@@ -44,15 +44,15 @@
 		result-not-here
 		(user-cast-ranged-targeted-spell caster 4 cast-kill-proc)
 	))
-		
+
 (define (scroll-in-quas-xen caster)
-	(if (in-wilderness? caster)
-		result-not-here
-		(cast-ui-basic-ranged-spell powers-clone
-			caster 
-			(powers-clone-range 12)
-			12)
-	))
+  (if (in-wilderness? caster)
+      result-not-here
+      (user-cast-ranged-targeted-spell 
+       caster 
+       (powers-clone-range 12) 
+       (lambda (kchar ktarg)
+	 (powers-clone kchar ktarg 12)))))
 
 (define (scroll-in-vas-por-ylem caster)
 	(if (in-wilderness? caster)

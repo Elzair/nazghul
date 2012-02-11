@@ -368,7 +368,6 @@
 (load "bim.scm")
 (load "step.scm")
 (load "monster-generator.scm")
-;;(load "wilderness-manager.scm")
 (load "terrain-to-ptype.scm")
 (load "edge-spawn.scm")
 (load "door.scm")

@@ -2168,10 +2168,8 @@
 
 (define (simple-start kplayer)
   (kern-obj-put-at kplayer (list p_demo_scene (+ xoff 14)  (+ yoff 3)))
-	(kern-map-center-camera (mk-loc p_demo_scene (+ xoff 10)  (+ yoff 5)))
-
-        (kern-char-set-control-mode ch_wanderer "auto")
-
+  (kern-map-center-camera (mk-loc p_demo_scene (+ xoff 10)  (+ yoff 5)))
+  (kern-char-set-control-mode ch_wanderer "auto")
   ;; Do this to initialize the map viewer's active view, and to replace the
   ;; splash screen with the scene.
   (kern-map-repaint)

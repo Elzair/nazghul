@@ -85,7 +85,7 @@
 
 ;; Make a wrapper for kern-mk-obj-type which inserts the ifc cap info
 (define (mk-obj-type tag name sprite layer ifc)
-  (kern-mk-obj-type tag name sprite layer (ifc-cap ifc) ifc mmode-smallobj))
+  (kern-mk-obj-type tag name sprite layer (ifc-cap ifc) ifc))
 
 ;; Same as mk-obj-type but flag this type as critical for a quest
 (define (mk-quest-obj-type tag name sprite layer ifc)
