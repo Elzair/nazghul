@@ -353,6 +353,7 @@
 ;;(load "parties.scm")
 ;;(load "jewelry.scm")
 (load "gate-guard.scm")
+(load "guard-call.scm")
 
 ;; Mechanism-like things
 (load "bim.scm")
