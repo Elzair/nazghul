@@ -23,14 +23,45 @@
 
 ;; Startup proc
 (define (create-char kplayer)
- (kern-obj-put-at kplayer (list p_19x19 10 10)))
+ (kern-obj-put-at kplayer (list p_19x19 12 10)))
 
 (kern-add-hook 'new_game_start_hook 'create-char)
 
 ;;----------------------------------------------------------------------------
-
 (give player t_in_quas_xen_scroll 10)
+(give player t_an_xen_ex_scroll 10)
+(give player t_xen_corp_scroll 10)
 (set-level ch_wanderer 9)
 
-(let ((kchar (mk-npc 'paladin 9)))
-  (kern-obj-put-at kchar (loc-mk p_19x19 5 5)))
+
+(kern-mk-char 
+ 'ch_thorald ; tag
+ "Thorald Greybeard"   ; name
+ sp_human              ; species
+ oc_wrogue             ; occ
+ s_companion_wizard    ; sprite
+ faction-player        ; starting alignment
+ 0 10 2                ; str/int/dex
+ 0 1                   ; hp mod/mult
+ 10 5                  ; mp mod/mult
+ 240 -1 8 0 8             ; hp/xp/mp/AP_per_turn/lvl
+ #f                    ; dead
+ 'conv-thorald         ; conv
+ nil                   ; sched
+ 'thorald-ai           ; special ai
+ nil                   ; container
+ (list t_sling
+       t_armor_leather
+       )
+ nil)
+
+(kern-party-add-member player ch_thorald)
+
+
+(let ((kchar (mk-npc 'headless 1)))
+  (kern-obj-put-at kchar (loc-mk p_19x19 10 10)))
+
+(let* ((kmir (kern-tag 'mirror (mk-mirror 's_mirror_bg_flagstones)))
+       (ksen (mk-char-sensor 'mirror)))
+  (kern-obj-put-at ksen (loc-mk p_19x19 11 10))
+  (kern-obj-put-at kmir (loc-mk p_19x19 11 9)))

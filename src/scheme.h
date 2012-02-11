@@ -85,7 +85,7 @@
 #endif
 
 #ifndef USE_TRACING
-# define USE_TRACING 0
+# define USE_TRACING 1
 #endif
 
 #ifndef USE_PLIST
@@ -123,6 +123,10 @@
 
 #ifndef USE_CELLDUMP
 # define USE_CELLDUMP 1
+#endif
+
+#ifndef USE_MEMLEAKCHECK
+# define USE_MEMLEAKCHECK 0
 #endif
 
 /* Allow cells to be marked with a flag that will run a custom finalizer on

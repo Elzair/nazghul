@@ -411,6 +411,9 @@
 (define (leave-player kchar)
   (kern-char-leave-player kchar))
 
+(define (join-player kchar)
+  (kern-char-join-player kchar))
+
 (define (random-select list)
   (if (or (null? list)
           (= 0 (length list)))

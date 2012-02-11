@@ -33,11 +33,12 @@
 #include <assert.h>
 void dump_protect(scheme *sc);
 #endif
-#include "file.h"
 
-#if USE_CELLDUMP
+#if USE_MEMLEAKCHECK
 static void memleakcheck(scheme *sc);
 #endif
+
+#include "file.h" /* XXX: contamination with nazghul source */
 
 /* Used for documentation purposes, to signal functions in 'interface' */
 #define INTERFACE
@@ -1323,6 +1324,8 @@ static void finalize_cell(scheme *sc, pointer a) {
 /* ========== Routines for Reading ========== */
 
 static int file_push(scheme *sc, const char *fname) {
+	/* XXX: shouldn't pollute scheme.c with external references. For one
+	 * thing, makes it impossible to build and test standalone. */
   FILE *fin = file_open_in_include_dir(fname);
   /*printf("load %s...\n", fname);*/
   if(fin!=0) {
@@ -1836,7 +1839,7 @@ static void atom2str(scheme *sc, pointer l, int f, const char **pp, int *plen) {
           }
           p = sc->strbuff;
      } else if (is_symbol(l)) {
-          p = symname(l);
+	     p = symname(l);
      } else if (is_proc(l)) {
           sprintf(sc->strbuff, "#<%s PROCEDURE %ld>", procname(l),procnum(l));
           p = sc->strbuff;
@@ -2416,8 +2419,8 @@ static pointer opexe_0(scheme *sc, enum scheme_opcodes op) {
 
 #if USE_TRACING
      case OP_TRACING: {
-       int tr=sc->tracing;
-       sc->tracing=ivalue(car(sc->args));
+       int tr = sc->tracing;
+       sc->tracing = ivalue(car(sc->args));
        s_return(sc,mk_integer(sc,tr));
      }
 #endif
@@ -4510,7 +4513,7 @@ void scheme_deinit(scheme *sc) {
   sc->gc_verbose=0;
   gc(sc,sc->NIL,sc->NIL);
 
-#if USE_CELLDUMP
+#if USE_MEMLEACKCHECK
   memleakcheck(sc);
 #endif
 
@@ -4796,7 +4799,9 @@ static void memdump(scheme *sc)
         }
 }
 #endif 
+#endif /* USE_CELLDUMP */
 
+#if USE_MEMLEAKCHECK
 static void memleakcheck(scheme *sc)
 {
         int i, j, leaks = 0;
@@ -4813,7 +4818,7 @@ static void memleakcheck(scheme *sc)
         }
         fprintf(stderr, "%d leaked cells detected\n", leaks);
 }
-#endif /* USE_CELLDUMP */
+#endif /* USE_MEMLEAKCHECK */
 
 #if USE_PROTECT
 void dump_protect(scheme *sc)

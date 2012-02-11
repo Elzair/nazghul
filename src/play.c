@@ -306,7 +306,7 @@ int playRun(char *fname)
         foogodSetMode(FOOGOD_DEFAULT);
 
         // Run the optional startup script.
-        session_run_hook(Session, new_game_start_hook, "p", Session->player);
+        //session_run_hook(Session, new_game_start_hook, "p", Session->player);
 
         /* bugfix: Place may not be set until after the startup script runs, so
          * now is the first time we can be sure that the following will repaint
