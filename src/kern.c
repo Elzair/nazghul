@@ -1535,7 +1535,6 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
         pointer ret;
         pointer gifc;
         int gifc_cap;
-        struct mmode *mmode;
 
         /* unpack the tag */
         if (unpack(sc, &args, "y", &tag)) {
@@ -1559,7 +1558,7 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
         }
 
         /* continue unpacking the rest of the args */
-        if (unpack(sc, &args, "pddop", &sprite, &layer, &gifc_cap, &gifc, &mmode)) {
+        if (unpack(sc, &args, "pddo", &sprite, &layer, &gifc_cap, &gifc)) {
                 load_err("kern-mk-obj-type %s: bad args (did you mean to use "\
                          "kern-mk-obj instead?)", tag);
                 return sc->NIL;
@@ -1576,7 +1575,6 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
                 type->setPluralName(pluralName);
         }
         
-        type->setMovementMode(mmode);
         session_add(Session, type, obj_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, type);
         scm_define(sc, tag, ret);
