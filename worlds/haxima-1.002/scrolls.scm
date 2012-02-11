@@ -61,13 +61,13 @@
 	))
 
 (define (scroll-an-xen-ex caster)
-	(if (in-wilderness? caster)
-		result-not-here
-		(cast-ui-basic-ranged-spell powers-charm
-			caster 
-			(powers-charm-range 12)
-			12)
-	))
+  (if (in-wilderness? caster)
+      result-not-here
+      (user-cast-ranged-targeted-spell
+       caster
+       (powers-charm-range 12)
+       (lambda (kchar ktarg)
+	 (powers-charm kchar ktarg 12)))))
 		
 (define (scroll-rel-xen-quas caster)
   (if (in-wilderness? caster)
