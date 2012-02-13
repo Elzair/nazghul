@@ -2488,8 +2488,6 @@ void Character::exec()
         bool noHostiles = false;
         bool appointmentChecked = false;
                 
-        //printf("exec %s\n", getName());
-
         startTurn();
         
         if (isDead() || ! isOnMap() ||action_points <= 0) {
@@ -2523,10 +2521,11 @@ void Character::exec()
                                 log_msg("Done resting...");
                                 endResting();
 
-                                if (player_party->isCamping())
+                                if (player_party->isCamping()) {
                                         player_party->endCamping();
-                                else if (player_party->isResting())
+				} else if (player_party->isResting()) {
                                         player_party->endResting();
+				}
 
                                 log_end_group();
                         }
@@ -2576,19 +2575,34 @@ void Character::exec()
         }
 
         else if (isLoitering()) {
-                if (clock_alarm_is_expired(&wakeup_alarm)) {
+
+		int end_loitering = 0;
+		char *msg = NULL;
+
+		if (combat_get_state() != COMBAT_STATE_DONE) {
+			end_loitering = 1;
+			msg = "Loitering interrupted by combat";
+		}
+
+                else if (clock_alarm_is_expired(&wakeup_alarm)) {
+			end_loitering = 1;
+			msg = "Done loitering";
+                }
+
+		if (end_loitering) {
                         if (! isPlayerPartyMember()) {
                                 endLoitering();
                         } else {
                                 log_begin_group();
-                                log_msg("Done loitering...");
+                                log_msg(msg);
                                 endLoitering();
-
                                 if (player_party->isLoitering())
                                         player_party->endLoitering();
                                 log_end_group();
                         }
-                }
+
+		}
+
                 endTurn();
                 return;
         }
