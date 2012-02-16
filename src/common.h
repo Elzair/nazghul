@@ -37,6 +37,12 @@ extern "C" {
 
 /* Constants *****************************************************************/
 
+/* 
+ * Experimental code that let's NPC parties move around the wilderness while
+ * the player is in a temporary combat map.
+ */
+#define CONFIG_CONCURRENT_WILDERNESS 1
+
 /* Directions */
 #define DIRECTION_NONE -1
 #define NORTHWEST 0

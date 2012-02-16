@@ -21,22 +21,20 @@
 (kern-load "test/island.scm")
 (load "test/tower.scm")
 (load "test/player.scm")
-(load "test/cave.scm")
 
 ;; Startup proc
 (define (create-char kplayer)
- (kern-obj-put-at kplayer (list p_island 9 5)))
+ (kern-obj-put-at kplayer (list p_island 5 4)))
 
 (kern-add-hook 'new_game_start_hook 'create-char)
 
 ;;----------------------------------------------------------------------------
 
 (give player t_in_quas_xen_scroll 10)
-(give player t_an_tym_scroll 10)
 (set-level ch_wanderer 9)
 
 (kern-obj-put-at (mk-npc-party 'pirate-party-l3) (loc-mk p_island 0 0))
-(kern-obj-put-at (mk-npc-party 'forest-goblin-party-l4) (loc-mk p_island 5 3))
+;(kern-obj-put-at (mk-npc-party 'forest-goblin-party-l4) (loc-mk p_island 5 3))
 ;(kern-obj-put-at (mk-npc-party 'forest-goblin-party-l4) (loc-mk p_island 5 2))
 ;(kern-obj-put-at (mk-npc-party 'forest-goblin-party-l1) (loc-mk p_island 5 7))
 ;(kern-obj-put-at (mk-npc-party 'forest-goblin-party-l1) (loc-mk p_island 7 5))
@@ -44,5 +42,3 @@
 ;(kern-obj-put-at (mk-npc-party 'forest-goblin-party-l1) (loc-mk p_island 1 1))
 
 (kern-place-set-subplace p_tower (list p_island 5 5))
-(kern-obj-put-at (mk-dungeon 'p_cave 7 12) (list p_island 10 5))
-(kern-obj-put-at (mk-ladder-down 'p_cave 7 14) (list p_tower 8 9))

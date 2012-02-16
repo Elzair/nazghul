@@ -1802,6 +1802,7 @@ void place_apply_tile_effects(struct place *place, class Object *obj)
 static int place_timed_obj_exec(Object *obj)
 {
         int time = SDL_GetTicks();
+	dbg("%s:%20s ----------\n", __FUNCTION__, obj->getName());
         obj->exec();
 /*         if (obj->isPlayerControlled()) */
 /*                 return 0; */
@@ -1817,8 +1818,12 @@ void place_exec(struct place *place)
         class Object *obj = NULL;
         int times = 0;
 
+	dbg("%s:%20s --------------------\n", __FUNCTION__, place->name);
+
+#if ! CONFIG_CONCURRENT_WILDERNESS
         /* FIXME: not sure if we still need this assert */
         assert(Place == place);
+#endif
         
         /* Prevent destruction of the place. */
         place_lock(place);
@@ -1834,10 +1839,12 @@ void place_exec(struct place *place)
                && ! Quit
                && ! player_party->allDead()
                && ! Reload
+#if ! CONFIG_CONCURRENT_WILDERNESS
                && place == Place /* otherwise projectiles and damage flashes
                                   * from the old place are shown in the new
                                   * place until the turn is over when the
                                   * player does a switch */
+#endif
                 ) {
 
                 /* Keep a pointer to the object in the node */

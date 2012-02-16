@@ -27,13 +27,19 @@
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms
 ;;----------------------------------------------------------------------------
+(define year 1611)
+(define hour 07)
+(define minutes 00)
+(define time-in-minutes (+ (* hour 60) minutes))
+(define game-start-time (time-mk year 0 0 0 hour minutes))
+
 (kern-set-clock 
- 1611 ; year
- 00   ; month
- 00   ; week
- 00   ; day
- 07   ; hour
- 00   ; minutes
+ year
+ 00 ; month
+ 00 ; week
+ 00 ; day
+ hour
+ minutes
  )
 
 ;; ----------------------------------------------------------------------------

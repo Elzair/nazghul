@@ -80,6 +80,7 @@ Party::~Party()
         /* Dereference all the members by removing them from the party. If no
          * other container references them then they will be automatically
          * destoyed. */
+	dbg("~Party:%s\n", getName());
         forEachMember(party_remove_member, this);
         obj_dec_ref_safe(vehicle);
 }
@@ -143,13 +144,34 @@ bool Party::turn_vehicle(void)
 
 bool Party::attackPlayer(int dx, int dy)
 {
+	dbg("attackPlayer:%s:dx=%d dy=%d\n", getName(), dx, dy);
+
+	// By default use the party's current place as the combat place, but if
+	// joining an existing combat this will be overridden below.
+	struct place *combat_place = getPlace();
+
+#if CONFIG_CONCURRENT_WILDERNESS
+	int join_existing_combat = 0;
+#endif
+
         // Subtle: check if the player party is on the map. This
         // catches the case where the player has just engaged another
         // npc party in combat on this turn. I don't want this npc
         // party to move to that spot because then when the player
         // party exits combat they will be on top of this npc party.
-        if (! player_party->isOnMap())
+        if (! player_party->isOnMap()) {
+#if CONFIG_CONCURRENT_WILDERNESS
+		// Player is already on a combat map. Let's join him
+		// there. Deploy on the nearest side.
+		join_existing_combat = 1;
+
+		// Change the combat map to the global Place.
+		combat_place = Place;
+#else
+		dbg("attackPlayer:%s:player not on map\n", getName());
                 return false;
+#endif
+	}
 
         struct move_info info;
         struct combat_info cinfo;
@@ -157,64 +179,81 @@ bool Party::attackPlayer(int dx, int dy)
         memset(&info, 0, sizeof(info));
         
          
-		/* Check for a diagonal attack. */
-		if (dx && dy)
+	/* Check for a diagonal attack. */
+	if (dx && dy)
+	{
+		int xgoodness=0;
+		int ygoodness=0;
+		if (place_is_passable(getPlace(), getX() + dx, getY(), 
+				      this, 0))
 		{
-			int xgoodness=0;
-			int ygoodness=0;
-			if (place_is_passable(getPlace(), getX() + dx, getY(), 
-					this, 0))
+			if (place_is_hazardous(getPlace(), getX() + dx, getY()))
 			{
-				if (place_is_hazardous(getPlace(), getX() + dx, getY()))
-				{
-					xgoodness=1;
-				}
-				else
-				{
-					xgoodness=2;	
-				}
-			}
-			if ((xgoodness<2) && place_is_passable(getPlace(), getX(), getY() + dy, 
-				this, 0))
-			{
-				if (place_is_hazardous(getPlace(), getX() + dx, getY()))
-				{
-					ygoodness=1;
-				}
-				else
-				{
-					ygoodness=2;	
-				}				
-			}
-			if (xgoodness && xgoodness > ygoodness)
-			{
-				//changing x is better				
-				info.x = getX() + dx;
-				info.y = getY();
-				info.dx = 0;
-				info.dy = dy;
-			}
-			else if (ygoodness)
-			{
-				//changing y is better	
-				info.x = getX();
-				info.y = getY() + dy;
-				info.dy = 0;
-				info.dx = dx;
+				xgoodness=1;
 			}
 			else
 			{
-				//cant actually get there!
-				return false;	
+				xgoodness=2;	
 			}
+		}
+		if ((xgoodness<2) && place_is_passable(getPlace(), getX(), getY() + dy, 
+						       this, 0))
+		{
+			if (place_is_hazardous(getPlace(), getX() + dx, getY()))
+			{
+				ygoodness=1;
+			}
+			else
+			{
+				ygoodness=2;	
+			}				
+		}
+		if (xgoodness && xgoodness > ygoodness)
+		{
+			//changing x is better				
+			info.x = getX() + dx;
+			info.y = getY();
+			info.dx = 0;
+			info.dy = dy;
+		}
+		else if (ygoodness)
+		{
+			//changing y is better	
+			info.x = getX();
+			info.y = getY() + dy;
+			info.dy = 0;
+			info.dx = dx;
 		}
 		else
 		{
-			info.x = getX();
-			info.y = getY();
-			info.dx = dx;
-			info.dy = dy;
+			//cant actually get there!
+			dbg("attackPlayer:%s:can't get there\n", getName());
+			return false;	
 		}
+	}
+	else
+	{
+		info.x = getX();
+		info.y = getY();
+		info.dx = dx;
+		info.dy = dy;
+	}
+
+#if CONFIG_CONCURRENT_WILDERNESS
+	if (join_existing_combat) {
+		struct place *combat_place = Place;
+		dbg("attackPlayer:%s:joining the combat at %s\n", getName(), combat_place->name);
+		if (combat_add_party_on_edge(this, info.dx, info.dy, combat_place)) {
+			/* We couldn't put anybody on the map. Maybe it was a
+			 * land-based map and this is a party of aquatic critters. Let
+			 * them wander. */
+			return false;
+		}
+		log_msg("%s joins combat", getName());
+		endTurn();
+		return true;
+	}
+#endif
 
         info.place = getPlace();
         info.px = player_party->getX();
@@ -227,6 +266,7 @@ bool Party::attackPlayer(int dx, int dy)
 
         combat_enter(&cinfo);
         endTurn();
+	dbg("attackPlayer:%s:ok\n", getName());
         return true;
 }
 
@@ -240,13 +280,17 @@ MoveResult Party::move(int dx, int dy)
 	int oldy;
 	class Object *mech;
 
+	dbg("move:%s:dx=%d dy=%d\n", getName(), dx, dy);
+
 	this->dx = dx;
 	this->dy = dy;
 
 	/* Check if the party is in a vehicle that must turn its facing before
 	 * moving */
-	if (turn_vehicle())
+	if (turn_vehicle()) {
+		dbg("move:%s:ChangedFacing\n", getName());
 		return ChangedFacing;
+	}
 
 	/* Remember old (current) coordinates */
 	oldplace = getPlace();
@@ -258,8 +302,11 @@ MoveResult Party::move(int dx, int dy)
 	newy = place_wrap_y(oldplace, oldy + dy);
 	newplace = oldplace;
 
+	dbg("move:%s:place=%s x=%d y=%d\n", getName(), newplace->name, newx, newy);
+
 	/* Walking off the edge of a map */
 	if (place_off_map(oldplace, newx, newy)) {
+		dbg("move:%s:off-map\n", getName());
 		return OffMap;
 	}
 
@@ -270,34 +317,41 @@ MoveResult Party::move(int dx, int dy)
 		/* If this party is hostile to the player then begin combat */
 		if (are_hostile(this, player_party)
                     && attackPlayer(dx, dy)) {
+			dbg("move:%s:EngagedEnemy (player)\n", getName());
                         return EngagedEnemy;
 
 		}
 
+		dbg("move:%s:WasOccupied (by player)\n", getName());
                 return WasOccupied;
 	}
 
 	/* Check if another entity is already there */
 	if (place_is_occupied(oldplace, newx, newy)) {
+		dbg("move:%s:WasOccupied\n", getName());
 		return WasOccupied;
 	}
 
 	/* Check for a vehicle. */
 	class Vehicle *veh = place_get_vehicle(newplace, newx, newy);
 	if (veh && (vehicle || veh->getOccupant())) {
+		dbg("move:%s:WasOccupied (by vehicle)\n", getName());
 		return WasOccupied;
 	}
 
 	/* Check passability */
 	if (!place_is_passable(oldplace, newx, newy, this,
                                PFLAG_MOVEATTEMPT)) {
+		dbg("move:%s:WasImpassable\n", getName());
 		return WasImpassable;
 	}
 
         /* When wandering, don't wander over terrain hazards. When pathfinding,
          * assume that braving the hazard is the best course. */
-	if (wandering && place_is_hazardous(newplace, newx, newy))
+	if (wandering && place_is_hazardous(newplace, newx, newy)) {
+		dbg("move:%s:AvoidedHazard\n", getName());
                 return AvoidedHazard;
+	}
 
 
 	// Check for a mech (not for passability, for sending the STEP
@@ -311,12 +365,14 @@ MoveResult Party::move(int dx, int dy)
                 // mech->step(this), not only did this invoke the step but it
                 // was redundant, because the relocate() call checks for step
                 // trigger mechs)
+		dbg("move:%s:AvoidedHazard (mech)\n", getName());
                 return AvoidedHazard;
         }
 
 	relocate(newplace, newx, newy);
 
 	action_points -= place_get_diagonal_movement_cost(getPlace(), oldx, oldy, getX(), getY(), this,0);
+	dbg("move:%s:MovedOk\n", getName());
 
         return MovedOk;
 }
@@ -331,6 +387,8 @@ bool Party::gotoSpot(int mx, int my)
 	int dy;
         enum MoveResult ret = NotApplicable;
 
+	dbg("gotoSpot:%s:x=%d y=%d\n", getName(), mx, my);
+
         if (isStationary())
                 return StationaryObject;
 
@@ -341,10 +399,12 @@ bool Party::gotoSpot(int mx, int my)
 	as_info.x1 = mx;
 	as_info.y1 = my;
 	as_info.flags = PFLAG_IGNOREMECHS;
-	path = place_find_path(Place, &as_info, this);
+	path = place_find_path(getPlace(), &as_info, this);
 
-	if (!path)
+	if (!path) {
+		dbg("gotoSpot:%s:no path\n", getName());
 		return false;
+	}
 
         //dump_path(path);
 
@@ -359,7 +419,6 @@ bool Party::gotoSpot(int mx, int my)
 
 		/* Attempt to move */
 		ret = move(dx, dy);
-                        
 	}
 
 	/* Cleanup */

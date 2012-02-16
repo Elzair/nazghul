@@ -1314,8 +1314,9 @@ void PlayerParty::ambushWhileCamping()
                 }
         }
 
-        if (camp_guard)
+        if (camp_guard) {
                 camp_guard->endGuarding();
+	}
 }
 
 void PlayerParty::endResting()

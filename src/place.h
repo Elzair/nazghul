@@ -42,6 +42,12 @@ BEGIN_DECL
 
 #define place_w(p) ((p)->terrain_map->w)
 #define place_h(p) ((p)->terrain_map->h)
+#define place_right(p) (place_w(p) - 1)
+#define place_left(p) 0
+#define place_top(p) 0
+#define place_bottom(p) (place_h(p) - 1)
+#define place_horz_center(p) (place_w(p) / 2)
+#define place_vert_center(p) (place_h(p) / 2)
 #define place_index(p,x,y) ((y) * place_w(p) + (x))
 #define place_name(p) ((p)->name)
 #define place_is_wilderness(p) ((p)->wilderness)

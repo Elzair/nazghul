@@ -273,12 +273,47 @@ void ctrl_party_ai(class Party *party)
 {
 	int d;
 
+	dbg("%s:%s@%s[%d %d]\n", __FUNCTION__, party->getName(), party->getPlace()->name, party->getX(), party->getY());
+
         /* Check if this party is friendly to the player or if the player is
          * not around */
-	if (! are_hostile(party, player_party) ||
-            Place != party->getPlace()) {
+	if (! are_hostile(party, player_party)
+#if ! CONFIG_CONCURRENT_WILDERNESS
+            || Place != party->getPlace()
+#endif
+		) {
 		// This party is friendly to the player, so just wander for now
 		// (later I'll add schedules).
+		ctrl_wander(party);
+		return;
+	}
+
+	dbg("%s:player@%s[%d %d]\n", __FUNCTION__, player_party->getPlace()->name, player_party->getX(), player_party->getY());
+	dbg("%s:Place=%s\n", __FUNCTION__, Place->name);
+
+	struct place *player_place = player_party->getPlace();
+	int target_x = 0;
+	int target_y = 0;
+
+	/* Check if the player party is in the same wilderness as this
+	 * party. This will be true even if the player party is in a temporary
+	 * wilderness combat map. */
+	if (player_place == party->getPlace()) {
+		target_x = player_party->getX();
+		target_y = player_party->getY();
+		dbg("%s:player in this place@[%d %d]\n", __FUNCTION__, target_x, target_y);
+	} 
+
+	/* Check if the player is in a town in this wilderness. */
+	else if (place_get_parent(player_place) == party->getPlace()) {
+		target_x = place_get_x(player_place);
+		target_y = place_get_y(player_place);
+		dbg("%s:player in sub-place@[%d %d]\n", __FUNCTION__, target_x, target_y);
+	}
+
+	/* Player is not accessible. */
+	else {
+		dbg("%s:player not around\n", __FUNCTION__);
 		ctrl_wander(party);
 		return;
 	}
@@ -286,9 +321,17 @@ void ctrl_party_ai(class Party *party)
         /* Check if the player is _on this spot_. Yes, this can happen under
          * current game rules. If a player enters a portal and an npc is on the
          * destination then... */
-	if (party->getX() == player_party->getX() && 
-            party->getY() == player_party->getY()) {
-                
+	if (party->getX() == target_x && 
+            party->getY() == target_y) {
+
+		/* Now check if the player is already in a combat map or a
+		 * town. If so, then join in, otherwise start a new combat
+		 * map. */
+		if (player_place != party->getPlace()) {
+			combat_add_party_on_edge(party, party->getDx(), party->getDy(), player_place);
+			return;
+		}
+
                 struct move_info info;
                 struct combat_info cinfo;
 
@@ -298,8 +341,8 @@ void ctrl_party_ai(class Party *party)
                 info.y = party->getY();
                 info.dx = party->getDx();
                 info.dy = party->getDy();
-                info.px = player_party->getX();
-                info.py = player_party->getY();
+                info.px = target_x;
+                info.py = target_y;
                 info.npc_party = party;
                 
                 if (!info.dx && !info.dy)
@@ -319,14 +362,15 @@ void ctrl_party_ai(class Party *party)
 	/* get distance to player */
 	d = place_walking_distance(party->getPlace(), party->getX(), 
                                    party->getY(),
-				   player_party->getX(), player_party->getY());
+				   target_x, target_y);
+	dbg("%s:%s:distance=%d\n", __FUNCTION__, party->getName(), d);
 
         /* if adjacent attack */
         if (1==d) {
                 int dx=0, dy=0;
                 place_get_direction_vector(party->getPlace(),
                                            party->getX(), party->getY(),
-                                           player_party->getX(), player_party->getY(),
+                                           target_x, target_y,
                                            &dx, &dy);
                 if (party->attackPlayer(dx, dy)) {
                         return;
@@ -338,11 +382,14 @@ void ctrl_party_ai(class Party *party)
 		return;
 	}
 
-	if (d > 1 && party->attack_with_ordnance(d)) {
+	if (d > 1 
+	    && (Place == party->getPlace()) /* don't attack towns or temp combat maps */
+	    && party->attack_with_ordnance(d)) {
 		return;
 	}
 
-	if (!party->gotoSpot(player_party->getX(), player_party->getY())) {
+	if (!party->gotoSpot(target_x, target_y)) {
+		dbg("%s:%s:can't gotoSpot\n", __FUNCTION__, party->getName());
 		ctrl_wander(party);
 		return;
 	}

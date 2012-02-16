@@ -130,6 +130,9 @@ static void play_reload()
         vmask_flush_all();
 }
 
+/**
+ * This is the main loop. It runs until the player is dead or wants to quit.
+ */
 static void play_loop(void)
 {
         int times[8];
@@ -138,22 +141,16 @@ static void play_loop(void)
 
         Turn = 0;
 
-        // --------------------------------------------------------------------
-        // Enter the main game loop. Do not exit until the player is dead or
-        // wants to quit.
-        // --------------------------------------------------------------------
-
-        while (true) {
+        while (1) {
 
                 session_run_hook(Session, turn_start_hook, "p", Session->player);
 
-                // ------------------------------------------------------------
-                // If the player party is camping then run the camping hook
-                // so the script can do things like ambushes, visions, etc.
-                // Since we don't know what the script might do check for party
-                // death and the Quit condition when it comes back.
-                // ------------------------------------------------------------
-
+                /*
+		 * If the player party is camping then run the camping hook so
+		 * the script can do things like ambushes, visions, etc.  Since
+		 * we don't know what the script might do check for party death
+		 * and the Quit condition when it comes back.
+		 */
                 if (player_party->isCamping()) {
                         session_run_hook(Session, camping_turn_start_hook, "pp",
                                          player_party, Place);
@@ -161,70 +158,80 @@ static void play_loop(void)
                                 play_print_end_of_game_prompt();
                                 break;
                         }
-                        if (Quit)
+                        if (Quit) {
                                 break;
+			}
                 }
+#if CONFIG_CONCURRENT_WILDERNESS
+		else if(! place_is_wilderness(Place)) {
+			struct place *parent = place_get_parent(Place);
+			if (parent && place_is_wilderness(parent)) {
+				int delay = Turn % place_get_scale(parent);
+				dbg("%s:parent delay=%d\n", __FUNCTION__, delay);
+				if (! delay) {
+					place_exec(parent);
+				}
+			}
+		}
+#endif
 
-                // ------------------------------------------------------------
-                // "Execute" the current place. This will loop through all
-                // objects in the current place and give them a chance to
-                // run. This includes player-controlled objects.
-                // ------------------------------------------------------------
 
+		/*
+		 * "Execute" the current place. This will loop through all
+		 * objects in the current place and give them a chance to
+		 * run. This includes player-controlled objects. This is also
+		 * where the player input is handled.
+		 */
                 times[0] = SDL_GetTicks();
                 place_exec(Place);
 
-                // ------------------------------------------------------------
-                // Check if the player requested to reload during that last
-                // turn.
-                // ------------------------------------------------------------
-
+		/*
+		 * The global Reload flag will be set if the player requested
+		 * to reload. XXX: do we still need this here since we're going
+		 * to check it below?
+		 */
                 if (Reload) {
                         play_reload();
                 }
 
-                // ------------------------------------------------------------
-                // Do a non-blocking check to see if any non-user events need
-                // to run (e.g., animation ticks). Normally these events get
-                // run in place_exec() when the game waits for player input,
-                // but if the player party is resting (for example) then that
-                // does not happen. To keep animation looking smooth I added
-                // this next call.
-                // ------------------------------------------------------------
-
+                /*
+		 * Do a non-blocking check to see if any non-user events need
+		 * to run (e.g., animation ticks). Normally these events get
+		 * run in place_exec() when the game waits for player input,
+		 * but if the player party is resting (for example) then that
+		 * does not happen. To keep animation looking smooth I added
+		 * this next call.
+		 */
                 times[2] = SDL_GetTicks();
                 eventHandlePending();
-
                 if (Reload) {
                         play_reload();
                 }
 
-                // ------------------------------------------------------------
-                // Check for end-of-game conditions.
-                // ------------------------------------------------------------
-
+		/*
+		 * Check for end-of-game conditions.
+		 */
                 times[3] = SDL_GetTicks();
                 if (player_party->allDead()) {
                         play_print_end_of_game_prompt();
                         break;
                 }
 
-                if (Quit)
+                if (Quit) {
                         break;
+		}
 
-                // ------------------------------------------------------------
-                // Run all the non-object stuff in the game world.
-                //
-                // NOTE: you should keep the clock update first since most
-                //       things take their cue from the current time.
-                // ------------------------------------------------------------
-
+		/*
+		 * Run all the non-object stuff in the game world.
+		 *
+		 * NOTE: you should keep the clock update first since most
+		 *       things take their cue from the current time.
+		 */
                 times[4] = SDL_GetTicks();
-
                 dec_time_stop(session_ticks_per_turn());
 
                 if (! TimeStop) {
-                        
+
                         dec_reveal(session_ticks_per_turn());
                         dec_quicken(session_ticks_per_turn());
                         dec_magic_negated(session_ticks_per_turn());
@@ -235,9 +242,11 @@ static void play_loop(void)
                         int oldHour = Session->clock.hour;
                         clock_advance(session_ticks_per_turn());
 
-                        // On each change of the hour check characters with
-                        // multi-place schedules to see if they need to be
-                        // introduced to the current place.
+                        /*
+			 * On each change of the hour check characters with
+			 * multi-place schedules to see if they need to be
+			 * introduced to the current place.
+			 */
                         if (oldHour != Session->clock.hour) {
                                 session_intro_sched_chars(Session);
                         }
@@ -248,7 +257,8 @@ static void play_loop(void)
                         windAdvanceTurns();
                         wqRunToTick(&TurnWorkQueue, Turn);
 
-                        /* Update the "Turn" counter. This drives the
+                        /* 
+			 * Update the "Turn" counter. This drives the
                          * TurnWorkQueue, which is still used for scheduled
                          * things like torches burning out and doors closing.
                          * Note: this is NOT the turn count shown in the foogod

@@ -390,7 +390,7 @@ static int combat_find_safe_position(struct position_info *info)
         return -1;
 }
 
-static bool myPutNpc(class Character * pm, void *data)
+static bool combat_put_npc(class Character * pm, void *data)
 {
         int tmp;
         struct position_info *info;
@@ -509,12 +509,12 @@ void combat_fill_position_info(struct position_info *info, struct place *place, 
         info->dy = dy;
 
         if (info->place != Combat.place) {
+		// XXX: what case is this for?
                 // Occupy the same location and face the same way
                 info->x = x;
                 info->y = y;
 
-        }
-        else {
+        } else {
 
                 if (defend) {
                         // Reverse facing
@@ -779,11 +779,6 @@ static void combat_overlay_map(struct terrain_map *map,
         terrain_map_unref(map);
 }
 
-static void myPutEnemy(class Party * foe, struct position_info *pinfo)
-{
-        foe->forEachMember(myPutNpc, pinfo);
-}
-
 /*
  * combat_position_enemy - put an NPC party on the combat map
  */
@@ -825,7 +820,7 @@ static int combat_position_enemy(class Party * foe, int dx, int dy,
         foe->disembark();
         obj_inc_ref(foe);
         foe->remove();
-        myPutEnemy(foe, &foe->pinfo);
+	foe->forEachMember(combat_put_npc, &foe->pinfo);
         positioned = foe->pinfo.placed;
 
         obj_dec_ref(foe);
@@ -1702,10 +1697,98 @@ char combatGetState(void)
         return 'N';
 }
 
+/* 
+ * Visitor function for combat_add_party_on_edge.
+ */
+static bool combat_add_npc_near_edge(class Character *npc, void *arg)
+{
+	struct position_info *pinfo = (struct position_info*)arg;
+
+	/* Reset search info before each attempt. */
+	pinfo->px = pinfo->x;
+	pinfo->py = pinfo->y;
+	pinfo->subject = npc;
+        memset(rmap, 0, sizeof (rmap));
+
+	/* Look for a spot. */
+	if (combat_find_safe_position(pinfo)) {
+		dbg("%s: can't place %s near [%d %d]\n", __FUNCTION__, npc->getName(), pinfo->x, pinfo->y);
+		return true;
+	}
+
+	/* Position the NPC. */
+        npc->setX(pinfo->px);
+        npc->setY(pinfo->py);
+        dbg("Put '%s' at [%d %d]\n", npc->getName(), pinfo->px, pinfo->py);
+        npc->setPlace(pinfo->place);
+        place_add_object(pinfo->place, npc);
+        npc->setOnMap(true);
+        pinfo->placed++;
+
+        /* Check if we need to go back to fighting */
+        if (combat_get_state() != COMBAT_STATE_FIGHTING &&
+            are_hostile(npc, player_party)) {
+                combat_set_state(COMBAT_STATE_FIGHTING);
+        }
+
+	return false;
+}
+
+/*
+ * combat_add_party() wants to deploy parties too close to the center, which is
+ * ok when first starting combat but not for adding them to an existing
+ * combat. I wrote this to introduce them on the edge, ignoring formation.
+ *
+ * 'party' is the NPC party.
+ *
+ * 'dx' and 'dy' are the direction the NPC party is coming in from (eg, dx=1
+ * and dy=1 means the party is traveling southeast, so it enters on the
+ * northwest corner).
+ *
+ * 'place' will be Combat.place iff the party is entering a temp combat
+ * map. But if entering a town Combat.place will be NULL, so the caller
+ * has to indicate the place.
+ */
+int combat_add_party_on_edge(class Party *party, int dx, int dy, struct place *place)
+{
+	struct position_info pinfo;
+
+	obj_inc_ref(party);
+
+	party->disembark();
+	party->remove();
+
+	/* Fill out pinfo for edge. */
+	memset(&pinfo, 0, sizeof(pinfo));
+	pinfo.place = place;
+	pinfo.x = dx > 0 ? place_left(place) : (dx < 0 ? place_right(place) : place_horz_center(place));
+	pinfo.y = dy > 0 ? place_top(place) : (dy < 0 ? place_bottom(place) : place_vert_center(place));
+	pinfo.dx = dx;
+	pinfo.dy = dy;
+	pinfo.rx = 0;
+	pinfo.ry = 0;
+	pinfo.rw = place_w(place);
+	pinfo.rh = place_h(place);
+	pinfo.px = pinfo.x;
+	pinfo.py = pinfo.y;
+
+	/* Add each member as close to the edge as possible. */
+	party->forEachMember(combat_add_npc_near_edge, &pinfo);
+
+	/* XXX: on success need to disembark & remove party (see
+	 * combat_position_enemy()) */
+
+	obj_dec_ref(party);
+
+	return pinfo.placed ? 0 : -1;
+}
+
 int combat_add_party(class Party * party, int dx, int dy, int located,
                      struct place *place, int x, int y)
 {
         int added = 0;
+
+	dbg("combat_add_party:%s:located=%s@%s(%d, %d)\n", party->getName(), located? "yes" : "no", place->name, x, y);
 
         obj_inc_ref(party);
 
@@ -1734,7 +1817,7 @@ int combat_add_party(class Party * party, int dx, int dy, int located,
         if (!party->pinfo.formation)
                 party->pinfo.formation = formation_get_default();
         set_party_initial_position(&party->pinfo, x, y);
-        myPutEnemy(party, &party->pinfo);
+	party->forEachMember(combat_put_npc, &party->pinfo);
 
         added = party->pinfo.placed;
 
