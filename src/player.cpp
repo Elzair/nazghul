@@ -632,9 +632,9 @@ static bool player_member_rest_one_hour(class Character * pm, void *data)
 
 void PlayerParty::exec()
 {
-
-        if (allDead())
+        if (allDead()) {
                 return;
+	}
 
         // NOTE: by running startTurn() after this we are skipping the party
         // members' start-of-party-turn hooks when resting. That's probably not
@@ -658,6 +658,8 @@ void PlayerParty::exec()
         startTurn();      
         
         absorbMemberAPDebt();
+
+	dbg("%s:%s:ap=%d\n", getName(), __FUNCTION__, action_points);
         
         /* Loiter */
         if (isLoitering())
@@ -668,6 +670,12 @@ void PlayerParty::exec()
 				}
 				endTurn();
         }  
+
+	/* If player misses a turn update the screen so he can see NPCs
+	 * move. */
+	if (action_points <= 0) {
+		mapUpdate(REPAINT_IF_DIRTY);
+	}
 
         if (action_points > 0 && ! isDestroyed()) {        
 

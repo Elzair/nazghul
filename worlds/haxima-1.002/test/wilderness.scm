@@ -33,7 +33,13 @@
 
 (give player t_in_quas_xen_scroll 10)
 (give player t_an_tym_scroll 10)
+
+(give player t_armor_plate 1)
+(give player t_iron_helm 1)
+(kern-char-ready ch_wanderer t_armor_plate t_iron_helm)
+
 (set-level ch_wanderer 9)
+
 
 (kern-obj-put-at (mk-npc-party 'pirate-party-l3) (loc-mk p_island 0 0))
 (kern-obj-put-at (mk-npc-party 'forest-goblin-party-l4) (loc-mk p_island 5 3))

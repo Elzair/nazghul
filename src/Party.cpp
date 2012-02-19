@@ -492,6 +492,8 @@ void Party::exec()
 
         startTurn();
 
+	dbg("%s:%s:ap=%d\n", getName(), __FUNCTION__, action_points);
+
         while (action_points > 0 && !isDestroyed()) {
 
                 int initial_points = action_points;

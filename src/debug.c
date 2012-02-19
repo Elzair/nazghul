@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 // revisit: make these command-line options
-int DEBUG = 1;
-int VERBOSE = 1;
+int DEBUG = 0;
+int VERBOSE = 0;
 
 void dbg(const char *fmt, ...)
 {

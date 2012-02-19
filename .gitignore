@@ -11,6 +11,7 @@ depcomp
 install-sh
 missing
 src/.deps/
+src/tags
 stamp-h1
 worlds/haxima-1.002/haxima.sh
 worlds/haxima-1.002/options.scm

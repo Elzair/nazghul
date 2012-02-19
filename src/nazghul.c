@@ -135,6 +135,8 @@ static void parse_args(int argc, char **argv)
 			break;
                 case 'd':
                         DeveloperMode = 1;
+			DEBUG = 1;
+			VERBOSE = 1;
                         break;
                 case 'f':
                         FullScreenMode = 1;
