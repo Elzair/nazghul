@@ -4379,6 +4379,34 @@ KERN_API_CALL(kern_char_unready)
         return ch->unready(type) ? sc->T : sc->F;
 }
 
+/* 
+ * (kern-char-ready kchar ktype-1 ... ktype-n) 
+ *
+ * Ready a list of arms in order and return the number successfully readied.
+ */
+KERN_API_CALL(kern_char_ready)
+{
+        class Character *ch;
+	int readied = 0;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-ready");
+        if (!ch)
+                return sc->F;
+
+	while (scm_is_pair(sc, args)) {
+		class ArmsType *type;
+		if (unpack(sc, &args, "p", &type)) {
+			rt_err("kern-char-ready: bad args");
+			break;
+		}
+		if (ch->ready(type) == Character::Readied) {
+			readied++;
+		}
+	}
+
+        return scm_mk_integer(sc, readied);
+}
+
 KERN_API_CALL(kern_char_get_readied_weapons)
 {
         class Character *ch;
@@ -10164,6 +10192,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-join-player", kern_char_join_player);
         API_DECL(sc, "kern-char-kill", kern_char_kill);
         API_DECL(sc, "kern-char-leave-player", kern_char_leave_player);
+        API_DECL(sc, "kern-char-ready", kern_char_ready);
         API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
         API_DECL(sc, "kern-char-set-ai", kern_char_set_ai);
         API_DECL(sc, "kern-char-set-control-mode", kern_char_set_control_mode);
