@@ -1,0 +1,14 @@
+To check out the source (replace $USER with your username):
+
+git clone ssh://$USER@nazghul.git.sourceforge.net/gitroot/nazghul/nazghul
+
+To build:
+
+cd nazghul
+./autogen.sh --prefix=/home/$USER
+make install
+
+To play:
+
+haxima.sh
+
