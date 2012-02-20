@@ -461,14 +461,16 @@ static void terrain_map_composite_save(struct save *save, struct terrain_map *ma
                                      sub_x < x*map->submap_w+map->submap_w; 
                                      sub_x++) {                        
                                         char *glyph;
-                                        
+                                        struct terrain *terrain = map->terrain[sub_y*map->w+sub_x];
                                         glyph = palette_glyph_for_terrain(
                                                 map->palette,
-                                                map->terrain[sub_y*map->w+sub_x]);
+                                                terrain);
                                         if (! glyph) {
                                                 err("map %s: no glyph in palette %s "\
-                                                    "for terrain at [%d %d]\n", map->tag,
-                                                    map->palette->tag, sub_x, sub_y);
+                                                    "for terrain %s (%s) at [%d %d]\n", map->tag,
+                                                    map->palette->tag, 
+						    terrain->name, terrain->tag,
+						    sub_x, sub_y);
                                                 assert(glyph);
                                         }
                                         
@@ -518,13 +520,15 @@ void terrain_map_save(struct save *save, void *val)
 
                 for (x = 0; x < map->w; x++) {                        
                         char *glyph;
-
-                        glyph = palette_glyph_for_terrain(map->palette,
-                                                          map->terrain[i]);
+			struct terrain *terrain = map->terrain[i];
+                        glyph = palette_glyph_for_terrain(map->palette, terrain);
                         if (! glyph) {
                                 err("map %s: no glyph in palette %s "\
-                                         "for terrain at [%d %d]\n", map->tag,
-                                         map->palette->tag, x, y);
+                                         "for terrain %s (%s) at [%d %d]\n", 
+				    map->tag,
+				    map->palette->tag,
+				    terrain->name, terrain->tag,
+				    x, y);
                                 assert(glyph);
                         }
 
