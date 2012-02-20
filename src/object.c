@@ -1539,6 +1539,9 @@ void Object::save(struct save *save)
                 save->write(save, "(kern-obj-set-submerged kobj #t)\n");
         }
 
+	// Save the action point debt
+	save->write(save, "(kern-obj-set-ap kobj %d)\n", action_points);
+
         // Close the 'let' block, returning kobj as the last thing evaluated.
         save->exit(save, "kobj)\n");
 
