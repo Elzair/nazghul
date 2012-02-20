@@ -352,7 +352,7 @@
     (list  "tN" t_treew_wes)
     (list  "tO" t_treew_c)
 	
-	(list  "{G" t_hillw_nw)            ;; hills + water
+    (list  "{G" t_hillw_nw)            ;; hills + water
     (list  "{H" t_hillw_ne)
     (list  "{I" t_hillw_nwe)
     (list  "{J" t_hillw_ws)
@@ -362,7 +362,7 @@
     (list  "{N" t_hillw_wes)
     (list  "{O" t_hillw_c)	
 	
-	(list  "{g" t_hillv_nw)           ;; hills + void
+    (list  "{g" t_hillv_nw)           ;; hills + void
     (list  "{h" t_hillv_ne)
     (list  "{i" t_hillv_nwe)
     (list  "{j" t_hillv_ws)
@@ -371,7 +371,7 @@
     (list  "{m" t_hillv_nes)
     (list  "{n" t_hillv_wes)	
 	
-	(list  ".g" t_grassv_nw)          ;; grass + void
+    (list  ".g" t_grassv_nw)          ;; grass + void
     (list  ".h" t_grassv_ne)
     (list  ".i" t_grassv_nwe)
     (list  ".j" t_grassv_ws)
@@ -380,7 +380,7 @@
     (list  ".m" t_grassv_nes)
     (list  ".n" t_grassv_wes)
 	
-	(list  "^g" t_mountv_nw)        ;; mounts + void
+    (list  "^g" t_mountv_nw)        ;; mounts + void
     (list  "^h" t_mountv_ne)
     (list  "^i" t_mountv_nwe)
     (list  "^j" t_mountv_ws)
@@ -389,7 +389,7 @@
     (list  "^m" t_mountv_nes)
     (list  "^n" t_mountv_wes)	
 	
-	(list  "^3" t_mountg_nw)     ;; mounts + grass
+    (list  "^3" t_mountg_nw)     ;; mounts + grass
     (list  "^5" t_mountg_ne)
     (list  "^7" t_mountg_nwe)
     (list  "^a" t_mountg_ws)
@@ -399,7 +399,7 @@
     (list  "^e" t_mountg_wes)
     (list  "^f" t_mountg_c)	
 	
-	(list  "^G" t_mountw_nw)        ;; mounts + water
+    (list  "^G" t_mountw_nw)        ;; mounts + water
     (list  "^H" t_mountw_ne) 
     (list  "^I" t_mountw_nwe)
     (list  "^J" t_mountw_ws)
@@ -409,10 +409,15 @@
     (list  "^N" t_mountw_wes)
     (list  "^O" t_mountw_c)	
 	
-    (list  "!3" t_lava_nw)        ;; lava + land
+    (list  "!1" t_lava_n)
+    (list  "!2" t_lava_w)
+    (list  "!3" t_lava_nw)        ;; lava + grass
+    (list  "!4" t_lava_e)
     (list  "!5" t_lava_ne)
     (list  "!6" t_lava_we)
     (list  "!7" t_lava_nwe)
+    (list  "!8" t_lava_s)
+    (list  "!9" t_lava_ns)
     (list  "!a" t_lava_ws)
     (list  "!b" t_lava_nws)
     (list  "!c" t_lava_es)
@@ -481,7 +486,7 @@
     (list	"rd" t_nat_rock_nes)
     (list	"re" t_nat_rock_wes)
     (list	"rf" t_nat_rock_nwes)
-     (list	"r~" t_fake_wall_nrock)   
+    (list	"r~" t_fake_wall_nrock)   
 
   )
 ) ;; palette pal_expanded
