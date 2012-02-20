@@ -18,7 +18,7 @@
 
 ;; Load generic data
 (load "haxima.scm")
-(kern-load "test/19x19.scm")
+(load "test/19x19.scm")
 (load "test/player.scm")
 
 ;; Startup proc
@@ -58,8 +58,10 @@
 (kern-party-add-member player ch_thorald)
 
 
-(let ((kchar (mk-npc 'headless 1)))
-  (kern-obj-put-at kchar (loc-mk p_19x19 10 10)))
+;;(let ((kchar (mk-npc 'headless 1))) (kern-obj-put-at kchar (loc-mk p_19x19 10 10)))
+;;(let ((kchar (mk-npc 'wolf 1))) (kern-obj-put-at kchar (loc-mk p_19x19 4 9)))
+;;(let ((kchar (mk-npc 'wolf 1))) (kern-obj-put-at kchar (loc-mk p_19x19 4 8)))
+;;(let ((kchar (mk-npc 'wolf 1))) (kern-obj-put-at kchar (loc-mk p_19x19 4 10)))
 
 (let* ((kmir (kern-tag 'mirror (mk-mirror 's_mirror_bg_flagstones)))
        (ksen (mk-char-sensor 'mirror)))
