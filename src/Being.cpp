@@ -351,6 +351,10 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                 } else {
                         clearCachedPath();
                 }
+
+		// Apply tile effects.
+		place_apply_tile_effects(getPlace(), this);
+
                 return true;
         }
 

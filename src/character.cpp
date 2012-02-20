@@ -2490,7 +2490,7 @@ void Character::exec()
                 
         startTurn();
         
-        if (isDead() || ! isOnMap() ||action_points <= 0) {
+        if (isDead() || ! isOnMap() || action_points <= 0) {
                 endTurn();
                 return;
         }
@@ -2577,7 +2577,7 @@ void Character::exec()
         else if (isLoitering()) {
 
 		int end_loitering = 0;
-		char *msg = NULL;
+		const char *msg = NULL;
 
 		if (combat_get_state() != COMBAT_STATE_DONE) {
 			end_loitering = 1;
@@ -2715,12 +2715,6 @@ void Character::exec()
                 assert(leader);
                 assert(this != leader);
 
-                // -----------------------------------------------------------
-                // Loop until the leader is one tile away, we run out of action
-                // points, or we stop using action points (this last occurs
-                // when we can't find a path)
-                // -----------------------------------------------------------
-
                 points_last_loop = 0;
 
                 // Since this character is in follow mode it's keystroke hook
@@ -2733,11 +2727,19 @@ void Character::exec()
 
                 noHostiles = ! place_contains_hostiles(getPlace(), this);
 
-                while (1 < place_flying_distance(Place, getX(), getY(), 
-                                                 leader->getX(), 
-                                                 leader->getY()) 
-                       && (noHostiles || ! isTurnEnded())
-                       && getActionPoints() != points_last_loop
+                // Loop until the leader is one tile away. Ignore ap debt so
+                // party members can "catch up". Note that they may die or
+                // otherwise get into trouble along the way. If they can't find
+                // a path their action points won't change in the loop and
+                // we'll stop.
+                while (!isDead()
+		       && !isAsleep()
+		       && isOnMap()
+                       && noHostiles
+                       && (getActionPoints() != points_last_loop)
+		       && (1 < place_flying_distance(Place, getX(), getY(), 
+						     leader->getX(), 
+						     leader->getY()))
                         ) {
 
                         points_last_loop = getActionPoints();
@@ -2755,10 +2757,11 @@ void Character::exec()
                                    |PFLAG_IGNORESTEPTRIG
                                 );
                         mapCenterView(getView(), getX(), getY());
-                        mapSetDirty();
+                        //mapSetDirty();
+			mapUpdate(0);
                 }
 
-                // In follow mode don't accumulate action point depth. This
+                // In follow mode don't accumulate action point debt. This
                 // leads to annoying laggardliness in player party members.
                 setActionPoints(0);
                 break;
