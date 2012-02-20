@@ -31,6 +31,17 @@
 (give player t_in_quas_xen_scroll 10)
 (give player t_an_xen_ex_scroll 10)
 (give player t_xen_corp_scroll 10)
+
+(give player sulphorous_ash 100)
+(give player ginseng 100)
+(give player garlic 100)
+(give player spider_silk 100)
+(give player blood_moss 100)
+(give player black_pearl 100)
+(give player nightshade 100)
+(give player mandrake 100)
+(give player t_royal_cape 100)
+
 (set-level ch_wanderer 9)
 
 
