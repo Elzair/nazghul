@@ -1417,6 +1417,193 @@ void mapFlashSprite(int x, int y, struct sprite *sprite)
                            Map.tile_scratch_surf, 100, 0, false);
 }
 
+int map_walk_missile_path(int Ax, int Ay, int *Bx, int *By,
+                          struct place *place,
+			  class Missile *missile, float range, 
+			  int (*on_tile_entry)(struct place *place, int x, int y, class Missile *missile))
+{
+	// 
+	// Derived from Kenny Hoff's Bresenhaum impl at
+	// http://www.cs.unc.edu/~hoff/projects/comp235/bresline/breslin1.txt
+	// (no license or copyright noted)
+	// 
+	int ret = 0;
+
+	// Get tile dimensions
+	int tile_w;
+	int tile_h;
+	mapGetTileDimensions(&tile_w, &tile_h);
+	
+	// Half tile offset- missiles fly from and to the middle of a tile
+	int tile_w_half = tile_w/2;
+	int tile_h_half = tile_h/2;
+	
+	// Get the map coordinates of the view origin (upper left corner)
+	int Ox, Oy;
+	mapGetMapOrigin(&Ox, &Oy);
+
+	// Get the screen coordinates of the map viewer origin
+	int Sx, Sy;
+	mapGetScreenOrigin(&Sx, &Sy);
+
+	// Copy the place coordinates of the origin of flight. I'll walk these
+	// along as the missile flies and check for obstructions.
+	int Px, Py, oPx, oPy, orx, ory;
+	Px = Ax;
+	Py = Ay;
+	orx = Ax;
+	ory = Ay;
+
+	// Convert to screen coordinates. (I need to keep the original
+	// B-coordinates for field effects at the bottom of this routine).
+	int sBx;
+	int sBy;
+	
+	if (place_is_wrapping(place))
+	{
+		if (Ax > Ox)
+		      Ax = (Ax - Ox) * tile_w + Sx;
+		else
+		      Ax = (place_w(place) - Ox + Ax)  * tile_w + Sx;
+		if (Ay >= Oy)
+		      Ay = (Ay - Oy) * tile_h + Sy;
+		else
+		      Ay = (place_h(place) - Oy + Ay)  * tile_h + Sy;
+		
+		if (*Bx >= Ox)
+		      sBx = (*Bx - Ox) * tile_w + Sx;
+		else
+		      sBx = (place_w(place) - Ox + *Bx) * tile_w + Sx;
+		if (*By >= Oy)
+		      sBy = (*By - Oy) * tile_h + Sy;
+		else
+		      sBy = (place_h(place) - Oy + *By)  * tile_h + Sy;
+	} 
+	else
+	{
+		Ax = (Ax - Ox) * tile_w + Sx;
+		Ay = (Ay - Oy) * tile_h + Sy;
+		sBx = (*Bx - Ox) * tile_w + Sx;
+		sBy = (*By - Oy) * tile_h + Sy;
+	}
+	
+	// Get the distance components
+	int dX = sBx - Ax;
+	int dY = sBy - Ay;
+	int AdX = abs(dX);
+	int AdY = abs(dY);
+
+	// Moving left?
+	int Xincr = (Ax > sBx) ? -1 : 1;
+	// adjust for rounding errors
+	if (Ax < sBx)
+	{
+		tile_w_half--;
+	}
+
+	// Moving down?
+	int Yincr = (Ay > sBy) ? -1 : 1;
+	// adjust for rounding errors
+	if (Ay < sBy)
+	{
+		tile_h_half--;
+	}
+	
+	int dPr, dPru, P, i , Xsubincr, Ysubincr;
+		
+	// Walk the x-axis?
+	if (AdX >= AdY)
+	{
+		dPr = AdY << 1;
+		dPru = dPr - (AdX << 1);
+		P = dPr - AdX;
+		Xsubincr = Xincr;
+		Ysubincr = 0;
+		if (range > 0.5) // floating point hence error margins
+		{
+			i = TILE_W * (place_w(place) + 2); // == "enough": its actually checked in the loop instead
+		}
+		else
+		{ 
+			i = AdX;	
+		}
+	}
+	else
+	{
+		dPr = AdX << 1;
+		dPru = dPr - (AdY << 1);
+		P = dPr - AdY;	
+		Xsubincr = 0;
+		Ysubincr = Yincr;
+
+		if (range > 0.5) // floating point hence error margins
+		{
+			i = TILE_H * (place_h(place) + 2); // == "enough": its actually checked in the loop instead
+		}
+		else
+		{ 
+			i = AdY;	
+		}
+	}
+	
+	// firing past selected range, so work out the map edges if need be.
+	bool checkEdge = ((range >= 1) && !(place_is_wrapping(place)));
+	
+	// For each step
+	for (; i >= 0; i--)
+	{	
+		oPx = Px;
+		oPy = Py;
+		Px = place_wrap_x(place, ((tile_w_half + Ax - Sx) / tile_w + Ox));
+		Py = place_wrap_y(place, ((tile_h_half + Ay - Sy) / tile_h + Oy));
+		
+		if (oPx != Px || oPy != Py)
+		{			
+			// check edge if required
+			if (checkEdge)
+			{
+				if (Px < 0 || Py < 0 || Px >= place_w(place) || Py >= place_h(place))
+					goto done;		
+			}
+				
+			// check range if required
+			if (range>1)
+			{
+				if (range < place_flying_distance(place, orx, ory, Px, Py))
+				{
+					//need to back up one square, since we the missile shouldnt have gotten this far
+					Px = oPx;
+					Py = oPy;
+					goto done;
+				}
+			}
+		
+			if ((ret = on_tile_entry(place, Px, Py, missile))) {
+				goto done;
+			}
+		}
+				
+		if (P > 0)
+		{
+			Ax += Xincr;
+			Ay += Yincr;
+			P += dPru;
+		}
+		else
+		{
+			Ax += Xsubincr;
+			Ay += Ysubincr;
+			P += dPr;
+		}
+	}
+      done:
+
+	*Bx = Px;
+	*By = Py;
+
+	return ret;
+}
+
 void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
                           struct sprite *sprite, struct place *place,
                           class Missile *missile, float range)

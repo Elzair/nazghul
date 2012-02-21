@@ -121,6 +121,18 @@ extern void mapClearImage(void);
  */
 extern void mapBlitImage(SDL_Surface *image, Uint32 x, Uint32 y);
 
+/**
+ * Walk the path a missile will fly from (Ax, Ay) to (Bx, By), invoking
+ * on_tile_entry() for every tile. If on_tile_entry() returns non-zero then
+ * this bails early and returns the same value, else it returns 0. On return Bx
+ * and By contain the final tile reached.
+ */
+int map_walk_missile_path(int Ax, int Ay, int *Bx, int *By,
+                          struct place *place,
+			  class Missile *missile, float range, 
+			  int (*on_tile_entry)(struct place *place, int x, int y, class Missile *missile));
+
+
 END_DECL
 
 #endif

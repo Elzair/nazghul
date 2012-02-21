@@ -113,16 +113,20 @@ class MissileType *Missile::getObjectType()
         return (class MissileType *) Object::getObjectType();
 }
 
+bool Missile::obstructed(struct place *place, int x, int y)
+{
+	int obstruction = place_get_movement_cost(place, x, y, this,0);
+	// XXX: why 20?
+	return ((obstruction == 20) || (dice_roll_numeric(1,100,0)<=obstruction));
+}
+
 /* set hit=true if a party or object has been struck
 return true if the missile has not been interupted */
 bool Missile::enterTile(struct place *place, int x, int y)
 {
-        if (! (flags & MISSILE_IGNORE_LOS))
-			{
-				int obstruction = place_get_movement_cost(place, x, y, this,0);
-				 //int opacity = place_visibility(place, x, y);
-				 return ((obstruction != 20) && (dice_roll_numeric(1,100,0)>obstruction));
-			}	
+        if (! (flags & MISSILE_IGNORE_LOS)) {
+		return ! obstructed(place, x, y);
+	}	
 			
         if (! (flags & MISSILE_HIT_PARTY))
                 return true;

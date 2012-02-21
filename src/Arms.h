@@ -29,33 +29,33 @@ class Missile;
 
 class ArmsType:public ObjectType {
 
-      public:
+public:
 
 	virtual bool isType(int classID);
 	virtual int getType();
         ArmsType();
         ArmsType(const char *tag, const char *name, struct sprite *sprite,
-			int slotMask,
-			char *to_hit_dice,
-			char *to_defend_dice,
-			int numHands,
-			int range,
-			int weight,
-			char *damage_dice,
-			char *armor_dice,
-			int reqActPts,
+		 int slotMask,
+		 char *to_hit_dice,
+		 char *to_defend_dice,
+		 int numHands,
+		 int range,
+		 int weight,
+		 char *damage_dice,
+		 char *armor_dice,
+		 int reqActPts,
 		 int AP_mod,
-			bool thrown,
-			bool ubiquitousAmmo,
-			sound_t *fireSound,
-			class MissileType *missileType,
-			class ObjectType *ammo_type,
-			int strAttackMod,
-			int dexAttackMod,
-			int charDamageMod,
-			float charAvoidMod,
-			bool isBeam
-			);
+		 bool thrown,
+		 bool ubiquitousAmmo,
+		 sound_t *fireSound,
+		 class MissileType *missileType,
+		 class ObjectType *ammo_type,
+		 int strAttackMod,
+		 int dexAttackMod,
+		 int charDamageMod,
+		 float charAvoidMod,
+		 bool isBeam
+		);
 	virtual ~ ArmsType();
 
 	virtual char * getArmorDice();
@@ -72,7 +72,7 @@ class ArmsType:public ObjectType {
 	virtual class MissileType *getMissileType();
 	virtual bool fire(class Character * target, int ox, int oy, int* misx, int* misy);
 	virtual bool fire(struct place *place, int ox, int oy, int* tx, int* ty);
-    virtual bool fireInDirection(struct place *place, int ox, int oy, int dx, int dy, class Object *user);
+	virtual bool fireInDirection(struct place *place, int ox, int oy, int dx, int dy, class Object *user);
 	virtual void fireHitLoc(Object *attacker, Object *target, struct place *place, int x, int y, int dam);
 	virtual bool isThrownWeapon();
 	virtual void setThrown(bool val);
@@ -87,9 +87,10 @@ class ArmsType:public ObjectType {
 	virtual int modifyDamageBonus(int damBonus);
 	virtual float modifyAvoidBonus(float avoidBonus);
 	virtual int get_AP_mod(void);
+	virtual bool obstructed(struct place *place, int from_x, int from_y, int to_x, int to_y);
       
 	
-      protected:
+protected:
 	int slotMask;
 	int numHands;
 	int range;

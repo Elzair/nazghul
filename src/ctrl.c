@@ -1469,16 +1469,17 @@ static bool ctrl_attack_target(class Character *character,
                                          character->getX(), character->getY(), 
                                          target->getX(), target->getY());
 
-		int armsIndex = 0;
-		int this_is_nth_attack = 0;
-		int slowest_attack_AP = 0;
-		int total_AP = 0;
-		int this_wpn_AP;
+	int armsIndex = 0;
+	int this_is_nth_attack = 0;
+	int slowest_attack_AP = 0;
+	int total_AP = 0;
+	int this_wpn_AP;
+
         for (class ArmsType * weapon = character->enumerateWeapons(&armsIndex);
              weapon != NULL; weapon = character->getNextWeapon(&armsIndex)) {
 
-	    // log_msg("DEBUG: wpn = %s (AP=%d), remaining AP=%d\n",
-	    //         weapon->getName(), weapon->getRequiredActionPoints(), character->getActionPoints() );
+		// log_msg("DEBUG: wpn = %s (AP=%d), remaining AP=%d\n",
+		//         weapon->getName(), weapon->getRequiredActionPoints(), character->getActionPoints() );
                 if (distance > weapon->getRange()) {
                         continue;
                 }
@@ -1491,6 +1492,11 @@ static bool ctrl_attack_target(class Character *character,
                         // Handle missile weapon interference
                         continue;
                 }
+
+		if (weapon->obstructed(character->getPlace(), character->getX(), character->getY(), 
+				       target->getX(), target->getY())) {
+			continue;
+		}
 
 		this_is_nth_attack++;
                 ctrl_do_attack(character, weapon, target, character->getToHitPenalty());
@@ -1505,17 +1511,17 @@ static bool ctrl_attack_target(class Character *character,
                 attacked = 1;
 
 		if (this_is_nth_attack == 1) {
-		    // 1st weapon attack (usual case)
+			// 1st weapon attack (usual case)
 		}
 		else if (this_is_nth_attack == 2) {
-		    // 2st weapon attack (dual weapon, 2nd weapon)
-		    int mult = kern_intvar_get("AP_MULT12:second_wpn_attack");
-		    this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
+			// 2st weapon attack (dual weapon, 2nd weapon)
+			int mult = kern_intvar_get("AP_MULT12:second_wpn_attack");
+			this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
 		}
 		else if (this_is_nth_attack >= 3) {
-		    // 3rd+ weapon attack (unusual case for multi-limbed beings...)
-		    int mult = kern_intvar_get("AP_MULT12:third_plus_wpn_attack");
-		    this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
+			// 3rd+ weapon attack (unusual case for multi-limbed beings...)
+			int mult = kern_intvar_get("AP_MULT12:third_plus_wpn_attack");
+			this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
 		}
 		character->decActionPoints(this_wpn_AP);
 		//log_msg("DEBUG: after attack, used %d, remaining AP=%d\n",
@@ -1528,9 +1534,9 @@ static bool ctrl_attack_target(class Character *character,
 		// If the AP use is not over the multi-weapon extra allowance, continue:
 		int threshold = kern_intvar_get("AP_THRESHOLD:multi_attack_overage");
 		if (character->getActionPoints() + threshold < 0) {
-		    //log_msg("DEBUG: AP = %d, threshold = %d -- breaking multi-attack\n",
-		    //    character->getActionPoints(), threshold );
-		    break;
+			//log_msg("DEBUG: AP = %d, threshold = %d -- breaking multi-attack\n",
+			//    character->getActionPoints(), threshold );
+			break;
 		}
 	}
         
@@ -1686,19 +1692,17 @@ static void ctrl_idle(class Character *character)
         // from the map (or killed it) as a result of its move attempt then
         // you should quit having it wander around
         
-			if (!character->canSee(target))
+	if (!character->canSee(target))	{
+		if (! character->pathfindTo(target->getPlace(),
+					    target->getX(),
+					    target->getY())) {
+			if (character->isOnMap())
 			{
-				if (! character->pathfindTo(target->getPlace(),
-						target->getX(),
-						target->getY()))
-				{
-					if (character->isOnMap())
-					{
-						ctrl_wander(character);
-					}
-					return;
-				}
+				ctrl_wander(character);
 			}
+			return;
+		}
+	}
 			       
         if (ctrl_too_close_to_target(character, target)) {
                 if (! ctrl_move_away_from_target(character, target))
@@ -1711,16 +1715,16 @@ static void ctrl_idle(class Character *character)
         // Then try force.
         // -------------------------------------------------------------------
 
-			if (!ctrl_attack_target(character, target))
-			{
-				if ((! character->pathfindTo(target->getPlace(),
-							target->getX(),
-							target->getY()))
-						&& character->isOnMap())
-				{
-					ctrl_wander(character);
-				}
-			}
+	if (!ctrl_attack_target(character, target))
+	{
+		if ((! character->pathfindTo(target->getPlace(),
+					     target->getX(),
+					     target->getY()))
+		    && character->isOnMap())
+		{
+			ctrl_wander(character);
+		}
+	}
 }
 
 void ctrl_character_ai(class Character *character)

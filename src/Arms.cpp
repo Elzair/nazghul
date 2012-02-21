@@ -195,6 +195,8 @@ void ArmsType::fireHitLoc(Object *attacker, Object *target, struct place *place,
 /*
 	Fires a missile at a specific target, returns true if it reaches the target's location
 	updates misx and misy to be the location the missile reaches.
+
+	XXX: isn't this almost an exact dupe of the other fire() method?
 */
 bool ArmsType::fire(class Character * target, int ox, int oy, int *misx, int *misy)
 {
@@ -214,6 +216,39 @@ bool ArmsType::fire(class Character * target, int ox, int oy, int *misx, int *mi
 			return false;
 	}
 	return true;
+}
+
+static int arms_on_tile_entry(struct place *place, int x, int y, class Missile *missile)
+{
+	return missile->obstructed(place, x, y) ? -1 : 0;
+}
+
+bool ArmsType::obstructed(struct place *place, int from_x, int from_y, int to_x, int to_y)
+{
+	if (isMissileWeapon() || isThrownWeapon()) {
+		int fin_x = to_x;
+		int fin_y = to_y;
+		int frange = 0;
+		if (missile->getObjectType()->isFixedRange()) {
+			frange = getRange();
+		}
+		
+		dbg("%s:%s:checking from [%d %d] to [%d %d] in %s...", __FUNCTION__, getName(), from_x, from_y, 
+		    to_x, to_y, place_name(place));
+		int ret = map_walk_missile_path(from_x, from_y, &fin_x, &fin_y, place, missile, frange,
+						arms_on_tile_entry);
+		if (ret != 0) {
+			dbg("blocked in flight!\n");
+			return true;
+		}
+
+		if (to_x != fin_x || to_y != fin_y) {
+			dbg("stopped early at [%d %d]\n", fin_x, fin_y);
+			return true;
+		}
+		dbg("OK!\n");
+	}
+	return false;
 }
 
 /*

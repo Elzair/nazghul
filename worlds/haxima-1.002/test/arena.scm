@@ -70,9 +70,19 @@
 
 
 ;;(let ((kchar (mk-npc 'headless 1))) (kern-obj-put-at kchar (loc-mk p_19x19 10 10)))
-;;(let ((kchar (mk-npc 'wolf 1))) (kern-obj-put-at kchar (loc-mk p_19x19 4 9)))
-;;(let ((kchar (mk-npc 'wolf 1))) (kern-obj-put-at kchar (loc-mk p_19x19 4 8)))
-;;(let ((kchar (mk-npc 'wolf 1))) (kern-obj-put-at kchar (loc-mk p_19x19 4 10)))
+(let ((kchar (mk-npc 'skeletal-archer 1))) 
+  (kern-obj-put-at kchar (loc-mk p_19x19 14 4))
+  (give kchar t_arrow 100)
+  )
+
+(let ((kchar (mk-npc 'craven-archer 1))) 
+  (kern-obj-put-at kchar (loc-mk p_19x19 15 5))
+  (give kchar t_arrow 100)
+  )
+
+(let ((kchar (mk-npc 'cave-goblin-slinger 1))) 
+  (kern-obj-put-at kchar (loc-mk p_19x19 16 4))
+  )
 
 (let* ((kmir (kern-tag 'mirror (mk-mirror 's_mirror_bg_flagstones)))
        (ksen (mk-char-sensor 'mirror)))
