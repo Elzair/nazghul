@@ -62,6 +62,10 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         /* Commands which are only enabled in developer mode */
         if (DeveloperMode) {
 	    switch (key) {
+
+                case KEY_CTRL_I:
+			place_dump_stats();
+			break;
                         
                 case KEY_CTRL_T:
 		    cmd_terraform(party->getPlace(), party->getX(), 
@@ -1048,6 +1052,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         if (DeveloperMode) {
                 switch (key) {
 
+                case KEY_CTRL_I:
+			place_dump_stats();
+			break;
+                        
                 case KEY_CTRL_T:
                         cmd_terraform(character->getPlace(), character->getX(),
                                       character->getY());

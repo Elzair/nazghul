@@ -61,8 +61,13 @@ BEGIN_DECL
  * that we care about.
  * CTRL-A is 0x01 and CTRL-Z is 0x1A, others are in-between of course.
  */
+#define KEY_CTRL_A      0x01
 #define KEY_CTRL_D      0x04
 #define KEY_CTRL_E      0x05
+#define KEY_CTRL_F      0x06
+#define KEY_CTRL_G      0x07
+#define KEY_CTRL_H      0x08
+#define KEY_CTRL_I      0x09
 #define KEY_CTRL_O      0x0F
 #define KEY_CTRL_Q      0x11
 #define KEY_CTRL_R      0x12

@@ -87,6 +87,11 @@ typedef struct closure_list {
 
 struct place *Place;
 
+/* For stats */
+static struct list place_list = { &place_list, &place_list };
+static int place_allocs = 0;
+static int place_frees = 0;
+
 /* Tile API ******************************************************************/
 struct tile {
 	struct olist hashlink;
@@ -508,7 +513,9 @@ struct place *place_new(const char *tag,
         place->turn_elem = &place->turn_list;
 
         place_set_default_edge_entrance(place);
-        
+
+	list_add_tail(&place_list, &place->all_places);
+	place_allocs++;
 
 	return place;
 }
@@ -573,6 +580,9 @@ void place_del(struct place *place)
 		terrain_map_unref(place->terrain_map);
 
         place_del_on_entry_hook(place);
+
+	list_remove(&place->all_places);
+	place_frees++;
 
 	free(place);
 }
@@ -2475,4 +2485,16 @@ void place_set_terrain_map(struct place *place, struct terrain_map *map)
         if (map) {
                 place->terrain_map = terrain_map_clone(map, 0);
         }
+}
+
+void place_dump_stats(void)
+{
+	struct list *entry;
+	int index = 0;
+	list_for_each(&place_list, entry) {
+		struct place *place = list_entry(entry, struct place, all_places);
+		index++;
+		info("%3d] %s\n", index, place_name(place));
+	}
+	info("Allocs: %d Frees: %d\n", place_allocs, place_frees);
 }

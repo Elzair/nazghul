@@ -105,7 +105,7 @@ struct place {
         // 'magic' is used by the loader to type-check a pointer passed in from
         // the script.
         int magic;
-
+	struct list all_places;
         struct node turn_list;   /* list of objects to exec each turn */
         struct node *turn_elem;  /* iterator over above list */
 
@@ -346,6 +346,7 @@ int place_move_is_passable(struct place *place, int from_x, int from_y,
                            int to_x, int to_y,
                            class Object *subject, int flags);
 void place_apply_tile_effects(struct place *place, class Object *obj);
+void place_dump_stats(void);
 
 END_DECL
 
