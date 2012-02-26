@@ -30,7 +30,7 @@ typedef struct {
 
 static void (*mem_err_handler)(int size) = NULL;
 
-void *mem_alloc(int size, void (*finalize)(void *))
+static mem_t * mem_alloc_internal(int size, void (*finalize)(void *))
 {
         mem_t *chunk = 
                 (mem_t*)calloc(1, sizeof(*chunk)+size);
@@ -40,8 +40,20 @@ void *mem_alloc(int size, void (*finalize)(void *))
                 }
                 return NULL;
         }
-        chunk->refcount = 1;
         chunk->finalize = finalize;
+	return chunk;
+}
+
+void *mem_alloc_noref(int size, void (*finalize)(void *))
+{
+        mem_t *chunk = mem_alloc_internal(size, finalize);
+        return (char *)chunk + sizeof(*chunk);
+}
+
+void *mem_alloc(int size, void (*finalize)(void *))
+{
+        mem_t *chunk = mem_alloc_internal(size, finalize);
+        chunk->refcount = 1;
         return (char *)chunk + sizeof(*chunk);
 }
 

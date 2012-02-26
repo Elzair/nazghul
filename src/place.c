@@ -92,43 +92,46 @@ struct place *Place;
 static struct list place_list = { &place_list, &place_list };
 static int place_allocs = 0;
 static int place_frees = 0;
+static int place_tile_allocs = 0;
+static int place_tile_frees = 0;
 
 /* Tile API ******************************************************************/
+
 struct tile {
 	struct olist hashlink;
 	struct node objstack;
         struct place *subplace;
 	class Vehicle *vehicle;
-	int objects;
-	int lock;
 };
+
+static void tile_fin(void *arg)
+{
+	struct tile *tile = (struct tile*)arg;
+	list_remove(&tile->hashlink.list);
+	place_tile_frees++;
+}
+
+static void tile_ref(struct tile *tile)
+{
+	mem_ref(tile);
+}
+
+static void tile_deref(struct tile *tile)
+{
+	mem_deref(tile);
+}
+
 static struct tile *tile_new(int hashkey)
 {
-	struct tile *tile;
-	CREATE(tile, struct tile, 0);
+	struct tile *tile = MEM_ALLOC_TYPE_NOREF(struct tile, tile_fin);
 	olist_init(&tile->hashlink);
 	tile->hashlink.key = hashkey;
 	node_init(&tile->objstack);
+	place_tile_allocs++;
 	return tile;
 }
-static void tile_del(struct tile *tile)
-{
-        /* 
-         * FIXME! use a straightforward refcount on the tile instead of an
-         * explicit lock
-         */
-	// Locking prevents me from destroying a tile while the place_for_each
-	// algorithm is using it.
-	if (!tile->lock) {
-		assert(!tile->objects);
-		list_remove(&tile->hashlink.list);
-                //dbg("tile_del: tile=%08lx\n", tile);
-		free(tile);
-	}
-}
-static void tile_for_each_object(struct tile *tile,
-                                 void (*fx)(class Object *obj, void *data),
-                                 void *data)
+
+static void tile_for_each_object(struct tile *tile, void (*fx)(class Object *obj, void *data), void *data)
 {
         struct node *elem;
         class Object *obj;
@@ -139,8 +142,9 @@ static void tile_for_each_object(struct tile *tile,
                 fx(obj, data);
 	}
 
-        if (tile->vehicle)
+        if (tile->vehicle) {
                 fx(tile->vehicle, data);
+	}
 }
 
 static Object *tile_get_filtered_object(struct tile *tile, int (*filter)(Object*))
@@ -153,12 +157,14 @@ static Object *tile_get_filtered_object(struct tile *tile, int (*filter)(Object*
         for (elem = node_prev(&tile->objstack); elem != &tile->objstack; ) {
 		obj = (class Object *)elem->ptr;
                 elem = node_prev(elem);
-                if (filter(obj))
+                if (filter(obj)) {
                         return obj;
+		}
 	}
 
-        if (tile->vehicle && filter(tile->vehicle))
+        if (tile->vehicle && filter(tile->vehicle)) {
                 return tile->vehicle;
+	}
 
         return NULL;
 }
@@ -168,8 +174,9 @@ static Object *tile_get_top_object_at_layer(struct tile *tile, enum layer layer)
         struct node *node;
 
         node = node_lookup(&tile->objstack, layer);
-        if (node)
+        if (node) {
                 return (Object*)node->ptr;
+	}
         
         return NULL;
 }
@@ -181,8 +188,9 @@ static int tile_get_light(struct tile *tile)
         class Object *obj = NULL;
 
 	/* Check for a vehicle */
-	if (tile->vehicle)
+	if (tile->vehicle) {
 		light += tile->vehicle->getLight();
+	}
 
 	/* Check all objects */
 	node_for_each(&tile->objstack, node) {
@@ -201,8 +209,9 @@ static int tile_is_transparent(struct tile *tile)
         for (elem = node_next(&tile->objstack); elem != &tile->objstack; ) {
 		obj = (class Object *)elem->ptr;
                 elem = node_next(elem);
-                if (obj->isOpaque())
+                if (obj->isOpaque()) {
                         return 0;
+		}
 	}
 
 	return 1;
@@ -213,7 +222,6 @@ static void tile_remove_object(struct tile *tile, class Object *object)
 	if (object->isType(VEHICLE_ID)) {
                 if (tile->vehicle == object) {
                         tile->vehicle = 0;
-                        tile->objects--;
                 }
                 /* 30Jul2003 gmcnutt: otherwise this vehicle must be occupied,
                  * in which case it does not occupy the tile (it's occupant
@@ -225,15 +233,11 @@ static void tile_remove_object(struct tile *tile, class Object *object)
                 node_remove(object->clink);
                 node_unref(object->clink);
                 object->clink = NULL;
-                tile->objects--;
-	}
-
-
-	if (!tile->objects) {
-		tile_del(tile);
 	}
 
         obj_dec_ref(object);
+	tile_deref(tile);
+
 }
 
 static void tile_add_object(struct tile *tile, class Object *object)
@@ -241,30 +245,27 @@ static void tile_add_object(struct tile *tile, class Object *object)
         obj_inc_ref(object);
 
 	if (object->isType(VEHICLE_ID)) {
-		if (tile->vehicle) {
-                        assert(0);
-                }
+		assert(! tile->vehicle);
 		tile->vehicle = (class Vehicle *) object;
-		tile->objects++;
-                return;
+	} else {
+		/* Create a new container link node for the object and add it to the
+		 * tile's object stack. */
+		assert(!object->clink);
+		object->clink = node_new_keyed(object, object->getLayer());
+		node_add_keyed(&tile->objstack, object->clink);
 	}
 
-        /* Create a new container link node for the object and add it to the
-         * tile's object stack. */
-        assert(!object->clink);
-        object->clink = node_new_keyed(object, object->getLayer());
-        node_add_keyed(&tile->objstack, object->clink);
-
-	tile->objects++;
+	tile_ref(tile);
 }
 
 static int tile_add_subplace(struct tile *tile, struct place *place)
 {
-        if (tile->subplace)
+        if (tile->subplace) {
                 return -1;
+	}
 
         tile->subplace = place;
-        tile->objects++;
+	tile_ref(tile);
         return 0;
 }
 
@@ -272,12 +273,8 @@ static void tile_remove_subplace(struct tile *tile)
 {
         if (tile->subplace) {
                 tile->subplace = 0;
-                tile->objects--;
+		tile_deref(tile);
         }
-
-	if (!tile->objects) {
-		tile_del(tile);
-	}
 }
 
 static void tile_paint(struct tile *tile, int sx, int sy)
@@ -481,13 +478,12 @@ static void place_del_tile_object_visitor(class Object *obj, void *data)
 static void place_del_tile_visitor(struct tile *tile, void *data)
 {
         // Called by place_for_each_tile()
-        tile->lock++;
+	tile_ref(tile);
         tile_for_each_object(tile, place_del_tile_object_visitor, tile);
         if (tile->subplace) {
                 tile_remove_subplace(tile);
         }
-        tile->lock--;
-        tile_del(tile);
+        tile_deref(tile);
 }
 
 static void place_del_on_entry_hook(struct place *place)
@@ -1605,8 +1601,9 @@ static void place_examine_objects(struct place *place, int x, int y)
 	Object *obj = NULL;
 
 	tile = place_lookup_tile(place, x, y);
-	if (!tile)
+	if (!tile) {
 		return;
+	}
 
 	if (tile->subplace) {
                 log_continue("\nthe entrance to %s", tile->subplace->name);
@@ -1669,12 +1666,11 @@ void place_examine(struct place *place, int x, int y)
 		return;
 	}
 	
-    place_describe_terrain(place, x, y);
+	place_describe_terrain(place, x, y);
 	place_examine_objects(place, x, y);
 }
 
-void place_for_each_tile(struct place *place, 
-                         void (*fx)(struct tile *tile, void *data), void *data)
+void place_for_each_tile(struct place *place, void (*fx)(struct tile *tile, void *data), void *data)
 {
 	int i;
 	struct olist *tileList;
@@ -1700,11 +1696,9 @@ void place_for_each_tile(struct place *place,
 			tile = outcast(tileElem, struct tile, hashlink.list);
                         
                         /* invoke the function on the tile */
-                        tile->lock++;
+                        tile_ref(tile);
                         fx(tile, data);
-                        tile->lock--;
-			if (!tile->objects)
-				tile_del(tile);
+			tile_deref(tile);
                         
 			tileElem = tileTmp;
                         count++;
@@ -1724,9 +1718,7 @@ void place_forobj_tile_visitor(struct tile *tile, void *data)
         tile_for_each_object(tile, info->fx, info->data);
 }
 
-void place_for_each_object(struct place *place, 
-                           void (*fx) (class Object *, void *data),
-			   void *data)
+void place_for_each_object(struct place *place, void (*fx) (class Object *, void *data), void *data)
 {
         struct forobj_tile_visitor_info info;
         info.fx = fx;
@@ -2475,7 +2467,8 @@ void place_dump_stats(void)
 		index++;
 		info("%c %3d. %s [%d]\n", (place == Place ? '*':' '), index, place_name(place), mem_get_refs(place));
 	}
-	info("Allocs: %d Frees: %d\n", place_allocs, place_frees);
+	info("Places: allocs=%d / frees=%d\n", place_allocs, place_frees);
+	info(" Tiles: allocs=%d / frees=%d\n", place_tile_allocs, place_tile_frees);
 }
 
 void place_ref(struct place *place)

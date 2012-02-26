@@ -28,11 +28,13 @@
  * destructors.
  */
 
-#define MEM_ALLOC_NTYPE(type, n, fin) \
-        ((type*)mem_alloc(sizeof(type) * (n), (fin)))
+#define MEM_ALLOC_NTYPE(type, n, fin) ((type*)mem_alloc(sizeof(type) * (n), (fin)))
 #define MEM_ALLOC_TYPE(type, fin) MEM_ALLOC_NTYPE(type, 1, fin)
+#define MEM_ALLOC_NTYPE_NOREF(type, n, fin) ((type*)mem_alloc_noref(sizeof(type) * (n), (fin)))
+#define MEM_ALLOC_TYPE_NOREF(type, fin) MEM_ALLOC_NTYPE_NOREF(type, 1, fin)
 
 void *mem_alloc(int size, void (*fin)(void *));
+void *mem_alloc_noref(int size, void (*fin)(void *));
 void mem_ref(void *ptr);
 void mem_deref(void *ptr);
 unsigned int mem_get_refs(void *ptr);
