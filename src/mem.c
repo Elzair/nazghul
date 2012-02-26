@@ -68,3 +68,9 @@ void mem_set_err_handler(void (*handler)(int size))
 {
         mem_err_handler = handler;
 }
+
+unsigned int mem_get_refs(void *ptr)
+{
+        mem_t *chunk = (mem_t*)ptr - 1;
+        return chunk->refcount;
+}

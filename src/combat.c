@@ -1843,7 +1843,7 @@ void combat_exit(void)
         // next step.
         if (Place->is_wilderness_combat) {
 
-                //assert(! Place->handle); // should not be top-level
+		assert(Place == Combat.place); /* Place is used as an alias below... */
                 assert(place_get_parent(Place));
 
                 if (Place->terrain_map->handle)
@@ -1870,7 +1870,7 @@ void combat_exit(void)
                 if (Place->handle)
                         session_rm(Session, Place->handle);
 
-                place_del(Place); // map deleted in here
+                place_deref(Combat.place); // map deleted in here
                 Combat.place = 0;
 
                 // ------------------------------------------------------------

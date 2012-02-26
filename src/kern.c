@@ -212,7 +212,7 @@ static void incfile_save(save_t *save, void *val)
 
 static void place_dtor(void *val)
 {
-        place_del((struct place*)val);
+        place_deref((struct place*)val);
 }
 
 static void species_dtor(void *val)
@@ -1251,7 +1251,7 @@ KERN_API_CALL(kern_mk_place)
         return ret;
 
  abort:
-        place_del(place);
+        place_deref(place);
         return sc->NIL;
 }
 

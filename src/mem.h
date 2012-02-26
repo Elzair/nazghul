@@ -35,6 +35,7 @@
 void *mem_alloc(int size, void (*fin)(void *));
 void mem_ref(void *ptr);
 void mem_deref(void *ptr);
+unsigned int mem_get_refs(void *ptr);
 void mem_set_err_handler(void (*handler)(int size));
 
 #endif

@@ -20,6 +20,7 @@
 //
 /* 12/14/2002 Sam Glasby added place_get_terrain()
  */
+#include "mem.h"
 #include "sound.h"
 #include "place.h"
 #include "sprite.h"
@@ -469,6 +470,63 @@ static void place_remove_from_turn_list(struct place *place, Object *object)
         node_unref(node);
 }
 
+static void place_del_tile_object_visitor(class Object *obj, void *data)
+{
+        // Called by tile_for_each_object()
+        struct tile *tile = (struct tile*)data;
+        tile_remove_object(tile, obj);
+}
+
+
+static void place_del_tile_visitor(struct tile *tile, void *data)
+{
+        // Called by place_for_each_tile()
+        tile->lock++;
+        tile_for_each_object(tile, place_del_tile_object_visitor, tile);
+        if (tile->subplace) {
+                tile_remove_subplace(tile);
+        }
+        tile->lock--;
+        tile_del(tile);
+}
+
+static void place_del_on_entry_hook(struct place *place)
+{
+        struct list *elem = place->on_entry_hook.next;
+        while (elem != &place->on_entry_hook) {
+                closure_list_t *node = (closure_list_t*)elem;
+                elem = elem->next;
+                list_remove(&node->list);
+                closure_unref(node->closure);
+                free(node);
+        }
+}
+
+static void place_fin(void *arg)
+{
+	struct place *place = (struct place*)arg;
+
+        // Destroy all tiles, objects and subplaces recursively.
+        place_for_each_tile(place, place_del_tile_visitor, 0);
+        hash_destroy(place->objects);
+
+        //dbg("place_del %s\n", place->tag);
+	if (place->tag) {
+		free(place->tag);
+	}
+	if (place->name) {
+		free(place->name);
+	}
+	if (place->terrain_map) {
+		terrain_map_unref(place->terrain_map);
+	}
+
+        place_del_on_entry_hook(place);
+
+	list_remove(&place->all_places);
+	place_frees++;
+}
+
 struct place *place_new(const char *tag,
                         const char *name, 
                         struct sprite *sprite,
@@ -479,10 +537,8 @@ struct place *place_new(const char *tag,
                         int wild_combat)
                         
 {
-	struct place *place;
-        
-	CREATE(place, struct place, 0);
-
+	struct place *place = MEM_ALLOC_TYPE(struct place, place_fin);
+ 
 	place->tag = strdup(tag);
         assert(place->tag);
 
@@ -518,73 +574,6 @@ struct place *place_new(const char *tag,
 	place_allocs++;
 
 	return place;
-}
-
-void place_del_tile_object_visitor(class Object *obj, void *data)
-{
-        // Called by tile_for_each_object()
-        struct tile *tile = (struct tile*)data;
-        tile_remove_object(tile, obj);
-}
-
-void place_del_tile_visitor(struct tile *tile, void *data)
-{
-        // Called by place_for_each_tile()
-        tile->lock++;
-        tile_for_each_object(tile, place_del_tile_object_visitor, tile);
-        if (tile->subplace) {
-                //place_del(tile->subplace);
-                tile_remove_subplace(tile);
-        }
-        tile->lock--;
-        tile_del(tile);
-}
-
-static void place_del_on_entry_hook(struct place *place)
-{
-        struct list *elem = place->on_entry_hook.next;
-        while (elem != &place->on_entry_hook) {
-                closure_list_t *node = (closure_list_t*)elem;
-                elem = elem->next;
-                list_remove(&node->list);
-                closure_unref(node->closure);
-                free(node);
-        }
-}
-
-void place_del(struct place *place)
-{
-        // --------------------------------------------------------------------
-        // If the place is locked then we cannot delete it now. Mark it for
-        // death so that it will be deleted when unlocked.
-        // --------------------------------------------------------------------
-
-        //dbg("place_del(%s)\n", place->name);
-
-        if (place_is_locked(place)) {
-                place_mark_for_death(place);
-                return;
-        }
-
-        // Destroy all tiles, objects and subplaces recursively.
-        place_for_each_tile(place, place_del_tile_visitor, 0);
-        hash_destroy(place->objects);
-
-        //dbg("place_del %s\n", place->tag);
-
-	if (place->tag)
-		free(place->tag);
-	if (place->name)
-		free(place->name);
-	if (place->terrain_map)
-		terrain_map_unref(place->terrain_map);
-
-        place_del_on_entry_hook(place);
-
-	list_remove(&place->all_places);
-	place_frees++;
-
-	free(place);
 }
 
 static int place_generic_is_passable(class Object *subject, int flags, 
@@ -1828,7 +1817,7 @@ void place_exec(struct place *place)
 #endif
         
         /* Prevent destruction of the place. */
-        place_lock(place);
+        place_ref(place);
         
         /* Flush ambient noises one cycle */
         sound_flush_ambient();
@@ -1893,7 +1882,7 @@ void place_exec(struct place *place)
                         /* Don't delete the player party here, that will be
                          * handled by the caller. */
                         if (obj == player_party) {
-                                place_unlock(place);
+                                place_deref(place);
                                 obj_dec_ref(obj);
                                 return;
                         }
@@ -1925,7 +1914,7 @@ void place_exec(struct place *place)
         }
 
         /* Allow the place to be destroyed. */
-        place_unlock(place);
+        place_deref(place);
 }
 
 void place_clip_to_map(struct place *place, int *x, int *y)
@@ -2376,16 +2365,6 @@ void place_exit(struct place *place)
                               NULL);
 }
 
-void place_unlock(struct place *place)
-{
-        assert(place->lock);
-
-        place->lock--;
-
-        if (!place->lock && place_is_marked_for_death(place))
-                place_del(place);
-}
-
 int place_get_edge_entrance(struct place *place, int dir, int *x, int *y)
 {
         if (dir < 0 || dir >= NUM_PLANAR_DIRECTIONS)
@@ -2494,7 +2473,17 @@ void place_dump_stats(void)
 	list_for_each(&place_list, entry) {
 		struct place *place = list_entry(entry, struct place, all_places);
 		index++;
-		info("%3d] %s\n", index, place_name(place));
+		info("%c %3d. %s [%d]\n", (place == Place ? '*':' '), index, place_name(place), mem_get_refs(place));
 	}
 	info("Allocs: %d Frees: %d\n", place_allocs, place_frees);
+}
+
+void place_ref(struct place *place)
+{
+	mem_ref(place);
+}
+
+void place_deref(struct place *place)
+{
+	mem_deref(place);
 }

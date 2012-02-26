@@ -60,11 +60,6 @@ BEGIN_DECL
 #define place_get_x(p) ((p)->location.x)
 #define place_get_y(p) ((p)->location.y)
 #define place_is_wilderness_combat(p) ((p)->is_wilderness_combat)
-#define place_lock(p) ((p)->lock++)
-/* place_unlock() is a function (see below) */
-#define place_is_locked(p) ((p)->lock)
-#define place_mark_for_death(p) ((p)->marked_for_death = 1)
-#define place_is_marked_for_death(p) ((p)->marked_for_death)
 #define place_max_distance(p) (place_w(p) + place_h(p))
 #define place_get_all_objects(p) (&(p)->turn_list)
 #define place_get_terrain_map(p) ((p)->terrain_map)
@@ -133,8 +128,6 @@ struct place {
         struct list on_entry_hook;  /* on-entry hook */
 
         int saved;
-        int lock;
-        int marked_for_death : 1;
         int saving_now : 1;
         int started : 1;
 
@@ -155,8 +148,8 @@ extern struct place *place_new(const char *tag,
                                int wilderness_combat
                                );
 
-
-extern void place_del(struct place *place);
+extern void place_ref(struct place *place);
+extern void place_deref(struct place *place);
 
 extern int place_is_passable(struct place *place, int x, int y,
                              class Object *passer, int flags);
@@ -295,7 +288,6 @@ extern struct place *place_get_subplace(struct place *place, int x, int y);
 extern void place_remove_subplace(struct place *place, struct place *subplace);
 extern void place_for_each_object_at(struct place *place, int x, int y, void (*fx)(class Object *, void *), void *);
 extern void place_exit(struct place *place);
-extern void place_unlock(struct place *place);
 extern void place_describe(struct place *place, int x, int y, int flags);
 extern void place_examine(struct place *place, int x, int y);
 extern int place_get_edge_entrance(struct place *place, int dir, int *x, int *y);
