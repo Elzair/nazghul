@@ -1068,9 +1068,7 @@ static int place_pathfind_is_valid_location(
 		return 1;
         }
 
-	if (!place_move_is_passable(context->place, from_x, from_y, x, y, 
-                                    context->requestor, context->pflags)) {
-                //dbg("impassable\n");
+	if (!place_move_is_passable(context->place, from_x, from_y, x, y, context->requestor, context->pflags)) {
 		return 0;
         }
 
@@ -1082,9 +1080,7 @@ static int place_pathfind_is_valid_location(
                 class Object *occupant;
                 occupant = place_get_object(context->place, x, y, being_layer);
                 if (occupant != NULL) {
-                        if (0 == (context->pflags & PFLAG_IGNORECOMPANIONS) ||
-                            ! context->requestor->isCompanionOf(occupant)) {
-                                //dbg("occupied!\n");
+                        if (! (context->pflags & PFLAG_IGNORECOMPANIONS) || ! context->requestor->isCompanionOf(occupant)) {
                                 return 0;
                         }
                 }
@@ -1106,19 +1102,15 @@ static int place_pathfind_is_valid_location(
         // Addendum 2: fix for SF Bug #[ 1523230 ] "pathfinding across
         // mechs". Added the new IGNORESTEPTRIG flag and wrapped the following
         // with a check. Currently the only time this flag should be set is in
-        // pathfinding done by player party member's in Follow Mode.
+        // pathfinding done by player party members in Follow Mode.
         // --------------------------------------------------------------------
 
-	if (0 == (context->pflags & PFLAG_IGNORESTEPTRIG)) {
-                if ((portal = 
-                     place_get_object(context->place, x, y, mech_layer)) 
-                    && portal->canStep()) {
-                        //dbg("portal!\n");
+	if (!(context->pflags & PFLAG_IGNORESTEPTRIG)) {
+                if ((portal = place_get_object(context->place, x, y, mech_layer)) && portal->canStep()) {
                         return 0;
                 }
         }
 
-        //dbg("ok\n");
 	return 1;
 }
 

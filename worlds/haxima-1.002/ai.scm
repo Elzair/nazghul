@@ -252,8 +252,8 @@
   (get-off-bad-tile? kchar))
 
 (define (wolf-ai kchar)
-	(or (npc-dosound-bark kchar)
-		(animal-ai kchar)))
+  (or (npc-dosound-bark kchar)
+      (animal-ai kchar)))
   
 (define (nolight-ai kchar)
   (or 

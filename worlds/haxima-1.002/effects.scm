@@ -893,19 +893,15 @@
 ;; TODO: multiply damage by kern-ticks-per-turn?
 ;;	TODO: define ifc for objects taking damage from fire
 (define (generic-burn obj dice)
-	(let ((damage (kern-dice-roll dice)))
-		(if (and (> damage 0)
-				(or (not (kern-obj-is-being? obj))
-					(not (has-fire-immunity? obj))
-			))
-			(begin
-				(if (kern-obj-is-being? obj)
-					(begin
-					(kern-log-msg (kern-obj-get-name obj) " burned!")
-					(kern-obj-apply-damage obj "burning" damage)
-					)
-			))
-	)))
+  (let ((damage (kern-dice-roll dice)))
+    (if (and (> damage 0)
+	     (or (not (kern-obj-is-being? obj))
+		 (not (has-fire-immunity? obj))))
+	(begin
+	  (if (kern-obj-is-being? obj)
+	      (begin
+		(kern-log-msg (kern-obj-get-name obj) " burned!")
+		(kern-obj-apply-damage obj "burning" damage)))))))
 
 (define (burn obj)
   (generic-burn obj "2d3+2"))

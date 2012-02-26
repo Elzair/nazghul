@@ -69,22 +69,25 @@
 (kern-party-add-member player ch_thorald)
 
 
-;;(let ((kchar (mk-npc 'headless 1))) (kern-obj-put-at kchar (loc-mk p_19x19 10 10)))
-(let ((kchar (mk-npc 'skeletal-archer 1))) 
-  (kern-obj-put-at kchar (loc-mk p_19x19 14 4))
-  (give kchar t_arrow 100)
-  )
+(let ((kchar (mk-npc 'wolf 9))) 
+  (kern-obj-put-at kchar (loc-mk p_19x19 5 10)))
 
-(let ((kchar (mk-npc 'craven-archer 1))) 
-  (kern-obj-put-at kchar (loc-mk p_19x19 15 5))
-  (give kchar t_arrow 100)
-  )
+(if #f
+    (let ((kchar (mk-npc 'skeletal-archer 1))) 
+      (kern-obj-put-at kchar (loc-mk p_19x19 14 4))
+      (give kchar t_arrow 100)))
 
-(let ((kchar (mk-npc 'cave-goblin-slinger 1))) 
-  (kern-obj-put-at kchar (loc-mk p_19x19 16 4))
-  )
+(if #f
+    (let ((kchar (mk-npc 'craven-archer 1))) 
+      (kern-obj-put-at kchar (loc-mk p_19x19 15 5))
+      (give kchar t_arrow 100)))
 
-(let* ((kmir (kern-tag 'mirror (mk-mirror 's_mirror_bg_flagstones)))
-       (ksen (mk-char-sensor 'mirror)))
-  (kern-obj-put-at ksen (loc-mk p_19x19 11 10))
-  (kern-obj-put-at kmir (loc-mk p_19x19 11 9)))
+(if #f
+    (let ((kchar (mk-npc 'cave-goblin-slinger 1))) 
+      (kern-obj-put-at kchar (loc-mk p_19x19 16 4))))
+
+(if #f
+    (let* ((kmir (kern-tag 'mirror (mk-mirror 's_mirror_bg_flagstones)))
+	   (ksen (mk-char-sensor 'mirror)))
+      (kern-obj-put-at ksen (loc-mk p_19x19 11 10))
+      (kern-obj-put-at kmir (loc-mk p_19x19 11 9))))

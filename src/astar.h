@@ -23,41 +23,38 @@
 #define astar_h
 
 #include "macros.h"
-
 BEGIN_DECL
 
 #include "tree.h"
-
 #define ASTAR_HORZ (1 << 0)
 #define ASTAR_VERT (1 << 1)
 
 struct astar_search_info {
-        int x0;
-        int x1;
-        int y0;
-        int y1;
-        int flags;
-        int (*is_valid_location) (void *context, int fx, int fy, int x, int y);
-        void (*heuristic) (struct astar_search_info * info, 
-                           int *goodness, int *cost, int fx, int fy);
-        unsigned int width;
-        unsigned int height;
-        int wraps;
-        void *context;
-        bool limit_depth;
-        int max_depth;
+	int x0;
+	int x1;
+	int y0;
+	int y1;
+	int flags;
+	int (*is_valid_location) (void *context, int fx, int fy, int x, int y);
+	void (*heuristic) (struct astar_search_info * info, int *goodness, int *cost, int fx, int fy);
+	unsigned int width;
+	unsigned int height;
+	int wraps;
+	void *context;
+	bool limit_depth;
+	int max_depth;
 };
 
 struct astar_node {
-        struct tree order;
-        struct astar_node *next;
-        int cost;
-        int goodness;
-        int len;
-        int x;
-        int y;
-        int depth;
-        unsigned char scheduled:1;
+	struct tree order;
+	struct astar_node *next;
+	int cost;
+	int goodness;
+	int len;
+	int x;
+	int y;
+	int depth;
+	unsigned char scheduled:1;
 };
 
 /**
@@ -97,5 +94,4 @@ extern void astar_node_destroy(struct astar_node *node);
 extern void astar_dbg_dump_path(struct astar_node *path);
 
 END_DECL
-
 #endif

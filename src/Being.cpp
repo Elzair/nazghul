@@ -22,7 +22,7 @@
 #endif
 
 Being::Being()
-{
+{/*  */
         setDefaults();
 }
 
@@ -100,61 +100,53 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         struct astar_search_info as_info;
         struct astar_node *pathPtr;
 
-	if (!flags)
+	if (!flags) {
 		flags = PFLAG_IGNORECOMPANIONS | PFLAG_IGNOREMECHS;
+	}
 
-	if (isStationary())
+	if (isStationary()) {
 		return false;
+	}
 	
 	// For now, don't try to pathfind between places.
-	if (destplace != getPlace())
-	{
+	if (destplace != getPlace()) {
 		warn("%s in %s, can't pathfind to %s", getName(),
 	   		getPlace()->name, destplace->name);
 		return false;
 	}
 	
-	//dbg("%s pathfind from (%d %d) to (%d %d)\n", 
-	//getName(), getX(), getY(), destx, desty);
+	dbg("%s pathfind from (%d %d) to (%d %d)\n", getName(), getX(), getY(), destx, desty);
 
 	// Check the cachedPath
-	if (USE_CACHED_PATH && cachedPath)
-	{
+	if (USE_CACHED_PATH && cachedPath) {
 		
 		//dbg("cachedPath: ");
 		//astar_dbg_dump_path(cachedPath);
 		
 		// If the cached path is for a different place then we can't
 		// use it
-		if (getPlace() != cachedPathPlace)
-		{
+		if (getPlace() != cachedPathPlace) {
 			//dbg("old place\n");
                         clearCachedPath();
-		} 
-		else 
-		{
+		} else {
 			pathPtr = cachedPath;
 			
 			
 			// If the cached path does not start from the current
 			// coordinates then we can't use it.
-			if (pathPtr->x != getX() || pathPtr->y != getY())
-			{
+			if (pathPtr->x != getX() || pathPtr->y != getY()) {
 				//dbg("old start\n");
                                 clearCachedPath();
-			}
-			else if (pathPtr->x != destx || pathPtr->y != desty)
-			{
+			} else if (pathPtr->x != destx || pathPtr->y != desty) {
 				pathPtr = pathPtr->next;
 				
 				// if we are about to hit nasty terrain, reevaluate our options
-				if (pathPtr && place_get_terrain(getPlace(),pathPtr->x,pathPtr->y)->effect)
-				{
+				if (pathPtr && place_get_terrain(getPlace(),pathPtr->x,pathPtr->y)->effect) {
 					dbg("recheck path (terrain)\n");
 					pathPtr = NULL;
 				}
-				if (pathPtr && place_get_object(getPlace(),pathPtr->x,pathPtr->y, field_layer) != NULL)
-				{
+
+				if (pathPtr && place_get_object(getPlace(),pathPtr->x,pathPtr->y, field_layer) != NULL) {
 					dbg("recheck path (field)\n");
 					pathPtr = NULL;
 				}
@@ -162,14 +154,13 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
 				//dbg("tracing\n");
 				// Trace down the path until it ends or hits
 				// the target
-				while (pathPtr && 
-						(pathPtr->x != destx || pathPtr->y != desty))
+				while (pathPtr && (pathPtr->x != destx || pathPtr->y != desty)) {
 					pathPtr = pathPtr->next;
+				}
 				
 				// If this path is no good then destroy it,
 				// we'll have to get a new one.
-				if (! pathPtr)
-				{
+				if (! pathPtr) {
 					//dbg("won't reach\n");
                                         clearCachedPath();
 				}
@@ -180,7 +171,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         // If we don't have a valid path then try to find one, first by
         // ignoring mechanisms.
         if (! USE_CACHED_PATH || ! cachedPath) {
-                //dbg("searching\n");
+                dbg("searching\n");
                 memset(&as_info, 0, sizeof (as_info));
                 as_info.x0 = getX();
                 as_info.y0 = getY();
@@ -230,15 +221,10 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                             && (occupant = (class Character *) place_get_object(getPlace(), 
                                                                                 pathPtr->x, pathPtr->y, 
                                                                                 being_layer))) {
-                                if (!are_hostile(this, occupant)
-                                    && occupant->isIncapacitated())
-                                {
-                                        if (!place_is_passable(getPlace(), getX(), getY(), 
-                                                               occupant, 0))
-                                        {
+                                if (!are_hostile(this, occupant) && occupant->isIncapacitated()) {
+                                        if (!place_is_passable(getPlace(), getX(), getY(), occupant, 0)) {
                                                 relocate(getPlace(), pathPtr->x, pathPtr->y);
-                                                runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(),
-                                                        pathPtr->x, pathPtr->y);
+                                                runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(), pathPtr->x, pathPtr->y);
                                                 decActionPoints(place_get_diagonal_movement_cost
                                                                 (
                                                                         getPlace(), 
@@ -309,8 +295,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         as_info.x1 = destx;
                         as_info.y1 = desty;
                         as_info.flags = PFLAG_IGNORECOMPANIONS;
-                        cachedPath = place_find_path(getPlace(), &as_info, 
-                                                     this);
+                        cachedPath = place_find_path(getPlace(), &as_info, this);
                         
                         // If we still don't have a valid path then give up
                         if (!cachedPath) {
@@ -342,8 +327,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
         // If the move worked (as evidenced by the fact that our location
         // changed to the next node) then free the first node and make the next
         // node the head of the path so we can continue using it next turn.
-        if (getX() == pathPtr->x &&
-            getY() == pathPtr->y) {
+        if (getX() == pathPtr->x && getY() == pathPtr->y) {
                 //dbg("ok\n");
                 if (USE_CACHED_PATH) {
                         astar_node_destroy(cachedPath);

@@ -419,8 +419,11 @@ void Character::taskPromptToAbort()
 
 void Character::damage(int amount)
 {
-        if (hp <= 0)
+	dbg("%s:%s:amount=%d\n", __FUNCTION__, getName(), amount);
+
+        if (hp <= 0) {
                 return;
+	}
 
         // This will run the "on-damage-hook":
         Object::damage(amount);
@@ -655,8 +658,11 @@ enum MoveResult Character::move(int dx, int dy)
 	int newx, newy;
 	class Character *occupant;
 
-        if (isStationary())
+        if (isStationary()) {
                 return StationaryObject;
+	}
+
+	dbg("%s:%s:dx=%d dy=%d\n", __FUNCTION__, getName(), dx, dy);
 
         this->dx = dx;
         this->dy = dy;
@@ -1828,8 +1834,12 @@ void Character::examine()
                 }
         }
 
-        log_continue(" %s [", getWoundDescription());
+        //log_continue(" %s", getWoundDescription());
+	log_continue(" hp:%d/%d", getHp(), getMaxHp());
+	log_continue(" mp:%d/%d", getMana(), getMaxMana());
+	log_continue(" ap:%d/%d", action_points, getActionPointsPerTurn());
 
+	log_continue(" [");
         for (ArmsType *arms = enumerateArms(&i); arms; 
              arms = getNextArms(&i)) {
                 if (n > 0) {
@@ -2194,6 +2204,7 @@ class Party *Character::getParty()
 
 void Character::burn()
 {
+	dbg("%s:%s\n", __FUNCTION__, getName());
         damage(DAMAGE_FIRE);
         log_msg("%s burning-%s!", getName(), getWoundDescription());
 }
