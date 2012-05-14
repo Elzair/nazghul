@@ -361,9 +361,9 @@
 		(kern-ui-paginate-text
 			"The Alchemist provided you with information on a rune buried in the deeps of Kurpolis:"
 			""
-		   "\"The paladins have built several fortifications in the deeps of Kurpolis. One of the runes was buried in the foundations of the deepest fort.\""
+		   "\'The paladins have built several fortifications in the deeps of Kurpolis. One of the runes was buried in the foundations of the deepest fort.\'"
 		   ""
-	   		"\"A pick and shovel may be enough to get it out again, but it might be difficult with a dozen paladins breathing down your neck.\""
+	   		"\'A pick and shovel may be enough to get it out again, but it might be difficult with a dozen paladins breathing down your neck.\'"
 		))
 )
 
