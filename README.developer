@@ -1,11 +1,16 @@
-To check out the source (replace $USER with your username):
+To check out the source (replace $USER with your SourceForge username):
 
 git clone ssh://$USER@nazghul.git.sourceforge.net/gitroot/nazghul/nazghul
+
+To install dependencies (ubuntu 12.04):
+
+sudo apt-get install autoconf automake libsdl-dev libsdl-image1.2-dev \
+libsdl-mixer1.2-dev g++
 
 To build:
 
 cd nazghul
-./autogen.sh --prefix=/home/$USER
+./autogen.sh --prefix=$HOME
 make install
 
 To play:
