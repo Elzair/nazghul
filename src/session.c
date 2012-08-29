@@ -780,11 +780,9 @@ void session_run_hook(struct session *session, session_hook_id_t id, const char 
 
 void *session_add_hook(struct session *session, session_hook_id_t id, struct closure *proc, pointer args)
 {
-        struct list *head;
         struct session_hook_entry *entry;
 
         assert(id < NUM_HOOKS);
-        head = &session->hook_table[id];
 
         if (!(entry = (struct session_hook_entry*)calloc(1, sizeof(*entry)))) {
                 return 0;

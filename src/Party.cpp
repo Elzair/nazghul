@@ -146,10 +146,6 @@ bool Party::attackPlayer(int dx, int dy)
 {
 	dbg("attackPlayer:%s:dx=%d dy=%d\n", getName(), dx, dy);
 
-	// By default use the party's current place as the combat place, but if
-	// joining an existing combat this will be overridden below.
-	struct place *combat_place = getPlace();
-
 #if CONFIG_CONCURRENT_WILDERNESS
 	int join_existing_combat = 0;
 #endif
@@ -164,9 +160,6 @@ bool Party::attackPlayer(int dx, int dy)
 		// Player is already on a combat map. Let's join him
 		// there. Deploy on the nearest side.
 		join_existing_combat = 1;
-
-		// Change the combat map to the global Place.
-		combat_place = Place;
 #else
 		dbg("attackPlayer:%s:player not on map\n", getName());
                 return false;
@@ -399,7 +392,7 @@ bool Party::gotoSpot(int mx, int my)
 	as_info.x1 = mx;
 	as_info.y1 = my;
 	as_info.flags = PFLAG_IGNOREMECHS;
-	path = place_find_path(getPlace(), &as_info, this);
+	path = path_find(getPlace(), &as_info, this);
 
 	if (!path) {
 		dbg("gotoSpot:%s:no path\n", getName());

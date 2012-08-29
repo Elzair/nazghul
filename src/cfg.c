@@ -111,7 +111,7 @@ char *cfg_get(const char *key)
 
 void cfg_print(int (*printfx)(const char *fmt, ...))
 {
-	int i = 0;
+	size_t i = 0;
 	for (i = 0; i < sizeof(cfg_hash)/sizeof(cfg_hash[0]); i++) {
 		struct cfg_entry *entry;
 		entry = cfg_hash[i];

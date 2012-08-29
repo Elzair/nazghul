@@ -1423,7 +1423,6 @@ int ui_select_target_generic(ui_select_target_req_t *req)
         struct movecursor_data data;
         struct KeyHandler kh;
         struct MouseButtonHandler mbh;
-        struct MouseMotionHandler mmh;
 
         Session->crosshair->setZone(req->tiles);
         Session->crosshair->setViewportBounded(1);
@@ -1442,9 +1441,6 @@ int ui_select_target_generic(ui_select_target_req_t *req)
   
         mbh.fx = mouse_button_cursor;
         mbh.data = &data;
-
-        mmh.fx = mouse_motion_cursor;
-        mmh.data = &data;
 
         eventPushMouseButtonHandler(&mbh);
         eventPushKeyHandler(&kh);
@@ -2815,7 +2811,6 @@ const char * name_of_context (void)
 
 bool cmdAT (class Character * pc)
 {
-	int x, y;
         const char * who = "";
         const char * place_name = "";
 
@@ -2829,16 +2824,12 @@ bool cmdAT (class Character * pc)
 		// combat mode. Use the party member's location as the origin.
                 who = pc->getName();
                 place_name =  Place->name;
-		x = pc->getX();
-		y = pc->getY();
 	}
         else {
 		// Must be party mode. 
 		// Use the player party's location as the origin.
                 who = "The party";
                 place_name = player_party->getPlace()->name;
-                x = player_party->getX();
-                y = player_party->getY();
 	}
         // SAM: Why is this line not safe in combat mode?
         //      Would it be The Right Thing (TM) 

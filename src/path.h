@@ -23,6 +23,6 @@
 #ifndef path_h
 #define path_h
 
-struct astar_node *place_find_path(struct place *place, struct astar_search_info *info, class Object *requestor);
+struct astar_node *path_find(struct place *place, struct astar_search_info *info, class Object *requestor);
 
 #endif

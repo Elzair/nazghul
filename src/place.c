@@ -1038,9 +1038,9 @@ struct terrain_map *place_get_combat_terrain_map(struct place *place,
 
 
 /**
- *  Calls place_find_path with the search info setup to seek a map edge.x
+ *  Calls path_find with the search info setup to seek a map edge.x
  */
-struct astar_node *place_find_path_to_edge(struct place *place, int x0, int y0,
+struct astar_node *path_find_to_edge(struct place *place, int x0, int y0,
 					   int edgedir, int pflags,
 					   class Object *requestor)
 {
@@ -1076,7 +1076,7 @@ struct astar_node *place_find_path_to_edge(struct place *place, int x0, int y0,
 		return 0;
 	}
 
-	return place_find_path(place, &info, requestor);
+	return path_find(place, &info, requestor);
 
 }
 

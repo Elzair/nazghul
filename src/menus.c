@@ -671,7 +671,6 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 {
 	menu_scroll_data_t *data = (menu_scroll_data_t *) kh->data;
         enum StatusScrollDir dir;
-        int i1;
 
         if (data->hotkeys && key < 128) {
                 char ckey = (char)key;
@@ -710,7 +709,6 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 	case SDLK_SPACE:
         case KEY_HERE:
 	case '\n':
-                i1 = statusGetSelectedIndex(String);
                 statusFlashSelected(Green);
                 data->entry = (char*)statusGetSelected(String);
                 data->save = menu_scroller_get_selected();

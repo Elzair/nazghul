@@ -378,7 +378,6 @@ void screen_erase(SDL_Rect * rect)
 
 void screen_fill(SDL_Rect * rect, Uint32 color)
 {
-	SDL_Rect tmp = *rect;
 	rect->w /= Zoom;
 	rect->h /= Zoom;
 	SDL_FillRect(Screen, rect, color);

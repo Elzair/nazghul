@@ -270,31 +270,6 @@ static void mySetViewLightRadius(struct mview *view, void *data)
 	view->rad = rad;
 }
 
-static int mapCalcMaxLightRadius(int light)
-{
-        // until something faster becomes necessary
-        return (int)sqrt((double)light);
-}
-
-#if 0
-// debug
-static void mapDumpRect(char *name, SDL_Rect *rect, unsigned char *data)
-{
-        int x, y, i;
-
-        printf("Rect %s (%d %d %d %d):\n", name, rect->x, rect->y, rect->w,
-               rect->h);
-        i = 0;
-        for (y = 0; y < rect->h; y++) {
-                for (x = 0; x < rect->w; x++, i++) {
-                        printf(" %03d", data[i]);
-                }
-                printf("\n");
-        }
-        printf("\n");
-}
-#endif
-
 /**
  * Given a light source, add its contribution to the light map (Map.lmap).
  *
@@ -303,7 +278,6 @@ static void mapDumpRect(char *name, SDL_Rect *rect, unsigned char *data)
  */
 static void mapMergeLightSource(struct light_source *light, struct mview *main_view)
 {
-        int radius;
         int vmask_i;
         struct mview tmp_view;
         int x;
@@ -324,7 +298,6 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
         tmp_view.vrect.h = VMASK_H;
         tmp_view.zoom    = 1;
 
-        radius = min(mapCalcMaxLightRadius(light->light), VMASK_W / 2);
 
         // Fetch the vmask from the cache.
         vmask = vmask_get(Map.place, light->x, light->y);

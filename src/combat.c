@@ -264,7 +264,7 @@ static int location_is_safe(struct position_info *info, int current)
                 as_info.limit_depth = true;
                 as_info.max_depth = 5;
 
-                path = place_find_path(info->place, &as_info, info->subject);
+                path = path_find(info->place, &as_info, info->subject);
 
                 if (!path)
                         dbg("no path back to party\n");
@@ -1529,8 +1529,6 @@ static bool position_player_party(struct combat_info *cinfo)
 
 bool combat_enter(struct combat_info * info)
 {
-        struct location loc;
-
         if (player_party->allDead()) {
                 /* Yes, this can happen in some rare circumstances... */
                 return false;
@@ -1551,11 +1549,6 @@ bool combat_enter(struct combat_info * info)
         // Default to the entry point as the combat exit location for the
         // player party.
         // --------------------------------------------------------------------
-
-        loc.place = info->move->place;
-        loc.x     = info->move->x;
-        loc.y     = info->move->y;
-
 
         // *** Initialize Combat Globals ***
 

@@ -95,9 +95,7 @@ class Object *VehicleType::createInstance()
 
 int VehicleType::getWindPenalty(int facing)
 {
-	int vdx, vdy, wdx, wdy, base_speed;
-
-	base_speed = getSpeed();
+	int vdx, vdy, wdx, wdy;
 
 	if (!mustTurn())
                 return 1;

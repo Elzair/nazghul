@@ -102,25 +102,18 @@ static void sprite_custom_blit(SDL_Surface *source, SDL_Rect *from,
                                SDL_Surface *dest, SDL_Rect *to)
 {
         Uint8 *dpix, *spix, pix = 0;
-        int dx, dy, di, sx,  sy, si, spitch,  dpitch, pix_bytes;
+        int dx, dy, pix_bytes;
         Uint8 in_alpha;
 
         spix = (Uint8*)(source->pixels);
         dpix = (Uint8*)(dest->pixels);
-
-        dpitch = dest->pitch;
-        spitch = source->pitch;
 
 	pix_bytes = source->format->BytesPerPixel;
 	assert(pix_bytes == 1 || pix_bytes == 2 || pix_bytes == 4);
 	assert(dest->format->BytesPerPixel == pix_bytes);
 	
         for (dy = 0; dy < from->h; dy++) {
-                sy = dy;
                 for (dx = 0; dx < from->w; dx++) {
-                        sx = dx;
-                        di = (dy + to->y) * dpitch + (dx + to->x) * pix_bytes;
-                        si = (sy + from->y) * spitch + (sx + from->x) * pix_bytes;
 
 			switch(pix_bytes) {
 			case 4:	pix = *(Uint32*)spix; break;
@@ -680,7 +673,7 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
                                          float matrix[4][3])
 {
         Uint8 *dpix, *spix, out_pix, in_pix = 0;
-        int dx, dy, di, sx,  sy, si, spitch,  dpitch, sbytes, dbytes;
+        int dx, dy, sbytes, dbytes;
         Uint8 in_red, in_grn, in_blu, in_alpha, out_red, out_grn, out_blu, 
                 out_alpha;
         int ired, igrn, iblu;
@@ -688,9 +681,6 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
 
         spix = (Uint8*)(source->pixels);
         dpix = (Uint8*)(dest->pixels);
-
-        dpitch = dest->pitch;
-        spitch = source->pitch;
 
 	sbytes = source->format->BytesPerPixel;
 	assert(sbytes == 1 || sbytes == 2 || sbytes == 4);
@@ -707,11 +697,7 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
         }
 
         for (dy = 0; dy < from->h; dy++) {
-                sy = dy;
                 for (dx = 0; dx < from->w; dx++) {
-                        sx = dx;
-                        di = (dy + to->y) * dpitch + (dx + to->x) * dbytes;
-                        si = (sy + from->y) * spitch + (sx + from->x) * sbytes;
 
 			switch(sbytes) {
 			case 4:	in_pix = *(Uint32*)spix; break;

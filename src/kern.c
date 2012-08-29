@@ -260,15 +260,13 @@ static void blender_dtor(void *val)
 static int unpack(scheme *sc, pointer *cell, const char *fmt, ...)
 {
         va_list args;
-        int expect, count = 0, errs = 0;
+        int count = 0, errs = 0;
         pointer car;
         char **strval;
         int *ival;
         float *rval;
         void **ptrval;
         pointer *cval;
-
-        expect = strlen(fmt);
 
         va_start(args, fmt);
 
@@ -7698,7 +7696,7 @@ KERN_API_CALL(kern_obj_find_path)
         /* find the path */
         as_info.x0 = object->getX();
         as_info.y0 = object->getY();
-        path = place_find_path(place, &as_info, object);
+        path = path_find(place, &as_info, object);
         if (! path)
                 return sc->NIL;
 

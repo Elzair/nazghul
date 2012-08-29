@@ -20,7 +20,7 @@ struct place_pathfind_context {
 static int place_pathfind_is_valid_location(struct place_pathfind_context *context, int from_x, int from_y, int x, int y);
 static void place_pathfind_heuristic(struct astar_search_info *info, int *goodness, int *cost, int from_x, int from_y);
 
-static int place_find_path_impossible(struct place_pathfind_context *context)
+static int path_find_impossible(struct place_pathfind_context *context)
 {
 	/* Check final destination */
 	if ((context->pflags & PFLAG_ADJACENTNOTOK) 
@@ -179,7 +179,7 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context *conte
 }
 
 
-struct astar_node *place_find_path(struct place *place, struct astar_search_info *info, class Object *requestor)
+struct astar_node *path_find(struct place *place, struct astar_search_info *info, class Object *requestor)
 {
 	struct astar_node *path;
 	struct place_pathfind_context context;
@@ -191,7 +191,7 @@ struct astar_node *place_find_path(struct place *place, struct astar_search_info
 	context.pflags = info->flags;
 	context.requestor = requestor;
 
-	if (place_find_path_impossible(&context))
+	if (path_find_impossible(&context))
 		return NULL;
 	
 	/* Fill out the search information */

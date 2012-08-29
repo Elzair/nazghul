@@ -1526,7 +1526,7 @@ bool PlayerParty::rendezvous(struct place *place, int rx, int ry)
                 as_info.x1    = rx;
                 as_info.y1    = ry;
                 as_info.flags = PFLAG_IGNOREBEINGS;
-                member->cachedPath = place_find_path(place, &as_info, 
+                member->cachedPath = path_find(place, &as_info, 
                                                member);
 
                 if (!member->cachedPath) {

@@ -198,7 +198,7 @@ extern class Party *place_search_for_Party(struct place *place,
                                                             Party));
         
         
-extern struct astar_node *place_find_path(struct place *place, 
+extern struct astar_node *path_find(struct place *place, 
                                           struct astar_search_info *info,
                                           class Object *requestor);
 

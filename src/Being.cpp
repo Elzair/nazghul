@@ -178,7 +178,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                 as_info.x1 = destx;
                 as_info.y1 = desty;
                 as_info.flags = flags;
-                cachedPath = place_find_path(getPlace(), &as_info, this);
+                cachedPath = path_find(getPlace(), &as_info, this);
         }
 
         // If we still don't have a valid path then give up
@@ -295,7 +295,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         as_info.x1 = destx;
                         as_info.y1 = desty;
                         as_info.flags = PFLAG_IGNORECOMPANIONS;
-                        cachedPath = place_find_path(getPlace(), &as_info, this);
+                        cachedPath = path_find(getPlace(), &as_info, this);
                         
                         // If we still don't have a valid path then give up
                         if (!cachedPath) {
