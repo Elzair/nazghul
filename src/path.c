@@ -8,7 +8,7 @@
 #define WRAP_DISTANCE(a,b,max) (min((a) + (max) - (b), (b) - (a)))
 
 
-struct place_pathfind_context {
+struct path_context {
 	struct place *place;
 	int target_x;
 	int target_y;
@@ -17,40 +17,40 @@ struct place_pathfind_context {
 };
 
 
-static int place_pathfind_is_valid_location(struct place_pathfind_context *context, int from_x, int from_y, int x, int y);
-static void place_pathfind_heuristic(struct astar_search_info *info, int *goodness, int *cost, int from_x, int from_y);
+static int path_location_is_valid(struct path_context *context, int from_x, int from_y, int x, int y);
+static void path_heuristic(struct astar_search_info *info, int *goodness, int *cost, int from_x, int from_y);
 
-static int path_find_impossible(struct place_pathfind_context *context)
+static int path_is_impossible(struct path_context *context)
 {
 	/* Check final destination */
-	if ((context->pflags & PFLAG_ADJACENTNOTOK) 
-	    && ! place_is_passable(context->place, context->target_x, 
-				   context->target_y, context->requestor, 
+	if ((context->pflags & PFLAG_ADJACENTNOTOK)
+	    && ! place_is_passable(context->place, context->target_x,
+				   context->target_y, context->requestor,
 				   context->pflags)) {
 		return 0;
 	}
 
 	/* check four neighbors */
-	if (place_pathfind_is_valid_location(context,
-					     context->target_x,
-					     context->target_y,
-					     context->target_x-1,
-					     context->target_y)
-	    || place_pathfind_is_valid_location(context,
-						context->target_x,
-						context->target_y,
-						context->target_x+1,
-						context->target_y)
-	    || place_pathfind_is_valid_location(context,
-						context->target_x,
-						context->target_y,
-						context->target_x,
-						context->target_y-1)
-	    || place_pathfind_is_valid_location(context,
-						context->target_x,
-						context->target_y,
-						context->target_x,
-						context->target_y+1))
+	if (path_location_is_valid(context,
+				   context->target_x,
+				   context->target_y,
+				   context->target_x-1,
+				   context->target_y)
+	    || path_location_is_valid(context,
+				      context->target_x,
+				      context->target_y,
+				      context->target_x+1,
+				      context->target_y)
+	    || path_location_is_valid(context,
+				      context->target_x,
+				      context->target_y,
+				      context->target_x,
+				      context->target_y-1)
+	    || path_location_is_valid(context,
+				      context->target_x,
+				      context->target_y,
+				      context->target_x,
+				      context->target_y+1))
 		return 0;
 
 	/* all 4 neighbors impassable so forget it */
@@ -59,12 +59,12 @@ static int path_find_impossible(struct place_pathfind_context *context)
 }
 
 
-static void place_pathfind_heuristic(struct astar_search_info *info, int *goodness, int *cost, int from_x, int from_y)
+static void path_heuristic(struct astar_search_info *info, int *goodness, int *cost, int from_x, int from_y)
 {
 	struct terrain *terrain;
-	struct place_pathfind_context *context;
+	struct path_context *context;
 
-	context = (struct place_pathfind_context *) info->context;
+	context = (struct path_context *) info->context;
 
 	/* The basic goodness is walking distance. Duplicate that algorithm
 	 * except pay attention to the info->flags. */
@@ -73,12 +73,9 @@ static void place_pathfind_heuristic(struct astar_search_info *info, int *goodne
 		// Yes, we are interested in the x coordinate of the
 		// destination.
 		if (context->place->wraps) {
-			*goodness -= WRAP_DISTANCE(min(info->x0, info->x1),
-						  max(info->x0, info->x1),
-					       context->place->terrain_map->w);
+			*goodness -= WRAP_DISTANCE(min(info->x0, info->x1), max(info->x0, info->x1), context->place->terrain_map->w);
 		} else {
-			*goodness -= max(info->x0, info->x1) - 
-				min(info->x0, info->x1);
+			*goodness -= max(info->x0, info->x1) - min(info->x0, info->x1);
 		}
 	}
 
@@ -96,9 +93,7 @@ static void place_pathfind_heuristic(struct astar_search_info *info, int *goodne
 	}
 
 	/* Add the terrain cost. */
-	*cost += place_get_diagonal_movement_cost(context->place, from_x, 
-						  from_y, info->x0, info->y0, 
-						  context->requestor, PFLAG_IGNOREMECHS);
+	*cost += place_get_diagonal_movement_cost(context->place, from_x, from_y, info->x0, info->y0, context->requestor, PFLAG_IGNOREMECHS);
 
 	/* And penalize tiles with hazards on them. I really should assign
 	 * different penalties to different hazerds. */
@@ -114,7 +109,7 @@ static void place_pathfind_heuristic(struct astar_search_info *info, int *goodne
 }
 
 
-static int place_pathfind_is_valid_location(struct place_pathfind_context *context, int from_x, int from_y, int x, int y)
+static int path_location_is_valid(struct path_context *context, int from_x, int from_y, int x, int y)
 {
 	class Object *portal;
 
@@ -126,7 +121,7 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context *conte
 	 * not what the caller wants, they need to se the PFLAG_ADJACENTNOTOK
 	 * flag. */
 	if ((!(context->pflags & PFLAG_ADJACENTNOTOK))
-	    && x == context->target_x 
+	    && x == context->target_x
 	    && y == context->target_y) {
 		//dbg("ok\n");
 		return 1;
@@ -182,7 +177,7 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context *conte
 struct astar_node *path_find(struct place *place, struct astar_search_info *info, class Object *requestor)
 {
 	struct astar_node *path;
-	struct place_pathfind_context context;
+	struct path_context context;
 
 	/* Store the target location as the context */
 	context.place = place;
@@ -191,14 +186,15 @@ struct astar_node *path_find(struct place *place, struct astar_search_info *info
 	context.pflags = info->flags;
 	context.requestor = requestor;
 
-	if (path_find_impossible(&context))
+	if (path_is_impossible(&context)) {
 		return NULL;
-	
+	}
+
 	/* Fill out the search information */
 	info->is_valid_location =
 	    (int (*)(void *, int, int, int, int))
-		place_pathfind_is_valid_location;
-	info->heuristic = place_pathfind_heuristic;
+		path_location_is_valid;
+	info->heuristic = path_heuristic;
 	info->width = place_w(place);
 	info->height = place_h(place);
 	info->wraps = place->wraps;
