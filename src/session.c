@@ -24,7 +24,7 @@
 
 #include "../config.h"
 #include "character.h"
-#include "object.h"
+#include "Object.h"
 #include "sprite.h"
 #include "terrain.h"
 #include "place.h"

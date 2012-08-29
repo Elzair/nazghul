@@ -2705,7 +2705,7 @@ void Character::exec()
                 }
 
                 if (Session->reloaded)
-                        /* Hack: this object has been destroyed. Leave
+                        /* Hack: this Object.has been destroyed. Leave
                          * now. Don't touch a thing. */
                         return;
 

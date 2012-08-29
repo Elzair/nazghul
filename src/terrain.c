@@ -23,7 +23,7 @@
 #include "debug.h"
 #include "sprite.h"
 #include "common.h"
-#include "object.h"
+#include "Object.h"
 
 #include <stdlib.h>
 #include <stdio.h>

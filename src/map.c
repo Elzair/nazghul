@@ -28,7 +28,7 @@
 #include "cursor.h"
 #include "terrain.h"
 #include "Missile.h"
-#include "object.h"
+#include "Object.h"
 #include "vmask.h"
 #include "session.h"
 #include "sprite.h"

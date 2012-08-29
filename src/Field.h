@@ -22,7 +22,7 @@
 #ifndef Field_h
 #define Field_h
 
-#include "object.h"
+#include "Object.h"
 #include "closure.h"
 
 class FieldType:public ObjectType {

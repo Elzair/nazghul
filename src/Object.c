@@ -21,7 +21,7 @@
 //
 #include "conv.h"
 #include "gob.h"
-#include "object.h"
+#include "Object.h"
 #include "session.h"
 #include "place.h"
 #include "character.h"

@@ -19,8 +19,9 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#ifndef object_h
-#define object_h
+
+#ifndef Object_h
+#define Object_h
 
 #include "clock.h"
 #include "list.h"
@@ -71,7 +72,7 @@
 #define OBJ_HOOK_USE_DONE      18 /* character finished using something      */
 #define OBJ_HOOK_MIX_DONE      19 /* character finished using something      */
 #define OBJ_HOOK_KAMP_START    20 /* character about to start camping        */
-#define OBJ_NUM_HOOKS          21 /* total number of object hooks            */
+#define OBJ_NUM_HOOKS          21 /* total number of Object.hooks            */
 
 /* Relocation flags. Used to avoid triggers in special cases. */
 #define REL_NOSTEP    (1<<0)                     /* don't trigger "step"     */
@@ -504,7 +505,7 @@ class Object {
         int facing;
         bool ignoreTimeStop;
 
-        // Each object has its own sprite_frame, which breaks up the
+        // Each Object.has its own sprite_frame, which breaks up the
         // "synchronized dancing" problem. It also allows us to animate only
         // player-controlled characters during Time Stop.
         int sprite_frame;
@@ -524,4 +525,4 @@ extern void obj_dec_ref(Object *obj);
 
 END_DECL
 
-#endif				// object_h
+#endif				// Object.h

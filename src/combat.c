@@ -25,7 +25,7 @@
 #include "Party.h"
 #include "place.h"
 #include "player.h"
-#include "object.h"
+#include "Object.h"
 #include "common.h"
 #include "map.h"
 #include "hash.h"

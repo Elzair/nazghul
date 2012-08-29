@@ -22,7 +22,7 @@
 #ifndef Arms_h
 #define Arms_h
 
-#include "object.h"
+#include "Object.h"
 #include "sound.h"
 
 class Missile;

@@ -27,7 +27,7 @@
 #include "sprite.h"
 #include "common.h"
 #include "player.h"
-#include "object.h"
+#include "Object.h"
 #include "Arms.h"
 #include "ascii.h"
 #include "console.h"

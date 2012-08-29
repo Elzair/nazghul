@@ -23,7 +23,7 @@
 #ifndef Reagent_h
 #define Reagent_h
 
-#include "object.h"
+#include "Object.h"
 
 // A reagent is an object that appears in the list of things which a player can
 // (M)ix to make a spell. It has absolutely no interesting or unusual

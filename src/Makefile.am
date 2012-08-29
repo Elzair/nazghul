@@ -60,8 +60,8 @@ nazghul_SOURCES =		\
         nazghul.c \
         Party.cpp \
         Party.h \
-        object.c \
-        object.h \
+	path.c path.h \
+        Object.c Object.h \
         occ.c \
         occ.h \
         olist.c \

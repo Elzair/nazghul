@@ -23,7 +23,7 @@
 #define player_h
 
 #include "Container.h"
-#include "object.h"
+#include "Object.h"
 #include "map.h"
 #include "character.h"
 #include "pinfo.h"

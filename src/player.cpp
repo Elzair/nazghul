@@ -20,7 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "player.h"
-#include "object.h"
+#include "Object.h"
 #include "status.h"
 #include "console.h"
 #include "place.h"
@@ -687,7 +687,7 @@ void PlayerParty::exec()
                 ctrl(this);
 
                 if (Session->reloaded)
-                        /* Hack: this object has been destroyed with the old
+                        /* Hack: this Object.has been destroyed with the old
                          * session. Leave now! */
                         return;
         }

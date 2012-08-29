@@ -23,7 +23,7 @@
 #ifndef vehicle_h
 #define vehicle_h
 
-#include "object.h"
+#include "Object.h"
 #include "sound.h"
 #include <closure.h>
 

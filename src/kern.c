@@ -33,7 +33,7 @@
 #include "effect.h"
 #include "event.h"
 #include "gob.h"
-#include "object.h"
+#include "Object.h"
 #include "sched.h"
 #include "sprite.h"
 #include "terrain.h"
@@ -2067,7 +2067,7 @@ static pointer kern_obj_put_into(scheme *sc, pointer args)
 
 /*
  * kern_obj_remove - remove an object from the map. Note that this implicitly
- * destroys most objects automatically, unless the object has another reference
+ * destroys most objects automatically, unless the Object.has another reference
  * count. Use kern_obj_inc_ref to prevent destruction during this call.
  */
 static pointer kern_obj_remove(scheme *sc, pointer args)

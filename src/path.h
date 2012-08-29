@@ -1,6 +1,6 @@
 /*
  * nazghul - an old-school RPG engine
- * Copyright (C) 2008 Gordon McNutt
+ * Copyright (C) 2012 Gordon McNutt
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -20,30 +20,9 @@
  * gmcnutt@users.sourceforge.net
  */
 
-#ifndef ztats_container_pane_h
-#define ztats_container_pane_h
+#ifndef path_h
+#define path_h
 
-#include "Container.h"
-#include "Object.h"
-#include "ztats_pane.h"
-
-#include <SDL.h>
-
-struct ztats_container_pane_ops {
-        void (*paint_item)(struct inv_entry *ie, SDL_Rect *rect);
-};
-
-struct ztats_container_pane {
-        struct ztats_pane base;
-        const char *title;
-        struct ztats_container_pane_ops *ops;
-        struct filter *filter;
-        int top_line;
-        int max_line;
-        int num_lines;
-};
-
-extern void ztats_container_pane_init(struct ztats_container_pane *zcp, const char *title, struct filter *filter, struct ztats_container_pane_ops *ops);
-extern void ztats_container_paint_item_generic(struct inv_entry *ie, SDL_Rect *rect);
+struct astar_node *place_find_path(struct place *place, struct astar_search_info *info, class Object *requestor);
 
 #endif

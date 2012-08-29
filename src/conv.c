@@ -31,7 +31,7 @@
 #include "event.h"
 #include "cmdwin.h"
 #include "common.h"
-#include "object.h"
+#include "Object.h"
 #include <string.h>
 #include "closure.h"
 #include "log.h"
@@ -551,7 +551,7 @@ void conv_enable_keyword_highlighting(int enable)
 #include "event.h"
 #include "cmdwin.h"
 #include "common.h"
-#include "object.h"
+#include "Object.h"
 #include "closure.h"
 #include "log.h"
 #include "session.h"

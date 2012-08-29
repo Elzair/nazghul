@@ -27,7 +27,7 @@
 BEGIN_DECL
 
 #include "list.h"
-#include "object.h"
+#include "Object.h"
 #include "ptable.h"     /* for ptable_get() */
 
 #include <stdio.h>      /* for FILE */
