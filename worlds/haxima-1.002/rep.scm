@@ -252,8 +252,11 @@
                         (rz-top-entry self))
              dims)))
 
+(define (rz-select self)
+  #t)
+
 (kern-ztats-add-pane rz-enter 
                      rz-scroll 
                      rz-paint 
-                     nil 
+                     rz-select 
                      (rz-mk))
