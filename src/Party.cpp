@@ -19,6 +19,7 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
+#include "ai.h"
 #include "Party.h"
 #include "dice.h"
 #include "place.h"

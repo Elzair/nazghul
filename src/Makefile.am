@@ -5,7 +5,8 @@ bin_PROGRAMS = nazghul
 
 #nazghul_SOURCES = $(wildcard *.c) $(wildcard *.cpp) $(wildcard *.h)
 
-nazghul_SOURCES =		\
+nazghul_SOURCES = \
+	ai.c ai.h \
 	angband.c \
         Arms.cpp \
         Arms.h \

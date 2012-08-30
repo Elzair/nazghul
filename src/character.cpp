@@ -19,6 +19,7 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
+#include "ai.h"
 #include "character.h"
 #include "conv.h"
 #include "dice.h"
