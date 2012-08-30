@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 
+#include "ai.h"
 #include "session.h"
 
 #include "applet.h"
@@ -6010,7 +6011,7 @@ KERN_API_CALL(kern_obj_wander)
 	//moves can have nasty consequences,
 	//so keep our own ref to the object for a bit
 	obj_inc_ref(obj);
-	ctrl_wander(obj);
+	ai_wander(obj);
 	obj_dec_ref(obj);
 	
 	return sc->NIL;

@@ -23,10 +23,7 @@
 #define ctrl_h
 
 extern void ctrl_party_ui(class PlayerParty *party);
-extern void ctrl_party_ai(class Party *party);
 extern void ctrl_character_ui(class Character *character);
-extern void ctrl_character_ai(class Character *character);
-extern void ctrl_wander(class Object *obj);
 extern void ctrl_do_attack(class Character *character, class ArmsType *weapon, 
                            class Character *target, int penalty);
 

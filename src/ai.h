@@ -24,10 +24,12 @@
 #define ai_h
 
 #include "character.h"
+#include "Object.h"
 #include "Party.h"
 
-void ctrl_character_ai(class Character *character);
-void ctrl_party_ai(class Party *party);
+void ai_character(class Character *character);
+void ai_party(class Party *party);
+void ai_wander(class Object *object);
 
 
 #endif

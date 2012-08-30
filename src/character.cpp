@@ -2004,7 +2004,7 @@ void Character::setPlayerControlled(bool val)
             }
         }
     } else {
-        ctrl = ctrl_character_ai;
+        ctrl = ai_character;
         if (isPlayerPartyMember()) {
             if (isLeader()) {
                 player_party->chooseNewLeader();
@@ -2939,7 +2939,7 @@ void Character::setControlMode(enum control_mode mode)
 
         switch (mode) {
         case CONTROL_MODE_AUTO:
-                ctrl = ctrl_character_ai;
+                ctrl = ai_character;
                 break;
         case CONTROL_MODE_PLAYER:
         case CONTROL_MODE_IDLE:

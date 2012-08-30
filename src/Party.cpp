@@ -64,7 +64,7 @@ Party::Party()
           , size(0)
           , formation(NULL)
           , wandering(false)
-          , ctrl(ctrl_party_ai)
+          , ctrl(ai_party)
 {
 	node_init(&members);
         memset(&pinfo, 0, sizeof(pinfo));
