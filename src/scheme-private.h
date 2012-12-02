@@ -123,7 +123,7 @@ struct scheme {
 
 #define LINESIZE 1024
         char    linebuff[LINESIZE];
-        char    strbuff[256];
+        char    strbuff[4096];
 
         FILE *tmpfp;
         int tok;
