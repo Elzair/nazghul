@@ -678,8 +678,6 @@ int session_save(char *fname)
         save->write(save, ";;--------------\n");
         save->write(save, ";; Miscellaneous\n");
         save->write(save, ";;--------------\n");
-        session_save_damage_sprite(save, Session);
-        session_save_crosshair(save, Session);
         session_save_clock(save, Session);
         session_save_time_accel(save, Session);
         session_save_turn_count(save, Session);
