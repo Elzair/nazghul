@@ -2,15 +2,15 @@
 
  ;; This is the image file for the UI border. The pieces need to be arranged in
  ;; a specific order in this image.
- "frame-image-filename"  "images/system/frame.png"
+ "frame-image-filename"  "images/engine/frame.png"
 
  ;; These are the letters used by the console, etc, in the UI. The character
  ;; sprites need to be arranged in a specific order in this image.
- "ascii-image-filename"  "images/system/charset.png"
+ "ascii-image-filename"  "images/engine/charset.png"
 
  ;; This is the cursor prompt used by the command window in the UI. It should
  ;; have four animation frames.
- "cursor-image-filename" "images/system/cursor.png"
+ "cursor-image-filename" "images/engine/cursor.png"
 
  ;; This is the script file run when the user selects the "Start New Game"
  ;; option from the main menu.
@@ -19,6 +19,9 @@
  ;; This is the script file run when the user selects the "Journey Onward"
  ;; option from the main menu. It lists the current save files.
  "save-game-filename"     "saved-games.scm"
+
+ ;; This is the directory where games will be saved.
+ "saved-games-dirname"    "saves"
 
  ;; This is the script file run when the user selects the "Tutorial"
  ;; option from the main menu.
@@ -30,11 +33,11 @@
  ;; These are the filenames of the splash image shown on startup for the
  ;; various supported screen sizes. The format of the key must be
  ;; <width>x<height>-splash-image-filename.
- "1280x960-splash-image-filename" "images/system/splash.png"
- "640x480-splash-image-filename" "images/system/640x480_splash.png"
- "800x480-splash-image-filename" "images/system/640x480_splash.png"
+ "1280x960-splash-image-filename" "images/engine/splash.png"
+ "640x480-splash-image-filename" "images/engine/640x480_splash.png"
+ "800x480-splash-image-filename" "images/engine/640x480_splash.png"
 
 ;; This is the image for the sprite pieces of the progress bar.
-"progress-bar-image-filename" "images/system/progress_bar_image.png"
+"progress-bar-image-filename" "images/engine/progress_bar_image.png"
 
  )
