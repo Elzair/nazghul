@@ -488,33 +488,11 @@ MoveResult PlayerParty::move(int newdx, int newdy)
                 // No complications. Update the turn counter based on player
                 // speed and terrain difficulties then move the player.
                 mv_cost = place_get_diagonal_movement_cost(info.place, x, y, info.x, info.y, this,0);
-					relocate(info.place, info.x, info.y);          
-                if (vehicle)
+		relocate(info.place, info.x, info.y);          
+                if (vehicle) {
                         mv_cost *= vehicle->getMovementCostMultiplier();
+		}
                 decActionPoints(mv_cost);
-
-                extern int DeveloperMode;
-                if (DeveloperMode) {
-                    log_msg("mv_cost=%d\n", mv_cost);
-                }
-
-                // none of this is used atm
-                //
-                // // reload mv_cost because diagonal movement shouldnt affect 'very slow' etc
-                //mv_cost = place_get_movement_cost(info.place, info.x, info.y, this,0);
-                //if (vehicle)
-                //        mv_cost *= vehicle->getMovementCostMultiplier();                
-                //if (mv_cost < getSpeed()) {
-                //        progress = "";
-                //} else if (mv_cost < (getSpeed() * 2)) {
-                //        progress = "-slow";
-                //} else {
-                //        progress = "-very slow";
-                //}
-
-               //consolePrint("Move %s%s [%d AP]\n", 
-               //               directionToString(vector_to_8facing(dx, dy)),
-               //               progress, mv_cost);
 
 		return MovedOk;
         }
@@ -1777,7 +1755,7 @@ void PlayerParty::save(save_t *save)
                 gob_save(getGob(), save);
                 save->exit(save, ")\n");
         }
-
+	save->write(save, "kplayer\n");
         save->exit(save, ")\n"); // end (let ...) block
 }
 
