@@ -598,7 +598,10 @@ static pointer kern_mk_sprite_set(scheme *sc, pointer args)
         image = images_new(tag, width, height, rows, cols, offx, offy, fname);
         session_add(Session, image, image_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, image);
-        scm_define(sc, tag, ret);
+
+	if (tag) {
+		scm_define(sc, tag, ret);
+	}
 
         return ret;
 }
@@ -620,7 +623,10 @@ static pointer kern_mk_sprite(scheme *sc, pointer args)
         sprite = sprite_new(tag, n_frames, index, wave, facings, images); 
         session_add(Session, sprite, sprite_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, sprite);
-        scm_define(sc, tag, ret);
+
+	if (tag) {
+		scm_define(sc, tag, ret);
+	}
 
         return ret;
 }
@@ -1578,7 +1584,11 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
         type->setMovementMode(mmode);
         session_add(Session, type, obj_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, type);
-        scm_define(sc, tag, ret);
+
+	if (tag) {
+		scm_define(sc, tag, ret);
+	}
+
         return ret;
 }
 
