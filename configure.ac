@@ -15,7 +15,7 @@ dnl   This macro performs essential initialization for the
 dnl   generated `configure' script. An optional argument may provide the name of a
 dnl   file from the source directory to ensure that the directory has been 
 dnl   specified correctly.
-AC_INIT(nazghul, 0.7.1, [nazghul-devel@lists.sourceforge.net])
+AC_INIT(nazghul, 0.8.0, [nazghul-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR([src/nazghul.c])
 AM_CONFIG_HEADER([config.h])
 
