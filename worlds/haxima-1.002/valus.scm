@@ -143,6 +143,7 @@
        (method 'stew valus-stew)
        (method 'trol valus-trol)
        (method 'unna valus-trol)
+       (method 'valu (lambda (knpc kpc) (say knpc "Isn't that what I said?")))
        ))
 
 (define (mk-valus)
