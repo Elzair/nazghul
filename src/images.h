@@ -35,8 +35,8 @@ struct images {
         char *fname;
         int w;		/* in pixels of the images */
         int h;		/* in pixels of the images */
-        int rows;	/* in the image file */
-        int cols;	/* in the image file */
+	int rows;       /* of images */
+	int cols;       /* of images */
         int offx;	/* pixels separating images */
         int offy;	/* pixels separating images */
         SDL_Surface *images;
@@ -44,8 +44,9 @@ struct images {
                                  * sem-transparent sprites */
 };
 
-extern struct images *images_new(const char *tag, int w, int h, int rows, int cols, 
-                                 int offx, int offy, const char *fname);
+struct images *images_new(const char *tag, int sprite_width_pix, 
+			  int sprite_height_pix, const char *fname);
+
 extern int images_convert2display(struct images *images);
 extern int images_fade(struct images *images);
 

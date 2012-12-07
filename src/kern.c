@@ -583,6 +583,7 @@ static pointer pack(scheme *sc, const char *fmt, ...)
 
 static pointer kern_mk_sprite_set(scheme *sc, pointer args)
 {
+	/* Obsolescent: use kern_mk_images from now on. */
         int width, height, rows, cols, offx, offy;
         char *fname;
         struct images *image = NULL;
@@ -595,7 +596,7 @@ static pointer kern_mk_sprite_set(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        image = images_new(tag, width, height, rows, cols, offx, offy, fname);
+        image = images_new(tag, width, height, fname);
         session_add(Session, image, image_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, image);
 
@@ -604,6 +605,31 @@ static pointer kern_mk_sprite_set(scheme *sc, pointer args)
 	}
 
         return ret;
+}
+
+static pointer kern_mk_images(scheme *sc, pointer args)
+{
+        int sprite_width_pix, sprite_height_pix;
+        char *fname;
+        const char *tag = TAG_UNK;
+        pointer p;
+
+        if (unpack(sc, &args, "ydds", &tag, &sprite_width_pix, 
+		   &sprite_height_pix, &fname)) {
+                load_err("kern-mk-image %s: bad args", tag);
+                return sc->NIL;
+        }
+
+        struct images *image = images_new(tag, sprite_width_pix, 
+					  sprite_height_pix, fname);
+        session_add(Session, image, image_dtor, NULL, NULL);
+        p = scm_mk_ptr(sc, image);
+
+	if (tag) {
+		scm_define(sc, tag, p);
+	}
+
+        return p;
 }
 
 static pointer kern_mk_sprite(scheme *sc, pointer args)
@@ -10227,6 +10253,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-astral-body", kern_mk_astral_body);
         API_DECL(sc, "kern-mk-blender", kern_mk_blender);
         API_DECL(sc, "kern-mk-char", kern_mk_char);
+        API_DECL(sc, "kern-mk-images", kern_mk_images);
         API_DECL(sc, "kern-mk-inventory", kern_mk_inventory);
         API_DECL(sc, "kern-mk-effect", kern_mk_effect);
         API_DECL(sc, "kern-mk-field", kern_mk_field);

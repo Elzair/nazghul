@@ -176,51 +176,35 @@ int images_convert2display(struct images *images)
 	return 1;
 }
 
-struct images *images_new(const char *tag, int w, int h, int rows, int cols, 
-                          int offx, int offy, const char *fname)
+struct images *images_new(const char *tag, int sprite_width_pix, 
+			  int sprite_height_pix, const char *fname)
 {
 	struct images *images;
 	char *filename;
 
 	images = MEM_ALLOC_TYPE(struct images, images_fin);
 
-        if (tag) {
-                images->tag     = strdup(tag);
-                assert(images->tag);
-        }
-
-        images->fname   = strdup(fname);
-        assert(images->fname);
-
-        images->w       = w;
-        images->h       = h;
-        images->offx    = offx;
-        images->offy    = offy;
-        images->rows    = rows;
-        images->cols    = cols;
+	images->tag = tag ? strdup(tag) : NULL;
+        images->fname = strdup(fname);
+        images->w = sprite_width_pix;
+        images->h = sprite_height_pix;
 
 	filename = file_mkpath(cfg_get("include-dirname"),fname);
 	if (filename) {
 		images->images = IMG_Load(filename);
 		free(filename);
 	}
+
+	images->rows = images->images->h / sprite_height_pix;
+	images->cols = images->images->w / sprite_width_pix;
+
 	if (!images->images) {
-                // BUG: Mac OS X fails to load PNG images here, but GIF works
-                // OK.  This could be a libPNG, libSDL, or libSDL_Image bug. In
-                // the meantime, better error logging is helpful.
                 err("IMG_Load() failed to load file '%s' because '%s'.\n", 
                        fname, SDL_GetError() );
                 assert(false);
-                // err("IMG_Load: %s", SDL_GetError()); The err() macro acted
-                // strangely, emitting different error text than the above
-                // would indicate.  Perhaps that is a clue to the bug?
-                // 
-                // Perhaps the err() macro, or the call above, 
-                // differ from the nazghul-0.2.0 release and recent CVS?
 	}
 
 	if (images_convert2display(images)) {
-		//images_dump_surface(fname, images->images);
 		return images;
 	}
 	

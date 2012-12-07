@@ -440,7 +440,7 @@ int ascii_init(void)
         }
 
         if (fname) {
-                Ascii.images = images_new(0, 8, 16, 9, 16, 0, 0, fname);
+                Ascii.images = images_new(0, 8, 16, fname);
         } else {
                 Ascii.images = ascii_load_fixed_charset();
         }

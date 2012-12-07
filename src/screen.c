@@ -343,7 +343,7 @@ static void screen_initFrame(void)
 
         memset(FrameSprites, 0, sizeof(FrameSprites));
 
-        ss_frame = images_new(0, 16, 16, 4, 4, 0, 0, fname);
+        ss_frame = images_new(0, 16, 16, fname);
         assert(ss_frame);
 
         for (i = 0; i < FRAME_NUM_SPRITES; i++) {

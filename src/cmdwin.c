@@ -79,7 +79,7 @@ static void cmdwin_cursor_sprite_init()
         struct images *ss_cursor = 0;
 
         assert(fname);
-        ss_cursor = images_new(0, 8, 16, 1, 4, 0, 0, fname);
+        ss_cursor = images_new(0, 8, 16, fname);
         assert(ss_cursor);
         cmdwin.cursor_sprite = sprite_new(0, 4, 0, 0, 0, ss_cursor);
         assert(cmdwin.cursor_sprite);

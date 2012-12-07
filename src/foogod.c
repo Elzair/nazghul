@@ -78,7 +78,7 @@ static int foogod_load_progress_bar_sprites(void)
 	Foogod.image = (struct images *)calloc(1, sizeof(*Foogod.image));
         assert(Foogod.image);
 
-	Foogod.image = images_new(0, 8, 16, 1, 3, 0, 0, fname);
+	Foogod.image = images_new(0, 8, 16, fname);
 	if (!Foogod.image) {
 	    err("images_new() failed for file '%s': '%s'\n", fname, SDL_GetError() );
 	    goto fail;
