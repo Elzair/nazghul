@@ -3380,11 +3380,17 @@ void Character::save(struct save *save)
 
 void Character::setSchedule(struct sched *val)
 {
-
+	// Bugfix: when switching from an existing schedule to a new one,
+	// self->appt must be reset else it might index off the new schedule's
+	// appointment array.
+	bool need_to_synch = sched != NULL;
         sched = val;
 
         if (sched) {
                 sched_chars_node = session_add_sched_char(Session, this);
+		if (need_to_synch) {
+			synchronize();
+		}
         } else {
                 // Bugfix: if a character is eating and the schedule is set to
                 // NULL then the character will be stuck eating (and doing
