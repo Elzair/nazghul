@@ -12,13 +12,11 @@
 ;;---------------
 ;; bandits
 (define (quest-bandits-update)
-  (println "quest-bandits-update")
   (let* ((quest (quest-data-get 'questentry-bandits))
          (quest-tbl (car (qst-payload quest)))
          (header (kern-ui-paginate-text
                   "Gregor, an old charcoal burner, has asked for your help in dealing with some troublesome bandits that have been plaguing the great forest."
                   "")))
-    (println "quest-tbl:" quest-tbl)
     (define (tbl-flag? tag) 
       (not (null? (tbl-get quest-tbl tag)))
       )
@@ -802,3 +800,21 @@
 
 		)
 	))
+
+(define (quest-puska-update)
+  (let* ((quest (quest-data-get 'questentry-puska))
+	 (quest-tbl (car (qst-payload quest)))
+	 (header (kern-ui-paginate-text 
+		  "Ilya lost her toy while hiding in the basement from trolls on her parents homestead. It's too late to save her parents, but maybe you can do something about that toy."
+		  "")))
+    (define (tbl-flag? tag)
+      (not (null? (tbl-get quest-tbl tag))))
+    (qst-set-descr! quest
+		    (cond ((tbl-flag? 'done)
+			   (kern-ui-paginate-text "Puska is now safely back with Ilya. You have earned the undying gratitude of a somewhat frightening little girl."))
+			  ((tbl-flag? 'found)
+			   (append header
+				   (kern-ui-paginate-text "You've recovered Puska, Ilya's toy horse. Take it back to her in Gregor's hut near the western edge of the Great Forest.")))
+			  (else
+			   (append header
+				   (kern-ui-paginate-text "The homestead is west of the mountain pass that leads to the Great Forest.")))))))

@@ -64,7 +64,6 @@
 (define (qst-descr qst) (list-ref qst 3))
 
 (define (qst-assign qst target) 
-  (println "qst-assign")
   (apply (eval (list-ref qst 4)) 
          (list qst target)))
          
@@ -76,7 +75,6 @@
 )
 
 (define (qst-done? qst)
-  ;;(println "qst-done? qst=" qst)
   (list-ref qst 6))
   
 (define (qst-done! qst result)
@@ -105,7 +103,6 @@
 (define (qst-payload qst) (list-ref qst 8))
 
 (define (quest-assign qst)
-  (println "quest-assign")
   (let ((target (gob (kern-get-player))))
     (if (and (notnull? qst)
              (notnull? target)
@@ -113,12 +110,10 @@
         (begin
         	(quest-insert qst)
           ;;(tbl-append! target 'quests qst)
-          ;;(println "quest-assign: " target)
           ;;(kern-log-msg "^c+gYou have a new quest: " (qst-title qst) "^c-")
           ))))
           
 (define (quest-assigned? qst)
-	(println "quest-assigned?")
 	(let* ((target (gob (kern-get-player)))
 			(qstlist (tbl-get target 'quests))
 			)
@@ -144,7 +139,6 @@
 	(define (quest-remove-helper qstlist)
 		(if (null? qstlist) nil
 			(let ((qhead (safe-car qstlist)))
-				(println "rem? " (eq? qhead qst) " " )
 				(if (eq? qhead qst)
 					(cdr qstlist)
 					(cons
@@ -187,7 +181,6 @@
 	(qst-bump-base! quest)
 	;; if we have children, bump them
 	(let ((childlist (quest-tbl-get quest 'qchildren)))
-		(println childlist)
 		(map (lambda (entry)
 				(let ((cqst (quest-get entry)))
 					(if (not (null? cqst))

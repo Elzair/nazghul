@@ -83,7 +83,6 @@
 (define (gregor-camp knpc kpc)
   (say knpc "Use the 'k' key to ^c+bkamp^c-, err...camp, in the wilderness and heal up."))
 
-
 (define (gregor-dang knpc kpc)
   (say knpc "Very dangerous! If you need healing, a town inn is the safest place. "
        "You can camp in the wilderness but it's dangerous when you're alone and have no one to keep watch. "

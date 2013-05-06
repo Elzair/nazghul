@@ -474,5 +474,15 @@
          )
 ))
 
-)
+(questadd (qst-mk "The Lost Toy"
+		  'questentry-puska
+		  (kern-ui-paginate-text "Ilya lost her toy while hiding in the basement from trolls on her parents homestead. "
+					 "It's too late to save her parents, but maybe you can do something about that toy. "
+					 ""
+					 "The homestead is west of the mountain pass.")
+		  'quest-assign-notify
+		  'quest-status-inprogress
+		  's_toy_horse
+		  (tbl-build 'on-update 'quest-puska-update)))
 
+)

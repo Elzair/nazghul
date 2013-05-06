@@ -81,7 +81,6 @@
 	
 ;; retrieves a quest from the quest data table
 (define (quest-data-get tag)
-  (println "quest-data-get:" tag)
 	(let* ((questdata (tbl-get (gob (kern-get-player)) 'questdata))
 			)
 			(tbl-get questdata tag)
@@ -112,33 +111,29 @@
 	
 ;; assuming quest in the QDT uses a tbl for payload, updates a key/value pair
 (define (quest-data-update tag key value)
-	(let* ((qpayload (car (qst-payload (quest-data-get tag))))
-			(updatehook (tbl-get qpayload 'on-update))
-			)
-		(if (not (equal? (tbl-get qpayload key) value))
-			(begin
-				(tbl-set! qpayload key value)
-				(if (not (null? updatehook))
-					((eval updatehook))
-				)
-				(qst-bump! (quest-data-get tag))
-			))
-	))
+  (let* ((qpayload (car (qst-payload (quest-data-get tag))))
+	 (updatehook (tbl-get qpayload 'on-update))
+	 )
+    (if (not (equal? (tbl-get qpayload key) value))
+	(begin
+	  (tbl-set! qpayload key value)
+	  (if (not (null? updatehook))
+	      ((eval updatehook))
+	      )
+	  (qst-bump! (quest-data-get tag))
+	  ))
+    ))
 	
 ;; updates as per quest-data-update, but additionally triggers a passed in function
 (define (quest-data-update-with tag key value callback)
-  (println "quest-data-update-with")
   (let* (	
          (quest (quest-data-get tag))
          (qpayload (car (qst-payload quest)))
          )
-    (println "quest:" quest)
-    (println "qpayload:" qpayload)
     (if (is-tbl? qpayload)
         (let (
               (updatehook (tbl-get qpayload 'on-update))
               )
-          (println "updatehook" updatehook)
           (if (not (equal? (tbl-get qpayload key) value))
               (begin			
                 (tbl-set! qpayload key value)
@@ -176,7 +171,6 @@
 ;; if appropriate, notifies the player about a change in quest state
 ;; can be chained to further functions
 (define (quest-notify subfunction)
-  (println "quest-notify")
 	(lambda (quest) 
 		(if (and (quest-assigned? quest) use-quest-pane)
 			(kern-log-msg "^c+mQuest updated:^c-\n^c+m" (qst-title quest) "^c-")

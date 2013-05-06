@@ -40,7 +40,9 @@
   (ifc '()
        (method 'get (lambda (kobj getter)
                       (kern-log-msg "Some child probably misses this toy!")
-                      (kobj-get kobj getter)))))
+                      (kobj-get kobj getter)
+		      (quest-data-update-with 'questentry-puska 'found 1 
+					      (quest-notify (grant-party-xp-fn 10)))))))
 
 (mk-obj-type 't_puska "stuffed toy horse" s_toy_horse layer-item puska-ifc)
 
@@ -78,7 +80,9 @@
                                    "Wait, take these, Mommy said wizards use them, so I pick them whenever I can.")
                               (ilya-finish-quest ilya)
                               (kern-obj-add-to-inventory kpc nightshade 23)
-                              )
+			      (quest-data-update-with 'questentry-puska 'done 1
+						      (quest-notify (grant-party-xp-fn 10)))
+			      (quest-data-complete 'questentry-puska))
 
                             ;; no - puska not in player inventory
                             (begin
@@ -88,7 +92,7 @@
                         ;; no - ilya can't have puska
                         (begin
                           (say knpc "When I grow up I'll be a sorceress! "
-                               "And I'LL BURN YOU TO A CRISP!")
+                               "AND I'LL BURN YOU TO A CRISP!")
                           (kern-conv-end))))
 
                   ;; no - didn't find her yet
@@ -106,6 +110,7 @@
               (begin
                 (say knpc "Our farm was west through the pass, then north against the hills. "
                      "Watch out for the trolls!")
+		(quest-data-assign-once 'questentry-puska)
                 (ilya-give-quest ilya))
               (begin
                 (say knpc "If you keep her I will find you when I grow up.")
