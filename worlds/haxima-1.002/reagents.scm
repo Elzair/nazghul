@@ -18,20 +18,25 @@
   (ifc obj-ifc
        (method 'mix (lambda () '()))))
 
+(define royal-cape-ifc
+  (ifc reagent-ifc
+       (method 'get (lambda (kobj getter)
+		      (if (not (quest-data-complete? 'questentry-shroom))
+			  (begin
+			    (kobj-get kobj getter)
+			    (quest-data-update-with 'questentry-shroom 'found 1 
+						    (quest-notify (grant-party-xp-fn 10)))))))))
+
 (define (mk-reagent-type tag name sprite)
   (mk-obj-type tag name sprite layer-item reagent-ifc))
 
-(define reagent-types
-  (list
-   (list 'sulphorous_ash "sulphurous ash" s_sulphorous_ash)
-   (list 'ginseng        "ginseng"        s_ginseng)
-   (list 'garlic         "garlic"         s_garlic)
-   (list 'spider_silk    "spider silk"    s_spider_silk)
-   (list 'blood_moss     "blood moss"     s_blood_moss)
-   (list 'black_pearl    "black pearl"    s_black_pearl)
-   (list 'nightshade     "nightshade"     s_nightshade)
-   (list 'mandrake       "mandrake"       s_mandrake)
-   (list 't_royal_cape   "royal cape mushroom" s_royal_cape)
-   ))
+(mk-reagent-type 'sulphorous_ash "sulphurous ash" s_sulphorous_ash)
+(mk-reagent-type 'ginseng        "ginseng"        s_ginseng)
+(mk-reagent-type 'garlic         "garlic"         s_garlic)
+(mk-reagent-type 'spider_silk    "spider silk"    s_spider_silk)
+(mk-reagent-type 'blood_moss     "blood moss"     s_blood_moss)
+(mk-reagent-type 'black_pearl    "black pearl"    s_black_pearl)
+(mk-reagent-type 'nightshade     "nightshade"     s_nightshade)
+(mk-reagent-type 'mandrake       "mandrake"       s_mandrake)
 
-(map (lambda (type) (apply mk-reagent-type type)) reagent-types)
+(mk-obj-type 't_royal_cape  "royal cape mushroom" s_royal_cape layer-item royal-cape-ifc)

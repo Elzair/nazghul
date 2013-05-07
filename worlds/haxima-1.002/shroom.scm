@@ -24,8 +24,13 @@
                                                       finished-quest?))
 (define (shroom-gave-quest? shroom) (car shroom))
 (define (shroom-quest-done? shroom) (cadr shroom))
-(define (shroom-give-quest shroom) (set-car! shroom #t))
-(define (shroom-set-quest-done! shroom) (set-car! (cdr shroom) #t))
+(define (shroom-give-quest shroom) 
+  (quest-data-assign-once 'questentry-shroom)
+  (set-car! shroom #t))
+(define (shroom-set-quest-done! shroom)
+  (quest-data-complete-with 'questentry-shroom 'done 1
+			    (lambda (quest) (grant-party-xp-fn 10)))
+  (set-car! (cdr shroom) #t))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -123,11 +128,11 @@
                   ;; player has shrooms
                   (say knpc "Ah, ye have the mushroom, as I requested!")
                   (kern-obj-remove-from-inventory kpc t_royal_cape 1)
-                  (shroom-set-quest-done! shroom)
                   (say knpc "Now for your reward. The ward is called "
                        "In Flam Sanct, of the first circle. Mix royal cape, "
                        "sulphurous ash and garlic. Cast it on yourself or a companion "
-                       "and fire will not harm!"))
+                       "and fire will not harm!")
+                  (shroom-set-quest-done! shroom))
                 ;; player does NOT have shrooms yet
                 (say knpc "No purple mushroom yet, I see. No rush, dear. "
                       "But I would like it before I die.")))
@@ -165,10 +170,10 @@
        (method 'shro (lambda (knpc kpc) (say knpc "Mushrooms are my "
                                                 "specialty. That's why they "
                                                 "call me Shroom.")))
-       (method 'maid (lambda (knpc) (say knpc "[she grins with crooked "
+       (method 'maid (lambda (knpc) (say knpc "[she grins with yellow "
                                            "teeth] Is it so hard to believe I "
                                            "was once a fair war-maiden? [she "
-                                           "cackles obscenely]")))
+                                           "cackles obscenely]. Battle wards were my specialty. Kept me alive!")))
        (method 'mush shroom-trade)
        (method 'buy (lambda (knpc kpc) (conv-trade knpc kpc "buy" shroom-merch-msgs shroom-catalog)))
        (method 'trad shroom-trade)

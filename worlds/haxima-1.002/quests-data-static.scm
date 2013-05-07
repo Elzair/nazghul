@@ -58,7 +58,7 @@
 ;;---------------
 ;; whereami
 
-    (define (quest-whereami-update)
+(define (quest-whereami-update)
       (let* ((quest (quest-data-get 'questentry-whereami))
              (quest-tbl (car (qst-payload quest)))
              (qp-shard (tbl-get quest-tbl 'shard))
@@ -818,3 +818,39 @@
 			  (else
 			   (append header
 				   (kern-ui-paginate-text "The homestead is west of the mountain pass that leads to the Great Forest.")))))))
+
+(define (quest-puska-update)
+  (let* ((quest (quest-data-get 'questentry-puska))
+	 (quest-tbl (car (qst-payload quest)))
+	 (header (kern-ui-paginate-text 
+		  "Ilya lost her toy while hiding in the basement from trolls on her parents homestead. It's too late to save her parents, but maybe you can do something about that toy."
+		  "")))
+    (define (tbl-flag? tag)
+      (not (null? (tbl-get quest-tbl tag))))
+    (qst-set-descr! quest
+		    (cond ((tbl-flag? 'done)
+			   (kern-ui-paginate-text "Puska is now safely back with Ilya. You have earned the undying gratitude of a somewhat frightening little girl."))
+			  ((tbl-flag? 'found)
+			   (append header
+				   (kern-ui-paginate-text "You've recovered Puska, Ilya's toy horse. Take it back to her in Gregor's hut near the western edge of the Great Forest.")))
+			  (else
+			   (append header
+				   (kern-ui-paginate-text "The homestead is west of the mountain pass that leads to the Great Forest.")))))))
+
+(define (quest-shroom-update)
+  (let* ((quest (quest-data-get 'questentry-shroom))
+	 (quest-tbl (car (qst-payload quest)))
+	 (header (kern-ui-paginate-text 
+		  "Shroom of Green Tower has promised to teach you a fire warding spell if you recover some purple mushrooms for her from a cave."
+		  "")))
+    (define (tbl-flag? tag)
+      (not (null? (tbl-get quest-tbl tag))))
+    (qst-set-descr! quest
+		    (cond ((tbl-flag? 'done)
+			   (kern-ui-paginate-text "You delivered the mushrooms to Shroom. She taught you In Flam Sanct: mix royal cape, sulphorous ash and garlic."))
+			  ((tbl-flag? 'found)
+			   (append header
+				   (kern-ui-paginate-text "You recovered some purple mushrooms, now take them back to Shroom.")))
+			  (else
+			   (append header
+				   (kern-ui-paginate-text "The mushrooms can be found in a cave south of Green Tower in the mountains by the sea. She mentioned something about slimes.")))))))

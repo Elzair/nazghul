@@ -485,4 +485,14 @@
 		  's_toy_horse
 		  (tbl-build 'on-update 'quest-puska-update)))
 
+(questadd (qst-mk "Shroom's Quest"
+		  'questentry-shroom
+		  (kern-ui-paginate-text "Shroom of Green Tower has promised to teach you a fire warding spell if you recover some purple mushrooms for her from a cave."
+					 ""
+					 "The mushrooms can be found in a cave south of Green Tower in the mountains by the sea. She mentioned something about slimes.")
+		  'quest-assign-notify
+		  'quest-status-inprogress
+		  's_royal_cape
+		  (tbl-build 'on-update 'quest-shroom-update)))
+		  
 )

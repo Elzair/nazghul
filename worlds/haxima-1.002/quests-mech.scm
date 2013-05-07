@@ -12,6 +12,11 @@
 	(qst-complete! quest)
 	)
 
+(define (quest-complete? quest)
+  (and (quest-assigned? quest) 
+       use-quest-pane
+       (qst-complete? quest)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; internal utility methods
 
@@ -108,6 +113,10 @@
 (define (quest-data-assigned? tag)
 	(quest-assigned? (quest-data-get tag))
 	)
+
+;; checks if a quest from the quest data table has been assigned and completed
+(define (quest-data-complete? tag)
+  (quest-complete? (quest-data-get tag)))
 	
 ;; assuming quest in the QDT uses a tbl for payload, updates a key/value pair
 (define (quest-data-update tag key value)
@@ -164,6 +173,10 @@
 (define (quest-data-complete tag)
 	(quest-complete (quest-data-get tag))
 	)
+
+(define (quest-data-complete-with tag key value callback)
+  (quest-data-update-with tag key value callback)
+  (quest-complete (quest-data-get tag)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 ;; callbacks for quest-data-update-with

@@ -80,9 +80,8 @@
                                    "Wait, take these, Mommy said wizards use them, so I pick them whenever I can.")
                               (ilya-finish-quest ilya)
                               (kern-obj-add-to-inventory kpc nightshade 23)
-			      (quest-data-update-with 'questentry-puska 'done 1
-						      (quest-notify (grant-party-xp-fn 10)))
-			      (quest-data-complete 'questentry-puska))
+			      (quest-data-complete-with 'questentry-puska 'done 1
+							(lambda (quest) (grant-party-xp-fn 10))))
 
                             ;; no - puska not in player inventory
                             (begin
