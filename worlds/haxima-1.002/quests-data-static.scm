@@ -854,3 +854,21 @@
 			  (else
 			   (append header
 				   (kern-ui-paginate-text "The mushrooms can be found in a cave south of Green Tower in the mountains by the sea. She mentioned something about slimes.")))))))
+
+(define (quest-nate-update)
+  (let* ((quest (quest-data-get 'questentry-nate))
+	 (quest-tbl (car (qst-payload quest)))
+	 (header (kern-ui-paginate-text 
+		  "Nate knows the secret of where to find Brundegardt."
+		  "")))
+    (define (tbl-flag? tag)
+      (not (null? (tbl-get quest-tbl tag))))
+    (qst-set-descr! quest
+		    (cond ((tbl-flag? 'done)
+			   (kern-ui-paginate-text "You have found the entrance to Brundegardt. The password is ^c+mnoor^c-."))
+			  ((tbl-flag? 'road)
+			   (append header
+				   (kern-ui-paginate-text "Explore where the Great Forest road passes north through the mountains. The entrance may be disguised. When you find it ask Nate about the ^c+mpassword^c-.")))
+			  (else
+			   (append header
+				   (kern-ui-paginate-text "You should ask Nate about ^c+mBrundegardt^c- in the wilderness.")))))))

@@ -22,17 +22,18 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Nate is a ranger of the Fens. He camps at the Enchanter's Tower.
+;; Nate is a bandit leader.
 ;;----------------------------------------------------------------------------
 (define (nate-hail knpc kpc)
   (let ((nate (kobj-gob-data knpc)))
     (define (join)
-      (say knpc "When it is convenient, ask me of the secret, milord. "
+      (say knpc "When it is convenient, ask me of the secret of Brundegardt, milord. "
            "Meanwhile, you can trust me not to escape.")
       (join-player knpc)
       (give kpc t_arrow 20)
       (nate-caught! nate)
       (quest-data-update-with 'questentry-bandits 'captured-nate 1 (quest-notify nil))
+      (quest-data-assign-once 'questentry-nate)
       )
     (nate-met! nate)
     (cond ((nate-caught? nate)
@@ -59,7 +60,10 @@
 (define (nate-secr knpc kpc)
   (cond ((is-player-party-member? knpc)
          (cond ((equal? (get-place knpc) p_shard)
-                (say knpc "I will tell you where to find the hidden entrance to Brundegardt!"))
+		(say knpc "Milord, we must look for the hidden entrance to Brundegardt where the forest road passes north through the mountains. "
+		     "I'll tell you the password when we are there.")
+		(quest-data-update-with 'questentry-nate 'road 1
+					(quest-notify nil)))
                (else
                 (say knpc "Merciful sir! It is not safe here! Let us escape to the wilderness and I will tell "
                      "you there.")
@@ -68,18 +72,12 @@
          (say knpc "The secret is safe with me.")
          )))
 
-(define (nate-brun knpc kpc)
-  (if (is-player-party-member? knpc)
-      (say knpc "Milord, we must search for Brundegardt where the forest road passes north through the mountains. "
-           "I'll tell you the password when we are there.")
-      (say knpc "Mums the word!")))
-
 (define (nate-pass knpc kpc)
   (if (is-player-party-member? knpc)
       (cond ((equal? (get-place knpc) p_brundegardt)
              (say knpc "Yes, here we are. You've done well, milord. The password... "
                   "[he clenches his teeth] "
-                  "...NOOR. [He sighs] It is NOOR.")
+                  "...noor. [He sighs] It is noor.")
              (prompt-for-key)
              (say knpc "Merciful sir, I beg of you a boon. "
                   "Long have I yearned to enter Brundegardt and learn its "
@@ -94,14 +92,16 @@
                     (say knpc "But most of all, we will need a goodly store of "
                          "magical reagents for the mixing of spells. "
                          "I hope you have some of the wizardly skill, "
-                         "for mark my words: we shall need it ere we are done."))
+                         "for mark my words: we shall need it before we are done."))
                    (else
                     (say knpc "I beg you to reconsider, but if you do not then heed "
                          "my warning, for I bear you no ill will, "
                          "you being a mere soldier of fortune like myself: "
                          "do not enter Brundegardt alone, "
                          "and take with you what supplies you can steal or purchase.")
-                    )))
+                    ))
+	     (quest-data-complete-with 'questentry-nate 'done 1
+				       (lambda (quest) (grant-party-xp-fn 10))))
              (else
               (say knpc "But sir! We have not reached Brundegardt!")
               ))
@@ -111,7 +111,7 @@
 (define nate-conv
   (ifc basic-conv
        (method 'name (lambda (knpc kpc) (say knpc "I am called Nate.")))
-       (method 'brun nate-brun)
+       (method 'brun nate-secr)
        (method 'hail nate-hail)
        (method 'pass nate-pass)
        (method 'secr nate-secr)

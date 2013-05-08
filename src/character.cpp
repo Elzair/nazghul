@@ -2496,7 +2496,7 @@ void Character::exec()
 {
         int points_last_loop;
         class Character *leader;
-        bool noHostiles = false;
+        //bool noHostiles = false;
         bool appointmentChecked = false;
                 
         startTurn();
@@ -2736,7 +2736,7 @@ void Character::exec()
                         break;
                 }
 
-                noHostiles = ! place_contains_hostiles(getPlace(), this);
+                //noHostiles = ! place_contains_hostiles(getPlace(), this);
 
                 // Loop until the leader is one tile away. Ignore ap debt so
                 // party members can "catch up". Note that they may die or
@@ -2746,7 +2746,7 @@ void Character::exec()
                 while (!isDead()
 		       && !isAsleep()
 		       && isOnMap()
-                       && noHostiles
+                       //&& noHostiles
                        && (getActionPoints() != points_last_loop)
 		       && (1 < place_flying_distance(Place, getX(), getY(), 
 						     leader->getX(), 

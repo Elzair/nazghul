@@ -494,5 +494,13 @@
 		  'quest-status-inprogress
 		  's_royal_cape
 		  (tbl-build 'on-update 'quest-shroom-update)))
+
+(questadd (qst-mk "Brundegardt"
+		  'questentry-nate
+		  (kern-ui-paginate-text "Nate has promised to share with you the secret of ^c+mBrundegardt^c-. You should ask him about it in the wilderness.")
+		  'quest-assign-notify
+		  'quest-status-inprogress
+		  's_dungeon
+		  (tbl-build 'on-update 'quest-nate-update)))
 		  
 )
