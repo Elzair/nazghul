@@ -134,17 +134,17 @@ static class Character * cmdAnyPartyMemberEngagedInTask(void)
 
 int dirkey(struct KeyHandler *kh, int key, int keymod)
 {
-	int *dir = (int *) kh->data;
+        int *dir = (int *) kh->data;
 
-	if (key >= KEY_SOUTHWEST && key <= KEY_NORTHEAST) {
-		*dir = keyToDirection(key);
-		return 1;
-	}
+        if (key >= KEY_SOUTHWEST && key <= KEY_NORTHEAST) {
+                *dir = keyToDirection(key);
+                return 1;
+        }
 
-	if (key == SDLK_ESCAPE) {
-		*dir = key;
-		return 1;
-	}
+        if (key == SDLK_ESCAPE) {
+                *dir = key;
+                return 1;
+        }
 
         /* Special case: let '.' mean KEY_HERE for the numeric keypad
          * challenged. */
@@ -153,171 +153,171 @@ int dirkey(struct KeyHandler *kh, int key, int keymod)
                 return 1;
         }
 
-	return 0;
+        return 0;
 }
 
 int cardinaldirkey(struct KeyHandler *kh, int key, int keymod)
 {
-	int *dir = (int *) kh->data;
+        int *dir = (int *) kh->data;
 
-	switch (key) {
-	case KEY_NORTH:
-	case KEY_SOUTH:
-	case KEY_EAST:
-	case KEY_WEST:
-		*dir = keyToDirection(key);
-		return 1;
-	}
+        switch (key) {
+        case KEY_NORTH:
+        case KEY_SOUTH:
+        case KEY_EAST:
+        case KEY_WEST:
+                *dir = keyToDirection(key);
+                return 1;
+        }
 
-	if (key == SDLK_ESCAPE) {
-		*dir = key;
-		return 1;
-	}
+        if (key == SDLK_ESCAPE) {
+                *dir = key;
+                return 1;
+        }
 
-	return 0;
+        return 0;
 }
 
 int yesnokey(struct KeyHandler * kh, int key, int keymod)
 {
-	int *yesno = (int *) kh->data;
+        int *yesno = (int *) kh->data;
 
-	switch (key) {
-	case 'y':
-	case 'Y':
-		*yesno = 'y';
-		return 1;
-	case 'n':
-	case 'N':
-	case CANCEL:
-		*yesno = 'n';
-		return 1;
-	default:
-		return 0;
-	}
+        switch (key) {
+        case 'y':
+        case 'Y':
+                *yesno = 'y';
+                return 1;
+        case 'n':
+        case 'N':
+        case CANCEL:
+                *yesno = 'n';
+                return 1;
+        default:
+                return 0;
+        }
 }
 
 enum get_number_state {
-	GN_ALL,
-	GN_ZERO,
-	GN_SOME,
-	GN_CANCEL
+        GN_ALL,
+        GN_ZERO,
+        GN_SOME,
+        GN_CANCEL
 };
 
 /* Max number getnum() will accept */
 const int MAX_GETNUM = 999999999;
 
 struct get_number_info {
-	int digit;
-	int state;
-	char *prompt;
+        int digit;
+        int state;
+        char *prompt;
 };
 
 struct get_char_info {
         const char *string;
         char c;
-	int state;
-	char *prompt;
+        int state;
+        char *prompt;
 };
 
 struct get_spell_name_data {
-	char spell_name[MAX_WORDS_IN_SPELL_NAME + 1];
+        char spell_name[MAX_WORDS_IN_SPELL_NAME + 1];
         const char *prompt;
-	char *ptr;
-	int n;
+        char *ptr;
+        int n;
         int state;
 };
 
 int getnum(struct KeyHandler *kh, int key, int keymod)
 {
-	struct get_number_info *info;
+        struct get_number_info *info;
 
-	info = (struct get_number_info *) kh->data;
+        info = (struct get_number_info *) kh->data;
 
-	switch (info->state) {
-	case GN_ALL:
-		if (key == CANCEL) {
+        switch (info->state) {
+        case GN_ALL:
+                if (key == CANCEL) {
                         cmdwin_pop();
-			info->digit = 0;
-			info->state = GN_CANCEL;
-			return 1;
-		}
-		if (key == '\n') {
+                        info->digit = 0;
+                        info->state = GN_CANCEL;
+                        return 1;
+                }
+                if (key == '\n') {
                         cmdwin_pop();
-			return 1;
-		}
-		if (key == '0') {
+                        return 1;
+                }
+                if (key == '0') {
                         cmdwin_pop();
-			cmdwin_push("0");
-			info->digit = 0;
-			info->state = GN_ZERO;
-			return 0;
-		}
-		if (isdigit(key)) {
+                        cmdwin_push("0");
+                        info->digit = 0;
+                        info->state = GN_ZERO;
+                        return 0;
+                }
+                if (isdigit(key)) {
                         cmdwin_pop();
-			info->digit = info->digit * 10 + key - '0';
-			cmdwin_push("%c", key);
-			info->state = GN_SOME;
-			return 0;
-		}
-		break;
-	case GN_ZERO:
-		if (key == CANCEL) {
-			info->digit = 0;
-			info->state = GN_CANCEL;
-			return 1;
-		}
-		if (key == '\n') {
-			return 1;
-		}
-		if (key == '\b') {
-			cmdwin_pop();
-			if (info->prompt)
-				cmdwin_spush(info->prompt);
-			info->state = GN_ALL;
-			return 0;
-		}
-		if (key == '0')
-			return 0;
-		if (isdigit(key)) {
-			cmdwin_pop();
-			info->digit = info->digit * 10 + key - '0';
-			cmdwin_push("%c", key);
-			info->state = GN_SOME;
-			return 0;
-		}
-		break;
-	case GN_SOME:
-		if (key == CANCEL) {
-			info->digit = 0;
-			info->state = GN_CANCEL;
-			return 1;
-		}
-		if (key == '\n') {
-			return 1;
-		}
-		if (key == '\b') {
-			info->digit = info->digit - (info->digit % 10);
-			info->digit /= 10;
-			cmdwin_pop();
-			if (info->digit == 0) {
-				info->state = GN_ALL;
-				if (info->prompt)
-					cmdwin_spush(info->prompt);
-			}
-			return 0;
-		}
-		if (isdigit(key)) {
+                        info->digit = info->digit * 10 + key - '0';
+                        cmdwin_push("%c", key);
+                        info->state = GN_SOME;
+                        return 0;
+                }
+                break;
+        case GN_ZERO:
+                if (key == CANCEL) {
+                        info->digit = 0;
+                        info->state = GN_CANCEL;
+                        return 1;
+                }
+                if (key == '\n') {
+                        return 1;
+                }
+                if (key == '\b') {
+                        cmdwin_pop();
+                        if (info->prompt)
+                                cmdwin_spush(info->prompt);
+                        info->state = GN_ALL;
+                        return 0;
+                }
+                if (key == '0')
+                        return 0;
+                if (isdigit(key)) {
+                        cmdwin_pop();
+                        info->digit = info->digit * 10 + key - '0';
+                        cmdwin_push("%c", key);
+                        info->state = GN_SOME;
+                        return 0;
+                }
+                break;
+        case GN_SOME:
+                if (key == CANCEL) {
+                        info->digit = 0;
+                        info->state = GN_CANCEL;
+                        return 1;
+                }
+                if (key == '\n') {
+                        return 1;
+                }
+                if (key == '\b') {
+                        info->digit = info->digit - (info->digit % 10);
+                        info->digit /= 10;
+                        cmdwin_pop();
+                        if (info->digit == 0) {
+                                info->state = GN_ALL;
+                                if (info->prompt)
+                                        cmdwin_spush(info->prompt);
+                        }
+                        return 0;
+                }
+                if (isdigit(key)) {
                         int keyval = key - '0';
                         if ((MAX_GETNUM - keyval) >= info->digit) {
                                 info->digit = info->digit * 10 + keyval;
                                 cmdwin_push("%c", key);
                         }
-			return 0;
-		}
-		break;
-	}
+                        return 0;
+                }
+                break;
+        }
 
-	return 0;
+        return 0;
 }
 
 int getdigit(struct KeyHandler * kh, int key, int keymod)
@@ -361,64 +361,64 @@ static int cmd_getchar(struct KeyHandler * kh, int key, int keymod)
                 cmdwin_push("%c", key);
                 return 1;
         }
-        
-        return 0;        
+
+        return 0;
 }
 
 int anykey(struct KeyHandler * kh, int key, int keymod)
 {
-	return 1;
+        return 1;
 }
 
 int scroller(struct KeyHandler * kh, int key, int keymod)
 {
-	struct ScrollerContext *context;
-	context = (struct ScrollerContext *) kh->data;
+        struct ScrollerContext *context;
+        context = (struct ScrollerContext *) kh->data;
 
-	switch (key) {
-	case KEY_NORTH:
-		statusScroll(ScrollUp);
-		break;
-	case KEY_SOUTH:
-		statusScroll(ScrollDown);
-		break;
-	case KEY_EAST:
-		statusScroll(ScrollRight);
-		break;
-	case KEY_WEST:
-		statusScroll(ScrollLeft);
-		break;
-	case SDLK_PAGEUP:
-		statusScroll(ScrollPageUp);
-		break;
-	case SDLK_PAGEDOWN:
-		statusScroll(ScrollPageDown);
-		break;
-	case SDLK_RETURN:
-	case SDLK_SPACE:
+        switch (key) {
+        case KEY_NORTH:
+                statusScroll(ScrollUp);
+                break;
+        case KEY_SOUTH:
+                statusScroll(ScrollDown);
+                break;
+        case KEY_EAST:
+                statusScroll(ScrollRight);
+                break;
+        case KEY_WEST:
+                statusScroll(ScrollLeft);
+                break;
+        case SDLK_PAGEUP:
+                statusScroll(ScrollPageUp);
+                break;
+        case SDLK_PAGEDOWN:
+                statusScroll(ScrollPageDown);
+                break;
+        case SDLK_RETURN:
+        case SDLK_SPACE:
         case KEY_HERE:
-	case '\n':
-		if (context != NULL) {
-			context->selection =
+        case '\n':
+                if (context != NULL) {
+                        context->selection =
                                 statusGetSelected(context->selector);
-		}
-		return 1;
-	case SDLK_ESCAPE:
-	case 'q':
-		if (context)
-			context->abort = 1;
-		return 1;
-	case 'm':
-		if (context && context->mixing) {
-			context->done = 1;
-			return 1;
-		}
-		break;
-	default:
-		break;
-	}
+                }
+                return 1;
+        case SDLK_ESCAPE:
+        case 'q':
+                if (context)
+                        context->abort = 1;
+                return 1;
+        case 'm':
+                if (context && context->mixing) {
+                        context->done = 1;
+                        return 1;
+                }
+                break;
+        default:
+                break;
+        }
 
-	return 0;
+        return 0;
 }
 
 bool mouse_button_cursor(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *event)
@@ -481,7 +481,7 @@ bool mouse_motion_cursor(struct MouseMotionHandler *mh, SDL_MouseMotionEvent *ev
         if (mapScreenToPlaceCoords(&mx, &my)) {
                 return false;
         }
-        
+
         /* Did the crosshair NOT move? */
         if (Session->crosshair->getX() == mx
             && Session->crosshair->getY() == my) {
@@ -529,10 +529,10 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
   
         /* target selected? */
         switch (key) {
-	case SDLK_RETURN:
-	case SDLK_SPACE:
+        case SDLK_RETURN:
+        case SDLK_SPACE:
         case KEY_HERE:
-	case '\n':
+        case '\n':
                 if (data->each_target_func) {
                         return data->each_target_func(Session->crosshair->getPlace(),
                                                       Session->crosshair->getX(),
@@ -637,112 +637,112 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
 
 struct inv_entry *ui_select_item(void)
 {
-	struct inv_entry *ie;
-	struct KeyHandler kh;
-	struct ScrollerContext sc;
+        struct inv_entry *ie;
+        struct KeyHandler kh;
+        struct ScrollerContext sc;
 
         foogodSetHintText(SCROLLER_HINT);
         foogodSetMode(FOOGOD_HINT);        
 
-	sc.selector = InventoryItem;
-	sc.selection = NULL;
-	kh.fx = scroller;
-	kh.data = &sc;
+        sc.selector = InventoryItem;
+        sc.selection = NULL;
+        kh.fx = scroller;
+        kh.data = &sc;
 
-	eventPushKeyHandler(&kh);
-	cmdwin_push("<select>");
-	eventHandle();
-	cmdwin_pop();
-	eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        cmdwin_push("<select>");
+        eventHandle();
+        cmdwin_pop();
+        eventPopKeyHandler();
 
         foogodSetMode(FOOGOD_DEFAULT);
 
-	ie = (struct inv_entry *) sc.selection;
-	if (ie == NULL) {
-		cmdwin_push("none!");
-		return NULL;
-	}
+        ie = (struct inv_entry *) sc.selection;
+        if (ie == NULL) {
+                cmdwin_push("none!");
+                return NULL;
+        }
 
-	cmdwin_spush(ie->type->getName());
+        cmdwin_spush(ie->type->getName());
 
-	return ie;
+        return ie;
 }
 
 class Character *select_party_member(void)
 {
-	enum StatusMode omode;
-	class Character *character;
+        enum StatusMode omode;
+        class Character *character;
 
         if (1 == player_party->getSize()) {
                 character = player_party->getMemberByOrder(0);
                 /* fixme: move to cmd_front_end? */
-		cmdwin_spush("%s", character->getName());
+                cmdwin_spush("%s", character->getName());
                 return character;
         }
 
         foogodSetHintText(SCROLLER_HINT);
         foogodSetMode(FOOGOD_HINT);        
-	omode = statusGetMode();
-	statusSetMode(SelectCharacter);
+        omode = statusGetMode();
+        statusSetMode(SelectCharacter);
 
-	struct KeyHandler kh;
-	struct ScrollerContext sc;
-	sc.selector = Character;
-	sc.selection = NULL;
-	kh.fx = scroller;
-	kh.data = &sc;
+        struct KeyHandler kh;
+        struct ScrollerContext sc;
+        sc.selector = Character;
+        sc.selection = NULL;
+        kh.fx = scroller;
+        kh.data = &sc;
 
-	eventPushKeyHandler(&kh);
-	cmdwin_push("<select>");
-	eventHandle();
-	cmdwin_pop();
-	eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        cmdwin_push("<select>");
+        eventHandle();
+        cmdwin_pop();
+        eventPopKeyHandler();
 
-	statusRepaint();
+        statusRepaint();
 
-	character = (class Character *) sc.selection;
+        character = (class Character *) sc.selection;
 
-	if (character == NULL) {
-		cmdwin_push("none!"); /* fixme: move to cmd_front_end? */
-		/* Hack alert: this saves the caller from having to remember to
-		 * do this. Doing it unconditionally is undesirable because it
-		 * can cause status screen flashes if the old mode requires a
-		 * short status window and the next mode requires a tall
-		 * one. */
-	} else {
+        if (character == NULL) {
+                cmdwin_push("none!"); /* fixme: move to cmd_front_end? */
+                /* Hack alert: this saves the caller from having to remember to
+                 * do this. Doing it unconditionally is undesirable because it
+                 * can cause status screen flashes if the old mode requires a
+                 * short status window and the next mode requires a tall
+                 * one. */
+        } else {
                 /* fixme: move to cmd_front_end? */
-		cmdwin_spush("%s", character->getName());
-	}
+                cmdwin_spush("%s", character->getName());
+        }
 
-	statusSetMode(omode);
+        statusSetMode(omode);
         foogodSetMode(FOOGOD_DEFAULT);
 
-	return character;
+        return character;
 }
 
 void getkey(void *data, int(*handler) (struct KeyHandler * kh, int key, int keymod))
 {
-	struct KeyHandler kh;
-	kh.fx = handler;
-	kh.data = data;
+        struct KeyHandler kh;
+        kh.fx = handler;
+        kh.data = data;
 
-	eventPushKeyHandler(&kh);
-	eventHandle();
-	eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        eventHandle();
+        eventPopKeyHandler();
 }
 
 int ui_get_direction(void)
 {
-	int dir;
-	cmdwin_push("<direction>");
-	getkey(&dir, dirkey);
-	cmdwin_pop();
-	if (dir == CANCEL) {
-		cmdwin_push("none!");
-	} else {
-		cmdwin_spush(directionToString(dir));
-	}
-	return dir;
+        int dir;
+        cmdwin_push("<direction>");
+        getkey(&dir, dirkey);
+        cmdwin_pop();
+        if (dir == CANCEL) {
+                cmdwin_push("none!");
+        } else {
+                cmdwin_spush(directionToString(dir));
+        }
+        return dir;
 }
 
 static void search_visitor(class Object *obj, void *arg)
@@ -757,26 +757,26 @@ static void search_visitor(class Object *obj, void *arg)
 
 bool cmdSearch(class Character *pc)
 {
-	int dir;
+        int dir;
         bool old_reveal;
         int x, y, x2,  y2;
         struct place *place = 0;
 
-	cmdwin_clear();
-	cmdwin_spush("Search");
+        cmdwin_clear();
+        cmdwin_spush("Search");
 
         /* FIXME: this is duplicated in cmdHandle(), these command functions
          * all need to be cleaned up to ensure consistency. */
         if (! pc) {
                 if (player_party->get_num_living_members() == 1) {
-			pc = player_party->get_first_living_member();
-			cmdwin_spush("%s", pc->getName());
-		} else {
-			pc = select_party_member();
-			if (pc == NULL) {
-				return false;
-			}
-		}
+                        pc = player_party->get_first_living_member();
+                        cmdwin_spush("%s", pc->getName());
+                } else {
+                        pc = select_party_member();
+                        if (pc == NULL) {
+                                return false;
+                        }
+                }
         }
 
         assert(pc);
@@ -784,9 +784,9 @@ bool cmdSearch(class Character *pc)
         x = pc->getX();
         y = pc->getY();
 
-	dir = ui_get_direction();
-	if (dir == CANCEL)
-		return false;
+        dir = ui_get_direction();
+        if (dir == CANCEL)
+                return false;
 
         x2 = x + directionToDx(dir);
         y2 = y + directionToDy(dir);
@@ -798,15 +798,15 @@ bool cmdSearch(class Character *pc)
         place_for_each_object_at(place, x2, y2, search_visitor, pc);
         obj_dec_ref(pc);
 
-	log_begin("You find ");
+        log_begin("You find ");
         old_reveal = Reveal;
         Reveal = true;
-	place_describe(place, x2, y2, PLACE_DESCRIBE_ALL);
+        place_describe(place, x2, y2, PLACE_DESCRIBE_ALL);
         log_end(".");
         Reveal = old_reveal;
         pc->decActionPoints(kern_intvar_get("AP_COST:search"));  // SAM: We may want a '-1' value here, to signify "all remaining AP"...
-	
-	return true;
+        
+        return true;
 }
 
 static int cmdGetFilter(class Object *obj)
@@ -817,51 +817,51 @@ static int cmdGetFilter(class Object *obj)
 
 bool cmdGet(class Object *actor)
 {
-	class Object *item;
-	int dir;
-	int x, y;
-	
-	cmdwin_clear();
-	cmdwin_spush("Get");
-	
-	dir = ui_get_direction();
-	
-	if (dir == CANCEL)
-		return false;
-	
-	x = actor->getX() + directionToDx(dir);
-	y = actor->getY() + directionToDy(dir);
-	
-	item = place_get_filtered_object(actor->getPlace(), x, y, 
-	cmdGetFilter);
-	if (!item) {
-		log_msg("Get - nothing there!");
-		return false;
-	}
-	
-	log_begin_group();
-	
-	while (NULL != (item = place_get_filtered_object(
-				actor->getPlace(), 
-				x, y, cmdGetFilter)))
-	{
-		item->getObjectType()->get(item, actor);
-		//do not allow too much AP debt if in combat
-		if ((combat_get_state() == COMBAT_STATE_FIGHTING)
-					&& ((2 * actor->getActionPoints()) + actor->getSpeed() < 0))
-		{
-			break;   
-		}
-	}
-	
-	log_end_group();
-	
-	mapSetDirty();
-	actor->runHook(OBJ_HOOK_GET_DONE, 0);
-	actor->decActionPoints(kern_intvar_get("AP_COST:get_item"));  // SAM: Better to have a number of AP by item type...
-	
-	
-	return true;
+        class Object *item;
+        int dir;
+        int x, y;
+        
+        cmdwin_clear();
+        cmdwin_spush("Get");
+        
+        dir = ui_get_direction();
+        
+        if (dir == CANCEL)
+                return false;
+        
+        x = actor->getX() + directionToDx(dir);
+        y = actor->getY() + directionToDy(dir);
+        
+        item = place_get_filtered_object(actor->getPlace(), x, y, 
+        cmdGetFilter);
+        if (!item) {
+                log_msg("Get - nothing there!");
+                return false;
+        }
+        
+        log_begin_group();
+        
+        while (NULL != (item = place_get_filtered_object(
+                                actor->getPlace(), 
+                                x, y, cmdGetFilter)))
+        {
+                item->getObjectType()->get(item, actor);
+                //do not allow too much AP debt if in combat
+                if ((combat_get_state() == COMBAT_STATE_FIGHTING)
+                                        && ((2 * actor->getActionPoints()) + actor->getSpeed() < 0))
+                {
+                        break;   
+                }
+        }
+        
+        log_end_group();
+        
+        mapSetDirty();
+        actor->runHook(OBJ_HOOK_GET_DONE, 0);
+        actor->decActionPoints(kern_intvar_get("AP_COST:get_item"));  // SAM: Better to have a number of AP by item type...
+        
+        
+        return true;
 }
 
 static void cmd_describe_inv_entry(struct inv_entry *ie, void *unused)
@@ -873,39 +873,39 @@ static void cmd_describe_inv_entry(struct inv_entry *ie, void *unused)
 
 bool cmdOpen(class Character * pc)
 {
-	int dir, x, y;
-	class Object *mech;
-	class Container *container;
+        int dir, x, y;
+        class Object *mech;
+        class Container *container;
 
-	cmdwin_clear();
-	cmdwin_spush("Open");
+        cmdwin_clear();
+        cmdwin_spush("Open");
 
-	// Get the party member who will open the container (in combat mode
-	// this is passed in as a parameter).
-	if (pc) {
-		cmdwin_spush(pc->getName());
-	} else {
-		pc = select_party_member();
-		if (pc == NULL) {
-			return false;
-		}
-	}
+        // Get the party member who will open the container (in combat mode
+        // this is passed in as a parameter).
+        if (pc) {
+                cmdwin_spush(pc->getName());
+        } else {
+                pc = select_party_member();
+                if (pc == NULL) {
+                        return false;
+                }
+        }
 
-	dir = ui_get_direction();
-	if (dir == CANCEL)
-		return false;
+        dir = ui_get_direction();
+        if (dir == CANCEL)
+                return false;
 
-	if (pc) {
-		x = place_wrap_x(pc->getPlace(), 
+        if (pc) {
+                x = place_wrap_x(pc->getPlace(), 
                                  pc->getX() + directionToDx(dir));
-		y = place_wrap_y(pc->getPlace(), 
+                y = place_wrap_y(pc->getPlace(), 
                                  pc->getY() + directionToDy(dir));
-	} else {
-		x = place_wrap_x(player_party->getPlace(),
+        } else {
+                x = place_wrap_x(player_party->getPlace(),
                                  player_party->getX() + directionToDx(dir));
-		y = place_wrap_y(player_party->getPlace(),
+                y = place_wrap_y(player_party->getPlace(),
                                  player_party->getY() + directionToDy(dir));
-	}
+        }
 
         /* Check for a mechanism */
          mech = place_get_object(pc->getPlace(), x, y, mech_layer);
@@ -987,7 +987,7 @@ bool cmdOpen(class Character * pc)
                  return false;
          }
 
-	/* Open Container */
+        /* Open Container */
 
         log_begin_group();
 
@@ -999,9 +999,9 @@ bool cmdOpen(class Character * pc)
         log_msg("You find:");
         container->forEach(cmd_describe_inv_entry, NULL);
 
-	// Open the container (automagically spills all the contents onto the
-	// map).
-	container->open();
+        // Open the container (automagically spills all the contents onto the
+        // map).
+        container->open();
 
         // --------------------------------------------------------------------
         // Delete container automatically on the combat map because if
@@ -1023,8 +1023,8 @@ bool cmdOpen(class Character * pc)
 
         log_end_group();
 
-	mapSetDirty();
-	return true;
+        mapSetDirty();
+        return true;
 }
 
 static bool cmd_nop_qh(struct QuitHandler *kh)
@@ -1035,25 +1035,25 @@ static bool cmd_nop_qh(struct QuitHandler *kh)
 
 bool cmdQuit(void)
 {
-	int yesno;
- 	struct QuitHandler qh;
+        int yesno;
+        struct QuitHandler qh;
 
         /* Bugfix: if the player tries to close the window while we're in one
          * of our getkey() calls, we'll enter this function recursively,
          * messing up the prompts. So push a nop quit handler to prevent
          * that. Kind of a hack: why should this function "know" it is called
          * by the default quit handler? */
-	qh.fx = cmd_nop_qh;
-	eventPushQuitHandler(&qh);
+        qh.fx = cmd_nop_qh;
+        eventPushQuitHandler(&qh);
         
-	cmdwin_clear();
-	cmdwin_spush("Quit");
+        cmdwin_clear();
+        cmdwin_spush("Quit");
         cmdwin_spush("<y/n>");
-	getkey(&yesno, yesnokey);
-	cmdwin_pop();
+        getkey(&yesno, yesnokey);
+        cmdwin_pop();
 
         /* Cancel quit? */
-	if (yesno == 'n') {
+        if (yesno == 'n') {
                 cmdwin_spush("abort!");
                 Quit = false;
                 goto pop_qh;
@@ -1082,7 +1082,7 @@ bool cmdQuit(void)
  pop_qh:
         eventPopQuitHandler();
 
-	return Quit;
+        return Quit;
 }
 
 void cmdAttack(void)
@@ -1096,18 +1096,18 @@ void cmdAttack(void)
         memset(&cinfo, 0, sizeof(cinfo));
         cinfo.move = &info;
         cinfo.defend = false;
-		
+                
         // Get the direction
-	cmdwin_clear();
-	cmdwin_spush("Attack");
+        cmdwin_clear();
+        cmdwin_spush("Attack");
         cmdwin_spush("<direction>");
-	getkey(&dir, cardinaldirkey);
-	cmdwin_pop();
-	if (dir == CANCEL) {
-		cmdwin_spush("none!");
-		return;
-	}
-	cmdwin_spush("%s", directionToString(dir));
+        getkey(&dir, cardinaldirkey);
+        cmdwin_pop();
+        if (dir == CANCEL) {
+                cmdwin_spush("none!");
+                return;
+        }
+        cmdwin_spush("%s", directionToString(dir));
 
         // Get the npc party being attacked
         info.dx = directionToDx(dir);
@@ -1116,7 +1116,7 @@ void cmdAttack(void)
         info.x = place_wrap_x(info.place, player_party->getX() + info.dx);
         info.y = place_wrap_y(info.place, player_party->getY() + info.dy);
         info.npc_party = place_get_Party(info.place, info.x, info.y);
-				
+                                
         if (info.npc_party == NULL) {
                 cmdwin_spush("nobody there!");
                 log_msg("Attack - nobody there!");
@@ -1179,56 +1179,56 @@ void cmdDeveloperEval(struct session *session)
 
 void cmdFire(void)
 {
-	int dir;
+        int dir;
 
-	cmdwin_clear();
-	cmdwin_spush("Fire");
+        cmdwin_clear();
+        cmdwin_spush("Fire");
 
         class Vehicle *vehicle = player_party->getVehicle();
-	if ((!vehicle ||
+        if ((!vehicle ||
              !vehicle->getOrdnance())) {
                 // SAM: 
                 // In future, we may check for adjacent "cannon" 
                 // mechanisms here (as in U5).
-		cmdwin_spush("No cannons available!");
+                cmdwin_spush("No cannons available!");
                 log_msg("Fire - no cannons!");
-		return;
-	}
+                return;
+        }
 
-	cmdwin_spush("%s", vehicle->getOrdnance()->getName());
+        cmdwin_spush("%s", vehicle->getOrdnance()->getName());
         cmdwin_spush("<direction>");
-	getkey(&dir, dirkey);
-	cmdwin_pop();
+        getkey(&dir, dirkey);
+        cmdwin_pop();
 
-	if (dir == CANCEL) {
-		cmdwin_spush("none!");
-		return;
-	}
+        if (dir == CANCEL) {
+                cmdwin_spush("none!");
+                return;
+        }
 
-	cmdwin_spush("%s", directionToString(dir));
-	if (! vehicle->fire_weapon(directionToDx(dir), 
+        cmdwin_spush("%s", directionToString(dir));
+        if (! vehicle->fire_weapon(directionToDx(dir), 
                                                  directionToDy(dir), 
                                                  player_party)) {
-		cmdwin_spush("Not a broadside!");
+                cmdwin_spush("Not a broadside!");
                 log_msg("Fire - not a broadside!");
-		return;
+                return;
         }
 }
 
 bool cmdReady(class Character * member)
 {
-	bool committed = false;
-	struct inv_entry *ie;
-	struct KeyHandler kh;
-	struct ScrollerContext sc;
-	const char *msg = 0;
+        bool committed = false;
+        struct inv_entry *ie;
+        struct KeyHandler kh;
+        struct ScrollerContext sc;
+        const char *msg = 0;
 
-	cmdwin_clear();
-	cmdwin_spush("Ready");
+        cmdwin_clear();
+        cmdwin_spush("Ready");
 
         // Select user
         if (member) {
-		cmdwin_spush("%s", member->getName());                
+                cmdwin_spush("%s", member->getName());                
         } else {
                 member = select_party_member();
                 if (member == NULL)
@@ -1245,49 +1245,49 @@ bool cmdReady(class Character * member)
         log_begin_group();
         log_msg("%s readies arms:", member->getName());
 
-	statusSelectCharacter(member->getOrder());
+        statusSelectCharacter(member->getOrder());
 
-	player_party->sortReadiedItems(member);
+        player_party->sortReadiedItems(member);
         foogodSetHintText(SCROLLER_HINT);
         foogodSetMode(FOOGOD_HINT);        
-	statusSetMode(Ready);
-	sc.selector = InventoryItem;
-	kh.fx = scroller;
-	kh.data = &sc;
-	eventPushKeyHandler(&kh);
+        statusSetMode(Ready);
+        sc.selector = InventoryItem;
+        kh.fx = scroller;
+        kh.data = &sc;
+        eventPushKeyHandler(&kh);
 
         cmdwin_spush("<select/ESC>");
 
-	for (;;) {
+        for (;;) {
 
-		sc.selection = NULL;
+                sc.selection = NULL;
 
-		eventHandle();
+                eventHandle();
                 cmdwin_pop();
 
-		ie = (struct inv_entry *) sc.selection;
-		if (ie == NULL) {
-			cmdwin_spush("done!");
-			break;
-		}
+                ie = (struct inv_entry *) sc.selection;
+                if (ie == NULL) {
+                        cmdwin_spush("done!");
+                        break;
+                }
 
-		committed = true;
+                committed = true;
 
-		class ArmsType *arms = (class ArmsType *) ie->type;
+                class ArmsType *arms = (class ArmsType *) ie->type;
 
                 log_begin("%s - ", arms->getName());
 
-		if (ie->ref && member->unready(arms)) {
-			msg = "unreadied!";
-			member->decActionPoints(arms->getRequiredActionPoints());
-			statusRepaint();
-		} else {
+                if (ie->ref && member->unready(arms)) {
+                        msg = "unreadied!";
+                        member->decActionPoints(arms->getRequiredActionPoints());
+                        statusRepaint();
+                } else {
 
-			switch (member->ready(arms)) {
-			case Character::Readied:
-				statusRepaint();
-				msg = "readied!";
-				member->decActionPoints(arms->getRequiredActionPoints());
+                        switch (member->ready(arms)) {
+                        case Character::Readied:
+                                statusRepaint();
+                                msg = "readied!";
+                                member->decActionPoints(arms->getRequiredActionPoints());
            /* Move the readied item to the front of the
             * list for easy access next time, and to
             * percolate frequently-used items up to the
@@ -1297,36 +1297,36 @@ bool cmdReady(class Character * member)
             * viewer to synch it back up with the new
             * list. */
            //statusSetMode(Ready);
-				break;
-			case Character::NoAvailableSlot:
-				msg = "all full!";
-				break;
-			case Character::WrongType:
-				msg = "can't use!";
-				break;
-			case Character::TooHeavy:
-				msg = "too heavy!";
-				break;
-			default:
-				assert(false);
-				break;
-			}
-		}
+                                break;
+                        case Character::NoAvailableSlot:
+                                msg = "all full!";
+                                break;
+                        case Character::WrongType:
+                                msg = "can't use!";
+                                break;
+                        case Character::TooHeavy:
+                                msg = "too heavy!";
+                                break;
+                        default:
+                                assert(false);
+                                break;
+                        }
+                }
 
-		cmdwin_spush("%s %s", arms->getName(), msg);
+                cmdwin_spush("%s %s", arms->getName(), msg);
                 log_end(msg);
       
-     	//do not allow too much AP debt if in combat
-		if ((combat_get_state() == COMBAT_STATE_FIGHTING)
-					&& ((2 * member->getActionPoints()) + member->getSpeed() < 0))
-		{
-			break;   
-		}
+        //do not allow too much AP debt if in combat
+                if ((combat_get_state() == COMBAT_STATE_FIGHTING)
+                                        && ((2 * member->getActionPoints()) + member->getSpeed() < 0))
+                {
+                        break;   
+                }
       
-	}
+        }
 
-	eventPopKeyHandler();
-	statusSetMode(ShowParty);
+        eventPopKeyHandler();
+        statusSetMode(ShowParty);
         foogodSetMode(FOOGOD_DEFAULT);
 
         if (committed) {
@@ -1336,7 +1336,7 @@ bool cmdReady(class Character * member)
 
         log_end_group();
 
-	return committed;
+        return committed;
 }
 
 static void cmd_init_movecursor_data(struct movecursor_data *data, 
@@ -1423,7 +1423,6 @@ int ui_select_target_generic(ui_select_target_req_t *req)
         struct movecursor_data data;
         struct KeyHandler kh;
         struct MouseButtonHandler mbh;
-        struct MouseMotionHandler mmh;
 
         Session->crosshair->setZone(req->tiles);
         Session->crosshair->setViewportBounded(1);
@@ -1442,9 +1441,6 @@ int ui_select_target_generic(ui_select_target_req_t *req)
   
         mbh.fx = mouse_button_cursor;
         mbh.data = &data;
-
-        mmh.fx = mouse_motion_cursor;
-        mmh.data = &data;
 
         eventPushMouseButtonHandler(&mbh);
         eventPushKeyHandler(&kh);
@@ -1481,48 +1477,48 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
 
 bool cmdHandle(class Character * pc)
 {
-	// SAM: Adding (H)andle command...
-	int x;
-	int y;
+        // SAM: Adding (H)andle command...
+        int x;
+        int y;
 
-	cmdwin_clear();
-	cmdwin_spush("Handle");
+        cmdwin_clear();
+        cmdwin_spush("Handle");
 
-	if (pc) {
-		// A party member was specified as a parameter, so this must be
-		// combat mode. Use the party member's location as the origin.
-		x = pc->getX();
-		y = pc->getY();
-		cmdwin_spush("%s", pc->getName());
-	} else {
-		// Must be party mode. Use the player party's location as the
-		// origin.
-		x = player_party->getX();
-		y = player_party->getY();
+        if (pc) {
+                // A party member was specified as a parameter, so this must be
+                // combat mode. Use the party member's location as the origin.
+                x = pc->getX();
+                y = pc->getY();
+                cmdwin_spush("%s", pc->getName());
+        } else {
+                // Must be party mode. Use the player party's location as the
+                // origin.
+                x = player_party->getX();
+                y = player_party->getY();
 
-		// And find out what the party member is Handling (so we can
-		// print the name). If only one party member then select the
-		// only one.
-		if (player_party->get_num_living_members() == 1) {
-			pc = player_party->get_first_living_member();
-			cmdwin_spush("%s", pc->getName());
-		} else {
-			pc = select_party_member();
-			if (pc == NULL) {
-				return false;
-			}
-		}
-	}
+                // And find out what the party member is Handling (so we can
+                // print the name). If only one party member then select the
+                // only one.
+                if (player_party->get_num_living_members() == 1) {
+                        pc = player_party->get_first_living_member();
+                        cmdwin_spush("%s", pc->getName());
+                } else {
+                        pc = select_party_member();
+                        if (pc == NULL) {
+                                return false;
+                        }
+                }
+        }
 
-	// *** Pick a target ***
+        // *** Pick a target ***
 
-	if (select_target(x, y, &x, &y, 1, 0) == -1)
-		return false;
+        if (select_target(x, y, &x, &y, 1, 0) == -1)
+                return false;
 
         // Try to find a mech
-	class Object *mech;
-	mech = place_get_object(Place, x, y, mech_layer);
-	if (! mech 
+        class Object *mech;
+        mech = place_get_object(Place, x, y, mech_layer);
+        if (! mech 
             || ! mech->getObjectType()->canHandle()
             || (! mech->isVisible()            
                 && ! Reveal)) {
@@ -1549,17 +1545,17 @@ bool cmdHandle(class Character * pc)
         // character mode.
         //player_party->updateView();
 
-	return true;
+        return true;
 }
 
 bool cmdUse(class Character * member, int flags)
 {
-	struct inv_entry *ie;
-	class ObjectType *item;
+        struct inv_entry *ie;
+        class ObjectType *item;
         int result;
 
-	cmdwin_clear();
-	cmdwin_spush("Use");
+        cmdwin_clear();
+        cmdwin_spush("Use");
 
         // Select user
         if (flags & CMD_SELECT_MEMBER) {
@@ -1570,14 +1566,14 @@ bool cmdUse(class Character * member, int flags)
                 assert(member);
                 cmdwin_spush("%s", member->getName());
         }
-	statusSelectCharacter(member->getOrder());
+        statusSelectCharacter(member->getOrder());
 
         // select item to use
-	statusSetMode(Use);
-	ie = ui_select_item();
-	statusSetMode(ShowParty);
-	if (ie == NULL) {
-		return false;
+        statusSetMode(Use);
+        ie = ui_select_item();
+        statusSetMode(ShowParty);
+        if (ie == NULL) {
+                return false;
         }
 
         /* warning: assume usable item came from player inventory; move it to
@@ -1587,12 +1583,12 @@ bool cmdUse(class Character * member, int flags)
          * the last one in inventory. */
         player_party->inventory->moveToFront(ie);
 
-	item = ie->type;
+        item = ie->type;
         assert(item->isUsable());
 
         // Use the item
         log_begin("%s: %s - ", member->getName(), item->getName());
-	result = item->use(member);
+        result = item->use(member);
         cmd_eval_and_log_result(result);
         log_end(0);
 
@@ -1600,9 +1596,9 @@ bool cmdUse(class Character * member, int flags)
 
         // Item's appear to decrement AP in the script...
         //member->decActionPoints(kern_intvar_get("AP_COST:use_item"));
-	statusRepaint();
+        statusRepaint();
 
-	return true;
+        return true;
 }
 
 /* Helper function called by cmdNewOrder: */
@@ -1618,7 +1614,7 @@ static void cmd_switch_party_leader(class Character *old_leader,
 
 void cmdNewOrder(void)
 {
-	class Character *pc1, *pc2;
+        class Character *pc1, *pc2;
 
         switch (player_party->getSize()) {
         case 0:
@@ -1633,34 +1629,34 @@ void cmdNewOrder(void)
                 goto swap;
         }
 
-	cmdwin_clear();
-	cmdwin_spush("Switch");
+        cmdwin_clear();
+        cmdwin_spush("Switch");
 
         // Set the mode now - before calling select_party_member - so that the
         // screen will not flash back to a short status window between the two
         // calls to select_party_member.
         statusSetMode(SelectCharacter);
 
-	pc1 = select_party_member();
-	if (pc1 == NULL) {
+        pc1 = select_party_member();
+        if (pc1 == NULL) {
                 statusSetMode(ShowParty);
-		return;
+                return;
         }
 
-	cmdwin_spush("with");
+        cmdwin_spush("with");
 
-	pc2 = select_party_member();
-	if (pc2 == NULL) {
+        pc2 = select_party_member();
+        if (pc2 == NULL) {
                 statusSetMode(ShowParty);
-		return;
-	}
+                return;
+        }
 
         statusSetMode(ShowParty);
  swap:
         player_party->switchOrder(pc1, pc2);
 
-	log_msg("New Order: %s switched with %s\n", pc1->getName(),
-		     pc2->getName());
+        log_msg("New Order: %s switched with %s\n", pc1->getName(),
+                     pc2->getName());
 
         // If one of the switched members was the party leader then make the
         // other one the new leader (unless the other one is dead or otherwise
@@ -1671,30 +1667,30 @@ void cmdNewOrder(void)
                 cmd_switch_party_leader(pc2, pc1);
         }
 
-	statusRepaint();
+        statusRepaint();
 }
 
 static void run_combat(bool camping, class Character * guard, int hours,
                        class Object *foe)
 {
-	struct move_info minfo;
-	struct combat_info cinfo;
+        struct move_info minfo;
+        struct combat_info cinfo;
 
         assert(!foe || foe->isType(PARTY_ID));
 
-	memset(&minfo, 0, sizeof(minfo));
-	minfo.place = Place;
-	minfo.x = player_party->getX();
-	minfo.y = player_party->getY();
+        memset(&minfo, 0, sizeof(minfo));
+        minfo.place = Place;
+        minfo.x = player_party->getX();
+        minfo.y = player_party->getY();
         minfo.px = minfo.x;
         minfo.py = minfo.y;
         minfo.npc_party = (class Party*)foe;
 
-	memset(&cinfo, 0, sizeof(cinfo));
-	cinfo.camping = camping;
-	cinfo.guard = guard;
-	cinfo.hours = hours;
-	cinfo.move = &minfo;
+        memset(&cinfo, 0, sizeof(cinfo));
+        cinfo.camping = camping;
+        cinfo.guard = guard;
+        cinfo.hours = hours;
+        cinfo.move = &minfo;
 
         // Is there an enemy?
         if (foe) {
@@ -1715,7 +1711,7 @@ static void run_combat(bool camping, class Character * guard, int hours,
                 minfo.dy = player_party->getDy();
         } 
 
-	combat_enter(&cinfo);
+        combat_enter(&cinfo);
 }
 
 struct talk_info {
@@ -1817,16 +1813,16 @@ static void cmd_cleanup_talk_info(struct talk_info *info)
 
 void cmdTalk(Object *member)
 {
-	struct conv *conv = NULL;
+        struct conv *conv = NULL;
         class Object *obj, *conversant = NULL;
         int x, y;
         struct talk_info info;
         const int max_distance = 5;
 
-	// *** Prompt user & check if valid ***
+        // *** Prompt user & check if valid ***
 
-	cmdwin_clear();
-	cmdwin_spush("Talk");
+        cmdwin_clear();
+        cmdwin_spush("Talk");
 
         if (! member) {
                 member = select_party_member();
@@ -1843,14 +1839,14 @@ void cmdTalk(Object *member)
         x = conversant->getX();
         y = conversant->getY();
 
-	if (select_target(member->getX(), member->getY(), 
+        if (select_target(member->getX(), member->getY(), 
                           &x, &y, max_distance, &info.suggest) == -1) {
                 goto cleanup;
-	}
+        }
 
-	obj = place_get_object(Place, x, y, being_layer);
+        obj = place_get_object(Place, x, y, being_layer);
 
-	if (!obj) {
+        if (!obj) {
                 cmdwin_spush("nobody there!");
                 log_msg("Try talking to a PERSON.");
                 goto cleanup;
@@ -1872,23 +1868,23 @@ void cmdTalk(Object *member)
 
         conv = obj->getConversation();
         if (!conv) {
-		cmdwin_spush("no response!");
+                cmdwin_spush("no response!");
                 log_begin("No response from ");
                 obj->describe();
                 log_end(".");
                 goto cleanup;
         }
 
-	cmdwin_spush(obj->getName());
+        cmdwin_spush(obj->getName());
 
-	if (((obj->getLayer() == being_layer) 
+        if (((obj->getLayer() == being_layer) 
              && ((class Character*)obj)->isAsleep())) {
-		log_msg("Zzzz...\n");
+                log_msg("Zzzz...\n");
                 goto cleanup;
-	}
+        }
 
         conv_enter(obj, member, conv);
-	mapSetDirty();
+        mapSetDirty();
 
  cleanup:
         
@@ -1899,14 +1895,14 @@ void cmdTalk(Object *member)
 
 bool cmdZtats(class Character * pc)
 {
-	statusRunApplet(ztats_get_applet()); /* runs until user ESC */
-	statusSetMode(ShowParty); /* restore default status mode */
-	return false;
+        statusRunApplet(ztats_get_applet()); /* runs until user ESC */
+        statusSetMode(ShowParty); /* restore default status mode */
+        return false;
 }
 
 static int select_hours(int allow_sunrise)
 {
-	struct get_char_info info;
+        struct get_char_info info;
 
         if (allow_sunrise) {
                 cmdwin_spush("<hours[0-9]/[s]unrise>");
@@ -1916,13 +1912,13 @@ static int select_hours(int allow_sunrise)
                 info.string = "0123456789";
         }
 
-	info.c = '0';
+        info.c = '0';
 
-	getkey(&info, &cmd_getchar);
+        getkey(&info, &cmd_getchar);
 
-	if (! info.c || info.c == '0') {
+        if (! info.c || info.c == '0') {
                 cmdwin_pop();
-		cmdwin_spush("none!");
+                cmdwin_spush("none!");
                 return 0;
         }
         else if (allow_sunrise
@@ -1939,101 +1935,101 @@ static int select_hours(int allow_sunrise)
                         return sunrise - hour;
                 return HOURS_PER_DAY - hour + sunrise;
         }
-	else if (info.c == '1') {
-		cmdwin_push(" hour");
+        else if (info.c == '1') {
+                cmdwin_push(" hour");
                 return 1;
         }
-	else {
-		cmdwin_push(" hours");
+        else {
+                cmdwin_push(" hours");
                 return info.c - '0';
         }
 }
 
 int ui_get_quantity(int max)
 {
-	struct get_number_info info;
+        struct get_number_info info;
         char prompt[64];
 
         /* Push the prompt but remember it for use within getnum() */
-	if (max == -1) {
+        if (max == -1) {
                 snprintf(prompt, sizeof(prompt), "<quantity>");
-	} else {
+        } else {
                 snprintf(prompt, sizeof(prompt), 
                          "<quantity[0-%d]/RET=%d>", max, max);
-	}
+        }
 
-	info.digit = 0;
-	info.state = GN_ALL;
-	info.prompt = prompt;
+        info.digit = 0;
+        info.state = GN_ALL;
+        info.prompt = prompt;
 
         cmdwin_spush(info.prompt);
-	getkey(&info, getnum);
+        getkey(&info, getnum);
 
-	if (info.state == GN_ALL) {
-		if (max == -1)
-			info.digit = 0;
-		else
-			info.digit = max;
-	} else if (info.state == GN_CANCEL)
-		cmdwin_spush("none!");
+        if (info.state == GN_ALL) {
+                if (max == -1)
+                        info.digit = 0;
+                else
+                        info.digit = max;
+        } else if (info.state == GN_CANCEL)
+                cmdwin_spush("none!");
 
-	return info.digit;
+        return info.digit;
 }
 
 int cmd_camp_in_wilderness(class Party *camper)
 {
-	int hours, yesno;
-	class Character *guard = 0;
+        int hours, yesno;
+        class Character *guard = 0;
 
-	cmdwin_clear();
-	cmdwin_spush("Camp");
+        cmdwin_clear();
+        cmdwin_spush("Camp");
 
-	if (!place_is_passable(camper->getPlace(), camper->getX(), 
+        if (!place_is_passable(camper->getPlace(), camper->getX(), 
                                camper->getY(), camper, PFLAG_IGNOREVEHICLES)) {
-		cmdwin_spush("not here!");
-                log_msg("Camp - not here!");
-		return 0;
-	}
-
-        if (place_get_subplace(camper->getPlace(), 
-                               camper->getX(), 
-                               camper->getY())) {
-		cmdwin_spush("not here!");
+                cmdwin_spush("not here!");
                 log_msg("Camp - not here!");
                 return 0;
         }
 
-	hours = select_hours(1);
-	if (hours == 0)
-		return 0;
+        if (place_get_subplace(camper->getPlace(), 
+                               camper->getX(), 
+                               camper->getY())) {
+                cmdwin_spush("not here!");
+                log_msg("Camp - not here!");
+                return 0;
+        }
+
+        hours = select_hours(1);
+        if (hours == 0)
+                return 0;
 
         cmdwin_spush(""); /* for the '-' */
-	cmdwin_spush("set a watch");
+        cmdwin_spush("set a watch");
         cmdwin_spush("<y/n>");
-	getkey(&yesno, &yesnokey);
+        getkey(&yesno, &yesnokey);
 
-	if (yesno == 'y') {
+        if (yesno == 'y') {
 
-		cmdwin_pop();
-		guard = select_party_member();
-		if (!guard) {
+                cmdwin_pop();
+                guard = select_party_member();
+                if (!guard) {
                         cmdwin_pop();
-			cmdwin_push("no watch");
-		}
+                        cmdwin_push("no watch");
+                }
                 else if (guard->isDead()) {
                         log_msg("You prop up the corpse and wave off "
                                 "the flies...");
                 }
                 // else select_party_member() prints the name
 
-	} else {
-		cmdwin_pop();
-		cmdwin_spush("no watch");
-	}
+        } else {
+                cmdwin_pop();
+                cmdwin_spush("no watch");
+        }
 
-	player_party->beginCamping(guard, hours);
+        player_party->beginCamping(guard, hours);
         camper->endTurn();
-	run_combat(true, guard, hours, NULL);
+        run_combat(true, guard, hours, NULL);
 
         return 0;
 }
@@ -2123,10 +2119,10 @@ int cmd_camp_in_town(class Character *camper)
 
 int get_spell_name(struct KeyHandler *kh, int key, int keymod)
 {
-	struct get_spell_name_data *ctx;
-	char *word, letter;
+        struct get_spell_name_data *ctx;
+        char *word, letter;
 
-	ctx = (struct get_spell_name_data *) kh->data;
+        ctx = (struct get_spell_name_data *) kh->data;
 
         switch (ctx->state) {
 
@@ -2232,27 +2228,27 @@ int get_spell_name(struct KeyHandler *kh, int key, int keymod)
 
 int select_spell(struct get_spell_name_data *context)
 {
-	struct KeyHandler kh;
+        struct KeyHandler kh;
 
-	memset(context, 0, sizeof(*context));
-	context->ptr = context->spell_name;
+        memset(context, 0, sizeof(*context));
+        context->ptr = context->spell_name;
         context->prompt = "<spell name>";
         context->state = GN_ZERO;
 
-	kh.fx = get_spell_name;
-	kh.data = context;
+        kh.fx = get_spell_name;
+        kh.data = context;
 
         cmdwin_spush(context->prompt);
-	eventPushKeyHandler(&kh);
-	eventHandle();
-	eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        eventHandle();
+        eventPopKeyHandler();
 
-	if (strlen(context->spell_name) == 0) {
-		cmdwin_spush("none!");
-		return -1;
-	}
+        if (strlen(context->spell_name) == 0) {
+                cmdwin_spush("none!");
+                return -1;
+        }
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -2295,12 +2291,12 @@ static int cmd_eval_and_log_result(int result)
 
 bool cmdCastSpell(class Character * pc)
 {
-	struct get_spell_name_data context;
-	struct inv_entry *ie = NULL;
-	struct spell *spell;
-	bool mixed = false;
-	bool natural = false;
-	int i, cast = 0, result = 0;
+        struct get_spell_name_data context;
+        struct inv_entry *ie = NULL;
+        struct spell *spell;
+        bool mixed = false;
+        bool natural = false;
+        int i, cast = 0, result = 0;
         char spell_name[MAX_SPELL_NAME_LENGTH];
 
         if (MagicNegated) {
@@ -2308,18 +2304,18 @@ bool cmdCastSpell(class Character * pc)
                 return false;
         }
 
-	cmdwin_clear();
-	cmdwin_spush("Cast");
+        cmdwin_clear();
+        cmdwin_spush("Cast");
 
-	/* If the pc is null then we are in non-combat mode and need to promp
+        /* If the pc is null then we are in non-combat mode and need to promp
          * the user. */
-	if (pc == NULL) {
-		pc = select_party_member();
-		if (pc == NULL) {
-			return false;
-		}
-		statusSetMode(ShowParty);
-	}
+        if (pc == NULL) {
+                pc = select_party_member();
+                if (pc == NULL) {
+                        return false;
+                }
+                statusSetMode(ShowParty);
+        }
 
         /* Make sure the PC is not asleep, dead, etc. */
         if (pc->isDead()) {
@@ -2334,9 +2330,9 @@ bool cmdCastSpell(class Character * pc)
                 return false;
         }
 
-	/* Prompt to select a spell */
-	if (select_spell(&context) == -1)
-		return false;
+        /* Prompt to select a spell */
+        if (select_spell(&context) == -1)
+                return false;
 
         /* The code for the spell is stored in the context, but not the full
          * name. I want the full name for log msgs. */
@@ -2346,60 +2342,60 @@ bool cmdCastSpell(class Character * pc)
 
         log_begin("%s: %s - ", pc->getName(), spell_name);
 
-	/* Lookup the spell in the list of valid spells. */
-	spell = magic_lookup_spell(&Session->magic, context.spell_name);
-	if (!spell) {
+        /* Lookup the spell in the list of valid spells. */
+        spell = magic_lookup_spell(&Session->magic, context.spell_name);
+        if (!spell) {
                 /* Bugfix for SF1564255: don't let player guess at spells. */
-		cmdwin_spush("none mixed!");
+                cmdwin_spush("none mixed!");
                 log_end("none mixed!");
-		return false;
-	}
+                return false;
+        }
 
-	/* Check if the spell can be used in this context. */
-	if (!(player_party->getContext() & spell->context)) {
-		cmdwin_spush("not here!");
+        /* Check if the spell can be used in this context. */
+        if (!(player_party->getContext() & spell->context)) {
+                cmdwin_spush("not here!");
                 log_end("not here!");
-		return false;
-	}
+                return false;
+        }
 
-	/* Check if the character comes by this spell naturally. */
-	for (i = 0; i < pc->species->n_spells; i++) {
-		if (! strcmp(pc->species->spells[i], spell->code)) {
-			natural = true;
-			break;
-		}
-	}
+        /* Check if the character comes by this spell naturally. */
+        for (i = 0; i < pc->species->n_spells; i++) {
+                if (! strcmp(pc->species->spells[i], spell->code)) {
+                        natural = true;
+                        break;
+                }
+        }
 
         /* Check if the caster is of sufficient level. */
         /*
          * FIXME: what if the spell is natural? cast An Xen Exe on a snake and
          * try to cast In Nox Por to see what I mean...
          */
-	if (!natural && pc->getLevel() < spell->level) {
-		cmdwin_spush("need more experience!");
+        if (!natural && pc->getLevel() < spell->level) {
+                cmdwin_spush("need more experience!");
                 log_end("must be level %d!", spell->level);
-		return false;
-	}
+                return false;
+        }
 
-	/* Check party inventory for a mixed spell. */
-	if (!natural) {
-		ie = player_party->inventory->search(spell->type);
-		if (ie && ie->count)
-			mixed = true;
-	}
+        /* Check party inventory for a mixed spell. */
+        if (!natural) {
+                ie = player_party->inventory->search(spell->type);
+                if (ie && ie->count)
+                        mixed = true;
+        }
 
-	if (!natural && !mixed) {
-		cmdwin_spush("none mixed!");
+        if (!natural && !mixed) {
+                cmdwin_spush("none mixed!");
                 log_end("none mixed!");
-		return false;
-	}
+                return false;
+        }
 
-	/* Check if the character has enough mana to cast the spell. */
-	if (pc->getMana() < spell->cost) {
-		cmdwin_spush("need more mana!");
+        /* Check if the character has enough mana to cast the spell. */
+        if (pc->getMana() < spell->cost) {
+                cmdwin_spush("need more mana!");
                 log_end("need more mana!");
-		return false;
-	}
+                return false;
+        }
 
         /* Cast the spell. */
         result = spell->type->cast(pc);
@@ -2416,10 +2412,10 @@ bool cmdCastSpell(class Character * pc)
         pc->decActionPoints(spell->action_points);
         pc->addExperience(spell->cost);
 
-	/* If the spell was mixed then remove it from inventory. */
-	if (mixed) {
+        /* If the spell was mixed then remove it from inventory. */
+        if (mixed) {
                 int count = ie->count - 1;
-		player_party->takeOut(ie->type, 1);
+                player_party->takeOut(ie->type, 1);
                 log_msg("%d %s remaining", count, spell_name);
         }
 
@@ -2428,28 +2424,28 @@ bool cmdCastSpell(class Character * pc)
 
         log_end(NULL);
 
-	return true;
+        return true;
 
 }
 
 bool cmdMixReagents(class Character *character)
 {
-	struct spell *spell;
-	struct get_spell_name_data context;
-	struct list reagents, *elem;
-	int quantity, max_quantity;
-	struct inv_entry *ie, *ie_spell = 0;
-	bool mistake = false;
+        struct spell *spell;
+        struct get_spell_name_data context;
+        struct list reagents, *elem;
+        int quantity, max_quantity;
+        struct inv_entry *ie, *ie_spell = 0;
+        bool mistake = false;
         char spell_name[MAX_SPELL_NAME_LENGTH];
 
-	list_init(&reagents);
+        list_init(&reagents);
 
-	cmdwin_clear();
-	cmdwin_spush("Mix");
+        cmdwin_clear();
+        cmdwin_spush("Mix");
 
-	// Select a spell...
-	if (select_spell(&context) == -1)
-		return false;
+        // Select a spell...
+        if (select_spell(&context) == -1)
+                return false;
 
         // The code for the spell is stored in the context, but not the full
         // name. I want the full name for log msgs.
@@ -2457,8 +2453,8 @@ bool cmdMixReagents(class Character *character)
                                  MAX_SPELL_NAME_LENGTH, 
                                  context.spell_name);
 
-	// Lookup the spell. If null then keep going and bomb when done.
-	spell = magic_lookup_spell(&Session->magic, context.spell_name);
+        // Lookup the spell. If null then keep going and bomb when done.
+        spell = magic_lookup_spell(&Session->magic, context.spell_name);
 
         // Show the player how many he already has mixed...
         ie_spell = 0;
@@ -2471,147 +2467,147 @@ bool cmdMixReagents(class Character *character)
                 cmdwin_spush("0 mixed");
         }
 
-	// Prompt for reagents 
-	cmdwin_spush("<select, then M)ix>");
+        // Prompt for reagents 
+        cmdwin_spush("<select, then M)ix>");
 
         foogodSetHintText("\005\006=scroll ENT=add/remove ESC=abort M=done");
         foogodSetMode(FOOGOD_HINT);
 
-	// Show the reagents in the status window
-	statusSetMode(MixReagents);
+        // Show the reagents in the status window
+        statusSetMode(MixReagents);
 
-	struct ScrollerContext sc;
-	sc.selector = Reagents;
-	sc.done = false;
-	sc.abort = false;
-	sc.mixing = true;
+        struct ScrollerContext sc;
+        sc.selector = Reagents;
+        sc.done = false;
+        sc.abort = false;
+        sc.mixing = true;
 
-	struct KeyHandler kh;
-	kh.fx = scroller;
-	kh.data = &sc;
+        struct KeyHandler kh;
+        kh.fx = scroller;
+        kh.data = &sc;
 
-	eventPushKeyHandler(&kh);
+        eventPushKeyHandler(&kh);
 
-	for (;;) {
-		sc.selection = NULL;
-		eventHandle();
+        for (;;) {
+                sc.selection = NULL;
+                eventHandle();
 
-		if (sc.abort) {
-			// u5 silently aborts here
+                if (sc.abort) {
+                        // u5 silently aborts here
                         cmdwin_pop();
-			eventPopKeyHandler();
-			cmdwin_spush("none!");
-			goto done;
-		}
+                        eventPopKeyHandler();
+                        cmdwin_spush("none!");
+                        goto done;
+                }
 
-		if (sc.done)
-			break;
+                if (sc.done)
+                        break;
 
-		ie = (struct inv_entry *) sc.selection;
+                ie = (struct inv_entry *) sc.selection;
                 if (! ie) {
                         /* This happens when the player has no reagents
                          * whatsoever. */
-			cmdwin_pop();
-			eventPopKeyHandler();
-			cmdwin_spush("none!");
-			goto done;
+                        cmdwin_pop();
+                        eventPopKeyHandler();
+                        cmdwin_spush("none!");
+                        goto done;
                 }
 
-		if (ie->ref) {
-			// unselect
-			ie->ref = 0;
-			list_remove(&ie->auxlist);
-		} else {
-			// select
-			ie->ref = 1;
-			list_add(&reagents, &ie->auxlist);
-		}
+                if (ie->ref) {
+                        // unselect
+                        ie->ref = 0;
+                        list_remove(&ie->auxlist);
+                } else {
+                        // select
+                        ie->ref = 1;
+                        list_add(&reagents, &ie->auxlist);
+                }
 
-		statusRepaint();
-	}
+                statusRepaint();
+        }
 
-	cmdwin_pop();
-	eventPopKeyHandler();
+        cmdwin_pop();
+        eventPopKeyHandler();
 
-	if (list_empty(&reagents)) {
-		cmdwin_spush("none!");
-		goto done;
-	}
+        if (list_empty(&reagents)) {
+                cmdwin_spush("none!");
+                goto done;
+        }
 
-	// Determine the max number of mixtures the player can make.
-	max_quantity = 0x7fffff;
-	list_for_each(&reagents, elem) {
-		ie = outcast(elem, struct inv_entry, auxlist);
-		if (ie->count < max_quantity) {
-			max_quantity = ie->count;
-		}
-	}
+        // Determine the max number of mixtures the player can make.
+        max_quantity = 0x7fffff;
+        list_for_each(&reagents, elem) {
+                ie = outcast(elem, struct inv_entry, auxlist);
+                if (ie->count < max_quantity) {
+                        max_quantity = ie->count;
+                }
+        }
 
-	// Prompt for the number of mixtures to make
-	for (;;) {
+        // Prompt for the number of mixtures to make
+        for (;;) {
 
-		int dummy;
+                int dummy;
 
                 cmdwin_push_mark();
-		quantity = ui_get_quantity(max_quantity);
+                quantity = ui_get_quantity(max_quantity);
 
-		if (quantity == 0) {
-			goto done;
-		}
+                if (quantity == 0) {
+                        goto done;
+                }
 
-		if (quantity <= max_quantity)
-			break;
+                if (quantity <= max_quantity)
+                        break;
 
                 cmdwin_spush(0); /* for the '-' after the quantity */
-		cmdwin_spush("not enough reagents!");
-		getkey(&dummy, anykey);
-		cmdwin_pop_to_mark();
-	}
+                cmdwin_spush("not enough reagents!");
+                getkey(&dummy, anykey);
+                cmdwin_pop_to_mark();
+        }
 
         cmdwin_push("-");
-	log_begin("Mix: %s - ", spell_name);
+        log_begin("Mix: %s - ", spell_name);
 
-	// For each reagent required by the spell, check if it is in the list
-	// of reagents given by the player. If not then remember this fact. If
-	// the reagent is found then remove it from player inventory and remove
-	// it from the list.
-	if (spell) {
-		for (int i = 0; i < spell->n_reagents; i++) {
-			bool found = false;
-			list_for_each(&reagents, elem) {
-				ie = outcast(elem, struct inv_entry, auxlist);
-				if (ie->type ==
-				    (class ObjectType *) spell->reagents[i]) {
+        // For each reagent required by the spell, check if it is in the list
+        // of reagents given by the player. If not then remember this fact. If
+        // the reagent is found then remove it from player inventory and remove
+        // it from the list.
+        if (spell) {
+                for (int i = 0; i < spell->n_reagents; i++) {
+                        bool found = false;
+                        list_for_each(&reagents, elem) {
+                                ie = outcast(elem, struct inv_entry, auxlist);
+                                if (ie->type ==
+                                    (class ObjectType *) spell->reagents[i]) {
                                         // The following line is safe only
-					// because this is the end of the
-					// list_for_each loop!
-					list_remove(elem);
-					ie->ref--;
-					player_party->takeOut(ie->type, 
+                                        // because this is the end of the
+                                        // list_for_each loop!
+                                        list_remove(elem);
+                                        ie->ref--;
+                                        player_party->takeOut(ie->type, 
                                                               quantity);
-					found = true;
-					break;
-				}
-			}
-			if (!found)
-				mistake = true;
-		}
-	}
+                                        found = true;
+                                        break;
+                                }
+                        }
+                        if (!found)
+                                mistake = true;
+                }
+        }
 
-	// Now, if any reagents remain leftover then remember this fact and
-	// remove the remaining reagents from inventory.
-	if (!list_empty(&reagents)) {
-		mistake = true;
-		elem = reagents.next;
-		while (elem != &reagents) {
-			struct list *tmp = elem->next;
-			ie = outcast(elem, struct inv_entry, auxlist);
-			list_remove(elem);
-			elem = tmp;
-			ie->ref--;
-			player_party->takeOut(ie->type, quantity);
-		}
-	}
+        // Now, if any reagents remain leftover then remember this fact and
+        // remove the remaining reagents from inventory.
+        if (!list_empty(&reagents)) {
+                mistake = true;
+                elem = reagents.next;
+                while (elem != &reagents) {
+                        struct list *tmp = elem->next;
+                        ie = outcast(elem, struct inv_entry, auxlist);
+                        list_remove(elem);
+                        elem = tmp;
+                        ie->ref--;
+                        player_party->takeOut(ie->type, quantity);
+                }
+        }
 
         statusSetMode(ShowParty);
         foogodSetMode(FOOGOD_DEFAULT);
@@ -2619,42 +2615,42 @@ bool cmdMixReagents(class Character *character)
         // committed to action now, so decrement AP
         if (character) {
                 character->runHook(OBJ_HOOK_MIX_DONE, 0);
-                
+
                 if (!spell)
                 {
-		    // Failed attempt (mixing a spell which does not exist)
-		    int num  = kern_intvar_get("AP_COST:mix_reagents_nospell_num");
-		    int dice = kern_intvar_get("AP_COST:mix_reagents_nospell_dice");
-		    int plus = kern_intvar_get("AP_COST:mix_reagents_nospell_plus");
-		    int AP_wasted = dice_roll_numeric(num, dice, plus);
-		    character->decActionPoints(AP_wasted);
-		    // was 3d50+20 -- dice_roll_numeric(3, 50, 20)
+                        // Failed attempt (mixing a spell which does not exist)
+                        int num  = kern_intvar_get("AP_COST:mix_reagents_nospell_num");
+                        int dice = kern_intvar_get("AP_COST:mix_reagents_nospell_dice");
+                        int plus = kern_intvar_get("AP_COST:mix_reagents_nospell_plus");
+                        int AP_wasted = dice_roll_numeric(num, dice, plus);
+                        character->decActionPoints(AP_wasted);
+                        // was 3d50+20 -- dice_roll_numeric(3, 50, 20)
                 }
                 else if (mistake)
                 {
-		    int level = spell->level;
-		    int num  = kern_intvar_get("AP_COST:mix_reagents_badmix_num");
-		    int dice = kern_intvar_get("AP_COST:mix_reagents_badmix_dice");
-		    int plus = kern_intvar_get("AP_COST:mix_reagents_badmix_plus");
-		    int AP_wasted = dice_roll_numeric(level * num, dice, plus);
-		    character->decActionPoints(AP_wasted);
-		    // was 1d(2*AP)+100 -- dice_roll_numeric(1 ,(2 * spell->action_points) , 100)
-            	 }
-            	else
-            	{
-		    // mixing should be SLOW
-		    int base      = kern_intvar_get("AP_COST:mix_reagents_base");
-		    int per_mix   = kern_intvar_get("AP_COST:mix_reagents_per_mix");
-		    int per_level = kern_intvar_get("AP_COST:mix_reagents_per_level");
-		    int AP_spent  = base + (quantity * per_mix) + (spell->level * per_level);
-		    character->decActionPoints(AP_spent);
-		    // was 100 + 2 * spell->action_points
-            	}
+                        int level = spell->level;
+                        int num  = kern_intvar_get("AP_COST:mix_reagents_badmix_num");
+                        int dice = kern_intvar_get("AP_COST:mix_reagents_badmix_dice");
+                        int plus = kern_intvar_get("AP_COST:mix_reagents_badmix_plus");
+                        int AP_wasted = dice_roll_numeric(level * num, dice, plus);
+                        character->decActionPoints(AP_wasted);
+                        // was 1d(2*AP)+100 -- dice_roll_numeric(1 ,(2 * spell->action_points) , 100)
+                }
+                else
+                {
+                        // mixing should be SLOW
+                        int base      = kern_intvar_get("AP_COST:mix_reagents_base");
+                        int per_mix   = kern_intvar_get("AP_COST:mix_reagents_per_mix");
+                        int per_level = kern_intvar_get("AP_COST:mix_reagents_per_level");
+                        int AP_spent  = base + (quantity * per_mix) + (spell->level * per_level);
+                        character->decActionPoints(AP_spent);
+                        // was 100 + 2 * spell->action_points
+                }
         }
 
-	// If the spell is invalid or the reagents are incorrect then punish
-	// the player.
-	if (!spell) {
+        // If the spell is invalid or the reagents are incorrect then punish
+        // the player.
+        if (!spell) {
                 cmdwin_spush("oops!");
                 player_party->damage(DAMAGE_ACID);
                 log_end("ACID!");
@@ -2665,26 +2661,26 @@ bool cmdMixReagents(class Character *character)
                 player_party->damage(DAMAGE_BOMB);
                 log_end("BOMB!");
                 goto done;
-	}
+        }
 
-	// All is well. Add the spell to player inventory.
+        // All is well. Add the spell to player inventory.
         cmdwin_spush("ok");
-	player_party->add(spell->type, quantity);
+        player_party->add(spell->type, quantity);
         log_end("ok!");
 
  done:
-	// In case of cancellation I need to unselect all the reagents.
-	elem = reagents.next;
-	while (elem != &reagents) {
-		struct list *tmp = elem->next;
-		ie = outcast(elem, struct inv_entry, auxlist);
-		list_remove(elem);
-		elem = tmp;
-		ie->ref--;
-	}
-	statusSetMode(ShowParty);
+        // In case of cancellation I need to unselect all the reagents.
+        elem = reagents.next;
+        while (elem != &reagents) {
+                struct list *tmp = elem->next;
+                ie = outcast(elem, struct inv_entry, auxlist);
+                list_remove(elem);
+                elem = tmp;
+                ie->ref--;
+        }
+        statusSetMode(ShowParty);
         foogodSetMode(FOOGOD_DEFAULT);
-	return true;
+        return true;
 }
 
 void look_at_XY(struct place *place, int x, int y, void *unused)
@@ -2714,30 +2710,30 @@ void look_at_XY(struct place *place, int x, int y, void *unused)
 
 int detailed_examine_XY(struct place *place, int x, int y, void *unused)
 {
-	if (DeveloperMode) {
-			log_begin("At XY=(%d,%d): ", x, y);
-	} else {
-			log_begin("");
-	}
+        if (DeveloperMode) {
+                        log_begin("At XY=(%d,%d): ", x, y);
+        } else {
+                        log_begin("");
+        }
 
-	if ( mapTileIsVisible(x, y) ) {
-			if (mapTileLightLevel(x,y) < MIN_XAMINE_LIGHT_LEVEL) {
-					log_continue("You can't see!");
-			} else {
-					log_continue("You see:\n");
-					place_examine(place, x, y);
-			}
-	} else if (ShowAllTerrain || XrayVision) {
-			log_continue("You see (via xray):\n");
-			place_examine(place, x, y);
-	} else {
-			log_continue("You can't see!");
-	}
+        if ( mapTileIsVisible(x, y) ) {
+                        if (mapTileLightLevel(x,y) < MIN_XAMINE_LIGHT_LEVEL) {
+                                        log_continue("You can't see!");
+                        } else {
+                                        log_continue("You see:\n");
+                                        place_examine(place, x, y);
+                        }
+        } else if (ShowAllTerrain || XrayVision) {
+                        log_continue("You see (via xray):\n");
+                        place_examine(place, x, y);
+        } else {
+                        log_continue("You can't see!");
+        }
 
-	#if 0
-	// SAM: 
-	// Hmmm...how best to print more info about
-	// the objects on this tile?
+        #if 0
+        // SAM: 
+        // Hmmm...how best to print more info about
+        // the objects on this tile?
         if ( mapTileIsVisible(x, y) ) {
                 log_msg("DETAIL XY=(%d,%d) TODO - print detailed view\n", x, y);
                 // For each object/terrain on the tile, print the name (and
@@ -2761,23 +2757,23 @@ int detailed_examine_XY(struct place *place, int x, int y, void *unused)
                 return;
         }
         log_msg("DETAIL XY=(%d,%d) out of LOS\n", x, y);
-	#endif
-	
-	log_end(NULL);
+        #endif
+        
+        log_end(NULL);
 
         return 0; /* keep on targeting */
 }
 
 bool cmdXamine(class Object * pc)
 {
-	// SAM: Working on an improved (L)ook command,
-	// which works as a "Look Mode" rather than a 
-	// "look at 1 tile" command...
-	int x, y;
+        // SAM: Working on an improved (L)ook command,
+        // which works as a "Look Mode" rather than a 
+        // "look at 1 tile" command...
+        int x, y;
         bool ret = true;
 
-	cmdwin_clear();
-	cmdwin_spush("Xamine");
+        cmdwin_clear();
+        cmdwin_spush("Xamine");
 
         x = pc->getX();
         y = pc->getY();
@@ -2790,14 +2786,14 @@ bool cmdXamine(class Object * pc)
                 log_msg("You examine around...");
 
         look_at_XY(pc->getPlace(), x, y, 0);  // First look at the current tile
-	if (select_target_with_doing(x, y, &x, &y, pc->getVisionRadius(),
-				     look_at_XY, detailed_examine_XY) == -1) {
-		ret = false;
-	}
+        if (select_target_with_doing(x, y, &x, &y, pc->getVisionRadius(),
+                                     look_at_XY, detailed_examine_XY) == -1) {
+                ret = false;
+        }
 
         log_end_group();
 
-	return ret;
+        return ret;
 } // cmdXamine()
 
 const char * name_of_context (void)
@@ -2815,50 +2811,45 @@ const char * name_of_context (void)
 
 bool cmdAT (class Character * pc)
 {
-	int x, y;
         const char * who = "";
         const char * place_name = "";
 
-	cmdwin_clear();
+        cmdwin_clear();
 
         // Should I check player_party->context
         // for the context info below, 
         // rather than the current method?
-	if (pc) {
-		// A party member was specified as a parameter, so this must be
-		// combat mode. Use the party member's location as the origin.
+        if (pc) {
+                // A party member was specified as a parameter, so this must be
+                // combat mode. Use the party member's location as the origin.
                 who = pc->getName();
                 place_name =  Place->name;
-		x = pc->getX();
-		y = pc->getY();
-	}
+        }
         else {
-		// Must be party mode. 
-		// Use the player party's location as the origin.
+                // Must be party mode. 
+                // Use the player party's location as the origin.
                 who = "The party";
                 place_name = player_party->getPlace()->name;
-                x = player_party->getX();
-                y = player_party->getY();
-	}
+        }
         // SAM: Why is this line not safe in combat mode?
         //      Would it be The Right Thing (TM) 
         //      for it to be made safe in all contexts?
         // place_name = player_party->getPlace()->name;
-    
+
         log_begin_group();
         log_msg("This is %s.", name_of_context() );
         log_msg("%s is in %s.", who, place_name);
-		if (Place->underground) {
-			log_msg("It is %s, %s of %s in the year %d.",
+                if (Place->underground) {
+                        log_msg("It is %s, %s of %s in the year %d.",
                 day_name(), week_name(), month_name(), Session->clock.year );
         }
-		else
-		{
-			log_msg("It is %s on %s, "
+                else
+                {
+                        log_msg("It is %s on %s, "
                 "%s of %s in the year %d.",
                 vague_time_as_string(), day_name(), 
                 week_name(), month_name(), Session->clock.year );
-		}
+                }
         // SAM: Is this really interesting though, I wonder?
         log_msg("%d game turns have passed.", Turn);
 
@@ -2975,9 +2966,9 @@ bool cmd_save_current_place (struct place * place)
 
     file = file_open_in_save_dir(file_path, "w");
     if (file == NULL) {
-	log_msg("Save place to file '%s' failed.", file_path);
-	printf("Error on fopen() for file '%s': '%s'\n", file_path, strerror(errno));
-	return 0;
+        log_msg("Save place to file '%s' failed.", file_path);
+        printf("Error on fopen() for file '%s': '%s'\n", file_path, strerror(errno));
+        return 0;
     }
     Session->session_id++;  // Must increment to cause saving.
 
@@ -2994,12 +2985,12 @@ bool cmd_save_current_place (struct place * place)
 
     ret = fclose(file);
     if (ret != 0) {
-	// SAM: Not sure what we can do about it, 
-	//      and this seems kind of low-level to log_msg() about...
-	printf("Error on fclose() for file '%s': '%s'\n", file_path, strerror(errno));
-	// It seems that the save method should return non-void, 
-	// so that we know success/failure in this and other cases...
-	return 0;
+        // SAM: Not sure what we can do about it, 
+        //      and this seems kind of low-level to log_msg() about...
+        printf("Error on fclose() for file '%s': '%s'\n", file_path, strerror(errno));
+        // It seems that the save method should return non-void, 
+        // so that we know success/failure in this and other cases...
+        return 0;
     }
     return 1;
 }
@@ -3013,10 +3004,10 @@ void cmdZoomIn(void)
         // each enter_combat() case might be desired...
         // 
         // For now, I print a placeholder message for each case here:
-        
+
         if ((subplace = place_get_subplace(player_party->getPlace(),
-                                                  player_party->getX(),
-                                                  player_party->getY()))) {
+                                           player_party->getX(),
+                                           player_party->getY()))) {
                 if (ENABLE_TOWN_ZOOM_IN) {
                         // Standing over a subplace. Try to enter with no
                         // direction, this will prompt the player to provide a
@@ -3098,21 +3089,21 @@ void cmdReload(void)
 
 int ui_get_yes_no(const char *name)
 {
-	int yesno;
-	cmdwin_clear();
-	cmdwin_spush("Reply");
+        int yesno;
+        cmdwin_clear();
+        cmdwin_spush("Reply");
         cmdwin_spush("<y/n>");
-	getkey(&yesno, yesnokey);
-	cmdwin_pop();
-	if (yesno == 'y') {
-		cmdwin_spush("yes");
-		log_msg("^c+%c%s:^c- Yes", CONV_PC_COLOR, name);
+        getkey(&yesno, yesnokey);
+        cmdwin_pop();
+        if (yesno == 'y') {
+                cmdwin_spush("yes");
+                log_msg("^c+%c%s:^c- Yes", CONV_PC_COLOR, name);
                 return 1;
-	} else {
-		cmdwin_spush("no");
-		log_msg("^c+%c%s:^c- No", CONV_PC_COLOR, name);
+        } else {
+                cmdwin_spush("no");
+                log_msg("^c+%c%s:^c- No", CONV_PC_COLOR, name);
                 return 0;
-	}
+        }
 }
 
 typedef struct ui_getline_data {
@@ -3126,43 +3117,43 @@ static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
 {
         getline_t *data = (getline_t*)kh->data;
 
-	if (key == CANCEL) {
-		while (data->ptr > data->buf) {
-			data->ptr--;
-			*data->ptr = 0;
-			cmdwin_pop();
-			data->room++;
-		}
-		return 1;
-	}
+        if (key == CANCEL) {
+                while (data->ptr > data->buf) {
+                        data->ptr--;
+                        *data->ptr = 0;
+                        cmdwin_pop();
+                        data->room++;
+                }
+                return 1;
+        }
 
-	if (key == '\n') {
-		return 1;
-	}
+        if (key == '\n') {
+                return 1;
+        }
 
-	if (key == '\b') {
-		if (data->ptr != data->buf) {
-			data->ptr--;
-			*data->ptr = 0;
-			data->room++;
-			cmdwin_pop();
-		}
-		return 0;
-	}
+        if (key == '\b') {
+                if (data->ptr != data->buf) {
+                        data->ptr--;
+                        *data->ptr = 0;
+                        data->room++;
+                        cmdwin_pop();
+                }
+                return 0;
+        }
 
         if (data->filter
             && data->filter(key)) {
                 return 0;
         }
 
-	if (isprintable(key) 
+        if (isprintable(key) 
             && data->room) {
-		cmdwin_push("%c", key);
-		*data->ptr++ = key;
-		data->room--;
-	}
+                cmdwin_push("%c", key);
+                *data->ptr++ = key;
+                data->room--;
+        }
 
-	return 0;
+        return 0;
 }
 
 int ui_getline_filtered(char *buf, int len, int (*filter)(int key))
@@ -3201,38 +3192,38 @@ int ui_getline(char *buf, int len)
 
 int ui_buy(struct merchant *merch)
 {
-	struct KeyHandler kh;
-	struct ScrollerContext sc;
-	struct trade_info *trade;
-	int quantity, cost, max_q, bought = 0;
+        struct KeyHandler kh;
+        struct ScrollerContext sc;
+        struct trade_info *trade;
+        int quantity, cost, max_q, bought = 0;
 
-	statusSetTradeInfo(merch->n_trades, merch->trades);
-	statusSetMode(Trade);
+        statusSetTradeInfo(merch->n_trades, merch->trades);
+        statusSetMode(Trade);
 
-	sc.selector = TradeItem;
-	kh.fx = scroller;
-	kh.data = &sc;
+        sc.selector = TradeItem;
+        kh.fx = scroller;
+        kh.data = &sc;
 
-	for (;;) {
+        for (;;) {
 
-		// *** selection ***
+                // *** selection ***
 
-		sc.selection = NULL;
+                sc.selection = NULL;
 
-		cmdwin_clear();
-		cmdwin_spush("Buy");
+                cmdwin_clear();
+                cmdwin_spush("Buy");
                 cmdwin_spush("<select/ESC>");
-		eventPushKeyHandler(&kh);
-		eventHandle();
-		eventPopKeyHandler();
-		cmdwin_pop();
+                eventPushKeyHandler(&kh);
+                eventHandle();
+                eventPopKeyHandler();
+                cmdwin_pop();
 
-		trade = (struct trade_info *) sc.selection;
+                trade = (struct trade_info *) sc.selection;
 
-		if (!trade) {
-			cmdwin_spush("none!");
-			break;
-		}
+                if (!trade) {
+                        cmdwin_spush("none!");
+                        break;
+                }
 
                 /* Print the sales pitch to the console, if one exists */
                 if (trade->sales_pitch) {
@@ -3240,39 +3231,39 @@ int ui_buy(struct merchant *merch)
                                 trade->sales_pitch);
                 }
 
-		cmdwin_spush("%s", trade->name);
+                cmdwin_spush("%s", trade->name);
 
-		if (player_party->gold < trade->cost) {
-			int dummy;
-			cmdwin_spush("not enough gold! <hit any key>");
-			getkey(&dummy, anykey);
-			continue;
-		}
-		// *** quantity ***
+                if (player_party->gold < trade->cost) {
+                        int dummy;
+                        cmdwin_spush("not enough gold! <hit any key>");
+                        getkey(&dummy, anykey);
+                        continue;
+                }
+                // *** quantity ***
 
                 cmdwin_push_mark();
-		max_q = player_party->gold / trade->cost;
-		quantity = ui_get_quantity(max_q);
+                max_q = player_party->gold / trade->cost;
+                quantity = ui_get_quantity(max_q);
                 cmdwin_pop_to_mark();
 
-		if (quantity == 0) {
-			cmdwin_spush("none!");
-			continue;
-		}
+                if (quantity == 0) {
+                        cmdwin_spush("none!");
+                        continue;
+                }
 
-		quantity = min(quantity, max_q);
-		cmdwin_spush("%d", quantity);
+                quantity = min(quantity, max_q);
+                cmdwin_spush("%d", quantity);
 
-		cost = quantity * trade->cost;
+                cost = quantity * trade->cost;
 
-		// *** trade ***
+                // *** trade ***
 
                 class ObjectType *type = (class ObjectType*)trade->data;
-		cmdwin_spush("ok");
-		log_msg("You buy %d %s%s for %d gold\n", quantity,
-			     trade->name, quantity > 1 ? "s" : "", cost);
+                cmdwin_spush("ok");
+                log_msg("You buy %d %s%s for %d gold\n", quantity,
+                             trade->name, quantity > 1 ? "s" : "", cost);
 
-		player_party->gold -= cost;
+                player_party->gold -= cost;
                 if (type->canBuy()) {
                         type->buy(player_party->get_leader(), quantity);
                 } else {
@@ -3280,11 +3271,11 @@ int ui_buy(struct merchant *merch)
                 }
                 trade->quantity = player_party->inventory->numAvail(type);
                 statusRepaint();
-		foogodRepaint();
+                foogodRepaint();
                 bought++;
-	}
+        }
 
-	statusSetMode(ShowParty);
+        statusSetMode(ShowParty);
         return bought;
 }
 
@@ -3296,9 +3287,9 @@ static bool conv_filter_trade(struct inv_entry *ie, void *fdata)
 
 static int fill_sell_list(struct merchant *merch, struct trade_info *trades)
 {
-	struct inv_entry *ie = NULL;
+        struct inv_entry *ie = NULL;
         struct filter filter;
-	int i, j = 0;
+        int i, j = 0;
 
         filter.fx = conv_filter_trade;
 
@@ -3320,153 +3311,153 @@ static int fill_sell_list(struct merchant *merch, struct trade_info *trades)
                 j++;
         }
 
-	return j;
+        return j;
 }
 
 int ui_sell(struct merchant *merch)
 {
-	// A bit trickier than the "Buy" scenario. A merchant will only buy
-	// items that it is willing to turn around and sell at a profit. When
-	// it comes time to select an item to sell the user should only see the
-	// list of items in player inventory which the merchant is willing to
-	// buy. So here we need to build that list and feed it to the status
-	// viewer.
+        // A bit trickier than the "Buy" scenario. A merchant will only buy
+        // items that it is willing to turn around and sell at a profit. When
+        // it comes time to select an item to sell the user should only see the
+        // list of items in player inventory which the merchant is willing to
+        // buy. So here we need to build that list and feed it to the status
+        // viewer.
 
-	int n_trades = 0;
-	struct trade_info *trades;
-	struct KeyHandler kh;
-	struct ScrollerContext sc;
-	struct trade_info *trade;
+        int n_trades = 0;
+        struct trade_info *trades;
+        struct KeyHandler kh;
+        struct ScrollerContext sc;
+        struct trade_info *trade;
         int sold = 0;
 
-	// Allocate the trade list.
-	trades = MEM_ALLOC_NTYPE(struct trade_info, merch->n_trades, NULL);
-	if (!trades) {
-		log_msg("^c+%c%s:^c- I don't need anything.\n", 
+        // Allocate the trade list.
+        trades = MEM_ALLOC_NTYPE(struct trade_info, merch->n_trades, NULL);
+        if (!trades) {
+                log_msg("^c+%c%s:^c- I don't need anything.\n", 
                         CONV_NPC_COLOR, merch->name);                
-		return 0;
-	}
-	// Fill out the list
-	n_trades = fill_sell_list(merch, trades);
-	statusSetTradeInfo(n_trades, trades);
-	statusSetMode(Trade);
+                return 0;
+        }
+        // Fill out the list
+        n_trades = fill_sell_list(merch, trades);
+        statusSetTradeInfo(n_trades, trades);
+        statusSetMode(Trade);
 
-	sc.selector = TradeItem;
-	kh.fx = scroller;
-	kh.data = &sc;
+        sc.selector = TradeItem;
+        kh.fx = scroller;
+        kh.data = &sc;
 
-	for (;;) {
+        for (;;) {
 
-		struct inv_entry *ie;
-		int quantity, max_q;
+                struct inv_entry *ie;
+                int quantity, max_q;
 
-		sc.selection = NULL;
+                sc.selection = NULL;
 
-		cmdwin_clear();
-		cmdwin_spush("Sell");
+                cmdwin_clear();
+                cmdwin_spush("Sell");
                 cmdwin_spush("<select or ESC>");
-		eventPushKeyHandler(&kh);
-		eventHandle();
-		eventPopKeyHandler();
-		cmdwin_pop();
+                eventPushKeyHandler(&kh);
+                eventHandle();
+                eventPopKeyHandler();
+                cmdwin_pop();
 
-		trade = (struct trade_info *) sc.selection;
+                trade = (struct trade_info *) sc.selection;
 
-		if (!trade) {
-			cmdwin_spush("none!");
-			break;
-		}
+                if (!trade) {
+                        cmdwin_spush("none!");
+                        break;
+                }
 
-		cmdwin_spush("%s", trade->name);
+                cmdwin_spush("%s", trade->name);
 
-		ie = player_party->inventory->search((class ObjectType *) 
+                ie = player_party->inventory->search((class ObjectType *) 
                                                      trade->data);
-		assert(ie);
-		assert(ie->ref < ie->count);
+                assert(ie);
+                assert(ie->ref < ie->count);
 
-		// quantity
+                // quantity
 
-		max_q = ie->count - ie->ref;
+                max_q = ie->count - ie->ref;
 
-		cmdwin_push_mark();
-		quantity = ui_get_quantity(max_q);
+                cmdwin_push_mark();
+                quantity = ui_get_quantity(max_q);
                 cmdwin_pop_to_mark();
 
-		if (quantity == 0) {
-			cmdwin_spush("none!");
-			continue;
-		}
+                if (quantity == 0) {
+                        cmdwin_spush("none!");
+                        continue;
+                }
 
-		quantity = min(quantity, max_q);
-		cmdwin_spush("%d", quantity);
+                quantity = min(quantity, max_q);
+                cmdwin_spush("%d", quantity);
 
-		// make the trade
-		player_party->takeOut(ie->type, quantity);
-		player_party->gold += quantity * trade->cost;
-		foogodRepaint();
+                // make the trade
+                player_party->takeOut(ie->type, quantity);
+                player_party->gold += quantity * trade->cost;
+                foogodRepaint();
 
-		cmdwin_spush("ok");
-		log_msg("You sell %d %s%s for %d gold\n", quantity,
-			     trade->name, quantity > 1 ? "s" : "",
-			     quantity * trade->cost);
+                cmdwin_spush("ok");
+                log_msg("You sell %d %s%s for %d gold\n", quantity,
+                             trade->name, quantity > 1 ? "s" : "",
+                             quantity * trade->cost);
 
-		// refresh the sell list
-		n_trades = fill_sell_list(merch, trades);
-		statusSetTradeInfo(n_trades, trades);
-		statusUpdateTradeInfo(n_trades, trades);
+                // refresh the sell list
+                n_trades = fill_sell_list(merch, trades);
+                statusSetTradeInfo(n_trades, trades);
+                statusUpdateTradeInfo(n_trades, trades);
                 sold++;
-	}
+        }
 
-	statusSetMode(ShowParty);
+        statusSetMode(ShowParty);
 
-	mem_deref(trades);
+        mem_deref(trades);
         return sold;
 }
 
 static int get_buy_or_sell_key(struct KeyHandler *kh, int key, int keymod)
 {
-	int *val = (int *) kh->data;
+        int *val = (int *) kh->data;
 
-	switch (key) {
-	case 'b':
-	case 'B':
-		*val = 'b';
-		return 1;
-	case 's':
-	case 'S':
-		*val = 's';
-		return 1;
-	case CANCEL:
-		*val = 'x';
-		return 1;
-	default:
-		return 0;
-	}
+        switch (key) {
+        case 'b':
+        case 'B':
+                *val = 'b';
+                return 1;
+        case 's':
+        case 'S':
+                *val = 's';
+                return 1;
+        case CANCEL:
+                *val = 'x';
+                return 1;
+        default:
+                return 0;
+        }
 }
 
 int ui_trade(struct merchant *merch)
 {
-	int key, traded = 0;
+        int key, traded = 0;
 
-	for (;;) {
-		cmdwin_clear();
-		cmdwin_spush("Buy or sell");
+        for (;;) {
+                cmdwin_clear();
+                cmdwin_spush("Buy or sell");
                 cmdwin_spush("<B/S/ESC>");
-		getkey(&key, get_buy_or_sell_key);
+                getkey(&key, get_buy_or_sell_key);
 
-		switch (key) {
-		case 'b':
-			traded += ui_buy(merch);
-			break;
-		case 's':
-			traded += ui_sell(merch);
-			break;
-		default:
-			cmdwin_pop();
-			cmdwin_spush("none!");
-			return traded;
-		}
-	}
+                switch (key) {
+                case 'b':
+                        traded += ui_buy(merch);
+                        break;
+                case 's':
+                        traded += ui_sell(merch);
+                        break;
+                default:
+                        cmdwin_pop();
+                        cmdwin_spush("none!");
+                        return traded;
+                }
+        }
 }
 
 static const char *cmd_help_text =
@@ -3524,9 +3515,9 @@ void cmdHelp(void)
 
         kh.fx = scroller;
         kh.data = NULL;
-	eventPushKeyHandler(&kh);
-	eventHandle();
-	eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        eventHandle();
+        eventPopKeyHandler();
 
         statusSetMode(ShowParty);
         foogodSetMode(FOOGOD_DEFAULT);
@@ -3616,8 +3607,8 @@ void cmdDrop(class Character *actor)
 
         /* prompt for location */
         dir = ui_get_direction();
-	if (dir == CANCEL) {
-		return;
+        if (dir == CANCEL) {
+                return;
         }
         x = actor->getX() + directionToDx(dir);
         y = actor->getY() + directionToDy(dir);
@@ -3629,26 +3620,26 @@ void cmdDrop(class Character *actor)
         if (place_get_movement_cost(actor->getPlace(), x, y, 
                             obj, 0) < PTABLE_NO_DROP)
         {
-	        obj->relocate(actor->getPlace(), x, y,
-   	                   REL_NOSTEP, /* FIXME: really? */
-      	                NULL);
-	        actor->takeOut(ie->type, quantity);
-	        actor->runHook(OBJ_HOOK_DROP_DONE, "pd", ie->type, quantity);
-   	  }
-   	  else if (place_get_movement_cost(actor->getPlace(), actor->getX(), actor->getY(), 
+                obj->relocate(actor->getPlace(), x, y,
+                           REL_NOSTEP, /* FIXME: really? */
+                        NULL);
+                actor->takeOut(ie->type, quantity);
+                actor->runHook(OBJ_HOOK_DROP_DONE, "pd", ie->type, quantity);
+          }
+          else if (place_get_movement_cost(actor->getPlace(), actor->getX(), actor->getY(), 
                             obj, 0) < PTABLE_IMPASSABLE)
         {
-   	  	        obj->relocate(actor->getPlace(), actor->getX(), actor->getY(),
-   	                   REL_NOSTEP, /* FIXME: really? */
-      	                NULL);
-	        actor->takeOut(ie->type, quantity);
-	        actor->runHook(OBJ_HOOK_DROP_DONE, "pd", ie->type, quantity);
-	        log_msg("%s wouldnt fit!", ie->type->getName());
-		 }
-		 else
-		 {
-			 log_msg("Couldnt drop %s!", ie->type->getName());
-		 }
+                        obj->relocate(actor->getPlace(), actor->getX(), actor->getY(),
+                           REL_NOSTEP, /* FIXME: really? */
+                        NULL);
+                actor->takeOut(ie->type, quantity);
+                actor->runHook(OBJ_HOOK_DROP_DONE, "pd", ie->type, quantity);
+                log_msg("%s wouldnt fit!", ie->type->getName());
+                 }
+                 else
+                 {
+                         log_msg("Couldnt drop %s!", ie->type->getName());
+                 }
         /* remove from party inventory */
         actor->decActionPoints(kern_intvar_get("AP_COST:drop_item"));
 
@@ -3661,22 +3652,22 @@ void cmdDrop(class Character *actor)
 
 static const void *cmd_select_generic()
 {
-	struct KeyHandler kh;
-	struct ScrollerContext sc;
+        struct KeyHandler kh;
+        struct ScrollerContext sc;
 
         foogodSetHintText(SCROLLER_HINT);
         foogodSetMode(FOOGOD_HINT);        
 
-	sc.selector = SelectSuperGeneric;
-	sc.selection = NULL;
-	kh.fx = scroller;
-	kh.data = &sc;
+        sc.selector = SelectSuperGeneric;
+        sc.selection = NULL;
+        kh.fx = scroller;
+        kh.data = &sc;
 
-	eventPushKeyHandler(&kh);
-	cmdwin_push("<select>");
-	eventHandle();
-	cmdwin_pop();
-	eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        cmdwin_push("<select>");
+        eventHandle();
+        cmdwin_pop();
+        eventPopKeyHandler();
 
         foogodSetMode(FOOGOD_DEFAULT);
         return sc.selection;

@@ -146,10 +146,6 @@ bool Party::attackPlayer(int dx, int dy)
 {
 	dbg("attackPlayer:%s:dx=%d dy=%d\n", getName(), dx, dy);
 
-	// By default use the party's current place as the combat place, but if
-	// joining an existing combat this will be overridden below.
-	struct place *combat_place = getPlace();
-
 #if CONFIG_CONCURRENT_WILDERNESS
 	int join_existing_combat = 0;
 #endif
@@ -164,9 +160,6 @@ bool Party::attackPlayer(int dx, int dy)
 		// Player is already on a combat map. Let's join him
 		// there. Deploy on the nearest side.
 		join_existing_combat = 1;
-
-		// Change the combat map to the global Place.
-		combat_place = Place;
 #else
 		dbg("attackPlayer:%s:player not on map\n", getName());
                 return false;
@@ -1077,23 +1070,21 @@ Object *Party::getSpeaker()
 
         // Allocate an array of status list entries big enough for the entire
         // party (this is probably more than we need, but it's only temporary).
-        statlist = (struct stat_list_entry*)
-                calloc(getSize(), sizeof(struct stat_list_entry));
+        statlist = (struct stat_list_entry*)calloc(getSize(), sizeof(struct stat_list_entry));
         assert(statlist);
 
 
         // For each party member that has a conversation, add it to the list.
         FOR_EACH_MEMBER(entry, member) {
 
-            // Fix for crasher: 'conv' is a member of this object, so don't use
-            // it as a temp variable!
-            if (!member->getConversation()) {
-                continue;
-            }
-
+                // Fix for crasher: 'conv' is a member of this object, so don't use
+                // it as a temp variable!
+                if (!member->getConversation()) {
+                        continue;
+                }
+                
                 statlist[list_sz].sprite = member->getSprite();
-                snprintf(statlist[list_sz].line1, STAT_LIST_CHARS_PER_LINE,
-                         member->getName());
+                snprintf(statlist[list_sz].line1, STAT_LIST_CHARS_PER_LINE, "%s", member->getName());
                 statlist[list_sz].data = member;
                 list_sz++;
         }

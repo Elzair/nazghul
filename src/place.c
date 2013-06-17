@@ -1778,8 +1778,6 @@ static int place_timed_obj_exec(Object *obj)
 	int time = SDL_GetTicks();
 	dbg("%s:%20s ----------\n", __FUNCTION__, obj->getName());
 	obj->exec();
-/*	   if (obj->isPlayerControlled()) */
-/*		   return 0; */
 	return SDL_GetTicks() - time;
 	
 }
@@ -1879,9 +1877,7 @@ void place_exec(struct place *place)
 		}
 
 		/* check for end of combat */
-		//if (combat_get_state() != COMBAT_STATE_DONE) {
-			combat_analyze_results_of_last_turn();
-		//}
+                combat_on_end_of_turn();
 
 		obj_dec_ref(obj);
 
@@ -2282,12 +2278,6 @@ int place_add_subplace(struct place *place, struct place *subplace,
 			return -1;
 	}
 
-	// Why was I doing this?
-/*	   if (subplace->handle) { */
-/*		   session_rm(Session, subplace->handle); */
-/*		   subplace->handle = 0; */
-/*	   } */
-
 	subplace->location.place = place;
 	subplace->location.x = x;
 	subplace->location.y = y;
@@ -2334,8 +2324,7 @@ void place_for_each_object_at(struct place *place, int x, int y,
 		tile_for_each_object(tile, fx, data);
 }
 
-static void place_remove_and_destroy_temporary_object(class Object *obj, 
-						      void *unused)
+static void place_object_on_exit(class Object *obj, void *unused)
 {
 	if (obj->isTemporary()) {
 		place_remove_and_destroy_object(obj, unused);
@@ -2344,8 +2333,7 @@ static void place_remove_and_destroy_temporary_object(class Object *obj,
 
 void place_exit(struct place *place)
 {
-	place_for_each_object(place, place_remove_and_destroy_temporary_object,
-			      NULL);
+	place_for_each_object(place, place_object_on_exit, NULL);
 }
 
 int place_get_edge_entrance(struct place *place, int dir, int *x, int *y)

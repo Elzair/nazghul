@@ -64,7 +64,7 @@ extern void combat_reset_state(void);
 extern bool combat_enter(struct combat_info *info);
 extern bool combat_rendezvous_party(int max_path_len);
 extern void combat_exit(void);
-extern void combat_analyze_results_of_last_turn(void);
+extern void combat_on_end_of_turn(void);
 extern void combat_fill_position_info(struct position_info *info, struct place *place, int x, int y, int dx, int dy, bool defend);
 extern bool combat_place_character(class Character * pm, void *data);
 extern int combat_add_party(class Party *party, int dx, int dy, int located,

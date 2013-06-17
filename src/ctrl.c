@@ -1316,14 +1316,11 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         break;
                 }
 
-                // ----------------------------------------------------
                 // This next call is to make sure the "Victory" and
                 // "Defeated" messages are printed properly. I don't
                 // *think* it has any other interesting side-effects in
                 // this case.
-                // ----------------------------------------------------
-
-                combat_analyze_results_of_last_turn();
+                combat_on_end_of_turn();
 
                 // ----------------------------------------------------
                 // Remove all party members.

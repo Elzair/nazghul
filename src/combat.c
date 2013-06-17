@@ -967,14 +967,9 @@ static enum combat_faction_status combat_get_player_faction_status(void)
         return stat;
 }
 
-void combat_analyze_results_of_last_turn()
+void combat_on_end_of_turn(void)
 {
-
-        enum combat_faction_status hostile_faction_status;
-        enum combat_faction_status player_faction_status;
-
-        // ---------------------------------------------------------------------
-        // Now check for changes in the combat state as a result of the last
+        // Check for changes in the combat state as a result of the last
         // turn. Check the status of the hostile party or parties and the
         // player party. The following table shows the outcome with all
         // possible combinations of status:
@@ -992,43 +987,35 @@ void combat_analyze_results_of_last_turn()
         // charmed  | gone         | exit combat
         // charmed  | charmed      | uncharm, continue combat
         // =====================================================
-        //
-        // ---------------------------------------------------------------------
         
+
+        enum combat_faction_status hostile_faction_status;
+        enum combat_faction_status player_faction_status;
+
         hostile_faction_status = combat_get_hostile_faction_status();
         player_faction_status  = combat_get_player_faction_status();
                         
-        switch (player_faction_status) {
-                
+        switch (player_faction_status) {                
         case COMBAT_FACTION_EXISTS:
-                
                 switch (hostile_faction_status) {
-                        
+
                 case COMBAT_FACTION_EXISTS:
-                        // -----------------------------------------------------
                         // Both factions exist. Continue or restart fighting.
-                        // -----------------------------------------------------                        
                         combat_set_state(COMBAT_STATE_FIGHTING);
                         break;
 
                 case COMBAT_FACTION_CHARMED:
-                        // -----------------------------------------------------
                         // The hostile faction are all charmed. Tough luck for
                         // them. Make sure we are fighting.  Addendum: can't
                         // attack them without degrading diplomacy with own
                         // faction, so declare combat over. When charm wears
                         // off we'll go back to fighting.
-                        // -----------------------------------------------------
-                        //combat_set_state(COMBAT_STATE_FIGHTING);
                         combat_set_state(COMBAT_STATE_LOOTING);
                         break;
 
                 case COMBAT_FACTION_GONE:
-                        // -----------------------------------------------------
                         // No hostiles around. Loot at will.
-                        // -----------------------------------------------------
-                        if (Combat.state != COMBAT_STATE_DONE)
-                        {
+                        if (Combat.state != COMBAT_STATE_DONE) {
                         	combat_set_state(COMBAT_STATE_LOOTING);
                      	}
                         break;
@@ -1036,8 +1023,7 @@ void combat_analyze_results_of_last_turn()
                 default:
                         assert(false);
                         break;
-                }
-                
+                }                
                 break;
 
         case COMBAT_FACTION_CHARMED:
@@ -1083,7 +1069,6 @@ void combat_analyze_results_of_last_turn()
                 
                 combat_set_state(COMBAT_STATE_DONE);
 
-//                if (Place == Combat.place)
                 combat_exit();
 
                 break;
@@ -1538,8 +1523,7 @@ bool combat_enter(struct combat_info * info)
 
         /* Our map-building code assumes 4-neighbor adjacency. If attacking on
          * a diagonal, randomly choose a cardinal direction. */
-        if (info->move->dx && info->move->dy)
-        {
+        if (info->move->dx && info->move->dy) {
                 if (rand() % 2) {
                         info->move->dx = 0;
                 } else {

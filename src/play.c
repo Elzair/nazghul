@@ -167,7 +167,6 @@ static void play_loop(void)
 			struct place *parent = place_get_parent(Place);
 			if (parent && place_is_wilderness(parent)) {
 				int delay = Turn % place_get_scale(parent);
-				dbg("%s:parent delay=%d\n", __FUNCTION__, delay);
 				if (! delay) {
 					place_exec(parent);
 				}

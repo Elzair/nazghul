@@ -260,15 +260,13 @@ static void blender_dtor(void *val)
 static int unpack(scheme *sc, pointer *cell, const char *fmt, ...)
 {
         va_list args;
-        int expect, count = 0, errs = 0;
+        int count = 0, errs = 0;
         pointer car;
         char **strval;
         int *ival;
         float *rval;
         void **ptrval;
         pointer *cval;
-
-        expect = strlen(fmt);
 
         va_start(args, fmt);
 
@@ -9762,7 +9760,7 @@ KERN_API_CALL(kern_screen_print)
                 int n = 0;
 
                 if (scm_is_str(sc, val)) {
-                        n = snprintf(ptr, room, scm_str_val(sc, val));
+                        n = snprintf(ptr, room, "%s", scm_str_val(sc, val));
                 } else if (scm_is_int(sc, val)) {
                         n = snprintf(ptr, room, "%ld", scm_int_val(sc, val));
                 } else if (scm_is_real(sc, val)) {
