@@ -422,8 +422,6 @@ class Object {
 	char *tag;
 	struct list list;	// for the loader, not the place
 
-        struct node *turn_list; /* points back to node in place's turn list */
-
         // The session handle for removing/checking the orphan list
         void *handle;
 

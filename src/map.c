@@ -303,7 +303,6 @@ static void mapDumpRect(char *name, SDL_Rect *rect, unsigned char *data)
  */
 static void mapMergeLightSource(struct light_source *light, struct mview *main_view)
 {
-        int radius;
         int vmask_i;
         struct mview tmp_view;
         int x;
@@ -323,8 +322,6 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
         tmp_view.vrect.w = VMASK_W;
         tmp_view.vrect.h = VMASK_H;
         tmp_view.zoom    = 1;
-
-        radius = min(mapCalcMaxLightRadius(light->light), VMASK_W / 2);
 
         // Fetch the vmask from the cache.
         vmask = vmask_get(Map.place, light->x, light->y);

@@ -405,65 +405,39 @@ static void place_set_default_edge_entrance(struct place *place)
 	place->edge_entrance[SOUTHEAST][1] = 0;
 }
 
-/*****************************************************************************
- * place_init_turn_list - abstract wrapper for simple init
- *****************************************************************************/
 static void place_init_turn_list(struct place *place)
 {
 	node_init(&place->turn_list);
 }
 
-/*****************************************************************************
- * place_add_to_turn_list - add an object to the turn list
- *****************************************************************************/
 static void place_add_to_turn_list(struct place *place, Object *object)
 {
 	struct node *node;
-
-	/* The object should not be pointing to an existing node. */
-	assert(! object->turn_list);
-
-	/* Create a new node that points to the object. */
 	node = node_new(object);
-
-	/* Link the object back to its node. */
-	object->turn_list = node;
-
-	/* Add the node to the turn list. */
 	node_add(&place->turn_list, node);
 }
 
-/*****************************************************************************
- * place_remove_from_turn_list - safely remove an object from the turn list
- *****************************************************************************/
 static void place_remove_from_turn_list(struct place *place, Object *object)
 {
-
 	struct node *node;
 
-	/* Get a convenience pointer to the node which holds the object */
-	node = object->turn_list;
+        // Find the node.
+        node = node_next(&place->turn_list);
+        while (node != &place->turn_list && node->ptr != object) {
+                node = node_next(node);
+        }
+        assert(node != &place->turn_list);
 
-	/* Should be valid */
-	assert(node);
-
-	/* Note: this is a bit subtle. If it just so happens that we are in the
-	 * process of running place_exec, there is a chance that the object we
-	 * are removing here is the next object to be processed in the
-	 * turn_list. In this special case we must setup the next object after
-	 * this to be processed instead. This can happen when one object
-	 * destroys or picks up another object on its turn. */
+	/* If we are in the middle of place_exec, this object may be the next
+           object to be processed in the turn_list. In this special case we
+           must setup the next object after this to be processed instead. This
+           can happen when one object destroys or picks up another object on
+           its turn. */
 	if (place->turn_elem == node) {
 		place->turn_elem = node_next(node);
 	}
 
-	/* Unlink the node from the turn list. */
 	node_remove(node);
-
-	/* Zero out the object's link to the node */
-	object->turn_list = NULL;
-
-	/* Release the node for destruction. */
 	node_unref(node);
 }
 

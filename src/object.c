@@ -696,12 +696,9 @@ void Object::setup()
         int i;
 
         clink     = NULL;
-        turn_list = NULL;
-
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
                 hook_list_init(&hooks[i]);
         }
-
         x               = -1;
         y               = -1;
         place           = NULL;
