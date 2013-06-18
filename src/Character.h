@@ -68,7 +68,6 @@ class Character:public Being {
                   int dex, int hpmod, int hpmult, 
                   int mpmod, int mpmult, 
                   int hp, int xp, int mp,
-		  int AP_per_round,
                   int lvl);
 	virtual ~ Character();
 
@@ -265,7 +264,6 @@ class Character:public Being {
 	int intl;
 	int dex;
 	int mana;
-	int AP_per_round;  // Action Points per round (speed)
 	int lvl;
         int defenseBonus;
 	bool playerControlled;

@@ -161,7 +161,6 @@ Character::Character(const char *tag, const char *name,
                      int mpmod, int mpmult, 
                      int hp, int xp_, 
                      int mp, 
-		     int AP_per_round,  // aka speed
 		     int lvl
                      )
         : hm(0), xp(xp_), order(-1),
@@ -238,7 +237,6 @@ Character::Character(const char *tag, const char *name,
 
 	this->hp = min(this->hp, getMaxHp());
 	this->mana = min(this->mana, getMaxMana());
-	this->AP_per_round = AP_per_round;
 
         setOnMap(false);
 	if (xp == 0) {
@@ -258,7 +256,6 @@ Character::Character():hm(0), xp(0), order(-1),
                        ac(0), 
                        str(0), intl(0),
                        dex(0), mana(0),
-		       AP_per_round(kern_intvar_get("AP_TOTAL:normal_human")),
 		       lvl(0),
                        playerControlled(true), solo(false),
                        target(NULL),
@@ -310,8 +307,6 @@ Character::Character():hm(0), xp(0), order(-1),
         factionSwitch= 0;
         tmpFaction   = NIL_FACTION;
         ambushedWhileCamping = false;
-
-	AP_per_round = AP_per_round;
 
         setDead(hp <= 0);
 
@@ -1605,7 +1600,6 @@ bool Character::initStock(struct species * species, struct occ * occ,
 
 	hp   = getMaxHp();
 	mana = getMaxMana();
-	AP_per_round = species->spd;
         setDead(false);
 
         defenseBonus = 0;
@@ -3259,7 +3253,7 @@ void Character::save(struct save *save)
         save->write(save, "%d %d  ;    mp_mod, mp_mult\n",  this->mp_mod,    this->mp_mult);
         save->write(save, "%d %d  ;    HP, XP\n",           this->getHp(),   this->getExperience());
         save->write(save, "%d  ;    mana\n",        this->getMana()  );
-        save->write(save, "%d  ;    AP_per_round\n", this->AP_per_round );
+        save->write(save, "0  ;    AP_per_round (OBSOLESCENT)\n");
         save->write(save, "%d  ;    level\n",       this->getLevel() );
         save->write(save, "#%c  ; dead?\n", isDead() ? 't' : 'f');
 
