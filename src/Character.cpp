@@ -19,7 +19,7 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#include "character.h"
+#include "Character.h"
 #include "conv.h"
 #include "dice.h"
 #include "effect.h"
@@ -198,15 +198,16 @@ Character::Character(const char *tag, const char *name,
         setName(name);
 
         plnode = NULL;
-	setPlayerControlled(false);	// by default
+	setPlayerControlled(false);
 	this->current_sprite = sprite;
 	this->light        = MIN_PLAYER_LIGHT;
 	this->party        = 0;
 	this->conv         = conv;
 	this->species      = species;
 	this->occ          = occ;
-        if (occ)
+        if (occ) {
                 occ_ref(occ);
+        }
 	this->is_clone     = false;
 	this->visible      = 1;
 	this->target       = 0;
@@ -240,16 +241,13 @@ Character::Character(const char *tag, const char *name,
 	this->AP_per_round = AP_per_round;
 
         setOnMap(false);
-	if (xp == 0)
+	if (xp == 0) {
 		this->xp = getXpForLevel(this->lvl);
-	if (xp < 0)
-	{
-		if (this->lvl == 1)
-		{
+        }
+	if (xp < 0) {
+		if (this->lvl == 1){
 			this->xp = rand() % getXpForLevel(this->lvl + 1);
-		}
-		else
-		{
+		} else {
 			this->xp = getXpForLevel(this->lvl) + (rand() % getXpForLevel(this->lvl));
 		}
 	}
@@ -857,7 +855,7 @@ enum MoveResult Character::move(int dx, int dy)
                         if (!place_is_passable(getPlace(), getX(), getY(), occupant, 0)) {
                                 relocate(getPlace(), newx, newy);
                                 runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(), newx, newy);
-                                decActionPoints(place_get_diagonal_movement_cost(
+                                decrementActionPoints(place_get_diagonal_movement_cost(
                                                         getPlace(), 
                                                         getX(), getY(),
                                                         newx, newy, 
@@ -883,7 +881,7 @@ enum MoveResult Character::move(int dx, int dy)
 	}
 
         runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(), getX(), getY());
-        decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
+        decrementActionPoints(place_get_diagonal_movement_cost(getPlace(), 
                                                          getX(), getY(), 
                                                          newx, 
                                                          newy, this, (getActivity() == COMMUTING ? PFLAG_IGNOREMECHS : 0)));
@@ -2041,34 +2039,18 @@ int Character::getVisionRadius() {
         return species->vr;
 }
 
-int Character::getSpeed() {
-    // Returns the character-specific number of 
-    // Action Points per round for this character.
-
-    int total_AP;
-    int AP_modifier_from_equipped_items = 0;
-
-    if (AP_per_round > 0)
-    	total_AP = AP_per_round;
-    else
-	total_AP = species->spd;
-
-    int armsIndex = 0;
-    for (class ArmsType * arms = enumerateArms(&armsIndex); arms != NULL; 
-	 arms = getNextArms(&armsIndex)) {
-	AP_modifier_from_equipped_items += arms->get_AP_mod();
-    }
-    total_AP += AP_modifier_from_equipped_items;
-
-    if (total_AP < 1)
-	total_AP = 1; // SAM: perhaps revisit this...
-
-    return total_AP;
-}
-
-int Character::setSpeed(int val) {
-    AP_per_round = val;
-    return AP_per_round;
+int Character::getSpeed()
+{
+        // Returns movement points per turn.
+        int points = 3 + species->spd;
+        int armsIndex = 0;
+        for (class ArmsType * arms = enumerateArms(&armsIndex); arms != NULL; arms = getNextArms(&armsIndex)) {
+                points += arms->get_AP_mod();
+        }
+        if (points < 1) {
+                points = 1;
+        }
+        return points;
 }
 
 int Character::getMana() {
@@ -2308,7 +2290,7 @@ void Character::switchPlaces(class Being *occupant)
         //remove();
         occupant->relocate(oldPlace, oldx, oldy);
         relocate(oldPlace, newx, newy);
-        decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
+        decrementActionPoints(place_get_diagonal_movement_cost(getPlace(), 
                                                          oldx, oldy,
                                                          newx, newy,
                                                          this, 0));
@@ -2699,7 +2681,7 @@ void Character::exec()
                 }
 
                 if (Session->reloaded)
-                        /* Hack: this object has been destroyed. Leave
+                        /* Hack: this Object.has been destroyed. Leave
                          * now. Don't touch a thing. */
                         return;
 

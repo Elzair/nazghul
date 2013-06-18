@@ -22,7 +22,7 @@
 
 #include "Missile.h"
 #include "dice.h"
-#include "character.h"
+#include "Character.h"
 #include "screen.h"
 #include "mmode.h"
 #include "sprite.h"
@@ -120,7 +120,7 @@ bool Missile::obstructed(struct place *place, int x, int y)
 	return ((obstruction == 20) || (dice_roll_numeric(1,100,0)<=obstruction));
 }
 
-/* set hit=true if a party or object has been struck
+/* set hit=true if a party or Object.has been struck
 return true if the missile has not been interupted */
 bool Missile::enterTile(struct place *place, int x, int y)
 {

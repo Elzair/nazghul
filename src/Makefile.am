@@ -13,8 +13,7 @@ nazghul_SOURCES =		\
         ascii.h \
         astar.c \
         astar.h \
-        character.cpp \
-        character.h \
+        Character.cpp Character.h \
         cmdwin.c \
         cmdwin.h \
         combat.c \
@@ -23,7 +22,6 @@ nazghul_SOURCES =		\
         common.h \
         console.c \
         console.h \
-        constants.h \
         Container.cpp \
         Container.h \
         cursor.cpp \
@@ -60,8 +58,7 @@ nazghul_SOURCES =		\
         nazghul.c \
         Party.cpp \
         Party.h \
-        object.c \
-        object.h \
+        Object.cpp Object.h \
         occ.c \
         occ.h \
         olist.c \

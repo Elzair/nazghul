@@ -22,7 +22,7 @@
 #ifndef Being_h
 #define Being_h
 
-#include "object.h"
+#include "Object.h"
 
 #define obj_is_being(obj) ((obj)->getLayer() == being_layer)
 

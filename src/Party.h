@@ -24,7 +24,7 @@
 
 #include "Being.h"
 #include "common.h"
-#include "character.h"
+#include "Character.h"
 #include "list.h"
 #include "node.h"
 #include "pinfo.h"

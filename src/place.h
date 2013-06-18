@@ -31,7 +31,7 @@ BEGIN_DECL
 #include "terrain_map.h"
 #include "list.h"
 #include "node.h"
-#include "object.h"
+#include "Object.h"
 #include "Party.h"
 #include "astar.h"
 #include "common.h"

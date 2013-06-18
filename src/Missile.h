@@ -22,7 +22,7 @@
 #ifndef Missile_h
 #define Missile_h
 
-#include "object.h"
+#include "Object.h"
 #include "Arms.h"
 
 #define MISSILE_IGNORE_LOS (1 << 0)

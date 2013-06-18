@@ -28,7 +28,7 @@
 #include "cursor.h"
 #include "terrain.h"
 #include "Missile.h"
-#include "object.h"
+#include "Object.h"
 #include "vmask.h"
 #include "session.h"
 #include "sprite.h"
@@ -268,12 +268,6 @@ static void mySetViewLightRadius(struct mview *view, void *data)
 {
 	int rad = *((int*)data);
 	view->rad = rad;
-}
-
-static int mapCalcMaxLightRadius(int light)
-{
-        // until something faster becomes necessary
-        return (int)sqrt((double)light);
 }
 
 #if 0

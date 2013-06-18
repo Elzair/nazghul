@@ -20,7 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "player.h"
-#include "object.h"
+#include "Object.h"
 #include "status.h"
 #include "console.h"
 #include "place.h"
@@ -491,7 +491,7 @@ MoveResult PlayerParty::move(int newdx, int newdy)
 					relocate(info.place, info.x, info.y);          
                 if (vehicle)
                         mv_cost *= vehicle->getMovementCostMultiplier();
-                decActionPoints(mv_cost);
+                decrementActionPoints(mv_cost);
 
                 extern int DeveloperMode;
                 if (DeveloperMode) {
@@ -687,7 +687,7 @@ void PlayerParty::exec()
                 ctrl(this);
 
                 if (Session->reloaded)
-                        /* Hack: this object has been destroyed with the old
+                        /* Hack: this Object.has been destroyed with the old
                          * session. Leave now! */
                         return;
         }
@@ -1154,7 +1154,7 @@ void PlayerParty::forceAbortLoitering()
 
 	log_begin_group();
 	FOR_EACH_MEMBER(entry, member) {
-		member->resetActionPoints();
+		member->setActionPoints(0);
 	}
 	log_end_group();
 }
@@ -1601,7 +1601,7 @@ bool PlayerParty::rendezvous(struct place *place, int rx, int ry)
                         // have a heavy action point debt, penalizing them in
                         // the new place. Zero out the debt during rendezvous
                         // to prevent that.
-                        member->resetActionPoints();
+                        member->setActionPoints(0);
 
                         mapUpdate(0);
                 }

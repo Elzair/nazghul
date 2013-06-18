@@ -21,10 +21,10 @@
 //
 #include "conv.h"
 #include "gob.h"
-#include "object.h"
+#include "Object.h"
 #include "session.h"
 #include "place.h"
-#include "character.h"
+#include "Character.h"
 #include "map.h"
 #include "sprite.h"
 #include "screen.h"
@@ -705,7 +705,8 @@ void Object::setup()
         selected        = false;
         destroyed       = false;
         tag             = 0;
-        action_points   = 0; /* FIXME: assumes no debt */
+        action_points   = 0;
+        movement_points = 0;
         control_mode    = CONTROL_MODE_AUTO;
         camera_attached = false;
         hp              = 0;
@@ -994,25 +995,6 @@ int Object::getActivity()
         return 0;
 }
 
-int Object::getActionPointsPerTurn()
-{
-        int baseAP = (int)(getSpeed() * session_get_time_accel());
-
-        // If 'Quicken' is in effect then give player-controlled objects bonus
-        // action points per turn.
-        if (Quicken > 0 && isPlayerControlled()) {
-                return baseAP * 2;
-        }
-
-        // If 'TimeStop' is in effect then give action points ONLY to
-        // player-controlled objects.
-        if (TimeStop && ! isPlayerControlled()) {
-                return 0;
-        }
-
-        return baseAP;
-}
-
 void Object::applyEffect(closure_t *effect)
 {
         closure_exec(effect, "p", this);
@@ -1052,22 +1034,89 @@ int Object::getActionPoints()
         return action_points;
 }
 
-void Object::decActionPoints(int points)
+int Object::getActionPointsPerTurn()
 {
+        int points = 2;
+
+        // If 'Quicken' is in effect then give player-controlled objects bonus
+        // action points per turn.
+        if (Quicken > 0 && isPlayerControlled()) {
+                return points * 2;
+        }
+
+        // If 'TimeStop' is in effect then give action points ONLY to
+        // player-controlled objects.
+        if (TimeStop && ! isPlayerControlled()) {
+                return 0;
+        }
+
+        return points;
+}
+
+void Object::setActionPoints(int amount)
+{
+        action_points = amount;
+        if (isPlayerControlled()) {
+                statusRepaint();
+        }
+}
+
+void Object::decrementActionPoints(int points)
+{
+        assert(action_points > points);
         setActionPoints(action_points - points);
+}
+
+int Object::getMovementPoints()
+{
+        return movement_points;
+}
+
+int Object::getMovementPointsPerTurn()
+{
+        int points = (int)(getSpeed() * session_get_time_accel());
+
+        // If 'Quicken' is in effect then give player-controlled objects bonus
+        // action points per turn.
+        if (Quicken > 0 && isPlayerControlled()) {
+                return points * 2;
+        }
+
+        // If 'TimeStop' is in effect then give action points ONLY to
+        // player-controlled objects.
+        if (TimeStop && ! isPlayerControlled()) {
+                return 0;
+        }
+
+        return points;
+}
+
+void Object::setMovementPoints(int amount)
+{
+        movement_points = amount;
+        if (isPlayerControlled()) {
+                statusRepaint();
+        }
+}
+
+void Object::decrementMovementPoints(int points)
+{
+        assert(movement_points >= points);
+        setMovementPoints(movement_points - points);
 }
 
 void Object::endTurn()
 {
-	if (action_points > 0)
-	{
+	if (action_points > 0) {
 		setActionPoints(0);
+                setMovementPoints(0);
 	}
 }
 
 void Object::startTurn()
 {
-        setActionPoints(action_points + getActionPointsPerTurn());
+        setActionPoints(getActionPointsPerTurn());
+        setMovementPoints(getMovementPointsPerTurn());
         runHook(OBJ_HOOK_START_OF_TURN, 0);
 }
 
@@ -2244,19 +2293,6 @@ void Object::setMovementMode(struct mmode *mmode)
 Object *Object::getSpeaker()
 {
         return this;
-}
-
-void Object::resetActionPoints()
-{
-        setActionPoints(0);
-}
-
-void Object::setActionPoints(int amount)
-{
-        action_points = amount;
-        if (isPlayerControlled()) {
-                statusRepaint();
-        }
 }
 
 void obj_inc_ref(Object *obj)

@@ -88,7 +88,7 @@ void Being::switchPlaces(class Being *occupant)
         struct place *oldPlace = getPlace();
         occupant->relocate(oldPlace, oldx, oldy);
         relocate(oldPlace, newx, newy);
-        decActionPoints(place_get_diagonal_movement_cost(getPlace(), 
+        decrementActionPoints(place_get_diagonal_movement_cost(getPlace(), 
                                                          oldx, oldy,
                                                          newx, newy,
                                                          this, 0));
@@ -225,7 +225,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                                         if (!place_is_passable(getPlace(), getX(), getY(), occupant, 0)) {
                                                 relocate(getPlace(), pathPtr->x, pathPtr->y);
                                                 runHook(OBJ_HOOK_MOVE_DONE, "pdd", getPlace(), pathPtr->x, pathPtr->y);
-                                                decActionPoints(place_get_diagonal_movement_cost
+                                                decrementActionPoints(place_get_diagonal_movement_cost
                                                                 (
                                                                         getPlace(), 
                                                                         getX(), getY(),
@@ -275,7 +275,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
                         // thus decrementing its action points, but in fact it
                         // can't move on any path.
                         if (MovedOk == result) {
-                                this->decActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
+                                this->decrementActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
                         }
 
                 }

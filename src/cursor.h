@@ -22,7 +22,7 @@
 #ifndef cursor_h
 #define cursor_h
 
-#include "object.h"
+#include "Object.h"
 
 class Cursor:public Object {
       public:

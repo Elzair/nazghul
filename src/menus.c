@@ -671,7 +671,6 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 {
 	menu_scroll_data_t *data = (menu_scroll_data_t *) kh->data;
         enum StatusScrollDir dir;
-        int i1;
 
         if (data->hotkeys && key < 128) {
                 char ckey = (char)key;
@@ -710,7 +709,6 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 	case SDLK_SPACE:
         case KEY_HERE:
 	case '\n':
-                i1 = statusGetSelectedIndex(String);
                 statusFlashSelected(Green);
                 data->entry = (char*)statusGetSelected(String);
                 data->save = menu_scroller_get_selected();
@@ -1004,7 +1002,7 @@ char * save_game_menu(void)
         menubufptr = menubuf;
 
         /* The first entry is always the New Save Game option. */
-        sprintf(menubufptr, MENU_NEW_GAME_STR);
+        sprintf(menubufptr, "%s", MENU_NEW_GAME_STR);
         data.hotkeys[i] = 'n';
         menu[i++] = menubufptr;
         menubufptr += linew+1;

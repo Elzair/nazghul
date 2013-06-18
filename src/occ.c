@@ -22,7 +22,7 @@
 
 #include "gob.h"
 #include "occ.h"
-#include "object.h"
+#include "Object.h"
 #include "sprite.h"
 #include "common.h"
 #include "skill_set.h"

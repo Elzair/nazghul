@@ -24,7 +24,7 @@
 #ifndef magic_h
 #define magic_h
 
-#include "object.h" /* for ObjectType */
+#include "Object.h" /* for ObjectType */
 #include "macros.h"
 
 BEGIN_DECL

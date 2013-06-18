@@ -24,7 +24,7 @@
 
 #include "applet.h"
 #include "blender.h"
-#include "character.h"
+#include "Character.h"
 #include "cmd.h"
 #include "conv.h"
 #include "config.h"
@@ -33,7 +33,7 @@
 #include "effect.h"
 #include "event.h"
 #include "gob.h"
-#include "object.h"
+#include "Object.h"
 #include "sched.h"
 #include "sprite.h"
 #include "terrain.h"
@@ -2065,7 +2065,7 @@ static pointer kern_obj_put_into(scheme *sc, pointer args)
 
 /*
  * kern_obj_remove - remove an object from the map. Note that this implicitly
- * destroys most objects automatically, unless the object has another reference
+ * destroys most objects automatically, unless the Object.has another reference
  * count. Use kern_obj_inc_ref to prevent destruction during this call.
  */
 static pointer kern_obj_remove(scheme *sc, pointer args)
@@ -4754,7 +4754,7 @@ KERN_API_CALL(kern_char_attack)
         ctrl_do_attack(attacker, weapon, defender, 
                        attacker->getToHitPenalty());
         
-        attacker->decActionPoints(weapon->getRequiredActionPoints());
+        attacker->decrementActionPoints(weapon->getRequiredActionPoints());
                        
         return sc->T;
 }
@@ -5155,7 +5155,7 @@ KERN_API_CALL(kern_obj_dec_ap)
                 return sc->F;
         }
 
-        obj->decActionPoints(val);
+        obj->decrementActionPoints(val);
 
         return sc->T;
 }
@@ -8334,25 +8334,6 @@ KERN_API_CALL(kern_char_get_speed)
         return scm_mk_integer(sc, character->getSpeed());
 }
 
-KERN_API_CALL(kern_char_set_speed)
-{
-        class Character *character;
-        int val = 0;
-
-        /* unpack the character */
-        character = (class Character*)unpack_obj(sc, &args, "kern-char-set-speed");
-        if (!character)
-                return sc->NIL;
-
-        if (unpack(sc, &args, "d", &val)) {
-                rt_err("kern-char-set-speed: bad args");
-                return sc->NIL;
-        }
-
-	character->setSpeed(val);
-        return scm_mk_ptr(sc, character);
-}
-
 KERN_API_CALL(kern_obj_get_ap)
 {
         class Object *object;
@@ -10173,7 +10154,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-base-dexterity", kern_char_get_base_dexterity);
         API_DECL(sc, "kern-char-get-base-intelligence", kern_char_get_base_intelligence);
         API_DECL(sc, "kern-char-set-sched", kern_char_set_sched);
-        API_DECL(sc, "kern-char-set-speed", kern_char_set_speed);
         API_DECL(sc, "kern-char-get-speed", kern_char_get_speed);
         API_DECL(sc, "kern-char-set-strength", kern_char_set_strength);
         API_DECL(sc, "kern-char-set-dexterity", kern_char_set_dexterity);

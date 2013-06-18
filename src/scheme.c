@@ -1390,18 +1390,10 @@ static pointer port_from_filename(scheme *sc, const char *fn, int prop) {
 }
 
 static port *port_rep_from_file(scheme *sc, FILE *f, int prop) {
-  const char *rw;
   port *pt;
   pt=(port*)sc->malloc(sizeof(port));
   if(pt==0) {
     return 0;
-  }
-  if(prop==(port_input|port_output)) {
-    rw="a+";
-  } else if(prop==port_output) {
-    rw="w";
-  } else {
-    rw="r";
   }
   pt->kind=port_file|prop;
   pt->rep.stdio.file=f;
@@ -4072,7 +4064,6 @@ static const char *procname(pointer x) {
 /* kernel of this interpreter */
 static void Eval_Cycle(scheme *sc, enum scheme_opcodes op) {
   int count=0;
-  int old_op;
   
   sc->inside++;
 
@@ -4145,7 +4136,6 @@ static void Eval_Cycle(scheme *sc, enum scheme_opcodes op) {
 	pcd=dispatch_table+sc->op;
       }
     }
-    old_op=sc->op;
     if (pcd->func(sc, (scheme_opcodes)sc->op) == sc->NIL) {
             sc->inside--;
       return;
@@ -4738,7 +4728,7 @@ void celldump(scheme *sc, pointer pp)
                 /* type */
                 for (i = 0; i < T_LAST_SYSTEM_TYPE && i != type(pp); i++)
                         ;
-                bptr += sprintf(bptr, typestr[i]);
+                bptr += sprintf(bptr, "%s", typestr[i]);
                 *bptr++ = ' ';
                 
                 /* flags */
@@ -4781,7 +4771,7 @@ void celldump(scheme *sc, pointer pp)
         strbuf[sizeof(strbuf)-1] = 0;
 
         /*putstr(sc, strbuf);*/
-        fprintf(stderr,strbuf);
+        fprintf(stderr, "%s", strbuf);
         fflush(NULL);
 }
 

@@ -20,7 +20,6 @@
 //
 #include "../config.h"
 #include "foogod.h"
-#include "constants.h"
 #include "file.h"
 #include "dimensions.h"
 #include "screen.h"

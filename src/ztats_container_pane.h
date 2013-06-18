@@ -24,7 +24,7 @@
 #define ztats_container_pane_h
 
 #include "Container.h"
-#include "object.h"
+#include "Object.h"
 #include "ztats_pane.h"
 
 #include <SDL.h>

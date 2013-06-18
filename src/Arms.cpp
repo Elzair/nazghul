@@ -23,7 +23,7 @@
 #include <string.h>
 
 #include "Arms.h"
-#include "character.h"
+#include "Character.h"
 #include "dice.h"
 #include "screen.h"
 #include "sprite.h"
@@ -317,7 +317,7 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
         obj_dec_ref(missile->getStruck());
 
         if (user)
-        	user->decActionPoints(getRequiredActionPoints());
+        	user->decrementActionPoints(getRequiredActionPoints());
 
         return true;
 }

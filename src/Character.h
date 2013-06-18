@@ -114,7 +114,6 @@ class Character:public Being {
 	virtual int getLight();
 	virtual int getVisionRadius();
 	virtual int getSpeed();
-	virtual int setSpeed(int val);
 	virtual struct sprite *getSprite();
         virtual sound_t *getDamageSound();
         virtual sound_t *get_movement_sound();

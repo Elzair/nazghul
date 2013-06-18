@@ -23,9 +23,9 @@
 #define player_h
 
 #include "Container.h"
-#include "object.h"
+#include "Object.h"
 #include "map.h"
-#include "character.h"
+#include "Character.h"
 #include "pinfo.h"
 #include "clock.h" /* for alarm clock */
 #include "place.h" // for struct location

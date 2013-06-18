@@ -1156,9 +1156,8 @@ static bool party_absorb_member_apdebt(class Character * c, void *data)
 	int apdebt = c->getActionPoints();
 	if (apdebt < 0)
 	{
-		c->resetActionPoints();
-		if (apdebt < *maxapdebt)
-		{
+		c->setActionPoints(0);
+		if (apdebt < *maxapdebt) {
 			*maxapdebt = apdebt;	
 		}	
 	}
@@ -1170,7 +1169,7 @@ void Party::absorbMemberAPDebt()
 {
 	int maxapdebt=0;
 	forEachMember(party_absorb_member_apdebt, &maxapdebt);
-	decActionPoints(0-maxapdebt/10); // 0-... because AP debt is negative
+	decrementActionPoints(0-maxapdebt/10); // 0-... because AP debt is negative
 }
 
 class Container *Party::getInventory()

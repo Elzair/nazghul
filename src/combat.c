@@ -25,7 +25,7 @@
 #include "Party.h"
 #include "place.h"
 #include "player.h"
-#include "object.h"
+#include "Object.h"
 #include "common.h"
 #include "map.h"
 #include "hash.h"
@@ -1514,8 +1514,6 @@ static bool position_player_party(struct combat_info *cinfo)
 
 bool combat_enter(struct combat_info * info)
 {
-        struct location loc;
-
         if (player_party->allDead()) {
                 /* Yes, this can happen in some rare circumstances... */
                 return false;
@@ -1530,16 +1528,6 @@ bool combat_enter(struct combat_info * info)
                         info->move->dy = 0;
                 }
         }
-
-        // --------------------------------------------------------------------
-        // Default to the entry point as the combat exit location for the
-        // player party.
-        // --------------------------------------------------------------------
-
-        loc.place = info->move->place;
-        loc.x     = info->move->x;
-        loc.y     = info->move->y;
-
 
         // *** Initialize Combat Globals ***
 

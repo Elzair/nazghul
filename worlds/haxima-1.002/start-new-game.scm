@@ -139,8 +139,6 @@
   nil                   ; readied
   )
 
-
-
 ; ;; For test
 ; (kern-mk-char 
 ;  'ch_thorald_greybeard ; tag

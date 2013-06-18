@@ -31,7 +31,7 @@
 #include "place.h"
 #include "player.h"
 #include "Party.h"
-#include "character.h"
+#include "Character.h"
 #include "combat.h"
 #include "terrain.h"
 #include "sched.h"
@@ -927,7 +927,7 @@ static void ctrl_attack_ui(class Character *character)
                                 character->getName(), weapon->getName());
                 }
                                 
-		character->decActionPoints(this_wpn_AP);
+		character->decrementActionPoints(this_wpn_AP);
 		//log_msg("DEBUG: after attack, used %d, remaining AP=%d\n", 
 		//	this_wpn_AP, character->getActionPoints() );
         }
@@ -993,7 +993,7 @@ static void ctrl_move_character(class Character *character, int dir)
 				if (mech && mech->getObjectType()->canHandle())
 				{
 					mech->getObjectType()->handle(mech, character);
-					character->decActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
+					character->decrementActionPoints(kern_intvar_get("AP_COST:handle_mechanism"));
 					mapSetDirty();
 					result = "handled!";
 				} 
@@ -1528,7 +1528,7 @@ static bool ctrl_attack_target(class Character *character,
 			int mult = kern_intvar_get("AP_MULT12:third_plus_wpn_attack");
 			this_wpn_AP = (int) (this_wpn_AP * mult) / 12;
 		}
-		character->decActionPoints(this_wpn_AP);
+		character->decrementActionPoints(this_wpn_AP);
 		//log_msg("DEBUG: after attack, used %d, remaining AP=%d\n",
                 //        this_wpn_AP, character->getActionPoints() );
                 statusRepaint();

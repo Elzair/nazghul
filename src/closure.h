@@ -48,11 +48,11 @@ extern  void closure_save(closure_t *closure, struct save *save);
 extern void closure_ref(closure_t *closure);
 extern void closure_unref(closure_t *closure);
 
-/* Special form of closure_exec() made for running object hooks. */
+/* Special form of closure_exec() made for running Object.hooks. */
 int closure_execlpv(closure_t *closure, pointer gob, void *obj, 
                      const char *fmt, va_list args);
 
-/* Special form of closure_exec() made for running object hooks where an effect
+/* Special form of closure_exec() made for running Object.hooks where an effect
  * is attached to more than one hook. */
 int closure_execlpiv(closure_t *closure, pointer gob, void *obj, int hook_id,
                      const char *fmt, va_list args);

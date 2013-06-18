@@ -27,7 +27,6 @@
 #include "play.h"
 #include "session.h"
 #include "place.h"
-#include "constants.h"
 #include "images.h"
 #include "sprite.h"
 #include "los.h"
