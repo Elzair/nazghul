@@ -74,20 +74,12 @@ ObjectType::ObjectType()
         assert(false);
 }
 
-ObjectType::ObjectType(const char *tag, const char *sname, struct sprite *sprite_, 
-                       enum layer layer_)
+ObjectType::ObjectType(const char *tag, const char *sname, struct sprite *sprite_, enum layer layer_)
         : sprite(sprite_), layer(layer_), speed(0), required_action_points(0), 
           max_hp(0), gifc(NULL), gifc_cap(0), gob(NULL), pluralName(NULL)
 {
 	this->tag = strdup(tag);
-        assert(this->tag);
-
-        if (sname) {
-                this->name = strdup(sname);
-                assert(this->name);
-        } else {
-                this->name = 0;
-        }
+        this->name = sname ? strdup(sname) :  NULL;
 }
 
 ObjectType::~ObjectType()
@@ -1064,7 +1056,9 @@ void Object::setActionPoints(int amount)
 void Object::decrementActionPoints(int points)
 {
         assert(action_points > points);
+        assert(movement_points > points);
         setActionPoints(action_points - points);
+        setMovementPoints(movement_points - points);
 }
 
 int Object::getMovementPoints()
@@ -1093,9 +1087,13 @@ int Object::getMovementPointsPerTurn()
 
 void Object::setMovementPoints(int amount)
 {
+        assert(amount >= 0);
         movement_points = amount;
         if (isPlayerControlled()) {
                 statusRepaint();
+        }
+        if (! movement_points) {
+                endTurn();
         }
 }
 
@@ -1170,9 +1168,7 @@ bool Object::isCameraAttached()
 
 bool Object::isTurnEnded()
 {
-        return (getActionPoints() <= 0 ||
-                isDead() ||
-                Quit);
+        return (getMovementPoints() <= 0 || isDead() || Quit);
 }
 
 bool Object::isPlayerPartyMember()

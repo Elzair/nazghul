@@ -3246,14 +3246,13 @@ void Character::save(struct save *save)
         save->write(save, "%s  ; species\n",  this->species->tag);
         save->write(save, "%s  ; occ\n", this->occ ? this->occ->tag : "nil");
         sprite_save(current_sprite, save);
-        /*save->write(save, "%s\n", sprite_get_tag(this->sprite));*/
         save->write(save, "%d  ; BaseFaction\n", getBaseFaction());
         save->write(save, "%d %d %d  ; str, int, dex\n",    str, intl, dex);
         save->write(save, "%d %d  ;    hp_mod, hp_mult\n",  this->hp_mod,    this->hp_mult);
         save->write(save, "%d %d  ;    mp_mod, mp_mult\n",  this->mp_mod,    this->mp_mult);
         save->write(save, "%d %d  ;    HP, XP\n",           this->getHp(),   this->getExperience());
         save->write(save, "%d  ;    mana\n",        this->getMana()  );
-        save->write(save, "0  ;    AP_per_round (OBSOLESCENT)\n");
+        save->write(save, "0  ;    (OBSOLETE)\n");
         save->write(save, "%d  ;    level\n",       this->getLevel() );
         save->write(save, "#%c  ; dead?\n", isDead() ? 't' : 'f');
 

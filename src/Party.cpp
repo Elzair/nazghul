@@ -667,13 +667,14 @@ void Party::disembark()
 
 int Party::getSpeed()
 {
-	if (vehicle)
+	if (vehicle) {
 		return vehicle->getSpeed();
+        }
 
-        int minVal=255; // something big, whatever
+        int minVal = 255; // something big, whatever
+
         struct node *entry;
         class Character *member;
-
         FOR_EACH_MEMBER(entry, member) {
                 if (!member->isDead()) {
                         int val  = member->getSpeed();
