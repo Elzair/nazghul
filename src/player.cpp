@@ -32,7 +32,6 @@
 #include "foogod.h"
 #include "combat.h"
 #include "wind.h"
-#include "dup_constants.h"
 #include "cmdwin.h"
 #include "vehicle.h"
 #include "sprite.h"

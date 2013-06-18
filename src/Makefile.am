@@ -28,7 +28,6 @@ nazghul_SOURCES =		\
         cursor.h \
         debug.h \
 	debug.c \
-        dup_constants.h \
         event.c \
         event.h \
         Field.h \

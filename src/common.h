@@ -29,7 +29,6 @@ extern "C" {
 #include "list.h"
 #include "debug.h"
 #include "los.h"
-#include "dup_constants.h"
 
 #include <stdlib.h>
 #include <string.h>

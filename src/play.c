@@ -45,7 +45,6 @@
 #include "event.h"
 #include "wind.h"
 #include "Container.h"
-#include "dup_constants.h"
 #include "cmdwin.h"
 #include "vehicle.h"
 #include "terrain.h"

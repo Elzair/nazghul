@@ -40,7 +40,6 @@
 #include "play.h"
 #include "foogod.h"
 #include "wind.h"
-#include "dup_constants.h"
 #include "cmdwin.h"
 #include "terrain_map.h"
 #include "vehicle.h"
