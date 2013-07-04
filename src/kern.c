@@ -597,7 +597,9 @@ static pointer kern_mk_sprite_set(scheme *sc, pointer args)
         image = images_new(tag, width, height, rows, cols, offx, offy, fname);
         session_add(Session, image, image_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, image);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
 
         return ret;
 }
@@ -619,7 +621,9 @@ static pointer kern_mk_sprite(scheme *sc, pointer args)
         sprite = sprite_new(tag, n_frames, index, wave, facings, images); 
         session_add(Session, sprite, sprite_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, sprite);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
 
         return ret;
 }
@@ -657,7 +661,9 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
 
         list_add(&Session->terrains, &terrain->session_list);
         ret = scm_mk_ptr(sc, terrain);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
 
         return ret;
 }
@@ -678,8 +684,9 @@ static pointer kern_mk_sound(scheme *sc, pointer args)
         /* Add it to the session */
         session_add(Session, sound, sound_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, sound);
-        scm_define(sc, tag, ret);
-
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 }
 
@@ -730,7 +737,9 @@ static pointer kern_mk_palette(scheme *sc, pointer args)
 
         session_add(Session, Session->palette, terrain_palette_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, Session->palette);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
 
         return ret;
 }
@@ -808,8 +817,9 @@ static pointer kern_mk_map(scheme *sc, pointer args)
 
         /* Embedded maps (those defined within and used exclusively for) place
          * constructors may not have and do not need tags. */
-        if (tag)
+        if (tag) {
                 scm_define(sc, tag, ret);
+        }
 
         return ret;
 
@@ -909,9 +919,9 @@ static pointer kern_mk_composite_map(scheme *sc, pointer args)
         ret = scm_mk_ptr(sc, map);
 
         /* define its tag (if specified) */
-        if (tag)
+        if (tag) {
                 scm_define(sc, tag, ret);
-
+        }
         return ret;
 
  abort:
@@ -1245,7 +1255,9 @@ KERN_API_CALL(kern_mk_place)
         place->handle = session_add(Session, place, place_dtor, place_save, 
 				    place_start);
         ret = scm_mk_ptr(sc, place);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 
  abort:
@@ -1337,7 +1349,9 @@ static pointer kern_mk_species(scheme *sc, pointer args)
 
         session_add(Session, species, species_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, species);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 
  abort:
@@ -1424,7 +1438,9 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
 
         session_add(Session, arms, arms_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, arms);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 }
 
@@ -1465,7 +1481,9 @@ static pointer kern_mk_missile_type(scheme *sc, pointer args)
 	
 	session_add(Session, arms, missile_type_dtor, NULL, NULL);
 	ret = scm_mk_ptr(sc, arms);
-	scm_define(sc, tag, ret);
+	if (tag) {
+                scm_define(sc, tag, ret);
+        }
 	
 	return ret;
 }
@@ -1495,7 +1513,9 @@ static pointer kern_mk_field_type(scheme *sc, pointer args)
         field->setMovementMode(mmode);
         session_add(Session, field, field_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, field);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 }
 
@@ -1519,7 +1539,9 @@ KERN_API_CALL(kern_mk_mmode)
         mmode = mmode_new(tag, name, index);
         session_add(Session, mmode, mmode_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, mmode);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 }
 
@@ -1577,7 +1599,9 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
         type->setMovementMode(mmode);
         session_add(Session, type, obj_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, type);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 }
 
@@ -1607,7 +1631,9 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
 
         session_add(Session, occ, occ_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, occ);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 }
 
@@ -2309,7 +2335,9 @@ KERN_API_CALL(kern_mk_player)
 
         session_add_obj(Session, player_party, player_dtor, player_save, NULL);
         ret = scm_mk_ptr(sc, player_party);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 
  abort:
@@ -2390,7 +2418,9 @@ static pointer kern_mk_sched(scheme *sc, pointer args)
 
         session_add(Session, sched, sched_dtor, 0, NULL);
         ret = scm_mk_ptr(sc, sched);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         return ret;
 
  abort:
@@ -3690,7 +3720,9 @@ static pointer kern_mk_astral_body(scheme *sc, pointer args)
          * automatically make them variables. */
         sky_add_astral_body(&Session->sky, body);        
         ret = scm_mk_ptr(sc, body);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
 
         return ret;
 
@@ -3766,16 +3798,18 @@ KERN_API_CALL(kern_mk_vehicle_type)
         type->mmode = mmode;
         session_add(Session, type, vehicle_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, type);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
         
-		if (proc != sc->NIL) {
-			type->renderCombat = closure_new(sc, proc);
-			closure_ref(type->renderCombat); //TODO clean up this nasty leaky hack
-		}
-		else
-		{
-			type->renderCombat=NULL;	
-		}
+        if (proc != sc->NIL) {
+                type->renderCombat = closure_new(sc, proc);
+                closure_ref(type->renderCombat); //TODO clean up this nasty leaky hack
+        }
+        else
+        {
+                type->renderCombat=NULL;	
+        }
         
         return ret;
 }
@@ -4825,7 +4859,9 @@ KERN_API_CALL(kern_mk_effect)
 
         session_add(Session, effect, effect_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, effect);
-        scm_define(sc, tag, ret);
+        if (tag) {
+                scm_define(sc, tag, ret);
+        }
 
         return ret;
 
