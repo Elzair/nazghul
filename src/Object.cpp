@@ -78,7 +78,7 @@ ObjectType::ObjectType(const char *tag, const char *sname, struct sprite *sprite
         : sprite(sprite_), layer(layer_), speed(0), required_action_points(0), 
           max_hp(0), gifc(NULL), gifc_cap(0), gob(NULL), pluralName(NULL)
 {
-	this->tag = strdup(tag);
+        this->tag = tag ? strdup(tag) : NULL;
         this->name = sname ? strdup(sname) :  NULL;
 }
 
@@ -114,8 +114,8 @@ char *ObjectType::getPluralName()
 bool ObjectType::init(char *tag, char *name, enum layer layer,
 		      struct sprite *sprite)
 {
-	this->tag = strdup(tag);
-	this->name = strdup(name);
+	this->tag = tag ? strdup(tag) : NULL;
+	this->name = name ? strdup(name) : NULL;
 	this->sprite = sprite;
 	this->layer = layer;
 	return (this->tag != 0 && this->name != 0);
