@@ -105,7 +105,11 @@ static int conv_get_player_query(struct KeyHandler *kh, int key, int keymod)
                 if (isprintable(key) 
                     && conv_room) {
                         console_end();
+                        /* Print user input in console rather than cmdwin */
+                        cmdwin_toggle_showcmd();
                         cmdwin_push("%c", key);
+                        cmdwin_toggle_showcmd();
+                        console_print("%c", key);
                         *conv_ptr++ = key;
                         conv_room--;
                 }
@@ -422,6 +426,7 @@ void conv_enter(Object *npc, Object *pc, struct conv *conv)
 
 		cmdwin_clear();
 		cmdwin_push("Say: ");
+                console_print("You Say: ");
 
 		/*** Get next query ***/
 
@@ -433,8 +438,10 @@ void conv_enter(Object *npc, Object *pc, struct conv *conv)
 		conv_len = strlen(conv_query);
                 if (! conv_len)
                         sprintf(conv_query, "bye");
-		log_msg("^c+%c%s:^c- %s", CONV_PC_COLOR, 
-                        pc->getName(), conv_query);
+                // End input row
+                log_msg("\n");
+		//log_msg("^c+%c%s:^c- %s", CONV_PC_COLOR, 
+                //        pc->getName(), conv_query);
 
 		/*** Check if player ended conversation ***/
 

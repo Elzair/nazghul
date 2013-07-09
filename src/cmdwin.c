@@ -60,7 +60,9 @@ static struct {
                          * limited by the cmdwin UI size */
         struct sprite *cursor_sprite;
         struct list frags;
+        int showcmd;    /* whether to print commands to cmdwin or not */
 } cmdwin;
+
 
 #ifdef DEBUG
 static FILE *log = NULL;
@@ -166,9 +168,17 @@ int cmdwin_init(void)
 		return -1;
 	}
 #endif
-
+        cmdwin.showcmd = 1;
         cmdwin_clear_no_repaint();
 	return 0;
+}
+
+void cmdwin_toggle_showcmd()
+{
+  if (cmdwin.showcmd == 1)
+    cmdwin.showcmd = 0;
+  else
+    cmdwin.showcmd = 1;
 }
 
 static void cmdwin_vpush(int flags, const char *fmt, va_list args)
@@ -192,12 +202,13 @@ static void cmdwin_vpush(int flags, const char *fmt, va_list args)
 
         /* Push the fragment onto the stack */
         list_add_tail(&cmdwin.frags, &frag->list);
+        if (cmdwin.showcmd == 1) {
+          /* Reprint the buffer with the new fragment */
+          cmdwin_reprint_buffer();
 
-        /* Reprint the buffer with the new fragment */
-        cmdwin_reprint_buffer();
-
-        /* Update the display */
-	cmdwin_repaint();        
+          /* Update the display */
+          cmdwin_repaint();
+        }        
 }
 
 void cmdwin_spush(const char *fmt, ...)

@@ -45,6 +45,10 @@ extern void cmdwin_repaint(void);
 /* cmdwin_flush -- write the contents of the cmdwin to the console */
 extern void cmdwin_flush(void);
 
+/* cmdwin_toggle_showcmd -- toggles whether or not to display user input in 
+ * cmdwin */
+extern void cmdwin_toggle_showcmd(void);
+
 /* cmdwin_push -- append a string to the cmdwin prompt (this can be undone with
  * cmdwin_pop). Works just like printf for string formatting. */
 extern void cmdwin_push(const char *fmt, ...);
